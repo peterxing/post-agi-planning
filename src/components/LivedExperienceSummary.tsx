@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { TechTreeState, TechTreeStatus, MonthData } from '@/lib/types';
 import { getCumulativeTechNodes } from '@/lib/tech-tree';
@@ -39,6 +39,10 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
   const [techStates] = useKV<TechTreeState[]>('tech-tree-states', []);
   const [summary, setSummary] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+    setSummary('');
+  }, [monthData?.month, monthData?.year]);
 
   if (!monthData) {
     return (
