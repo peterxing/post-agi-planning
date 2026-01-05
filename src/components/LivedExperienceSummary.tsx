@@ -1,12 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { TechTreeState, TechTreeStatus, MonthData } from '@/lib/types';
-import { getCumulativeTechNodes } from '@/lib/tech-tree';
+import { getCumulativeTechNodes, getNodeStatusForDate } from '@/lib/tech-tree';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sparkle, User } from '@phosphor-icons/react';
 import { toast } from 'sonner';
+
+interface SummaryContext {
+  monthLabel: string;
+  activeNodes: ReturnType<typeof getCumulativeTechNodes>;
+  activeNodesList: string;
+  statusList: string;
+  topImpactsList: string;
+  predictionsList: string;
+}
+
+const buildFallbackSummary = (context: SummaryContext) => {
+  const { monthLabel, activeNodes, activeNodesList, topImpactsList, predictionsList } = context;
+
+  const notableTech = activeNodes.slice(0, 3).map(node => node.title).join(', ') || 'subtle background systems';
+  const focusAreas = topImpactsList || 'everyday routines and work patterns';
+
+  const predictionLine = predictionsList
+    ? `The month's headlines orbit predictions like ${predictionsList.replace(/^- /gm, '').split('\n').join(', ')}.`
+    : 'Headlines are a mix of incremental improvements and cautious optimism.';
+
+  const techLine = activeNodesList
+    ? `Technologies such as ${notableTech} quietly hum in the background, stitched together by steady deployment teams.`
+    : `Even without a single headline technology, your devices quietly coordinate the day in ways that would have felt uncanny a few years ago.`;
+
+  return [
+    `It's ${monthLabel}, and your day is quietly shaped by ${notableTech}. You wake to a home that already knows your schedule, adjusts the lights, and queues up a breakfast that matches your health preferences. Commuting is less stressful as automation handles most logistics, letting you reclaim mental space for reflection.`,
+    `Work has become a conversation with systems rather than a grind through interfaces. Agents prepare briefs and drafts, leaving you to edit and steer. Collaboration happens asynchronously with teammates and their tools, and the biggest change is how quickly ideas turn into tested pilots. The focus areas that feel most different are ${focusAreas}.`,
+    `Social life keeps pace with the technology curve. Some interactions feel hyper-mediated, but there is still novelty in the way gatherings blend physical and digital presence. ${predictionLine} ${techLine} The month feels like a waypoint rather than a destination.`,
+  ].join('\n\n');
+};
 
 interface LivedExperienceSummaryProps {
   monthData: MonthData | null;
@@ -16,6 +46,10 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
   const [techStates] = useKV<TechTreeState[]>('tech-tree-states', []);
   const [summary, setSummary] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+    setSummary('');
+  }, [monthData?.month, monthData?.year]);
 
   if (!monthData) {
     return (
@@ -30,40 +64,52 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
 
   const generateSummary = async () => {
     setIsGenerating(true);
+    setSummary('');
+
+    const cumulativeNodes = getCumulativeTechNodes(monthData.year, monthData.month);
+
+    const activeNodes = cumulativeNodes.filter(node => {
+      const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      return status !== 'not-started' && status !== 'r-and-d';
+    });
+
+    const lifeVariableImpacts = new Map<string, number>();
+    activeNodes.forEach(node => {
+      node.tags.forEach(tag => {
+        lifeVariableImpacts.set(tag, (lifeVariableImpacts.get(tag) || 0) + 1);
+      });
+    });
+
+    const topImpacts = Array.from(lifeVariableImpacts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([tag]) => tag);
+
+    const statusBreakdown = activeNodes.reduce((acc, node) => {
+      const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {} as Record<TechTreeStatus, number>);
+
+    const monthLabel = new Date(monthData.year, monthData.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const activeNodesList = activeNodes
+      .slice(0, 20)
+      .map(n => `- ${n.title} (${getNodeStatusForDate(techStates, n.id, monthData.year, monthData.month, 'pilot')})`)
+      .join('\n');
+    const statusList = Object.entries(statusBreakdown).map(([status, count]) => `- ${status}: ${count} breakthroughs`).join('\n');
+    const topImpactsList = topImpacts.join(', ');
+    const predictionsList = monthData.predictions.slice(0, 3).map(p => `- ${p.title}`).join('\n');
+
+    const context: SummaryContext = {
+      monthLabel,
+      activeNodes,
+      activeNodesList,
+      statusList,
+      topImpactsList,
+      predictionsList,
+    };
+
     try {
-      const cumulativeNodes = getCumulativeTechNodes(monthData.year, monthData.month);
-      
-      const activeNodes = cumulativeNodes.filter(node => {
-        const state = techStates?.find(s => s.nodeId === node.id);
-        const status = state?.status || 'not-started';
-        return status !== 'not-started' && status !== 'r-and-d';
-      });
-
-      const lifeVariableImpacts = new Map<string, number>();
-      activeNodes.forEach(node => {
-        node.tags.forEach(tag => {
-          lifeVariableImpacts.set(tag, (lifeVariableImpacts.get(tag) || 0) + 1);
-        });
-      });
-
-      const topImpacts = Array.from(lifeVariableImpacts.entries())
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
-        .map(([tag]) => tag);
-
-      const statusBreakdown = activeNodes.reduce((acc, node) => {
-        const state = techStates?.find(s => s.nodeId === node.id);
-        const status = state?.status || 'not-started';
-        acc[status] = (acc[status] || 0) + 1;
-        return acc;
-      }, {} as Record<TechTreeStatus, number>);
-
-      const monthLabel = new Date(monthData.year, monthData.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      const activeNodesList = activeNodes.slice(0, 20).map(n => `- ${n.title} (${techStates?.find(s => s.nodeId === n.id)?.status || 'pilot'})`).join('\n');
-      const statusList = Object.entries(statusBreakdown).map(([status, count]) => `- ${status}: ${count} breakthroughs`).join('\n');
-      const topImpactsList = topImpacts.join(', ');
-      const predictionsList = monthData.predictions.slice(0, 3).map(p => `- ${p.title}`).join('\n');
-
       const promptText = `You are a futurist writing a vivid "lived experience" narrative for someone living in ${monthLabel}.
 
 Based on the following technological breakthroughs that have occurred or are underway, write a compelling 3-4 paragraph narrative describing what daily life is like for an average person in a developed country.
@@ -88,12 +134,30 @@ Write in second person ("you wake up...", "your morning starts...") and make it 
 
 Be specific about technologies in use but keep the tone human and relatable. Aim for 300-400 words.`;
 
-      const result = await window.spark.llm(promptText, 'gpt-4o');
-      setSummary(result);
-      toast.success('Lived experience summary generated');
+      const sparkLlm = window.spark?.llm;
+
+      if (!sparkLlm) {
+        const fallback = buildFallbackSummary(context);
+        setSummary(fallback);
+        toast.warning('AI helper unavailable. Showing synthesized summary instead.');
+        return;
+      }
+
+      const aiSummary = await sparkLlm(promptText, 'gpt-4o');
+
+      if (aiSummary) {
+        setSummary(aiSummary);
+        toast.success('Lived experience summary generated');
+      } else {
+        const fallback = buildFallbackSummary(context);
+        setSummary(fallback);
+        toast.warning('Using offline summary while AI is unavailable');
+      }
     } catch (error) {
       console.error('Error generating summary:', error);
-      toast.error('Failed to generate summary');
+      const fallback = buildFallbackSummary(context);
+      setSummary(fallback);
+      toast.error('Failed to generate summary with AI. Showing synthesized version instead');
     } finally {
       setIsGenerating(false);
     }
