@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { TechTreeState, TechTreeStatus, MonthData } from '@/lib/types';
-import { getCumulativeTechNodes } from '@/lib/tech-tree';
+import { getCumulativeTechNodes, getNodeStatusForDate } from '@/lib/tech-tree';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
