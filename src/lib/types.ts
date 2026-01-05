@@ -96,5 +96,7 @@ export interface TechTreeNode {
 export interface TechTreeState {
   nodeId: string;
   status: TechTreeStatus;
+  effectiveYear?: number;
+  effectiveMonth?: number;
   updatedAt: number;
 }
