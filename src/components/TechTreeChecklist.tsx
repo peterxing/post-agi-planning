@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { TechTreeNode, TechTreeState, TechTreeStatus } from '@/lib/types';
-import { getCumulativeTechNodes } from '@/lib/tech-tree';
+import { getCumulativeTechNodes, getNodeStatusForDate } from '@/lib/tech-tree';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -47,14 +47,19 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   }, {} as Record<string, TechTreeNode[]>);
 
   const getNodeStatus = (nodeId: string): TechTreeStatus => {
-    const state = techStates?.find(s => s.nodeId === nodeId);
-    return state?.status || 'not-started';
+    return getNodeStatusForDate(techStates, nodeId, year, month, 'not-started');
   };
 
   const updateNodeStatus = (nodeId: string, status: TechTreeStatus) => {
     setTechStates(current => {
-      const filtered = (current || []).filter(s => s.nodeId !== nodeId);
-      return [...filtered, { nodeId, status, updatedAt: Date.now() }];
+      const filtered = (current || []).filter(
+        s => !(s.nodeId === nodeId && s.effectiveYear === year && s.effectiveMonth === month)
+      );
+
+      return [
+        ...filtered,
+        { nodeId, status, effectiveYear: year, effectiveMonth: month, updatedAt: Date.now() },
+      ];
     });
   };
 

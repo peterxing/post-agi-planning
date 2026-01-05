@@ -1,4 +1,4 @@
-import type { TechTreeNode } from './types';
+import type { TechTreeNode, TechTreeState, TechTreeStatus } from './types';
 
 export const TECH_TREE_NODES: TechTreeNode[] = [
   {
@@ -541,4 +541,41 @@ export function getAllNodesGroupedByCategory() {
 
 export function getCumulativeTechNodes(year: number, month: number): TechTreeNode[] {
   return getNodesUpToMonth(year, month);
+}
+
+const toMonthIndex = (year: number, month: number) => year * 12 + month;
+
+export function getNodeStatusForDate(
+  states: TechTreeState[] | undefined,
+  nodeId: string,
+  year: number,
+  month: number,
+  fallback: TechTreeStatus = 'not-started'
+): TechTreeStatus {
+  const targetIndex = toMonthIndex(year, month);
+
+  const applicableStates = (states || []).filter((state) => {
+    if (state.nodeId !== nodeId) return false;
+    if (state.effectiveYear == null || state.effectiveMonth == null) return true;
+
+    return toMonthIndex(state.effectiveYear, state.effectiveMonth) <= targetIndex;
+  });
+
+  if (!applicableStates.length) return fallback;
+
+  const latest = applicableStates.sort((a, b) => {
+    const aIndex =
+      a.effectiveYear == null || a.effectiveMonth == null
+        ? -Infinity
+        : toMonthIndex(a.effectiveYear, a.effectiveMonth);
+    const bIndex =
+      b.effectiveYear == null || b.effectiveMonth == null
+        ? -Infinity
+        : toMonthIndex(b.effectiveYear, b.effectiveMonth);
+
+    if (aIndex !== bIndex) return aIndex - bIndex;
+    return (a.updatedAt || 0) - (b.updatedAt || 0);
+  })[applicableStates.length - 1];
+
+  return latest.status;
 }
