@@ -126,15 +126,6 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
     upsertTechTreeState(supabaseConfig, userInstanceId, nextState).catch(error => {
       const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
       toast.error('Failed to store selection', { description });
-    setTechStates(current => {
-      const filtered = (current || []).filter(
-        s => !(s.nodeId === nodeId && s.effectiveYear === year && s.effectiveMonth === month)
-      );
-
-      return [
-        ...filtered,
-        { nodeId, status, effectiveYear: year, effectiveMonth: month, updatedAt: Date.now() },
-      ];
     });
   };
 
