@@ -31,11 +31,13 @@ const buildFallbackSummary = (context: SummaryContext) => {
   const techLine = activeNodesList
     ? `Technologies such as ${notableTech} quietly hum in the background, stitched together by steady deployment teams.`
     : `Even without a single headline technology, your devices quietly coordinate the day in ways that would have felt uncanny a few years ago.`;
+  const headlinePredictions = predictionsList || 'incremental signals rather than headline breakthroughs';
 
   return [
     `It's ${monthLabel}, and your day is quietly shaped by ${notableTech}. You wake to a home that already knows your schedule, adjusts the lights, and queues up a breakfast that matches your health preferences. Commuting is less stressful as automation handles most logistics, letting you reclaim mental space for reflection.`,
     `Work has become a conversation with systems rather than a grind through interfaces. Agents prepare briefs and drafts, leaving you to edit and steer. Collaboration happens asynchronously with teammates and their tools, and the biggest change is how quickly ideas turn into tested pilots. The focus areas that feel most different are ${focusAreas}.`,
     `Social life keeps pace with the technology curve. Some interactions feel hyper-mediated, but there is still novelty in the way gatherings blend physical and digital presence. ${predictionLine} ${techLine} The month feels like a waypoint rather than a destination.`,
+    `Social life keeps pace with the technology curve. Some interactions feel hyper-mediated, but there is still novelty in the way gatherings blend physical and digital presence. Headlines for the month point toward ${headlinePredictions}, reminding you that the present is a moving target.`,
   ].join('\n\n');
 };
 
@@ -71,6 +73,8 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
 
     const activeNodes = cumulativeNodes.filter(node => {
       const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      const state = techStates?.find(s => s.nodeId === node.id);
+      const status = state?.status || 'not-started';
       return status !== 'not-started' && status !== 'r-and-d';
     });
 
@@ -88,6 +92,8 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
 
     const statusBreakdown = activeNodes.reduce((acc, node) => {
       const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      const state = techStates?.find(s => s.nodeId === node.id);
+      const status = state?.status || 'not-started';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {} as Record<TechTreeStatus, number>);
@@ -97,6 +103,7 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
       .slice(0, 20)
       .map(n => `- ${n.title} (${getNodeStatusForDate(techStates, n.id, monthData.year, monthData.month, 'pilot')})`)
       .join('\n');
+    const activeNodesList = activeNodes.slice(0, 20).map(n => `- ${n.title} (${techStates?.find(s => s.nodeId === n.id)?.status || 'pilot'})`).join('\n');
     const statusList = Object.entries(statusBreakdown).map(([status, count]) => `- ${status}: ${count} breakthroughs`).join('\n');
     const topImpactsList = topImpacts.join(', ');
     const predictionsList = monthData.predictions.slice(0, 3).map(p => `- ${p.title}`).join('\n');
@@ -136,6 +143,7 @@ Write in second person ("you wake up...", "your morning starts...") and make it 
 Be specific about technologies in use but keep the tone human and relatable. Aim for 300-400 words.`;
 
       const aiSummary = await generateSparkText(promptText, 'gpt-4o');
+      const aiSummary = await window.spark?.llm?.(promptText, 'gpt-4o');
 
       if (aiSummary) {
         setSummary(aiSummary);
