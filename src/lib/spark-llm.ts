@@ -38,6 +38,8 @@ const normalizeSparkOutput = (raw: unknown): string | null => {
 };
 
 export async function generateSparkText(prompt: string, model = 'gpt-4o'): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+
   const spark = (window as any)?.spark;
 
   if (!spark) return null;
