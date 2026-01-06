@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import type { MonthData, Domain } from '@/lib/types';
 import { getMonthName, DOMAIN_LABELS } from '@/lib/predictions';
 import { Brain, ArrowsClockwise } from '@phosphor-icons/react';
+import { generateSparkText } from '@/lib/spark-llm';
 
 interface NarrativeDialogProps {
   open: boolean;
@@ -71,8 +72,8 @@ Write a vivid 2-3 paragraph narrative describing what daily life might feel like
 
 Make it personal, sensory, and grounded. Avoid generic statements. This should read like a dispatch from the future.`;
 
-      const result = await window.spark.llm(promptText, 'gpt-4o');
-      setNarrative(result);
+      const result = await generateSparkText(promptText, 'gpt-4o');
+      setNarrative(result || 'Unable to generate narrative. Please try again.');
     } catch (error) {
       setNarrative('Unable to generate narrative. Please try again.');
     } finally {
