@@ -103,15 +103,29 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   };
 
   const updateNodeStatus = (nodeId: string, status: TechTreeStatus) => {
-    setTechStates(current => {
-      const filtered = (current || []).filter(
-        s => !(s.nodeId === nodeId && s.effectiveYear === year && s.effectiveMonth === month)
-      );
+    const nextState: TechTreeState = {
+      nodeId,
+      status,
+      effectiveYear: year,
+      effectiveMonth: month,
+      updatedAt: Date.now(),
+    };
 
-      return [
-        ...filtered,
-        { nodeId, status, effectiveYear: year, effectiveMonth: month, updatedAt: Date.now() },
-      ];
+    setTechStates(current => mergeStates(current || [], [nextState]));
+
+    if (!supabaseConfig || !userInstanceId) {
+      if (!warnedAboutLocalOnly) {
+        setWarnedAboutLocalOnly(true);
+        toast.message('Selections saved locally', {
+          description: 'Add Supabase env vars to sync selections per user.',
+        });
+      }
+      return;
+    }
+
+    upsertTechTreeState(supabaseConfig, userInstanceId, nextState).catch(error => {
+      const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      toast.error('Failed to store selection', { description });
     });
   };
 
