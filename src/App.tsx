@@ -189,13 +189,7 @@ function App() {
             </TabsContent>
 
             <TabsContent value="lived" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <TechTreeChecklist
-                  year={selectedMonth?.year || currentYear}
-                  month={selectedMonth?.month || new Date().getMonth()}
-                />
-                <LivedExperienceSummary monthData={selectedMonth} />
-              </div>
+              <LivedExperienceSummary monthData={selectedMonth} />
             </TabsContent>
 
             <TabsContent value="goals">
