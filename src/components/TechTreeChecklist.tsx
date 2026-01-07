@@ -67,7 +67,7 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['individual']);
   const [warnedAboutLocalOnly, setWarnedAboutLocalOnly] = useState(false);
   const supabaseConfig = useMemo(() => getSupabaseConfig(), []);
-  const [userInstanceId, setUserInstanceId] = useState<string | null>(null);
+  const [userInstanceId, setUserInstanceId] = useState<string | null>(() => getUserInstanceId());
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -172,7 +172,9 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
       if (!warnedAboutLocalOnly) {
         setWarnedAboutLocalOnly(true);
         toast.message('Selections saved locally', {
-          description: 'Add Supabase env vars to sync selections per user.',
+          description: supabaseConfig
+            ? 'Sign in with Supabase to sync selections per user.'
+            : 'Supabase is not configured, so selections stay on this device.',
         });
       }
       return;

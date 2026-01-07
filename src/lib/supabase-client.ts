@@ -40,8 +40,12 @@ export function getSupabaseConfig(): SupabaseConfig | null {
     w?.env?.NEXT_PUBLIC_SUPABASE_OAUTH_PROVIDER ||
     'github';
 
-  if (!url || !anonKey) return null;
-  return { url, anonKey, oauthProvider };
+  const resolvedUrl = url || 'https://kpcdcpnwvemeqedtvnsd.supabase.co';
+  const resolvedKey =
+    anonKey || 'sb_publishable_MNUopX7S_p-eaTnKcQ8a2g_1nZdZU1i';
+
+  if (!resolvedUrl || !resolvedKey) return null;
+  return { url: resolvedUrl, anonKey: resolvedKey, oauthProvider };
 }
 
 export function getUserInstanceId(): string | null {
