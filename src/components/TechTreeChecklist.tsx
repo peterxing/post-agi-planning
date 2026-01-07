@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { CheckCircle, Circle, Flask, Users, Rocket, Globe, Lock } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import {
@@ -189,6 +190,41 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
             </div>
           </div>
         </div>
+
+        {supabaseConfig && (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/20 px-3 py-2 text-xs">
+            <div className="text-muted-foreground">
+              {authUserId
+                ? `Signed in to Supabase as ${authUserId.slice(0, 8)}…`
+                : 'Sign in with Supabase to sync selections across devices.'}
+            </div>
+            <div className="flex items-center gap-2">
+              {authUserId ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    clearSupabaseAuthSession();
+                    setAuthUserId(null);
+                    setUserInstanceId(getUserInstanceId());
+                    toast.message('Signed out of Supabase');
+                  }}
+                >
+                  Sign out
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    startSupabaseOAuth(supabaseConfig);
+                  }}
+                >
+                  Sign in with {supabaseConfig.oauthProvider || 'GitHub'}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {Object.entries(STATUS_CONFIG).slice(1).map(([status, config]) => {
