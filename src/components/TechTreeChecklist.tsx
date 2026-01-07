@@ -11,15 +11,9 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Circle, Flask, Users, Rocket, Globe, Lock } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import {
-  clearSupabaseAuthSession,
-  consumeSupabaseOAuthError,
-  consumeSupabaseOAuthRedirect,
   fetchTechTreeStates,
   getSupabaseConfig,
-  getSupabaseAuthUserId,
   getUserInstanceId,
-  refreshSupabaseAuthUserId,
-  startSupabaseOAuth,
   SupabaseRestError,
   upsertTechTreeState,
 } from '@/lib/supabase-client';
@@ -70,22 +64,6 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   const [warnedAboutLocalOnly, setWarnedAboutLocalOnly] = useState(false);
   const supabaseConfig = useMemo(() => getSupabaseConfig(), []);
   const [userInstanceId, setUserInstanceId] = useState<string | null>(() => getUserInstanceId());
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const authError = consumeSupabaseOAuthError();
-    if (authError) {
-      toast.error('Supabase sign-in failed', {
-        description: authError,
-      });
-    }
-
-    consumeSupabaseOAuthRedirect();
-    const cached = getSupabaseAuthUserId();
-    if (cached) {
-      setAuthUserId(cached);
-    }
-  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -96,24 +74,6 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
         if (!isCancelled) {
           setUserInstanceId(fallback);
         }
-        return;
-      }
-
-      const cachedUserId = getSupabaseAuthUserId();
-      if (cachedUserId) {
-        if (!isCancelled) {
-          setAuthUserId(cachedUserId);
-          setUserInstanceId(cachedUserId);
-        }
-        return;
-      }
-
-      const remoteUserId = await refreshSupabaseAuthUserId(supabaseConfig);
-      if (isCancelled) return;
-
-      if (remoteUserId) {
-        setAuthUserId(remoteUserId);
-        setUserInstanceId(remoteUserId);
         return;
       }
 

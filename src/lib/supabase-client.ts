@@ -1,9 +1,6 @@
 import type { TechTreeState } from './types';
 
 const LOCAL_USER_KEY = 'rehoboam-user-instance';
-const SUPABASE_AUTH_TOKEN_KEY = 'rehoboam-supabase-auth-token';
-const SUPABASE_AUTH_USER_KEY = 'rehoboam-supabase-user-id';
-
 export class SupabaseRestError extends Error {
   code?: string;
   details?: string | null;
@@ -21,7 +18,6 @@ export class SupabaseRestError extends Error {
 interface SupabaseConfig {
   url: string;
   anonKey: string;
-  oauthProvider?: string;
 }
 
 interface TechTreeStateRow {
@@ -47,19 +43,12 @@ export function getSupabaseConfig(): SupabaseConfig | null {
     import.meta?.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
     w?.env?.SUPABASE_ANON_KEY ||
     w?.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
-  const oauthProvider =
-    import.meta?.env?.VITE_SUPABASE_OAUTH_PROVIDER ||
-    import.meta?.env?.NEXT_PUBLIC_SUPABASE_OAUTH_PROVIDER ||
-    w?.env?.SUPABASE_OAUTH_PROVIDER ||
-    w?.env?.NEXT_PUBLIC_SUPABASE_OAUTH_PROVIDER ||
-    'github';
-
   const resolvedUrl = url || 'https://kpcdcpnwvemeqedtvnsd.supabase.co';
   const resolvedKey =
     anonKey || 'sb_publishable_MNUopX7S_p-eaTnKcQ8a2g_1nZdZU1i';
 
   if (!resolvedUrl || !resolvedKey) return null;
-  return { url: resolvedUrl, anonKey: resolvedKey, oauthProvider };
+  return { url: resolvedUrl, anonKey: resolvedKey };
 }
 
 export function getUserInstanceId(): string | null {
@@ -82,148 +71,6 @@ export function getUserInstanceId(): string | null {
   }
 }
 
-export function consumeSupabaseOAuthRedirect(): boolean {
-  const w = ensureWindow();
-  if (!w?.location?.hash) return false;
-
-  const params = new URLSearchParams(w.location.hash.replace(/^#/, ''));
-  const accessToken = params.get('access_token');
-  if (!accessToken) return false;
-
-  const expiresIn = params.get('expires_in');
-  const tokenType = params.get('token_type') || undefined;
-  const refreshToken = params.get('refresh_token') || undefined;
-  const expiresAt = expiresIn ? Date.now() + Number(expiresIn) * 1000 : undefined;
-
-  const session = {
-    accessToken,
-    tokenType,
-    refreshToken,
-    expiresAt,
-  };
-
-  try {
-    w.localStorage?.setItem(SUPABASE_AUTH_TOKEN_KEY, JSON.stringify(session));
-  } catch {
-    return false;
-  }
-
-  w.history?.replaceState?.(null, '', w.location.pathname + w.location.search);
-  return true;
-}
-
-export function consumeSupabaseOAuthError(): string | null {
-  const w = ensureWindow();
-  if (!w?.location?.hash) return null;
-
-  const params = new URLSearchParams(w.location.hash.replace(/^#/, ''));
-  const error = params.get('error');
-  const errorDescription = params.get('error_description');
-  const errorCode = params.get('error_code');
-
-  if (!error && !errorDescription) return null;
-
-  w.history?.replaceState?.(null, '', w.location.pathname + w.location.search);
-
-  if (errorCode || error) {
-    return `${errorCode || error}${errorDescription ? `: ${errorDescription}` : ''}`;
-  }
-
-  return errorDescription || 'Supabase authentication failed.';
-}
-
-export function getSupabaseAuthSession(): {
-  accessToken: string;
-  tokenType?: string;
-  refreshToken?: string;
-  expiresAt?: number;
-} | null {
-  const w = ensureWindow();
-  if (!w) return null;
-  try {
-    const raw = w.localStorage?.getItem(SUPABASE_AUTH_TOKEN_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-export function clearSupabaseAuthSession(): void {
-  const w = ensureWindow();
-  if (!w) return;
-  try {
-    w.localStorage?.removeItem(SUPABASE_AUTH_TOKEN_KEY);
-    w.localStorage?.removeItem(SUPABASE_AUTH_USER_KEY);
-  } catch {
-    return;
-  }
-}
-
-export function getSupabaseAuthUserId(): string | null {
-  const w = ensureWindow();
-  if (!w) return null;
-  try {
-    return w.localStorage?.getItem(SUPABASE_AUTH_USER_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export async function refreshSupabaseAuthUserId(
-  config: SupabaseConfig
-): Promise<string | null> {
-  const session = getSupabaseAuthSession();
-  if (!session?.accessToken) return null;
-  if (session.expiresAt && session.expiresAt <= Date.now()) {
-    clearSupabaseAuthSession();
-    return null;
-  }
-
-  const response = await fetch(`${config.url}/auth/v1/user`, {
-    headers: {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${session.accessToken}`,
-      Accept: 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    return null;
-  }
-
-  const data = (await response.json()) as { id?: string };
-  if (!data?.id) return null;
-
-  const w = ensureWindow();
-  try {
-    w?.localStorage?.setItem(SUPABASE_AUTH_USER_KEY, data.id);
-  } catch {
-    return data.id;
-  }
-
-  return data.id;
-}
-
-export function getSupabaseOAuthUrl(config: SupabaseConfig, redirectTo?: string): string {
-  const w = ensureWindow();
-  const redirect = redirectTo || w?.location?.href || '';
-  const provider = config.oauthProvider || 'github';
-  const params = new URLSearchParams({
-    provider,
-    redirect_to: redirect,
-    response_type: 'token',
-  });
-  return `${config.url}/auth/v1/authorize?${params.toString()}`;
-}
-
-export function startSupabaseOAuth(config: SupabaseConfig, redirectTo?: string): void {
-  const w = ensureWindow();
-  if (!w) return;
-  const url = getSupabaseOAuthUrl(config, redirectTo);
-  w.location.assign(url);
-}
-
 function mapRowToState(row: TechTreeStateRow): TechTreeState {
   return {
     nodeId: row.node_id,
@@ -235,14 +82,6 @@ function mapRowToState(row: TechTreeStateRow): TechTreeState {
 }
 
 function getSupabaseAuthHeaders(config: SupabaseConfig): Record<string, string> {
-  const session = getSupabaseAuthSession();
-  if (session?.accessToken && (!session.expiresAt || session.expiresAt > Date.now())) {
-    return {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${session.accessToken}`,
-    };
-  }
-
   return {
     apikey: config.anonKey,
     Authorization: `Bearer ${config.anonKey}`,
