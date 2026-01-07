@@ -66,20 +66,6 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   const [userInstanceId, setUserInstanceId] = useState<string | null>(() => getUserInstanceId());
 
   useEffect(() => {
-    const legacyLabels = [
-      'Sign in with GitHub',
-      'Sign in with Supabase to sync selections across devices.',
-    ];
-    const candidates = Array.from(document.querySelectorAll('button, a, div, p'));
-    candidates.forEach((node) => {
-      const text = node.textContent?.trim();
-      if (text && legacyLabels.some(label => text.includes(label))) {
-        (node as HTMLElement).style.display = 'none';
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     let isCancelled = false;
 
     const resolveUser = async () => {
