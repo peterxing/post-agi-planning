@@ -145,14 +145,20 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
       if (!warnedAboutLocalOnly) {
         setWarnedAboutLocalOnly(true);
         toast.message('Selections saved locally', {
-          description: 'Add Supabase env vars to sync selections per user.',
+          description: supabaseConfig
+            ? 'Supabase sync is unavailable for this session, so selections stay on this device.'
+            : 'Supabase is not configured, so selections stay on this device.',
         });
       }
       return;
     }
 
     upsertTechTreeState(supabaseConfig, userInstanceId, nextState).catch(error => {
-      const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      let description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      if (error instanceof SupabaseRestError && error.code === 'PGRST205') {
+        description =
+          'Create the public.tech_tree_states table (scripts/supabase-tech-tree.sql) and reload the Supabase API schema cache.';
+      }
       toast.error('Failed to store selection', { description });
     });
   };

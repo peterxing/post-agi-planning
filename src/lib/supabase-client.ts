@@ -156,12 +156,69 @@ export async function upsertTechTreeState(
     updated_at: new Date(state.updatedAt).toISOString(),
   }];
 
-  const response = await fetch(`${config.url}/rest/v1/tech_tree_states`, {
-    method: 'POST',
+  const response = await fetch(
+    `${config.url}/rest/v1/tech_tree_states?on_conflict=user_id,node_id,effective_year,effective_month`,
+    {
+      method: 'POST',
+      headers: {
+        ...getSupabaseAuthHeaders(config),
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal,resolution=merge-duplicates',
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await parseSupabaseError(response);
+    if (error.code === '23505' || error.message.includes('duplicate key')) {
+      await updateTechTreeState(config, userId, state);
+      return;
+    }
+    throw error;
+  }
+}
+
+function buildTechTreeFilters(userId: string, state: TechTreeState): string {
+  const params = new URLSearchParams({
+    user_id: `eq.${userId}`,
+    node_id: `eq.${state.nodeId}`,
+  });
+
+  if (state.effectiveYear == null) {
+    params.set('effective_year', 'is.null');
+  } else {
+    params.set('effective_year', `eq.${state.effectiveYear}`);
+  }
+
+  if (state.effectiveMonth == null) {
+    params.set('effective_month', 'is.null');
+  } else {
+    params.set('effective_month', `eq.${state.effectiveMonth}`);
+  }
+
+  return params.toString();
+}
+
+async function updateTechTreeState(
+  config: SupabaseConfig,
+  userId: string,
+  state: TechTreeState
+): Promise<void> {
+  const filters = buildTechTreeFilters(userId, state);
+  const payload = {
+    status: state.status,
+    effective_year: state.effectiveYear ?? null,
+    effective_month: state.effectiveMonth ?? null,
+    updated_at: new Date(state.updatedAt).toISOString(),
+  };
+
+  const response = await fetch(`${config.url}/rest/v1/tech_tree_states?${filters}`, {
+    method: 'PATCH',
     headers: {
       ...getSupabaseAuthHeaders(config),
       'Content-Type': 'application/json',
-      Prefer: 'return=minimal,resolution=merge-duplicates',
+      Prefer: 'return=minimal',
     },
     body: JSON.stringify(payload),
   });
