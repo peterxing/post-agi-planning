@@ -9,6 +9,8 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
+(window as any).authUserId ??= null
+
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <App />

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { Domain, MonthData, Goal, Prediction } from '@/lib/types';
-import { generateTimelineData } from '@/lib/predictions';
+import { generateTimelineData, getPredictionYearRange } from '@/lib/predictions';
 import { CircularTimeline } from '@/components/CircularTimeline';
 import { LinearTimeline } from '@/components/LinearTimeline';
 import { DomainSelector } from '@/components/DomainSelector';
@@ -28,9 +28,11 @@ function App() {
   const [goals, setGoals] = useKV<Goal[]>('rehoboam-goals', []);
 
   useEffect(() => {
-    const data = generateTimelineData(currentYear, currentYear + 10);
+    const { minYear, maxYear } = getPredictionYearRange();
+    const endYear = Math.max(maxYear, minYear + 10);
+    const data = generateTimelineData(minYear, endYear);
     setTimelineData(data);
-  }, [currentYear]);
+  }, []);
 
   const handleDomainToggle = (domain: Domain) => {
     setActiveDomains((prev) =>
