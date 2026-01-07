@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { TechTreeNode, TechTreeState, TechTreeStatus } from '@/lib/types';
-import { getCumulativeTechNodes } from '@/lib/tech-tree';
+import { getCumulativeTechNodes, getNodeStatusForDate } from '@/lib/tech-tree';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { CheckCircle, Circle, Flask, Users, Rocket, Globe, Lock } from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import {
+  clearSupabaseAuthSession,
+  consumeSupabaseOAuthRedirect,
+  fetchTechTreeStates,
+  getSupabaseConfig,
+  getSupabaseAuthUserId,
+  getUserInstanceId,
+  refreshSupabaseAuthUserId,
+  startSupabaseOAuth,
+  upsertTechTreeState,
+} from '@/lib/supabase-client';
 
 interface TechTreeChecklistProps {
   year: number;
@@ -32,9 +45,103 @@ const CATEGORY_LABELS = {
   geopolitics: 'Geopolitics',
 };
 
+const mergeStates = (existing: TechTreeState[], incoming: TechTreeState[]) => {
+  const byKey = new Map<string, TechTreeState>();
+
+  const pushState = (state: TechTreeState) => {
+    const key = `${state.nodeId}-${state.effectiveYear ?? 'all'}-${state.effectiveMonth ?? 'all'}`;
+    const current = byKey.get(key);
+    if (!current || current.updatedAt < state.updatedAt) {
+      byKey.set(key, state);
+    }
+  };
+
+  (existing || []).forEach(pushState);
+  (incoming || []).forEach(pushState);
+
+  return Array.from(byKey.values()).sort((a, b) => a.updatedAt - b.updatedAt);
+};
+
 export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   const [techStates, setTechStates] = useKV<TechTreeState[]>('tech-tree-states', []);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['individual']);
+  const [warnedAboutLocalOnly, setWarnedAboutLocalOnly] = useState(false);
+  const supabaseConfig = useMemo(() => getSupabaseConfig(), []);
+  const [userInstanceId, setUserInstanceId] = useState<string | null>(() => getUserInstanceId());
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    consumeSupabaseOAuthRedirect();
+    const cached = getSupabaseAuthUserId();
+    if (cached) {
+      setAuthUserId(cached);
+    }
+  }, []);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const resolveUser = async () => {
+      if (!supabaseConfig) {
+        const fallback = getUserInstanceId();
+        if (!isCancelled) {
+          setUserInstanceId(fallback);
+        }
+        return;
+      }
+
+      const cachedUserId = getSupabaseAuthUserId();
+      if (cachedUserId) {
+        if (!isCancelled) {
+          setAuthUserId(cachedUserId);
+          setUserInstanceId(cachedUserId);
+        }
+        return;
+      }
+
+      const remoteUserId = await refreshSupabaseAuthUserId(supabaseConfig);
+      if (isCancelled) return;
+
+      if (remoteUserId) {
+        setAuthUserId(remoteUserId);
+        setUserInstanceId(remoteUserId);
+        return;
+      }
+
+      setUserInstanceId(getUserInstanceId());
+    };
+
+    resolveUser();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [supabaseConfig]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const pullRemoteState = async () => {
+      if (!supabaseConfig || !userInstanceId) return;
+
+      try {
+        const remote = await fetchTechTreeStates(supabaseConfig, userInstanceId);
+        if (isCancelled || !remote) return;
+
+        setTechStates(current => mergeStates(current || [], remote));
+      } catch (error) {
+        if (isCancelled) return;
+        const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+        toast.error('Failed to load saved tech selections', { description });
+      }
+    };
+
+    pullRemoteState();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [setTechStates, supabaseConfig, userInstanceId]);
 
   const cumulativeNodes = getCumulativeTechNodes(year, month);
 
@@ -47,14 +154,35 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   }, {} as Record<string, TechTreeNode[]>);
 
   const getNodeStatus = (nodeId: string): TechTreeStatus => {
-    const state = techStates?.find(s => s.nodeId === nodeId);
-    return state?.status || 'not-started';
+    return getNodeStatusForDate(techStates, nodeId, year, month, 'not-started');
   };
 
   const updateNodeStatus = (nodeId: string, status: TechTreeStatus) => {
-    setTechStates(current => {
-      const filtered = (current || []).filter(s => s.nodeId !== nodeId);
-      return [...filtered, { nodeId, status, updatedAt: Date.now() }];
+    const nextState: TechTreeState = {
+      nodeId,
+      status,
+      effectiveYear: year,
+      effectiveMonth: month,
+      updatedAt: Date.now(),
+    };
+
+    setTechStates(current => mergeStates(current || [], [nextState]));
+
+    if (!supabaseConfig || !userInstanceId) {
+      if (!warnedAboutLocalOnly) {
+        setWarnedAboutLocalOnly(true);
+        toast.message('Selections saved locally', {
+          description: supabaseConfig
+            ? 'Sign in with Supabase to sync selections per user.'
+            : 'Supabase is not configured, so selections stay on this device.',
+        });
+      }
+      return;
+    }
+
+    upsertTechTreeState(supabaseConfig, userInstanceId, nextState).catch(error => {
+      const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      toast.error('Failed to store selection', { description });
     });
   };
 
@@ -85,6 +213,41 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
             </div>
           </div>
         </div>
+
+        {supabaseConfig && (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/20 px-3 py-2 text-xs">
+            <div className="text-muted-foreground">
+              {authUserId
+                ? `Signed in to Supabase as ${authUserId.slice(0, 8)}…`
+                : 'Sign in with Supabase to sync selections across devices.'}
+            </div>
+            <div className="flex items-center gap-2">
+              {authUserId ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    clearSupabaseAuthSession();
+                    setAuthUserId(null);
+                    setUserInstanceId(getUserInstanceId());
+                    toast.message('Signed out of Supabase');
+                  }}
+                >
+                  Sign out
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    startSupabaseOAuth(supabaseConfig);
+                  }}
+                >
+                  Sign in with {supabaseConfig.oauthProvider || 'GitHub'}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {Object.entries(STATUS_CONFIG).slice(1).map(([status, config]) => {
