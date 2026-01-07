@@ -12,6 +12,7 @@ import { CheckCircle, Circle, Flask, Users, Rocket, Globe, Lock } from '@phospho
 import { toast } from 'sonner';
 import {
   clearSupabaseAuthSession,
+  consumeSupabaseOAuthError,
   consumeSupabaseOAuthRedirect,
   fetchTechTreeStates,
   getSupabaseConfig,
@@ -71,6 +72,13 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
   const [authUserId, setAuthUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    const authError = consumeSupabaseOAuthError();
+    if (authError) {
+      toast.error('Supabase sign-in failed', {
+        description: authError,
+      });
+    }
+
     consumeSupabaseOAuthRedirect();
     const cached = getSupabaseAuthUserId();
     if (cached) {

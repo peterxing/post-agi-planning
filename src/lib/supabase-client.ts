@@ -98,6 +98,26 @@ export function consumeSupabaseOAuthRedirect(): boolean {
   return true;
 }
 
+export function consumeSupabaseOAuthError(): string | null {
+  const w = ensureWindow();
+  if (!w?.location?.hash) return null;
+
+  const params = new URLSearchParams(w.location.hash.replace(/^#/, ''));
+  const error = params.get('error');
+  const errorDescription = params.get('error_description');
+  const errorCode = params.get('error_code');
+
+  if (!error && !errorDescription) return null;
+
+  w.history?.replaceState?.(null, '', w.location.pathname + w.location.search);
+
+  if (errorCode || error) {
+    return `${errorCode || error}${errorDescription ? `: ${errorDescription}` : ''}`;
+  }
+
+  return errorDescription || 'Supabase authentication failed.';
+}
+
 export function getSupabaseAuthSession(): {
   accessToken: string;
   tokenType?: string;

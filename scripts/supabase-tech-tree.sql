@@ -14,6 +14,8 @@ alter table public.tech_tree_states enable row level security;
 
 do $$
 begin
+  perform pg_notify('pgrst', 'reload schema');
+
   if not exists (
     select 1
     from pg_policies
