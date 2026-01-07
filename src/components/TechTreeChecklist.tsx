@@ -146,7 +146,7 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
         setWarnedAboutLocalOnly(true);
         toast.message('Selections saved locally', {
           description: supabaseConfig
-            ? 'Sign in with Supabase to sync selections per user.'
+            ? 'Supabase sync is unavailable for this session, so selections stay on this device.'
             : 'Supabase is not configured, so selections stay on this device.',
         });
       }
