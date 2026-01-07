@@ -1,6 +1,19 @@
 import type { TechTreeState } from './types';
 
 const LOCAL_USER_KEY = 'rehoboam-user-instance';
+export class SupabaseRestError extends Error {
+  code?: string;
+  details?: string | null;
+  hint?: string | null;
+
+  constructor(message: string, code?: string, details?: string | null, hint?: string | null) {
+    super(message);
+    this.name = 'SupabaseRestError';
+    this.code = code;
+    this.details = details ?? null;
+    this.hint = hint ?? null;
+  }
+}
 
 interface SupabaseConfig {
   url: string;
@@ -20,11 +33,22 @@ const ensureWindow = () => (typeof window === 'undefined' ? null : window as any
 
 export function getSupabaseConfig(): SupabaseConfig | null {
   const w = ensureWindow();
-  const url = import.meta?.env?.VITE_SUPABASE_URL || w?.env?.SUPABASE_URL;
-  const anonKey = import.meta?.env?.VITE_SUPABASE_ANON_KEY || w?.env?.SUPABASE_ANON_KEY;
+  const url =
+    import.meta?.env?.VITE_SUPABASE_URL ||
+    import.meta?.env?.NEXT_PUBLIC_SUPABASE_URL ||
+    w?.env?.SUPABASE_URL ||
+    w?.env?.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey =
+    import.meta?.env?.VITE_SUPABASE_ANON_KEY ||
+    import.meta?.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+    w?.env?.SUPABASE_ANON_KEY ||
+    w?.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
+  const resolvedUrl = url || 'https://kpcdcpnwvemeqedtvnsd.supabase.co';
+  const resolvedKey =
+    anonKey || 'sb_publishable_MNUopX7S_p-eaTnKcQ8a2g_1nZdZU1i';
 
-  if (!url || !anonKey) return null;
-  return { url, anonKey };
+  if (!resolvedUrl || !resolvedKey) return null;
+  return { url: resolvedUrl, anonKey: resolvedKey };
 }
 
 export function getUserInstanceId(): string | null {
@@ -57,6 +81,45 @@ function mapRowToState(row: TechTreeStateRow): TechTreeState {
   };
 }
 
+function getSupabaseAuthHeaders(config: SupabaseConfig): Record<string, string> {
+  return {
+    apikey: config.anonKey,
+    Authorization: `Bearer ${config.anonKey}`,
+  };
+}
+
+async function parseSupabaseError(response: Response): Promise<SupabaseRestError> {
+  let message = 'Supabase request failed';
+  let code: string | undefined;
+  let details: string | null | undefined;
+  let hint: string | null | undefined;
+
+  try {
+    const text = await response.text();
+    if (text) {
+      try {
+        const json = JSON.parse(text) as {
+          message?: string;
+          code?: string;
+          details?: string | null;
+          hint?: string | null;
+          error?: string;
+        };
+        message = json.message || json.error || message;
+        code = json.code;
+        details = json.details;
+        hint = json.hint;
+      } catch {
+        message = text;
+      }
+    }
+  } catch {
+    message = response.statusText || message;
+  }
+
+  return new SupabaseRestError(message, code, details, hint);
+}
+
 export async function fetchTechTreeStates(
   config: SupabaseConfig,
   userId: string
@@ -65,16 +128,14 @@ export async function fetchTechTreeStates(
     `${config.url}/rest/v1/tech_tree_states?user_id=eq.${encodeURIComponent(userId)}&select=node_id,status,effective_year,effective_month,updated_at`,
     {
       headers: {
-        apikey: config.anonKey,
-        Authorization: `Bearer ${config.anonKey}`,
+        ...getSupabaseAuthHeaders(config),
         Accept: 'application/json',
       },
     }
   );
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || 'Failed to load saved selections');
+    throw await parseSupabaseError(response);
   }
 
   const rows = (await response.json()) as TechTreeStateRow[];
@@ -98,8 +159,7 @@ export async function upsertTechTreeState(
   const response = await fetch(`${config.url}/rest/v1/tech_tree_states`, {
     method: 'POST',
     headers: {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${config.anonKey}`,
+      ...getSupabaseAuthHeaders(config),
       'Content-Type': 'application/json',
       Prefer: 'return=minimal,resolution=merge-duplicates',
     },
@@ -107,7 +167,6 @@ export async function upsertTechTreeState(
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || 'Failed to save selection');
+    throw await parseSupabaseError(response);
   }
 }
