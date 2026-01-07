@@ -4,6 +4,20 @@ const LOCAL_USER_KEY = 'rehoboam-user-instance';
 const SUPABASE_AUTH_TOKEN_KEY = 'rehoboam-supabase-auth-token';
 const SUPABASE_AUTH_USER_KEY = 'rehoboam-supabase-user-id';
 
+export class SupabaseRestError extends Error {
+  code?: string;
+  details?: string | null;
+  hint?: string | null;
+
+  constructor(message: string, code?: string, details?: string | null, hint?: string | null) {
+    super(message);
+    this.name = 'SupabaseRestError';
+    this.code = code;
+    this.details = details ?? null;
+    this.hint = hint ?? null;
+  }
+}
+
 interface SupabaseConfig {
   url: string;
   anonKey: string;
@@ -235,6 +249,38 @@ function getSupabaseAuthHeaders(config: SupabaseConfig): Record<string, string> 
   };
 }
 
+async function parseSupabaseError(response: Response): Promise<SupabaseRestError> {
+  let message = 'Supabase request failed';
+  let code: string | undefined;
+  let details: string | null | undefined;
+  let hint: string | null | undefined;
+
+  try {
+    const text = await response.text();
+    if (text) {
+      try {
+        const json = JSON.parse(text) as {
+          message?: string;
+          code?: string;
+          details?: string | null;
+          hint?: string | null;
+          error?: string;
+        };
+        message = json.message || json.error || message;
+        code = json.code;
+        details = json.details;
+        hint = json.hint;
+      } catch {
+        message = text;
+      }
+    }
+  } catch {
+    message = response.statusText || message;
+  }
+
+  return new SupabaseRestError(message, code, details, hint);
+}
+
 export async function fetchTechTreeStates(
   config: SupabaseConfig,
   userId: string
@@ -250,8 +296,7 @@ export async function fetchTechTreeStates(
   );
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || 'Failed to load saved selections');
+    throw await parseSupabaseError(response);
   }
 
   const rows = (await response.json()) as TechTreeStateRow[];
@@ -283,7 +328,6 @@ export async function upsertTechTreeState(
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || 'Failed to save selection');
+    throw await parseSupabaseError(response);
   }
 }

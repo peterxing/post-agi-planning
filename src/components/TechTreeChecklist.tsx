@@ -20,6 +20,7 @@ import {
   getUserInstanceId,
   refreshSupabaseAuthUserId,
   startSupabaseOAuth,
+  SupabaseRestError,
   upsertTechTreeState,
 } from '@/lib/supabase-client';
 
@@ -139,7 +140,11 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
         setTechStates(current => mergeStates(current || [], remote));
       } catch (error) {
         if (isCancelled) return;
-        const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+        let description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+        if (error instanceof SupabaseRestError && error.code === 'PGRST205') {
+          description =
+            'Create the public.tech_tree_states table (scripts/supabase-tech-tree.sql) and reload the Supabase API schema cache.';
+        }
         toast.error('Failed to load saved tech selections', { description });
       }
     };
@@ -189,7 +194,11 @@ export function TechTreeChecklist({ year, month }: TechTreeChecklistProps) {
     }
 
     upsertTechTreeState(supabaseConfig, userInstanceId, nextState).catch(error => {
-      const description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      let description = error instanceof Error ? error.message : 'Unable to reach Supabase';
+      if (error instanceof SupabaseRestError && error.code === 'PGRST205') {
+        description =
+          'Create the public.tech_tree_states table (scripts/supabase-tech-tree.sql) and reload the Supabase API schema cache.';
+      }
       toast.error('Failed to store selection', { description });
     });
   };
