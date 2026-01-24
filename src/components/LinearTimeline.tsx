@@ -47,6 +47,16 @@ export function LinearTimeline({
     }));
   }, [data, activeDomains]);
 
+  const getYearSummary = (year: number) => {
+    const yearPredictions = filteredData
+      .filter((monthData) => monthData.year === year)
+      .flatMap((monthData) => monthData.predictions);
+    const titles = Array.from(new Set(yearPredictions.map((prediction) => prediction.title)));
+    return titles.length > 0
+      ? `Predictions: ${titles.join(' • ')}`
+      : 'No predictions available for the selected domains.';
+  };
+
   const getYearHighlights = (year: number) => {
     const yearData = groupedByYear.get(year) || [];
     const allPredictions = yearData.flatMap((d) => d.predictions);
@@ -64,6 +74,7 @@ export function LinearTimeline({
         const highlights = getYearHighlights(year);
         const isExpanded = expandedYear === year;
         const yearGoals = goals.filter((g) => g.targetYear === year);
+        const yearSummary = getYearSummary(year);
 
         return (
           <motion.div
@@ -105,10 +116,10 @@ export function LinearTimeline({
                     {highlights.topPrediction && (
                       <div className="mt-3">
                         <p className="text-sm font-semibold text-foreground">
-                          {highlights.topPrediction.title}
+                          Year summary
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {highlights.topPrediction.description}
+                          {yearSummary}
                         </p>
                       </div>
                     )}
