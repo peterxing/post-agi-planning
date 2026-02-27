@@ -1,23 +1,83 @@
-# ✨ Welcome to Your Spark Template!
-You've just launched your brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
+# Post-AGI Planning
 
-This template is your blank canvas. It comes with a minimal setup to help you get started quickly with Spark development.
+A timeline planning app that combines:
 
-🚀 What's Inside?
-- A clean, minimal Spark environment
-- Pre-configured for local development
-- Ready to scale with your ideas
-  
-🧠 What Can You Do?
+- **Base forecast timeline** (AI Futures Model + Future Timeline style predictions)
+- **Live signal feed** from **X API** and **Polymarket API**
+- **Probability overlay engine** that shifts month/domain probabilities from incoming market + event signals
 
-Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
+---
 
-🧹 Just Exploring?
-No problem! If you were just checking things out and don’t need to keep this code:
+## What’s new in this update
 
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
+### 1) Live Signals Feed tab
+- New **Signals** tab shows significant events in near-real-time
+- Includes source, domain mapping, significance score, target month, and delta impact
+- Displays domain-level rollup of net pressure (`+/-` percentage points)
 
-📄 License For Spark Template Resources 
+### 2) Timeline probability impact overlay
+- Live signals now affect the timeline probabilities via bounded deltas
+- Effects decay over subsequent months (default 3-month horizon)
+- Signal items are also injected into month predictions as `[Signal] ...` entries with source links
 
-The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
+### 3) Signal ingestion pipeline
+- New script: `scripts/update-live-signals.mjs`
+- Pulls:
+  - **X API** (`/2/tweets/search/recent`) when `X_BEARER_TOKEN` is provided
+  - **Polymarket Gamma API** (`/markets`) for active AI-related markets
+- Writes snapshot to:
+  - `public/data/live-signals.json`
+
+---
+
+## Quick start
+
+```bash
+npm install
+npm run signals:update
+npm run dev
+```
+
+Open the app and go to the **Signals** tab.
+
+---
+
+## Environment variables
+
+Create a `.env` file (optional but recommended):
+
+```bash
+# Required for X ingestion
+X_BEARER_TOKEN=...
+
+# Optional tuning
+X_QUERY=(AGI OR ASI OR "artificial general intelligence" OR OpenAI OR Anthropic OR DeepMind OR xAI) lang:en -is:retweet
+X_MAX_RESULTS=40
+
+POLYMARKET_API_BASE=https://gamma-api.polymarket.com
+POLYMARKET_LIMIT=400
+
+SIGNAL_WINDOW_HOURS=24
+SIGNAL_MAX_ITEMS=120
+```
+
+If `X_BEARER_TOKEN` is missing, the script still runs and ingests Polymarket-only signals.
+
+---
+
+## NPM scripts
+
+```bash
+npm run dev
+npm run build
+npm run signals:update
+npm run signals:update:with-build
+```
+
+---
+
+## Notes
+
+- This is a **decision-support signal layer**, not an oracle.
+- Deltas are intentionally bounded to avoid runaway probability swings.
+- Improve calibration by tuning keyword maps, significance formulas, and per-domain weighting over time.

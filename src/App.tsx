@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { Domain, MonthData, Goal, Prediction } from '@/lib/types';
 import { generateTimelineData, getPredictionYearRange } from '@/lib/predictions';
+import { applySignalsToTimeline, loadLiveSignals, summarizeSignalImpact, type LiveSignal } from '@/lib/live-signals';
 import { CircularTimeline } from '@/components/CircularTimeline';
 import { LinearTimeline } from '@/components/LinearTimeline';
 import { DomainSelector } from '@/components/DomainSelector';
@@ -11,28 +12,59 @@ import { NarrativeDialog } from '@/components/NarrativeDialog';
 import { GoalsList } from '@/components/GoalsList';
 import { TechTreeChecklist } from '@/components/TechTreeChecklist';
 import { LivedExperienceSummary } from '@/components/LivedExperienceSummary';
+import { SignalFeedPanel } from '@/components/SignalFeedPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Brain } from '@phosphor-icons/react';
+import { Brain, Lightning } from '@phosphor-icons/react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 
 function App() {
   const currentYear = new Date().getFullYear();
-  const [timelineData, setTimelineData] = useState<MonthData[]>([]);
+  const [baseTimelineData, setBaseTimelineData] = useState<MonthData[]>([]);
   const [activeDomains, setActiveDomains] = useState<Domain[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<MonthData | null>(null);
   const [selectedPrediction, setSelectedPrediction] = useState<Prediction | null>(null);
   const [goalDialogOpen, setGoalDialogOpen] = useState(false);
   const [narrativeDialogOpen, setNarrativeDialogOpen] = useState(false);
   const [goals, setGoals] = useKV<Goal[]>('rehoboam-goals', []);
+  const [liveSignals, setLiveSignals] = useState<LiveSignal[]>([]);
+  const [signalsGeneratedAt, setSignalsGeneratedAt] = useState<string | null>(null);
+  const [sourceStatus, setSourceStatus] = useState<Record<string, string>>({});
+  const [signalsLoading, setSignalsLoading] = useState(false);
+  const [signalsError, setSignalsError] = useState<string | null>(null);
 
   useEffect(() => {
     const { minYear, maxYear } = getPredictionYearRange();
     const endYear = Math.max(maxYear, minYear + 10);
     const data = generateTimelineData(minYear, endYear);
-    setTimelineData(data);
+    setBaseTimelineData(data);
   }, []);
+
+  const refreshLiveSignals = useCallback(async () => {
+    setSignalsLoading(true);
+    try {
+      const snapshot = await loadLiveSignals();
+      setLiveSignals(snapshot.signals || []);
+      setSignalsGeneratedAt(snapshot.generatedAt || new Date().toISOString());
+      setSourceStatus(snapshot.sourceStatus || {});
+      setSignalsError(null);
+    } catch (error) {
+      setLiveSignals([]);
+      setSignalsError(error instanceof Error ? error.message : 'Unable to load live signals');
+    } finally {
+      setSignalsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshLiveSignals();
+    const intervalId = window.setInterval(refreshLiveSignals, 120000);
+    return () => window.clearInterval(intervalId);
+  }, [refreshLiveSignals]);
+
+  const timelineData = useMemo(() => applySignalsToTimeline(baseTimelineData, liveSignals), [baseTimelineData, liveSignals]);
+  const signalImpacts = useMemo(() => summarizeSignalImpact(liveSignals), [liveSignals]);
 
   const handleDomainToggle = (domain: Domain) => {
     setActiveDomains((prev) =>
@@ -45,7 +77,7 @@ function App() {
     setSelectedPrediction(null);
   };
 
-  const handleMonthHover = (monthData: MonthData | null) => {
+  const handleMonthHover = (_monthData: MonthData | null) => {
   };
 
   const handlePredictionSelect = (prediction: Prediction | null) => {
@@ -130,10 +162,30 @@ function App() {
             </div>
           </Card>
 
+          <Card className="p-4 bg-card/30 backdrop-blur-sm border-border/50">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-sm">
+                <Lightning className="text-primary" />
+                <span className="font-medium">Live signal overlay active</span>
+                <span className="text-muted-foreground">
+                  {liveSignals.length} signal{liveSignals.length === 1 ? '' : 's'} impacting timeline probabilities
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={refreshLiveSignals}
+                className="text-xs text-primary hover:underline"
+              >
+                Refresh feed
+              </button>
+            </div>
+          </Card>
+
           <Tabs defaultValue="linear" className="space-y-6">
-            <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-5">
+            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-6">
               <TabsTrigger value="linear">Timeline</TabsTrigger>
               <TabsTrigger value="circular">Circular</TabsTrigger>
+              <TabsTrigger value="signals">Signals ({liveSignals.length})</TabsTrigger>
               <TabsTrigger value="tech-tree">Tech Tree</TabsTrigger>
               <TabsTrigger value="lived">Experience</TabsTrigger>
               <TabsTrigger value="goals">Goals ({goals?.length || 0})</TabsTrigger>
@@ -181,6 +233,18 @@ function App() {
               </div>
             </TabsContent>
 
+            <TabsContent value="signals" className="space-y-6">
+              <SignalFeedPanel
+                signals={liveSignals}
+                generatedAt={signalsGeneratedAt}
+                sourceStatus={sourceStatus}
+                impacts={signalImpacts}
+                loading={signalsLoading}
+                error={signalsError}
+                onRefresh={refreshLiveSignals}
+              />
+            </TabsContent>
+
             <TabsContent value="tech-tree" className="space-y-6">
               <TechTreeChecklist
                 year={selectedMonth?.year || currentYear}
@@ -203,7 +267,8 @@ function App() {
 
           <footer className="text-center text-xs text-muted-foreground pt-8 border-t border-border/50">
             <p>
-              Predictions synthesized from AI Futures Model, Future Timeline, and forecasting research
+              Base predictions synthesized from AI Futures Model, Future Timeline, and forecasting research.
+              Live probability pressure overlays are ingested from X API and Polymarket market data.
             </p>
           </footer>
         </div>
