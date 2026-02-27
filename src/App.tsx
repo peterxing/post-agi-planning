@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useKV } from '@github/spark/hooks';
 import type { Domain, MonthData, Goal, Prediction } from '@/lib/types';
-import { generateTimelineData, getPredictionYearRange } from '@/lib/predictions';
+import { generateTimelineData, getPredictionYearRange, getMonthName } from '@/lib/predictions';
 import { applySignalsToTimeline, loadLiveSignals, summarizeSignalImpact, type LiveSignal } from '@/lib/live-signals';
 import { CircularTimeline } from '@/components/CircularTimeline';
 import { LinearTimeline } from '@/components/LinearTimeline';
@@ -15,6 +15,7 @@ import { LivedExperienceSummary } from '@/components/LivedExperienceSummary';
 import { SignalFeedPanel } from '@/components/SignalFeedPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Brain, Lightning } from '@phosphor-icons/react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
@@ -65,6 +66,23 @@ function App() {
 
   const timelineData = useMemo(() => applySignalsToTimeline(baseTimelineData, liveSignals), [baseTimelineData, liveSignals]);
   const signalImpacts = useMemo(() => summarizeSignalImpact(liveSignals), [liveSignals]);
+
+  const effectiveMonthData = useMemo(() => {
+    if (selectedMonth) return selectedMonth;
+
+    const now = new Date();
+    const currentMonth = timelineData.find(
+      (monthData) => monthData.year === now.getFullYear() && monthData.month === now.getMonth()
+    );
+
+    return currentMonth || timelineData[0] || null;
+  }, [selectedMonth, timelineData]);
+
+  useEffect(() => {
+    if (!selectedMonth && effectiveMonthData) {
+      setSelectedMonth(effectiveMonthData);
+    }
+  }, [selectedMonth, effectiveMonthData]);
 
   const handleDomainToggle = (domain: Domain) => {
     setActiveDomains((prev) =>
@@ -247,16 +265,32 @@ function App() {
 
             <TabsContent value="tech-tree" className="space-y-6">
               <TechTreeChecklist
-                year={selectedMonth?.year || currentYear}
-                month={selectedMonth?.month || new Date().getMonth()}
+                year={effectiveMonthData?.year || currentYear}
+                month={effectiveMonthData?.month || new Date().getMonth()}
               />
             </TabsContent>
 
             <TabsContent value="lived" className="space-y-6">
-              <LivedExperienceSummary monthData={selectedMonth} />
+              <LivedExperienceSummary monthData={effectiveMonthData} />
             </TabsContent>
 
-            <TabsContent value="goals">
+            <TabsContent value="goals" className="space-y-4">
+              <Card className="p-4 bg-card/30 backdrop-blur-sm border-border/50">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <h3 className="text-sm font-semibold">Goal planning</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {effectiveMonthData
+                        ? `Create goals quickly for ${getMonthName(effectiveMonthData.month)} ${effectiveMonthData.year}.`
+                        : 'Create timeline-linked goals.'}
+                    </p>
+                  </div>
+                  <Button onClick={handleCreateGoal} className="w-full sm:w-auto">
+                    Add Goal
+                  </Button>
+                </div>
+              </Card>
+
               <GoalsList
                 goals={goals || []}
                 onToggleComplete={handleToggleGoalComplete}
@@ -278,7 +312,7 @@ function App() {
         open={goalDialogOpen}
         onOpenChange={setGoalDialogOpen}
         onSave={handleSaveGoal}
-        initialMonth={selectedMonth || undefined}
+        initialMonth={effectiveMonthData || undefined}
       />
 
       <NarrativeDialog
