@@ -24,7 +24,10 @@ A timeline planning app that combines:
 - New script: `scripts/update-live-signals.mjs`
 - Pulls:
   - **X API** (`/2/tweets/search/recent`) when `X_BEARER_TOKEN` is provided
-  - **Polymarket Gamma API** (`/markets`) for active AI-related markets
+  - **Polymarket Gamma API** (`/markets`) for active markets
+- Applies a strict **post-AGI implication relevance filter**:
+  - keeps signals tied to AI capability/compute/governance/energy/supply-chain implications
+  - removes unrelated noise (sports/celebrity/general non-implication markets)
 - Writes snapshot to:
   - `public/data/live-signals.json`
 

@@ -5,6 +5,9 @@
   - Polymarket Gamma API (active markets)
 
   Output: public/data/live-signals.json
+
+  This version aggressively filters for post-AGI planning relevance so
+  unrelated markets/news (sports, celebrity, etc.) do not enter the feed.
 */
 
 import fs from 'node:fs/promises';
@@ -17,71 +20,174 @@ const projectRoot = path.resolve(__dirname, '..');
 const outputPath = path.join(projectRoot, 'public', 'data', 'live-signals.json');
 
 const DOMAIN_KEYWORDS = {
-  tech: ['agi', 'asi', 'model', 'llm', 'compute', 'gpu', 'robot', 'agent', 'alignment', 'ai'],
-  governance: ['regulation', 'law', 'policy', 'treaty', 'compliance', 'standards'],
-  geopolitical: ['china', 'us', 'war', 'export control', 'sanction', 'geopolitic', 'conflict'],
-  economic: ['market', 'valuation', 'gdp', 'inflation', 'recession', 'jobs', 'employment'],
-  social: ['education', 'society', 'labor', 'culture', 'demographic', 'adoption'],
-  individual: ['health', 'longevity', 'therapy', 'personal', 'consumer', 'household'],
+  tech: ['agi', 'asi', 'model', 'llm', 'compute', 'gpu', 'robot', 'agent', 'alignment', 'ai', 'chip', 'semiconductor'],
+  governance: ['regulation', 'law', 'policy', 'treaty', 'compliance', 'standards', 'licensing'],
+  geopolitical: ['export control', 'sanction', 'supply chain', 'critical minerals', 'taiwan', 'chip war', 'geopolitic'],
+  economic: ['productivity', 'labor', 'employment', 'gdp', 'inflation', 'capex', 'energy demand', 'market'],
+  social: ['education', 'society', 'misinformation', 'public trust', 'adoption'],
+  individual: ['health', 'longevity', 'therapy', 'bci', 'personal ai', 'consumer ai'],
 };
 
 const ALL_DOMAINS = /** @type {const} */ (['individual', 'social', 'tech', 'economic', 'geopolitical', 'governance']);
+
+const POST_AGI_PRIMARY_TERMS = [
+  'agi',
+  'asi',
+  'artificial intelligence',
+  'foundation model',
+  'frontier model',
+  'llm',
+  'openai',
+  'anthropic',
+  'deepmind',
+  'xai',
+  'gpu',
+  'compute cluster',
+  'training run',
+  'inference',
+  'datacenter',
+  'semiconductor',
+  'chip export',
+  'export control',
+  'chip ban',
+  'nvidia',
+  'asml',
+  'tsmc',
+  'autonomous agent',
+  'agentic',
+  'robotics',
+  'automation',
+  'ai safety',
+  'alignment',
+  'power grid',
+  'energy demand',
+  'nuclear power',
+  'biosecurity',
+  'cybersecurity',
+  'critical minerals',
+];
+
+const POST_AGI_CONTEXT_TERMS = [
+  'regulation',
+  'policy',
+  'governance',
+  'compliance',
+  'treaty',
+  'sanction',
+  'supply chain',
+  'electricity',
+  'productivity',
+  'labor market',
+  'job displacement',
+  'unemployment',
+  'infrastructure',
+  'geopolitical',
+  'defense',
+  'military',
+];
+
+const EXCLUSION_TERMS = [
+  'nba',
+  'nfl',
+  'nhl',
+  'mlb',
+  'fifa',
+  'world cup',
+  'mvp',
+  'rookie',
+  'playoffs',
+  'finals',
+  'oscars',
+  'grammys',
+  'box office',
+  'celebrity',
+  'sentenced',
+  'prison',
+  'movie',
+  'album',
+  'concert',
+];
 
 const POSITIVE_WORDS = [
   'breakthrough',
   'approval',
   'launch',
-  'wins',
   'record',
   'accelerate',
-  'upgrades',
-  'expands',
-  'improves',
-  'beats',
-  'gains',
+  'expand',
+  'improve',
+  'gain',
   'surge',
+  'increase',
+  'deployed',
 ];
 
 const NEGATIVE_WORDS = [
   'ban',
   'blocked',
   'delay',
-  'lawsuit',
   'risk',
   'conflict',
-  'crash',
   'hack',
   'sanction',
   'restriction',
   'decline',
   'shortage',
-];
-
-const POLY_AI_TERMS = [
-  'ai',
-  'agi',
-  'artificial intelligence',
-  'openai',
-  'anthropic',
-  'deepmind',
-  'xai',
-  'robot',
-  'chip',
-  'semiconductor',
-  'automation',
-  'regulation',
+  'outage',
+  'slowdown',
 ];
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function normalizeText(value) {
+  return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function hasTerm(text, term) {
+  const source = normalizeText(text);
+  const needle = normalizeText(term);
+  if (!source || !needle) return false;
+
+  if (needle.includes(' ')) {
+    return source.includes(needle);
+  }
+
+  const re = new RegExp(`(^|[^a-z0-9])${escapeRegex(needle)}([^a-z0-9]|$)`, 'i');
+  return re.test(source);
+}
+
+function matchedTerms(text, terms) {
+  return terms.filter((term) => hasTerm(text, term));
+}
+
+function evaluatePostAgiRelevance(text) {
+  const primaryMatches = matchedTerms(text, POST_AGI_PRIMARY_TERMS);
+  const contextMatches = matchedTerms(text, POST_AGI_CONTEXT_TERMS);
+  const exclusionMatches = matchedTerms(text, EXCLUSION_TERMS);
+
+  const score = primaryMatches.length * 2 + contextMatches.length - exclusionMatches.length * 2;
+
+  return {
+    primaryMatches,
+    contextMatches,
+    exclusionMatches,
+    score,
+    isRelevant: primaryMatches.length >= 1 && score >= 2,
+  };
+}
+
 function detectDomain(text) {
-  const source = (text || '').toLowerCase();
+  const source = normalizeText(text);
   let bestDomain = 'tech';
   let bestScore = -1;
 
   for (const domain of ALL_DOMAINS) {
     const keywords = DOMAIN_KEYWORDS[domain] || [];
-    const score = keywords.reduce((acc, keyword) => acc + (source.includes(keyword) ? 1 : 0), 0);
+    const score = keywords.reduce((acc, keyword) => acc + (hasTerm(source, keyword) ? 1 : 0), 0);
     if (score > bestScore) {
       bestScore = score;
       bestDomain = domain;
@@ -92,9 +198,9 @@ function detectDomain(text) {
 }
 
 function detectDirection(text) {
-  const source = (text || '').toLowerCase();
-  const positive = POSITIVE_WORDS.reduce((acc, keyword) => acc + (source.includes(keyword) ? 1 : 0), 0);
-  const negative = NEGATIVE_WORDS.reduce((acc, keyword) => acc + (source.includes(keyword) ? 1 : 0), 0);
+  const source = normalizeText(text);
+  const positive = POSITIVE_WORDS.reduce((acc, keyword) => acc + (hasTerm(source, keyword) ? 1 : 0), 0);
+  const negative = NEGATIVE_WORDS.reduce((acc, keyword) => acc + (hasTerm(source, keyword) ? 1 : 0), 0);
 
   if (positive === negative) return 1;
   return positive > negative ? 1 : -1;
@@ -130,6 +236,20 @@ function idPrefix(prefix) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function compactTag(term) {
+  return String(term || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 30);
+}
+
+function relevanceTags(relevance, maxTags = 6) {
+  return Array.from(
+    new Set([...relevance.primaryMatches.slice(0, 4), ...relevance.contextMatches.slice(0, 3)].map(compactTag).filter(Boolean))
+  ).slice(0, maxTags);
+}
+
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, options);
   if (!response.ok) {
@@ -146,7 +266,7 @@ async function loadSignalsFromX(now) {
   }
 
   const query = process.env.X_QUERY
-    || '(AGI OR ASI OR "artificial general intelligence" OR OpenAI OR Anthropic OR DeepMind OR xAI OR "AI regulation" OR "chip export") lang:en -is:retweet';
+    || '(AGI OR ASI OR "artificial general intelligence" OR OpenAI OR Anthropic OR DeepMind OR xAI OR "AI regulation" OR "chip export" OR semiconductor OR datacenter) lang:en -is:retweet';
   const maxResults = clamp(Number(process.env.X_MAX_RESULTS || 40), 10, 100);
 
   const params = new URLSearchParams({
@@ -167,12 +287,15 @@ async function loadSignalsFromX(now) {
 
   const users = new Map((payload?.includes?.users || []).map((u) => [u.id, u]));
   const tweets = payload?.data || [];
+  const signals = [];
 
-  const signals = tweets.map((tweet) => {
+  for (const tweet of tweets) {
     const user = users.get(tweet.author_id);
     const text = String(tweet.text || '').replace(/\s+/g, ' ').trim();
-    const metrics = tweet.public_metrics || {};
+    const relevance = evaluatePostAgiRelevance(text);
+    if (!relevance.isRelevant) continue;
 
+    const metrics = tweet.public_metrics || {};
     const engagement =
       Number(metrics.like_count || 0)
       + Number(metrics.retweet_count || 0) * 2
@@ -180,14 +303,15 @@ async function loadSignalsFromX(now) {
       + Number(metrics.reply_count || 0);
 
     const verifiedBoost = user?.verified ? 0.08 : 0;
-    const significance = clamp(Math.log10(engagement + 1) / 3 + verifiedBoost, 0.05, 1);
+    const relevanceBoost = clamp(relevance.score * 0.02, 0, 0.18);
+    const significance = clamp(Math.log10(engagement + 1) / 3 + verifiedBoost + relevanceBoost, 0.08, 1);
 
     const direction = detectDirection(text);
-    const probabilityDelta = inferImpactDelta(significance, direction, 0.065);
+    const probabilityDelta = inferImpactDelta(significance, direction, 0.06);
     const { targetYear, targetMonth } = toYearMonth(tweet.created_at, now);
     const headline = text.length > 120 ? `${text.slice(0, 117)}...` : text;
 
-    return {
+    signals.push({
       id: `x-${tweet.id || idPrefix('tweet')}`,
       source: 'x',
       timestamp: tweet.created_at || now.toISOString(),
@@ -201,27 +325,36 @@ async function loadSignalsFromX(now) {
       targetMonth,
       probabilityDelta,
       significance,
-      tags: Array.from(new Set((text.match(/#\w+/g) || []).map((tag) => tag.toLowerCase().replace('#', '')))).slice(0, 8),
+      tags: Array.from(
+        new Set([
+          ...((text.match(/#\w+/g) || []).map((tag) => tag.toLowerCase().replace('#', ''))),
+          ...relevanceTags(relevance),
+          'x',
+        ])
+      ).slice(0, 10),
       horizonMonths: 3,
-    };
-  });
+    });
+  }
 
-  return { signals, status: `ok(${signals.length})` };
+  return { signals, status: `ok(raw=${tweets.length},kept=${signals.length})` };
 }
 
 async function loadSignalsFromPolymarket(now) {
   const apiBase = process.env.POLYMARKET_API_BASE || 'https://gamma-api.polymarket.com';
-  const limit = clamp(Number(process.env.POLYMARKET_LIMIT || 400), 50, 500);
+  const limit = clamp(Number(process.env.POLYMARKET_LIMIT || 400), 50, 800);
 
   const url = `${apiBase}/markets?active=true&closed=false&limit=${limit}`;
   const markets = await fetchJson(url);
+  const rawMarkets = Array.isArray(markets) ? markets : [];
 
-  const filtered = (Array.isArray(markets) ? markets : []).filter((market) => {
-    const text = `${market.question || ''} ${market.description || ''}`.toLowerCase();
-    return POLY_AI_TERMS.some((term) => text.includes(term));
-  });
+  const relevantMarkets = rawMarkets
+    .map((market) => {
+      const text = `${market.question || ''} ${market.description || ''}`.trim();
+      return { market, text, relevance: evaluatePostAgiRelevance(text) };
+    })
+    .filter((entry) => entry.relevance.isRelevant);
 
-  const signals = filtered.slice(0, 60).map((market) => {
+  const signals = relevantMarkets.slice(0, 80).map(({ market, text, relevance }) => {
     const outcomes = safeJsonArray(market.outcomes);
     const outcomePrices = safeJsonArray(market.outcomePrices).map((value) => Number(value));
 
@@ -230,10 +363,12 @@ async function loadSignalsFromPolymarket(now) {
 
     const volume = Number(market.volume24hr || market.volume || 0);
     const liquidity = Number(market.liquidity || 0);
-    const significance = clamp(Math.log10(volume + 1) / 6 + Math.log10(liquidity + 1) / 8, 0.08, 1);
+    const baseSignificance = clamp(Math.log10(volume + 1) / 6 + Math.log10(liquidity + 1) / 8, 0.08, 1);
+    const relevanceBoost = clamp(relevance.score * 0.02, 0, 0.18);
+    const significance = clamp(baseSignificance + relevanceBoost, 0.08, 1);
 
-    const direction = probability >= 0.5 ? 1 : -1;
-    const probabilityDelta = clamp((probability - 0.5) * 0.22, -0.16, 0.16);
+    const centeredProbability = probability - 0.5;
+    const probabilityDelta = clamp(centeredProbability * (0.22 + relevance.score * 0.01), -0.18, 0.18);
 
     const { targetYear, targetMonth } = toYearMonth(market.endDate, now);
     const question = String(market.question || market.title || 'Polymarket signal').replace(/\s+/g, ' ').trim();
@@ -245,18 +380,18 @@ async function loadSignalsFromPolymarket(now) {
       headline: question,
       summary: `${question} • market probability ${(probability * 100).toFixed(1)}%`,
       url: market.slug ? `https://polymarket.com/event/${market.slug}` : 'https://polymarket.com',
-      domain: detectDomain(`${question} ${market.description || ''}`),
+      domain: detectDomain(text),
       targetYear,
       targetMonth,
-      probabilityDelta: direction === 1 ? Math.abs(probabilityDelta) : -Math.abs(probabilityDelta),
+      probabilityDelta,
       significance,
-      tags: ['polymarket', 'prediction-market'],
+      tags: Array.from(new Set(['polymarket', 'prediction-market', ...relevanceTags(relevance, 5)])),
       marketProbability: probability,
       horizonMonths: 3,
     };
   });
 
-  return { signals, status: `ok(${signals.length})` };
+  return { signals, status: `ok(raw=${rawMarkets.length},kept=${signals.length})` };
 }
 
 function dedupeSignals(signals) {
@@ -272,6 +407,7 @@ function dedupeSignals(signals) {
 async function main() {
   const now = new Date();
   const windowHours = clamp(Number(process.env.SIGNAL_WINDOW_HOURS || 24), 1, 168);
+  const cutoffMs = now.getTime() - windowHours * 60 * 60 * 1000;
 
   const [xResult, polyResult] = await Promise.allSettled([
     loadSignalsFromX(now),
@@ -289,7 +425,11 @@ async function main() {
   let mergedSignals = dedupeSignals([...xSignals, ...polySignals]);
 
   mergedSignals = mergedSignals
-    .filter((signal) => Math.abs(signal.probabilityDelta) >= 0.005)
+    .filter((signal) => Math.abs(signal.probabilityDelta) >= 0.008)
+    .filter((signal) => {
+      const ts = new Date(signal.timestamp).getTime();
+      return !Number.isFinite(ts) || ts >= cutoffMs;
+    })
     .sort((a, b) => {
       const bySignificance = b.significance - a.significance;
       if (bySignificance !== 0) return bySignificance;
@@ -307,7 +447,7 @@ async function main() {
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, JSON.stringify(payload, null, 2));
 
-  console.log(`Wrote ${mergedSignals.length} signals to ${outputPath}`);
+  console.log(`Wrote ${mergedSignals.length} relevance-filtered signals to ${outputPath}`);
   console.log(`Source status: x=${sourceStatus.x}, polymarket=${sourceStatus.polymarket}`);
 }
 
