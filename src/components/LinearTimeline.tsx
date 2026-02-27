@@ -1,6 +1,14 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
 import type { Domain, MonthData, Goal, Prediction } from '@/lib/types';
 import { DOMAIN_COLORS, DOMAIN_LABELS, getMonthName } from '@/lib/predictions';
@@ -25,7 +33,44 @@ export function LinearTimeline({
   const [hoveredPrediction, setHoveredPrediction] = useState<Prediction | null>(null);
   const [hoveredGoal, setHoveredGoal] = useState<Goal | null>(null);
   const [popupPosition, setPopupPosition] = useState<{ x: number; y: number } | null>(null);
+  const [isTouchUi, setIsTouchUi] = useState(false);
+  const [drilldownOpen, setDrilldownOpen] = useState(false);
+  const [drilldownPrediction, setDrilldownPrediction] = useState<Prediction | null>(null);
+  const [drilldownGoal, setDrilldownGoal] = useState<Goal | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+
+    const mediaQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+    const update = () => setIsTouchUi(mediaQuery.matches);
+    update();
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', update);
+      return () => mediaQuery.removeEventListener('change', update);
+    }
+
+    mediaQuery.addListener(update);
+    return () => mediaQuery.removeListener(update);
+  }, []);
+
+  const clearHoverPopup = () => {
+    setHoveredPrediction(null);
+    setHoveredGoal(null);
+    setPopupPosition(null);
+  };
+
+  const openMobileDrilldown = ({ monthData, prediction, goal }: {
+    monthData: MonthData;
+    prediction?: Prediction;
+    goal?: Goal;
+  }) => {
+    onMonthClick(monthData);
+    setDrilldownPrediction(prediction || null);
+    setDrilldownGoal(goal || null);
+    setDrilldownOpen(true);
+  };
 
   const groupedByYear = useMemo(() => {
     const grouped = new Map<number, MonthData[]>();
@@ -67,6 +112,16 @@ export function LinearTimeline({
       topPrediction: highImpact[0] || allPredictions[0],
     };
   };
+
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280;
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 720;
+  const popupWidth = 320;
+  const popupLeft = popupPosition
+    ? Math.min(Math.max(popupPosition.x + 12, 12), viewportWidth - popupWidth - 12)
+    : 12;
+  const popupTop = popupPosition
+    ? Math.min(Math.max(popupPosition.y - 180, 12), viewportHeight - 260)
+    : 12;
 
   return (
     <div ref={containerRef} className="space-y-6 relative">
@@ -186,20 +241,34 @@ export function LinearTimeline({
                                 {monthGoals.map((goal) => (
                                   <div
                                     key={goal.id}
-                                    className="flex items-start gap-2 p-3 rounded-lg bg-domain-individual/10 border border-domain-individual/30"
-                                    onMouseEnter={(e) => {
-                                      setHoveredGoal(goal);
-                                      setHoveredPrediction(null);
-                                      if (containerRef.current) {
-                                        const containerRect = containerRef.current.getBoundingClientRect();
-                                        const hoverX = e.clientX - containerRect.left;
-                                        const hoverY = e.clientY - containerRect.top;
-                                        setPopupPosition({ x: hoverX, y: hoverY });
+                                    role="button"
+                                    tabIndex={0}
+                                    className="flex items-start gap-2 p-3 rounded-lg bg-domain-individual/10 border border-domain-individual/30 hover:bg-domain-individual/15 transition-colors"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (isTouchUi) {
+                                        openMobileDrilldown({ monthData, goal });
                                       }
                                     }}
+                                    onMouseEnter={(e) => {
+                                      if (isTouchUi) return;
+                                      setHoveredGoal(goal);
+                                      setHoveredPrediction(null);
+                                      setPopupPosition({ x: e.clientX, y: e.clientY });
+                                    }}
+                                    onMouseMove={(e) => {
+                                      if (isTouchUi) return;
+                                      setPopupPosition({ x: e.clientX, y: e.clientY });
+                                    }}
                                     onMouseLeave={() => {
-                                      setHoveredGoal(null);
-                                      setPopupPosition(null);
+                                      if (isTouchUi) return;
+                                      clearHoverPopup();
+                                    }}
+                                    onKeyDown={(e) => {
+                                      if ((e.key === 'Enter' || e.key === ' ') && isTouchUi) {
+                                        e.preventDefault();
+                                        openMobileDrilldown({ monthData, goal });
+                                      }
                                     }}
                                   >
                                     <Target
@@ -221,20 +290,34 @@ export function LinearTimeline({
                               {monthPredictions.map((prediction) => (
                                 <div
                                   key={prediction.id}
+                                  role="button"
+                                  tabIndex={0}
                                   className="flex items-start gap-3 p-3 rounded-lg bg-background/40 hover:bg-background/60 transition-colors relative"
-                                  onMouseEnter={(e) => {
-                                    setHoveredPrediction(prediction);
-                                    setHoveredGoal(null);
-                                    if (containerRef.current) {
-                                      const containerRect = containerRef.current.getBoundingClientRect();
-                                      const hoverX = e.clientX - containerRect.left;
-                                      const hoverY = e.clientY - containerRect.top;
-                                      setPopupPosition({ x: hoverX, y: hoverY });
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isTouchUi) {
+                                      openMobileDrilldown({ monthData, prediction });
                                     }
                                   }}
+                                  onMouseEnter={(e) => {
+                                    if (isTouchUi) return;
+                                    setHoveredPrediction(prediction);
+                                    setHoveredGoal(null);
+                                    setPopupPosition({ x: e.clientX, y: e.clientY });
+                                  }}
+                                  onMouseMove={(e) => {
+                                    if (isTouchUi) return;
+                                    setPopupPosition({ x: e.clientX, y: e.clientY });
+                                  }}
                                   onMouseLeave={() => {
-                                    setHoveredPrediction(null);
-                                    setPopupPosition(null);
+                                    if (isTouchUi) return;
+                                    clearHoverPopup();
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if ((e.key === 'Enter' || e.key === ' ') && isTouchUi) {
+                                      e.preventDefault();
+                                      openMobileDrilldown({ monthData, prediction });
+                                    }
                                   }}
                                 >
                                   <div
@@ -287,19 +370,19 @@ export function LinearTimeline({
         );
       })}
       
-      {(hoveredPrediction || hoveredGoal) && popupPosition && (
+      {!isTouchUi && (hoveredPrediction || hoveredGoal) && popupPosition && (
         <div
           className="fixed bg-card/95 backdrop-blur-md border border-border rounded-lg shadow-2xl p-3 w-80 z-50 pointer-events-none"
           style={{
-            left: `${popupPosition.x + 10}px`,
-            top: `${popupPosition.y - 150}px`,
+            left: `${popupLeft}px`,
+            top: `${popupTop}px`,
           }}
         >
           <div className="space-y-2">
             <h3 className="text-xs font-bold text-primary uppercase tracking-wide">
               {hoveredGoal ? 'Goal' : 'Prediction'}
             </h3>
-            
+
             {hoveredGoal && (
               <div className="flex items-start gap-2 p-2 rounded bg-background/40">
                 <Target
@@ -335,7 +418,7 @@ export function LinearTimeline({
                 </div>
               </div>
             )}
-            
+
             {hoveredPrediction && (
               <div className="flex items-start gap-2 p-2 rounded bg-background/40">
                 <div
@@ -406,6 +489,138 @@ export function LinearTimeline({
           </div>
         </div>
       )}
+
+      <Dialog
+        open={drilldownOpen}
+        onOpenChange={(open) => {
+          setDrilldownOpen(open);
+          if (!open) {
+            setDrilldownPrediction(null);
+            setDrilldownGoal(null);
+          }
+        }}
+      >
+        <DialogContent className="w-[calc(100vw-1rem)] max-w-none sm:max-w-xl max-h-[90dvh] overflow-hidden p-0 bg-card border-border">
+          <DialogHeader className="px-4 pt-6 pb-3 border-b border-border/50">
+            <DialogTitle className="text-lg font-semibold">
+              {drilldownGoal ? 'Goal detail' : 'Prediction detail'}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Mobile drill-down mode: tap sources to open full context.
+            </DialogDescription>
+          </DialogHeader>
+
+          <ScrollArea className="max-h-[calc(90dvh-7.5rem)] px-4 py-4">
+            {drilldownGoal && (
+              <div className="space-y-3">
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-domain-individual/10 border border-domain-individual/30">
+                  <Target
+                    size={18}
+                    weight="fill"
+                    className="shrink-0 mt-0.5"
+                    style={{ color: 'oklch(0.70 0.18 60)' }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold">{drilldownGoal.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                      {drilldownGoal.description || 'No additional description provided.'}
+                    </p>
+                  </div>
+                </div>
+
+                {drilldownGoal.domains && drilldownGoal.domains.length > 0 && (
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-2">Related domains</p>
+                    <div className="flex flex-wrap gap-2">
+                      {drilldownGoal.domains.map((domain) => (
+                        <Badge
+                          key={domain}
+                          variant="outline"
+                          className="text-xs"
+                          style={{
+                            borderColor: DOMAIN_COLORS[domain],
+                            color: DOMAIN_COLORS[domain],
+                          }}
+                        >
+                          {DOMAIN_LABELS[domain]}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {drilldownPrediction && (
+              <div className="space-y-4">
+                <div className="p-3 rounded-lg border border-border/50 bg-background/30">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="text-sm font-semibold leading-tight">{drilldownPrediction.title}</h3>
+                    <Badge
+                      variant={
+                        drilldownPrediction.impact === 'high'
+                          ? 'destructive'
+                          : drilldownPrediction.impact === 'medium'
+                          ? 'default'
+                          : 'secondary'
+                      }
+                      className="text-xs"
+                    >
+                      {drilldownPrediction.impact}
+                    </Badge>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {drilldownPrediction.description}
+                  </p>
+
+                  <div className="mt-3 flex items-center gap-2 text-xs">
+                    <span className="font-mono font-bold" style={{ color: DOMAIN_COLORS[drilldownPrediction.domain] }}>
+                      {DOMAIN_LABELS[drilldownPrediction.domain]}
+                    </span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground font-mono">
+                      {(drilldownPrediction.probability * 100).toFixed(0)}% confidence
+                    </span>
+                  </div>
+                </div>
+
+                {drilldownPrediction.sources && drilldownPrediction.sources.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                      <Link size={12} />
+                      Sources
+                    </p>
+                    <div className="space-y-2">
+                      {drilldownPrediction.sources.map((source, idx) => (
+                        <div key={idx} className="p-3 rounded-lg border border-border/50 bg-background/20">
+                          {source.url ? (
+                            <a
+                              href={source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-primary hover:underline"
+                            >
+                              {source.name}
+                            </a>
+                          ) : (
+                            <p className="text-sm">{source.name}</p>
+                          )}
+                          {source.confidence && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Confidence {(source.confidence * 100).toFixed(0)}%
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

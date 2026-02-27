@@ -83,8 +83,8 @@ Make it personal, sensory, and grounded. Avoid generic statements. This should r
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] max-h-[80vh] bg-card border-border">
-        <DialogHeader>
+      <DialogContent className="w-[calc(100vw-1rem)] max-w-[700px] max-h-[92dvh] overflow-hidden p-0 bg-card border-border sm:p-6">
+        <DialogHeader className="px-4 pt-6 pb-3 sm:px-0 sm:pt-0 sm:pb-2">
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <Brain weight="duotone" className="text-primary" />
             Lived Experience Simulation
@@ -97,7 +97,7 @@ Make it personal, sensory, and grounded. Avoid generic statements. This should r
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[400px] pr-4">
+        <ScrollArea className="max-h-[calc(92dvh-12rem)] px-4 sm:px-0 sm:max-h-[60vh]">
           {isGenerating ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center space-y-3">
@@ -110,7 +110,7 @@ Make it personal, sensory, and grounded. Avoid generic statements. This should r
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 pb-4">
               <div className="prose prose-sm prose-invert max-w-none">
                 {narrative.split('\n\n').map((paragraph, i) => (
                   <p key={i} className="text-foreground leading-relaxed">
@@ -123,12 +123,13 @@ Make it personal, sensory, and grounded. Avoid generic statements. This should r
         </ScrollArea>
 
         {!isGenerating && narrative && (
-          <div className="flex justify-end gap-2 pt-4 border-t border-border">
+          <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/50 sm:px-0 sm:py-0 sm:border-0">
             <Button
               variant="outline"
               size="sm"
               onClick={generateNarrative}
               disabled={isGenerating}
+              className="w-full sm:w-auto h-11 sm:h-9"
             >
               <ArrowsClockwise className="mr-2" />
               Regenerate
