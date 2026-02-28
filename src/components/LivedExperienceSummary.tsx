@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useKV } from '@github/spark/hooks';
-import type { TechTreeState, TechTreeStatus, MonthData } from '@/lib/types';
-import { getCumulativeTechNodes, getNodeStatusForDate } from '@/lib/tech-tree';
+import type { TechTreeStatus, MonthData } from '@/lib/types';
+import { getAutoTechTreeStatusesForDate, getCumulativeTechNodes } from '@/lib/tech-tree';
 import { generateSparkText } from '@/lib/spark-llm';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,7 +43,6 @@ interface LivedExperienceSummaryProps {
 }
 
 export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProps) {
-  const [techStates] = useKV<TechTreeState[]>('tech-tree-states', []);
   const [summary, setSummary] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -68,9 +66,10 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
     setSummary('');
 
     const cumulativeNodes = getCumulativeTechNodes(monthData.year, monthData.month);
+    const autoStatuses = getAutoTechTreeStatusesForDate(monthData.year, monthData.month);
 
     const activeNodes = cumulativeNodes.filter(node => {
-      const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      const status = autoStatuses[node.id] || 'not-started';
       return status !== 'not-started' && status !== 'r-and-d';
     });
 
@@ -87,7 +86,7 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
       .map(([tag]) => tag);
 
     const statusBreakdown = activeNodes.reduce((acc, node) => {
-      const status = getNodeStatusForDate(techStates, node.id, monthData.year, monthData.month, 'pilot');
+      const status = autoStatuses[node.id] || 'not-started';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {} as Record<TechTreeStatus, number>);
@@ -95,7 +94,7 @@ export function LivedExperienceSummary({ monthData }: LivedExperienceSummaryProp
     const monthLabel = new Date(monthData.year, monthData.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     const activeNodesList = activeNodes
       .slice(0, 20)
-      .map(n => `- ${n.title} (${getNodeStatusForDate(techStates, n.id, monthData.year, monthData.month, 'pilot')})`)
+      .map(n => `- ${n.title} (${autoStatuses[n.id] || 'not-started'})`)
       .join('\n');
     const statusList = Object.entries(statusBreakdown).map(([status, count]) => `- ${status}: ${count} breakthroughs`).join('\n');
     const topImpactsList = topImpacts.join(', ');

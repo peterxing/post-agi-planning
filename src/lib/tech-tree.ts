@@ -579,3 +579,90 @@ export function getNodeStatusForDate(
 
   return latest.status;
 }
+
+const STATUS_TO_STAGE: Record<TechTreeStatus, number> = {
+  'not-started': 0,
+  'r-and-d': 1,
+  pilot: 2,
+  'early-adopters': 3,
+  'mass-market': 4,
+  ubiquitous: 5,
+  regulated: 4,
+};
+
+const STAGE_TO_STATUS: TechTreeStatus[] = [
+  'not-started',
+  'r-and-d',
+  'pilot',
+  'early-adopters',
+  'mass-market',
+  'ubiquitous',
+];
+
+function getBaseAutoStage(node: TechTreeNode, targetIndex: number): number {
+  const startIndex = toMonthIndex(node.windowStart.year, node.windowStart.month);
+  const endIndex = toMonthIndex(node.windowEnd.year, node.windowEnd.month);
+
+  if (targetIndex < startIndex) return 0;
+
+  const span = Math.max(1, endIndex - startIndex + 1);
+  const progress = Math.max(0, Math.min(1, (targetIndex - startIndex) / span));
+
+  if (progress < 0.12) return 1; // r-and-d
+  if (progress < 0.30) return 2; // pilot
+  if (progress < 0.56) return 3; // early-adopters
+  if (progress < 0.84) return 4; // mass-market
+  return 5; // ubiquitous
+}
+
+function stageToStatus(stage: number): TechTreeStatus {
+  const normalized = Math.max(0, Math.min(5, Math.round(stage)));
+  return STAGE_TO_STATUS[normalized] || 'not-started';
+}
+
+/**
+ * Auto-populates tech-tree status based on timeline window progress + dependency readiness.
+ * This is read-only inferred state (no manual user input required).
+ */
+export function getAutoTechTreeStatusesForDate(year: number, month: number): Record<string, TechTreeStatus> {
+  const targetIndex = toMonthIndex(year, month);
+  const byId = new Map<string, TechTreeNode>(TECH_TREE_NODES.map((node) => [node.id, node]));
+  const memo = new Map<string, TechTreeStatus>();
+  const visiting = new Set<string>();
+
+  const resolveStatus = (nodeId: string): TechTreeStatus => {
+    if (memo.has(nodeId)) return memo.get(nodeId)!;
+
+    const node = byId.get(nodeId);
+    if (!node) return 'not-started';
+
+    if (visiting.has(nodeId)) {
+      // Break any accidental dependency cycle safely.
+      return 'r-and-d';
+    }
+
+    visiting.add(nodeId);
+
+    let stage = getBaseAutoStage(node, targetIndex);
+
+    if (node.dependsOn && node.dependsOn.length > 0) {
+      const dependencyStages = node.dependsOn.map((depId) => STATUS_TO_STAGE[resolveStatus(depId)] ?? 0);
+      const minDependencyStage = Math.min(...dependencyStages);
+
+      // A node can be at most one stage ahead of its weakest dependency.
+      const dependencyCap = Math.max(1, minDependencyStage + 1);
+      stage = Math.min(stage, dependencyCap);
+    }
+
+    const status = stageToStatus(stage);
+    memo.set(nodeId, status);
+    visiting.delete(nodeId);
+    return status;
+  };
+
+  for (const node of TECH_TREE_NODES) {
+    resolveStatus(node.id);
+  }
+
+  return Object.fromEntries(memo.entries());
+}
