@@ -286,11 +286,23 @@
     }
 
     .chapter {
+      display: block;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
       min-height: 310px;
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .chapter:hover,
+    .chapter:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 10px 28px rgba(33, 31, 24, 0.10);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .chapter .num {
@@ -704,7 +716,6 @@
         <a href="#chapters">Chapters</a>
         <a href="#read">Read</a>
         <a href="#model" class="primary">Model</a>
-        <a href="BOOK.md">Manuscript</a>
       </div>
     </nav>
   </header>
@@ -764,7 +775,7 @@
           <p>A practical manual for leaders, households, builders, founders, communities, and policymakers. It begins with the feeling of acceleration, then turns AGI from an abstract debate into a live planning problem.</p>
         </div>
         <div class="chapters">
-          <article class="chapter">
+          <a class="chapter" href="#chapter-1-do-you-feel-the-acceleration">
             <span class="num">Chapter 01</span>
             <h3>Intro and Summary</h3>
             <p>Do you feel the acceleration? The future is no longer a distant line; it is a slope changing under our feet.</p>
@@ -773,9 +784,9 @@
               <li>Why leaders must shape the transition.</li>
               <li>Why a static book needs a live model.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="chapter">
+          <a class="chapter" href="#chapter-2-why-this-matters-and-who-needs-a-plan">
             <span class="num">Chapter 02</span>
             <h3>Why and Who</h3>
             <p>AGI reaches ordinary life through bills, income, insurance, children, health, community, pensions, and work.</p>
@@ -784,9 +795,9 @@
               <li>Financial, family, and career exposure.</li>
               <li>Community and governance implications.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="chapter">
+          <a class="chapter" href="#chapter-3-what-agi-means-inside-the-singularity">
             <span class="num">Chapter 03</span>
             <h3>What</h3>
             <p>The singularity is a zone of accelerating uncertainty where machine intelligence becomes the engine of progress.</p>
@@ -795,9 +806,9 @@
               <li>Bits become cheap; atoms are next.</li>
               <li>Transhumanism as practical strategy.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="chapter">
+          <a class="chapter" href="#chapter-4-how-the-transition-could-unfold">
             <span class="num">Chapter 04</span>
             <h3>How</h3>
             <p>Displacement can arrive gradually, then suddenly. The outcome depends on policy, ownership, resilience, and advocacy.</p>
@@ -806,9 +817,9 @@
               <li>Fast abundance versus slow takeoff.</li>
               <li>Human merger and existential risk.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="chapter">
+          <a class="chapter" href="#chapter-5-when-to-expect-impact">
             <span class="num">Chapter 05</span>
             <h3>When</h3>
             <p>The right question is not one date. Separate capability, embodiment, deployment, economic impact, and social impact.</p>
@@ -817,9 +828,9 @@
               <li>Model capability versus real-world impact.</li>
               <li>Update triggers and watch signals.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="chapter">
+          <a class="chapter" href="#chapter-6-what-to-do-now">
             <span class="num">Chapter 06</span>
             <h3>What to Do</h3>
             <p>Energy and compute become strategic currencies. The plan converts scenarios into capital allocation and action.</p>
@@ -828,14 +839,7 @@
               <li>Productive infrastructure.</li>
               <li>Advocacy for abundance and safety.</li>
             </ul>
-          </article>
-        </div>
-        <div class="book-link">
-          <div>
-            <strong>Editable manuscript is included.</strong>
-            <p>Use the markdown draft for expansion, editing, or export into publishing tools.</p>
-          </div>
-          <a href="BOOK.md" style="color:white">Open BOOK.md</a>
+          </a>
         </div>
       </div>
     </section>
@@ -844,7 +848,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>Full chapters.</h2>
-          <p>The manuscript below is loaded from the published `BOOK.md`, so the website and book stay aligned. Read it linearly, then use the model to turn the argument into a personal or organisational plan.</p>
+          <p>The full book is published below. Read it linearly, or jump from the chapter cards above, then use the model to turn the argument into a personal or organisational plan.</p>
         </div>
         <div class="reader-grid">
           <aside class="toc" id="toc" aria-label="Book table of contents">
@@ -852,7 +856,7 @@
             <a href="#model">Skip to live model</a>
           </aside>
           <div class="book-text" id="bookText">
-            <p class="loading">Loading full manuscript...</p>
+            <p class="loading">Loading full book...</p>
           </div>
         </div>
       </div>
@@ -1470,7 +1474,7 @@
       })
       .then(renderBook)
       .catch(() => {
-        document.getElementById("bookText").innerHTML = '<p class="loading">Could not load BOOK.md. Use the Manuscript link above.</p>';
+        document.getElementById("bookText").innerHTML = '<p class="loading">Could not load the published chapter text. Refresh the page and try again.</p>';
       });
   </script>
 </body>
