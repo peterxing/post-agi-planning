@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post-AGI Planning | Peter Xing</title>
+  <meta name="description" content="A living book and realtime planning model for navigating near-term AGI disruption, resilience, abundance, and human agency.">
+  <style>
+    :root {
+      --bg: #f8f7f2;
+      --ink: #171713;
+      --muted: #67675d;
+      --line: #d8d4c7;
+      --panel: #ffffff;
+      --panel2: #efeee8;
+      --accent: #0e7c66;
+      --accent2: #c44f2d;
+      --accent3: #2f5f98;
+      --warn: #9b5c00;
+      --danger: #9f2424;
+      --shadow: 0 16px 40px rgba(33, 31, 24, 0.12);
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 247, 242, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      min-width: 220px;
+    }
+
+    .brand strong {
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .navlinks a, button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button.primary, .navlinks a.primary {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    main { overflow: hidden; }
+
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 36px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 70px 20px 34px;
+      align-items: center;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(14, 124, 102, 0.12);
+    }
+
+    h1, h2, h3 {
+      line-height: 1.05;
+      letter-spacing: 0;
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 22px;
+      max-width: 850px;
+      font-size: clamp(44px, 8vw, 88px);
+      font-family: var(--serif);
+      font-weight: 700;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: #34342e;
+      font-size: 19px;
+      margin: 22px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .hero-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-decoration: none;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: white;
+      font-weight: 650;
+    }
+
+    .hero-actions a.secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .scenario-board {
+      background: #11120f;
+      color: white;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-height: 420px;
+    }
+
+    .board-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+      padding-bottom: 14px;
+    }
+
+    .board-top small {
+      color: rgba(255,255,255,0.64);
+      font-family: var(--mono);
+    }
+
+    .meters {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .meter label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 6px;
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .fill {
+      height: 100%;
+      width: var(--w);
+      background: var(--c);
+    }
+
+    .board-callout {
+      margin-top: 20px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .board-callout strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .board-callout p {
+      margin: 0;
+      color: rgba(255,255,255,0.76);
+      font-size: 14px;
+    }
+
+    section {
+      border-top: 1px solid var(--line);
+      padding: 64px 20px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 28px;
+      margin-bottom: 30px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(30px, 5vw, 56px);
+      font-family: var(--serif);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: #3f3f37;
+      font-size: 18px;
+    }
+
+    .chapters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .chapter {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 310px;
+    }
+
+    .chapter .num {
+      display: inline-block;
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .chapter h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .chapter p {
+      margin: 0 0 12px;
+      color: #45453d;
+    }
+
+    .chapter ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .model {
+      background: #e9e7dd;
+    }
+
+    .tool {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .panel h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .control {
+      border-top: 1px solid var(--line);
+      padding: 14px 0;
+    }
+
+    .control:first-of-type { border-top: 0; }
+
+    .control label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-weight: 650;
+      margin-bottom: 8px;
+    }
+
+    .control span {
+      font-family: var(--mono);
+      color: var(--accent3);
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 4px 0 0;
+    }
+
+    .scoregrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .score {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .score small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .score strong {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .alloc {
+      margin-top: 16px;
+    }
+
+    .alloc-row {
+      display: grid;
+      grid-template-columns: 142px 1fr 48px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    .alloc-track {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--panel2);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .alloc-track i {
+      display: block;
+      height: 100%;
+      width: var(--w);
+      background: var(--c);
+    }
+
+    .actions-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .action {
+      border-left: 4px solid var(--accent);
+      background: var(--panel2);
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    .action strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .action p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .watchlist {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .watchlist div {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .book-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: var(--ink);
+      color: white;
+      border-radius: 8px;
+      padding: 22px;
+      margin-top: 22px;
+    }
+
+    .book-link p {
+      margin: 5px 0 0;
+      color: rgba(255,255,255,0.72);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px 20px 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 920px) {
+      .hero, .section-head, .tool {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 44px;
+      }
+
+      .chapters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .navlinks {
+        justify-content: flex-start;
+      }
+
+      .chapters, .scoregrid, .watchlist {
+        grid-template-columns: 1fr;
+      }
+
+      .alloc-row {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-board {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav" aria-label="Primary">
+      <div class="brand">
+        <strong>Post-AGI Planning</strong>
+        <span>Peter Xing</span>
+      </div>
+      <div class="navlinks">
+        <a href="#chapters">Chapters</a>
+        <a href="#model" class="primary">Model</a>
+        <a href="BOOK.md">Manuscript</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div>
+        <span class="kicker"><span class="pulse"></span> Living book + realtime planning model</span>
+        <h1>Do you feel the acceleration?</h1>
+        <p>We are no longer planning for a distant science-fiction future. We are planning inside the acceleration: AI, robotics, energy, compute, labour disruption, abundance, resilience, and the human choice to shape what comes next.</p>
+        <div class="hero-actions">
+          <a href="#model">Run your post-AGI plan</a>
+          <a class="secondary" href="#chapters">Read the chapters</a>
+        </div>
+      </div>
+      <aside class="scenario-board" aria-label="Scenario probability overview">
+        <div class="board-top">
+          <div>
+            <strong>Starting Scenario Stack</strong><br>
+            <small>Adjust it in the live model below</small>
+          </div>
+          <small id="clock">LIVE</small>
+        </div>
+        <div class="meters">
+          <div class="meter">
+            <label><span>Rapid disruption + unrest</span><span>20%</span></label>
+            <div class="bar"><div class="fill" style="--w:20%;--c:#c44f2d"></div></div>
+          </div>
+          <div class="meter">
+            <label><span>Fast takeoff into abundance</span><span>30%</span></label>
+            <div class="bar"><div class="fill" style="--w:30%;--c:#0e7c66"></div></div>
+          </div>
+          <div class="meter">
+            <label><span>Slow gentle singularity</span><span>30%</span></label>
+            <div class="bar"><div class="fill" style="--w:30%;--c:#2f5f98"></div></div>
+          </div>
+          <div class="meter">
+            <label><span>Long horizon</span><span>10%</span></label>
+            <div class="bar"><div class="fill" style="--w:10%;--c:#77756b"></div></div>
+          </div>
+          <div class="meter">
+            <label><span>Existential risk</span><span>10%</span></label>
+            <div class="bar"><div class="fill" style="--w:10%;--c:#9f2424"></div></div>
+          </div>
+        </div>
+        <div class="board-callout">
+          <strong>The point is not to predict one future.</strong>
+          <p>The point is to allocate across uncertainty, monitor reality, and update before old assumptions break.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="chapters">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The book.</h2>
+          <p>A practical manual for leaders, households, builders, founders, communities, and policymakers. It begins with the feeling of acceleration, then turns AGI from an abstract debate into a live planning problem.</p>
+        </div>
+        <div class="chapters">
+          <article class="chapter">
+            <span class="num">Chapter 01</span>
+            <h3>Intro and Summary</h3>
+            <p>Do you feel the acceleration? The future is no longer a distant line; it is a slope changing under our feet.</p>
+            <ul>
+              <li>Who, why, what, how, when, where.</li>
+              <li>Why leaders must shape the transition.</li>
+              <li>Why a static book needs a live model.</li>
+            </ul>
+          </article>
+
+          <article class="chapter">
+            <span class="num">Chapter 02</span>
+            <h3>Why and Who</h3>
+            <p>AGI reaches ordinary life through bills, income, insurance, children, health, community, pensions, and work.</p>
+            <ul>
+              <li>Maslow's hierarchy under acceleration.</li>
+              <li>Financial, family, and career exposure.</li>
+              <li>Community and governance implications.</li>
+            </ul>
+          </article>
+
+          <article class="chapter">
+            <span class="num">Chapter 03</span>
+            <h3>What</h3>
+            <p>The singularity is a zone of accelerating uncertainty where machine intelligence becomes the engine of progress.</p>
+            <ul>
+              <li>AGI plus robotics as general labour.</li>
+              <li>Bits become cheap; atoms are next.</li>
+              <li>Transhumanism as practical strategy.</li>
+            </ul>
+          </article>
+
+          <article class="chapter">
+            <span class="num">Chapter 04</span>
+            <h3>How</h3>
+            <p>Displacement can arrive gradually, then suddenly. The outcome depends on policy, ownership, resilience, and advocacy.</p>
+            <ul>
+              <li>Labour shock and stimulus scenarios.</li>
+              <li>Fast abundance versus slow takeoff.</li>
+              <li>Human merger and existential risk.</li>
+            </ul>
+          </article>
+
+          <article class="chapter">
+            <span class="num">Chapter 05</span>
+            <h3>When</h3>
+            <p>The right question is not one date. Separate capability, embodiment, deployment, economic impact, and social impact.</p>
+            <ul>
+              <li>Probabilistic timelines.</li>
+              <li>Model capability versus real-world impact.</li>
+              <li>Update triggers and watch signals.</li>
+            </ul>
+          </article>
+
+          <article class="chapter">
+            <span class="num">Chapter 06</span>
+            <h3>What to Do</h3>
+            <p>Energy and compute become strategic currencies. The plan converts scenarios into capital allocation and action.</p>
+            <ul>
+              <li>Personal and household resilience.</li>
+              <li>Productive infrastructure.</li>
+              <li>Advocacy for abundance and safety.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="book-link">
+          <div>
+            <strong>Editable manuscript is included.</strong>
+            <p>Use the markdown draft for expansion, editing, or export into publishing tools.</p>
+          </div>
+          <a href="BOOK.md" style="color:white">Open BOOK.md</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="model" id="model">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The live model.</h2>
+          <p>Set your beliefs, then turn them into action. This is not financial advice; it is a structured way to stop treating AGI as a vague anxiety and start treating it as a portfolio of futures.</p>
+        </div>
+
+        <div class="tool">
+          <div class="panel">
+            <h3>Scenario probabilities</h3>
+            <div class="control">
+              <label for="rapid">Rapid disruption + civil unrest <span id="rapidVal">20%</span></label>
+              <input id="rapid" type="range" min="0" max="80" value="20">
+              <p class="hint">AI disrupts the economy over the next 6 months; resilience and defensibility matter.</p>
+            </div>
+            <div class="control">
+              <label for="abundance">Fast takeoff into abundance <span id="abundanceVal">30%</span></label>
+              <input id="abundance" type="range" min="0" max="80" value="30">
+              <p class="hint">6 months to 4 years; advocate for positive deployment and shared upside.</p>
+            </div>
+            <div class="control">
+              <label for="gentle">Slow gentle singularity <span id="gentleVal">30%</span></label>
+              <input id="gentle" type="range" min="0" max="80" value="30">
+              <p class="hint">5 to 10 years; keep building while upgrading work and assets with AI.</p>
+            </div>
+            <div class="control">
+              <label for="long">Long horizon <span id="longVal">10%</span></label>
+              <input id="long" type="range" min="0" max="60" value="10">
+              <p class="hint">AGI takes decades; monitor without overfitting your life to one forecast.</p>
+            </div>
+            <div class="control">
+              <label for="xrisk">Existential risk <span id="xriskVal">10%</span></label>
+              <input id="xrisk" type="range" min="0" max="60" value="10">
+              <p class="hint">Low probability, extreme severity; support safety, governance, and defensive infrastructure.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Personal exposure</h3>
+            <div class="control">
+              <label for="income">Income automation exposure <span id="incomeVal">60</span></label>
+              <input id="income" type="range" min="0" max="100" value="60">
+              <p class="hint">0 = mostly defended by ownership/trust/physical context. 100 = labour income highly automatable.</p>
+            </div>
+            <div class="control">
+              <label for="liquidity">Liquidity and debt resilience <span id="liquidityVal">45</span></label>
+              <input id="liquidity" type="range" min="0" max="100" value="45">
+              <p class="hint">Cash buffer, low fragile debt, flexible expenses, emergency capacity.</p>
+            </div>
+            <div class="control">
+              <label for="energy">Energy + compute readiness <span id="energyVal">35</span></label>
+              <input id="energy" type="range" min="0" max="100" value="35">
+              <p class="hint">Power, compute access, communications, productive infrastructure.</p>
+            </div>
+            <div class="control">
+              <label for="community">Community resilience <span id="communityVal">45</span></label>
+              <input id="community" type="range" min="0" max="100" value="45">
+              <p class="hint">Trusted people, local coordination, food/water/security/health access.</p>
+            </div>
+            <div class="control">
+              <label for="ai">AI fluency and leverage <span id="aiVal">55</span></label>
+              <input id="ai" type="range" min="0" max="100" value="55">
+              <p class="hint">Ability to use agents, automate workflows, build with AI, and learn quickly.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Realtime readout</h3>
+            <div class="scoregrid">
+              <div class="score">
+                <small>Disruption pressure</small>
+                <strong id="disruptionScore">0</strong>
+              </div>
+              <div class="score">
+                <small>Resilience score</small>
+                <strong id="resilienceScore">0</strong>
+              </div>
+              <div class="score">
+                <small>Action urgency</small>
+                <strong id="urgencyScore">0</strong>
+              </div>
+            </div>
+            <div class="alloc">
+              <h3>Suggested capital and attention allocation</h3>
+              <div id="allocation"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Recommended actions</h3>
+            <div id="actions" class="actions-list"></div>
+            <div class="watchlist">
+              <div><strong>Capability watch:</strong><br>Frontier agent reliability, coding autonomy, tool use, multi-day task completion.</div>
+              <div><strong>Economy watch:</strong><br>Layoffs, wage pressure, AI-native competitors, insurance and credit changes.</div>
+              <div><strong>Atoms watch:</strong><br>Robot cost curves, energy prices, GPU supply, autonomous farms, warehouses, logistics.</div>
+              <div><strong>Society watch:</strong><br>UBI/UHI policy, unrest, public AI infrastructure, safety incidents, governance moves.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Draft 0.1 - 2026-06-02 - Peter Xing</span>
+      <span>Living model: update assumptions as reality changes.</span>
+    </div>
+  </footer>
+
+  <script>
+    const ids = ["rapid", "abundance", "gentle", "long", "xrisk", "income", "liquidity", "energy", "community", "ai"];
+    const colors = {
+      resilience: "#0e7c66",
+      opportunity: "#2f5f98",
+      liquidity: "#c44f2d",
+      safety: "#9f2424",
+      learning: "#9b5c00"
+    };
+
+    function value(id) {
+      return Number(document.getElementById(id).value);
+    }
+
+    function normalisedScenarios() {
+      const raw = {
+        rapid: value("rapid"),
+        abundance: value("abundance"),
+        gentle: value("gentle"),
+        long: value("long"),
+        xrisk: value("xrisk")
+      };
+      const sum = Object.values(raw).reduce((a, b) => a + b, 0) || 1;
+      return Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, v / sum]));
+    }
+
+    function pct(n) {
+      return Math.max(0, Math.min(100, Math.round(n)));
+    }
+
+    function renderAllocation(items) {
+      const root = document.getElementById("allocation");
+      root.innerHTML = items.map(item => `
+        <div class="alloc-row">
+          <span>${item.label}</span>
+          <span class="alloc-track"><i style="--w:${pct(item.value)}%;--c:${item.color}"></i></span>
+          <strong>${pct(item.value)}%</strong>
+        </div>
+      `).join("");
+    }
+
+    function renderActions(actions) {
+      document.getElementById("actions").innerHTML = actions.map(action => `
+        <div class="action" style="border-left-color:${action.color}">
+          <strong>${action.title}</strong>
+          <p>${action.body}</p>
+        </div>
+      `).join("");
+    }
+
+    function update() {
+      ids.forEach(id => {
+        const label = document.getElementById(id + "Val");
+        if (label) label.textContent = value(id) + (["rapid", "abundance", "gentle", "long", "xrisk"].includes(id) ? "%" : "");
+      });
+
+      const s = normalisedScenarios();
+      const income = value("income");
+      const liquidity = value("liquidity");
+      const energy = value("energy");
+      const community = value("community");
+      const ai = value("ai");
+
+      const disruption = pct((s.rapid * 95) + (s.xrisk * 80) + (s.abundance * 58) + (s.gentle * 38) + (income * 0.28) - (liquidity * 0.10));
+      const resilience = pct((liquidity * 0.28) + (energy * 0.24) + (community * 0.22) + (ai * 0.18) + ((100 - income) * 0.08));
+      const urgency = pct((disruption * 0.62) + ((100 - resilience) * 0.38));
+
+      document.getElementById("disruptionScore").textContent = disruption;
+      document.getElementById("resilienceScore").textContent = resilience;
+      document.getElementById("urgencyScore").textContent = urgency;
+
+      const allocation = [
+        { label: "Liquidity + debt defence", value: 16 + s.rapid * 34 + Math.max(0, 60 - liquidity) * 0.18, color: colors.liquidity },
+        { label: "Energy + compute", value: 14 + (s.rapid + s.abundance + s.xrisk) * 28 + Math.max(0, 60 - energy) * 0.16, color: colors.resilience },
+        { label: "AI-native upside", value: 16 + (s.abundance + s.gentle) * 34 + Math.max(0, 65 - ai) * 0.10, color: colors.opportunity },
+        { label: "Community resilience", value: 10 + (s.rapid + s.xrisk) * 24 + Math.max(0, 60 - community) * 0.16, color: colors.safety },
+        { label: "Health + human upgrade", value: 12 + (s.abundance + s.gentle) * 20 + s.long * 12, color: colors.learning }
+      ];
+      const total = allocation.reduce((a, b) => a + b.value, 0) || 1;
+      renderAllocation(allocation.map(item => ({ ...item, value: item.value / total * 100 })));
+
+      const actions = [];
+      if (urgency > 65) {
+        actions.push({ color: colors.liquidity, title: "Next 30 days: reduce fragility", body: "Map burn rate, debt exposure, essential expenses, and income dependencies. Build a cash buffer before chasing speculative upside." });
+      } else {
+        actions.push({ color: colors.opportunity, title: "Next 30 days: build leverage", body: "Pick one workflow or income stream and redesign it around AI agents, automation, and faster iteration." });
+      }
+      if (energy < 55) {
+        actions.push({ color: colors.resilience, title: "Energy + compute audit", body: "List power, internet, backup, GPU/cloud access, critical loads, and what fails if the grid or income is stressed." });
+      }
+      if (income > 55) {
+        actions.push({ color: colors.opportunity, title: "Career or business defence", body: "Identify what AI can replace, what it can amplify, and where ownership, trust, regulation, physical context, or taste creates a moat." });
+      }
+      if (community < 55 || s.rapid > 0.25) {
+        actions.push({ color: colors.safety, title: "Community layer", body: "Strengthen trusted local relationships. Resilience is cheaper and more humane when it is shared." });
+      }
+      if (s.abundance > 0.25) {
+        actions.push({ color: colors.opportunity, title: "Advocate for abundance", body: "Support policies, products, and institutions that distribute AI benefits: public AI access, health acceleration, energy buildout, and human augmentation." });
+      }
+      if (s.xrisk > 0.12) {
+        actions.push({ color: colors.safety, title: "Risk reduction", body: "Support serious AI safety, biosecurity, cyber defence, monitoring, and governance without defaulting to anti-technology fatalism." });
+      }
+      renderActions(actions.slice(0, 5));
+
+      localStorage.setItem("postAgiPlanningModel", JSON.stringify(Object.fromEntries(ids.map(id => [id, value(id)]))));
+    }
+
+    function restore() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("postAgiPlanningModel") || "{}");
+        ids.forEach(id => {
+          if (saved[id] !== undefined) document.getElementById(id).value = saved[id];
+        });
+      } catch (_) {}
+    }
+
+    restore();
+    ids.forEach(id => document.getElementById(id).addEventListener("input", update));
+    document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    update();
+  </script>
+</body>
+</html>
