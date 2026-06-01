@@ -1,6 +1,6 @@
-# Post-AGI Planning
+# Hitchhiker's Guide to the Singularity
 
-## How to Survive, Adapt, and Help Build an Abundant Future
+## How to prepare for when artificial intelligence does everything better than humans can
 
 By Peter Xing
 
