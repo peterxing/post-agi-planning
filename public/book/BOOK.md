@@ -4,7 +4,7 @@
 
 By Peter Xing
 
-Draft 0.1 - 2026-06-02
+Draft 1.0 - 2026-06-02
 
 ---
 
@@ -21,6 +21,31 @@ It is not a prophecy. It is a probabilistic operating model.
 The reader should finish with a living plan: what to monitor, how to allocate capital and attention, how to protect their family and community, how to advocate for a better transition, and how to update their assumptions as the world changes in real time.
 
 The companion modelling tool turns the book into action. It lets readers set scenario probabilities, choose a timeline, map household or organisational exposure, and convert the result into a ranked post-AGI action plan.
+
+## How to Use This Book
+
+This is a book, but it is also a planning instrument.
+
+Read it once like an argument. Then use it like an operating system.
+
+The chapters move from felt acceleration to practical action:
+
+- Chapter 1 explains why the planning horizon has changed.
+- Chapter 2 maps who is exposed and why ordinary life is the real battlefield.
+- Chapter 3 defines AGI, robotics, and the singularity as economic and civilisational forces.
+- Chapter 4 explores the major transition pathways, from disorderly labour shock to fast abundance.
+- Chapter 5 separates capability timelines from economic and social impact timelines.
+- Chapter 6 turns the argument into a live plan.
+
+The companion website is not an afterthought. It is the point.
+
+Books are static. AGI planning cannot be static. The reader should return to the live model when frontier models improve, robotics prices change, labour markets crack, governments announce new policy, energy and compute become constrained, or social volatility rises.
+
+The goal is not ideological purity. The goal is adaptive positioning.
+
+You do not need to believe in one exact timeline to act. You need to assign probabilities, allocate capital and attention, monitor reality, and update.
+
+That is the difference between being surprised by the future and participating in its construction.
 
 ---
 
@@ -69,6 +94,22 @@ We are not outside the event looking in.
 We are already inside the acceleration.
 
 The work now is to plan like it.
+
+### Chapter 1 Action: Name the Acceleration
+
+Before you can plan, you need to stop treating the acceleration as background noise.
+
+Write down three things that have changed in the last twelve months:
+
+- A tool that can now do something you used to assume required a human.
+- A workflow in your job, business, or household that AI can already compress.
+- A physical-world capability, such as robotics, energy storage, drones, sensors, or manufacturing, that looks closer than it did a year ago.
+
+Then ask a harder question: if each of those improves at the same rate for another two years, what breaks first?
+
+For some people, the answer is income. For others, it is education, company structure, competitive advantage, local politics, retirement assumptions, or a sense of meaning. Do not generalise too early. Your plan begins where your exposure is real.
+
+The first post-AGI planning move is simple: write your current assumptions down before the world changes them for you.
 
 ---
 
@@ -150,6 +191,57 @@ What changes is the planning horizon.
 
 If the world can change in six months, five years, or ten years, then we should stop treating the future as a single line and start treating it as a portfolio of scenarios.
 
+### Chapter 2 Action: Audit the Human Stack
+
+Use the human stack as your first planning map.
+
+At the base are survival needs:
+
+- Shelter.
+- Food.
+- Water.
+- Energy.
+- Health.
+- Communications.
+- Safety.
+
+Above that are economic needs:
+
+- Income.
+- Savings.
+- Insurance.
+- Debt service.
+- Investment exposure.
+- Retirement assumptions.
+- Business continuity.
+
+Above that are social needs:
+
+- Family.
+- Friends.
+- Neighbours.
+- Community trust.
+- Local institutions.
+- Governance.
+
+At the top are human potential needs:
+
+- Learning.
+- Purpose.
+- Creativity.
+- Contribution.
+- Healthspan.
+- Intelligence amplification.
+- Spiritual and philosophical orientation.
+
+AGI touches all four layers.
+
+If you are a parent, your plan must include children and education. If you are a founder, it must include business model fragility and AI-native competition. If you are a CxO, it must include labour redesign, governance, security, morale, and social licence. If you are a policymaker, it must include transition income, public AI access, infrastructure, and legitimacy. If you are retired, it must include purchasing power, medical access, longevity, and social stability.
+
+The mistake is to think the AGI question belongs only to technologists.
+
+It belongs to anyone with bills to pay, people to protect, assets to allocate, or a community to lead.
+
 ---
 
 ## Chapter 3: What AGI Means Inside the Singularity
@@ -217,6 +309,29 @@ We cannot know exactly what happens beyond the event horizon. But we can know wh
 - A moral commitment to human flourishing.
 
 That is the foundation of the plan.
+
+### Chapter 3 Action: Define Your Singularity Assumptions
+
+Do not argue about AGI in the abstract. Define what would matter in practice.
+
+For your life or organisation, write down the threshold conditions:
+
+- What would AI need to do before your day job is materially exposed?
+- What would AI need to do before your business model is materially exposed?
+- What would robotics need to do before your local economy changes?
+- What would energy or compute need to cost before your plan changes?
+- What would medical AI or longevity science need to achieve before retirement assumptions change?
+- What would governance need to fail at before resilience becomes urgent?
+
+This converts philosophy into triggers.
+
+The singularity is not useful as a mystical concept. It is useful when it forces you to notice that old forecasting methods stop working in a world where intelligence itself is compounding.
+
+When intelligence compounds, every bottleneck should be re-examined.
+
+Some bottlenecks disappear. Some become more valuable. Human trust may become more valuable. Energy may become more valuable. Land, water, chips, robotics, security, law, governance, embodied presence, and community may become more valuable.
+
+The strategic move is to identify which bottlenecks you can own, improve, access, or defend.
 
 ---
 
@@ -294,6 +409,38 @@ You can build resilience for a disorderly transition, advocate for positive abun
 
 That is post-AGI planning.
 
+### Chapter 4 Action: Build a Scenario Portfolio
+
+A scenario portfolio prevents two common failures.
+
+The first failure is denial. You assume the world will continue roughly as it is, so you make no preparation for rapid disruption.
+
+The second failure is monomania. You bet everything on one extreme outcome, then damage your present life if that outcome arrives later, differently, or not at all.
+
+A better starting portfolio is:
+
+- 20% rapid economic disruption over the next 6 months.
+- 30% fast takeoff into positive abundance over 6 months to 4 years.
+- 30% slow or gentle singularity over 5 to 10 years.
+- 10% long horizon, where AGI takes decades.
+- 10% existential-risk pathway.
+
+The percentages are not sacred. They are a starting point.
+
+What matters is the discipline of connecting each scenario to action.
+
+Rapid disruption means liquidity, essentials, defensible income, community, security, and low-fragility debt.
+
+Fast abundance means AI-native upside, robotics, energy, compute, biotech, education, and public advocacy for widely shared benefits.
+
+Slow takeoff means keep building, keep investing, keep learning, and upgrade your work before competitors do.
+
+Long horizon means do not sacrifice the present for a future that may take longer.
+
+Existential risk means support safety, governance, cyber resilience, biosecurity, monitoring, and serious coordination.
+
+The point is not to average the scenarios into bland advice. The point is to maintain live exposure to the futures that matter.
+
 ---
 
 ## Chapter 5: When to Expect Impact
@@ -363,6 +510,42 @@ Each reader should define personal trigger points:
 Near-term AGI planning is not about being right once.
 
 It is about updating faster than the world breaks your old assumptions.
+
+### Chapter 5 Action: Track Capability, Deployment, and Impact Separately
+
+Most timeline debates collapse three different questions into one.
+
+Capability asks: what can the system do?
+
+Deployment asks: who is actually using it at scale?
+
+Impact asks: what has changed in money, work, law, politics, or daily life?
+
+You need all three.
+
+A frontier model may be capable before enterprises deploy it. Enterprises may deploy it before official labour statistics show the effect. Labour statistics may show the effect before governments understand what to do. Governments may act before communities trust the response.
+
+That lag is where both risk and opportunity live.
+
+Track five timelines:
+
+- Cognitive capability.
+- Physical robotics.
+- Enterprise and government deployment.
+- Economic impact.
+- Social impact.
+
+Then define update signals:
+
+- A model can reliably complete multi-day agentic work.
+- Robotics drops below a price point relevant to your industry.
+- A major company redesigns work around agents instead of departments.
+- Unemployment, underemployment, or wage pressure shifts in your sector.
+- Insurance, credit, or asset markets start repricing AI risk.
+- Governments announce UBI, UHI, public AI, compute policy, or emergency transition measures.
+- Safety incidents, cyber events, or biosecurity concerns rise.
+
+The reader who monitors these signals calmly will make better decisions than the reader who waits for consensus.
 
 ---
 
@@ -434,3 +617,98 @@ But futures do not build themselves.
 
 We have to choose, prepare, and accelerate the right one.
 
+---
+
+## Conclusion: Do Not Wait for Permission From the Future
+
+The central mistake is waiting for certainty.
+
+By the time everyone agrees that AGI has arrived, the best positioning will already have happened. The careers will already be changing. The companies will already be reorganising. The investment narratives will already have shifted. The policy fights will already be underway. The communities with resilience will already have built trust, energy, food, communications, and coordination capacity.
+
+You do not need certainty to begin.
+
+You need a living plan.
+
+That plan should be humble enough to update and serious enough to act on.
+
+Start with the ordinary: bills, income, health, children, family, housing, insurance, debt, retirement, community, and purpose. Then examine each one under near-term AGI assumptions. Do not outsource that thinking to pundits, politicians, employers, or markets. They will be reacting to the same uncertainty.
+
+Then look upward.
+
+If AGI is real, humanity is approaching one of the most important transitions in its history. We can use machine intelligence to accelerate science, extend healthy lifespan, automate dangerous work, educate every child, restore ecosystems, lower the cost of essentials, and expand human potential. We can build an abundant future.
+
+But abundance is not guaranteed.
+
+It has to be built, governed, defended, and distributed.
+
+The post-AGI plan is therefore both personal and civilisational.
+
+Protect your household. Upgrade your capabilities. Reduce fragility. Build or join resilient communities. Allocate capital with probabilities. Own or access strategic infrastructure. Learn to work with AI. Advocate for safety without surrendering to fear. Advocate for abundance without becoming naive. Support human enhancement, healthy longevity, and intelligence amplification so humans are not merely displaced by the tools we create.
+
+The future is not waiting.
+
+Neither should we.
+
+---
+
+## Appendix A: The Post-AGI Planning Worksheet
+
+### 1. Current Exposure
+
+- What percentage of your income depends on tasks AI can plausibly automate?
+- What percentage of your expenses are fixed for the next twelve months?
+- How many months of essential expenses can you cover without labour income?
+- What debt becomes dangerous if income drops?
+- Which insurance assumptions should be reviewed?
+- Which family obligations are non-negotiable?
+
+### 2. Strategic Assets
+
+- Do you have access to reliable energy?
+- Do you have access to compute, cloud credits, GPUs, or AI-native tooling?
+- Do you have productive land, workshop capacity, food capacity, water security, or local manufacturing access?
+- Do you have trusted people nearby?
+- Do you have skills that become more valuable with AI rather than less?
+- Do you own assets that benefit from abundance, automation, energy demand, or resilience demand?
+
+### 3. Capability Upgrade
+
+- Which AI tools do you use daily?
+- Which workflows have you automated?
+- Which agents could you build or deploy this month?
+- Which human skills become more valuable when paired with AI?
+- Which health, cognition, or longevity practices increase your future optionality?
+
+### 4. Scenario Allocation
+
+Assign percentages:
+
+- Rapid disruption:
+- Fast abundance:
+- Slow gentle singularity:
+- Long horizon:
+- Existential risk:
+
+For each scenario, write one action for:
+
+- The next 30 days.
+- The next 6 months.
+- The next 2 years.
+
+### 5. Update Triggers
+
+Write five signals that would force you to update your plan.
+
+Examples:
+
+- My industry adopts autonomous agents for more than 30% of core workflows.
+- A major robotics platform reaches a price and capability threshold relevant to my work.
+- My local community shows signs of economic stress or institutional failure.
+- Energy or compute access becomes a limiting factor.
+- A government announces major transition income, public AI, or emergency labour policy.
+
+Planning is not a document.
+
+Planning is a loop.
+
+Run the loop.

@@ -476,6 +476,85 @@
       margin-top: 22px;
     }
 
+    .reader {
+      background: #fffdf7;
+    }
+
+    .reader-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 76px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 7px 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .toc a:first-of-type { border-top: 0; }
+
+    .book-text {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: clamp(18px, 4vw, 42px);
+    }
+
+    .book-text article {
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .book-text article:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .book-text h2 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 46px);
+      margin-bottom: 16px;
+    }
+
+    .book-text h3 {
+      font-size: 23px;
+      margin: 28px 0 10px;
+    }
+
+    .book-text p,
+    .book-text li {
+      font-size: 18px;
+      color: #31312b;
+    }
+
+    .book-text p {
+      margin: 0 0 16px;
+    }
+
+    .book-text ul {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+
+    .book-text .loading {
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
     .book-link p {
       margin: 5px 0 0;
       color: rgba(255,255,255,0.72);
@@ -524,6 +603,14 @@
         grid-template-columns: 1fr;
       }
 
+      .reader-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+
       .alloc-row {
         grid-template-columns: 1fr;
       }
@@ -543,6 +630,7 @@
       </div>
       <div class="navlinks">
         <a href="#chapters">Chapters</a>
+        <a href="#read">Read</a>
         <a href="#model" class="primary">Model</a>
         <a href="BOOK.md">Manuscript</a>
       </div>
@@ -676,6 +764,24 @@
             <p>Use the markdown draft for expansion, editing, or export into publishing tools.</p>
           </div>
           <a href="BOOK.md" style="color:white">Open BOOK.md</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="reader" id="read">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Full chapters.</h2>
+          <p>The manuscript below is loaded from the published `BOOK.md`, so the website and book stay aligned. Read it linearly, then use the model to turn the argument into a personal or organisational plan.</p>
+        </div>
+        <div class="reader-grid">
+          <aside class="toc" id="toc" aria-label="Book table of contents">
+            <strong>Contents</strong>
+            <a href="#model">Skip to live model</a>
+          </aside>
+          <div class="book-text" id="bookText">
+            <p class="loading">Loading full manuscript...</p>
+          </div>
         </div>
       </div>
     </section>
@@ -910,6 +1016,82 @@
     ids.forEach(id => document.getElementById(id).addEventListener("input", update));
     document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     update();
+
+    function slugify(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+    }
+
+    function inlineMarkdown(text) {
+      return text
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    }
+
+    function renderBook(markdown) {
+      const root = document.getElementById("bookText");
+      const toc = document.getElementById("toc");
+      const lines = markdown.split(/\r?\n/);
+      const sections = [];
+      let current = null;
+
+      for (const line of lines) {
+        if (line.startsWith("## ")) {
+          if (current) sections.push(current);
+          current = { title: line.slice(3).trim(), body: [] };
+        } else if (current && line.trim() !== "---") {
+          current.body.push(line);
+        }
+      }
+      if (current) sections.push(current);
+
+      root.innerHTML = sections.map(section => {
+        const id = slugify(section.title);
+        const blocks = [];
+        let list = [];
+
+        function flushList() {
+          if (list.length) {
+            blocks.push(`<ul>${list.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
+            list = [];
+          }
+        }
+
+        for (const raw of section.body) {
+          const line = raw.trim();
+          if (!line) {
+            flushList();
+            continue;
+          }
+          if (line.startsWith("### ")) {
+            flushList();
+            blocks.push(`<h3>${inlineMarkdown(line.slice(4).trim())}</h3>`);
+          } else if (line.startsWith("- ")) {
+            list.push(line.slice(2).trim());
+          } else if (!line.startsWith("# ")) {
+            flushList();
+            blocks.push(`<p>${inlineMarkdown(line)}</p>`);
+          }
+        }
+        flushList();
+
+        return `<article id="${id}"><h2>${inlineMarkdown(section.title)}</h2>${blocks.join("")}</article>`;
+      }).join("");
+
+      toc.innerHTML = "<strong>Contents</strong>" + sections
+        .filter(section => section.title.startsWith("Chapter") || section.title === "Working Thesis" || section.title.startsWith("Conclusion"))
+        .map(section => `<a href="#${slugify(section.title)}">${section.title}</a>`)
+        .join("") + '<a href="#model">Live model</a>';
+    }
+
+    fetch("BOOK.md")
+      .then(response => {
+        if (!response.ok) throw new Error("BOOK.md unavailable");
+        return response.text();
+      })
+      .then(renderBook)
+      .catch(() => {
+        document.getElementById("bookText").innerHTML = '<p class="loading">Could not load BOOK.md. Use the Manuscript link above.</p>';
+      });
   </script>
 </body>
 </html>
