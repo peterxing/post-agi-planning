@@ -464,6 +464,78 @@
       font-size: 14px;
     }
 
+    .comparison {
+      grid-column: 1 / -1;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .compare-card {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 168px;
+    }
+
+    .compare-card h4 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .compare-row:first-of-type { border-top: 0; }
+
+    .compare-row strong {
+      font-family: var(--mono);
+    }
+
+    .market-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .market-item {
+      border-left: 4px solid var(--accent3);
+      background: var(--panel);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .market-item a {
+      color: var(--ink);
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .market-item p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-line {
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
     .book-link {
       display: flex;
       align-items: center;
@@ -599,7 +671,7 @@
         justify-content: flex-start;
       }
 
-      .chapters, .scoregrid, .watchlist {
+      .chapters, .scoregrid, .watchlist, .comparison-grid {
         grid-template-columns: 1fr;
       }
 
@@ -884,6 +956,28 @@
               <div><strong>Society watch:</strong><br>UBI/UHI policy, unrest, public AI infrastructure, safety incidents, governance moves.</div>
             </div>
           </div>
+
+          <div class="panel comparison">
+            <h3>Reader survey + prediction markets</h3>
+            <p class="hint">Your slider values are submitted as an anonymous survey response when the backend is available. The comparison uses public prediction-market APIs where browser access succeeds; otherwise it shows the reader consensus and a clear source status.</p>
+            <div class="comparison-grid">
+              <div class="compare-card">
+                <h4>Your model</h4>
+                <div id="personalRows"></div>
+              </div>
+              <div class="compare-card">
+                <h4>Reader consensus</h4>
+                <div id="readerRows"></div>
+                <div id="surveyStatus" class="status-line">Survey loading...</div>
+              </div>
+              <div class="compare-card">
+                <h4>Prediction markets</h4>
+                <div id="marketRows"></div>
+                <div id="marketStatus" class="status-line">Markets loading...</div>
+              </div>
+            </div>
+            <div id="marketList" class="market-list"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -898,6 +992,23 @@
 
   <script>
     const ids = ["rapid", "abundance", "gentle", "long", "xrisk", "income", "liquidity", "energy", "community", "ai"];
+    const scenarioIds = ["rapid", "abundance", "gentle", "long", "xrisk"];
+    const scenarioLabels = {
+      rapid: "Rapid disruption",
+      abundance: "Fast abundance",
+      gentle: "Gentle singularity",
+      long: "Long horizon",
+      xrisk: "Existential risk"
+    };
+    const pollTable = "book_probability_responses";
+    const supabaseConfig = {
+      url: "https://kpcdcpnwvemeqedtvnsd.supabase.co",
+      anonKey: "sb_publishable_MNUopX7S_p-eaTnKcQ8a2g_1nZdZU1i"
+    };
+    let surveyTimer = null;
+    let lastSurveyPayload = "";
+    let readerConsensus = null;
+    let marketConsensus = null;
     const colors = {
       resilience: "#0e7c66",
       opportunity: "#2f5f98",
@@ -920,6 +1031,11 @@
       };
       const sum = Object.values(raw).reduce((a, b) => a + b, 0) || 1;
       return Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, v / sum]));
+    }
+
+    function normalizedPercentages() {
+      const normalized = normalisedScenarios();
+      return Object.fromEntries(scenarioIds.map(id => [id, pct(normalized[id] * 100)]));
     }
 
     function pct(n) {
@@ -946,6 +1062,239 @@
       `).join("");
     }
 
+    function renderProbabilityRows(targetId, values, fallback) {
+      const root = document.getElementById(targetId);
+      if (!root) return;
+
+      if (!values) {
+        root.innerHTML = `<div class="compare-row"><span>${fallback}</span><strong>--</strong></div>`;
+        return;
+      }
+
+      root.innerHTML = scenarioIds.map(id => `
+        <div class="compare-row">
+          <span>${scenarioLabels[id]}</span>
+          <strong>${Math.round(values[id] || 0)}%</strong>
+        </div>
+      `).join("");
+    }
+
+    function readerId() {
+      const key = "hitchhikerSingularityReaderId";
+      try {
+        const existing = localStorage.getItem(key);
+        if (existing) return existing;
+        const id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+        localStorage.setItem(key, id);
+        return id;
+      } catch (_) {
+        return Math.random().toString(36).slice(2);
+      }
+    }
+
+    function surveyPayload() {
+      const normalized = normalizedPercentages();
+      return {
+        reader_id: readerId(),
+        rapid: normalized.rapid,
+        abundance: normalized.abundance,
+        gentle: normalized.gentle,
+        long_horizon: normalized.long,
+        xrisk: normalized.xrisk,
+        income: value("income"),
+        liquidity: value("liquidity"),
+        energy: value("energy"),
+        community: value("community"),
+        ai_fluency: value("ai"),
+        user_agent_hash: String(navigator.userAgent || "").slice(0, 140),
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    function setStatus(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    async function submitSurveySoon() {
+      clearTimeout(surveyTimer);
+      surveyTimer = setTimeout(submitSurvey, 900);
+    }
+
+    async function submitSurvey() {
+      const payload = surveyPayload();
+      const signature = JSON.stringify(payload);
+      if (signature === lastSurveyPayload) return;
+      lastSurveyPayload = signature;
+
+      try {
+        const response = await fetch(`${supabaseConfig.url}/rest/v1/${pollTable}?on_conflict=reader_id`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal,resolution=merge-duplicates"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error(`survey write ${response.status}`);
+        setStatus("surveyStatus", "Survey connected. Your anonymous response is included.");
+        await loadSurveyAggregate();
+      } catch (error) {
+        const personal = normalizedPercentages();
+        readerConsensus = personal;
+        renderProbabilityRows("readerRows", readerConsensus, "Local only");
+        setStatus("surveyStatus", "Survey backend unavailable here; showing your local response only.");
+      }
+    }
+
+    async function loadSurveyAggregate() {
+      try {
+        const response = await fetch(`${supabaseConfig.url}/rest/v1/${pollTable}?select=rapid,abundance,gentle,long_horizon,xrisk&limit=2000`, {
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error(`survey read ${response.status}`);
+        const rows = await response.json();
+        if (!Array.isArray(rows) || !rows.length) throw new Error("no survey rows");
+
+        const sums = { rapid: 0, abundance: 0, gentle: 0, long: 0, xrisk: 0 };
+        rows.forEach(row => {
+          sums.rapid += Number(row.rapid || 0);
+          sums.abundance += Number(row.abundance || 0);
+          sums.gentle += Number(row.gentle || 0);
+          sums.long += Number(row.long_horizon || 0);
+          sums.xrisk += Number(row.xrisk || 0);
+        });
+        readerConsensus = Object.fromEntries(Object.entries(sums).map(([k, v]) => [k, v / rows.length]));
+        renderProbabilityRows("readerRows", readerConsensus, "No reader responses");
+        setStatus("surveyStatus", `Survey responses: ${rows.length}`);
+      } catch (error) {
+        renderProbabilityRows("readerRows", readerConsensus || normalizedPercentages(), "Survey unavailable");
+        setStatus("surveyStatus", "Survey aggregate unavailable; using current reader response.");
+      }
+    }
+
+    function marketScenario(text) {
+      const source = String(text || "").toLowerCase();
+      if (/extinction|catastroph|doom|wipe out|unaligned|ai safety|biosecurity|nuclear|world war/.test(source)) return "xrisk";
+      if (/unemployment|job|labor|labour|recession|civil unrest|riot|strike|layoff/.test(source)) return "rapid";
+      if (/agi|artificial general intelligence|superintelligence|asi|openai|anthropic|deepmind|xai|frontier/.test(source)) return "abundance";
+      if (/robot|automation|productivity|gdp|economic growth|ai agent|agents/.test(source)) return "gentle";
+      if (/2050|2040|2035|50 years|decade/.test(source)) return "long";
+      return null;
+    }
+
+    function polymarketProbability(market) {
+      const outcomes = Array.isArray(market.outcomes) ? market.outcomes : JSON.parse(market.outcomes || "[]");
+      const prices = Array.isArray(market.outcomePrices) ? market.outcomePrices : JSON.parse(market.outcomePrices || "[]");
+      const yesIndex = outcomes.findIndex(outcome => String(outcome).toLowerCase() === "yes");
+      const idx = yesIndex >= 0 ? yesIndex : 0;
+      const price = Number(prices[idx]);
+      return Number.isFinite(price) ? price * 100 : null;
+    }
+
+    function kalshiProbability(market) {
+      const bid = Number(market.yes_bid);
+      const ask = Number(market.yes_ask);
+      const last = Number(market.last_price);
+      if (Number.isFinite(bid) && Number.isFinite(ask) && bid > 0 && ask > 0) return (bid + ask) / 2;
+      if (Number.isFinite(last) && last > 0) return last;
+      return null;
+    }
+
+    async function fetchJson(url) {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${url}`);
+      return response.json();
+    }
+
+    async function loadPredictionMarkets() {
+      const found = [];
+      const statuses = [];
+
+      const polyQueries = ["AGI", "artificial intelligence", "AI unemployment", "AI extinction"];
+      for (const query of polyQueries) {
+        try {
+          const markets = await fetchJson(`https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=25&search=${encodeURIComponent(query)}`);
+          (Array.isArray(markets) ? markets : []).forEach(market => {
+            const title = market.question || market.title || market.groupItemTitle || "";
+            const scenario = marketScenario(title);
+            const probability = polymarketProbability(market);
+            if (scenario && probability != null) {
+              found.push({
+                source: "Polymarket",
+                title,
+                scenario,
+                probability,
+                url: market.slug ? `https://polymarket.com/event/${market.slug}` : "https://polymarket.com/markets"
+              });
+            }
+          });
+          statuses.push(`Polymarket ${query}: ok`);
+        } catch (error) {
+          statuses.push(`Polymarket ${query}: unavailable`);
+        }
+      }
+
+      const kalshiQueries = ["artificial intelligence", "AI", "AGI", "automation"];
+      for (const query of kalshiQueries) {
+        try {
+          const payload = await fetchJson(`https://external-api.kalshi.com/trade-api/v2/markets?limit=25&status=open&search=${encodeURIComponent(query)}`);
+          (payload.markets || []).forEach(market => {
+            const title = market.title || market.subtitle || market.ticker || "";
+            const scenario = marketScenario(title);
+            const probability = kalshiProbability(market);
+            if (scenario && probability != null) {
+              found.push({
+                source: "Kalshi",
+                title,
+                scenario,
+                probability,
+                url: market.ticker ? `https://kalshi.com/markets/${market.ticker}` : "https://kalshi.com/markets"
+              });
+            }
+          });
+          statuses.push(`Kalshi ${query}: ok`);
+        } catch (error) {
+          statuses.push(`Kalshi ${query}: unavailable`);
+        }
+      }
+
+      const byScenario = {};
+      scenarioIds.forEach(id => byScenario[id] = []);
+      found.forEach(item => byScenario[item.scenario]?.push(item.probability));
+      marketConsensus = {};
+      scenarioIds.forEach(id => {
+        const values = byScenario[id];
+        marketConsensus[id] = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+      });
+
+      renderProbabilityRows("marketRows", marketConsensus, "No matching markets");
+      renderMarketList(found.slice(0, 8));
+      setStatus("marketStatus", found.length ? `${found.length} AI-relevant markets matched. ${statuses.join("; ")}` : `No matching market prices. ${statuses.join("; ")}`);
+    }
+
+    function renderMarketList(items) {
+      const root = document.getElementById("marketList");
+      if (!root) return;
+      if (!items.length) {
+        root.innerHTML = '<div class="market-item"><strong>No matching public market prices loaded.</strong><p>Try again later; browser CORS or market availability may block a source.</p></div>';
+        return;
+      }
+      root.innerHTML = items.map(item => `
+        <div class="market-item">
+          <a href="${item.url}" target="_blank" rel="noreferrer">${item.source}: ${item.title}</a>
+          <p>${scenarioLabels[item.scenario]} proxy: ${Math.round(item.probability)}%</p>
+        </div>
+      `).join("");
+    }
+
     function update() {
       ids.forEach(id => {
         const label = document.getElementById(id + "Val");
@@ -966,6 +1315,9 @@
       document.getElementById("disruptionScore").textContent = disruption;
       document.getElementById("resilienceScore").textContent = resilience;
       document.getElementById("urgencyScore").textContent = urgency;
+      renderProbabilityRows("personalRows", normalizedPercentages(), "Set your model");
+      if (readerConsensus) renderProbabilityRows("readerRows", readerConsensus, "Survey unavailable");
+      if (marketConsensus) renderProbabilityRows("marketRows", marketConsensus, "Markets unavailable");
 
       const allocation = [
         { label: "Liquidity + debt defence", value: 16 + s.rapid * 34 + Math.max(0, 60 - liquidity) * 0.18, color: colors.liquidity },
@@ -1001,6 +1353,7 @@
       renderActions(actions.slice(0, 5));
 
       localStorage.setItem("postAgiPlanningModel", JSON.stringify(Object.fromEntries(ids.map(id => [id, value(id)]))));
+      submitSurveySoon();
     }
 
     function restore() {
@@ -1016,6 +1369,8 @@
     ids.forEach(id => document.getElementById(id).addEventListener("input", update));
     document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     update();
+    loadSurveyAggregate();
+    loadPredictionMarkets();
 
     function slugify(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
