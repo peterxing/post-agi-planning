@@ -1128,6 +1128,20 @@
       lastSurveyPayload = signature;
 
       try {
+        const apiResponse = await fetch("/api/book-poll", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          readerConsensus = data.average || normalizedPercentages();
+          renderProbabilityRows("readerRows", readerConsensus, "No reader responses");
+          setStatus("surveyStatus", `Survey responses: ${data.count || 1} (${data.source || "live API"})`);
+          return;
+        }
+
         const response = await fetch(`${supabaseConfig.url}/rest/v1/${pollTable}?on_conflict=reader_id`, {
           method: "POST",
           headers: {
@@ -1152,6 +1166,17 @@
 
     async function loadSurveyAggregate() {
       try {
+        const apiResponse = await fetch("/api/book-poll", { cache: "no-store" });
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          if (data.count) {
+            readerConsensus = data.average;
+            renderProbabilityRows("readerRows", readerConsensus, "No reader responses");
+            setStatus("surveyStatus", `Survey responses: ${data.count} (${data.source || "live API"})`);
+            return;
+          }
+        }
+
         const response = await fetch(`${supabaseConfig.url}/rest/v1/${pollTable}?select=rapid,abundance,gentle,long_horizon,xrisk&limit=2000`, {
           headers: {
             apikey: supabaseConfig.anonKey,
