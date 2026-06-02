@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T22:26:54.907Z",
+  "generatedAt": "2026-06-02T22:37:54.757Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -8,9 +8,9 @@
     ]
   },
   "chapters": {
-    "chapter-1-the-future-stopped-arriving-politely": {
-      "id": "chapter-1-the-future-stopped-arriving-politely",
-      "title": "Chapter 1: The Future Stopped Arriving Politely",
+    "opening-the-future-stopped-arriving-politely": {
+      "id": "opening-the-future-stopped-arriving-politely",
+      "title": "Opening: The Future Stopped Arriving Politely",
       "terms": [
         "acceleration",
         "exponential",

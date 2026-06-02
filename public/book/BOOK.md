@@ -10,20 +10,6 @@ A living planning manual for the transition from labour scarcity to intelligence
 
 ---
 
-## Author's Note: Why This Rewrite Exists
-
-This draft has been rewritten with a moonshot and abundance lens: optimistic without being naive, practical without becoming small, personal without becoming a memoir-only project. The goal is not to imitate another writer's voice. The goal is to give this book the energy of exponential thinking while keeping it rooted in Peter Xing's lived experience: migration, scarcity, professional reinvention, transhumanism, public-sector AI, education, family, health, community, and the responsibility to help steer the post-AGI transition toward human flourishing.
-
-The core promise is simple: the reader finishes with a living plan. Not a prediction. Not a panic script. A plan that assigns probabilities, monitors reality, allocates capital and attention, protects the household, strengthens the community, and advocates for a better future.
-
-> The future is not a destination we wait for. It is a set of probabilities we allocate toward - and a better branch we help build.
-
-This version adds a clearer emotional arc. It begins with felt acceleration. It moves into the personal scarcity-to-abundance story. It then gives the reader a concrete set of frameworks: the human stack, the Six Ds of post-AGI disruption, the abundance engine, the scenario portfolio, the timeline stack, the 1000-day plan, and the distribution layer of UBI, Universal High Income, and Universal Compute.
-
-It also removes material that belonged to the writing process rather than the reader's journey. The book is now less about drafting a book and more about living through the transition from labour scarcity to intelligence abundance.
-
----
-
 ## How to Use This Book
 
 This is a book, but it is also a planning instrument.
@@ -44,7 +30,7 @@ The goal is not ideological purity. The goal is adaptive positioning. The goal i
 
 ---
 
-## Chapter 1: The Future Stopped Arriving Politely
+## Opening: The Future Stopped Arriving Politely
 
 There are moments when the future stops arriving politely.
 
@@ -89,7 +75,7 @@ The right posture is resilient acceleration. Reduce the fragilities that make pe
 
 > We are not outside the event looking in. We are inside the acceleration. The work now is to plan like it.
 
-### Chapter 1 Action: Name the Acceleration
+### Opening Action: Name the Acceleration
 
 Write down three things that changed in the last twelve months:
 

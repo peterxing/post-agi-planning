@@ -24,8 +24,8 @@ const scrapeSources = (process.env.X_SCRAPE_SOURCES || [
 
 const CHAPTERS = [
   {
-    id: 'chapter-1-the-future-stopped-arriving-politely',
-    title: 'Chapter 1: The Future Stopped Arriving Politely',
+    id: 'opening-the-future-stopped-arriving-politely',
+    title: 'Opening: The Future Stopped Arriving Politely',
     terms: ['acceleration', 'exponential', 'future', 'agi', 'frontier model', 'agent', 'codex', 'automation', 'disruption'],
   },
   {

@@ -1345,10 +1345,10 @@
               <path class="route-line" d="M132 354 C268 536 620 548 842 362" stroke="#18a57f"/>
               <path class="route-line" d="M344 132 C490 356 634 450 842 362" stroke="#c44f2d"/>
 
-              <a href="#chapter-1-the-future-stopped-arriving-politely" aria-label="Jump to Chapter 1, The Future Stopped Arriving Politely">
+              <a href="#opening-the-future-stopped-arriving-politely" aria-label="Jump to the opening, The Future Stopped Arriving Politely">
                 <circle cx="142" cy="340" r="58" fill="rgba(54,214,255,0.08)"/>
                 <circle class="system-core" cx="142" cy="340" r="21" fill="url(#coreGlow)" filter="url(#softGlow)"/>
-                <text class="system-label" x="92" y="410">01 Acceleration</text>
+                <text class="system-label" x="92" y="410">Opening</text>
                 <text class="system-note" x="88" y="430">launch vector</text>
               </a>
 
@@ -1429,17 +1429,6 @@
           <p>A practical field guide for households, founders, leaders, communities, and policymakers. It begins with lived disruption, then turns AGI from abstract anxiety into a plan that can keep updating.</p>
         </div>
         <div class="chapters">
-          <a class="chapter" href="#chapter-1-the-future-stopped-arriving-politely">
-            <span class="num">Chapter 01</span>
-            <h3>The Future Stopped Arriving Politely</h3>
-            <p>Why the old planning model breaks when intelligence gets cheap and institutions keep moving at committee speed.</p>
-            <ul>
-              <li>Felt acceleration, not abstract futurism.</li>
-              <li>Financial, physical, and social exposure.</li>
-              <li>Resilient acceleration as the default posture.</li>
-            </ul>
-          </a>
-
           <a class="chapter" href="#chapter-2-from-scarcity-to-abundance-my-why">
             <span class="num">Chapter 02</span>
             <h3>From Scarcity to Abundance</h3>
@@ -2498,7 +2487,7 @@
       }).join("");
 
       toc.innerHTML = "<strong>Contents</strong>" + sections
-        .filter(section => section.title.startsWith("Chapter") || section.title === "Working Thesis" || section.title.startsWith("Conclusion"))
+        .filter(section => section.title.startsWith("Opening") || section.title.startsWith("Chapter") || section.title === "Working Thesis" || section.title.startsWith("Conclusion"))
         .map(section => `<a href="#${slugify(section.title)}">${section.title}</a>`)
         .join("") + '<a href="#model">Live model</a>';
     }
