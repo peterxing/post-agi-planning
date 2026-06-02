@@ -16,11 +16,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Generate X chapter embeds
+      - name: Scrape X chapter embeds
         env:
-          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
           X_USERNAME: peterxing
           X_MAX_RESULTS: 50
+          X_SCRAPE_SOURCES: https://nitter.net/peterxing/rss,https://nitter.poast.org/peterxing/rss,https://xcancel.com/peterxing/rss,https://x.com/peterxing
         run: node scripts/update-x-chapter-embeds.mjs
       - name: Commit updated embeds
         run: |
