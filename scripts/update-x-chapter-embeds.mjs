@@ -24,39 +24,64 @@ const scrapeSources = (process.env.X_SCRAPE_SOURCES || [
 
 const CHAPTERS = [
   {
-    id: 'chapter-1-do-you-feel-the-acceleration',
-    title: 'Chapter 1: Do You Feel the Acceleration?',
+    id: 'chapter-1-the-future-stopped-arriving-politely',
+    title: 'Chapter 1: The Future Stopped Arriving Politely',
     terms: ['acceleration', 'exponential', 'future', 'agi', 'frontier model', 'agent', 'codex', 'automation', 'disruption'],
   },
   {
-    id: 'chapter-2-why',
-    title: 'Chapter 2: Why',
+    id: 'chapter-2-from-scarcity-to-abundance-my-why',
+    title: 'Chapter 2: From Scarcity to Abundance - My Why',
     terms: ['immigration', 'international student', 'scarcity', 'abundance', 'harbin', 'hobart', 'aging', 'longevity', 'transhumanism', 'human potential'],
   },
   {
-    id: 'chapter-3-who-needs-a-plan',
-    title: 'Chapter 3: Who Needs a Plan',
+    id: 'chapter-3-the-abundance-engine',
+    title: 'Chapter 3: The Abundance Engine',
+    terms: ['abundance', 'moonshot', 'six ds', 'digitisation', 'deception', 'disruption', 'dematerialisation', 'demonetisation', 'democratisation', 'supply'],
+  },
+  {
+    id: 'chapter-4-who-needs-a-plan-the-human-stack',
+    title: 'Chapter 4: Who Needs a Plan? The Human Stack',
     terms: ['income', 'insurance', 'family', 'career', 'jobs', 'education', 'retirement', 'community', 'governance', 'society'],
   },
   {
-    id: 'chapter-4-what-agi-means-inside-the-singularity',
-    title: 'Chapter 4: What AGI Means Inside the Singularity',
-    terms: ['singularity', 'agi', 'asi', 'superintelligence', 'robotics', 'transhumanism', 'bci', 'longevity', 'abundance'],
+    id: 'chapter-5-the-new-currency-energy-compute-and-productive-capacity',
+    title: 'Chapter 5: The New Currency - Energy, Compute, and Productive Capacity',
+    terms: ['energy', 'compute', 'gpu', 'microgrid', 'power', 'productive capacity', 'infrastructure', 'sovereignty', 'robots', 'automation'],
   },
   {
-    id: 'chapter-5-how-the-transition-could-unfold',
-    title: 'Chapter 5: How the Transition Could Unfold',
-    terms: ['ubi', 'uhi', 'civil unrest', 'labour', 'labor', 'displacement', 'takeoff', 'alignment', 'x-risk', 'existential'],
+    id: 'chapter-6-work-after-work',
+    title: 'Chapter 6: Work After Work',
+    terms: ['work', 'jobs', 'labour', 'labor', 'career', 'automation', 'agents', 'ownership', 'trust', 'purpose'],
   },
   {
-    id: 'chapter-6-when-to-expect-impact',
-    title: 'Chapter 6: When to Expect Impact',
+    id: 'chapter-7-five-futures-one-portfolio',
+    title: 'Chapter 7: Five Futures, One Portfolio',
+    terms: ['ubi', 'uhi', 'civil unrest', 'labour', 'labor', 'displacement', 'takeoff', 'alignment', 'x-risk', 'existential', 'scenario'],
+  },
+  {
+    id: 'chapter-8-when-capability-deployment-impact',
+    title: 'Chapter 8: When - Capability, Deployment, Impact',
     terms: ['timeline', 'forecast', 'prediction', 'polymarket', 'kalshi', 'probability', 'when', '2026', '2027', '2030'],
   },
   {
-    id: 'chapter-7-what-to-do-now',
-    title: 'Chapter 7: What to Do Now',
-    terms: ['energy', 'compute', 'gpu', 'resilience', 'microgrid', 'capital', 'plan', 'action', 'strategy', 'sovereignty'],
+    id: 'chapter-9-your-1000-day-moonshot-plan',
+    title: 'Chapter 9: Your 1000-Day Moonshot Plan',
+    terms: ['1000 days', 'moonshot', 'mtp', 'plan', 'sprint', '30 days', 'strategy', 'capability', 'assets', 'action'],
+  },
+  {
+    id: 'chapter-10-the-distribution-layer-ubi-universal-high-income-and-universal-compute',
+    title: 'Chapter 10: The Distribution Layer - UBI, Universal High Income, and Universal Compute',
+    terms: ['ubi', 'universal basic income', 'uhi', 'universal high income', 'universal compute', 'distribution', 'public ai', 'access'],
+  },
+  {
+    id: 'chapter-11-human-enhancement-staying-in-the-game',
+    title: 'Chapter 11: Human Enhancement - Staying in the Game',
+    terms: ['transhumanism', 'longevity', 'healthspan', 'bci', 'brain-computer', 'augmentation', 'enhancement', 'human potential'],
+  },
+  {
+    id: 'chapter-12-leaders-build-the-better-branch',
+    title: 'Chapter 12: Leaders - Build the Better Branch',
+    terms: ['leader', 'leadership', 'public sector', 'education', 'builder', 'policy', 'abundance', 'community', 'legitimacy'],
   },
 ];
 

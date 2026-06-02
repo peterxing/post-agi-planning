@@ -1062,6 +1062,21 @@
       padding-left: 22px;
     }
 
+    .book-text ol {
+      margin: 0 0 18px;
+      padding-left: 24px;
+    }
+
+    .book-text blockquote {
+      margin: 22px 0;
+      padding: 14px 18px;
+      border-left: 4px solid var(--accent);
+      background: var(--panel2);
+      border-radius: 6px;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
     .book-text .loading {
       color: var(--muted);
       font-family: var(--mono);
@@ -1287,7 +1302,7 @@
           <p>A star chart for the singularity: choose a route through the book by clicking a system, then use the live model as your ship computer when the real world changes.</p>
         </div>
         <div class="map-shell">
-          <div class="star-chart" role="img" aria-label="Clickable intergalactic map linking the seven book chapters as star systems">
+          <div class="star-chart" role="img" aria-label="Clickable intergalactic map linking the main book chapters as star systems">
             <svg viewBox="0 0 960 620" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
               <defs>
                 <radialGradient id="coreGlow" cx="50%" cy="50%" r="60%">
@@ -1330,53 +1345,53 @@
               <path class="route-line" d="M132 354 C268 536 620 548 842 362" stroke="#18a57f"/>
               <path class="route-line" d="M344 132 C490 356 634 450 842 362" stroke="#c44f2d"/>
 
-              <a href="#chapter-1-do-you-feel-the-acceleration" aria-label="Jump to Chapter 1, Acceleration">
+              <a href="#chapter-1-the-future-stopped-arriving-politely" aria-label="Jump to Chapter 1, The Future Stopped Arriving Politely">
                 <circle cx="142" cy="340" r="58" fill="rgba(54,214,255,0.08)"/>
                 <circle class="system-core" cx="142" cy="340" r="21" fill="url(#coreGlow)" filter="url(#softGlow)"/>
                 <text class="system-label" x="92" y="410">01 Acceleration</text>
                 <text class="system-note" x="88" y="430">launch vector</text>
               </a>
 
-              <a href="#chapter-2-why" aria-label="Jump to Chapter 2, Why">
+              <a href="#chapter-2-from-scarcity-to-abundance-my-why" aria-label="Jump to Chapter 2, From Scarcity to Abundance">
                 <circle cx="344" cy="132" r="54" fill="rgba(24,165,127,0.08)"/>
                 <circle class="system-core" cx="344" cy="132" r="20" fill="url(#abundanceGlow)" filter="url(#softGlow)"/>
                 <text class="system-label" x="286" y="82">02 Why</text>
                 <text class="system-note" x="286" y="102">origin system</text>
               </a>
 
-              <a href="#chapter-3-who-needs-a-plan" aria-label="Jump to Chapter 3, Who Needs a Plan">
+              <a href="#chapter-3-the-abundance-engine" aria-label="Jump to Chapter 3, The Abundance Engine">
                 <circle cx="590" cy="272" r="64" fill="rgba(255,255,255,0.05)"/>
                 <circle class="system-core" cx="590" cy="272" r="24" fill="#f7f2df" filter="url(#softGlow)"/>
-                <text class="system-label" x="612" y="210">03 Who</text>
-                <text class="system-note" x="612" y="230">human stack</text>
+                <text class="system-label" x="612" y="210">03 Abundance</text>
+                <text class="system-note" x="612" y="230">engine room</text>
               </a>
 
-              <a href="#chapter-4-what-agi-means-inside-the-singularity" aria-label="Jump to Chapter 4, What AGI Means Inside the Singularity">
+              <a href="#chapter-4-who-needs-a-plan-the-human-stack" aria-label="Jump to Chapter 4, Who Needs a Plan">
                 <circle cx="842" cy="362" r="72" fill="rgba(54,214,255,0.08)"/>
                 <circle class="system-core" cx="842" cy="362" r="29" fill="url(#coreGlow)" filter="url(#softGlow)"/>
-                <text class="system-label" x="748" y="448">04 Singularity Core</text>
-                <text class="system-note" x="748" y="468">event horizon</text>
+                <text class="system-label" x="748" y="448">04 Human Stack</text>
+                <text class="system-note" x="748" y="468">ordinary life</text>
               </a>
 
-              <a href="#chapter-5-how-the-transition-could-unfold" aria-label="Jump to Chapter 5, How the Transition Could Unfold">
+              <a href="#chapter-5-the-new-currency-energy-compute-and-productive-capacity" aria-label="Jump to Chapter 5, Energy, Compute, and Productive Capacity">
                 <circle cx="690" cy="500" r="48" fill="rgba(196,79,45,0.09)"/>
                 <circle class="system-core" cx="690" cy="500" r="18" fill="url(#riskGlow)" filter="url(#softGlow)"/>
-                <text class="system-label" x="710" y="510">05 How</text>
-                <text class="system-note" x="710" y="530">scenario lanes</text>
+                <text class="system-label" x="710" y="510">05 Energy</text>
+                <text class="system-note" x="710" y="530">compute lanes</text>
               </a>
 
-              <a href="#chapter-6-when-to-expect-impact" aria-label="Jump to Chapter 6, When to Expect Impact">
+              <a href="#chapter-6-work-after-work" aria-label="Jump to Chapter 6, Work After Work">
                 <circle cx="392" cy="502" r="50" fill="rgba(255,247,196,0.08)"/>
                 <circle class="system-core" cx="392" cy="502" r="19" fill="#f4c95d" filter="url(#softGlow)"/>
-                <text class="system-label" x="304" y="544">06 When</text>
-                <text class="system-note" x="304" y="564">time gates</text>
+                <text class="system-label" x="304" y="544">06 Work</text>
+                <text class="system-note" x="304" y="564">new ladders</text>
               </a>
 
-              <a href="#chapter-7-what-to-do-now" aria-label="Jump to Chapter 7, What to Do Now">
+              <a href="#chapter-7-five-futures-one-portfolio" aria-label="Jump to Chapter 7, Five Futures, One Portfolio">
                 <circle cx="260" cy="420" r="54" fill="rgba(24,165,127,0.08)"/>
                 <circle class="system-core" cx="260" cy="420" r="21" fill="url(#abundanceGlow)" filter="url(#softGlow)"/>
-                <text class="system-label" x="220" y="356">07 Action</text>
-                <text class="system-note" x="220" y="376">ship computer</text>
+                <text class="system-label" x="220" y="356">07 Portfolio</text>
+                <text class="system-note" x="220" y="376">scenario bets</text>
               </a>
             </svg>
           </div>
@@ -1398,8 +1413,8 @@
               </div>
             </div>
             <div class="map-actions">
-              <a href="#chapter-2-why">Start with Why</a>
-              <a href="#chapter-4-what-agi-means-inside-the-singularity">Enter the Core</a>
+              <a href="#chapter-2-from-scarcity-to-abundance-my-why">Start with Why</a>
+              <a href="#chapter-3-the-abundance-engine">Enter the Engine</a>
               <a href="#model">Open Ship Computer</a>
             </div>
           </aside>
@@ -1414,80 +1429,135 @@
           <p>A practical field guide for households, founders, leaders, communities, and policymakers. It begins with lived disruption, then turns AGI from abstract anxiety into a plan that can keep updating.</p>
         </div>
         <div class="chapters">
-          <a class="chapter" href="#chapter-1-do-you-feel-the-acceleration">
+          <a class="chapter" href="#chapter-1-the-future-stopped-arriving-politely">
             <span class="num">Chapter 01</span>
-            <h3>Acceleration</h3>
-            <p>Why the old planning model breaks when intelligence and labour start compounding faster than institutions can adapt.</p>
+            <h3>The Future Stopped Arriving Politely</h3>
+            <p>Why the old planning model breaks when intelligence gets cheap and institutions keep moving at committee speed.</p>
             <ul>
+              <li>Felt acceleration, not abstract futurism.</li>
               <li>Financial, physical, and social exposure.</li>
-              <li>Resilient acceleration.</li>
-              <li>Why the book needs a live model.</li>
+              <li>Resilient acceleration as the default posture.</li>
             </ul>
           </a>
 
-          <a class="chapter" href="#chapter-2-why">
+          <a class="chapter" href="#chapter-2-from-scarcity-to-abundance-my-why">
             <span class="num">Chapter 02</span>
-            <h3>Why</h3>
-            <p>Peter's migration, family disruption, Deloitte AI realisation, mortality shock, Singularity University, and transhumanist abundance arc.</p>
+            <h3>From Scarcity to Abundance</h3>
+            <p>Peter's migration, family disruption, professional automation realisation, mortality shock, and transhumanist why.</p>
             <ul>
-              <li>International student family roots.</li>
-              <li>From scarcity thinking to abundance.</li>
-              <li>Transhumanism as human agency.</li>
+              <li>Harbin, Hobart, Sydney, and the migrant ladder.</li>
+              <li>Travel agencies, taxis, tax advisory, and AI.</li>
+              <li>Healthy longevity and human agency.</li>
             </ul>
           </a>
 
-          <a class="chapter" href="#chapter-3-who-needs-a-plan">
+          <a class="chapter" href="#chapter-3-the-abundance-engine">
             <span class="num">Chapter 03</span>
-            <h3>Who</h3>
-            <p>AGI reaches ordinary life through bills, income, insurance, housing, children, health, community, pensions, and work.</p>
+            <h3>The Abundance Engine</h3>
+            <p>The Six Ds and the supply-side stack for turning cheap intelligence into real-world abundance.</p>
+            <ul>
+              <li>Digitisation to democratisation.</li>
+              <li>Energy, compute, robots, capital, policy, trust.</li>
+              <li>Abundance as infrastructure, not magic.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-4-who-needs-a-plan-the-human-stack">
+            <span class="num">Chapter 04</span>
+            <h3>The Human Stack</h3>
+            <p>AGI reaches ordinary life through bills, work, housing, health, family, trust, and purpose.</p>
             <ul>
               <li>Survival, economic, social, and potential layers.</li>
-              <li>Supply-side abundance.</li>
-              <li>Community and governance pressure.</li>
+              <li>Physical resilience still matters.</li>
+              <li>Adaptive plans, not bunker fantasies.</li>
             </ul>
           </a>
 
-          <a class="chapter" href="#chapter-4-what-agi-means-inside-the-singularity">
-            <span class="num">Chapter 04</span>
-            <h3>What</h3>
-            <p>The singularity becomes practical when cognition and physical agency can be distributed across civilisation.</p>
-            <ul>
-              <li>AGI plus robotics as general labour.</li>
-              <li>Bits become cheap; atoms are next.</li>
-              <li>Transhumanism as practical strategy.</li>
-            </ul>
-          </a>
-
-          <a class="chapter" href="#chapter-5-how-the-transition-could-unfold">
+          <a class="chapter" href="#chapter-5-the-new-currency-energy-compute-and-productive-capacity">
             <span class="num">Chapter 05</span>
-            <h3>How</h3>
-            <p>Displacement, fast abundance, slow takeoff, long horizon, existential risk, and human merger all need different bets.</p>
+            <h3>Energy, Compute, Capacity</h3>
+            <p>Why post-AGI planning has to include power, compute, productive assets, and local execution.</p>
             <ul>
-              <li>Labour shock and stimulus scenarios.</li>
-              <li>Fast abundance versus slow takeoff.</li>
-              <li>Human merger and existential risk.</li>
+              <li>Energy as the floor of abundance.</li>
+              <li>Compute as access to intelligence.</li>
+              <li>Homes, farms, workshops, and community hubs.</li>
             </ul>
           </a>
 
-          <a class="chapter" href="#chapter-6-when-to-expect-impact">
+          <a class="chapter" href="#chapter-6-work-after-work">
             <span class="num">Chapter 06</span>
-            <h3>When</h3>
-            <p>The right question is not one date. Separate capability, embodiment, deployment, economic impact, social impact, and live market signals.</p>
+            <h3>Work After Work</h3>
+            <p>How labour disruption changes careers before every job disappears, and where human advantage can still compound.</p>
             <ul>
-              <li>Probabilistic timelines.</li>
-              <li>Model capability versus real-world impact.</li>
-              <li>Update triggers and watch signals.</li>
+              <li>The ladder breaks before the top disappears.</li>
+              <li>Trust, taste, embodiment, ownership, and care.</li>
+              <li>Four work identities for the transition.</li>
             </ul>
           </a>
 
-          <a class="chapter" href="#chapter-7-what-to-do-now">
+          <a class="chapter" href="#chapter-7-five-futures-one-portfolio">
             <span class="num">Chapter 07</span>
-            <h3>What to Do</h3>
-            <p>Turn scenario weights into personal resilience, family capability, productive infrastructure, social trust, and advocacy.</p>
+            <h3>Five Futures, One Portfolio</h3>
+            <p>A scenario portfolio for disorderly labour shock, fast abundance, gentle singularity, long horizon, existential risk, and human merger.</p>
             <ul>
-              <li>Personal and household resilience.</li>
-              <li>Productive infrastructure.</li>
-              <li>Advocacy for abundance and safety.</li>
+              <li>Do not bet your life on one timeline.</li>
+              <li>Allocate across risk and upside.</li>
+              <li>Use markets as signals, not gods.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-8-when-capability-deployment-impact">
+            <span class="num">Chapter 08</span>
+            <h3>Capability, Deployment, Impact</h3>
+            <p>Separate what models can do from when institutions deploy them and when households feel the consequences.</p>
+            <ul>
+              <li>Capability, embodiment, deployment, economic impact.</li>
+              <li>Prediction markets and reality signals.</li>
+              <li>A watchlist instead of a prophecy.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-9-your-1000-day-moonshot-plan">
+            <span class="num">Chapter 09</span>
+            <h3>The 1000-Day Moonshot Plan</h3>
+            <p>A practical 30-day, 180-day, 365-day, and 1000-day plan for becoming a useful node in the better future.</p>
+            <ul>
+              <li>Create the first plan.</li>
+              <li>Build capability and productive assets.</li>
+              <li>Compound into community and leadership.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-10-the-distribution-layer-ubi-universal-high-income-and-universal-compute">
+            <span class="num">Chapter 10</span>
+            <h3>The Distribution Layer</h3>
+            <p>UBI, Universal High Income, and Universal Compute as the social architecture for abundance.</p>
+            <ul>
+              <li>Income floor, abundance aspiration.</li>
+              <li>Compute as leverage.</li>
+              <li>Distribution still requires production.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-11-human-enhancement-staying-in-the-game">
+            <span class="num">Chapter 11</span>
+            <h3>Human Enhancement</h3>
+            <p>Why longevity, AI fluency, cognitive tools, and augmentation are practical planning, not sci-fi decoration.</p>
+            <ul>
+              <li>The first merger already happened.</li>
+              <li>Healthspan changes the planning horizon.</li>
+              <li>Augmentation should expand agency.</li>
+            </ul>
+          </a>
+
+          <a class="chapter" href="#chapter-12-leaders-build-the-better-branch">
+            <span class="num">Chapter 12</span>
+            <h3>Build the Better Branch</h3>
+            <p>For leaders, founders, educators, builders, and public servants: move from scarcity management to abundance leadership.</p>
+            <ul>
+              <li>The leader's dashboard.</li>
+              <li>Public sector, education, and legitimacy.</li>
+              <li>Pick your arena and build.</li>
             </ul>
           </a>
         </div>
@@ -1713,7 +1783,7 @@
 
   <footer>
     <div class="wrap">
-      <span>Draft 2.2 - 2026-06-03 - Peter Xing</span>
+      <span>Draft 2.0 Moonshot / Abundance Rewrite - Peter Xing</span>
       <span>Living model: update assumptions, market alignment, and action criticality as reality changes.</span>
     </div>
   </footer>
@@ -2380,11 +2450,16 @@
         const id = slugify(section.title);
         const blocks = [];
         let list = [];
+        let orderedList = [];
 
         function flushList() {
           if (list.length) {
             blocks.push(`<ul>${list.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
             list = [];
+          }
+          if (orderedList.length) {
+            blocks.push(`<ol>${orderedList.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ol>`);
+            orderedList = [];
           }
         }
 
@@ -2397,8 +2472,21 @@
           if (line.startsWith("### ")) {
             flushList();
             blocks.push(`<h3>${inlineMarkdown(line.slice(4).trim())}</h3>`);
+          } else if (line.startsWith("> ")) {
+            flushList();
+            blocks.push(`<blockquote>${inlineMarkdown(line.slice(2).trim())}</blockquote>`);
           } else if (line.startsWith("- ")) {
+            if (orderedList.length) {
+              blocks.push(`<ol>${orderedList.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ol>`);
+              orderedList = [];
+            }
             list.push(line.slice(2).trim());
+          } else if (/^\d+\.\s+/.test(line)) {
+            if (list.length) {
+              blocks.push(`<ul>${list.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
+              list = [];
+            }
+            orderedList.push(line.replace(/^\d+\.\s+/, "").trim());
           } else if (!line.startsWith("# ")) {
             flushList();
             blocks.push(`<p>${inlineMarkdown(line)}</p>`);
