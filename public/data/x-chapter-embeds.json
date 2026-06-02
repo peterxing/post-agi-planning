@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T03:30:53.114Z",
+  "generatedAt": "2026-06-02T11:10:59.148Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -35,6 +35,28 @@
           ]
         },
         {
+          "id": "2061601186474836438",
+          "type": "repost",
+          "text": "deepmind shane legg has predicted a 50% chance we'll see AGI by 2028 demis has also been pretty consistent this year about 2030, plus or minus so it seems to me 2026-2028 may be the final stretch of the pre-AGI era before the consensus shifts toward \"AGI is here\"",
+          "created_at": "2026-06-02T00:10:00.000Z",
+          "url": "https://x.com/haider1/status/2061601186474836438",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
+          "id": "2061513383287882111",
+          "type": "repost",
+          "text": "Opus 4.8 just broke ARC-AGI-3 it tripled GPT-5.5's score we are now at a breathtaking 1.5% human efficiency",
+          "created_at": "2026-06-01T18:21:06.000Z",
+          "url": "https://x.com/scaling01/status/2061513383287882111",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
           "id": "2060669627710198042",
           "type": "repost",
           "text": "SpaceX is recovering Starship boosters in Australia’s backyard. And Canberra is doing almost nothing. As Starship scales toward high flight cadence, recovery speed will decide who leads the multiplanetary future. Australia sits on one of the greatest geographic and industrial adv",
@@ -44,23 +66,53 @@
           "matched_terms": [
             "future"
           ]
-        },
+        }
+      ]
+    },
+    "chapter-2-why": {
+      "id": "chapter-2-why",
+      "title": "Chapter 2: Why",
+      "terms": [
+        "immigration",
+        "international student",
+        "scarcity",
+        "abundance",
+        "harbin",
+        "hobart",
+        "aging",
+        "longevity",
+        "transhumanism",
+        "human potential"
+      ],
+      "posts": [
         {
-          "id": "2060007324551610600",
+          "id": "2060615106778574883",
           "type": "repost",
-          "text": "Microsoft is launching homegrown AI models at Build next week, positioned as cheaper alternatives to OpenAI and Anthropic. Buried in the reporting: relying on Anthropic's Claude forced Microsoft to raise GitHub Copilot prices and cap how much developers could actually use it. The",
-          "created_at": "2026-05-28T14:36:33.000Z",
-          "url": "https://x.com/kimmonismus/status/2060007324551610600",
+          "text": "My latest article is about how the longevity movement should not be about wellness tips and tricks and lifestyle improvements, but rather, true, biotech-enabled life extension and life improvement. We should be able to live exciting lives, without restriction. Forever.",
+          "created_at": "2026-05-30T06:51:40.000Z",
+          "url": "https://x.com/cremieuxrecueil/status/2060615106778574883",
           "public_metrics": {},
           "matched_terms": [
-            "frontier model"
+            "longevity"
+          ]
+        },
+        {
+          "id": "2060585346715513179",
+          "type": "repost",
+          "text": "This is huge for longevity science. \"Researchers just discovered that aging may partly happen because our DNA gradually loses its organized structure inside cells.\" \"The team found that boosting a protein called SIRT6 restored youthful chromatin organization in old mouse cells, r",
+          "created_at": "2026-05-30T04:53:25.000Z",
+          "url": "https://x.com/SciTechera/status/2060585346715513179",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging",
+            "longevity"
           ]
         }
       ]
     },
-    "chapter-2-why-this-matters-and-who-needs-a-plan": {
-      "id": "chapter-2-why-this-matters-and-who-needs-a-plan",
-      "title": "Chapter 2: Why This Matters and Who Needs a Plan",
+    "chapter-3-who-needs-a-plan": {
+      "id": "chapter-3-who-needs-a-plan",
+      "title": "Chapter 3: Who Needs a Plan",
       "terms": [
         "income",
         "insurance",
@@ -73,11 +125,23 @@
         "governance",
         "society"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2061463726407155795",
+          "type": "repost",
+          "text": "AI is advancing quickly. Society’s ability to manage its risks must advance just as fast. Today we’re sharing our vision for AI Resilience, with more than $130M in initial grants underway across bio-resilience, cyber-resilience, AI model safety, and AI’s impact on young people: o",
+          "created_at": "2026-06-01T15:03:47.000Z",
+          "url": "https://x.com/FoundationOAI/status/2061463726407155795",
+          "public_metrics": {},
+          "matched_terms": [
+            "society"
+          ]
+        }
+      ]
     },
-    "chapter-3-what-agi-means-inside-the-singularity": {
-      "id": "chapter-3-what-agi-means-inside-the-singularity",
-      "title": "Chapter 3: What AGI Means Inside the Singularity",
+    "chapter-4-what-agi-means-inside-the-singularity": {
+      "id": "chapter-4-what-agi-means-inside-the-singularity",
+      "title": "Chapter 4: What AGI Means Inside the Singularity",
       "terms": [
         "singularity",
         "agi",
@@ -90,6 +154,17 @@
         "abundance"
       ],
       "posts": [
+        {
+          "id": "2061513383287882111",
+          "type": "repost",
+          "text": "Opus 4.8 just broke ARC-AGI-3 it tripled GPT-5.5's score we are now at a breathtaking 1.5% human efficiency",
+          "created_at": "2026-06-01T18:21:06.000Z",
+          "url": "https://x.com/scaling01/status/2061513383287882111",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
         {
           "id": "2060615106778574883",
           "type": "repost",
@@ -125,9 +200,9 @@
         }
       ]
     },
-    "chapter-4-how-the-transition-could-unfold": {
-      "id": "chapter-4-how-the-transition-could-unfold",
-      "title": "Chapter 4: How the Transition Could Unfold",
+    "chapter-5-how-the-transition-could-unfold": {
+      "id": "chapter-5-how-the-transition-could-unfold",
+      "title": "Chapter 5: How the Transition Could Unfold",
       "terms": [
         "ubi",
         "uhi",
@@ -142,9 +217,9 @@
       ],
       "posts": []
     },
-    "chapter-5-when-to-expect-impact": {
-      "id": "chapter-5-when-to-expect-impact",
-      "title": "Chapter 5: When to Expect Impact",
+    "chapter-6-when-to-expect-impact": {
+      "id": "chapter-6-when-to-expect-impact",
+      "title": "Chapter 6: When to Expect Impact",
       "terms": [
         "timeline",
         "forecast",
@@ -158,6 +233,18 @@
         "2030"
       ],
       "posts": [
+        {
+          "id": "2061601186474836438",
+          "type": "repost",
+          "text": "deepmind shane legg has predicted a 50% chance we'll see AGI by 2028 demis has also been pretty consistent this year about 2030, plus or minus so it seems to me 2026-2028 may be the final stretch of the pre-AGI era before the consensus shifts toward \"AGI is here\"",
+          "created_at": "2026-06-02T00:10:00.000Z",
+          "url": "https://x.com/haider1/status/2061601186474836438",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026",
+            "2030"
+          ]
+        },
         {
           "id": "2060867599869649097",
           "type": "repost",
@@ -190,23 +277,12 @@
           "matched_terms": [
             "when"
           ]
-        },
-        {
-          "id": "2060489048490446964",
-          "type": "post",
-          "text": "Neuralink Update — May 2026 piped.video/SGyq6JcFtqI?si=tNH-… via @NeuraPod",
-          "created_at": "2026-05-29T22:30:45.000Z",
-          "url": "https://x.com/peterxing/status/2060489048490446964",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026"
-          ]
         }
       ]
     },
-    "chapter-6-what-to-do-now": {
-      "id": "chapter-6-what-to-do-now",
-      "title": "Chapter 6: What to Do Now",
+    "chapter-7-what-to-do-now": {
+      "id": "chapter-7-what-to-do-now",
+      "title": "Chapter 7: What to Do Now",
       "terms": [
         "energy",
         "compute",
@@ -220,6 +296,17 @@
         "sovereignty"
       ],
       "posts": [
+        {
+          "id": "2061463726407155795",
+          "type": "repost",
+          "text": "AI is advancing quickly. Society’s ability to manage its risks must advance just as fast. Today we’re sharing our vision for AI Resilience, with more than $130M in initial grants underway across bio-resilience, cyber-resilience, AI model safety, and AI’s impact on young people: o",
+          "created_at": "2026-06-01T15:03:47.000Z",
+          "url": "https://x.com/FoundationOAI/status/2061463726407155795",
+          "public_metrics": {},
+          "matched_terms": [
+            "resilience"
+          ]
+        },
         {
           "id": "2060013590137147669",
           "type": "repost",

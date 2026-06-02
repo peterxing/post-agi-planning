@@ -31,11 +31,12 @@ Read it once like an argument. Then use it like an operating system.
 The chapters move from felt acceleration to practical action:
 
 - Chapter 1 explains why the planning horizon has changed.
-- Chapter 2 maps who is exposed and why ordinary life is the real battlefield.
-- Chapter 3 defines AGI, robotics, and the singularity as economic and civilisational forces.
-- Chapter 4 explores the major transition pathways, from disorderly labour shock to fast abundance.
-- Chapter 5 separates capability timelines from economic and social impact timelines.
-- Chapter 6 turns the argument into a live plan.
+- Chapter 2 explains why this question is personal for me.
+- Chapter 3 maps who is exposed and why ordinary life is the real battlefield.
+- Chapter 4 defines AGI, robotics, and the singularity as economic and civilisational forces.
+- Chapter 5 explores the major transition pathways, from disorderly labour shock to fast abundance.
+- Chapter 6 separates capability timelines from economic and social impact timelines.
+- Chapter 7 turns the argument into a live plan.
 
 The companion website is not an afterthought. It is the point.
 
@@ -113,7 +114,94 @@ The first post-AGI planning move is simple: write your current assumptions down 
 
 ---
 
-## Chapter 2: Why This Matters and Who Needs a Plan
+## Chapter 2: Why
+
+I did not come to this question from an abstract debate about machines.
+
+I came to it from a family story about scarcity, migration, work, health, and the search for a better future.
+
+I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a place of extremes. In winter, the temperature can fall to minus 40 degrees Celsius, and the city turns ice and snow into a festival. My partner Alyse's family came from Guangzhou, where the heat can push the other way. I have joked that together we are a Song of Ice and Fire, without the problematic family tree.
+
+But underneath the joke is a serious point: our families moved because they believed opportunity mattered.
+
+My parents grew up inside the consequences of scarcity. My mother's family lost property and business during the Cultural Revolution. My parents studied English, worked, travelled, translated, exported, and looked for a way to give our family a better shot. In 1992 my father came to Tasmania as an international student. In 1993 my mother and I joined him. I was seven years old, starting again in Hobart, then later across Sydney.
+
+That experience changes how you see policy, technology, and the future.
+
+When you grow up as part of an international student family, you learn that systems matter. Visa rules matter. Housing matters. Schools matter. Work matters. Cost of living matters. Social trust matters. You also learn that people are not just demand in an economic model. They are families taking risks across borders because they believe their children can become more than the circumstances they were born into.
+
+I moved through several schools. I was the only Chinese kid in one classroom and got teased for my face. I spent a lot of time alone as an only child while my parents worked, playing a SEGA Mega Drive and later discovering the Apple Macintosh LC575 my parents bought for their travel agency. That machine became one of my first portals into a different kind of world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do.
+
+That is why I am suspicious of scarcity thinking.
+
+Scarcity thinking tells us to pull back demand. Shut doors. Blame immigrants. Protect the old bottlenecks. Accept that housing, health, education, and opportunity must remain expensive because there is not enough to go around.
+
+The better answer is to increase supply.
+
+AI, robotics, automation, energy, better infrastructure, and better coordination can help us produce more of what people actually need: homes, food, care, education, medical access, transport, clean energy, scientific progress, and time. The point of technology is not gadgets for their own sake. The point is to move human civilisation from scarcity toward abundance.
+
+That is also why I became involved in transhumanism.
+
+To me, transhumanism is not about escaping humanity. It is about taking human limitations seriously enough to improve them. We should use science and technology to extend healthy lifespan, enhance intelligence, improve wellbeing, and give people more agency over the conditions of their lives.
+
+In my TEDx talk on healthy life extension, I framed aging as a disease process that kills more than 120,000 Australians a year and contributes to the majority of deaths globally. That framing matters because it changes the moral posture. If aging is only treated as "normal", we accept the suffering that comes with Alzheimer's, heart disease, cancer, frailty, and loss of independence. If aging is a biological process, then we can study it, treat it, and eventually prevent more of its damage.
+
+The same logic applies to intelligence.
+
+If the limits of our cognition are treated as fixed, then AI becomes a threat that replaces us. If cognition can be extended, amplified, shared, and integrated, then AI becomes part of the next stage of human capability. The question becomes how we ensure people have access to that capability rather than being locked out of it.
+
+My public work has moved through this same arc: emerging technology at Deloitte and KPMG, Singularity University, Transhumanism Australia, Transhuman Coin, AI adoption at Microsoft, and now post-AGI planning. The common thread is not one company or one platform. It is the belief that accelerating technologies should be used to expand human potential.
+
+That belief does not make me blind to risk.
+
+AI can displace workers. Robotics can compress labour. Platforms can concentrate power. Longevity can create inequality if only the wealthy get access. Brain-computer interfaces can become surveillance if governed badly. Crypto can become speculation instead of coordination. Abundance can become a slogan if we do not build the physical and institutional capacity to make it real.
+
+But the answer to risk is not retreat.
+
+The answer is agency.
+
+My parents left one system and entered another because they believed a better future was possible. They did not wait for certainty. They acted under uncertainty, worked, adapted, and built a life. Post-AGI planning is the same pattern at civilisational scale.
+
+We are all becoming migrants into a new technological world.
+
+Some people will cross that border early, with capital, networks, AI fluency, and optionality. Others will be pushed across by job loss, cost pressure, health shocks, or institutions that no longer work the way they used to. A humane transition requires us to see both groups.
+
+This is why the singularity matters to me.
+
+Because behind every model, benchmark, robot demo, market forecast, and policy argument are families trying to live well.
+
+Because I have seen what scarcity thinking does, and I have also seen what opportunity can unlock.
+
+Because aging should not be accepted as destiny.
+
+Because intelligence should not be trapped inside biology.
+
+Because abundance should be built, not merely predicted.
+
+Because if AGI becomes a general-purpose labour and intelligence layer for civilisation, then the question is not whether it will change humanity. The question is whether we shape the change toward human flourishing.
+
+### Chapter 2 Action: Write Your Why
+
+Before you build a post-AGI plan, write down why the future matters to you.
+
+Do not start with the technology. Start with the people.
+
+- Who are you trying to protect?
+- What scarcity shaped your life or family?
+- What opportunity changed your trajectory?
+- What human limitation do you most want technology to help overcome?
+- What kind of abundance would actually improve your life, not just sound impressive?
+- What future would you regret failing to help build?
+
+Your answer does not need to sound like mine.
+
+It should be concrete enough to guide choices under pressure. If your why is only "AI is interesting", it will not survive volatility. If your why is family, health, dignity, freedom, community, or human potential, then planning becomes less abstract.
+
+The future is easier to navigate when you know what you are trying to preserve, what you are trying to transcend, and what you are trying to build.
+
+---
+
+## Chapter 3: Who Needs a Plan
 
 Most people do not plan their lives around technological singularities.
 
@@ -191,7 +279,7 @@ What changes is the planning horizon.
 
 If the world can change in six months, five years, or ten years, then we should stop treating the future as a single line and start treating it as a portfolio of scenarios.
 
-### Chapter 2 Action: Audit the Human Stack
+### Chapter 3 Action: Audit the Human Stack
 
 Use the human stack as your first planning map.
 
@@ -244,7 +332,7 @@ It belongs to anyone with bills to pay, people to protect, assets to allocate, o
 
 ---
 
-## Chapter 3: What AGI Means Inside the Singularity
+## Chapter 4: What AGI Means Inside the Singularity
 
 The word singularity is borrowed from physics.
 
@@ -310,7 +398,7 @@ We cannot know exactly what happens beyond the event horizon. But we can know wh
 
 That is the foundation of the plan.
 
-### Chapter 3 Action: Define Your Singularity Assumptions
+### Chapter 4 Action: Define Your Singularity Assumptions
 
 Do not argue about AGI in the abstract. Define what would matter in practice.
 
@@ -335,7 +423,7 @@ The strategic move is to identify which bottlenecks you can own, improve, access
 
 ---
 
-## Chapter 4: How the Transition Could Unfold
+## Chapter 5: How the Transition Could Unfold
 
 There is no single post-AGI future.
 
@@ -409,7 +497,7 @@ You can build resilience for a disorderly transition, advocate for positive abun
 
 That is post-AGI planning.
 
-### Chapter 4 Action: Build a Scenario Portfolio
+### Chapter 5 Action: Build a Scenario Portfolio
 
 A scenario portfolio prevents two common failures.
 
@@ -443,7 +531,7 @@ The point is not to average the scenarios into bland advice. The point is to mai
 
 ---
 
-## Chapter 5: When to Expect Impact
+## Chapter 6: When to Expect Impact
 
 The AGI timeline debate is noisy because people are answering different questions.
 
@@ -511,7 +599,7 @@ Near-term AGI planning is not about being right once.
 
 It is about updating faster than the world breaks your old assumptions.
 
-### Chapter 5 Action: Track Capability, Deployment, and Impact Separately
+### Chapter 6 Action: Track Capability, Deployment, and Impact Separately
 
 Most timeline debates collapse three different questions into one.
 
@@ -549,7 +637,7 @@ The reader who monitors these signals calmly will make better decisions than the
 
 ---
 
-## Chapter 6: What to Do Now
+## Chapter 7: What to Do Now
 
 Energy and compute are becoming strategic currencies.
 

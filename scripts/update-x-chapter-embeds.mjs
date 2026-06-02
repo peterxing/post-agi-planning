@@ -29,28 +29,33 @@ const CHAPTERS = [
     terms: ['acceleration', 'exponential', 'future', 'agi', 'frontier model', 'agent', 'codex', 'automation', 'disruption'],
   },
   {
-    id: 'chapter-2-why-this-matters-and-who-needs-a-plan',
-    title: 'Chapter 2: Why This Matters and Who Needs a Plan',
+    id: 'chapter-2-why',
+    title: 'Chapter 2: Why',
+    terms: ['immigration', 'international student', 'scarcity', 'abundance', 'harbin', 'hobart', 'aging', 'longevity', 'transhumanism', 'human potential'],
+  },
+  {
+    id: 'chapter-3-who-needs-a-plan',
+    title: 'Chapter 3: Who Needs a Plan',
     terms: ['income', 'insurance', 'family', 'career', 'jobs', 'education', 'retirement', 'community', 'governance', 'society'],
   },
   {
-    id: 'chapter-3-what-agi-means-inside-the-singularity',
-    title: 'Chapter 3: What AGI Means Inside the Singularity',
+    id: 'chapter-4-what-agi-means-inside-the-singularity',
+    title: 'Chapter 4: What AGI Means Inside the Singularity',
     terms: ['singularity', 'agi', 'asi', 'superintelligence', 'robotics', 'transhumanism', 'bci', 'longevity', 'abundance'],
   },
   {
-    id: 'chapter-4-how-the-transition-could-unfold',
-    title: 'Chapter 4: How the Transition Could Unfold',
+    id: 'chapter-5-how-the-transition-could-unfold',
+    title: 'Chapter 5: How the Transition Could Unfold',
     terms: ['ubi', 'uhi', 'civil unrest', 'labour', 'labor', 'displacement', 'takeoff', 'alignment', 'x-risk', 'existential'],
   },
   {
-    id: 'chapter-5-when-to-expect-impact',
-    title: 'Chapter 5: When to Expect Impact',
+    id: 'chapter-6-when-to-expect-impact',
+    title: 'Chapter 6: When to Expect Impact',
     terms: ['timeline', 'forecast', 'prediction', 'polymarket', 'kalshi', 'probability', 'when', '2026', '2027', '2030'],
   },
   {
-    id: 'chapter-6-what-to-do-now',
-    title: 'Chapter 6: What to Do Now',
+    id: 'chapter-7-what-to-do-now',
+    title: 'Chapter 7: What to Do Now',
     terms: ['energy', 'compute', 'gpu', 'resilience', 'microgrid', 'capital', 'plan', 'action', 'strategy', 'sovereignty'],
   },
 ];
