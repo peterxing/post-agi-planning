@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T22:37:54.757Z",
+  "generatedAt": "2026-06-02T22:51:05.290Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -69,9 +69,9 @@
         }
       ]
     },
-    "chapter-2-from-scarcity-to-abundance-my-why": {
-      "id": "chapter-2-from-scarcity-to-abundance-my-why",
-      "title": "Chapter 2: From Scarcity to Abundance - My Why",
+    "chapter-1-from-scarcity-to-abundance-my-why": {
+      "id": "chapter-1-from-scarcity-to-abundance-my-why",
+      "title": "Chapter 1: From Scarcity to Abundance - My Why",
       "terms": [
         "immigration",
         "international student",
@@ -121,9 +121,9 @@
         }
       ]
     },
-    "chapter-3-the-abundance-engine": {
-      "id": "chapter-3-the-abundance-engine",
-      "title": "Chapter 3: The Abundance Engine",
+    "chapter-2-the-abundance-engine": {
+      "id": "chapter-2-the-abundance-engine",
+      "title": "Chapter 2: The Abundance Engine",
       "terms": [
         "abundance",
         "moonshot",
@@ -138,9 +138,9 @@
       ],
       "posts": []
     },
-    "chapter-4-who-needs-a-plan-the-human-stack": {
-      "id": "chapter-4-who-needs-a-plan-the-human-stack",
-      "title": "Chapter 4: Who Needs a Plan? The Human Stack",
+    "chapter-3-who-needs-a-plan-the-human-stack": {
+      "id": "chapter-3-who-needs-a-plan-the-human-stack",
+      "title": "Chapter 3: Who Needs a Plan? The Human Stack",
       "terms": [
         "income",
         "insurance",
@@ -178,9 +178,9 @@
         }
       ]
     },
-    "chapter-5-the-new-currency-energy-compute-and-productive-capacity": {
-      "id": "chapter-5-the-new-currency-energy-compute-and-productive-capacity",
-      "title": "Chapter 5: The New Currency - Energy, Compute, and Productive Capacity",
+    "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
+      "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
+      "title": "Chapter 4: The New Currency - Energy, Compute, and Productive Capacity",
       "terms": [
         "energy",
         "compute",
@@ -195,9 +195,9 @@
       ],
       "posts": []
     },
-    "chapter-6-work-after-work": {
-      "id": "chapter-6-work-after-work",
-      "title": "Chapter 6: Work After Work",
+    "chapter-5-work-after-work": {
+      "id": "chapter-5-work-after-work",
+      "title": "Chapter 5: Work After Work",
       "terms": [
         "work",
         "jobs",
@@ -235,9 +235,9 @@
         }
       ]
     },
-    "chapter-7-five-futures-one-portfolio": {
-      "id": "chapter-7-five-futures-one-portfolio",
-      "title": "Chapter 7: Five Futures, One Portfolio",
+    "chapter-6-five-futures-one-portfolio": {
+      "id": "chapter-6-five-futures-one-portfolio",
+      "title": "Chapter 6: Five Futures, One Portfolio",
       "terms": [
         "ubi",
         "uhi",
@@ -253,9 +253,9 @@
       ],
       "posts": []
     },
-    "chapter-8-when-capability-deployment-impact": {
-      "id": "chapter-8-when-capability-deployment-impact",
-      "title": "Chapter 8: When - Capability, Deployment, Impact",
+    "chapter-7-when-capability-deployment-impact": {
+      "id": "chapter-7-when-capability-deployment-impact",
+      "title": "Chapter 7: When - Capability, Deployment, Impact",
       "terms": [
         "timeline",
         "forecast",
@@ -316,9 +316,9 @@
         }
       ]
     },
-    "chapter-9-your-1000-day-moonshot-plan": {
-      "id": "chapter-9-your-1000-day-moonshot-plan",
-      "title": "Chapter 9: Your 1000-Day Moonshot Plan",
+    "chapter-8-your-1000-day-moonshot-plan": {
+      "id": "chapter-8-your-1000-day-moonshot-plan",
+      "title": "Chapter 8: Your 1000-Day Moonshot Plan",
       "terms": [
         "1000 days",
         "moonshot",
@@ -333,9 +333,9 @@
       ],
       "posts": []
     },
-    "chapter-10-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
-      "id": "chapter-10-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
-      "title": "Chapter 10: The Distribution Layer - UBI, Universal High Income, and Universal Compute",
+    "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
+      "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
+      "title": "Chapter 9: The Distribution Layer - UBI, Universal High Income, and Universal Compute",
       "terms": [
         "ubi",
         "universal basic income",
@@ -348,9 +348,9 @@
       ],
       "posts": []
     },
-    "chapter-11-human-enhancement-staying-in-the-game": {
-      "id": "chapter-11-human-enhancement-staying-in-the-game",
-      "title": "Chapter 11: Human Enhancement - Staying in the Game",
+    "chapter-10-human-enhancement-staying-in-the-game": {
+      "id": "chapter-10-human-enhancement-staying-in-the-game",
+      "title": "Chapter 10: Human Enhancement - Staying in the Game",
       "terms": [
         "transhumanism",
         "longevity",
@@ -386,9 +386,9 @@
         }
       ]
     },
-    "chapter-12-leaders-build-the-better-branch": {
-      "id": "chapter-12-leaders-build-the-better-branch",
-      "title": "Chapter 12: Leaders - Build the Better Branch",
+    "chapter-11-leaders-build-the-better-branch": {
+      "id": "chapter-11-leaders-build-the-better-branch",
+      "title": "Chapter 11: Leaders - Build the Better Branch",
       "terms": [
         "leader",
         "leadership",

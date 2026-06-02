@@ -88,7 +88,7 @@ Finally ask the harder question: if each improves at the same rate for another t
 
 ---
 
-## Chapter 2: From Scarcity to Abundance - My Why
+## Chapter 1: From Scarcity to Abundance - My Why
 
 I did not arrive at post-AGI planning through an abstract debate about whether machines can think.
 
@@ -108,11 +108,13 @@ In 1992 my father came to Tasmania as an international student. In 1993, after a
 
 Australia was not an instant success story. It rarely is, unless you are reading the brochure version written after the hard part. My parents sold textiles at local markets, washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
 
+There was another hard lesson inside that move: skills do not always travel at full value. In China, my father's English was rare, useful, and income-producing. It made him a translator, a tour guide, and a bridge to the outside world. In Australia, English was no longer a scarce skill. It was the floor. The thing that had helped him cross the border stopped being enough to earn on the other side. That is not a failure of effort. It is what happens when the market changes around a capability.
+
 Around 1996, they started a travel agency.
 
 Then the internet arrived.
 
-At the time, the travel agency looked like a sensible business. My father could translate, guide, book travel, and connect people across cultures. My mother understood export, paperwork, logistics, and international commerce. They had exactly the kind of skills that should have compounded into a stable small business.
+At the time, the travel agency looked like a sensible business. My father could translate, guide, book travel, and connect people across cultures. My mother understood export, paperwork, logistics, and international commerce. They had exactly the kind of skills that should have compounded into a stable small business. Then the market moved again, because apparently one round of humility was not considered sufficient.
 
 But the internet changed the market structure. Online booking made travel more transparent and competitive. Margins compressed. The in-person travel agency market consolidated around larger players. Small independent agencies had to fight harder for less. That was one of my first lived experiences of technological disruption: not as a productivity chart, not as a keynote slide, but as a family business being hit by a new coordination layer.
 
@@ -150,7 +152,7 @@ Post-AGI planning is not a side project for me. It is where the family story, th
 
 > Behind every model, benchmark, robot demo, market forecast, and policy argument are families trying to live well.
 
-### Chapter 2 Action: Write Your Why
+### Chapter 1 Action: Write Your Why
 
 Before you build a post-AGI plan, write down why the future matters to you. Do not start with the technology. Start with the people.
 
@@ -164,7 +166,7 @@ If your why is only "AI is interesting", it will not survive volatility. If your
 
 ---
 
-## Chapter 3: The Abundance Engine
+## Chapter 2: The Abundance Engine
 
 The most important question about AGI is not whether the machine can win an argument about consciousness on the internet.
 
@@ -211,7 +213,7 @@ When those layers converge, the cost of essentials can fall dramatically. When t
 
 > Abundance is not guaranteed by capability. Abundance is produced by capability plus infrastructure plus distribution plus trust.
 
-### Chapter 3 Action: Map Your Abundance Engine
+### Chapter 2 Action: Map Your Abundance Engine
 
 Pick one domain that affects your life directly: housing, health, education, food, energy, work, transport, or community safety.
 
@@ -219,7 +221,7 @@ For that domain, list the bottlenecks across the abundance stack: intelligence, 
 
 ---
 
-## Chapter 4: Who Needs a Plan? The Human Stack
+## Chapter 3: Who Needs a Plan? The Human Stack
 
 Most people do not plan their lives around technological singularities. They plan around bills.
 
@@ -261,7 +263,7 @@ Every household needs an adaptive plan. That plan should cover income resilience
 
 AGI forces us to rethink the ordinary. The bills still matter. The family still matters. The job still matters. The business still matters. The community still matters. What changes is the planning horizon.
 
-### Chapter 4 Action: Audit the Human Stack
+### Chapter 3 Action: Audit the Human Stack
 
 Map your exposure across four layers: survival, economic, social, and potential.
 
@@ -275,7 +277,7 @@ Do this as a household, not just as an individual. The singularity will arrive i
 
 ---
 
-## Chapter 5: The New Currency - Energy, Compute, and Productive Capacity
+## Chapter 4: The New Currency - Energy, Compute, and Productive Capacity
 
 Money is a claim on future goods and services. In a post-AGI world, the question is: what produces those goods and services?
 
@@ -319,7 +321,7 @@ In a fast-abundance future, productive infrastructure lets you participate in up
 
 > Energy and compute are not just inputs to AI. They are claims on future capability.
 
-### Chapter 5 Action: Build Your Energy + Compute Map
+### Chapter 4 Action: Build Your Energy + Compute Map
 
 Answer these questions for your household or organisation:
 
@@ -332,7 +334,7 @@ Do not try to solve everything. Identify the first bottleneck that would matter 
 
 ---
 
-## Chapter 6: Work After Work
+## Chapter 5: Work After Work
 
 The question is not whether AI will affect work. The question is which parts of work remain human, which parts become automated, and which parts become more valuable because AI exists.
 
@@ -374,7 +376,7 @@ This is why children need more than technical skills. They need a Massively Tran
 
 > The goal is not to be better than AI at being a machine. The goal is to become more human, more capable, and more useful with intelligence at your side.
 
-### Chapter 6 Action: Redesign Your Work Stack
+### Chapter 5 Action: Redesign Your Work Stack
 
 Write down the ten tasks that occupy most of your working week. For each task, mark:
 
@@ -389,7 +391,7 @@ Then choose one task to automate, one skill to upgrade, one relationship to stre
 
 ---
 
-## Chapter 7: Five Futures, One Portfolio
+## Chapter 6: Five Futures, One Portfolio
 
 There is no single post-AGI future. There are scenarios.
 
@@ -437,7 +439,7 @@ The best path is not humans versus machines. It is humans becoming more capable 
 
 > Do not average the scenarios into bland advice. Maintain live exposure to the futures that matter.
 
-### Chapter 7 Action: Build Your Scenario Portfolio
+### Chapter 6 Action: Build Your Scenario Portfolio
 
 Assign your own percentages across the five scenarios. The numbers must add to 100%. For each scenario, write one action for the next 30 days, 6 months, and 2 years.
 
@@ -445,7 +447,7 @@ Then choose the no-regrets actions that help across multiple scenarios: health, 
 
 ---
 
-## Chapter 8: When - Capability, Deployment, Impact
+## Chapter 7: When - Capability, Deployment, Impact
 
 The AGI timeline debate is noisy because people are answering different questions, often at each other, usually with charts.
 
@@ -477,7 +479,7 @@ Near-term AGI planning is not about being right once. It is about updating faste
 
 > The timeline is not a date. It is a dashboard.
 
-### Chapter 8 Action: Build Your Watchlist
+### Chapter 7 Action: Build Your Watchlist
 
 Choose ten signals you will track monthly. Include at least one signal from each category: model capability, agent reliability, robotics, labour market, policy, energy, compute, capital markets, safety, and local community stability.
 
@@ -485,7 +487,7 @@ For each signal, write: what would make me increase my disruption probability? W
 
 ---
 
-## Chapter 9: Your 1000-Day Moonshot Plan
+## Chapter 8: Your 1000-Day Moonshot Plan
 
 A moonshot is not a fantasy. It is a goal large enough to reorganise your behaviour.
 
@@ -525,7 +527,7 @@ You may have launched an AI-native project, created a local resilience map, help
 
 > Do not make a five-year plan for a world that may change in eighteen months. Make a living 1000-day plan that updates monthly.
 
-### Chapter 9 Action: Start the 30-Day Sprint
+### Chapter 8 Action: Start the 30-Day Sprint
 
 Choose seven actions for the next thirty days:
 
@@ -540,7 +542,7 @@ Put the actions on your calendar. If it is not scheduled, it is still a feeling.
 
 ---
 
-## Chapter 10: The Distribution Layer - UBI, Universal High Income, and Universal Compute
+## Chapter 9: The Distribution Layer - UBI, Universal High Income, and Universal Compute
 
 Abundance only matters if people can access it.
 
@@ -580,7 +582,7 @@ This is where leaders must resist false choices. It is not markets or government
 
 > The post-AGI question is not only who gets money. It is who gets access to intelligence, energy, tools, health, housing, and purpose.
 
-### Chapter 10 Action: Design Your Distribution Thesis
+### Chapter 9 Action: Design Your Distribution Thesis
 
 Write your answer to these questions:
 
@@ -593,7 +595,7 @@ A good distribution thesis is not charity. It is social architecture for a high-
 
 ---
 
-## Chapter 11: Human Enhancement - Staying in the Game
+## Chapter 10: Human Enhancement - Staying in the Game
 
 If intelligence is the new leverage, humans need better access to intelligence.
 
@@ -629,7 +631,7 @@ Human enhancement should not become another inequality engine. If only elites ca
 
 > Transhumanism is not the rejection of humanity. It is the decision to take human potential seriously.
 
-### Chapter 11 Action: Create Your Capability Upgrade Plan
+### Chapter 10 Action: Create Your Capability Upgrade Plan
 
 Choose one upgrade in each category:
 
@@ -642,7 +644,7 @@ The goal is not to become less human. The goal is to become more capable of prot
 
 ---
 
-## Chapter 12: Leaders - Build the Better Branch
+## Chapter 11: Leaders - Build the Better Branch
 
 The future is not a weather system. It is a choice architecture.
 
@@ -689,7 +691,7 @@ The future will not ask whether you were certain. It will ask what you built wit
 
 > The best future is not the one we predict. It is the one we organise ourselves to build.
 
-### Chapter 12 Action: Pick Your Leadership Arena
+### Chapter 11 Action: Pick Your Leadership Arena
 
 Choose one arena where you have influence: household, school, workplace, business, industry, community, public policy, health, energy, education, housing, or technology.
 
