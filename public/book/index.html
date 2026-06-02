@@ -482,7 +482,7 @@
 
     .comparison-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
 
@@ -513,6 +513,36 @@
 
     .compare-row strong {
       font-family: var(--mono);
+    }
+
+    .divergence-row {
+      border-left: 4px solid var(--line);
+      background: var(--panel);
+      border-radius: 6px;
+      margin-top: 8px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .divergence-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .divergence-row p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .divergence-row.warn {
+      border-left-color: var(--accent2);
+      background: #fff6e6;
+    }
+
+    .divergence-row.hot {
+      border-left-color: var(--accent3);
+      background: #fff0ec;
     }
 
     .market-list {
@@ -704,6 +734,10 @@
     @media (max-width: 920px) {
       .hero, .section-head, .tool {
         grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .hero {
@@ -1033,6 +1067,11 @@
                 <div id="marketRows"></div>
                 <div id="marketStatus" class="status-line">Markets loading...</div>
               </div>
+              <div class="compare-card">
+                <h4>Divergence flags</h4>
+                <div id="divergenceRows"></div>
+                <div class="status-line">Flags trigger at 20+ points outside a market proxy, with 35+ treated as a large mismatch.</div>
+              </div>
             </div>
             <div id="marketList" class="market-list"></div>
           </div>
@@ -1067,6 +1106,7 @@
     let lastSurveyPayload = "";
     let readerConsensus = null;
     let marketConsensus = null;
+    let marketCoverage = null;
     const colors = {
       resilience: "#0e7c66",
       opportunity: "#2f5f98",
@@ -1135,6 +1175,48 @@
           <strong>${Math.round(values[id] || 0)}%</strong>
         </div>
       `).join("");
+    }
+
+    function renderDivergenceFlags() {
+      const root = document.getElementById("divergenceRows");
+      if (!root) return;
+
+      const personal = normalizedPercentages();
+      if (!marketConsensus || !marketCoverage) {
+        root.innerHTML = '<div class="divergence-row"><strong>Market check pending</strong><p>Reader probabilities will be compared once Polymarket/Kalshi proxies load.</p></div>';
+        return;
+      }
+
+      const rows = scenarioIds.map(id => {
+        const coverage = marketCoverage[id] || 0;
+        if (!coverage) {
+          return `
+            <div class="divergence-row">
+              <strong>${scenarioLabels[id]}</strong>
+              <p>No clean public prediction-market proxy loaded for this scenario.</p>
+            </div>
+          `;
+        }
+
+        const reader = Math.round(personal[id] || 0);
+        const market = Math.round(marketConsensus[id] || 0);
+        const diff = Math.abs(reader - market);
+        const level = diff >= 35 ? "hot" : diff >= 20 ? "warn" : "";
+        const verdict = diff >= 35
+          ? "large mismatch"
+          : diff >= 20
+            ? "outside market range"
+            : "inside rough market range";
+
+        return `
+          <div class="divergence-row ${level}">
+            <strong>${scenarioLabels[id]}: ${verdict}</strong>
+            <p>Your model ${reader}% vs market proxy ${market}% across ${coverage} matched market${coverage === 1 ? "" : "s"}; gap ${diff} points.</p>
+          </div>
+        `;
+      });
+
+      root.innerHTML = rows.join("");
     }
 
     function readerId() {
@@ -1273,6 +1355,19 @@
       return null;
     }
 
+    function marketText(market) {
+      return [
+        market.question,
+        market.title,
+        market.groupItemTitle,
+        market.description
+      ].filter(Boolean).join(" ");
+    }
+
+    function hasQualifiedAiMarketText(text) {
+      return /\bagi\b|\basi\b|\bai\b|artificial intelligence|superintelligence|openai|anthropic|deepmind|xai|frontier model|large language model|\bllm\b|gpt|robot|robotics|automation|ai safety|ai unemployment|ai extinction/i.test(String(text || ""));
+    }
+
     function polymarketProbability(market) {
       const outcomes = Array.isArray(market.outcomes) ? market.outcomes : JSON.parse(market.outcomes || "[]");
       const prices = Array.isArray(market.outcomePrices) ? market.outcomePrices : JSON.parse(market.outcomePrices || "[]");
@@ -1300,16 +1395,22 @@
     async function loadPredictionMarkets() {
       const found = [];
       const statuses = [];
+      const seenMarkets = new Set();
 
       const polyQueries = ["AGI", "artificial intelligence", "AI unemployment", "AI extinction"];
       for (const query of polyQueries) {
         try {
           const markets = await fetchJson(`https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=25&search=${encodeURIComponent(query)}`);
           (Array.isArray(markets) ? markets : []).forEach(market => {
+            const text = marketText(market);
+            if (!hasQualifiedAiMarketText(text)) return;
             const title = market.question || market.title || market.groupItemTitle || "";
-            const scenario = marketScenario(title);
+            const scenario = marketScenario(text);
             const probability = polymarketProbability(market);
             if (scenario && probability != null) {
+              const key = `Polymarket:${market.id || market.slug || title}`;
+              if (seenMarkets.has(key)) return;
+              seenMarkets.add(key);
               found.push({
                 source: "Polymarket",
                 title,
@@ -1319,7 +1420,7 @@
               });
             }
           });
-          statuses.push(`Polymarket ${query}: ok`);
+          statuses.push(`Polymarket ${query}: checked`);
         } catch (error) {
           statuses.push(`Polymarket ${query}: unavailable`);
         }
@@ -1330,10 +1431,15 @@
         try {
           const payload = await fetchJson(`https://external-api.kalshi.com/trade-api/v2/markets?limit=25&status=open&search=${encodeURIComponent(query)}`);
           (payload.markets || []).forEach(market => {
+            const text = [market.title, market.subtitle, market.ticker, market.category].filter(Boolean).join(" ");
+            if (!hasQualifiedAiMarketText(text)) return;
             const title = market.title || market.subtitle || market.ticker || "";
-            const scenario = marketScenario(title);
+            const scenario = marketScenario(text);
             const probability = kalshiProbability(market);
             if (scenario && probability != null) {
+              const key = `Kalshi:${market.ticker || title}`;
+              if (seenMarkets.has(key)) return;
+              seenMarkets.add(key);
               found.push({
                 source: "Kalshi",
                 title,
@@ -1353,12 +1459,15 @@
       scenarioIds.forEach(id => byScenario[id] = []);
       found.forEach(item => byScenario[item.scenario]?.push(item.probability));
       marketConsensus = {};
+      marketCoverage = {};
       scenarioIds.forEach(id => {
         const values = byScenario[id];
         marketConsensus[id] = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+        marketCoverage[id] = values.length;
       });
 
       renderProbabilityRows("marketRows", marketConsensus, "No matching markets");
+      renderDivergenceFlags();
       renderMarketList(found.slice(0, 8));
       setStatus("marketStatus", found.length ? `${found.length} AI-relevant markets matched. ${statuses.join("; ")}` : `No matching market prices. ${statuses.join("; ")}`);
     }
@@ -1455,6 +1564,7 @@
       renderProbabilityRows("personalRows", normalizedPercentages(), "Set your model");
       if (readerConsensus) renderProbabilityRows("readerRows", readerConsensus, "Survey unavailable");
       if (marketConsensus) renderProbabilityRows("marketRows", marketConsensus, "Markets unavailable");
+      renderDivergenceFlags();
 
       const allocation = [
         { label: "Liquidity + debt defence", value: 16 + s.rapid * 34 + Math.max(0, 60 - liquidity) * 0.18, color: colors.liquidity },
