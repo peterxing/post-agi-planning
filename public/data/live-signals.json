@@ -1,30 +1,9 @@
 {
-  "generatedAt": "2026-02-27T23:40:01.911Z",
+  "generatedAt": "2026-06-02T15:08:29.992Z",
   "windowHours": 24,
   "sourceStatus": {
     "x": "missing-token",
-    "polymarket": "ok(raw=400,kept=1)"
+    "polymarket": "ok(raw=100,kept=0)"
   },
-  "signals": [
-    {
-      "id": "poly-546612",
-      "source": "polymarket",
-      "timestamp": "2026-02-27T23:37:42.902094Z",
-      "headline": "Will OpenAI launch a new consumer hardware product by March 31, 2026?",
-      "summary": "Will OpenAI launch a new consumer hardware product by March 31, 2026? • market probability 2.6%",
-      "url": "https://polymarket.com/event/will-openai-launch-a-new-consumer-hardware-product-by-march-31-2026",
-      "domain": "tech",
-      "targetYear": 2026,
-      "targetMonth": 1,
-      "probabilityDelta": -0.11375999999999999,
-      "significance": 0.9070490804651601,
-      "tags": [
-        "polymarket",
-        "prediction-market",
-        "openai"
-      ],
-      "marketProbability": 0.026,
-      "horizonMonths": 3
-    }
-  ]
+  "signals": []
 }

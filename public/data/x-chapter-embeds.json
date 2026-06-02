@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T11:10:59.148Z",
+  "generatedAt": "2026-06-02T15:08:30.015Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -86,6 +86,17 @@
       ],
       "posts": [
         {
+          "id": "2061688462663905749",
+          "type": "repost",
+          "text": "🎤 Speaker at #WikiEXPOHK2026 @peterxing is Cloud & AI Platforms Lead for Public Sector and Education at @Microsoft , helping governments and educational institutions adopt Azure and frontier AI technologies. Previously, he held leadership roles at KPMG and Deloitte, focusing on ",
+          "created_at": "2026-06-02T05:56:48.000Z",
+          "url": "https://x.com/Wikiexpo_global/status/2061688462663905749",
+          "public_metrics": {},
+          "matched_terms": [
+            "transhumanism"
+          ]
+        },
+        {
           "id": "2060615106778574883",
           "type": "repost",
           "text": "My latest article is about how the longevity movement should not be about wellness tips and tricks and lifestyle improvements, but rather, true, biotech-enabled life extension and life improvement. We should be able to live exciting lives, without restriction. Forever.",
@@ -127,6 +138,17 @@
       ],
       "posts": [
         {
+          "id": "2061553610111279294",
+          "type": "repost",
+          "text": "Human civilization is about to gain trillions of extra (200+ IQ) minds. For all of history, progress was limited by the tiny number of genius level humans alive at any moment. A few thousand extraordinary minds per generation had to push the entire species forward. One Einstein. ",
+          "created_at": "2026-06-01T21:00:57.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2061553610111279294",
+          "public_metrics": {},
+          "matched_terms": [
+            "education"
+          ]
+        },
+        {
           "id": "2061463726407155795",
           "type": "repost",
           "text": "AI is advancing quickly. Society’s ability to manage its risks must advance just as fast. Today we’re sharing our vision for AI Resilience, with more than $130M in initial grants underway across bio-resilience, cyber-resilience, AI model safety, and AI’s impact on young people: o",
@@ -154,6 +176,18 @@
         "abundance"
       ],
       "posts": [
+        {
+          "id": "2061688462663905749",
+          "type": "repost",
+          "text": "🎤 Speaker at #WikiEXPOHK2026 @peterxing is Cloud & AI Platforms Lead for Public Sector and Education at @Microsoft , helping governments and educational institutions adopt Azure and frontier AI technologies. Previously, he held leadership roles at KPMG and Deloitte, focusing on ",
+          "created_at": "2026-06-02T05:56:48.000Z",
+          "url": "https://x.com/Wikiexpo_global/status/2061688462663905749",
+          "public_metrics": {},
+          "matched_terms": [
+            "singularity",
+            "transhumanism"
+          ]
+        },
         {
           "id": "2061513383287882111",
           "type": "repost",
@@ -185,17 +219,6 @@
           "public_metrics": {},
           "matched_terms": [
             "longevity"
-          ]
-        },
-        {
-          "id": "2060229967649411096",
-          "type": "post",
-          "text": "AI Singularity Syndicate – Sydney Meetup Tickets, Friday, May 29 • 6 PM - 8:30 PM | Eventbrite eventbrite.com.au/e/ai-singu…",
-          "created_at": "2026-05-29T05:21:16.000Z",
-          "url": "https://x.com/peterxing/status/2060229967649411096",
-          "public_metrics": {},
-          "matched_terms": [
-            "singularity"
           ]
         }
       ]
@@ -305,17 +328,6 @@
           "public_metrics": {},
           "matched_terms": [
             "resilience"
-          ]
-        },
-        {
-          "id": "2060013590137147669",
-          "type": "repost",
-          "text": "GOOD NEWS 🇦🇺 A massive fleet of 144 Tesla Megapacks is driving Australia’s first eight-hour battery 🎉 After the system aced its final performance tests, regulators AEMO and Transgrid just gave RWE the green light to run its Limondale Battery Energy Storage System (BESS) at ful",
-          "created_at": "2026-05-28T15:01:27.000Z",
-          "url": "https://x.com/tslaming/status/2060013590137147669",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy"
           ]
         }
       ]

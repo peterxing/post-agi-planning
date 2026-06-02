@@ -575,6 +575,8 @@ The 2027 framing is useful because it is close enough to force action.
 
 If you assume the world may be materially different within one to two years, vague future-proofing stops being enough. You cannot say "I will learn AI someday" or "governments will figure it out" or "my industry is probably safe" and call that a plan.
 
+When credible AGI forecasts cluster around the late 2020s, treat that as a planning signal rather than a prophecy. A 2028 or 2030 estimate should not make you abandon normal life, but it should pull forward the work that has long lead times: income resilience, AI-native capability, energy and compute exposure, community trust, health, and policy imagination. The practical question is not whether the forecaster is exactly right. It is whether your plan still works if the pre-AGI era has only a few years left.
+
 A near-term horizon forces practical questions:
 
 - What can I change this quarter?
