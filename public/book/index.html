@@ -521,6 +521,49 @@
       margin-top: 12px;
     }
 
+    .x-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .x-chapter {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 160px;
+    }
+
+    .x-chapter h3 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .x-posts {
+      display: grid;
+      gap: 10px;
+    }
+
+    .x-post {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .x-post a {
+      color: var(--ink);
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .x-post p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .market-item {
       border-left: 4px solid var(--accent3);
       background: var(--panel);
@@ -683,7 +726,7 @@
         justify-content: flex-start;
       }
 
-      .chapters, .scoregrid, .watchlist, .comparison-grid {
+      .chapters, .scoregrid, .watchlist, .comparison-grid, .x-grid {
         grid-template-columns: 1fr;
       }
 
@@ -859,6 +902,17 @@
             <p class="loading">Loading full book...</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="x-trail">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Peter's live X trail.</h2>
+          <p>Recent posts and reposts are matched to the chapters they support, so the book can keep absorbing live public thinking as the singularity gets closer.</p>
+        </div>
+        <div id="xStatus" class="status-line">Loading X chapter links...</div>
+        <div id="xChapterEmbeds" class="x-grid"></div>
       </div>
     </section>
 
@@ -1323,6 +1377,60 @@
         </div>
       `).join("");
     }
+
+    function renderXChapterEmbeds(snapshot) {
+      const root = document.getElementById("xChapterEmbeds");
+      const status = document.getElementById("xStatus");
+      if (!root || !status) return;
+
+      const chapters = Object.values(snapshot?.chapters || {});
+      status.textContent = `X source: ${snapshot?.sourceStatus?.x || "unknown"} · updated ${snapshot?.generatedAt ? new Date(snapshot.generatedAt).toLocaleString() : "unknown"}`;
+
+      root.innerHTML = chapters.map(chapter => {
+        const posts = Array.isArray(chapter.posts) ? chapter.posts : [];
+        const postHtml = posts.length
+          ? posts.map(post => `
+              <div class="x-post">
+                <blockquote class="twitter-tweet" data-dnt="true">
+                  <a href="${post.url}" target="_blank" rel="noreferrer">${post.type === "repost" ? "Repost" : "Post"} on X</a>
+                </blockquote>
+                <p>${post.text || ""}</p>
+                <p>Matched: ${(post.matched_terms || []).join(", ") || "chapter theme"}</p>
+              </div>
+            `).join("")
+          : '<div class="x-post"><strong>No matched X posts yet.</strong><p>The daily updater will fill this once X API credentials are available and matching posts are found.</p></div>';
+
+        return `
+          <article class="x-chapter">
+            <h3><a href="#${chapter.id}">${chapter.title || chapter.id}</a></h3>
+            <div class="x-posts">${postHtml}</div>
+          </article>
+        `;
+      }).join("");
+
+      if (window.twttr?.widgets) {
+        window.twttr.widgets.load(root);
+      } else if (chapters.some(chapter => Array.isArray(chapter.posts) && chapter.posts.length)) {
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = "https://platform.twitter.com/widgets.js";
+        script.charset = "utf-8";
+        document.body.appendChild(script);
+      }
+    }
+
+    fetch("/data/x-chapter-embeds.json", { cache: "no-store" })
+      .then(response => {
+        if (!response.ok) throw new Error("X chapter feed unavailable");
+        return response.json();
+      })
+      .then(renderXChapterEmbeds)
+      .catch(() => {
+        const status = document.getElementById("xStatus");
+        const root = document.getElementById("xChapterEmbeds");
+        if (status) status.textContent = "X chapter feed unavailable.";
+        if (root) root.innerHTML = '<div class="x-chapter"><h3>X feed unavailable</h3><p class="hint">The daily updater has not generated chapter-linked posts yet.</p></div>';
+      });
 
     function update() {
       ids.forEach(id => {

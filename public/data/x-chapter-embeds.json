@@ -1,0 +1,109 @@
+{
+  "generatedAt": "2026-06-02T01:47:04.743Z",
+  "username": "peterxing",
+  "sourceStatus": {
+    "x": "missing-token"
+  },
+  "chapters": {
+    "chapter-1-do-you-feel-the-acceleration": {
+      "id": "chapter-1-do-you-feel-the-acceleration",
+      "title": "Chapter 1: Do You Feel the Acceleration?",
+      "terms": [
+        "acceleration",
+        "exponential",
+        "future",
+        "agi",
+        "frontier model",
+        "agent",
+        "codex",
+        "automation",
+        "disruption"
+      ],
+      "posts": []
+    },
+    "chapter-2-why-this-matters-and-who-needs-a-plan": {
+      "id": "chapter-2-why-this-matters-and-who-needs-a-plan",
+      "title": "Chapter 2: Why This Matters and Who Needs a Plan",
+      "terms": [
+        "income",
+        "insurance",
+        "family",
+        "career",
+        "jobs",
+        "education",
+        "retirement",
+        "community",
+        "governance",
+        "society"
+      ],
+      "posts": []
+    },
+    "chapter-3-what-agi-means-inside-the-singularity": {
+      "id": "chapter-3-what-agi-means-inside-the-singularity",
+      "title": "Chapter 3: What AGI Means Inside the Singularity",
+      "terms": [
+        "singularity",
+        "agi",
+        "asi",
+        "superintelligence",
+        "robotics",
+        "transhumanism",
+        "bci",
+        "longevity",
+        "abundance"
+      ],
+      "posts": []
+    },
+    "chapter-4-how-the-transition-could-unfold": {
+      "id": "chapter-4-how-the-transition-could-unfold",
+      "title": "Chapter 4: How the Transition Could Unfold",
+      "terms": [
+        "ubi",
+        "uhi",
+        "civil unrest",
+        "labour",
+        "labor",
+        "displacement",
+        "takeoff",
+        "alignment",
+        "x-risk",
+        "existential"
+      ],
+      "posts": []
+    },
+    "chapter-5-when-to-expect-impact": {
+      "id": "chapter-5-when-to-expect-impact",
+      "title": "Chapter 5: When to Expect Impact",
+      "terms": [
+        "timeline",
+        "forecast",
+        "prediction",
+        "polymarket",
+        "kalshi",
+        "probability",
+        "when",
+        "2026",
+        "2027",
+        "2030"
+      ],
+      "posts": []
+    },
+    "chapter-6-what-to-do-now": {
+      "id": "chapter-6-what-to-do-now",
+      "title": "Chapter 6: What to Do Now",
+      "terms": [
+        "energy",
+        "compute",
+        "gpu",
+        "resilience",
+        "microgrid",
+        "capital",
+        "plan",
+        "action",
+        "strategy",
+        "sovereignty"
+      ],
+      "posts": []
+    }
+  }
+}
