@@ -138,13 +138,21 @@ I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a 
 
 But underneath the joke is a serious point: our families moved because they believed opportunity mattered.
 
-My parents grew up inside the consequences of scarcity. My mother's family lost property and business during the Cultural Revolution. My father studied English, then worked as a translator and tour guide in Harbin. That work opened the door to the wider world. One of the people he met was Bruce Dale, the National Geographic photographer, who sponsored him to come to Australia. My father immigrated through Tasmania first, and even now he still emails Bruce, who shares stories about his family in Virginia.
+Both of my parents were the youngest in their families. They were natural risk-takers, the ones willing to move outside the familiar system and test whether a different life was possible.
 
-My mother worked at an import-export textiles company in China. Both of my parents travelled around the world before most people around us had that opportunity. They saw what was possible outside the system they grew up in, and they decided to take the risk. In 1992 my father came to Tasmania as an international student. In 1993 my mother and I joined him. I was seven years old, starting again in Hobart.
+My parents grew up inside the consequences of scarcity. My mother's family lost property, land, and a paint shop business during the Cultural Revolution. It was a brutal lesson in the difference between equity through enforced scarcity and equal opportunity through abundance.
+
+My father studied English, then worked as a translator and tour guide in Harbin. That work opened the door to the wider world. He translated for visiting photographers, including Bruce Dale, the National Geographic photographer, who later sponsored him to come to Australia. My father immigrated through Tasmania first, and even now he still emails Bruce, who shares stories about his family in Virginia.
+
+My mother also studied English and worked at an export textiles company based in Harbin. She travelled to Russia and Finland for work. My father travelled through the United States and Russia as a translator. Both of my parents saw the world beyond the system they grew up in, compared notes, and decided that the best chance for our family to reach its potential was to find opportunity abroad.
+
+In 1992 my father came to Tasmania as an international student at the University of Tasmania, then transferred to Hobart Technical College because his English studies were already advanced and the college path was more affordable. In Hobart, he worked while studying. He taught table tennis at local schools and gave remedial treatments to retirees, drawing on physiotherapy traits passed down from my grandfather, who died before I was born.
+
+In 1993, after almost a year living apart, my mother and I were approved to join him. I was seven years old, starting again in Hobart, finishing Year 1 at South Hobart Primary School.
 
 Six months later, we moved to Sydney.
 
-Australia was not an instant success story. My parents worked hard. They washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country. Around 1996, they started a travel agency.
+Australia was not an instant success story. In Hobart, my parents sold textiles at local markets and went fishing on weekends so we could have more variety for dinner. In Sydney, they washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country. Around 1996, they started a travel agency.
 
 Then the internet arrived.
 
@@ -176,9 +184,17 @@ It was not because I disliked tax. It was because I could see the same pattern t
 
 That experience changes how you see policy, technology, and the future.
 
+At Deloitte, I did not only learn professional services. I started branching into technology, lean startups, data analytics, automation, and AI solutions. I collaborated with strategic foresight work connected to Singularity University and co-founded communities around emerging technology, transhumanism, and policy. Later I led teams at KPMG to build and take these kinds of solutions to market, while also building startup and network-state experiments. Since late 2023, my work at Microsoft has been about accelerating AI adoption for the education industry.
+
+That arc matters because it is the same arc as the family story. We moved from scarcity to opportunity, from manual work to knowledge work, from a travel agency computer to AI systems that can reason across domains, and from trying to fit into existing institutions to trying to help build better ones.
+
 When you grow up as part of an international student family, you learn that systems matter. Visa rules matter. Housing matters. Schools matter. Work matters. Cost of living matters. Social trust matters. You also learn that people are not just demand in an economic model. They are families taking risks across borders because they believe their children can become more than the circumstances they were born into.
 
-I moved through several schools. I was the only Chinese kid in one classroom and got teased for my face. I spent a lot of time alone as an only child while my parents worked, playing a SEGA Mega Drive and later discovering the Apple Macintosh LC575 my parents bought for their travel agency. That machine became one of my first portals into a different kind of world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do. It was also sitting inside the same family business that the internet would eventually make harder.
+I moved through more homes and schools than I could comfortably explain as a child. Across Sydney and Greater Sydney, we lived in many suburbs and I went through about six primary schools, from Lindfield to Cammeray, Leichhardt, and Burwood. Cammeray was especially hard. I was the only Chinese kid in the class, teased for having a "flat face", and had to fight for the basic dignity of being treated as another human being. Leichhardt and Burwood felt more accepting because multiculturalism was more normal there.
+
+As a product of China's one-child policy, I did not have siblings to play with while my parents were busy making a living. I spent a lot of time alone, playing a SEGA Mega Drive and memorising Street Fighter II moves. Later I discovered the Apple Macintosh LC575 my parents bought for their travel agency. That machine became one of my first portals into a different kind of world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do. It was also sitting inside the same family business that the internet would eventually make harder.
+
+Education became the migrant-family ladder. I got into Sydney Technical High School, but it was in Hurstville while we were living in Mount Druitt for much of my high school and university years. My parents worked hard to support me into the University of Sydney to study Commerce and Law, the sort of respectable professional path many Asian parents understandably saw as safe when they had already taken enough risks for one lifetime.
 
 That is why I am suspicious of scarcity thinking.
 
@@ -187,6 +203,8 @@ Scarcity thinking tells us to pull back demand. Shut doors. Blame immigrants. Pr
 The better answer is to increase supply, while helping people move through the transition.
 
 AI, robotics, automation, energy, better infrastructure, and better coordination can help us produce more of what people actually need: homes, food, care, education, medical access, transport, clean energy, scientific progress, and time. The point of technology is not gadgets for their own sake. The point is to move human civilisation from scarcity toward abundance.
+
+Legal immigrants and international students are often treated as demand pressure in a spreadsheet. But my family was not just demand. We became workers, students, small-business owners, taxpayers, community members, customers, builders, and eventually contributors to the technology ecosystem. A serious society should not respond to demand by closing doors. It should respond by building enough supply that opportunity is not rationed through scarcity.
 
 That is also why I became involved in transhumanism.
 
@@ -239,6 +257,8 @@ My parents left one system and entered another because they believed a better fu
 We are all becoming migrants into a new technological world.
 
 Some people will cross that border early, with capital, networks, AI fluency, and optionality. Others will be pushed across by job loss, cost pressure, health shocks, or institutions that no longer work the way they used to. A humane transition requires us to see both groups.
+
+My family crossed a literal border because Australia represented possibility. The post-AGI border will be less visible but just as real. People will cross from labour income to AI-amplified work, from old credentials to new capabilities, from scarcity politics to supply-side abundance, from biological fatalism to healthy-longevity strategy, and from national institutions to more networked forms of coordination.
 
 This is why the singularity matters to me.
 
@@ -306,6 +326,7 @@ For a leader, the questions are larger:
 - How do we keep critical infrastructure running through social volatility?
 - How do we govern AI systems that increasingly mediate knowledge, labour, finance, defence, science, and culture?
 - How do we give people a path to agency instead of turning them into spectators?
+- How do we increase supply fast enough that legal migration, family formation, education, health care, and housing do not become zero-sum fights?
 
 The near-term AGI planning problem is not only technical. It is financial, social, political, biological, and spiritual.
 
@@ -334,6 +355,10 @@ If AI accelerates biology, drug discovery, diagnostics, brain-computer interface
 Community planning changes because resilience becomes local.
 
 If institutions respond slowly, communities will need practical capacity: energy, food, communications, security, medical access, trusted coordination, and shared purpose. A resilient town, village, neighbourhood, or network can absorb shocks that isolated individuals cannot.
+
+Immigration planning changes because demand and supply have to be modelled honestly.
+
+When a country faces housing pressure, overloaded services, and cost-of-living stress, blaming legal immigrants can feel politically easy because demand is visible. But supply failure is the deeper problem. If we do not build enough homes, infrastructure, health capacity, schools, energy, transport, and productive automation, every new person looks like a burden. If we accelerate supply with AI, robotics, construction technology, energy buildout, better approvals, and better coordination, people become contributors to abundance rather than contestants in scarcity.
 
 The point is not that every household needs a bunker. The point is that every household needs an adaptive plan.
 
@@ -443,6 +468,10 @@ Bits become cheap first.
 
 Atoms follow when robots, energy, compute, materials, logistics, and autonomous production improve together.
 
+Housing is one of the cleanest tests of whether abundance is real.
+
+It is easy to talk about post-scarcity in software. It is harder to build enough dwellings, infrastructure, and services that growing populations do not turn into social conflict. A genuine abundance agenda has to make physical supply elastic: faster planning, faster construction, cheaper energy, automated logistics, modular manufacturing, robotic labour, better materials, and local production capacity. Otherwise AI abundance stays trapped in screens while ordinary people still fight over rent.
+
 This is the abundance case: AI helps us cure disease, extend healthy lifespan, solve intelligence, automate dangerous labour, accelerate science, reduce material scarcity, and expand human potential.
 
 But abundance is not automatic.
@@ -536,6 +565,10 @@ If the transition is mismanaged, civil unrest becomes plausible.
 
 People do not revolt because a benchmark improves. They revolt when they cannot pay bills, feel humiliated, lose status, lose trust, or believe the system has no place for them. A post-AGI plan must account for social volatility, not because collapse is guaranteed, but because fragile optimism is not strategy.
 
+This is where scarcity politics can become dangerous.
+
+If housing is tight, services are strained, and jobs are being automated, societies may look for people to blame: immigrants, international students, young people, old people, welfare recipients, tech workers, foreigners, corporations, or governments. Some criticism will be legitimate. Some will be scapegoating. The planning question is how to keep the social response aimed at the real bottlenecks: supply, infrastructure, ownership, transition income, public services, and trustworthy governance.
+
 The second scenario is fast takeoff into positive abundance.
 
 In this world, AI systems rapidly accelerate science, medicine, robotics, energy, and production. The cost of essentials falls. New forms of income or public provision emerge. Governments and companies coordinate better than expected. AI helps design better policy, better infrastructure, better education, and better health systems. Humanity experiences a rapid expansion in capability.
@@ -547,6 +580,10 @@ It requires leaders who treat abundance as a design goal. It requires open acces
 It also requires planning before abundance arrives.
 
 If the cost of some goods and services collapses, the transition can still be chaotic if people are carrying debt from the old economy, if housing remains supply-constrained, if health care access is uneven, if energy and compute are bottlenecked, or if communities lose status and meaning faster than new institutions can form. Cheap intelligence is not the same thing as a good society. The abundance scenario still needs capital allocation, public goods, local infrastructure, and a social contract.
+
+In the best version of this scenario, universal basic income is only the floor.
+
+The richer goal is universal high income: not merely enough money to survive, but broad access to the goods and services that make life genuinely better. Housing, education, health care, mobility, energy, AI tutors, creative tools, longevity medicine, and the time to pursue family, community, learning, and exploration. That requires both distribution and production. Cash transfers help only if the supply of essentials expands.
 
 The third scenario is slow takeoff: the gentle singularity.
 
@@ -776,6 +813,10 @@ Do not merely prepare for the future. Help shape it.
 
 Advocate for abundance, public access to AI benefits, better health technologies, accelerated science, safe deployment, resilient infrastructure, and human augmentation. Push against catastrophic-risk pathways, reckless deployment, surveillance authoritarianism, and a future where a small number of entities own the intelligence layer of civilisation.
 
+That advocacy should be supply-side as well as income-side.
+
+Support policies and projects that make it easier to build housing, deploy clean energy, automate construction, expand health capacity, use AI in education, train people into AI-amplified work, and welcome productive legal migration without pretending the infrastructure constraint does not exist. The answer to scarcity pressure is not to make the circle smaller. It is to increase the capacity of the circle.
+
 The companion modelling tool turns these layers into a live plan.
 
 The reader sets:
@@ -813,6 +854,7 @@ Start with a 30-day sprint:
 - Map essential needs: shelter, energy, food, water, health, communications, and transport.
 - Identify one local resilience relationship to strengthen.
 - Pick one abundance opportunity to learn, build, invest in, or advocate for.
+- Identify one supply bottleneck in your city, industry, household, or community that AI, robotics, better policy, or capital could help relieve.
 
 The people who thrive after AGI will not be the people who guessed the exact date. They will be the people who treated uncertainty as something to model, prepare for, and act through.
 
