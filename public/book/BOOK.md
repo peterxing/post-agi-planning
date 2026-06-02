@@ -150,6 +150,16 @@ Now AI and robotics are coming for the next layer.
 
 AI can automate many of the translation skills my father built his life around. AI travel agents can plan and book itineraries. Voice agents can guide tourists. Robotaxis can automate driving. The same capabilities that can create abundance can also compress the value of labour that families depended on for decades.
 
+That is why AI disruption is not a theoretical topic for me.
+
+I later joined Deloitte in business tax advisory. It was a serious professional path: structured work, complex rules, client trust, analysis, compliance, judgment, and the kind of career that families like mine are told to aim for. But the more I looked at the work, the more obvious the automation curve became.
+
+Tax advisory is full of patterns. Read legislation. Interpret rules. Compare facts. Search precedents. Draft advice. Check edge cases. Prepare workpapers. Explain risk. A lot of it still needs accountability and human trust, but a large share of the cognitive workflow is exactly the kind of thing AI gets better at when models can read, reason across documents, call tools, and produce structured outputs.
+
+That realisation pushed me deeper into AI.
+
+It was not because I disliked tax. It was because I could see the same pattern that had hit my parents' travel agency and my father's taxi work now moving into professional services. Software had already reorganised travel and transport. AI was going to reorganise white-collar judgment work.
+
 That experience changes how you see policy, technology, and the future.
 
 When you grow up as part of an international student family, you learn that systems matter. Visa rules matter. Housing matters. Schools matter. Work matters. Cost of living matters. Social trust matters. You also learn that people are not just demand in an economic model. They are families taking risks across borders because they believe their children can become more than the circumstances they were born into.
@@ -170,6 +180,16 @@ To me, transhumanism is not about escaping humanity. It is about taking human li
 
 In my TEDx talk on healthy life extension, I framed aging as a disease process that kills more than 120,000 Australians a year and contributes to the majority of deaths globally. That framing matters because it changes the moral posture. If aging is only treated as "normal", we accept the suffering that comes with Alzheimer's, heart disease, cancer, frailty, and loss of independence. If aging is a biological process, then we can study it, treat it, and eventually prevent more of its damage.
 
+There is also a more personal reason this matters.
+
+I was once robbed in Malaysia. I woke up in hospital with tubes in my body everywhere. You do not need a philosophy degree to understand mortality when you wake up like that. Life stops being an abstraction. Fragility becomes physical.
+
+That experience clarified something for me. If I had been 80 years old in that hospital bed, but still healthy, conscious, curious, connected, and able to keep living well, I would still have wanted to continue. I do not see virtue in death simply because a calendar says someone has reached a socially accepted age. I care about health, agency, relationships, consciousness, and the ability to keep participating in the world.
+
+That is part of what pulled me toward Singularity University.
+
+Singularity University had a partnership with Deloitte, and through that doorway I went down the rabbit hole: exponential technologies, AI, robotics, biotech, longevity, abundance, and Ray Kurzweil's argument that information technologies accelerate in predictable ways.
+
 The same logic applies to intelligence.
 
 If the limits of our cognition are treated as fixed, then AI becomes a threat that replaces us. If cognition can be extended, amplified, shared, and integrated, then AI becomes part of the next stage of human capability. The question becomes how we ensure people have access to that capability rather than being locked out of it.
@@ -177,6 +197,16 @@ If the limits of our cognition are treated as fixed, then AI becomes a threat th
 My public work has moved through this same arc: emerging technology at Deloitte and KPMG, Singularity University, Transhumanism Australia, Transhuman Coin, AI adoption at Microsoft, and now post-AGI planning. Across my talks and interviews, the recurring pattern is the same. Start with a technology that seems strange or futuristic, explain the mechanism, then ask what it means for ordinary people, business models, communities, and humanity.
 
 I have talked about aging as a disease process, senescent cells, healthy life extension, brain-computer interfaces, human identity in a digital world, VR and AR as new social spaces, automation in close-contact industries, AI agents, GPT-4, decentralised AI, humanoid robots, crypto coordination, remote delivery, and the future of work. These are not separate fascinations. They are all pieces of the same question: how do we use exponential technologies to transcend human limitations without abandoning the humans caught in the transition?
+
+Kurzweil called it *The Singularity Is Near*. Then he wrote *The Singularity Is Nearer*. The joke now is that if he were writing the next one today, it might have to be called *The Singularity Is Here: When We Have No F***ing Idea What's Gonna Happen*.
+
+That joke works because the timelines are compressing.
+
+Kurzweil's predictions look less strange with every generation of AI progress. In some ways they now look conservative compared with what AI lab CEOs are saying publicly about AGI timelines. The people building frontier models are no longer talking like this is a distant science fiction event. They are talking about years, not centuries. They are talking about systems that can do economically valuable work, automate research, operate tools, write code, reason across domains, and eventually help build the next generation of AI.
+
+So the question changed for me.
+
+It is no longer "will AI affect my field?" I already watched software disrupt my family's business, then platforms disrupt my father's work, then AI begin to move toward the professional work I was trained to do. It is no longer "is life fragile?" I have had the hospital-bed reminder. It is no longer "is the singularity near?" The practical question is what we do when the singularity is near enough that plans, careers, companies, governments, and families need to adapt now.
 
 That is why post-AGI planning is not a side project for me.
 

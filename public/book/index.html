@@ -377,6 +377,53 @@
       font-size: 13px;
     }
 
+    .timeline-panel {
+      background: #050506;
+      color: white;
+    }
+
+    .timeline-panel .section-head h2,
+    .timeline-panel .section-head p {
+      color: white;
+    }
+
+    .timeline-panel .section-head p {
+      color: rgba(255,255,255,0.76);
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .timeline-frame {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      background: #000;
+      box-shadow: 0 26px 68px rgba(0, 0, 0, 0.44);
+      overflow: hidden;
+    }
+
+    .timeline-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .timeline-note {
+      border-left: 3px solid #f4d47b;
+      padding-left: 18px;
+      color: rgba(255,255,255,0.82);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .timeline-note strong {
+      color: white;
+    }
+
     .galactic-map {
       background: #081018;
       color: white;
@@ -923,7 +970,7 @@
     }
 
     @media (max-width: 920px) {
-      .hero, .section-head, .tool, .map-shell {
+      .hero, .section-head, .tool, .map-shell, .timeline-grid {
         grid-template-columns: 1fr;
       }
 
@@ -987,6 +1034,7 @@
       </div>
       <div class="navlinks">
         <a href="#summary">Summary</a>
+        <a href="#timelines">Timelines</a>
         <a href="#map">Map</a>
         <a href="#chapters">Chapters</a>
         <a href="#read">Read</a>
@@ -1056,6 +1104,29 @@
           <a href="/book/hitchhikers-guide-summary-infographic.jpg">Open full-size infographic</a>
           <a href="#model">Run the companion model</a>
           <a href="#chapters">Jump to chapters</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="timeline-panel" id="timelines">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The timelines are accelerating.</h2>
+          <p>Chapter 2 now treats AI disruption as the personal thread: family businesses, professional services, mortality, Singularity University, and the Kurzweil rabbit hole all point to the same problem.</p>
+        </div>
+        <div class="timeline-grid">
+          <figure class="timeline-frame">
+            <img src="/book/singularity-is-here-timelines.jpg" alt="Three Ray Kurzweil book-cover style panels showing The Singularity Is Near, The Singularity Is Nearer, and a joke cover reading The Singularity Is Here when we have no idea what's going to happen." loading="lazy" decoding="async">
+          </figure>
+          <div class="timeline-note">
+            <p><strong>The argument is no longer that the singularity is someday.</strong></p>
+            <p>Software disrupted travel. Platforms disrupted taxis. AI is now moving into tax advisory, translation, booking, coding, research, and professional judgment. The planning problem is what families, workers, companies, and governments do when no one has a stable map anymore.</p>
+          </div>
+        </div>
+        <div class="infographic-actions">
+          <a href="/book/singularity-is-here-timelines.jpg">Open timeline image</a>
+          <a href="#read">Read Chapter 2</a>
+          <a href="#model">Stress-test your plan</a>
         </div>
       </div>
     </section>
