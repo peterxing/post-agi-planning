@@ -4,37 +4,37 @@
 
 By Peter Xing
 
-Draft 2.0 - 2026-06-02
+Draft 2.1 - 2026-06-03
 
 ---
 
 ## Working Thesis
 
-We are not waiting for a science-fiction future anymore.
+We are not waiting for the science-fiction future anymore.
 
-We are already inside the acceleration.
+We are already in the weird bit.
 
-Artificial general intelligence may arrive as a clean technical milestone, a messy stack of compounding capabilities, or a market shock that becomes obvious only after employers, households, governments, and institutions are already reacting. The exact date matters. But the more useful question is: what changes if intelligence and labour become increasingly abundant, cheap, and automated?
+Artificial general intelligence might arrive as a neat technical milestone, a messy pile of compounding capabilities, or the kind of market shock that only becomes obvious after employers, households, governments, and institutions are already improvising in public. The exact date matters, of course. I am not anti-calendar. But the more useful question is: what changes when intelligence and labour become dramatically cheaper, more abundant, and more automated?
 
-That question touches everything ordinary people actually care about.
+That question is not abstract.
 
-Income. Housing. Debt. Education. Health. Insurance. Retirement. Energy. Food. Community. Purpose. Children. Parents. Social trust. The ability to keep living a meaningful life when the old map stops working.
+It hits the things people actually care about: income, housing, debt, education, health, insurance, retirement, energy, food, family, community, purpose, and whether the old plan for a decent life still works when the map starts updating faster than the people holding it.
 
-This book is not a prophecy.
+This book is not a prophecy. Prophecy is a terrible planning tool. It makes people either smug or frozen, and neither pays the mortgage.
 
-It is a living operating model.
+This is a living field guide.
 
-Read it once as an argument. Then keep coming back to the website as the world changes. Adjust the probabilities. Watch the market signals. Read the latest posts. Re-run the model. Update your plan.
+Read it once as an argument. Then come back to the website as reality changes. Adjust the probabilities. Watch the markets. Read the latest signals. Re-run the model. Update your plan.
 
-The point is not to predict one perfect future. The point is to stay oriented while the future is being rewritten.
+The point is not to guess the one perfect future. The point is to stay oriented while the future is being rewritten.
 
 ---
 
 ## How to Use This Book
 
-Most books are static. Post-AGI planning cannot be static.
+Most books are static. Post-AGI planning cannot be.
 
-This book is paired with a live model because reality will keep moving: frontier models will improve, robotics will get cheaper, prediction markets will update, governments will respond, companies will reorganise, energy and compute will become bottlenecks, and people will feel the pressure through bills, jobs, housing, health, and trust.
+This book is paired with a live model because reality has developed a fairly rude habit of not waiting for publishing schedules. Frontier models will improve. Robotics will get cheaper. Prediction markets will update. Governments will respond late and loudly. Companies will reorganise quietly, then pretend it was always the strategy. Energy and compute will become bottlenecks. People will feel the pressure through bills, jobs, housing, health, and trust.
 
 The chapters move through seven questions:
 
@@ -46,7 +46,7 @@ The chapters move through seven questions:
 - Chapter 6 separates capability timelines from real-world impact.
 - Chapter 7 turns the argument into a plan you can update.
 
-Do not read this as doom. Do not read it as hype.
+Do not read this as doom. Doom is just hype with worse lighting.
 
 Read it as a field guide.
 
@@ -64,17 +64,17 @@ Then the slope changes.
 
 The tool becomes a colleague. The colleague becomes a team. The team becomes an automated company. The automated company starts competing with human organisations that still hire, coordinate, approve, meet, report, and sleep.
 
-That is the feeling many people are noticing now. It is not just that AI is getting better. It is that the time between impossible, demo, product, and normal is collapsing.
+That is the feeling many people are noticing now. It is not simply that AI is getting better. It is that the time between impossible, demo, product, and "of course we use that every day" is collapsing.
 
 The old planning model assumes society gives us time.
 
-Study. Get a job. Buy insurance. Save for retirement. Raise children. Trust that institutions will absorb disruption over decades.
+Study. Get a job. Buy insurance. Save for retirement. Raise children. Trust that institutions will absorb disruption over decades, ideally with a committee, a consultation paper, and a PDF nobody reads.
 
 That model worked when technology changed tools faster than it changed labour itself. AGI changes the planning assumption. If AI can perform most economically useful cognitive work, and robotics can eventually perform much of the physical work, then labour income, education, taxation, pensions, insurance, politics, and social status all move.
 
 The disruption will not arrive evenly.
 
-Some people will experience it as a productivity boom. Some will experience it as a hiring freeze. Some will see their business margin disappear. Some will get richer because they own energy, compute, land, infrastructure, capital, or AI-native companies. Some will be told to reskill after the ladder they were climbing has already been removed.
+Some people will experience it as a productivity boom. Some will experience it as a hiring freeze. Some will see their business margin vanish while the website still says "we value our people". Some will get richer because they own energy, compute, land, infrastructure, capital, or AI-native companies. Some will be told to reskill after the ladder they were climbing has already been quietly removed.
 
 That is why the planning lens has to be broader than career advice.
 
@@ -86,11 +86,11 @@ In my post-AGI planning frame, preparation has three layers:
 
 Those layers interact.
 
-A household with money but no practical resilience can still be fragile. A community with goodwill but no energy, food, tools, or plan can still be overwhelmed. A person with AI skills but no trusted network can still be isolated. A country with clever models but broken housing supply can still descend into scarcity politics.
+A household with money but no practical resilience can still be fragile. A community with goodwill but no energy, food, tools, or plan can still be overwhelmed. A person with AI skills but no trusted network can still be isolated. A country with clever models but broken housing supply can still descend into scarcity politics and yell at the wrong spreadsheet.
 
 AGI planning begins when these layers are treated as one system.
 
-Leaders should read this with one question in mind: how can this transition be better for humanity?
+Leaders should read this with one question in mind: how do we make this transition better for humanity, not just more efficient for balance sheets?
 
 That means pushing for abundance instead of scarcity, resilience instead of dependence, dignity instead of abandonment, and human enhancement instead of passive displacement. It means taking seriously the possibility that energy, compute, land, water, robotics, health, and trusted communities become strategic assets.
 
@@ -122,17 +122,17 @@ Your plan begins where your exposure is real.
 
 ## Chapter 2: Why
 
-I did not come to this question from an abstract debate about machines.
+I did not arrive at this question through an abstract debate about whether machines can think.
 
-I came to it from a family story about scarcity, migration, work, health, technology, and the search for a better future.
+I came to it through a family story about scarcity, migration, work, health, technology, and the strange human habit of crossing borders because tomorrow might be better than yesterday.
 
-I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a place of extremes. In winter, the temperature can fall to minus 40 degrees Celsius and the city turns ice and snow into a festival. My partner Alyse's family came from Guangzhou, where the heat pushes the other way. I joke that together we are a Song of Ice and Fire, without the problematic family tree.
+I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a place of extremes. In winter, the temperature can fall to minus 40 degrees Celsius and the city turns ice and snow into a festival. My partner Alyse's family came from Guangzhou, where the heat pushes the other way. Together we are basically a Song of Ice and Fire, minus the problematic family tree.
 
-Underneath the joke is a serious point: our families moved because they believed opportunity mattered.
+Underneath that is the serious point: our families moved because they believed opportunity mattered.
 
 Both of my parents were the youngest in their families. They were natural risk-takers, willing to move outside the familiar system and test whether a different life was possible.
 
-My parents grew up inside scarcity. My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a brutal lesson in the difference between equity through enforced scarcity and equal opportunity through abundance.
+My parents grew up inside scarcity. My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a fairly direct education in the difference between "everyone is equal because nobody is allowed to own anything" and "everyone has a shot because society is rich enough to build more opportunity".
 
 My father studied English, then worked as a translator and tour guide in Harbin. That work opened the door to the wider world. He translated for visiting photographers, including Bruce Dale, the National Geographic photographer, who later sponsored him to come to Australia. My father immigrated through Tasmania first, and even now he still emails Bruce, who shares stories about his family in Virginia.
 
@@ -144,7 +144,7 @@ In 1993, after almost a year living apart, my mother and I joined him. I was sev
 
 Six months later, we moved to Sydney.
 
-Australia was not an instant success story. In Hobart, my parents sold textiles at local markets and went fishing on weekends so we could have more variety for dinner. In Sydney, they washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
+Australia was not an instant success story. It rarely is, unless you are reading the brochure version written after the hard part. In Hobart, my parents sold textiles at local markets and went fishing on weekends so we could have more variety for dinner. In Sydney, they washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
 
 Around 1996, they started a travel agency.
 
@@ -154,13 +154,13 @@ At the time, the travel agency looked like a sensible business. My father could 
 
 But the internet changed the market structure.
 
-Online booking made travel more transparent and competitive. Margins compressed. The in-person travel agency market consolidated around larger players like Flight Centre. Small independent agencies had to fight harder for less. That was one of my first lived experiences of technological disruption: not as a productivity chart, but as a family business being hit by a new coordination layer.
+Online booking made travel more transparent and competitive. Margins compressed. The in-person travel agency market consolidated around larger players like Flight Centre. Small independent agencies had to fight harder for less. That was one of my first lived experiences of technological disruption: not as a productivity chart, not as a keynote slide, but as a family business being hit by a new coordination layer.
 
 My father adapted. He became a taxi driver.
 
 Then Uber arrived.
 
-The same pattern repeated. A platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software.
+The same pattern repeated. A platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software. The app did not need to hate taxi drivers. It just needed to route around the old system.
 
 Now AI and robotics are coming for the next layer.
 
@@ -168,9 +168,11 @@ AI can automate many of the translation skills my father built his life around. 
 
 That is why AI disruption is not theoretical for me.
 
-I later joined Deloitte in business tax advisory. It was the kind of serious professional path migrant families are told to aim for: structured work, complex rules, client trust, analysis, compliance, judgment, and prestige. But the more I looked at the work, the more obvious the automation curve became.
+I later joined Deloitte in business tax advisory. It was the kind of serious professional path migrant families are told to aim for: structured work, complex rules, client trust, analysis, compliance, judgment, and prestige. In other words, the respectable ladder. The one everyone tells you is safe because it has a logo on the building and people wear shoes that make meetings sound important.
 
-Tax advisory is full of patterns. Read legislation. Interpret rules. Compare facts. Search precedent. Draft advice. Check edge cases. Prepare workpapers. Explain risk. Some of it still needs accountability and human trust, but a large share of the cognitive workflow is exactly the kind of thing AI gets better at when models can read, reason across documents, call tools, and produce structured outputs.
+But the more I looked at the work, the more obvious the automation curve became.
+
+Tax advisory is full of patterns. Read legislation. Interpret rules. Compare facts. Search precedent. Draft advice. Check edge cases. Prepare workpapers. Explain risk. Some of it still needs accountability and human trust, and I am not suggesting we let a chatbot freestyle tax law after three confident paragraphs and a hallucinated case citation. But a large share of the cognitive workflow is exactly the kind of thing AI gets better at when models can read, reason across documents, call tools, and produce structured outputs.
 
 That realisation pushed me deeper into AI.
 
@@ -182,7 +184,9 @@ We moved from scarcity to opportunity, from manual work to knowledge work, from 
 
 As a child, I moved through more homes and schools than I could comfortably explain. Across Sydney and Greater Sydney, we lived in many suburbs and I went through about six primary schools, from Lindfield to Cammeray, Leichhardt, and Burwood. Cammeray was especially hard. I was the only Chinese kid in the class, teased for having a "flat face", and had to fight for the basic dignity of being treated as another human being. Leichhardt and Burwood felt more accepting because multiculturalism was more normal there.
 
-As a product of China's one-child policy, I did not have siblings to play with while my parents were busy making a living. I spent a lot of time alone, playing a SEGA Mega Drive and memorising Street Fighter II moves. Later I discovered the Apple Macintosh LC575 my parents bought for the travel agency. That machine became one of my first portals into a different world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do.
+As a product of China's one-child policy, I did not have siblings to play with while my parents were busy making a living. I spent a lot of time alone, playing a SEGA Mega Drive and memorising Street Fighter II moves. This was probably not the official curriculum for human potential, but it did teach timing, pattern recognition, and the joy of discovering that a system has hidden moves.
+
+Later I discovered the Apple Macintosh LC575 my parents bought for the travel agency. That machine became one of my first portals into a different world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do.
 
 Education became the migrant-family ladder. I got into Sydney Technical High School, but it was in Hurstville while we were living in Mount Druitt for much of my high school and university years. My parents worked hard to support me into the University of Sydney to study Commerce and Law, the kind of respectable path many Asian parents understandably saw as safe after taking enough risks for one lifetime.
 
@@ -190,7 +194,7 @@ This is why I am suspicious of scarcity thinking.
 
 Scarcity thinking tells us to pull back demand. Shut doors. Blame immigrants. Protect old bottlenecks. Accept that housing, health, education, and opportunity must remain expensive because there is not enough to go around.
 
-The better answer is to increase supply while helping people through the transition.
+The better answer is to increase supply while helping people through the transition. Build more. Automate more. Coordinate better. Use technology to make the pie bigger instead of holding an increasingly dramatic meeting about who gets the last slice.
 
 Legal immigrants and international students are often treated as demand pressure in a spreadsheet. But my family was not just demand. We became workers, students, small-business owners, taxpayers, community members, customers, builders, and eventually contributors to the technology ecosystem. A serious society should not respond to demand by closing doors. It should respond by building enough supply that opportunity is not rationed through scarcity.
 
@@ -206,9 +210,9 @@ I was once robbed in Malaysia. I woke up in hospital with tubes in my body every
 
 That experience clarified something for me. If I had been 80 years old in that hospital bed, but still healthy, conscious, curious, connected, and able to keep living well, I would still have wanted to continue. I do not see virtue in death simply because a calendar says someone has reached a socially accepted age. I care about health, agency, relationships, consciousness, and the ability to keep participating in the world.
 
-Singularity University, through Deloitte, pulled me into Ray Kurzweil's exponential technology rabbit hole. Kurzweil called it *The Singularity Is Near*. Then he wrote *The Singularity Is Nearer*. The joke now is that if he were writing the next one today, it might have to be called *The Singularity Is Here: When We Have No F***ing Idea What's Gonna Happen*.
+Singularity University, through Deloitte, pulled me into Ray Kurzweil's exponential technology rabbit hole. Kurzweil called it *The Singularity Is Near*. Then he wrote *The Singularity Is Nearer*. At the current pace, the next title may need to be *The Singularity Is Here: When We Have No F***ing Idea What's Gonna Happen*.
 
-The joke works because the timelines are compressing.
+That title lands because the timelines are compressing.
 
 The people building frontier models no longer talk like this is centuries away. They talk about years. They talk about systems that can do economically valuable work, automate research, operate tools, write code, reason across domains, and eventually help build the next generation of AI.
 
@@ -218,7 +222,7 @@ It is no longer "will AI affect my field?" I already watched software disrupt my
 
 Post-AGI planning is not a side project for me.
 
-It is the convergence of the family story, the technology story, and the transhumanist story.
+It is where the family story, the technology story, and the transhumanist story finally point at the same thing.
 
 My parents crossed a literal border because Australia represented possibility. The post-AGI border will be less visible but just as real. People will cross from labour income to AI-amplified work, from old credentials to new capabilities, from scarcity politics to supply-side abundance, from biological fatalism to healthy-longevity strategy, and from national institutions to more networked forms of coordination.
 
@@ -232,7 +236,7 @@ Because intelligence should not be trapped inside biology.
 
 Because abundance should be built, not merely predicted.
 
-Because if AGI becomes a general-purpose labour and intelligence layer for civilisation, then the question is not whether it changes humanity. The question is whether we shape the change toward human flourishing.
+Because if AGI becomes a general-purpose labour and intelligence layer for civilisation, then the question is not whether it changes humanity. The question is whether we shape the change toward human flourishing, or just let the default settings run until someone asks why everything feels broken.
 
 ### Chapter 2 Action: Write Your Why
 
@@ -290,7 +294,7 @@ For leaders, the questions are bigger:
 
 The near-term AGI planning problem is financial, physical, social, political, biological, and spiritual.
 
-Digital people often underweight the physical layer. They imagine AGI as software eating software. But humans live in bodies. Families need rooms, calories, sleep, medicine, clean water, transport, energy, and safety. Communities need roads, trades, clinics, warehouses, workshops, farms, substations, emergency services, and people who can coordinate when systems fail.
+Digital people often underweight the physical layer. They imagine AGI as software eating software, which is a very online way to forget that humans still require rooms, calories, sleep, medicine, clean water, transport, energy, and safety. Communities need roads, trades, clinics, warehouses, workshops, farms, substations, emergency services, and people who can coordinate when systems fail.
 
 Cheaper intelligence can write a plan for abundance. Physical abundance still needs energy, machines, land, materials, logistics, regulation, maintenance, and trust.
 
@@ -300,7 +304,9 @@ When a country faces housing pressure, overloaded services, and cost-of-living s
 
 That is the difference between scarcity politics and abundance planning.
 
-The point is not that every household needs a bunker. The point is that every household needs an adaptive plan.
+The point is not that every household needs a bunker. Most people do not need a cinematic bunker. They need liquidity, useful skills, reliable people, practical redundancy, and enough AI literacy to stop outsourcing their future to whoever has the most confident newsletter.
+
+Every household needs an adaptive plan.
 
 That plan should cover:
 
@@ -358,7 +364,7 @@ That sounds mystical until you translate it into economics.
 
 Artificial general intelligence means AI systems can perform the broad range of economically useful cognitive tasks humans can perform. Add robotics, and that capability moves from screens into the physical world. It can answer, code, design, negotiate, simulate, research, plan, persuade, manufacture, move, inspect, repair, farm, teach, diagnose, and coordinate.
 
-Once AI and robotics can do everything a human can do, they will not stop at the human level.
+Once AI and robotics can do everything a human can do, they will not stop at the human level out of politeness.
 
 Machines do not need to remain bound by human working memory, sleep cycles, communication speed, or biological fragility. They can copy, parallelise, simulate, test, and improve. They can operate across millions of instances. They can integrate with sensors, factories, markets, laboratories, satellites, drones, farms, hospitals, and homes.
 
@@ -378,7 +384,7 @@ Atoms follow when robots, energy, compute, materials, logistics, and autonomous 
 
 Housing is one of the cleanest tests of whether abundance is real. It is easy to talk about post-scarcity in software. It is harder to build enough dwellings, infrastructure, and services that growing populations do not turn into social conflict. A real abundance agenda has to make physical supply more elastic: faster planning, faster construction, cheaper energy, automated logistics, modular manufacturing, robotic labour, better materials, and local production capacity.
 
-Otherwise AI abundance stays trapped in screens while ordinary people still fight over rent.
+Otherwise AI abundance stays trapped in screens while ordinary people still fight over rent. That is not post-scarcity. That is just better software sitting on top of the same old bottlenecks.
 
 This is the abundance case: AI helps us cure disease, extend healthy lifespan, solve intelligence, automate dangerous labour, accelerate science, reduce material scarcity, and expand human potential.
 
@@ -402,7 +408,9 @@ It is a zone of accelerating uncertainty.
 
 Inside that zone, "prepare" and "accelerate" are not opposites.
 
-The survival-only posture says: protect what you have and wait out the storm. The acceleration-only posture says: build as fast as possible and trust abundance to solve the rest. Both are incomplete. The useful posture is resilient acceleration: reduce the kinds of fragility that make people panic, while increasing the kinds of capability that let people build the better future.
+The survival-only posture says: protect what you have and wait out the storm. The acceleration-only posture says: build as fast as possible and trust abundance to solve the rest. Both are incomplete. One becomes fear with supplies. The other becomes optimism with no backup generator.
+
+The useful posture is resilient acceleration: reduce the kinds of fragility that make people panic, while increasing the kinds of capability that let people build the better future.
 
 ### Chapter 4 Action: Define Your Singularity Assumptions
 
@@ -417,7 +425,7 @@ Write down the threshold conditions:
 - What would medical AI or longevity science need to achieve before retirement assumptions change?
 - What would governance need to fail at before resilience becomes urgent?
 
-This converts philosophy into triggers.
+This converts philosophy into triggers, which is where philosophy becomes less decorative and more useful.
 
 When intelligence compounds, every bottleneck should be re-examined. Some bottlenecks disappear. Some become more valuable. Human trust may become more valuable. Energy may become more valuable. Land, water, chips, robotics, security, law, governance, embodied presence, and community may become more valuable.
 
@@ -429,11 +437,11 @@ The strategic move is to identify which bottlenecks you can own, improve, access
 
 There is no single post-AGI future.
 
-There are scenarios.
+There are scenarios. This is annoying if you want certainty, but useful if you want to stay alive, solvent, and vaguely sane.
 
 The first is labour displacement: gradually, then suddenly.
 
-AI enters as assistance. It drafts emails, writes code, answers customer questions, generates reports, creates images, analyses documents, and helps employees do more. At first, companies keep headcount and increase output.
+AI enters as assistance. It drafts emails, writes code, answers customer questions, generates reports, creates images, analyses documents, and helps employees do more. At first, companies keep headcount and increase output. Everyone calls it empowerment, and for a while it is.
 
 Then budgets tighten.
 
@@ -447,13 +455,13 @@ Governments may respond with stimulus cheques, universal basic income, universal
 
 If the transition is mismanaged, civil unrest becomes plausible.
 
-People do not revolt because a benchmark improves. They revolt when they cannot pay bills, feel humiliated, lose status, lose trust, or believe the system has no place for them.
+People do not revolt because a benchmark improves. Nobody storms a parliament because a model got 92% on an eval. They revolt when they cannot pay bills, feel humiliated, lose status, lose trust, or believe the system has no place for them.
 
 This is where scarcity politics becomes dangerous. If housing is tight, services are strained, and jobs are being automated, societies may look for people to blame: immigrants, international students, young people, old people, welfare recipients, tech workers, foreigners, corporations, or governments. Some criticism will be legitimate. Some will be scapegoating. The planning question is how to keep the social response aimed at the real bottlenecks: supply, infrastructure, ownership, transition income, public services, and trustworthy governance.
 
 The second scenario is fast takeoff into positive abundance.
 
-In this world, AI systems rapidly accelerate science, medicine, robotics, energy, and production. The cost of essentials falls. New forms of income or public provision emerge. Governments and companies coordinate better than expected. AI helps design better policy, better infrastructure, better education, and better health systems. Humanity experiences a rapid expansion in capability.
+In this world, AI systems rapidly accelerate science, medicine, robotics, energy, and production. The cost of essentials falls. New forms of income or public provision emerge. Governments and companies coordinate better than expected, which would be a pleasant surprise and should not be excluded purely because it sounds uncharacteristic. AI helps design better policy, better infrastructure, better education, and better health systems. Humanity experiences a rapid expansion in capability.
 
 This is the future worth advocating for.
 
@@ -463,11 +471,11 @@ In the best version of this scenario, universal basic income is only the floor.
 
 The richer goal is universal high income: not merely enough money to survive, but broad access to the goods and services that make life genuinely better. Housing, education, health care, mobility, energy, AI tutors, creative tools, longevity medicine, and the time to pursue family, community, learning, and exploration.
 
-That requires both distribution and production. Cash transfers help only if the supply of essentials expands.
+That requires both distribution and production. Cash transfers help only if the supply of essentials expands. Otherwise we have invented a more compassionate bidding war.
 
 The third scenario is slow takeoff: the gentle singularity.
 
-Capabilities improve, but society absorbs them over five to ten years. Regulation slows deployment. Robotics remains harder than software. Enterprises adopt unevenly. Human inertia, trust, liability, procurement, unions, culture, infrastructure, and politics stretch the transition.
+Capabilities improve, but society absorbs them over five to ten years. Regulation slows deployment. Robotics remains harder than software. Enterprises adopt unevenly. Human inertia, trust, liability, procurement, unions, culture, infrastructure, and politics stretch the transition. Never underestimate the ability of a procurement process to make a miracle technology feel tired.
 
 This gives households, businesses, and governments more time.
 
@@ -481,7 +489,7 @@ Maybe AGI is decades away. Maybe human intelligence has bottlenecks that are har
 
 This scenario should not be ignored.
 
-Overpreparing for a near-term shock can be costly if it makes you miss ordinary opportunities. You still need a career, investments, relationships, health, and meaning. A probabilistic plan avoids betting your life on one timeline.
+Overpreparing for a near-term shock can be costly if it makes you miss ordinary opportunities. You still need a career, investments, relationships, health, and meaning. A probabilistic plan avoids betting your life on one timeline, which is generally wise unless you enjoy turning uncertainty into personality.
 
 The fifth scenario is existential risk.
 
@@ -505,7 +513,7 @@ The practical conclusion is this: do not choose one scenario. Allocate across th
 
 You can build resilience for a disorderly transition, advocate for positive abundance, maintain optionality for slow takeoff, monitor long-horizon evidence, support existential-risk reduction, and upgrade your own capabilities through AI and health technologies.
 
-Prediction markets and live signals should inform this, not replace judgment. If markets move on AGI timelines, AI labour displacement, robotics, compute, energy, or AI safety, use that as a reason to update your scenario weights. A market is not truth. It is a public aggregation of belief, incentives, liquidity, and uncertainty. Useful, but not sacred.
+Prediction markets and live signals should inform this, not replace judgment. If markets move on AGI timelines, AI labour displacement, robotics, compute, energy, or AI safety, use that as a reason to update your scenario weights. A market is not truth. It is a public aggregation of belief, incentives, liquidity, and uncertainty. Useful, but not sacred. The market can be smarter than you and still wrong.
 
 That is post-AGI planning.
 
@@ -515,7 +523,7 @@ A scenario portfolio prevents two failures.
 
 The first is denial: assuming the world continues roughly as it is.
 
-The second is monomania: betting everything on one extreme outcome.
+The second is monomania: betting everything on one extreme outcome and then recruiting your wardrobe, diet, and friendships into the thesis.
 
 A starting portfolio might be:
 
@@ -541,7 +549,7 @@ The point is not to average the scenarios into bland advice. The point is to mai
 
 ## Chapter 6: When to Expect Impact
 
-The AGI timeline debate is noisy because people are answering different questions.
+The AGI timeline debate is noisy because people are answering different questions, often at each other, usually with charts.
 
 Some ask when AI will pass a benchmark. Some ask when it can do a remote worker's job. Some ask when it can operate an entire company. Some ask when robotics can replace physical labour. Some ask when the economy notices. Some ask when politics breaks. Some ask when superintelligence arrives.
 
@@ -573,9 +581,9 @@ These are not predictions. They are planning assumptions to test.
 
 The 2027 framing is useful because it is close enough to force action.
 
-If you assume the world may be materially different within one to two years, vague future-proofing stops being enough. You cannot say "I will learn AI someday" or "governments will figure it out" or "my industry is probably safe" and call that a plan.
+If you assume the world may be materially different within one to two years, vague future-proofing stops being enough. You cannot say "I will learn AI someday" or "governments will figure it out" or "my industry is probably safe" and call that a plan. That is not a plan. That is a soothing noise.
 
-When credible AGI forecasts cluster around the late 2020s, treat that as a planning signal rather than a prophecy. A 2028 or 2030 estimate should not make you abandon normal life, but it should pull forward the work that has long lead times: income resilience, AI-native capability, energy and compute exposure, community trust, health, and policy imagination. The practical question is not whether the forecaster is exactly right. It is whether your plan still works if the pre-AGI era has only a few years left.
+When credible AGI forecasts cluster around the late 2020s, treat that as a planning signal rather than a prophecy. A 2028 or 2030 estimate should not make you abandon normal life, sell everything, and begin speaking exclusively in probability distributions. It should pull forward the work that has long lead times: income resilience, AI-native capability, energy and compute exposure, community trust, health, and policy imagination. The practical question is not whether the forecaster is exactly right. It is whether your plan still works if the pre-AGI era has only a few years left.
 
 A near-term horizon forces practical questions:
 
@@ -617,7 +625,7 @@ Track signals:
 - Prediction markets materially shift on AGI, AI labour, robotics, or AI safety.
 - Safety incidents, cyber events, or biosecurity concerns rise.
 
-The reader who monitors these signals calmly will make better decisions than the reader who waits for consensus.
+The reader who monitors these signals calmly will make better decisions than the reader who waits for consensus. Consensus is useful, but it often arrives wearing the shoes of someone who missed the first half of the race.
 
 ---
 
@@ -625,13 +633,13 @@ The reader who monitors these signals calmly will make better decisions than the
 
 Energy and compute are becoming strategic currencies.
 
-If bits become commoditised by AI, atoms are next. But atoms need energy, machines, land, logistics, materials, sensors, and physical-world execution. The post-AGI world may be abundant, but abundance has infrastructure.
+If bits become commoditised by AI, atoms are next. But atoms need energy, machines, land, logistics, materials, sensors, and physical-world execution. The post-AGI world may be abundant, but abundance has infrastructure. You cannot prompt your way into a functioning substation.
 
 A practical plan begins with six layers.
 
 Layer one: personal resilience.
 
-Know your burn rate. Reduce fragile debt. Build liquidity. Protect health. Strengthen relationships. Learn to use AI deeply. Audit your career exposure. Identify which parts of your income are vulnerable to automation and which parts are defended by trust, regulation, physical presence, ownership, taste, or community.
+Know your burn rate. Reduce fragile debt. Build liquidity. Protect health. Strengthen relationships. Learn to use AI deeply, not in the "I asked it for a recipe once" sense, but as a daily capability layer. Audit your career exposure. Identify which parts of your income are vulnerable to automation and which parts are defended by trust, regulation, physical presence, ownership, taste, or community.
 
 Layer two: family and household capability.
 
@@ -639,17 +647,17 @@ Review insurance assumptions. Reconsider education plans. Build AI literacy in t
 
 Layer three: capital allocation.
 
-Use probabilities, not ideology.
+Use probabilities, not ideology. Ideology is excellent at making a person sound certain while quietly deleting risk.
 
 If you assign 20% probability to rapid economic disruption, allocate some capital and attention to liquidity, resilient shelter, food, energy, security, and community. If you assign 30% to fast abundance, allocate to AI-native opportunities, robotics, energy, compute, biotech, education, and public advocacy. If you assign 30% to slow takeoff, keep building conventional assets while upgrading your work with AI. If you assign 10% to long horizon, avoid burning your life down for a future that may take longer. If you assign 10% to existential risk, support safety and governance.
 
 Layer four: productive infrastructure.
 
-Energy matters. Compute matters. Water matters. Food matters. Communications matter. Local manufacturing and robotics will matter. A home, farm, workshop, community hub, or business that can generate power, run compute, grow food, repair equipment, and coordinate people has strategic value.
+Energy matters. Compute matters. Water matters. Food matters. Communications matter. Local manufacturing and robotics will matter. A home, farm, workshop, community hub, or business that can generate power, run compute, grow food, repair equipment, and coordinate people has strategic value. Not because everyone needs to become a prepper. Because the physical world is where the invoices eventually land.
 
 Layer five: social resilience.
 
-Know who you would call if systems became unstable. Build relationships before you need them. Join or form groups that can coordinate practically: neighbours, builders, farmers, engineers, health workers, educators, founders, local officials, parents, and trusted online networks. In a post-AGI shock, information will be abundant but trust may be scarce.
+Know who you would call if systems became unstable. Build relationships before you need them. Join or form groups that can coordinate practically: neighbours, builders, farmers, engineers, health workers, educators, founders, local officials, parents, and trusted online networks. In a post-AGI shock, information will be abundant but trust may be scarce. A group chat is not a community until people can actually help each other.
 
 Layer six: advocacy and leadership.
 
@@ -669,7 +677,7 @@ The companion model turns these layers into a live plan. The reader sets scenari
 
 The first plan does not need to be perfect.
 
-It needs to exist.
+It needs to exist. An imperfect plan you update beats a perfect plan that lives forever in your head, where all productivity systems go to retire.
 
 Then it needs to update.
 
