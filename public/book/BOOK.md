@@ -82,6 +82,14 @@ The answer will be different for a parent, a retiree, a software engineer, a sma
 
 If AI can perform most cognitive work and robotics can perform most physical work, then the value of human labour changes. If labour changes, income changes. If income changes, debt, insurance, pensions, taxation, education, and politics change. If politics changes under pressure, communities need resilience. If technology accelerates into abundance, we need leaders who can help steer that abundance toward humanity instead of letting it concentrate into fragile monopolies.
 
+That is why the planning lens has to be broader than career advice.
+
+In my earlier post-AGI planning essay, I framed the problem as financial, physical, and social preparation for a world that could look radically different by 2027. That frame still holds. Financial preparation means knowing what happens to income, debt, savings, insurance, and assets when labour is repriced. Physical preparation means having access to the essentials that cannot be downloaded: shelter, energy, food, water, health care, communications, tools, and transport. Social preparation means having trusted people, local coordination, institutional legitimacy, and a moral purpose bigger than self-preservation.
+
+Those three layers are connected.
+
+A household with money but no practical resilience can still be fragile. A farm or workshop with supplies but no trusted community can still be isolated. A community with goodwill but no energy, food, tools, capital, or plan can still be overwhelmed. Post-AGI planning begins when those layers are treated as one system.
+
 The goal is not to predict one future. The goal is to stay adaptive across several plausible futures.
 
 The live companion model is the operating layer. It lets you adjust your assumptions as new models, robots, regulations, prices, conflicts, and opportunities emerge. A book can make the case. A model can keep the case alive.
@@ -105,6 +113,12 @@ Write down three things that have changed in the last twelve months:
 - A tool that can now do something you used to assume required a human.
 - A workflow in your job, business, or household that AI can already compress.
 - A physical-world capability, such as robotics, energy storage, drones, sensors, or manufacturing, that looks closer than it did a year ago.
+
+Then classify each change:
+
+- Financial: does it affect income, prices, assets, debt, or insurance?
+- Physical: does it affect shelter, energy, food, water, health, logistics, or security?
+- Social: does it affect trust, status, community, education, politics, or purpose?
 
 Then ask a harder question: if each of those improves at the same rate for another two years, what breaks first?
 
@@ -295,6 +309,12 @@ For a leader, the questions are larger:
 
 The near-term AGI planning problem is not only technical. It is financial, social, political, biological, and spiritual.
 
+It is also physical.
+
+Digital people sometimes underweight this. They imagine AGI as software eating software, as if civilisation were only files, prompts, cloud APIs, dashboards, and markets. But humans live in bodies. Families need rooms, calories, sleep, medicine, clean water, transport, energy, and safety. Communities need roads, trades, clinics, warehouses, workshops, farms, substations, emergency services, and people who can coordinate when systems fail.
+
+If AGI accelerates the digital world first, the pressure will still land in the physical world. Cheaper intelligence can write a plan for abundance, but physical abundance needs energy, machines, land, materials, logistics, regulation, maintenance, and trust. A planning model that ignores atoms is a fantasy with a spreadsheet.
+
 Financial planning changes because income risk changes.
 
 The old model says: earn from labour, save and invest, insure against catastrophe, retire on accumulated assets. In a post-AGI transition, labour income may become more volatile. Some assets may inflate because they are scarce inputs to the AI economy: energy, compute, land, water, chips, robotics, resilient housing, productive infrastructure. Other assets may deflate because their value depended on human bottlenecks.
@@ -323,6 +343,7 @@ That plan should cover:
 - Essential expenses.
 - Debt exposure.
 - Insurance assumptions.
+- Shelter, food, water, energy, health, and communications coverage.
 - Health and longevity strategy.
 - Children's education and capability building.
 - Asset allocation.
@@ -442,6 +463,12 @@ The singularity is not one moment.
 
 It is a zone of accelerating uncertainty.
 
+Inside that zone, "prepare" and "accelerate" are not opposites.
+
+The survival-only posture says: protect what you have, lower exposure, and wait out the storm. The acceleration-only posture says: build as fast as possible and trust abundance to solve the rest. Both are incomplete. The useful posture is resilient acceleration: reduce the kinds of fragility that make people panic, while increasing the kinds of capability that let people build the better future.
+
+That means treating AGI as both a shock and a tool. It can disrupt income, but it can also help people retrain, start companies, diagnose disease, automate admin, coordinate communities, design microgrids, model supply chains, and make expertise cheaper. It can undermine institutions, but it can also help institutions serve people faster if deployed with accountability. It can concentrate power, but it can also widen access if public infrastructure, open systems, and human agency are designed into the transition.
+
 We cannot know exactly what happens beyond the event horizon. But we can know what assets, behaviours, and institutions are more likely to survive the crossing:
 
 - Adaptive learning.
@@ -493,6 +520,10 @@ The first is labour displacement: gradually, then suddenly.
 
 AI enters as assistance. It drafts emails, writes code, answers customer questions, generates reports, creates images, analyses documents, and helps employees do more. At first, companies keep headcount and increase output. Then budgets tighten. New AI-native firms appear with smaller teams and lower costs. Procurement asks why a task still takes ten people. Investors reward margin expansion. Managers discover that the work graph can be redesigned around agents instead of departments.
 
+This can feel benign until the budget line moves.
+
+The first phase is productivity. The second phase is hiring freezes. The third phase is role redesign. The fourth phase is substitution. A person may not lose their job because AI "replaces" them in one clean event. They may lose bargaining power because one AI-amplified team can do what three teams used to do, because junior hiring collapses, because clients expect faster output for lower fees, or because an AI-native competitor attacks the margin pool.
+
 The displacement starts unevenly.
 
 Copywriters, analysts, support staff, junior developers, paralegals, designers, researchers, bookkeepers, recruiters, tutors, and consultants feel it early. Then the systems improve. Middle management gets compressed. Expert workflows become partially automated. Robotics starts moving through warehouses, agriculture, construction, elder care, cleaning, transport, mining, defence, and domestic work.
@@ -512,6 +543,10 @@ In this world, AI systems rapidly accelerate science, medicine, robotics, energy
 This is the future worth advocating for.
 
 It requires leaders who treat abundance as a design goal. It requires open access where possible, safety where necessary, human dignity by default, and mechanisms to distribute benefits. It requires energy buildout, compute access, resilient infrastructure, scientific acceleration, and new ownership models.
+
+It also requires planning before abundance arrives.
+
+If the cost of some goods and services collapses, the transition can still be chaotic if people are carrying debt from the old economy, if housing remains supply-constrained, if health care access is uneven, if energy and compute are bottlenecked, or if communities lose status and meaning faster than new institutions can form. Cheap intelligence is not the same thing as a good society. The abundance scenario still needs capital allocation, public goods, local infrastructure, and a social contract.
 
 The third scenario is slow takeoff: the gentle singularity.
 
@@ -554,6 +589,10 @@ It is humans becoming more capable with machines while ensuring the gains serve 
 The practical conclusion is this: do not choose one scenario. Allocate across them.
 
 You can build resilience for a disorderly transition, advocate for positive abundance, maintain optionality for slow takeoff, monitor long-horizon evidence, support existential-risk reduction, and upgrade your own capabilities through AI and health technologies.
+
+This is the key difference between prediction and planning.
+
+Prediction asks which future wins. Planning asks what actions remain sensible across futures. Liquidity helps in rapid disruption and slow takeoff. AI fluency helps in abundance and displacement. Healthspan helps in every scenario except catastrophe. Energy and community resilience help in disorderly transition, climate shocks, cyber failures, and normal life. Safety work helps if existential risk rises, but it also improves public trust in deployment.
 
 That is post-AGI planning.
 
@@ -626,6 +665,10 @@ For example:
 - Policy may respond only after visible pain.
 
 These are not predictions. They are planning assumptions to test.
+
+The 2027 framing is useful because it is close enough to force action.
+
+If you assume the world may be materially different within one to two years, vague future-proofing stops being enough. You cannot say "I will learn AI someday" or "governments will figure it out" or "my industry is probably safe" and call that a plan. A near-term horizon forces the practical questions: what can I change this quarter, what can I measure this month, what would I do if my income model broke next year, and what opportunities am I ignoring because they still feel too early?
 
 A useful model starts with scenario weights.
 
@@ -703,7 +746,7 @@ Energy and compute are becoming strategic currencies.
 
 If bits become commoditised by AI, atoms are next. But atoms need energy, machines, land, logistics, materials, sensors, and physical-world execution. The post-AGI world may be abundant, but abundance has infrastructure.
 
-A practical plan should begin with five layers.
+A practical plan should begin with six layers.
 
 Layer one: personal resilience.
 
@@ -723,7 +766,11 @@ Layer four: productive infrastructure.
 
 Energy matters. Compute matters. Water matters. Food matters. Communications matter. Local manufacturing and robotics will matter. A home, farm, workshop, community hub, or business that can generate power, run compute, grow food, repair equipment, and coordinate people has strategic value.
 
-Layer five: advocacy and leadership.
+Layer five: social resilience.
+
+Know who you would call if systems became unstable. Build relationships before you need them. Join or form groups that can coordinate practically: neighbours, builders, farmers, engineers, health workers, educators, founders, local officials, parents, and trusted online networks. In a post-AGI shock, information will be abundant but trust may be scarce. The people who can verify facts, share resources, make decisions, and stay calm will matter.
+
+Layer six: advocacy and leadership.
 
 Do not merely prepare for the future. Help shape it.
 
@@ -756,6 +803,16 @@ The first plan does not need to be perfect.
 It needs to exist.
 
 Then it needs to update.
+
+Start with a 30-day sprint:
+
+- Run a household or organisational exposure audit.
+- Set up one AI workflow that saves real time each week.
+- Build or improve a liquidity buffer.
+- Review debt, insurance, and fixed expenses.
+- Map essential needs: shelter, energy, food, water, health, communications, and transport.
+- Identify one local resilience relationship to strengthen.
+- Pick one abundance opportunity to learn, build, invest in, or advocate for.
 
 The people who thrive after AGI will not be the people who guessed the exact date. They will be the people who treated uncertainty as something to model, prepare for, and act through.
 
@@ -793,6 +850,8 @@ The post-AGI plan is therefore both personal and civilisational.
 
 Protect your household. Upgrade your capabilities. Reduce fragility. Build or join resilient communities. Allocate capital with probabilities. Own or access strategic infrastructure. Learn to work with AI. Advocate for safety without surrendering to fear. Advocate for abundance without becoming naive. Support human enhancement, healthy longevity, and intelligence amplification so humans are not merely displaced by the tools we create.
 
+That is how to survive and thrive: protect the basics, build capability, keep optionality, coordinate with people you trust, and push the transition toward abundance rather than fear.
+
 The future is not waiting.
 
 Neither should we.
@@ -819,7 +878,22 @@ Neither should we.
 - Do you have skills that become more valuable with AI rather than less?
 - Do you own assets that benefit from abundance, automation, energy demand, or resilience demand?
 
-### 3. Capability Upgrade
+### 3. Physical Resilience
+
+- Where would you live if income, transport, grid power, or supply chains were disrupted?
+- How many days of food, water, medicine, and household essentials could you cover?
+- What backup power, communications, and transport options do you have?
+- Which local trades, growers, health workers, or operators do you know personally?
+- What equipment, tools, spares, or practical skills would reduce dependence on fragile services?
+
+### 4. Social Resilience
+
+- Who are the five people you would coordinate with first in a shock?
+- Which local institutions do you trust, and which ones are brittle?
+- What community role could you play: organiser, builder, medic, teacher, operator, analyst, connector, funder, advocate?
+- Where could you contribute to public AI access, local resilience, or transition support?
+
+### 5. Capability Upgrade
 
 - Which AI tools do you use daily?
 - Which workflows have you automated?
@@ -827,7 +901,7 @@ Neither should we.
 - Which human skills become more valuable when paired with AI?
 - Which health, cognition, or longevity practices increase your future optionality?
 
-### 4. Scenario Allocation
+### 6. Scenario Allocation
 
 Assign percentages:
 
@@ -843,7 +917,7 @@ For each scenario, write one action for:
 - The next 6 months.
 - The next 2 years.
 
-### 5. Update Triggers
+### 7. Update Triggers
 
 Write five signals that would force you to update your plan.
 
