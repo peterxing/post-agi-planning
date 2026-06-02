@@ -377,6 +377,149 @@
       font-size: 13px;
     }
 
+    .galactic-map {
+      background: #081018;
+      color: white;
+    }
+
+    .galactic-map .section-head h2,
+    .galactic-map .section-head p {
+      color: white;
+    }
+
+    .galactic-map .section-head p {
+      color: rgba(255,255,255,0.76);
+    }
+
+    .map-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .star-chart {
+      min-height: 560px;
+      border: 1px solid rgba(141, 208, 255, 0.28);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(17, 35, 54, 0.94), rgba(5, 12, 22, 0.98)),
+        #081018;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+      overflow: hidden;
+    }
+
+    .star-chart svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+    }
+
+    .star-chart a {
+      outline: none;
+    }
+
+    .star-chart a:focus-visible .system-core,
+    .star-chart a:hover .system-core {
+      stroke: white;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.7));
+    }
+
+    .system-label {
+      fill: white;
+      font: 700 14px var(--sans);
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+
+    .system-note {
+      fill: rgba(255,255,255,0.68);
+      font: 12px var(--mono);
+      pointer-events: none;
+    }
+
+    .route-line {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 8 10;
+      opacity: 0.82;
+    }
+
+    .jump-line {
+      fill: none;
+      stroke: rgba(255,255,255,0.28);
+      stroke-width: 1.4;
+    }
+
+    .map-panel {
+      border: 1px solid rgba(141, 208, 255, 0.28);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.06);
+      padding: 18px;
+    }
+
+    .map-panel h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .route-item {
+      border-top: 1px solid rgba(255,255,255,0.16);
+      padding-top: 12px;
+    }
+
+    .route-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .route-item strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+
+    .route-item p {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.72);
+      font-size: 14px;
+    }
+
+    .route-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--route);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--route) 22%, transparent);
+      flex: 0 0 auto;
+    }
+
+    .map-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .map-actions a {
+      border: 1px solid rgba(141, 208, 255, 0.34);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.06);
+      font-size: 13px;
+    }
+
     .model {
       background: #e9e7dd;
     }
@@ -780,7 +923,7 @@
     }
 
     @media (max-width: 920px) {
-      .hero, .section-head, .tool {
+      .hero, .section-head, .tool, .map-shell {
         grid-template-columns: 1fr;
       }
 
@@ -827,6 +970,11 @@
       .scenario-board {
         min-height: auto;
       }
+
+      .star-chart,
+      .star-chart svg {
+        min-height: 430px;
+      }
     }
   </style>
 </head>
@@ -839,6 +987,7 @@
       </div>
       <div class="navlinks">
         <a href="#summary">Summary</a>
+        <a href="#map">Map</a>
         <a href="#chapters">Chapters</a>
         <a href="#read">Read</a>
         <a href="#model" class="primary">Model</a>
@@ -907,6 +1056,133 @@
           <a href="/book/hitchhikers-guide-summary-infographic.jpg">Open full-size infographic</a>
           <a href="#model">Run the companion model</a>
           <a href="#chapters">Jump to chapters</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="galactic-map" id="map">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Intergalactic navigation map.</h2>
+          <p>A star chart for the singularity: choose a route through the book by clicking a system, then use the live model as your ship computer when the real world changes.</p>
+        </div>
+        <div class="map-shell">
+          <div class="star-chart" role="img" aria-label="Clickable intergalactic map linking the seven book chapters as star systems">
+            <svg viewBox="0 0 960 620" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+              <defs>
+                <radialGradient id="coreGlow" cx="50%" cy="50%" r="60%">
+                  <stop offset="0%" stop-color="#fff7c4"/>
+                  <stop offset="48%" stop-color="#36d6ff"/>
+                  <stop offset="100%" stop-color="#2f5f98"/>
+                </radialGradient>
+                <radialGradient id="riskGlow" cx="50%" cy="50%" r="65%">
+                  <stop offset="0%" stop-color="#ffd0bd"/>
+                  <stop offset="58%" stop-color="#c44f2d"/>
+                  <stop offset="100%" stop-color="#7e1d1d"/>
+                </radialGradient>
+                <radialGradient id="abundanceGlow" cx="50%" cy="50%" r="65%">
+                  <stop offset="0%" stop-color="#e9ffd1"/>
+                  <stop offset="55%" stop-color="#18a57f"/>
+                  <stop offset="100%" stop-color="#0e4f45"/>
+                </radialGradient>
+                <filter id="softGlow">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <rect width="960" height="620" fill="#07101a"/>
+              <g fill="rgba(255,255,255,0.72)">
+                <circle cx="62" cy="74" r="1.4"/><circle cx="122" cy="178" r="1"/><circle cx="220" cy="86" r="1.6"/><circle cx="312" cy="42" r="1"/><circle cx="428" cy="112" r="1.3"/><circle cx="536" cy="58" r="1.6"/><circle cx="668" cy="100" r="1.1"/><circle cx="812" cy="56" r="1.4"/><circle cx="904" cy="146" r="1"/>
+                <circle cx="82" cy="374" r="1.2"/><circle cx="156" cy="520" r="1.5"/><circle cx="292" cy="564" r="1"/><circle cx="396" cy="486" r="1.4"/><circle cx="516" cy="560" r="1.2"/><circle cx="674" cy="502" r="1.4"/><circle cx="824" cy="556" r="1"/><circle cx="910" cy="420" r="1.5"/>
+                <circle cx="244" cy="286" r="1"/><circle cx="742" cy="294" r="1.2"/><circle cx="592" cy="258" r="1"/><circle cx="112" cy="286" r="1.3"/><circle cx="858" cy="260" r="1"/>
+              </g>
+
+              <path class="jump-line" d="M142 340 C210 240 268 186 344 132"/>
+              <path class="jump-line" d="M344 132 C438 142 516 188 590 272"/>
+              <path class="jump-line" d="M590 272 C696 250 782 286 842 362"/>
+              <path class="jump-line" d="M590 272 C520 342 456 422 392 502"/>
+              <path class="jump-line" d="M392 502 C308 480 208 444 142 340"/>
+              <path class="route-line" d="M142 340 C248 80 700 78 842 362" stroke="#36d6ff"/>
+              <path class="route-line" d="M132 354 C268 536 620 548 842 362" stroke="#18a57f"/>
+              <path class="route-line" d="M344 132 C490 356 634 450 842 362" stroke="#c44f2d"/>
+
+              <a href="#chapter-1-do-you-feel-the-acceleration" aria-label="Jump to Chapter 1, Acceleration">
+                <circle cx="142" cy="340" r="58" fill="rgba(54,214,255,0.08)"/>
+                <circle class="system-core" cx="142" cy="340" r="21" fill="url(#coreGlow)" filter="url(#softGlow)"/>
+                <text class="system-label" x="92" y="410">01 Acceleration</text>
+                <text class="system-note" x="88" y="430">launch vector</text>
+              </a>
+
+              <a href="#chapter-2-why" aria-label="Jump to Chapter 2, Why">
+                <circle cx="344" cy="132" r="54" fill="rgba(24,165,127,0.08)"/>
+                <circle class="system-core" cx="344" cy="132" r="20" fill="url(#abundanceGlow)" filter="url(#softGlow)"/>
+                <text class="system-label" x="286" y="82">02 Why</text>
+                <text class="system-note" x="286" y="102">origin system</text>
+              </a>
+
+              <a href="#chapter-3-who-needs-a-plan" aria-label="Jump to Chapter 3, Who Needs a Plan">
+                <circle cx="590" cy="272" r="64" fill="rgba(255,255,255,0.05)"/>
+                <circle class="system-core" cx="590" cy="272" r="24" fill="#f7f2df" filter="url(#softGlow)"/>
+                <text class="system-label" x="612" y="210">03 Who</text>
+                <text class="system-note" x="612" y="230">human stack</text>
+              </a>
+
+              <a href="#chapter-4-what-agi-means-inside-the-singularity" aria-label="Jump to Chapter 4, What AGI Means Inside the Singularity">
+                <circle cx="842" cy="362" r="72" fill="rgba(54,214,255,0.08)"/>
+                <circle class="system-core" cx="842" cy="362" r="29" fill="url(#coreGlow)" filter="url(#softGlow)"/>
+                <text class="system-label" x="748" y="448">04 Singularity Core</text>
+                <text class="system-note" x="748" y="468">event horizon</text>
+              </a>
+
+              <a href="#chapter-5-how-the-transition-could-unfold" aria-label="Jump to Chapter 5, How the Transition Could Unfold">
+                <circle cx="690" cy="500" r="48" fill="rgba(196,79,45,0.09)"/>
+                <circle class="system-core" cx="690" cy="500" r="18" fill="url(#riskGlow)" filter="url(#softGlow)"/>
+                <text class="system-label" x="710" y="510">05 How</text>
+                <text class="system-note" x="710" y="530">scenario lanes</text>
+              </a>
+
+              <a href="#chapter-6-when-to-expect-impact" aria-label="Jump to Chapter 6, When to Expect Impact">
+                <circle cx="392" cy="502" r="50" fill="rgba(255,247,196,0.08)"/>
+                <circle class="system-core" cx="392" cy="502" r="19" fill="#f4c95d" filter="url(#softGlow)"/>
+                <text class="system-label" x="304" y="544">06 When</text>
+                <text class="system-note" x="304" y="564">time gates</text>
+              </a>
+
+              <a href="#chapter-7-what-to-do-now" aria-label="Jump to Chapter 7, What to Do Now">
+                <circle cx="260" cy="420" r="54" fill="rgba(24,165,127,0.08)"/>
+                <circle class="system-core" cx="260" cy="420" r="21" fill="url(#abundanceGlow)" filter="url(#softGlow)"/>
+                <text class="system-label" x="220" y="356">07 Action</text>
+                <text class="system-note" x="220" y="376">ship computer</text>
+              </a>
+            </svg>
+          </div>
+
+          <aside class="map-panel" aria-label="Map route key">
+            <h3>Route key</h3>
+            <div class="route-list">
+              <div class="route-item">
+                <strong><span class="route-dot" style="--route:#36d6ff"></span> Capability route</strong>
+                <p>Track acceleration from frontier models to the singularity core: what becomes possible, then economically normal.</p>
+              </div>
+              <div class="route-item">
+                <strong><span class="route-dot" style="--route:#18a57f"></span> Abundance route</strong>
+                <p>Move from personal why to human agency, healthspan, productive infrastructure, and practical action.</p>
+              </div>
+              <div class="route-item">
+                <strong><span class="route-dot" style="--route:#c44f2d"></span> Risk route</strong>
+                <p>Stress-test labour shock, social volatility, existential risk, and the policies needed before the transition breaks trust.</p>
+              </div>
+            </div>
+            <div class="map-actions">
+              <a href="#chapter-2-why">Start with Why</a>
+              <a href="#chapter-4-what-agi-means-inside-the-singularity">Enter the Core</a>
+              <a href="#model">Open Ship Computer</a>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
