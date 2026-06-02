@@ -124,19 +124,43 @@ I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a 
 
 But underneath the joke is a serious point: our families moved because they believed opportunity mattered.
 
-My parents grew up inside the consequences of scarcity. My mother's family lost property and business during the Cultural Revolution. My parents studied English, worked, travelled, translated, exported, and looked for a way to give our family a better shot. In 1992 my father came to Tasmania as an international student. In 1993 my mother and I joined him. I was seven years old, starting again in Hobart, then later across Sydney.
+My parents grew up inside the consequences of scarcity. My mother's family lost property and business during the Cultural Revolution. My father studied English, then worked as a translator and tour guide in Harbin. That work opened the door to the wider world. One of the people he met was Bruce Dale, the National Geographic photographer, who sponsored him to come to Australia. My father immigrated through Tasmania first, and even now he still emails Bruce, who shares stories about his family in Virginia.
+
+My mother worked at an import-export textiles company in China. Both of my parents travelled around the world before most people around us had that opportunity. They saw what was possible outside the system they grew up in, and they decided to take the risk. In 1992 my father came to Tasmania as an international student. In 1993 my mother and I joined him. I was seven years old, starting again in Hobart.
+
+Six months later, we moved to Sydney.
+
+Australia was not an instant success story. My parents worked hard. They washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country. Around 1996, they started a travel agency.
+
+Then the internet arrived.
+
+At the time, the travel agency looked like a sensible business. My father could translate, guide, book travel, and connect people across cultures. My mother understood import-export, paperwork, logistics, and the practical reality of international commerce. They had exactly the kind of skills that should have compounded into a stable small business.
+
+But the internet changed the market structure.
+
+Online booking made travel more transparent and more competitive. Customers could compare prices directly. Margins compressed. The in-person travel agency market consolidated around larger players like Flight Centre. Small independent agencies had to fight harder for less. That was one of my first lived experiences of technological disruption: not as an abstract productivity chart, but as a family business being hit by a new coordination layer.
+
+My father adapted. He became a taxi driver.
+
+Then Uber arrived.
+
+The same pattern repeated. A technology platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software. Another human livelihood was squeezed by a better coordination system.
+
+Now AI and robotics are coming for the next layer.
+
+AI can automate many of the translation skills my father built his life around. AI travel agents can plan and book itineraries. Voice agents can guide tourists. Robotaxis can automate driving. The same capabilities that can create abundance can also compress the value of labour that families depended on for decades.
 
 That experience changes how you see policy, technology, and the future.
 
 When you grow up as part of an international student family, you learn that systems matter. Visa rules matter. Housing matters. Schools matter. Work matters. Cost of living matters. Social trust matters. You also learn that people are not just demand in an economic model. They are families taking risks across borders because they believe their children can become more than the circumstances they were born into.
 
-I moved through several schools. I was the only Chinese kid in one classroom and got teased for my face. I spent a lot of time alone as an only child while my parents worked, playing a SEGA Mega Drive and later discovering the Apple Macintosh LC575 my parents bought for their travel agency. That machine became one of my first portals into a different kind of world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do.
+I moved through several schools. I was the only Chinese kid in one classroom and got teased for my face. I spent a lot of time alone as an only child while my parents worked, playing a SEGA Mega Drive and later discovering the Apple Macintosh LC575 my parents bought for their travel agency. That machine became one of my first portals into a different kind of world. It was not just a computer. It was a hint that tools could expand what a person could imagine and do. It was also sitting inside the same family business that the internet would eventually make harder.
 
 That is why I am suspicious of scarcity thinking.
 
 Scarcity thinking tells us to pull back demand. Shut doors. Blame immigrants. Protect the old bottlenecks. Accept that housing, health, education, and opportunity must remain expensive because there is not enough to go around.
 
-The better answer is to increase supply.
+The better answer is to increase supply, while helping people move through the transition.
 
 AI, robotics, automation, energy, better infrastructure, and better coordination can help us produce more of what people actually need: homes, food, care, education, medical access, transport, clean energy, scientific progress, and time. The point of technology is not gadgets for their own sake. The point is to move human civilisation from scarcity toward abundance.
 
@@ -150,7 +174,13 @@ The same logic applies to intelligence.
 
 If the limits of our cognition are treated as fixed, then AI becomes a threat that replaces us. If cognition can be extended, amplified, shared, and integrated, then AI becomes part of the next stage of human capability. The question becomes how we ensure people have access to that capability rather than being locked out of it.
 
-My public work has moved through this same arc: emerging technology at Deloitte and KPMG, Singularity University, Transhumanism Australia, Transhuman Coin, AI adoption at Microsoft, and now post-AGI planning. The common thread is not one company or one platform. It is the belief that accelerating technologies should be used to expand human potential.
+My public work has moved through this same arc: emerging technology at Deloitte and KPMG, Singularity University, Transhumanism Australia, Transhuman Coin, AI adoption at Microsoft, and now post-AGI planning. Across my talks and interviews, the recurring pattern is the same. Start with a technology that seems strange or futuristic, explain the mechanism, then ask what it means for ordinary people, business models, communities, and humanity.
+
+I have talked about aging as a disease process, senescent cells, healthy life extension, brain-computer interfaces, human identity in a digital world, VR and AR as new social spaces, automation in close-contact industries, AI agents, GPT-4, decentralised AI, humanoid robots, crypto coordination, remote delivery, and the future of work. These are not separate fascinations. They are all pieces of the same question: how do we use exponential technologies to transcend human limitations without abandoning the humans caught in the transition?
+
+That is why post-AGI planning is not a side project for me.
+
+It is the convergence of the family story, the technology story, and the transhumanist story.
 
 That belief does not make me blind to risk.
 
