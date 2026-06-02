@@ -1142,7 +1142,7 @@
           const data = await apiResponse.json();
           readerConsensus = data.average || normalizedPercentages();
           renderProbabilityRows("readerRows", readerConsensus, "No reader responses");
-          setStatus("surveyStatus", `Survey responses: ${data.count || 1} (${data.source || "live API"})`);
+          setStatus("surveyStatus", `Saved to Vercel memory. Survey responses: ${data.count || 1}.`);
           return;
         }
 
@@ -1176,7 +1176,7 @@
           if (data.count) {
             readerConsensus = data.average;
             renderProbabilityRows("readerRows", readerConsensus, "No reader responses");
-            setStatus("surveyStatus", `Survey responses: ${data.count} (${data.source || "live API"})`);
+            setStatus("surveyStatus", `Vercel memory responses: ${data.count}.`);
             return;
           }
         }
