@@ -13,9 +13,19 @@ create table if not exists public.book_probability_responses (
   energy numeric check (energy >= 0 and energy <= 100),
   community numeric check (community >= 0 and community <= 100),
   ai_fluency numeric check (ai_fluency >= 0 and ai_fluency <= 100),
+  severity numeric check (severity >= 0 and severity <= 100),
+  horizon_months numeric check (horizon_months >= 6 and horizon_months <= 120),
+  essentials numeric check (essentials >= 0 and essentials <= 100),
+  mitigation numeric check (mitigation >= 0 and mitigation <= 100),
   user_agent_hash text,
   updated_at timestamptz not null default now()
 );
+
+alter table public.book_probability_responses
+  add column if not exists severity numeric check (severity >= 0 and severity <= 100),
+  add column if not exists horizon_months numeric check (horizon_months >= 6 and horizon_months <= 120),
+  add column if not exists essentials numeric check (essentials >= 0 and essentials <= 100),
+  add column if not exists mitigation numeric check (mitigation >= 0 and mitigation <= 100);
 
 alter table public.book_probability_responses enable row level security;
 

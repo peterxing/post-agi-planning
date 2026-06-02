@@ -1,5 +1,5 @@
 const scenarioKeys = ['rapid', 'abundance', 'gentle', 'long', 'xrisk'];
-const exposureKeys = ['income', 'liquidity', 'energy', 'community', 'ai_fluency'];
+const exposureKeys = ['income', 'liquidity', 'energy', 'community', 'ai_fluency', 'severity', 'horizon_months', 'essentials', 'mitigation'];
 
 function store() {
   if (!globalThis.__bookPollResponses) {
@@ -31,6 +31,10 @@ function normalizeResponse(body) {
   const energy = clamp(body.energy);
   const community = clamp(body.community);
   const aiFluency = clamp(body.ai_fluency);
+  const severity = clamp(body.severity);
+  const horizonMonths = clamp(body.horizon_months, 6, 120);
+  const essentials = clamp(body.essentials);
+  const mitigation = clamp(body.mitigation);
 
   const row = {
     reader_id: cleanReaderId(body.reader_id),
@@ -44,6 +48,10 @@ function normalizeResponse(body) {
     energy,
     community,
     ai_fluency: aiFluency,
+    severity,
+    horizon_months: horizonMonths,
+    essentials,
+    mitigation,
     model: {
       scenarioProbabilities: {
         rapid,
@@ -58,6 +66,10 @@ function normalizeResponse(body) {
         energy,
         community,
         ai_fluency: aiFluency,
+        severity,
+        horizon_months: horizonMonths,
+        essentials,
+        mitigation,
       },
     },
     updated_at: new Date().toISOString(),

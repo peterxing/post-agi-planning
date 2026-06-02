@@ -690,6 +690,75 @@
       line-height: 1;
     }
 
+    .score p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .criticality {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel2);
+      padding: 14px;
+    }
+
+    .criticality strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .criticality p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .criticality.warn {
+      border-color: rgba(155, 92, 0, 0.38);
+      background: #fff6e6;
+    }
+
+    .criticality.hot {
+      border-color: rgba(159, 36, 36, 0.42);
+      background: #fff0ec;
+    }
+
+    .criticality.good {
+      border-color: rgba(14, 124, 102, 0.34);
+      background: #eef8f4;
+    }
+
+    .actuarial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .actuarial-card {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .actuarial-card small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .actuarial-card strong {
+      font-family: var(--mono);
+      font-size: 20px;
+    }
+
     .alloc {
       margin-top: 16px;
     }
@@ -824,6 +893,11 @@
     .divergence-row.hot {
       border-left-color: var(--accent3);
       background: #fff0ec;
+    }
+
+    .divergence-row.good {
+      border-left-color: var(--accent);
+      background: #eef8f4;
     }
 
     .market-list {
@@ -1041,7 +1115,7 @@
         justify-content: flex-start;
       }
 
-      .chapters, .guide-grid, .scoregrid, .watchlist, .comparison-grid, .x-grid {
+      .chapters, .guide-grid, .scoregrid, .watchlist, .comparison-grid, .x-grid, .actuarial-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1453,7 +1527,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>The live model.</h2>
-          <p>Set your beliefs, compare them with live market/reality signals, then turn uncertainty into action. This is not financial advice; it is a structured way to stop treating AGI as vague anxiety and start treating it as a portfolio of futures.</p>
+          <p>Set your beliefs, compare them with live market/reality signals, then turn uncertainty into action. This is not financial advice; it is an actuarial-style planning tool: probability, severity, time horizon, exposure, mitigation, and market alignment.</p>
         </div>
 
         <div class="tool">
@@ -1516,6 +1590,31 @@
           </div>
 
           <div class="panel">
+            <h3>Actuarial planning assumptions</h3>
+            <p class="hint">Think like an insurer or financial planner: probability is only one part of the equation. Severity, time horizon, mitigation, and market alignment change the action.</p>
+            <div class="control">
+              <label for="severity">Impact severity if you are underprepared <span id="severityVal">70</span></label>
+              <input id="severity" type="range" min="0" max="100" value="70">
+              <p class="hint">0 = inconvenience. 100 = income, shelter, health, family obligations, or business continuity are materially at risk.</p>
+            </div>
+            <div class="control">
+              <label for="horizon">Material impact horizon <span id="horizonVal">24 months</span></label>
+              <input id="horizon" type="range" min="6" max="120" value="24">
+              <p class="hint">Shorter horizons increase urgency because mitigation has less time to compound.</p>
+            </div>
+            <div class="control">
+              <label for="essentials">Essential-needs coverage <span id="essentialsVal">45</span></label>
+              <input id="essentials" type="range" min="0" max="100" value="45">
+              <p class="hint">Shelter, food, water, medicine, power, communications, transport, and practical fallback capacity.</p>
+            </div>
+            <div class="control">
+              <label for="mitigation">Mitigation progress <span id="mitigationVal">35</span></label>
+              <input id="mitigation" type="range" min="0" max="100" value="35">
+              <p class="hint">How much of the plan is already implemented, not merely admired in a notes app.</p>
+            </div>
+          </div>
+
+          <div class="panel">
             <h3>Realtime readout</h3>
             <div class="scoregrid">
               <div class="score">
@@ -1529,6 +1628,39 @@
               <div class="score">
                 <small>Action urgency</small>
                 <strong id="urgencyScore">0</strong>
+              </div>
+              <div class="score">
+                <small>Expected transition loss</small>
+                <strong id="lossScore">0</strong>
+                <p>Probability x exposure x severity, reduced by resilience and mitigation.</p>
+              </div>
+              <div class="score">
+                <small>Market alignment</small>
+                <strong id="alignmentScore">--</strong>
+                <p>How closely your scenario weights track loaded market proxies.</p>
+              </div>
+              <div class="score">
+                <small>Perspective shift</small>
+                <strong id="shiftScore">0</strong>
+                <p>High score means your beliefs or actions need repricing.</p>
+              </div>
+            </div>
+            <div class="criticality" id="criticalityBox">
+              <strong id="criticalityLabel">Criticality loading...</strong>
+              <p id="criticalityText">Move the sliders to see whether this is a watch item, planning item, or act-now item.</p>
+            </div>
+            <div class="actuarial-grid">
+              <div class="actuarial-card">
+                <small>Annualised disruption pressure</small>
+                <strong id="annualPressure">--</strong>
+              </div>
+              <div class="actuarial-card">
+                <small>Residual resilience gap</small>
+                <strong id="residualGap">--</strong>
+              </div>
+              <div class="actuarial-card">
+                <small>Planning half-life</small>
+                <strong id="planningHalfLife">--</strong>
               </div>
             </div>
             <div class="alloc">
@@ -1567,9 +1699,9 @@
                 <div id="marketStatus" class="status-line">Markets loading...</div>
               </div>
               <div class="compare-card">
-                <h4>Divergence flags</h4>
+                <h4>Criticality flags</h4>
                 <div id="divergenceRows"></div>
-                <div class="status-line">Flags trigger at 20+ points outside a market proxy, with 35+ treated as a large mismatch.</div>
+                <div class="status-line">A 20+ point gap asks for perspective shift; 35+ plus high severity becomes action-critical.</div>
               </div>
             </div>
             <div id="marketList" class="market-list"></div>
@@ -1581,13 +1713,13 @@
 
   <footer>
     <div class="wrap">
-      <span>Draft 0.1 - 2026-06-02 - Peter Xing</span>
-      <span>Living model: update assumptions as reality changes.</span>
+      <span>Draft 2.2 - 2026-06-03 - Peter Xing</span>
+      <span>Living model: update assumptions, market alignment, and action criticality as reality changes.</span>
     </div>
   </footer>
 
   <script>
-    const ids = ["rapid", "abundance", "gentle", "long", "xrisk", "income", "liquidity", "energy", "community", "ai"];
+    const ids = ["rapid", "abundance", "gentle", "long", "xrisk", "income", "liquidity", "energy", "community", "ai", "severity", "horizon", "essentials", "mitigation"];
     const scenarioIds = ["rapid", "abundance", "gentle", "long", "xrisk"];
     const scenarioLabels = {
       rapid: "Rapid disruption",
@@ -1639,6 +1771,61 @@
       return Math.max(0, Math.min(100, Math.round(n)));
     }
 
+    function months(n) {
+      return `${Math.round(Number(n) || 0)} months`;
+    }
+
+    function scenarioRiskLoad(s) {
+      return (s.rapid * 96) + (s.abundance * 56) + (s.gentle * 36) + (s.long * 14) + (s.xrisk * 100);
+    }
+
+    function marketAlignment(personal) {
+      if (!marketConsensus || !marketCoverage) return null;
+      let weightedGap = 0;
+      let coverage = 0;
+      scenarioIds.forEach(id => {
+        const scenarioCoverage = marketCoverage[id] || 0;
+        if (!scenarioCoverage) return;
+        weightedGap += Math.abs((personal[id] || 0) - (marketConsensus[id] || 0)) * scenarioCoverage;
+        coverage += scenarioCoverage;
+      });
+      if (!coverage) return null;
+      return {
+        gap: weightedGap / coverage,
+        score: pct(100 - (weightedGap / coverage) * 2.2),
+        coverage
+      };
+    }
+
+    function criticalityFrom(score, shift, alignment) {
+      if (score >= 78 || (score >= 68 && shift >= 55)) {
+        return {
+          className: "hot",
+          label: "Act now: underpricing could be expensive",
+          text: "From an actuarial perspective, the expected loss and time compression are high enough that waiting for consensus is the risk. Pull mitigation forward into the next 30 days."
+        };
+      }
+      if (score >= 58 || shift >= 45) {
+        return {
+          className: "warn",
+          label: "Reprice the plan this quarter",
+          text: "Your model has enough exposure, severity, or market divergence that it should change behaviour: liquidity, AI leverage, essentials, energy/compute, and trusted people."
+        };
+      }
+      if (alignment && alignment.score >= 75 && score < 45) {
+        return {
+          className: "good",
+          label: "Aligned watch: keep the loop alive",
+          text: "Your assumptions roughly track the loaded market proxies and residual risk is manageable. Keep monitoring; do not let a calm readout become complacency."
+        };
+      }
+      return {
+        className: "",
+        label: "Planning item: monitor and compound",
+        text: "The current readout does not demand panic. It does demand a living plan, because small mitigations compound before volatility arrives."
+      };
+    }
+
     function renderAllocation(items) {
       const root = document.getElementById("allocation");
       root.innerHTML = items.map(item => `
@@ -1682,10 +1869,13 @@
 
       const personal = normalizedPercentages();
       if (!marketConsensus || !marketCoverage) {
-        root.innerHTML = '<div class="divergence-row"><strong>Market check pending</strong><p>Reader probabilities will be compared once Polymarket/Kalshi proxies load.</p></div>';
+        root.innerHTML = '<div class="divergence-row"><strong>Market check pending</strong><p>Reader probabilities will be compared once Polymarket/Kalshi proxies load. Until then, treat the model as personal exposure math.</p></div>';
         return;
       }
 
+      const severity = value("severity");
+      const horizon = value("horizon");
+      const horizonFactor = Math.max(0, Math.min(1, (120 - horizon) / 114));
       const rows = scenarioIds.map(id => {
         const coverage = marketCoverage[id] || 0;
         if (!coverage) {
@@ -1700,17 +1890,18 @@
         const reader = Math.round(personal[id] || 0);
         const market = Math.round(marketConsensus[id] || 0);
         const diff = Math.abs(reader - market);
-        const level = diff >= 35 ? "hot" : diff >= 20 ? "warn" : "";
-        const verdict = diff >= 35
-          ? "large mismatch"
-          : diff >= 20
-            ? "outside market range"
+        const criticalLoad = pct((diff * 1.4) + (severity * 0.35) + (horizonFactor * 22));
+        const level = diff >= 35 || criticalLoad >= 76 ? "hot" : diff >= 20 || criticalLoad >= 56 ? "warn" : "good";
+        const verdict = level === "hot"
+          ? "action-critical mismatch"
+          : level === "warn"
+            ? "perspective shift needed"
             : "inside rough market range";
 
         return `
           <div class="divergence-row ${level}">
             <strong>${scenarioLabels[id]}: ${verdict}</strong>
-            <p>Your model ${reader}% vs market proxy ${market}% across ${coverage} matched market${coverage === 1 ? "" : "s"}; gap ${diff} points.</p>
+            <p>Your model ${reader}% vs market proxy ${market}% across ${coverage} matched market${coverage === 1 ? "" : "s"}; gap ${diff} points; criticality ${criticalLoad}.</p>
           </div>
         `;
       });
@@ -1745,6 +1936,10 @@
         energy: value("energy"),
         community: value("community"),
         ai_fluency: value("ai"),
+        severity: value("severity"),
+        horizon_months: value("horizon"),
+        essentials: value("essentials"),
+        mitigation: value("mitigation"),
         user_agent_hash: String(navigator.userAgent || "").slice(0, 140),
         updated_at: new Date().toISOString()
       };
@@ -2043,34 +2238,64 @@
     function update() {
       ids.forEach(id => {
         const label = document.getElementById(id + "Val");
-        if (label) label.textContent = value(id) + (["rapid", "abundance", "gentle", "long", "xrisk"].includes(id) ? "%" : "");
+        if (!label) return;
+        if (id === "horizon") {
+          label.textContent = months(value(id));
+        } else {
+          label.textContent = value(id) + (["rapid", "abundance", "gentle", "long", "xrisk"].includes(id) ? "%" : "");
+        }
       });
 
       const s = normalisedScenarios();
+      const personalPercentages = normalizedPercentages();
       const income = value("income");
       const liquidity = value("liquidity");
       const energy = value("energy");
       const community = value("community");
       const ai = value("ai");
-
-      const disruption = pct((s.rapid * 95) + (s.xrisk * 80) + (s.abundance * 58) + (s.gentle * 38) + (income * 0.28) - (liquidity * 0.10));
-      const resilience = pct((liquidity * 0.28) + (energy * 0.24) + (community * 0.22) + (ai * 0.18) + ((100 - income) * 0.08));
-      const urgency = pct((disruption * 0.62) + ((100 - resilience) * 0.38));
+      const severity = value("severity");
+      const horizon = value("horizon");
+      const essentials = value("essentials");
+      const mitigation = value("mitigation");
+      const horizonFactor = Math.max(0, Math.min(1, (120 - horizon) / 114));
+      const resilience = pct((liquidity * 0.22) + (energy * 0.18) + (community * 0.17) + (ai * 0.16) + (essentials * 0.17) + (mitigation * 0.10));
+      const riskLoad = scenarioRiskLoad(s);
+      const exposureLoad = (income * 0.34) + (severity * 0.30) + ((100 - essentials) * 0.18) + ((100 - liquidity) * 0.10) + ((100 - mitigation) * 0.08);
+      const disruption = pct((riskLoad * 0.52) + (exposureLoad * 0.48) + (horizonFactor * 12) - (resilience * 0.12));
+      const expectedLoss = pct((riskLoad * 0.40) + (exposureLoad * 0.42) + (severity * 0.18) - (resilience * 0.30));
+      const annualPressure = pct(expectedLoss * Math.min(2.8, 12 / Math.max(6, horizon)) + riskLoad * 0.18);
+      const residualGap = pct(100 - resilience);
+      const alignment = marketAlignment(personalPercentages);
+      const alignmentScore = alignment ? alignment.score : null;
+      const marketGap = alignment ? alignment.gap : 0;
+      const shift = pct((marketGap * 1.7) + (expectedLoss * 0.34) + (severity * 0.18) + (horizonFactor * 18) - (mitigation * 0.12));
+      const urgency = pct((disruption * 0.38) + (expectedLoss * 0.34) + (residualGap * 0.18) + (shift * 0.10));
+      const criticality = criticalityFrom(urgency, shift, alignment);
 
       document.getElementById("disruptionScore").textContent = disruption;
       document.getElementById("resilienceScore").textContent = resilience;
       document.getElementById("urgencyScore").textContent = urgency;
-      renderProbabilityRows("personalRows", normalizedPercentages(), "Set your model");
+      document.getElementById("lossScore").textContent = expectedLoss;
+      document.getElementById("alignmentScore").textContent = alignmentScore == null ? "--" : alignmentScore;
+      document.getElementById("shiftScore").textContent = shift;
+      document.getElementById("annualPressure").textContent = `${annualPressure}/100`;
+      document.getElementById("residualGap").textContent = `${residualGap}/100`;
+      document.getElementById("planningHalfLife").textContent = horizon <= 12 ? "monthly" : horizon <= 36 ? "quarterly" : "6-monthly";
+      const criticalityBox = document.getElementById("criticalityBox");
+      criticalityBox.className = `criticality ${criticality.className}`;
+      document.getElementById("criticalityLabel").textContent = criticality.label;
+      document.getElementById("criticalityText").textContent = criticality.text;
+      renderProbabilityRows("personalRows", personalPercentages, "Set your model");
       if (readerConsensus) renderProbabilityRows("readerRows", readerConsensus, "Survey unavailable");
       if (marketConsensus) renderProbabilityRows("marketRows", marketConsensus, "Markets unavailable");
       renderDivergenceFlags();
 
       const allocation = [
-        { label: "Liquidity + debt defence", value: 16 + s.rapid * 34 + Math.max(0, 60 - liquidity) * 0.18, color: colors.liquidity },
-        { label: "Energy + compute", value: 14 + (s.rapid + s.abundance + s.xrisk) * 28 + Math.max(0, 60 - energy) * 0.16, color: colors.resilience },
+        { label: "Liquidity + debt defence", value: 16 + s.rapid * 34 + Math.max(0, 60 - liquidity) * 0.18 + severity * 0.08, color: colors.liquidity },
+        { label: "Energy + compute", value: 14 + (s.rapid + s.abundance + s.xrisk) * 28 + Math.max(0, 60 - energy) * 0.16 + Math.max(0, 65 - essentials) * 0.10, color: colors.resilience },
         { label: "AI-native upside", value: 16 + (s.abundance + s.gentle) * 34 + Math.max(0, 65 - ai) * 0.10, color: colors.opportunity },
         { label: "Community resilience", value: 10 + (s.rapid + s.xrisk) * 24 + Math.max(0, 60 - community) * 0.16, color: colors.safety },
-        { label: "Health + human upgrade", value: 12 + (s.abundance + s.gentle) * 20 + s.long * 12, color: colors.learning }
+        { label: "Health + human upgrade", value: 12 + (s.abundance + s.gentle) * 20 + s.long * 12 + severity * 0.05, color: colors.learning }
       ];
       const total = allocation.reduce((a, b) => a + b.value, 0) || 1;
       renderAllocation(allocation.map(item => ({ ...item, value: item.value / total * 100 })));
@@ -2084,8 +2309,14 @@
       if (energy < 55) {
         actions.push({ color: colors.resilience, title: "Energy + compute audit", body: "List power, internet, backup, GPU/cloud access, critical loads, and what fails if the grid or income is stressed." });
       }
+      if (expectedLoss > 62 && essentials < 60) {
+        actions.push({ color: colors.resilience, title: "Essential-needs coverage", body: "Treat food, water, medicine, power, communications, and transport like insurance coverage: define the gap, cost the gap, then close the highest-severity item first." });
+      }
       if (income > 55) {
         actions.push({ color: colors.opportunity, title: "Career or business defence", body: "Identify what AI can replace, what it can amplify, and where ownership, trust, regulation, physical context, or taste creates a moat." });
+      }
+      if (alignment && alignment.gap >= 20) {
+        actions.push({ color: colors.learning, title: "Perspective shift", body: "Your scenario weights are far from loaded market proxies. Either write down why you have an edge, or reprice timelines before your actions lag reality." });
       }
       if (community < 55 || s.rapid > 0.25) {
         actions.push({ color: colors.safety, title: "Community layer", body: "Strengthen trusted local relationships. Resilience is cheaper and more humane when it is shared." });

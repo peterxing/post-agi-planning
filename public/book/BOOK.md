@@ -4,7 +4,7 @@
 
 By Peter Xing
 
-Draft 2.1 - 2026-06-03
+Draft 2.2 - 2026-06-03
 
 ---
 
@@ -515,6 +515,10 @@ You can build resilience for a disorderly transition, advocate for positive abun
 
 Prediction markets and live signals should inform this, not replace judgment. If markets move on AGI timelines, AI labour displacement, robotics, compute, energy, or AI safety, use that as a reason to update your scenario weights. A market is not truth. It is a public aggregation of belief, incentives, liquidity, and uncertainty. Useful, but not sacred. The market can be smarter than you and still wrong.
 
+The trick is to treat market disagreement like an actuarial signal. In insurance and financial planning, probability is only one part of the calculation. You also care about severity, time horizon, exposure, mitigation, and whether the risk is correlated with everything else going wrong at the same time. A 20% chance of mild inconvenience is not the same as a 20% chance of losing your income while housing, politics, and health systems are also stressed.
+
+So if your model is far from prediction markets, do not automatically surrender to the market. Ask the better question: am I seeing something the market is missing, or am I emotionally anchored to a story I like? If the gap is large and the severity is high, the correct response is not internet debating. It is repricing your plan.
+
 That is post-AGI planning.
 
 ### Chapter 5 Action: Build a Scenario Portfolio
@@ -673,7 +677,11 @@ The answer to scarcity pressure is not to make the circle smaller.
 
 It is to increase the capacity of the circle.
 
-The companion model turns these layers into a live plan. The reader sets scenario probabilities, household or organisational exposure, essential needs coverage, energy and compute readiness, community resilience, and advocacy posture. The tool returns a disruption score, resilience score, capital allocation suggestion, top actions, and watch signals.
+The companion model turns these layers into a live plan. The reader sets scenario probabilities, household or organisational exposure, essential-needs coverage, severity, time horizon, energy and compute readiness, community resilience, AI fluency, and mitigation progress. The tool then behaves more like a lightweight actuarial planner than a vibe calculator: it estimates disruption pressure, residual resilience, expected transition loss, market alignment, perspective shift, suggested capital and attention allocation, top actions, and watch signals.
+
+The most important output is not the number. It is the moment the model tells you your assumptions should change behaviour.
+
+If your probability is low but severity is extreme, buy the insurance equivalent: resilience, safety, essential coverage, and trusted coordination. If your probability is high but mitigation is already strong, keep compounding. If your beliefs are far away from prediction markets, write down why you have an edge or update. The model is there to make perspective shifting explicit before reality does it for you with worse manners.
 
 The first plan does not need to be perfect.
 
