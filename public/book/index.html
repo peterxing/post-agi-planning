@@ -329,6 +329,54 @@
       color: var(--muted);
     }
 
+    .infographic {
+      background:
+        radial-gradient(circle at 22% 20%, rgba(17, 190, 205, 0.18), transparent 28%),
+        radial-gradient(circle at 78% 18%, rgba(126, 211, 82, 0.14), transparent 26%),
+        #06101f;
+      color: white;
+    }
+
+    .infographic .section-head h2,
+    .infographic .section-head p {
+      color: white;
+    }
+
+    .infographic .section-head p {
+      color: rgba(255,255,255,0.78);
+    }
+
+    .infographic-frame {
+      border: 1px solid rgba(75, 222, 238, 0.34);
+      border-radius: 8px;
+      background: rgba(2, 7, 18, 0.68);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+      overflow: hidden;
+    }
+
+    .infographic-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .infographic-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .infographic-actions a {
+      border: 1px solid rgba(75, 222, 238, 0.42);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.06);
+      font-size: 13px;
+    }
+
     .model {
       background: #e9e7dd;
     }
@@ -790,6 +838,7 @@
         <span>Peter Xing</span>
       </div>
       <div class="navlinks">
+        <a href="#summary">Summary</a>
         <a href="#chapters">Chapters</a>
         <a href="#read">Read</a>
         <a href="#model" class="primary">Model</a>
@@ -843,6 +892,23 @@
           <p>The point is to allocate across uncertainty, monitor reality, and update before old assumptions break.</p>
         </div>
       </aside>
+    </section>
+
+    <section class="infographic" id="summary">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>One-page summary.</h2>
+          <p>The operating map: what is happening, why it matters, how the transition could unfold, when to watch for impact, and what to do now.</p>
+        </div>
+        <figure class="infographic-frame">
+          <img src="/book/hitchhikers-guide-summary-infographic.jpg" alt="Infographic summary of Hitchhiker's Guide to the Singularity covering six chapters, scenario probabilities, impact timelines, and actions to take now." loading="eager" decoding="async">
+        </figure>
+        <div class="infographic-actions">
+          <a href="/book/hitchhikers-guide-summary-infographic.jpg">Open full-size infographic</a>
+          <a href="#model">Run the companion model</a>
+          <a href="#chapters">Jump to chapters</a>
+        </div>
+      </div>
     </section>
 
     <section id="chapters">
