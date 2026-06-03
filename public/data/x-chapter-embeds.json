@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-02T22:51:05.290Z",
+  "generatedAt": "2026-06-03T22:32:06.705Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,47 +24,36 @@
       ],
       "posts": [
         {
-          "id": "2061631867712139323",
+          "id": "2061970164527386934",
           "type": "repost",
-          "text": "OpenAI is releasing a major Codex update tomorrow. Months in development, something quite special. It certainly sounds different from GPT-5.6.",
-          "created_at": "2026-06-02T02:11:55.000Z",
-          "url": "https://x.com/kimmonismus/status/2061631867712139323",
-          "public_metrics": {},
-          "matched_terms": [
-            "codex"
-          ]
-        },
-        {
-          "id": "2061601186474836438",
-          "type": "repost",
-          "text": "deepmind shane legg has predicted a 50% chance we'll see AGI by 2028 demis has also been pretty consistent this year about 2030, plus or minus so it seems to me 2026-2028 may be the final stretch of the pre-AGI era before the consensus shifts toward \"AGI is here\"",
-          "created_at": "2026-06-02T00:10:00.000Z",
-          "url": "https://x.com/haider1/status/2061601186474836438",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
-          ]
-        },
-        {
-          "id": "2061513383287882111",
-          "type": "repost",
-          "text": "Opus 4.8 just broke ARC-AGI-3 it tripled GPT-5.5's score we are now at a breathtaking 1.5% human efficiency",
-          "created_at": "2026-06-01T18:21:06.000Z",
-          "url": "https://x.com/scaling01/status/2061513383287882111",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
-          ]
-        },
-        {
-          "id": "2060669627710198042",
-          "type": "repost",
-          "text": "SpaceX is recovering Starship boosters in Australia’s backyard. And Canberra is doing almost nothing. As Starship scales toward high flight cadence, recovery speed will decide who leads the multiplanetary future. Australia sits on one of the greatest geographic and industrial adv",
-          "created_at": "2026-05-30T10:28:19.000Z",
-          "url": "https://x.com/TerAustralis/status/2060669627710198042",
+          "text": "Tesla Self-Driving 14 is coming to Australia and New Zealand! Electric Future (@electricfuture5) First comms from @TeslaAUNZ. FSD V14 is coming. No FSD on new cars until it does — https://nitter.net/electricfuture5/status/2061950975133577509#m",
+          "created_at": "2026-06-03T00:36:11.000Z",
+          "url": "https://x.com/wholemars/status/2061970164527386934",
           "public_metrics": {},
           "matched_terms": [
             "future"
+          ]
+        },
+        {
+          "id": "2061876244862619953",
+          "type": "repost",
+          "text": "Introducing Microsoft Scout, the first autopilot agent from Microsoft - 57 days after starting my new job, we are launching Microsoft Scout to our Frontier customers. Big day for the team and for @openclaw #MicrosoftBuild microsoft.com/en-us/microsof…",
+          "created_at": "2026-06-02T18:22:59.000Z",
+          "url": "https://x.com/OmarShahine/status/2061876244862619953",
+          "public_metrics": {},
+          "matched_terms": [
+            "agent"
+          ]
+        },
+        {
+          "id": "2061874930547871868",
+          "type": "repost",
+          "text": "Meet Microsoft Scout. An always-on agent that keeps work moving, taking action without needing to be prompted each time. As Microsoft’s first Autopilot agent, Microsoft Scout works across Teams, Outlook, OneDrive, and more—taking action within the controls your organization sets.",
+          "created_at": "2026-06-02T18:17:45.000Z",
+          "url": "https://x.com/Microsoft365/status/2061874930547871868",
+          "public_metrics": {},
+          "matched_terms": [
+            "agent"
           ]
         }
       ]
@@ -86,6 +75,29 @@
       ],
       "posts": [
         {
+          "id": "2061853377483493421",
+          "type": "repost",
+          "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
+          "created_at": "2026-06-02T16:52:07.000Z",
+          "url": "https://x.com/brian_armstrong/status/2061853377483493421",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging",
+            "longevity"
+          ]
+        },
+        {
+          "id": "2061849237156159511",
+          "type": "repost",
+          "text": "Following breakthrough results, we’re bringing longevity medicine to human trials. We’ve raised a $435M Series C led by @foundersfund to make it happen. Reprogramming cell age has the potential to create more healthy years for everyone. We're closer than ever to realizing it. Vid",
+          "created_at": "2026-06-02T16:35:40.000Z",
+          "url": "https://x.com/newlimit/status/2061849237156159511",
+          "public_metrics": {},
+          "matched_terms": [
+            "longevity"
+          ]
+        },
+        {
           "id": "2061688462663905749",
           "type": "repost",
           "text": "🎤 Speaker at #WikiEXPOHK2026 @peterxing is Cloud & AI Platforms Lead for Public Sector and Education at @Microsoft , helping governments and educational institutions adopt Azure and frontier AI technologies. Previously, he held leadership roles at KPMG and Deloitte, focusing on ",
@@ -94,29 +106,6 @@
           "public_metrics": {},
           "matched_terms": [
             "transhumanism"
-          ]
-        },
-        {
-          "id": "2060615106778574883",
-          "type": "repost",
-          "text": "My latest article is about how the longevity movement should not be about wellness tips and tricks and lifestyle improvements, but rather, true, biotech-enabled life extension and life improvement. We should be able to live exciting lives, without restriction. Forever.",
-          "created_at": "2026-05-30T06:51:40.000Z",
-          "url": "https://x.com/cremieuxrecueil/status/2060615106778574883",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        },
-        {
-          "id": "2060585346715513179",
-          "type": "repost",
-          "text": "This is huge for longevity science. \"Researchers just discovered that aging may partly happen because our DNA gradually loses its organized structure inside cells.\" \"The team found that boosting a protein called SIRT6 restored youthful chromatin organization in old mouse cells, r",
-          "created_at": "2026-05-30T04:53:25.000Z",
-          "url": "https://x.com/SciTechera/status/2060585346715513179",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
           ]
         }
       ]
@@ -155,6 +144,17 @@
       ],
       "posts": [
         {
+          "id": "2061860319547527191",
+          "type": "repost",
+          "text": "This came as a surprise: Microsoft has unveiled handheld and desktop devices designed to control one's agents. It reminds me of what I had expected from OpenAI’s hardware-standalone devices for controlling agents. Video Chubby♨️ (@kimmonismus) It is interesting how much focus is ",
+          "created_at": "2026-06-02T17:19:42.000Z",
+          "url": "https://x.com/kimmonismus/status/2061860319547527191",
+          "public_metrics": {},
+          "matched_terms": [
+            "community"
+          ]
+        },
+        {
           "id": "2061553610111279294",
           "type": "repost",
           "text": "Human civilization is about to gain trillions of extra (200+ IQ) minds. For all of history, progress was limited by the tiny number of genius level humans alive at any moment. A few thousand extraordinary minds per generation had to push the entire species forward. One Einstein. ",
@@ -163,17 +163,6 @@
           "public_metrics": {},
           "matched_terms": [
             "education"
-          ]
-        },
-        {
-          "id": "2061463726407155795",
-          "type": "repost",
-          "text": "AI is advancing quickly. Society’s ability to manage its risks must advance just as fast. Today we’re sharing our vision for AI Resilience, with more than $130M in initial grants underway across bio-resilience, cyber-resilience, AI model safety, and AI’s impact on young people: o",
-          "created_at": "2026-06-01T15:03:47.000Z",
-          "url": "https://x.com/FoundationOAI/status/2061463726407155795",
-          "public_metrics": {},
-          "matched_terms": [
-            "society"
           ]
         }
       ]
@@ -193,7 +182,30 @@
         "robots",
         "automation"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2061901702324695115",
+          "type": "repost",
+          "text": "Mustafa Suleyman, CEO of Microsoft AI says that AI compute will grow 1000x in the next 3 years We are currently at around 5e27 FLOPs. Three more OOMs mean we reach 5e30 FLOPs in 2029.",
+          "created_at": "2026-06-02T20:04:08.000Z",
+          "url": "https://x.com/scaling01/status/2061901702324695115",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute"
+          ]
+        },
+        {
+          "id": "2061850684052394367",
+          "type": "repost",
+          "text": "Introducing - Surface RTX Spark Dev Box. All the power developers need, right out of the box. Sign up to learn more: msft.it/6016vbfbA Surface RTX Spark Dev Box. Built for more. Video",
+          "created_at": "2026-06-02T16:41:25.000Z",
+          "url": "https://x.com/surface/status/2061850684052394367",
+          "public_metrics": {},
+          "matched_terms": [
+            "power"
+          ]
+        }
+      ]
     },
     "chapter-5-work-after-work": {
       "id": "chapter-5-work-after-work",
@@ -212,22 +224,44 @@
       ],
       "posts": [
         {
-          "id": "2061874084649025728",
+          "id": "2062288421406785710",
           "type": "repost",
-          "text": "Such a privilege to work with Microsoft to bring claws to enterprises! OpenClaw🦞 (@openclaw) \"You can run OpenClaw inside your company now.\" Annoucing our work with @Microsoft to bring OpenClaw to the Microsoft and Windows ecosystems. Claws now work securly in the enterprise. — ",
-          "created_at": "2026-06-02T18:14:24.000Z",
-          "url": "https://x.com/steipete/status/2061874084649025728",
+          "text": "OpenClaw 2026.6.1 is live 🦞 🪟 native Windows node host 🛠️ Skill Workshop for self-learning agents 📋 Workboard orchestration 🧠 MiniMax M3 support Windows joins the cluster. No penguin costume required. github.com/openclaw/openclaw…",
+          "created_at": "2026-06-03T21:40:49.000Z",
+          "url": "https://x.com/openclaw/status/2062288421406785710",
+          "public_metrics": {},
+          "matched_terms": [
+            "agents"
+          ]
+        },
+        {
+          "id": "2061892887856492686",
+          "type": "repost",
+          "text": "Make sure your business is ready to accept AI agents as customers! Base (@base) x.com/i/article/206039277755… — https://nitter.net/base/status/2060401276240757111#m",
+          "created_at": "2026-06-02T19:29:07.000Z",
+          "url": "https://x.com/brian_armstrong/status/2061892887856492686",
+          "public_metrics": {},
+          "matched_terms": [
+            "agents"
+          ]
+        },
+        {
+          "id": "2061874930547871868",
+          "type": "repost",
+          "text": "Meet Microsoft Scout. An always-on agent that keeps work moving, taking action without needing to be prompted each time. As Microsoft’s first Autopilot agent, Microsoft Scout works across Teams, Outlook, OneDrive, and more—taking action within the controls your organization sets.",
+          "created_at": "2026-06-02T18:17:45.000Z",
+          "url": "https://x.com/Microsoft365/status/2061874930547871868",
           "public_metrics": {},
           "matched_terms": [
             "work"
           ]
         },
         {
-          "id": "2060559650907460086",
+          "id": "2061874084649025728",
           "type": "repost",
-          "text": "Thank you for being here today. Your support means a lot to the whole team. We will get back to flight, and we will get to the Moon. Gradatim Ferociter. NASA Administrator Jared Isaacman (@NASAAdmin) We go where we need to be, and today that was @NASAKennedy. Some of my senior en",
-          "created_at": "2026-05-30T03:11:18.000Z",
-          "url": "https://x.com/JeffBezos/status/2060559650907460086",
+          "text": "Such a privilege to work with Microsoft to bring claws to enterprises! OpenClaw🦞 (@openclaw) \"You can run OpenClaw inside your company now.\" Annoucing our work with @Microsoft to bring OpenClaw to the Microsoft and Windows ecosystems. Claws now work securly in the enterprise. — ",
+          "created_at": "2026-06-02T18:14:24.000Z",
+          "url": "https://x.com/steipete/status/2061874084649025728",
           "public_metrics": {},
           "matched_terms": [
             "work"
@@ -270,45 +304,22 @@
       ],
       "posts": [
         {
-          "id": "2061601186474836438",
+          "id": "2062288421406785710",
           "type": "repost",
-          "text": "deepmind shane legg has predicted a 50% chance we'll see AGI by 2028 demis has also been pretty consistent this year about 2030, plus or minus so it seems to me 2026-2028 may be the final stretch of the pre-AGI era before the consensus shifts toward \"AGI is here\"",
-          "created_at": "2026-06-02T00:10:00.000Z",
-          "url": "https://x.com/haider1/status/2061601186474836438",
+          "text": "OpenClaw 2026.6.1 is live 🦞 🪟 native Windows node host 🛠️ Skill Workshop for self-learning agents 📋 Workboard orchestration 🧠 MiniMax M3 support Windows joins the cluster. No penguin costume required. github.com/openclaw/openclaw…",
+          "created_at": "2026-06-03T21:40:49.000Z",
+          "url": "https://x.com/openclaw/status/2062288421406785710",
           "public_metrics": {},
           "matched_terms": [
-            "2026",
-            "2030"
+            "2026"
           ]
         },
         {
-          "id": "2060867599869649097",
+          "id": "2061853377483493421",
           "type": "repost",
-          "text": "It does seem like meaningfully better AI releases are accelerating, especially from OpenAI & Anthropic. To illustrate, I caused this timeline to be created. It only lists new models that scored 3 points or higher over previous models in the Artificial Analysis index.",
-          "created_at": "2026-05-30T23:34:59.000Z",
-          "url": "https://x.com/emollick/status/2060867599869649097",
-          "public_metrics": {},
-          "matched_terms": [
-            "timeline"
-          ]
-        },
-        {
-          "id": "2060577512347013344",
-          "type": "repost",
-          "text": "What stage in the cycle is it when the Uber driver Claudes while the Tesla drives",
-          "created_at": "2026-05-30T04:22:17.000Z",
-          "url": "https://x.com/aarondfrancis/status/2060577512347013344",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
-        },
-        {
-          "id": "2060559650907460086",
-          "type": "repost",
-          "text": "Thank you for being here today. Your support means a lot to the whole team. We will get back to flight, and we will get to the Moon. Gradatim Ferociter. NASA Administrator Jared Isaacman (@NASAAdmin) We go where we need to be, and today that was @NASAKennedy. Some of my senior en",
-          "created_at": "2026-05-30T03:11:18.000Z",
-          "url": "https://x.com/JeffBezos/status/2060559650907460086",
+          "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
+          "created_at": "2026-06-02T16:52:07.000Z",
+          "url": "https://x.com/brian_armstrong/status/2061853377483493421",
           "public_metrics": {},
           "matched_terms": [
             "when"
@@ -363,22 +374,11 @@
       ],
       "posts": [
         {
-          "id": "2060615106778574883",
+          "id": "2061849237156159511",
           "type": "repost",
-          "text": "My latest article is about how the longevity movement should not be about wellness tips and tricks and lifestyle improvements, but rather, true, biotech-enabled life extension and life improvement. We should be able to live exciting lives, without restriction. Forever.",
-          "created_at": "2026-05-30T06:51:40.000Z",
-          "url": "https://x.com/cremieuxrecueil/status/2060615106778574883",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        },
-        {
-          "id": "2060585346715513179",
-          "type": "repost",
-          "text": "This is huge for longevity science. \"Researchers just discovered that aging may partly happen because our DNA gradually loses its organized structure inside cells.\" \"The team found that boosting a protein called SIRT6 restored youthful chromatin organization in old mouse cells, r",
-          "created_at": "2026-05-30T04:53:25.000Z",
-          "url": "https://x.com/SciTechera/status/2060585346715513179",
+          "text": "Following breakthrough results, we’re bringing longevity medicine to human trials. We’ve raised a $435M Series C led by @foundersfund to make it happen. Reprogramming cell age has the potential to create more healthy years for everyone. We're closer than ever to realizing it. Vid",
+          "created_at": "2026-06-02T16:35:40.000Z",
+          "url": "https://x.com/newlimit/status/2061849237156159511",
           "public_metrics": {},
           "matched_terms": [
             "longevity"
