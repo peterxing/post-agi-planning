@@ -4,10 +4,6 @@
 
 Peter Xing
 
-Draft 2.0 - Moonshot / Abundance Rewrite
-
-A living planning manual for the transition from labour scarcity to intelligence abundance.
-
 ---
 
 ## How to Use This Book
