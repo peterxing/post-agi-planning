@@ -105,7 +105,7 @@
     .hero {
       min-height: calc(100vh - 64px);
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 1fr;
       gap: 36px;
       max-width: 1180px;
       margin: 0 auto;
@@ -1186,41 +1186,6 @@
           <a class="secondary" href="#read">Read the field guide</a>
         </div>
       </div>
-      <aside class="scenario-board" aria-label="Scenario probability overview">
-        <div class="board-top">
-          <div>
-            <strong>Starting Scenario Stack</strong><br>
-            <small>Adjust it in the live model below</small>
-          </div>
-          <small id="clock">LIVE</small>
-        </div>
-        <div class="meters">
-          <div class="meter">
-            <label><span>Rapid disruption + unrest</span><span>20%</span></label>
-            <div class="bar"><div class="fill" style="--w:20%;--c:#c44f2d"></div></div>
-          </div>
-          <div class="meter">
-            <label><span>Fast takeoff into abundance</span><span>30%</span></label>
-            <div class="bar"><div class="fill" style="--w:30%;--c:#0e7c66"></div></div>
-          </div>
-          <div class="meter">
-            <label><span>Slow gentle singularity</span><span>30%</span></label>
-            <div class="bar"><div class="fill" style="--w:30%;--c:#2f5f98"></div></div>
-          </div>
-          <div class="meter">
-            <label><span>Long horizon</span><span>10%</span></label>
-            <div class="bar"><div class="fill" style="--w:10%;--c:#77756b"></div></div>
-          </div>
-          <div class="meter">
-            <label><span>Existential risk</span><span>10%</span></label>
-            <div class="bar"><div class="fill" style="--w:10%;--c:#9f2424"></div></div>
-          </div>
-        </div>
-        <div class="board-callout">
-          <strong>The point is not to predict one future.</strong>
-          <p>The point is to allocate across uncertainty, monitor reality, and update before old assumptions break.</p>
-        </div>
-      </aside>
     </section>
 
     <section class="infographic" id="summary">
@@ -1536,6 +1501,46 @@
             <p class="loading">Loading full book...</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="scenario-stack">
+      <div class="wrap">
+        <aside class="scenario-board" aria-label="Scenario probability overview">
+          <div class="board-top">
+            <div>
+              <strong>Starting Scenario Stack</strong><br>
+              <small>Adjust it in the live model below</small>
+            </div>
+            <small id="clock">LIVE</small>
+          </div>
+          <div class="meters">
+            <div class="meter">
+              <label><span>Rapid disruption + unrest</span><span>20%</span></label>
+              <div class="bar"><div class="fill" style="--w:20%;--c:#c44f2d"></div></div>
+            </div>
+            <div class="meter">
+              <label><span>Fast takeoff into abundance</span><span>30%</span></label>
+              <div class="bar"><div class="fill" style="--w:30%;--c:#0e7c66"></div></div>
+            </div>
+            <div class="meter">
+              <label><span>Slow gentle singularity</span><span>30%</span></label>
+              <div class="bar"><div class="fill" style="--w:30%;--c:#2f5f98"></div></div>
+            </div>
+            <div class="meter">
+              <label><span>Long horizon</span><span>10%</span></label>
+              <div class="bar"><div class="fill" style="--w:10%;--c:#77756b"></div></div>
+            </div>
+            <div class="meter">
+              <label><span>Existential risk</span><span>10%</span></label>
+              <div class="bar"><div class="fill" style="--w:10%;--c:#9f2424"></div></div>
+            </div>
+          </div>
+          <div class="board-callout">
+            <strong>The point is not to predict one future.</strong>
+            <p>The point is to allocate across uncertainty, monitor reality, and update before old assumptions break.</p>
+          </div>
+        </aside>
       </div>
     </section>
 
