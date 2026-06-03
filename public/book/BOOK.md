@@ -108,19 +108,17 @@ In 1992 my father came to Tasmania as an international student. In 1993, after a
 
 ### Technology as both ladder and wave
 
-Australia was not an instant success story. It rarely is, unless you are reading the brochure version written after the hard part. My parents sold textiles at local markets, washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
+Australia was not an instant success story. My parents sold textiles at markets, washed dishes, took odd jobs, and saved what they could — the classic migrant scramble for a foothold.
 
-So in 1996, they started a travel agency called Wonderland World Travel. I could tell they were really excited. They got a new computer, a Macintosh LC575, which I fell in love with - everything about it, from the mouse to Paint to the Return to Zork immersive puzzle game. They got an office in the city, decorated it with capital letters "WONDERLAND WORLD TRAVEL" on the wall, and all the pictures they took of them travelling around the world. They started getting a lot of walk-in visits, printed out the orders and got their first paying customers.
-
-There was another hard lesson inside that move: skills do not always travel at full value. In China, my father's English was rare, useful, and income-producing. It made him a translator, a tour guide, and a bridge to the outside world. In Australia, English was no longer a scarce skill. It was the floor. The thing that had helped him cross the border stopped being enough to earn on the other side. That is not a failure of effort. It is what happens when the market changes around a capability.
+In 1996 they opened Wonderland World Travel. I still remember how excited they were. They bought a Macintosh LC575 (the first computer I fell in love with), rented an office in the city, painted “WONDERLAND WORLD TRAVEL” on the wall, and hung photos from their travels. Walk-in customers came. They printed orders. They had their first paying clients.
 
 Then the internet arrived.
 
-At the time, the travel agency looked like a sensible business. My father could translate, guide, book travel, and connect people across cultures. My mother understood export, paperwork, logistics, and international commerce. They had exactly the kind of skills that should have compounded into a stable small business. Then the market moved again, because apparently one round of humility was not considered sufficient.
+What looked like a sensible business — my father translating and booking, my mother handling export and logistics — was suddenly competing with a new coordination layer. Online booking made everything transparent and cheaper. Margins collapsed. Small agencies were squeezed. That was my first real lesson in technological disruption: not a chart, but a family business being quietly routed around.
 
-But the internet changed the market structure. Online booking made travel more transparent and competitive. Margins compressed. The in-person travel agency market consolidated around larger players. Small independent agencies had to fight harder for less. That was one of my first lived experiences of technological disruption: not as a productivity chart, not as a keynote slide, but as a family business being hit by a new coordination layer.
+My father became a taxi driver. Then Uber arrived and did it again — platforms reorganising demand, pricing, and reputation while the old system watched its value evaporate.
 
-My father adapted. He became a taxi driver. Then Uber arrived. The same pattern repeated. A platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software. The app did not need to hate taxi drivers. It just needed to route around the old system.
+Now AI and robotics are coming for the next layer, from robotaxis to digital workers to humanoid robots. My dad is just glad he’s retired and won’t have to reinvent himself again.
 
 Now AI and robotics are coming for the next layer, from robotaxis to digital workers to humanoid robot. My dad is just glad he's retired and won't have to reinvent himself again.
 
