@@ -124,7 +124,7 @@ But the internet changed the market structure. Online booking made travel more t
 
 My father adapted. He became a taxi driver. Then Uber arrived. The same pattern repeated. A platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software. The app did not need to hate taxi drivers. It just needed to route around the old system.
 
-Now AI and robotics are coming for the next layer. Translation, travel planning, driving, tax advice, coding, research, education, customer service, logistics, diagnostics, design, and management are all being re-examined by the same question: what happens when intelligence becomes cheap?
+Now AI and robotics are coming for the next layer, from robotaxis to digital workers to humanoid robot. My dad is just glad he’s retired and won’t have to reinvent himself again.
 
 ### The respectable ladder is not immune
 
