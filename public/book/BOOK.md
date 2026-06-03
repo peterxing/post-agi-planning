@@ -114,8 +114,6 @@ So in 1996, they started a travel agency called Wonderland World Travel. I could
 
 There was another hard lesson inside that move: skills do not always travel at full value. In China, my father's English was rare, useful, and income-producing. It made him a translator, a tour guide, and a bridge to the outside world. In Australia, English was no longer a scarce skill. It was the floor. The thing that had helped him cross the border stopped being enough to earn on the other side. That is not a failure of effort. It is what happens when the market changes around a capability.
 
-Around 1996, they started a travel agency.
-
 Then the internet arrived.
 
 At the time, the travel agency looked like a sensible business. My father could translate, guide, book travel, and connect people across cultures. My mother understood export, paperwork, logistics, and international commerce. They had exactly the kind of skills that should have compounded into a stable small business. Then the market moved again, because apparently one round of humility was not considered sufficient.
