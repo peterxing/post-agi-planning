@@ -112,6 +112,8 @@ In 1992 my father came to Tasmania as an international student. In 1993, after a
 
 Australia was not an instant success story. It rarely is, unless you are reading the brochure version written after the hard part. My parents sold textiles at local markets, washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
 
+So in 1996, they started a travel agency called Wonderland World Travel. I could tell they were really excited. They got a new computer, a Macintosh LC575, which I fell in love with — everything about it, from the mouse to Paint to the Return to Zork immersive puzzle game. They got an office in the city, decorated it with capital letters “WONDERLAND WORLD TRAVEL” on the wall, and all the pictures they took of them travelling around the world. They started getting a lot of walk-in visits, printed out the orders and got their first paying customers.
+
 There was another hard lesson inside that move: skills do not always travel at full value. In China, my father's English was rare, useful, and income-producing. It made him a translator, a tour guide, and a bridge to the outside world. In Australia, English was no longer a scarce skill. It was the floor. The thing that had helped him cross the border stopped being enough to earn on the other side. That is not a failure of effort. It is what happens when the market changes around a capability.
 
 Around 1996, they started a travel agency.
