@@ -100,6 +100,8 @@ Both of my parents were the youngest in their families. They were natural risk-t
 
 My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a direct education in the difference between a system that equalises by removing ownership and a society that expands opportunity by increasing abundance.
 
+My grandfather on his side was a hair dresser who got put into the prisoner’s camps during the Japanese invasion and worked in the coal mines, before being rescued by the People’s Liberation Army under the Communist Party.
+
 My father studied English and worked as a translator and tour guide in Harbin. That work opened the door to the wider world. He translated for visiting photographers, including Bruce Dale, the National Geographic photographer, who later sponsored him to come to Australia. My mother also studied English and worked at an export textiles company. She travelled for work. My father travelled as a translator. They saw beyond the system they grew up in and decided the best chance for our family was to find opportunity abroad.
 
 In 1992 my father came to Tasmania as an international student. In 1993, after almost a year living apart, my mother and I joined him. I was seven years old, starting again in Hobart, finishing Year 1 at South Hobart Primary School. Six months later we moved to Sydney.
