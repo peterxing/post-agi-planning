@@ -10,7 +10,7 @@ Peter Xing
 
 This is not a book you read once and shelve. It is a planning instrument.
 
-Read it the first time like a story — the story of why the acceleration is already here, why ordinary households and careers are the real battlefield, and why energy, compute, and human agency become the new strategic assets.
+Read it the first time like a story - the story of why the acceleration is already here, why ordinary households and careers are the real battlefield, and why energy, compute, and human agency become the new strategic assets.
 
 The second time, treat it like an operating system. Run the exercises. Update the probabilities in the live model. Map your real exposure. Identify your first thirty-day sprint. Talk to your family. Talk to your team. Talk to the people who will matter when the old systems get brittle.
 
@@ -90,7 +90,7 @@ I did not arrive at post-AGI planning through an abstract debate about whether m
 
 I came to it through a family story about scarcity, adaptation, migration, work, health, technology, and the strange human habit of crossing borders because tomorrow might be better than yesterday.
 
-I was born in Harbin, Heilongjiang, in the far north-east of China, up near Russia and North Korea — or a rock and a hard place. Not exactly the soft-launch region of civilisation. Harbin is a place of extremes. In winter, the temperature can fall to around minus 40 degrees Celsius, and the city turns ice and snow into a festival because humans are excellent at taking hostile conditions and adding lighting design. Even the province name, Hei Long Jiang, translates as Black Dragon River. Subtle, obviously.
+I was born in Harbin, Heilongjiang, in the far north-east of China, up near Russia and North Korea - or a rock and a hard place. Not exactly the soft-launch region of civilisation. Harbin is a place of extremes. In winter, the temperature can fall to around minus 40 degrees Celsius, and the city turns ice and snow into a festival because humans are excellent at taking hostile conditions and adding lighting design. Even the province name, Hei Long Jiang, translates as Black Dragon River. Subtle, obviously.
 
 My wife Alyse's family came from Guangzhou in southern China, where the heat pushes the other way, up towards plus 40 degrees Celsius. She was born in the year of the dragon, so I sometimes point out that together we are basically a Song of Ice and Fire, minus the problematic family tree. Ancestry appears to have spared us the worst HBO subplot.
 
@@ -100,7 +100,7 @@ Both of my parents were the youngest in their families. They were natural risk-t
 
 My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a direct education in the difference between a system that equalises by removing ownership and a society that expands opportunity by increasing abundance.
 
-My grandfather on his side was a hair dresser who got put into the prisoner’s camps during the Japanese invasion and worked in the coal mines, before being rescued by the People’s Liberation Army under the Communist Party.
+My grandfather on his side was a hair dresser who got put into the prisoner's camps during the Japanese invasion and worked in the coal mines, before being rescued by the People's Liberation Army under the Communist Party.
 
 My father studied English and worked as a translator and tour guide in Harbin. That work opened the door to the wider world. He translated for visiting photographers, including Bruce Dale, the National Geographic photographer, who later sponsored him to come to Australia. My mother also studied English and worked at an export textiles company. She travelled for work. My father travelled as a translator. They saw beyond the system they grew up in and decided the best chance for our family was to find opportunity abroad.
 
@@ -110,7 +110,7 @@ In 1992 my father came to Tasmania as an international student. In 1993, after a
 
 Australia was not an instant success story. It rarely is, unless you are reading the brochure version written after the hard part. My parents sold textiles at local markets, washed dishes, took odd jobs, saved money, and did what migrant families do when they are trying to build a foothold in a new country.
 
-So in 1996, they started a travel agency called Wonderland World Travel. I could tell they were really excited. They got a new computer, a Macintosh LC575, which I fell in love with — everything about it, from the mouse to Paint to the Return to Zork immersive puzzle game. They got an office in the city, decorated it with capital letters “WONDERLAND WORLD TRAVEL” on the wall, and all the pictures they took of them travelling around the world. They started getting a lot of walk-in visits, printed out the orders and got their first paying customers.
+So in 1996, they started a travel agency called Wonderland World Travel. I could tell they were really excited. They got a new computer, a Macintosh LC575, which I fell in love with - everything about it, from the mouse to Paint to the Return to Zork immersive puzzle game. They got an office in the city, decorated it with capital letters "WONDERLAND WORLD TRAVEL" on the wall, and all the pictures they took of them travelling around the world. They started getting a lot of walk-in visits, printed out the orders and got their first paying customers.
 
 There was another hard lesson inside that move: skills do not always travel at full value. In China, my father's English was rare, useful, and income-producing. It made him a translator, a tour guide, and a bridge to the outside world. In Australia, English was no longer a scarce skill. It was the floor. The thing that had helped him cross the border stopped being enough to earn on the other side. That is not a failure of effort. It is what happens when the market changes around a capability.
 
@@ -122,7 +122,19 @@ But the internet changed the market structure. Online booking made travel more t
 
 My father adapted. He became a taxi driver. Then Uber arrived. The same pattern repeated. A platform reorganised demand, pricing, dispatch, reputation, and customer expectations. Work that once depended on local knowledge and individual relationships became mediated by software. The app did not need to hate taxi drivers. It just needed to route around the old system.
 
-Now AI and robotics are coming for the next layer, from robotaxis to digital workers to humanoid robot. My dad is just glad he’s retired and won’t have to reinvent himself again.
+Now AI and robotics are coming for the next layer, from robotaxis to digital workers to humanoid robot. My dad is just glad he's retired and won't have to reinvent himself again.
+
+### Childhood Adaptations
+
+After South Hobart Primary School, I jumped to Lindfield Primary as that was the first place my folks found a place to live in Sydney. It was a community house with friendly guests — I remember the guy who rented the movie *Short Circuit* from Blockbuster, and I was intrigued by how cool robots could be. We stayed in Lindfield for about a year before moving to Leichhardt. Looking back, I always wondered why *Looking for Alibrandi* was such a popular book in the library there. I loved Leichhardt; my classmates were all really friendly.
+
+After a year there, we moved to Cammeray, which wasn’t as friendly — I was probably only the second Asian guy there and got the nickname “flat face” (which, to be fair, is pretty accurate). I had to adapt to some of the bullies there, both verbally and physically.
+
+My favourite primary school was Burwood for Year 5 and 6, because that place was starting to feel more China-friendly (and now is pretty much China). They had dozens of LC575s in the school to play sample discs I got from computer magazines like *Mac Addict*, with fully playable demos like Doom on them. So much possibility, and nerding out about the internet with my classmates.
+
+So after five primary schools in five years, I got to experience change as normality.
+
+It also made high school at Sydney Tech, where I stayed for six years, a lot more appreciable. Despite being a boys’ school, the nerds were able to take over the computers in the workshop and LAN up Counter-Strike to play during lunch. This was also when online forums started spinning up and we all found ways to connect with people on the other side of the world doing the same thing. I was even able to easily get my own website and build Flash games myself, inspiring so many possibilities to get your message out and share experiences with anyone online.
 
 ### The respectable ladder is not immune
 
@@ -378,22 +390,22 @@ This is why children need more than technical skills. They need a Massively Tran
 
 > The goal is not to be better than AI at being a machine. The goal is to become more human, more capable, and more useful with intelligence at your side.
 
-### Alyse’s View: Keep It Simple
+### Alyse's View: Keep It Simple
 
-My wife Alyse’s take is more direct. She does not want to track every model release or join every governance debate. She wants to go to the gym, live her life, and have a simple framework that works.
+My wife Alyse's take is more direct. She does not want to track every model release or join every governance debate. She wants to go to the gym, live her life, and have a simple framework that works.
 
 Her approach has two pillars:
 
 - **Insurance policy**: Accumulate resources through higher-paying work, multiple income streams, equity, and high-growth assets so you have the option to move if things get bad.
-- **Basic needs access**: Electricity, water, food, and practical self-reliance — the prepper/homesteader layer that protects you when systems get brittle.
+- **Basic needs access**: Electricity, water, food, and practical self-reliance - the prepper/homesteader layer that protects you when systems get brittle.
 
 She maps the scenarios bluntly:
 - Rapid disruption + civil unrest → Get money and get out.
-- Fast abundance → You don’t need any of this.
-- Slow or long horizon → It’s basically now.
-- Existential risk → You’re dead, do nothing.
+- Fast abundance → You don't need any of this.
+- Slow or long horizon → It's basically now.
+- Existential risk → You're dead, do nothing.
 
-She is skeptical of rigid five-year plans (“having a plan is one of the worst things you can do”) and prefers a dynamic, macro-level view focused on economics, portfolio allocation, liquidity, and basic resilience. She wants the book to feel like familiar economic thinking rather than new jargon.
+She is skeptical of rigid five-year plans ("having a plan is one of the worst things you can do") and prefers a dynamic, macro-level view focused on economics, portfolio allocation, liquidity, and basic resilience. She wants the book to feel like familiar economic thinking rather than new jargon.
 
 This is the voice of the target reader: busy, practical, and unwilling to turn post-AGI planning into a second job.
 
