@@ -22,6 +22,8 @@ The second pass should be active. Run the exercises. Update the probabilities. M
 
 The companion model is not an afterthought. Static books are useful for orientation, but AGI planning cannot stay static. Frontier models improve. Robotics costs fall. Policy changes. Labour markets crack. Energy and compute become constrained. Social volatility rises. New opportunities appear. Your plan should update with reality.
 
+The website also embeds the Rehoboam timeline planner. Use it to explore possible post-AGI timelines and societal impacts before you set your own weights. The point is not to outsource judgment to a dashboard. The point is to notice which domains move together: AI capability, robotics, labour markets, energy, compute, policy, social trust, health, education, and the ordinary household machinery of bills and care.
+
 > You do not need to believe in one exact timeline to act. You need to assign probabilities, allocate capital and attention, monitor reality, and update.
 
 This book is written for individuals and leaders. If you are a parent, start with your household. If you are a founder, start with your business model. If you are a CxO, start with workforce redesign and social licence. If you are a public servant, start with transition income, public AI access, legitimacy, and resilience. If you are an educator, start with children's agency and AI fluency. If you are simply trying to get through the month, start with bills, debt, health, and trusted people.
