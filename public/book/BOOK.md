@@ -12,15 +12,13 @@ A living planning manual for the transition from labour scarcity to intelligence
 
 ## How to Use This Book
 
-This is a book, but it is also a planning instrument.
+This is not a book you read once and shelve. It is a planning instrument.
 
-Read it once like a story. Then use it like an operating system.
+Read it the first time like a story — the story of why the acceleration is already here, why ordinary households and careers are the real battlefield, and why energy, compute, and human agency become the new strategic assets.
 
-The first pass gives you the frame: why the acceleration matters, why ordinary life is the real battlefield, why energy and compute become strategic, why labour displacement and abundance can both be true, and why the future should be treated as a portfolio of scenarios rather than a single forecast.
+The second time, treat it like an operating system. Run the exercises. Update the probabilities in the live model. Map your real exposure. Identify your first thirty-day sprint. Talk to your family. Talk to your team. Talk to the people who will matter when the old systems get brittle.
 
-The second pass should be active. Run the exercises. Update the probabilities. Map your exposure. Identify your first thirty-day sprint. Talk to your family. Talk to your team. Talk to the people who would matter if the old systems became brittle.
-
-The companion model is not an afterthought. Static books are useful for orientation, but AGI planning cannot stay static. Frontier models improve. Robotics costs fall. Policy changes. Labour markets crack. Energy and compute become constrained. Social volatility rises. New opportunities appear. Your plan should update with reality.
+The companion model is the point. Static books become obsolete the moment the frontier moves. Use the embedded planner to stress-test your assumptions, then update as reality changes.
 
 The website also embeds the Rehoboam timeline planner. Use it to explore possible post-AGI timelines and societal impacts before you set your own weights. The point is not to outsource judgment to a dashboard. The point is to notice which domains move together: AI capability, robotics, labour markets, energy, compute, policy, social trust, health, education, and the ordinary household machinery of bills and care.
 
@@ -96,7 +94,7 @@ I did not arrive at post-AGI planning through an abstract debate about whether m
 
 I came to it through a family story about scarcity, adaptation, migration, work, health, technology, and the strange human habit of crossing borders because tomorrow might be better than yesterday.
 
-I was born in Harbin, Heilongjiang, in the far north-east of China, up near Russia and North Korea. Not exactly the soft-launch region of civilisation. Harbin is a place of extremes. In winter, the temperature can fall to around minus 40 degrees Celsius, and the city turns ice and snow into a festival because humans are excellent at taking hostile conditions and adding lighting design. Even the province name, Hei Long Jiang, translates as Black Dragon River. Subtle, obviously.
+I was born in Harbin, Heilongjiang, in the far north-east of China, up near Russia and North Korea — or a rock and a hard place. Not exactly the soft-launch region of civilisation. Harbin is a place of extremes. In winter, the temperature can fall to around minus 40 degrees Celsius, and the city turns ice and snow into a festival because humans are excellent at taking hostile conditions and adding lighting design. Even the province name, Hei Long Jiang, translates as Black Dragon River. Subtle, obviously.
 
 My wife Alyse's family came from Guangzhou in southern China, where the heat pushes the other way, up towards plus 40 degrees Celsius. She was born in the year of the dragon, so I sometimes point out that together we are basically a Song of Ice and Fire, minus the problematic family tree. Ancestry appears to have spared us the worst HBO subplot.
 
@@ -381,6 +379,25 @@ Some people will become passive consumers. Others will become creators, builders
 This is why children need more than technical skills. They need a Massively Transformative Purpose, curiosity, resilience, agency, and the ability to work with intelligent systems. Education should not be about memorising yesterday's bottlenecks. It should be about forming people who can ask better questions, learn deeply, coordinate with others, care about real humans, and build things worth building.
 
 > The goal is not to be better than AI at being a machine. The goal is to become more human, more capable, and more useful with intelligence at your side.
+
+### Alyse’s View: Keep It Simple
+
+My wife Alyse’s take is more direct. She does not want to track every model release or join every governance debate. She wants to go to the gym, live her life, and have a simple framework that works.
+
+Her approach has two pillars:
+
+- **Insurance policy**: Accumulate resources through higher-paying work, multiple income streams, equity, and high-growth assets so you have the option to move if things get bad.
+- **Basic needs access**: Electricity, water, food, and practical self-reliance — the prepper/homesteader layer that protects you when systems get brittle.
+
+She maps the scenarios bluntly:
+- Rapid disruption + civil unrest → Get money and get out.
+- Fast abundance → You don’t need any of this.
+- Slow or long horizon → It’s basically now.
+- Existential risk → You’re dead, do nothing.
+
+She is skeptical of rigid five-year plans (“having a plan is one of the worst things you can do”) and prefers a dynamic, macro-level view focused on economics, portfolio allocation, liquidity, and basic resilience. She wants the book to feel like familiar economic thinking rather than new jargon.
+
+This is the voice of the target reader: busy, practical, and unwilling to turn post-AGI planning into a second job.
 
 ### Chapter 5 Action: Redesign Your Work Stack
 
