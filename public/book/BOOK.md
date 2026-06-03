@@ -1,6 +1,6 @@
 ﻿# Hitchhiker's Guide to the Singularity
 
-## A practical guide for when AI can do everything better than all the humans can
+**_How to prepare and plan for when artificial intelligence does everything better than humans can_**
 
 Peter Xing
 
