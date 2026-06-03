@@ -92,13 +92,17 @@ Finally ask the harder question: if each improves at the same rate for another t
 
 I did not arrive at post-AGI planning through an abstract debate about whether machines can think.
 
-I came to it through a family story about scarcity, migration, work, health, technology, and the strange human habit of crossing borders because tomorrow might be better than yesterday.
+I came to it through a family story about scarcity, adaptation, migration, work, health, technology, and the strange human habit of crossing borders because tomorrow might be better than yesterday.
 
-I was born in Harbin, Heilongjiang, in the far north-east of China. Harbin is a place of extremes. In winter, the temperature can fall brutally low and the city turns ice and snow into a festival. My wife Alyse's family came from Guangzhou, where the heat pushes the other way. Together we are basically a Song of Ice and Fire, minus the problematic family tree.
+I was born in Harbin, Heilongjiang, in the far north-east of China, up near Russia and North Korea. Not exactly the soft-launch region of civilisation. Harbin is a place of extremes. In winter, the temperature can fall to around minus 40 degrees Celsius, and the city turns ice and snow into a festival because humans are excellent at taking hostile conditions and adding lighting design. Even the province name, Hei Long Jiang, translates as Black Dragon River. Subtle, obviously.
 
-Underneath the joke is the serious point: our families moved because they believed opportunity mattered.
+My wife Alyse's family came from Guangzhou in southern China, where the heat pushes the other way, up towards plus 40 degrees Celsius. She was born in the year of the dragon, so I sometimes point out that together we are basically a Song of Ice and Fire, minus the problematic family tree. Ancestry appears to have spared us the worst HBO subplot.
 
-Both of my parents were the youngest in their families. They were natural risk-takers, willing to move outside the familiar system and test whether a different life was possible. My parents grew up inside scarcity. My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a direct education in the difference between a system that equalises by removing ownership and a society that expands opportunity by increasing abundance.
+Underneath the joke is the serious point: our families came from places where conditions shaped people. Heat, cold, scarcity, political history, family expectation, and the constant question of whether the next generation could have more room to move.
+
+Both of my parents were the youngest in their families. They were natural risk-takers, willing to move outside the familiar system and test whether a different life was possible. My parents grew up inside scarcity. My father told stories about my grandmother chasing him down the street after he took a whole flour bun from the bamboo steamer, because that bun was meant to feed the family, including his three siblings. That is a very efficient childhood lesson in marginal utility. It also explains why immigrant parents can look at a full pantry and still behave like civilisation is one bad week away from auditing the rice bag.
+
+My mother's family lost property, land, and a paint shop business during the Cultural Revolution. That is a direct education in the difference between a system that equalises by removing ownership and a society that expands opportunity by increasing abundance.
 
 My father studied English and worked as a translator and tour guide in Harbin. That work opened the door to the wider world. He translated for visiting photographers, including Bruce Dale, the National Geographic photographer, who later sponsored him to come to Australia. My mother also studied English and worked at an export textiles company. She travelled for work. My father travelled as a translator. They saw beyond the system they grew up in and decided the best chance for our family was to find opportunity abroad.
 
