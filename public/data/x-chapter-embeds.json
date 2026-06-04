@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T22:32:06.705Z",
+  "generatedAt": "2026-06-04T21:52:09.900Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -23,17 +23,6 @@
         "disruption"
       ],
       "posts": [
-        {
-          "id": "2061970164527386934",
-          "type": "repost",
-          "text": "Tesla Self-Driving 14 is coming to Australia and New Zealand! Electric Future (@electricfuture5) First comms from @TeslaAUNZ. FSD V14 is coming. No FSD on new cars until it does — https://nitter.net/electricfuture5/status/2061950975133577509#m",
-          "created_at": "2026-06-03T00:36:11.000Z",
-          "url": "https://x.com/wholemars/status/2061970164527386934",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
-          ]
-        },
         {
           "id": "2061876244862619953",
           "type": "repost",
@@ -75,6 +64,18 @@
       ],
       "posts": [
         {
+          "id": "2062179061653528907",
+          "type": "repost",
+          "text": "New Limit just raised $435 million. This is, in part, because they've had a massive breakthrough on reversing the age of the liver with their new brand of genetic reprogramming drugs. For the first time, NewLimit's co-founder and president Jacob Kimmel details the company's break",
+          "created_at": "2026-06-03T14:26:16.000Z",
+          "url": "https://x.com/ashleevance/status/2062179061653528907",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging",
+            "longevity"
+          ]
+        },
+        {
           "id": "2061853377483493421",
           "type": "repost",
           "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
@@ -95,17 +96,6 @@
           "public_metrics": {},
           "matched_terms": [
             "longevity"
-          ]
-        },
-        {
-          "id": "2061688462663905749",
-          "type": "repost",
-          "text": "🎤 Speaker at #WikiEXPOHK2026 @peterxing is Cloud & AI Platforms Lead for Public Sector and Education at @Microsoft , helping governments and educational institutions adopt Azure and frontier AI technologies. Previously, he held leadership roles at KPMG and Deloitte, focusing on ",
-          "created_at": "2026-06-02T05:56:48.000Z",
-          "url": "https://x.com/Wikiexpo_global/status/2061688462663905749",
-          "public_metrics": {},
-          "matched_terms": [
-            "transhumanism"
           ]
         }
       ]
@@ -153,17 +143,6 @@
           "matched_terms": [
             "community"
           ]
-        },
-        {
-          "id": "2061553610111279294",
-          "type": "repost",
-          "text": "Human civilization is about to gain trillions of extra (200+ IQ) minds. For all of history, progress was limited by the tiny number of genius level humans alive at any moment. A few thousand extraordinary minds per generation had to push the entire species forward. One Einstein. ",
-          "created_at": "2026-06-01T21:00:57.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2061553610111279294",
-          "public_metrics": {},
-          "matched_terms": [
-            "education"
-          ]
         }
       ]
     },
@@ -184,14 +163,14 @@
       ],
       "posts": [
         {
-          "id": "2061901702324695115",
+          "id": "2062196873923109361",
           "type": "repost",
-          "text": "Mustafa Suleyman, CEO of Microsoft AI says that AI compute will grow 1000x in the next 3 years We are currently at around 5e27 FLOPs. Three more OOMs mean we reach 5e30 FLOPs in 2029.",
-          "created_at": "2026-06-02T20:04:08.000Z",
-          "url": "https://x.com/scaling01/status/2061901702324695115",
+          "text": "A 26-year-old from Sichuan just wowed America’s Got Talent with eight Unitree robots. Wu Yufei danced alongside the robots, stunned the judges and audience, and earned a unanimous pass to the next round. Video",
+          "created_at": "2026-06-03T15:37:03.000Z",
+          "url": "https://x.com/shanghaidaily/status/2062196873923109361",
           "public_metrics": {},
           "matched_terms": [
-            "compute"
+            "robots"
           ]
         },
         {
@@ -235,17 +214,6 @@
           ]
         },
         {
-          "id": "2061892887856492686",
-          "type": "repost",
-          "text": "Make sure your business is ready to accept AI agents as customers! Base (@base) x.com/i/article/206039277755… — https://nitter.net/base/status/2060401276240757111#m",
-          "created_at": "2026-06-02T19:29:07.000Z",
-          "url": "https://x.com/brian_armstrong/status/2061892887856492686",
-          "public_metrics": {},
-          "matched_terms": [
-            "agents"
-          ]
-        },
-        {
           "id": "2061874930547871868",
           "type": "repost",
           "text": "Meet Microsoft Scout. An always-on agent that keeps work moving, taking action without needing to be prompted each time. As Microsoft’s first Autopilot agent, Microsoft Scout works across Teams, Outlook, OneDrive, and more—taking action within the controls your organization sets.",
@@ -257,14 +225,14 @@
           ]
         },
         {
-          "id": "2061874084649025728",
+          "id": "2061860319547527191",
           "type": "repost",
-          "text": "Such a privilege to work with Microsoft to bring claws to enterprises! OpenClaw🦞 (@openclaw) \"You can run OpenClaw inside your company now.\" Annoucing our work with @Microsoft to bring OpenClaw to the Microsoft and Windows ecosystems. Claws now work securly in the enterprise. — ",
-          "created_at": "2026-06-02T18:14:24.000Z",
-          "url": "https://x.com/steipete/status/2061874084649025728",
+          "text": "This came as a surprise: Microsoft has unveiled handheld and desktop devices designed to control one's agents. It reminds me of what I had expected from OpenAI’s hardware-standalone devices for controlling agents. Video Chubby♨️ (@kimmonismus) It is interesting how much focus is ",
+          "created_at": "2026-06-02T17:19:42.000Z",
+          "url": "https://x.com/kimmonismus/status/2061860319547527191",
           "public_metrics": {},
           "matched_terms": [
-            "work"
+            "agents"
           ]
         }
       ]
@@ -315,6 +283,28 @@
           ]
         },
         {
+          "id": "2062212701414187452",
+          "type": "repost",
+          "text": "Welp, that happened faster than I predicted. Thought it would be end of 2027, then early 2027, but agentic traffic growing so fast that bots have now passed human traffic online for the first time in the Internet's history. radar.cloudflare.com/traffic…",
+          "created_at": "2026-06-03T16:39:56.000Z",
+          "url": "https://x.com/eastdakota/status/2062212701414187452",
+          "public_metrics": {},
+          "matched_terms": [
+            "2027"
+          ]
+        },
+        {
+          "id": "2062197439583465964",
+          "type": "repost",
+          "text": "Telstra, the largest telecom company in Australia, has announced that over 200,000 of its customers connect to @Starlink Mobile per day, and over 2.7 million customers have connected at least once within the last year since launch. \"What stands out to us the most is not the numbe",
+          "created_at": "2026-06-03T15:39:18.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2062197439583465964",
+          "public_metrics": {},
+          "matched_terms": [
+            "2027"
+          ]
+        },
+        {
           "id": "2061853377483493421",
           "type": "repost",
           "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
@@ -342,7 +332,19 @@
         "assets",
         "action"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2062197439583465964",
+          "type": "repost",
+          "text": "Telstra, the largest telecom company in Australia, has announced that over 200,000 of its customers connect to @Starlink Mobile per day, and over 2.7 million customers have connected at least once within the last year since launch. \"What stands out to us the most is not the numbe",
+          "created_at": "2026-06-03T15:39:18.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2062197439583465964",
+          "public_metrics": {},
+          "matched_terms": [
+            "capability"
+          ]
+        }
+      ]
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
@@ -374,6 +376,17 @@
       ],
       "posts": [
         {
+          "id": "2062179061653528907",
+          "type": "repost",
+          "text": "New Limit just raised $435 million. This is, in part, because they've had a massive breakthrough on reversing the age of the liver with their new brand of genetic reprogramming drugs. For the first time, NewLimit's co-founder and president Jacob Kimmel details the company's break",
+          "created_at": "2026-06-03T14:26:16.000Z",
+          "url": "https://x.com/ashleevance/status/2062179061653528907",
+          "public_metrics": {},
+          "matched_terms": [
+            "longevity"
+          ]
+        },
+        {
           "id": "2061849237156159511",
           "type": "repost",
           "text": "Following breakthrough results, we’re bringing longevity medicine to human trials. We’ve raised a $435M Series C led by @foundersfund to make it happen. Reprogramming cell age has the potential to create more healthy years for everyone. We're closer than ever to realizing it. Vid",
@@ -400,32 +413,7 @@
         "community",
         "legitimacy"
       ],
-      "posts": [
-        {
-          "id": "2061688462663905749",
-          "type": "repost",
-          "text": "🎤 Speaker at #WikiEXPOHK2026 @peterxing is Cloud & AI Platforms Lead for Public Sector and Education at @Microsoft , helping governments and educational institutions adopt Azure and frontier AI technologies. Previously, he held leadership roles at KPMG and Deloitte, focusing on ",
-          "created_at": "2026-06-02T05:56:48.000Z",
-          "url": "https://x.com/Wikiexpo_global/status/2061688462663905749",
-          "public_metrics": {},
-          "matched_terms": [
-            "leadership",
-            "public sector",
-            "education"
-          ]
-        },
-        {
-          "id": "2061553610111279294",
-          "type": "repost",
-          "text": "Human civilization is about to gain trillions of extra (200+ IQ) minds. For all of history, progress was limited by the tiny number of genius level humans alive at any moment. A few thousand extraordinary minds per generation had to push the entire species forward. One Einstein. ",
-          "created_at": "2026-06-01T21:00:57.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2061553610111279294",
-          "public_metrics": {},
-          "matched_terms": [
-            "education"
-          ]
-        }
-      ]
+      "posts": []
     }
   }
 }
