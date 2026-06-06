@@ -512,6 +512,8 @@ Reality signals matter more. Update when frontier models improve, agent reliabil
 
 As of 6 June 2026, one liquid-enough Polymarket signal puts OpenAI officially announcing AGI before 2027 at roughly 13% Yes. That is not a verdict on AGI itself; it is a priced belief about one company making one official claim under one resolution rule. Read it alongside harder deployment signals: bot traffic passing human traffic online, companies redesigning research with AI, frontier models stretching the length of tasks they can complete alone, and AI-written code becoming normal inside AI labs. Together they should nudge scenario weights toward earlier disruption without making the official AGI announcement the only trigger that matters.
 
+Also watch the boring miracles. A farmer using Codex to run a 100-hectare operation matters because deployment often shows up first as ordinary people stitching tools into messy real-world work. If software agents start improving farms, workshops, clinics, councils, classrooms, and small businesses before the official macro data moves, the timeline has already entered the deployment layer.
+
 Near-term AGI planning is not about being right once. It is about updating faster than the world breaks your old assumptions.
 
 > The timeline is not a date. It is a dashboard.
