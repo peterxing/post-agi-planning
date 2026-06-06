@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T07:08:22.777Z",
+  "generatedAt": "2026-06-06T10:08:23.492Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,16 +24,37 @@
       ],
       "posts": [
         {
-          "id": "2062948403815030850",
+          "id": "2063005792899317921",
           "type": "repost",
-          "text": "Building AI that Builds AI: Introducing the Sakana AI RSI Lab 🚀 sakana.ai/rsi-lab Today, we are announcing the Sakana AI Recursive Self-Improvement (RSI) Lab: a dedicated research group in Tokyo tasked with redesigning the AI development process itself using AI. While the indust",
-          "created_at": "2026-06-05T17:23:21.000Z",
-          "url": "https://x.com/SakanaAILabs/status/2062948403815030850",
+          "text": "if you track AI development closely there has been a clear acceleration since opus 4.5 and gpt-5.2 came out last december now i wonder what things will look like after claude 5 and gpt-6 are released later this year models will get much better at designing new ai systems",
+          "created_at": "2026-06-05T21:11:24.000Z",
+          "url": "https://x.com/haider1/status/2063005792899317921",
+          "public_metrics": {},
+          "matched_terms": [
+            "acceleration"
+          ]
+        },
+        {
+          "id": "2062983280082014244",
+          "type": "repost",
+          "text": "so i put every frontier ai model into a chart.. >every dot is a frontier model >left to right = when it shipped >bottom to top = the longest task it can finish alone without a human in the loop. connect them and you don't get a curve.. you get almost a straight line.. 7 min (gpt-",
+          "created_at": "2026-06-05T19:41:57.000Z",
+          "url": "https://x.com/jumperz/status/2062983280082014244",
           "public_metrics": {},
           "matched_terms": [
             "future",
-            "agent",
-            "automation"
+            "frontier model"
+          ]
+        },
+        {
+          "id": "2062906204947710203",
+          "type": "repost",
+          "text": "OpenAI Noam Brown: I’d be surprised if our latest internal models don’t get a perfect IMO score — and disappointed if we don’t release a public model this year that can do the same \"either now or very soon, math and coding competitions won't be interesting anymore\" The frontier w",
+          "created_at": "2026-06-05T14:35:40.000Z",
+          "url": "https://x.com/haider1/status/2062906204947710203",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
           ]
         },
         {
@@ -64,20 +85,7 @@
         "transhumanism",
         "human potential"
       ],
-      "posts": [
-        {
-          "id": "2062179061653528907",
-          "type": "repost",
-          "text": "New Limit just raised $435 million. This is, in part, because they've had a massive breakthrough on reversing the age of the liver with their new brand of genetic reprogramming drugs. For the first time, NewLimit's co-founder and president Jacob Kimmel details the company's break",
-          "created_at": "2026-06-03T14:26:16.000Z",
-          "url": "https://x.com/ashleevance/status/2062179061653528907",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-2-the-abundance-engine": {
       "id": "chapter-2-the-abundance-engine",
@@ -113,11 +121,33 @@
       ],
       "posts": [
         {
+          "id": "2062897227690074124",
+          "type": "repost",
+          "text": "Come visit our CVPR booth for hands-on experiences: – Neural video generation + sim drive – Selfies with @Tesla_Optimus – Real FSD test drives in Tesla models of your choice Chat directly with the team behind it, including @aelluswamy & @pduan and other engineers to get answers t",
+          "created_at": "2026-06-05T14:00:00.000Z",
+          "url": "https://x.com/Tesla_AI/status/2062897227690074124",
+          "public_metrics": {},
+          "matched_terms": [
+            "career"
+          ]
+        },
+        {
           "id": "2062594306670535130",
           "type": "repost",
           "text": "Now we know why Peter Thiel packed his bags for Argentina. Milei just submitted his AI legislative framework to Congress, where he proposes: - zero regulation on AI development, - a brand-new \"non-human corporation\" category for AI/robot-operated entities with limited liability -",
           "created_at": "2026-06-04T17:56:18.000Z",
           "url": "https://x.com/trajektoriePL/status/2062594306670535130",
+          "public_metrics": {},
+          "matched_terms": [
+            "governance"
+          ]
+        },
+        {
+          "id": "2062517474277675102",
+          "type": "repost",
+          "text": "OpenAI just wrote: \"We also see early signs of recursive self-improvement (RSI) in today’s systems: where AI development is itself accelerated by AI. We expect this to increase competitive pressures among developers and nations, and create governance challenges that existing inst",
+          "created_at": "2026-06-04T12:51:00.000Z",
+          "url": "https://x.com/kimmonismus/status/2062517474277675102",
           "public_metrics": {},
           "matched_terms": [
             "governance"
@@ -141,29 +171,6 @@
         "automation"
       ],
       "posts": [
-        {
-          "id": "2062972460018905246",
-          "type": "repost",
-          "text": "SpaceX has just announced that they have entered into a $920 million per month agreement with Google to provide compute capacity, according to a new filing. \"On June 5, 2026, we entered into a Cloud Service Agreement with Google with respect to access to compute capacity. The cus",
-          "created_at": "2026-06-05T18:58:57.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2062972460018905246",
-          "public_metrics": {},
-          "matched_terms": [
-            "compute"
-          ]
-        },
-        {
-          "id": "2062948403815030850",
-          "type": "repost",
-          "text": "Building AI that Builds AI: Introducing the Sakana AI RSI Lab 🚀 sakana.ai/rsi-lab Today, we are announcing the Sakana AI Recursive Self-Improvement (RSI) Lab: a dedicated research group in Tokyo tasked with redesigning the AI development process itself using AI. While the indust",
-          "created_at": "2026-06-05T17:23:21.000Z",
-          "url": "https://x.com/SakanaAILabs/status/2062948403815030850",
-          "public_metrics": {},
-          "matched_terms": [
-            "compute",
-            "automation"
-          ]
-        },
         {
           "id": "2062557004829233504",
           "type": "repost",
@@ -194,14 +201,14 @@
       ],
       "posts": [
         {
-          "id": "2062972460018905246",
+          "id": "2062897227690074124",
           "type": "repost",
-          "text": "SpaceX has just announced that they have entered into a $920 million per month agreement with Google to provide compute capacity, according to a new filing. \"On June 5, 2026, we entered into a Cloud Service Agreement with Google with respect to access to compute capacity. The cus",
-          "created_at": "2026-06-05T18:58:57.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2062972460018905246",
+          "text": "Come visit our CVPR booth for hands-on experiences: – Neural video generation + sim drive – Selfies with @Tesla_Optimus – Real FSD test drives in Tesla models of your choice Chat directly with the team behind it, including @aelluswamy & @pduan and other engineers to get answers t",
+          "created_at": "2026-06-05T14:00:00.000Z",
+          "url": "https://x.com/Tesla_AI/status/2062897227690074124",
           "public_metrics": {},
           "matched_terms": [
-            "ownership"
+            "career"
           ]
         },
         {
@@ -224,6 +231,19 @@
           "public_metrics": {},
           "matched_terms": [
             "agents"
+          ]
+        },
+        {
+          "id": "2062570067305570671",
+          "type": "repost",
+          "text": "We’re going all in on World Models. Today we’re launching the 1X World Model Lab. The bet is simple: You can’t fine-tune your way to AGI. And you definitely can’t fine-tune your way to robots that can operate in the physical world. General-purpose humanoids need models that under",
+          "created_at": "2026-06-04T16:19:59.000Z",
+          "url": "https://x.com/BerntBornich/status/2062570067305570671",
+          "public_metrics": {},
+          "matched_terms": [
+            "labor",
+            "career",
+            "purpose"
           ]
         }
       ]
@@ -263,14 +283,27 @@
       ],
       "posts": [
         {
-          "id": "2062212701414187452",
+          "id": "2062983280082014244",
           "type": "repost",
-          "text": "Welp, that happened faster than I predicted. Thought it would be end of 2027, then early 2027, but agentic traffic growing so fast that bots have now passed human traffic online for the first time in the Internet's history. radar.cloudflare.com/traffic…",
-          "created_at": "2026-06-03T16:39:56.000Z",
-          "url": "https://x.com/eastdakota/status/2062212701414187452",
+          "text": "so i put every frontier ai model into a chart.. >every dot is a frontier model >left to right = when it shipped >bottom to top = the longest task it can finish alone without a human in the loop. connect them and you don't get a curve.. you get almost a straight line.. 7 min (gpt-",
+          "created_at": "2026-06-05T19:41:57.000Z",
+          "url": "https://x.com/jumperz/status/2062983280082014244",
           "public_metrics": {},
           "matched_terms": [
+            "timeline",
+            "when",
             "2027"
+          ]
+        },
+        {
+          "id": "2062580571214389510",
+          "type": "repost",
+          "text": "We just published internal data on how much of Claude's development is already being done by Claude: - Over 80% of all code merged into our codebase is now written by Claude - It's been months since many researchers at Anthropic hand-wrote code - The typical Anthropic engineer sh",
+          "created_at": "2026-06-04T17:01:43.000Z",
+          "url": "https://x.com/alexalbert__/status/2062580571214389510",
+          "public_metrics": {},
+          "matched_terms": [
+            "when"
           ]
         }
       ]
@@ -320,19 +353,7 @@
         "enhancement",
         "human potential"
       ],
-      "posts": [
-        {
-          "id": "2062179061653528907",
-          "type": "repost",
-          "text": "New Limit just raised $435 million. This is, in part, because they've had a massive breakthrough on reversing the age of the liver with their new brand of genetic reprogramming drugs. For the first time, NewLimit's co-founder and president Jacob Kimmel details the company's break",
-          "created_at": "2026-06-03T14:26:16.000Z",
-          "url": "https://x.com/ashleevance/status/2062179061653528907",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-11-leaders-build-the-better-branch": {
       "id": "chapter-11-leaders-build-the-better-branch",
@@ -348,7 +369,20 @@
         "community",
         "legitimacy"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2062570067305570671",
+          "type": "repost",
+          "text": "We’re going all in on World Models. Today we’re launching the 1X World Model Lab. The bet is simple: You can’t fine-tune your way to AGI. And you definitely can’t fine-tune your way to robots that can operate in the physical world. General-purpose humanoids need models that under",
+          "created_at": "2026-06-04T16:19:59.000Z",
+          "url": "https://x.com/BerntBornich/status/2062570067305570671",
+          "public_metrics": {},
+          "matched_terms": [
+            "policy",
+            "abundance"
+          ]
+        }
+      ]
     }
   }
 }
