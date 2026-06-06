@@ -2542,7 +2542,7 @@
         .join("") + '<a href="#model">Live model</a>';
     }
 
-    fetch("BOOK.md")
+    fetch("/book/BOOK.md", { cache: "no-store" })
       .then(response => {
         if (!response.ok) throw new Error("BOOK.md unavailable");
         return response.text();
