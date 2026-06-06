@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-05T21:42:19.257Z",
+  "generatedAt": "2026-06-06T02:01:32.650Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,25 +24,16 @@
       ],
       "posts": [
         {
-          "id": "2061876244862619953",
+          "id": "2062948403815030850",
           "type": "repost",
-          "text": "Introducing Microsoft Scout, the first autopilot agent from Microsoft - 57 days after starting my new job, we are launching Microsoft Scout to our Frontier customers. Big day for the team and for @openclaw #MicrosoftBuild microsoft.com/en-us/microsof…",
-          "created_at": "2026-06-02T18:22:59.000Z",
-          "url": "https://x.com/OmarShahine/status/2061876244862619953",
+          "text": "Building AI that Builds AI: Introducing the Sakana AI RSI Lab 🚀 sakana.ai/rsi-lab Today, we are announcing the Sakana AI Recursive Self-Improvement (RSI) Lab: a dedicated research group in Tokyo tasked with redesigning the AI development process itself using AI. While the indust",
+          "created_at": "2026-06-05T17:23:21.000Z",
+          "url": "https://x.com/SakanaAILabs/status/2062948403815030850",
           "public_metrics": {},
           "matched_terms": [
-            "agent"
-          ]
-        },
-        {
-          "id": "2061874930547871868",
-          "type": "repost",
-          "text": "Meet Microsoft Scout. An always-on agent that keeps work moving, taking action without needing to be prompted each time. As Microsoft’s first Autopilot agent, Microsoft Scout works across Teams, Outlook, OneDrive, and more—taking action within the controls your organization sets.",
-          "created_at": "2026-06-02T18:17:45.000Z",
-          "url": "https://x.com/Microsoft365/status/2061874930547871868",
-          "public_metrics": {},
-          "matched_terms": [
-            "agent"
+            "future",
+            "agent",
+            "automation"
           ]
         }
       ]
@@ -72,29 +63,6 @@
           "public_metrics": {},
           "matched_terms": [
             "aging",
-            "longevity"
-          ]
-        },
-        {
-          "id": "2061853377483493421",
-          "type": "repost",
-          "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
-          "created_at": "2026-06-02T16:52:07.000Z",
-          "url": "https://x.com/brian_armstrong/status/2061853377483493421",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
-        },
-        {
-          "id": "2061849237156159511",
-          "type": "repost",
-          "text": "Following breakthrough results, we’re bringing longevity medicine to human trials. We’ve raised a $435M Series C led by @foundersfund to make it happen. Reprogramming cell age has the potential to create more healthy years for everyone. We're closer than ever to realizing it. Vid",
-          "created_at": "2026-06-02T16:35:40.000Z",
-          "url": "https://x.com/newlimit/status/2061849237156159511",
-          "public_metrics": {},
-          "matched_terms": [
             "longevity"
           ]
         }
@@ -132,19 +100,7 @@
         "governance",
         "society"
       ],
-      "posts": [
-        {
-          "id": "2061860319547527191",
-          "type": "repost",
-          "text": "This came as a surprise: Microsoft has unveiled handheld and desktop devices designed to control one's agents. It reminds me of what I had expected from OpenAI’s hardware-standalone devices for controlling agents. Video Chubby♨️ (@kimmonismus) It is interesting how much focus is ",
-          "created_at": "2026-06-02T17:19:42.000Z",
-          "url": "https://x.com/kimmonismus/status/2061860319547527191",
-          "public_metrics": {},
-          "matched_terms": [
-            "community"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -163,6 +119,40 @@
       ],
       "posts": [
         {
+          "id": "2062972460018905246",
+          "type": "repost",
+          "text": "SpaceX has just announced that they have entered into a $920 million per month agreement with Google to provide compute capacity, according to a new filing. \"On June 5, 2026, we entered into a Cloud Service Agreement with Google with respect to access to compute capacity. The cus",
+          "created_at": "2026-06-05T18:58:57.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2062972460018905246",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute"
+          ]
+        },
+        {
+          "id": "2062948403815030850",
+          "type": "repost",
+          "text": "Building AI that Builds AI: Introducing the Sakana AI RSI Lab 🚀 sakana.ai/rsi-lab Today, we are announcing the Sakana AI Recursive Self-Improvement (RSI) Lab: a dedicated research group in Tokyo tasked with redesigning the AI development process itself using AI. While the indust",
+          "created_at": "2026-06-05T17:23:21.000Z",
+          "url": "https://x.com/SakanaAILabs/status/2062948403815030850",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute",
+            "automation"
+          ]
+        },
+        {
+          "id": "2062557004829233504",
+          "type": "repost",
+          "text": "Introducing pump fun GO: Pay ANYONE to do ANYTHING Create & complete bounties for ANY task and leverage the power of humans & money across the globe The world is at your fingertips. It’s time to GO 👇 Video",
+          "created_at": "2026-06-04T15:28:05.000Z",
+          "url": "https://x.com/Pumpfun/status/2062557004829233504",
+          "public_metrics": {},
+          "matched_terms": [
+            "power"
+          ]
+        },
+        {
           "id": "2062196873923109361",
           "type": "repost",
           "text": "A 26-year-old from Sichuan just wowed America’s Got Talent with eight Unitree robots. Wu Yufei danced alongside the robots, stunned the judges and audience, and earned a unanimous pass to the next round. Video",
@@ -171,17 +161,6 @@
           "public_metrics": {},
           "matched_terms": [
             "robots"
-          ]
-        },
-        {
-          "id": "2061850684052394367",
-          "type": "repost",
-          "text": "Introducing - Surface RTX Spark Dev Box. All the power developers need, right out of the box. Sign up to learn more: msft.it/6016vbfbA Surface RTX Spark Dev Box. Built for more. Video",
-          "created_at": "2026-06-02T16:41:25.000Z",
-          "url": "https://x.com/surface/status/2061850684052394367",
-          "public_metrics": {},
-          "matched_terms": [
-            "power"
           ]
         }
       ]
@@ -203,36 +182,14 @@
       ],
       "posts": [
         {
-          "id": "2062288421406785710",
+          "id": "2062972460018905246",
           "type": "repost",
-          "text": "OpenClaw 2026.6.1 is live 🦞 🪟 native Windows node host 🛠️ Skill Workshop for self-learning agents 📋 Workboard orchestration 🧠 MiniMax M3 support Windows joins the cluster. No penguin costume required. github.com/openclaw/openclaw…",
-          "created_at": "2026-06-03T21:40:49.000Z",
-          "url": "https://x.com/openclaw/status/2062288421406785710",
+          "text": "SpaceX has just announced that they have entered into a $920 million per month agreement with Google to provide compute capacity, according to a new filing. \"On June 5, 2026, we entered into a Cloud Service Agreement with Google with respect to access to compute capacity. The cus",
+          "created_at": "2026-06-05T18:58:57.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2062972460018905246",
           "public_metrics": {},
           "matched_terms": [
-            "agents"
-          ]
-        },
-        {
-          "id": "2061874930547871868",
-          "type": "repost",
-          "text": "Meet Microsoft Scout. An always-on agent that keeps work moving, taking action without needing to be prompted each time. As Microsoft’s first Autopilot agent, Microsoft Scout works across Teams, Outlook, OneDrive, and more—taking action within the controls your organization sets.",
-          "created_at": "2026-06-02T18:17:45.000Z",
-          "url": "https://x.com/Microsoft365/status/2061874930547871868",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
-          ]
-        },
-        {
-          "id": "2061860319547527191",
-          "type": "repost",
-          "text": "This came as a surprise: Microsoft has unveiled handheld and desktop devices designed to control one's agents. It reminds me of what I had expected from OpenAI’s hardware-standalone devices for controlling agents. Video Chubby♨️ (@kimmonismus) It is interesting how much focus is ",
-          "created_at": "2026-06-02T17:19:42.000Z",
-          "url": "https://x.com/kimmonismus/status/2061860319547527191",
-          "public_metrics": {},
-          "matched_terms": [
-            "agents"
+            "ownership"
           ]
         }
       ]
@@ -272,17 +229,6 @@
       ],
       "posts": [
         {
-          "id": "2062288421406785710",
-          "type": "repost",
-          "text": "OpenClaw 2026.6.1 is live 🦞 🪟 native Windows node host 🛠️ Skill Workshop for self-learning agents 📋 Workboard orchestration 🧠 MiniMax M3 support Windows joins the cluster. No penguin costume required. github.com/openclaw/openclaw…",
-          "created_at": "2026-06-03T21:40:49.000Z",
-          "url": "https://x.com/openclaw/status/2062288421406785710",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026"
-          ]
-        },
-        {
           "id": "2062212701414187452",
           "type": "repost",
           "text": "Welp, that happened faster than I predicted. Thought it would be end of 2027, then early 2027, but agentic traffic growing so fast that bots have now passed human traffic online for the first time in the Internet's history. radar.cloudflare.com/traffic…",
@@ -302,17 +248,6 @@
           "public_metrics": {},
           "matched_terms": [
             "2027"
-          ]
-        },
-        {
-          "id": "2061853377483493421",
-          "type": "repost",
-          "text": "Aging is arguably the root cause of most major diseases (loss of function in our cells). Four years ago, we made a bet that aging was treatable, and NewLimit was born. NewLimit now has a prototype drug that reverses the age of some human cells (restores function they had when the",
-          "created_at": "2026-06-02T16:52:07.000Z",
-          "url": "https://x.com/brian_armstrong/status/2061853377483493421",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
           ]
         }
       ]
@@ -381,17 +316,6 @@
           "text": "New Limit just raised $435 million. This is, in part, because they've had a massive breakthrough on reversing the age of the liver with their new brand of genetic reprogramming drugs. For the first time, NewLimit's co-founder and president Jacob Kimmel details the company's break",
           "created_at": "2026-06-03T14:26:16.000Z",
           "url": "https://x.com/ashleevance/status/2062179061653528907",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        },
-        {
-          "id": "2061849237156159511",
-          "type": "repost",
-          "text": "Following breakthrough results, we’re bringing longevity medicine to human trials. We’ve raised a $435M Series C led by @foundersfund to make it happen. Reprogramming cell age has the potential to create more healthy years for everyone. We're closer than ever to realizing it. Vid",
-          "created_at": "2026-06-02T16:35:40.000Z",
-          "url": "https://x.com/newlimit/status/2061849237156159511",
           "public_metrics": {},
           "matched_terms": [
             "longevity"

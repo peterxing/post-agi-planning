@@ -307,6 +307,8 @@ Models sit on compute. Compute sits on data centres. Data centres sit on energy,
 
 That is why the people who understand the stack will see the bottlenecks before everyone else. It is not enough to ask which model is best. Ask: where is compute constrained? Where is power constrained? Which workflows are ready for agents? Which data is accessible? Which leaders can move? Which sectors have both the need and the permission to change?
 
+The recent reality feed keeps rhyming with this. Compute deals, recursive AI research labs, and consumer-visible robotics all point to the same pressure: AI is becoming an industrial process that improves the next industrial process. Do not treat any one post as gospel. Treat the cluster as a map. If AI starts helping build the next AI, then compute access, research automation, energy capacity, deployment permission, and institutional trust become leverage points, not background details.
+
 ### Energy as the floor of abundance
 
 Energy is the floor of abundance. Cheap energy makes compute cheaper. Cheap compute makes intelligence cheaper. Cheap intelligence makes design, science, automation, and coordination cheaper. Better coordination makes energy deployment faster. This loop is powerful.
@@ -505,6 +507,8 @@ The practical question is not whether the forecaster is exactly right. It is whe
 Prediction markets can be useful because they aggregate beliefs, incentives, liquidity, and uncertainty. They are not truth. They can be smarter than you and still wrong. Use them as inputs, not gods.
 
 Reality signals matter more. Update when frontier models improve, agent reliability changes, robotics costs fall, companies replace workflows, governments announce emergency policies, unemployment data shifts, insurance markets adjust, energy and compute markets move, social unrest rises, or safety incidents occur.
+
+As of 6 June 2026, one liquid-enough Polymarket signal puts OpenAI officially announcing AGI before 2027 at roughly 13% Yes. That is not a verdict on AGI itself; it is a priced belief about one company making one official claim under one resolution rule. Read it alongside harder deployment signals: bot traffic passing human traffic online, companies redesigning research with AI, and compute becoming strategic infrastructure. Together they should nudge scenario weights toward earlier disruption without making the official AGI announcement the only trigger that matters.
 
 Near-term AGI planning is not about being right once. It is about updating faster than the world breaks your old assumptions.
 
@@ -828,3 +832,4 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Moonshots episode page with Ray Kurzweil on AGI by 2029 and human-AI merger: https://www.diamandis.com/podcast/singularity-countdown-agi-2029-ray-kurzweil
 - Business Insider, Diamandis discussing Musk, AI abundance, retirement, UBI/UHI: https://www.businessinsider.com/elon-musk-peter-diamandis-retirement-saving-abundance-ai-universal-income-2026-4
 - Business Insider, Diamandis on kids, MTP, curiosity, mindset, AI era: https://www.businessinsider.com/peter-diamandis-ai-skills-children-skills-careers-strategy-parenting-success-2026-4
+- Polymarket, OpenAI announces it has achieved AGI before 2027?: https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027/openai-announces-it-has-achieved-agi-before-2027
