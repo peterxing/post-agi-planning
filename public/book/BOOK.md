@@ -370,6 +370,8 @@ Ask instead: where can I combine AI, human trust, physical-world context, capita
 
 The future belongs less to people who can perform isolated tasks and more to people who can orchestrate systems. The AI-native worker is not merely faster at email. They are a conductor of agents, tools, data, people, and physical capacity. They know when to delegate to AI, when to verify, when to bring in humans, when to build, when to stop, and when to take responsibility.
 
+Watch the legal layer, not just the labour market. If governments begin creating explicit categories for AI-operated or robot-operated entities, the question shifts from "which tasks can AI do?" to "which organisations can AI legally inhabit?" That would accelerate the owner/operator divide: people with capital, compliance, distribution, and agent infrastructure could run productive systems with very small human teams, while everyone else competes for the remaining trust, accountability, and physical-context work.
+
 ### Four work identities
 
 In the transition, many people will move among four work identities.

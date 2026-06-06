@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T02:01:32.650Z",
+  "generatedAt": "2026-06-06T07:08:22.777Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -34,6 +34,17 @@
             "future",
             "agent",
             "automation"
+          ]
+        },
+        {
+          "id": "2062881091787100350",
+          "type": "repost",
+          "text": "We’ve been dancing with Spot for years but this kind of thing just doesn’t work with quadrupeds. But it does with humanoids! Excited for a future with robot dance-offs. Video",
+          "created_at": "2026-06-05T12:55:53.000Z",
+          "url": "https://x.com/mario_bollini/status/2062881091787100350",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
           ]
         }
       ]
@@ -100,7 +111,19 @@
         "governance",
         "society"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2062594306670535130",
+          "type": "repost",
+          "text": "Now we know why Peter Thiel packed his bags for Argentina. Milei just submitted his AI legislative framework to Congress, where he proposes: - zero regulation on AI development, - a brand-new \"non-human corporation\" category for AI/robot-operated entities with limited liability -",
+          "created_at": "2026-06-04T17:56:18.000Z",
+          "url": "https://x.com/trajektoriePL/status/2062594306670535130",
+          "public_metrics": {},
+          "matched_terms": [
+            "governance"
+          ]
+        }
+      ]
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -151,17 +174,6 @@
           "matched_terms": [
             "power"
           ]
-        },
-        {
-          "id": "2062196873923109361",
-          "type": "repost",
-          "text": "A 26-year-old from Sichuan just wowed America’s Got Talent with eight Unitree robots. Wu Yufei danced alongside the robots, stunned the judges and audience, and earned a unanimous pass to the next round. Video",
-          "created_at": "2026-06-03T15:37:03.000Z",
-          "url": "https://x.com/shanghaidaily/status/2062196873923109361",
-          "public_metrics": {},
-          "matched_terms": [
-            "robots"
-          ]
         }
       ]
     },
@@ -190,6 +202,28 @@
           "public_metrics": {},
           "matched_terms": [
             "ownership"
+          ]
+        },
+        {
+          "id": "2062881091787100350",
+          "type": "repost",
+          "text": "We’ve been dancing with Spot for years but this kind of thing just doesn’t work with quadrupeds. But it does with humanoids! Excited for a future with robot dance-offs. Video",
+          "created_at": "2026-06-05T12:55:53.000Z",
+          "url": "https://x.com/mario_bollini/status/2062881091787100350",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
+          ]
+        },
+        {
+          "id": "2062594306670535130",
+          "type": "repost",
+          "text": "Now we know why Peter Thiel packed his bags for Argentina. Milei just submitted his AI legislative framework to Congress, where he proposes: - zero regulation on AI development, - a brand-new \"non-human corporation\" category for AI/robot-operated entities with limited liability -",
+          "created_at": "2026-06-04T17:56:18.000Z",
+          "url": "https://x.com/trajektoriePL/status/2062594306670535130",
+          "public_metrics": {},
+          "matched_terms": [
+            "agents"
           ]
         }
       ]
@@ -238,17 +272,6 @@
           "matched_terms": [
             "2027"
           ]
-        },
-        {
-          "id": "2062197439583465964",
-          "type": "repost",
-          "text": "Telstra, the largest telecom company in Australia, has announced that over 200,000 of its customers connect to @Starlink Mobile per day, and over 2.7 million customers have connected at least once within the last year since launch. \"What stands out to us the most is not the numbe",
-          "created_at": "2026-06-03T15:39:18.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2062197439583465964",
-          "public_metrics": {},
-          "matched_terms": [
-            "2027"
-          ]
         }
       ]
     },
@@ -267,19 +290,7 @@
         "assets",
         "action"
       ],
-      "posts": [
-        {
-          "id": "2062197439583465964",
-          "type": "repost",
-          "text": "Telstra, the largest telecom company in Australia, has announced that over 200,000 of its customers connect to @Starlink Mobile per day, and over 2.7 million customers have connected at least once within the last year since launch. \"What stands out to us the most is not the numbe",
-          "created_at": "2026-06-03T15:39:18.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2062197439583465964",
-          "public_metrics": {},
-          "matched_terms": [
-            "capability"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
