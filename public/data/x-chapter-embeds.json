@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T21:23:06.305Z",
+  "generatedAt": "2026-06-07T22:12:56.995Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,28 @@
       ],
       "posts": [
         {
+          "id": "2063712102876156172",
+          "type": "repost",
+          "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
+          "created_at": "2026-06-07T19:58:01.000Z",
+          "url": "https://x.com/kimmonismus/status/2063712102876156172",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
+          "id": "2063603307067879590",
+          "type": "repost",
+          "text": "Anthropic reports Claude now writes over 80% of its own production code — meaning an AI is the primary author of the systems training future versions of itself. Claude's research judgment matched human experts 22% of the time in 2024. Today it's 64%. The recursive loop has starte",
+          "created_at": "2026-06-07T12:45:42.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2063603307067879590",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
+        {
           "id": "2063005792899317921",
           "type": "repost",
           "text": "if you track AI development closely there has been a clear acceleration since opus 4.5 and gpt-5.2 came out last december now i wonder what things will look like after claude 5 and gpt-6 are released later this year models will get much better at designing new ai systems",
@@ -45,28 +67,6 @@
             "future",
             "frontier model"
           ]
-        },
-        {
-          "id": "2062906204947710203",
-          "type": "repost",
-          "text": "OpenAI Noam Brown: I’d be surprised if our latest internal models don’t get a perfect IMO score — and disappointed if we don’t release a public model this year that can do the same \"either now or very soon, math and coding competitions won't be interesting anymore\" The frontier w",
-          "created_at": "2026-06-05T14:35:40.000Z",
-          "url": "https://x.com/haider1/status/2062906204947710203",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
-          ]
-        },
-        {
-          "id": "2062840689415905369",
-          "type": "repost",
-          "text": "i'm obsessed with AI DIY projects. my favorite one right now is this broccoli farmer in hokkaido, japan using Codex to run his 100-hectare farm this guy never studied agriculture, never inherited land, started out as a civil servant. but he wanted his farm to run better, and inst",
-          "created_at": "2026-06-05T10:15:20.000Z",
-          "url": "https://x.com/itsolelehmann/status/2062840689415905369",
-          "public_metrics": {},
-          "matched_terms": [
-            "codex"
-          ]
         }
       ]
     },
@@ -85,7 +85,19 @@
         "transhumanism",
         "human potential"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2063714787091956179",
+          "type": "repost",
+          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
+          "created_at": "2026-06-07T20:08:41.000Z",
+          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging"
+          ]
+        }
+      ]
     },
     "chapter-2-the-abundance-engine": {
       "id": "chapter-2-the-abundance-engine",
@@ -121,17 +133,6 @@
       ],
       "posts": [
         {
-          "id": "2062897227690074124",
-          "type": "repost",
-          "text": "Come visit our CVPR booth for hands-on experiences: – Neural video generation + sim drive – Selfies with @Tesla_Optimus – Real FSD test drives in Tesla models of your choice Chat directly with the team behind it, including @aelluswamy & @pduan and other engineers to get answers t",
-          "created_at": "2026-06-05T14:00:00.000Z",
-          "url": "https://x.com/Tesla_AI/status/2062897227690074124",
-          "public_metrics": {},
-          "matched_terms": [
-            "career"
-          ]
-        },
-        {
           "id": "2062517474277675102",
           "type": "repost",
           "text": "OpenAI just wrote: \"We also see early signs of recursive self-improvement (RSI) in today’s systems: where AI development is itself accelerated by AI. We expect this to increase competitive pressures among developers and nations, and create governance challenges that existing inst",
@@ -160,6 +161,17 @@
         "automation"
       ],
       "posts": [
+        {
+          "id": "2063714787091956179",
+          "type": "repost",
+          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
+          "created_at": "2026-06-07T20:08:41.000Z",
+          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
+          "public_metrics": {},
+          "matched_terms": [
+            "energy"
+          ]
+        },
         {
           "id": "2063244676468179348",
           "type": "repost",
@@ -209,30 +221,6 @@
           "public_metrics": {},
           "matched_terms": [
             "labor"
-          ]
-        },
-        {
-          "id": "2062897227690074124",
-          "type": "repost",
-          "text": "Come visit our CVPR booth for hands-on experiences: – Neural video generation + sim drive – Selfies with @Tesla_Optimus – Real FSD test drives in Tesla models of your choice Chat directly with the team behind it, including @aelluswamy & @pduan and other engineers to get answers t",
-          "created_at": "2026-06-05T14:00:00.000Z",
-          "url": "https://x.com/Tesla_AI/status/2062897227690074124",
-          "public_metrics": {},
-          "matched_terms": [
-            "career"
-          ]
-        },
-        {
-          "id": "2062570067305570671",
-          "type": "repost",
-          "text": "We’re going all in on World Models. Today we’re launching the 1X World Model Lab. The bet is simple: You can’t fine-tune your way to AGI. And you definitely can’t fine-tune your way to robots that can operate in the physical world. General-purpose humanoids need models that under",
-          "created_at": "2026-06-04T16:19:59.000Z",
-          "url": "https://x.com/BerntBornich/status/2062570067305570671",
-          "public_metrics": {},
-          "matched_terms": [
-            "labor",
-            "career",
-            "purpose"
           ]
         }
       ]
@@ -285,6 +273,18 @@
       ],
       "posts": [
         {
+          "id": "2063712102876156172",
+          "type": "repost",
+          "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
+          "created_at": "2026-06-07T19:58:01.000Z",
+          "url": "https://x.com/kimmonismus/status/2063712102876156172",
+          "public_metrics": {},
+          "matched_terms": [
+            "when",
+            "2030"
+          ]
+        },
+        {
           "id": "2063244676468179348",
           "type": "repost",
           "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
@@ -314,17 +314,6 @@
           "text": "i'm obsessed with AI DIY projects. my favorite one right now is this broccoli farmer in hokkaido, japan using Codex to run his 100-hectare farm this guy never studied agriculture, never inherited land, started out as a civil servant. but he wanted his farm to run better, and inst",
           "created_at": "2026-06-05T10:15:20.000Z",
           "url": "https://x.com/itsolelehmann/status/2062840689415905369",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
-        },
-        {
-          "id": "2062580571214389510",
-          "type": "repost",
-          "text": "We just published internal data on how much of Claude's development is already being done by Claude: - Over 80% of all code merged into our codebase is now written by Claude - It's been months since many researchers at Anthropic hand-wrote code - The typical Anthropic engineer sh",
-          "created_at": "2026-06-04T17:01:43.000Z",
-          "url": "https://x.com/alexalbert__/status/2062580571214389510",
           "public_metrics": {},
           "matched_terms": [
             "when"
@@ -393,20 +382,7 @@
         "community",
         "legitimacy"
       ],
-      "posts": [
-        {
-          "id": "2062570067305570671",
-          "type": "repost",
-          "text": "We’re going all in on World Models. Today we’re launching the 1X World Model Lab. The bet is simple: You can’t fine-tune your way to AGI. And you definitely can’t fine-tune your way to robots that can operate in the physical world. General-purpose humanoids need models that under",
-          "created_at": "2026-06-04T16:19:59.000Z",
-          "url": "https://x.com/BerntBornich/status/2062570067305570671",
-          "public_metrics": {},
-          "matched_terms": [
-            "policy",
-            "abundance"
-          ]
-        }
-      ]
+      "posts": []
     }
   }
 }
