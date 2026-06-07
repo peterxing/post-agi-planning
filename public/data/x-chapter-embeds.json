@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T21:15:30.697Z",
+  "generatedAt": "2026-06-07T10:08:21.086Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -58,14 +58,14 @@
           ]
         },
         {
-          "id": "2062881091787100350",
+          "id": "2062840689415905369",
           "type": "repost",
-          "text": "We’ve been dancing with Spot for years but this kind of thing just doesn’t work with quadrupeds. But it does with humanoids! Excited for a future with robot dance-offs. Video",
-          "created_at": "2026-06-05T12:55:53.000Z",
-          "url": "https://x.com/mario_bollini/status/2062881091787100350",
+          "text": "i'm obsessed with AI DIY projects. my favorite one right now is this broccoli farmer in hokkaido, japan using Codex to run his 100-hectare farm this guy never studied agriculture, never inherited land, started out as a civil servant. but he wanted his farm to run better, and inst",
+          "created_at": "2026-06-05T10:15:20.000Z",
+          "url": "https://x.com/itsolelehmann/status/2062840689415905369",
           "public_metrics": {},
           "matched_terms": [
-            "future"
+            "codex"
           ]
         }
       ]
@@ -132,17 +132,6 @@
           ]
         },
         {
-          "id": "2062594306670535130",
-          "type": "repost",
-          "text": "Now we know why Peter Thiel packed his bags for Argentina. Milei just submitted his AI legislative framework to Congress, where he proposes: - zero regulation on AI development, - a brand-new \"non-human corporation\" category for AI/robot-operated entities with limited liability -",
-          "created_at": "2026-06-04T17:56:18.000Z",
-          "url": "https://x.com/trajektoriePL/status/2062594306670535130",
-          "public_metrics": {},
-          "matched_terms": [
-            "governance"
-          ]
-        },
-        {
           "id": "2062517474277675102",
           "type": "repost",
           "text": "OpenAI just wrote: \"We also see early signs of recursive self-improvement (RSI) in today’s systems: where AI development is itself accelerated by AI. We expect this to increase competitive pressures among developers and nations, and create governance challenges that existing inst",
@@ -170,7 +159,30 @@
         "robots",
         "automation"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2063244676468179348",
+          "type": "repost",
+          "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
+          "created_at": "2026-06-06T13:00:38.000Z",
+          "url": "https://x.com/CyberRobooo/status/2063244676468179348",
+          "public_metrics": {},
+          "matched_terms": [
+            "robots"
+          ]
+        },
+        {
+          "id": "2062928067371077774",
+          "type": "repost",
+          "text": "The US Federal Gvt collects $5.2 trillion in taxes per year but can't deliver working healthcare, functional infrastructure, or effective regulation. Meanwhile, a 22-year-old with Claude just built a working prototype of a government service in an afternoon.",
+          "created_at": "2026-06-05T16:02:33.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2062928067371077774",
+          "public_metrics": {},
+          "matched_terms": [
+            "infrastructure"
+          ]
+        }
+      ]
     },
     "chapter-5-work-after-work": {
       "id": "chapter-5-work-after-work",
@@ -189,6 +201,17 @@
       ],
       "posts": [
         {
+          "id": "2063320013772063128",
+          "type": "repost",
+          "text": "i'm genuinely worried about Mythos release because i've had early access, and in my limited testing, it can: - automate an entire software company - explain how to take over the world - reason about existential risk for 16 hours - design a new programming language - threaten the ",
+          "created_at": "2026-06-06T18:00:00.000Z",
+          "url": "https://x.com/haider1/status/2063320013772063128",
+          "public_metrics": {},
+          "matched_terms": [
+            "labor"
+          ]
+        },
+        {
           "id": "2062897227690074124",
           "type": "repost",
           "text": "Come visit our CVPR booth for hands-on experiences: – Neural video generation + sim drive – Selfies with @Tesla_Optimus – Real FSD test drives in Tesla models of your choice Chat directly with the team behind it, including @aelluswamy & @pduan and other engineers to get answers t",
@@ -197,28 +220,6 @@
           "public_metrics": {},
           "matched_terms": [
             "career"
-          ]
-        },
-        {
-          "id": "2062881091787100350",
-          "type": "repost",
-          "text": "We’ve been dancing with Spot for years but this kind of thing just doesn’t work with quadrupeds. But it does with humanoids! Excited for a future with robot dance-offs. Video",
-          "created_at": "2026-06-05T12:55:53.000Z",
-          "url": "https://x.com/mario_bollini/status/2062881091787100350",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
-          ]
-        },
-        {
-          "id": "2062594306670535130",
-          "type": "repost",
-          "text": "Now we know why Peter Thiel packed his bags for Argentina. Milei just submitted his AI legislative framework to Congress, where he proposes: - zero regulation on AI development, - a brand-new \"non-human corporation\" category for AI/robot-operated entities with limited liability -",
-          "created_at": "2026-06-04T17:56:18.000Z",
-          "url": "https://x.com/trajektoriePL/status/2062594306670535130",
-          "public_metrics": {},
-          "matched_terms": [
-            "agents"
           ]
         },
         {
@@ -252,7 +253,20 @@
         "existential",
         "scenario"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2063320013772063128",
+          "type": "repost",
+          "text": "i'm genuinely worried about Mythos release because i've had early access, and in my limited testing, it can: - automate an entire software company - explain how to take over the world - reason about existential risk for 16 hours - design a new programming language - threaten the ",
+          "created_at": "2026-06-06T18:00:00.000Z",
+          "url": "https://x.com/haider1/status/2063320013772063128",
+          "public_metrics": {},
+          "matched_terms": [
+            "labor",
+            "existential"
+          ]
+        }
+      ]
     },
     "chapter-7-when-capability-deployment-impact": {
       "id": "chapter-7-when-capability-deployment-impact",
@@ -270,6 +284,17 @@
         "2030"
       ],
       "posts": [
+        {
+          "id": "2063244676468179348",
+          "type": "repost",
+          "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
+          "created_at": "2026-06-06T13:00:38.000Z",
+          "url": "https://x.com/CyberRobooo/status/2063244676468179348",
+          "public_metrics": {},
+          "matched_terms": [
+            "when"
+          ]
+        },
         {
           "id": "2062983280082014244",
           "type": "repost",

@@ -309,6 +309,8 @@ That is why the people who understand the stack will see the bottlenecks before 
 
 The recent reality feed keeps rhyming with this. Compute deals, recursive AI research labs, and consumer-visible robotics all point to the same pressure: AI is becoming an industrial process that improves the next industrial process. Do not treat any one post as gospel. Treat the cluster as a map. If AI starts helping build the next AI, then compute access, research automation, energy capacity, deployment permission, and institutional trust become leverage points, not background details.
 
+The useful signal is not that every demo deserves belief. It is that the boundary keeps moving from screen work into service work and physical work. Humanoid robot pre-orders, AI-assisted public-service prototypes, and operators using Codex inside real farms all point to the same deployment layer: intelligence becomes valuable when it touches permits, land, machines, maintenance, customers, and trust. The bottleneck shifts from "can the model answer?" to "can a real institution or operator absorb the answer safely?"
+
 ### Energy as the floor of abundance
 
 Energy is the floor of abundance. Cheap energy makes compute cheaper. Cheap compute makes intelligence cheaper. Cheap intelligence makes design, science, automation, and coordination cheaper. Better coordination makes energy deployment faster. This loop is powerful.
@@ -439,6 +441,8 @@ A scenario portfolio prevents two failures. The first is denial: assuming the wo
 Starting weight: 20%. AI disrupts the economy faster than institutions can respond. Hiring freezes spread. Roles are decomposed. AI-native competitors attack margins. Junior positions vanish. Debt pressure rises. People feel humiliated, not just unemployed. Governments respond with stimulus cheques, UBI, wage subsidies, emergency transfers, public AI services, compute dividends, or Universal High Income proposals. The politics become messy because pain is uneven.
 
 People do not revolt because a benchmark improves. Nobody storms a parliament because a model got a better score on an eval. They revolt when they cannot pay bills, lose status, lose trust, or believe the system has no place for them. Rapid disruption requires liquidity, essential-needs coverage, defensible income, community trust, and safety.
+
+Recent signals should keep this scenario live even when headline labour data still looks calm. If AI can already help build frontier systems, stretch autonomous task length, prototype government services, and creep into farms and humanoid robotics, the labour shock may arrive first as margin compression and organisational redesign rather than mass unemployment. Update your weights when small teams start doing institutional-scale work, not only when the unemployment rate finally confesses.
 
 ### Scenario 2: fast abundance
 
