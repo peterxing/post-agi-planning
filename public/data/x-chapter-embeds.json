@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T22:12:56.995Z",
+  "generatedAt": "2026-06-08T07:08:19.061Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -46,17 +46,6 @@
           ]
         },
         {
-          "id": "2063005792899317921",
-          "type": "repost",
-          "text": "if you track AI development closely there has been a clear acceleration since opus 4.5 and gpt-5.2 came out last december now i wonder what things will look like after claude 5 and gpt-6 are released later this year models will get much better at designing new ai systems",
-          "created_at": "2026-06-05T21:11:24.000Z",
-          "url": "https://x.com/haider1/status/2063005792899317921",
-          "public_metrics": {},
-          "matched_terms": [
-            "acceleration"
-          ]
-        },
-        {
           "id": "2062983280082014244",
           "type": "repost",
           "text": "so i put every frontier ai model into a chart.. >every dot is a frontier model >left to right = when it shipped >bottom to top = the longest task it can finish alone without a human in the loop. connect them and you don't get a curve.. you get almost a straight line.. 7 min (gpt-",
@@ -66,6 +55,17 @@
           "matched_terms": [
             "future",
             "frontier model"
+          ]
+        },
+        {
+          "id": "2062906204947710203",
+          "type": "repost",
+          "text": "OpenAI Noam Brown: I’d be surprised if our latest internal models don’t get a perfect IMO score — and disappointed if we don’t release a public model this year that can do the same \"either now or very soon, math and coding competitions won't be interesting anymore\" The frontier w",
+          "created_at": "2026-06-05T14:35:40.000Z",
+          "url": "https://x.com/haider1/status/2062906204947710203",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
           ]
         }
       ]
@@ -132,6 +132,17 @@
         "society"
       ],
       "posts": [
+        {
+          "id": "2063564469926867006",
+          "type": "repost",
+          "text": "society if we spent a trillion building TSU clusters around the Sun instead of building AI factories with soon to be obsolete GPUs on Earth",
+          "created_at": "2026-06-07T10:11:23.000Z",
+          "url": "https://x.com/beffjezos/status/2063564469926867006",
+          "public_metrics": {},
+          "matched_terms": [
+            "society"
+          ]
+        },
         {
           "id": "2062517474277675102",
           "type": "repost",
@@ -212,6 +223,17 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2063697162748260627",
+          "type": "repost",
+          "text": "Here’s your monthly reminder that you shouldn’t be prompting coding agents anymore. You should be designing loops that prompt your agents.",
+          "created_at": "2026-06-07T18:58:39.000Z",
+          "url": "https://x.com/steipete/status/2063697162748260627",
+          "public_metrics": {},
+          "matched_terms": [
+            "agents"
+          ]
+        },
         {
           "id": "2063320013772063128",
           "type": "repost",
@@ -336,7 +358,20 @@
         "assets",
         "action"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2063760159357190373",
+          "type": "repost",
+          "text": "The Ontario Teachers’ Pension Plan is sitting on a potential windfall of as much as $11.6 billion from an initial investment of about $300 million into @SpaceX in 2019. This would make it the single most successful investment the pension plan has ever made. The Teachers portfolio",
+          "created_at": "2026-06-07T23:08:59.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2063760159357190373",
+          "public_metrics": {},
+          "matched_terms": [
+            "plan",
+            "assets"
+          ]
+        }
+      ]
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",

@@ -86,6 +86,10 @@ const POST_AGI_CONTEXT_TERMS = [
   'military',
 ];
 
+const DEFAULT_POLYMARKET_MARKET_SLUGS = [
+  'openai-announces-it-has-achieved-agi-before-2027',
+];
+
 const EXCLUSION_TERMS = [
   'nba',
   'nfl',
@@ -342,10 +346,28 @@ async function loadSignalsFromX(now) {
 async function loadSignalsFromPolymarket(now) {
   const apiBase = process.env.POLYMARKET_API_BASE || 'https://gamma-api.polymarket.com';
   const limit = clamp(Number(process.env.POLYMARKET_LIMIT || 400), 50, 800);
+  const curatedSlugs = (process.env.POLYMARKET_MARKET_SLUGS || DEFAULT_POLYMARKET_MARKET_SLUGS.join(','))
+    .split(',')
+    .map((slug) => slug.trim())
+    .filter(Boolean);
 
   const url = `${apiBase}/markets?active=true&closed=false&limit=${limit}`;
   const markets = await fetchJson(url);
-  const rawMarkets = Array.isArray(markets) ? markets : [];
+  const rawMarkets = Array.isArray(markets) ? [...markets] : [];
+
+  for (const slug of curatedSlugs) {
+    try {
+      const curatedMarkets = await fetchJson(`${apiBase}/markets?slug=${encodeURIComponent(slug)}&active=true&closed=false`);
+      const list = Array.isArray(curatedMarkets) ? curatedMarkets : [];
+      for (const market of list) {
+        if (!rawMarkets.some((existing) => String(existing.id) === String(market.id) || existing.slug === market.slug)) {
+          rawMarkets.push(market);
+        }
+      }
+    } catch (error) {
+      console.warn(`Polymarket curated slug failed (${slug}): ${error?.message || error}`);
+    }
+  }
 
   const relevantMarkets = rawMarkets
     .map((market) => {
@@ -378,7 +400,7 @@ async function loadSignalsFromPolymarket(now) {
       source: 'polymarket',
       timestamp: market.updatedAt || market.createdAt || now.toISOString(),
       headline: question,
-      summary: `${question} • market probability ${(probability * 100).toFixed(1)}%`,
+      summary: `${question} - market probability ${(probability * 100).toFixed(1)}%`,
       url: market.slug ? `https://polymarket.com/event/${market.slug}` : 'https://polymarket.com',
       domain: detectDomain(text),
       targetYear,
