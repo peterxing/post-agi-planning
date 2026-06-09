@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T12:08:22.157Z",
+  "generatedAt": "2026-06-09T21:57:41.825Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -86,11 +86,11 @@
       ],
       "posts": [
         {
-          "id": "2063714787091956179",
+          "id": "2064400619583213821",
           "type": "repost",
-          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
-          "created_at": "2026-06-07T20:08:41.000Z",
-          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
+          "text": "Today, @lifebiosciences confirmed the first patient has been dosed with an epigenetic restoration drug candidate. An exciting milestone 🚀 Life Biosciences is the OG cellular rejuvenation using epigenetic restoration to reverse diseases of aging. It was cofounded by @davidasincla",
+          "created_at": "2026-06-09T17:33:57.000Z",
+          "url": "https://x.com/JoinLifespan/status/2064400619583213821",
           "public_metrics": {},
           "matched_terms": [
             "aging"
@@ -216,17 +216,6 @@
             "compute",
             "power"
           ]
-        },
-        {
-          "id": "2063714787091956179",
-          "type": "repost",
-          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
-          "created_at": "2026-06-07T20:08:41.000Z",
-          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy"
-          ]
         }
       ]
     },
@@ -246,6 +235,17 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2064394151441863006",
+          "type": "repost",
+          "text": "Fable 5 is state-of-the-art on nearly all tested benchmarks, with exceptional performance in software engineering, knowledge work, scientific research, and vision. The longer and more complex the task, the larger Fable 5’s lead over our other models.",
+          "created_at": "2026-06-09T17:08:14.000Z",
+          "url": "https://x.com/claudeai/status/2064394151441863006",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
+          ]
+        },
         {
           "id": "2064248075502444951",
           "type": "repost",
