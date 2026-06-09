@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T07:08:19.061Z",
+  "generatedAt": "2026-06-09T02:08:22.578Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,39 @@
       ],
       "posts": [
         {
+          "id": "2064054837294354677",
+          "type": "repost",
+          "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in because they're designed for different traffic. How do we build infrastructure agents can use? anthropic.com/research/agent…",
+          "created_at": "2026-06-08T18:39:56.000Z",
+          "url": "https://x.com/AnthropicAI/status/2064054837294354677",
+          "public_metrics": {},
+          "matched_terms": [
+            "agent"
+          ]
+        },
+        {
+          "id": "2064039540256338326",
+          "type": "repost",
+          "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI: - Dario Amodei (Anthropic), writing in January 2026: we may be \"only 1-2 years away\" from the current generation of AI autonomously building the next - Anthropic, Frontier",
+          "created_at": "2026-06-08T17:39:09.000Z",
+          "url": "https://x.com/deredleritt3r/status/2064039540256338326",
+          "public_metrics": {},
+          "matched_terms": [
+            "automation"
+          ]
+        },
+        {
+          "id": "2063977460631277801",
+          "type": "repost",
+          "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
+          "created_at": "2026-06-08T13:32:28.000Z",
+          "url": "https://x.com/TeksEdge/status/2063977460631277801",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
           "id": "2063712102876156172",
           "type": "repost",
           "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
@@ -32,40 +65,6 @@
           "public_metrics": {},
           "matched_terms": [
             "agi"
-          ]
-        },
-        {
-          "id": "2063603307067879590",
-          "type": "repost",
-          "text": "Anthropic reports Claude now writes over 80% of its own production code — meaning an AI is the primary author of the systems training future versions of itself. Claude's research judgment matched human experts 22% of the time in 2024. Today it's 64%. The recursive loop has starte",
-          "created_at": "2026-06-07T12:45:42.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2063603307067879590",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
-          ]
-        },
-        {
-          "id": "2062983280082014244",
-          "type": "repost",
-          "text": "so i put every frontier ai model into a chart.. >every dot is a frontier model >left to right = when it shipped >bottom to top = the longest task it can finish alone without a human in the loop. connect them and you don't get a curve.. you get almost a straight line.. 7 min (gpt-",
-          "created_at": "2026-06-05T19:41:57.000Z",
-          "url": "https://x.com/jumperz/status/2062983280082014244",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "frontier model"
-          ]
-        },
-        {
-          "id": "2062906204947710203",
-          "type": "repost",
-          "text": "OpenAI Noam Brown: I’d be surprised if our latest internal models don’t get a perfect IMO score — and disappointed if we don’t release a public model this year that can do the same \"either now or very soon, math and coding competitions won't be interesting anymore\" The frontier w",
-          "created_at": "2026-06-05T14:35:40.000Z",
-          "url": "https://x.com/haider1/status/2062906204947710203",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
           ]
         }
       ]
@@ -133,6 +132,28 @@
       ],
       "posts": [
         {
+          "id": "2063977460631277801",
+          "type": "repost",
+          "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
+          "created_at": "2026-06-08T13:32:28.000Z",
+          "url": "https://x.com/TeksEdge/status/2063977460631277801",
+          "public_metrics": {},
+          "matched_terms": [
+            "family"
+          ]
+        },
+        {
+          "id": "2063653239287943541",
+          "type": "repost",
+          "text": "A new system is coming, and it's coming soon. Almost everything will change: work, medicine, science, money, education, cities, bodies, intelligence, and daily life. We are moving toward Star Trek level technology and lifestyles. But we won't stop there. Star Trek will be only th",
+          "created_at": "2026-06-07T16:04:07.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2063653239287943541",
+          "public_metrics": {},
+          "matched_terms": [
+            "education"
+          ]
+        },
+        {
           "id": "2063564469926867006",
           "type": "repost",
           "text": "society if we spent a trillion building TSU clusters around the Sun instead of building AI factories with soon to be obsolete GPUs on Earth",
@@ -141,17 +162,6 @@
           "public_metrics": {},
           "matched_terms": [
             "society"
-          ]
-        },
-        {
-          "id": "2062517474277675102",
-          "type": "repost",
-          "text": "OpenAI just wrote: \"We also see early signs of recursive self-improvement (RSI) in today’s systems: where AI development is itself accelerated by AI. We expect this to increase competitive pressures among developers and nations, and create governance challenges that existing inst",
-          "created_at": "2026-06-04T12:51:00.000Z",
-          "url": "https://x.com/kimmonismus/status/2062517474277675102",
-          "public_metrics": {},
-          "matched_terms": [
-            "governance"
           ]
         }
       ]
@@ -173,6 +183,29 @@
       ],
       "posts": [
         {
+          "id": "2064054837294354677",
+          "type": "repost",
+          "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in because they're designed for different traffic. How do we build infrastructure agents can use? anthropic.com/research/agent…",
+          "created_at": "2026-06-08T18:39:56.000Z",
+          "url": "https://x.com/AnthropicAI/status/2064054837294354677",
+          "public_metrics": {},
+          "matched_terms": [
+            "infrastructure"
+          ]
+        },
+        {
+          "id": "2063986818991702217",
+          "type": "repost",
+          "text": "The Tesla Cybercab is ~3.4 times more efficient than a Waymo I-PACE. The Cybercab is built from the ground up as a Robotaxi. The Waymo is a retrofitted platform with a sensor suite that adds excess weight, drag, and constant compute/sensor power draw.",
+          "created_at": "2026-06-08T14:09:39.000Z",
+          "url": "https://x.com/niccruzpatane/status/2063986818991702217",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute",
+            "power"
+          ]
+        },
+        {
           "id": "2063714787091956179",
           "type": "repost",
           "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
@@ -192,17 +225,6 @@
           "public_metrics": {},
           "matched_terms": [
             "robots"
-          ]
-        },
-        {
-          "id": "2062928067371077774",
-          "type": "repost",
-          "text": "The US Federal Gvt collects $5.2 trillion in taxes per year but can't deliver working healthcare, functional infrastructure, or effective regulation. Meanwhile, a 22-year-old with Claude just built a working prototype of a government service in an afternoon.",
-          "created_at": "2026-06-05T16:02:33.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2062928067371077774",
-          "public_metrics": {},
-          "matched_terms": [
-            "infrastructure"
           ]
         }
       ]
@@ -232,6 +254,17 @@
           "public_metrics": {},
           "matched_terms": [
             "agents"
+          ]
+        },
+        {
+          "id": "2063653239287943541",
+          "type": "repost",
+          "text": "A new system is coming, and it's coming soon. Almost everything will change: work, medicine, science, money, education, cities, bodies, intelligence, and daily life. We are moving toward Star Trek level technology and lifestyles. But we won't stop there. Star Trek will be only th",
+          "created_at": "2026-06-07T16:04:07.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2063653239287943541",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
           ]
         },
         {
@@ -295,6 +328,18 @@
       ],
       "posts": [
         {
+          "id": "2064039540256338326",
+          "type": "repost",
+          "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI: - Dario Amodei (Anthropic), writing in January 2026: we may be \"only 1-2 years away\" from the current generation of AI autonomously building the next - Anthropic, Frontier",
+          "created_at": "2026-06-08T17:39:09.000Z",
+          "url": "https://x.com/deredleritt3r/status/2064039540256338326",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026",
+            "2027"
+          ]
+        },
+        {
           "id": "2063712102876156172",
           "type": "repost",
           "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
@@ -307,35 +352,22 @@
           ]
         },
         {
+          "id": "2063432076838179153",
+          "type": "repost",
+          "text": "A doctor from 1985 seeing 2026 medicine would be stunned. mRNA vaccines. Cancer immunotherapy. CAR-T cells. Gene editing. AI protein design. Lab grown organoids. Personal genome sequencing. Robotic surgery. Blood tests that can detect cancer signals. Drugs that make people lose 2",
+          "created_at": "2026-06-07T01:25:18.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2063432076838179153",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026"
+          ]
+        },
+        {
           "id": "2063244676468179348",
           "type": "repost",
           "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
           "created_at": "2026-06-06T13:00:38.000Z",
           "url": "https://x.com/CyberRobooo/status/2063244676468179348",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
-        },
-        {
-          "id": "2062983280082014244",
-          "type": "repost",
-          "text": "so i put every frontier ai model into a chart.. >every dot is a frontier model >left to right = when it shipped >bottom to top = the longest task it can finish alone without a human in the loop. connect them and you don't get a curve.. you get almost a straight line.. 7 min (gpt-",
-          "created_at": "2026-06-05T19:41:57.000Z",
-          "url": "https://x.com/jumperz/status/2062983280082014244",
-          "public_metrics": {},
-          "matched_terms": [
-            "timeline",
-            "when",
-            "2027"
-          ]
-        },
-        {
-          "id": "2062840689415905369",
-          "type": "repost",
-          "text": "i'm obsessed with AI DIY projects. my favorite one right now is this broccoli farmer in hokkaido, japan using Codex to run his 100-hectare farm this guy never studied agriculture, never inherited land, started out as a civil servant. but he wanted his farm to run better, and inst",
-          "created_at": "2026-06-05T10:15:20.000Z",
-          "url": "https://x.com/itsolelehmann/status/2062840689415905369",
           "public_metrics": {},
           "matched_terms": [
             "when"
