@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T02:08:22.578Z",
+  "generatedAt": "2026-06-09T12:08:22.157Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -23,6 +23,17 @@
         "disruption"
       ],
       "posts": [
+        {
+          "id": "2064248075502444951",
+          "type": "repost",
+          "text": "Economic output per person from 1820 until a year or two after we reach AGI. Once we reach AGI, output will be decoupled from human labor. This graph would need to be 10X higher to show where we will be in 10 years. AGI by the end of this year. We will all be rich.",
+          "created_at": "2026-06-09T07:27:47.000Z",
+          "url": "https://x.com/davidpattersonx/status/2064248075502444951",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
         {
           "id": "2064054837294354677",
           "type": "repost",
@@ -51,17 +62,6 @@
           "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
           "created_at": "2026-06-08T13:32:28.000Z",
           "url": "https://x.com/TeksEdge/status/2063977460631277801",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
-          ]
-        },
-        {
-          "id": "2063712102876156172",
-          "type": "repost",
-          "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
-          "created_at": "2026-06-07T19:58:01.000Z",
-          "url": "https://x.com/kimmonismus/status/2063712102876156172",
           "public_metrics": {},
           "matched_terms": [
             "agi"
@@ -183,6 +183,18 @@
       ],
       "posts": [
         {
+          "id": "2064108916611420273",
+          "type": "repost",
+          "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: • 150 kW peak compute payload • 120 kW average compute payload • 70 kW per ton • Compute provider interchangeable Dimensions: • Wingspan: 70 meters • Deployed height: 2",
+          "created_at": "2026-06-08T22:14:49.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2064108916611420273",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute",
+            "power"
+          ]
+        },
+        {
           "id": "2064054837294354677",
           "type": "repost",
           "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in because they're designed for different traffic. How do we build infrastructure agents can use? anthropic.com/research/agent…",
@@ -215,17 +227,6 @@
           "matched_terms": [
             "energy"
           ]
-        },
-        {
-          "id": "2063244676468179348",
-          "type": "repost",
-          "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
-          "created_at": "2026-06-06T13:00:38.000Z",
-          "url": "https://x.com/CyberRobooo/status/2063244676468179348",
-          "public_metrics": {},
-          "matched_terms": [
-            "robots"
-          ]
         }
       ]
     },
@@ -245,6 +246,17 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2064248075502444951",
+          "type": "repost",
+          "text": "Economic output per person from 1820 until a year or two after we reach AGI. Once we reach AGI, output will be decoupled from human labor. This graph would need to be 10X higher to show where we will be in 10 years. AGI by the end of this year. We will all be rich.",
+          "created_at": "2026-06-09T07:27:47.000Z",
+          "url": "https://x.com/davidpattersonx/status/2064248075502444951",
+          "public_metrics": {},
+          "matched_terms": [
+            "labor"
+          ]
+        },
         {
           "id": "2063697162748260627",
           "type": "repost",
@@ -266,17 +278,6 @@
           "matched_terms": [
             "work"
           ]
-        },
-        {
-          "id": "2063320013772063128",
-          "type": "repost",
-          "text": "i'm genuinely worried about Mythos release because i've had early access, and in my limited testing, it can: - automate an entire software company - explain how to take over the world - reason about existential risk for 16 hours - design a new programming language - threaten the ",
-          "created_at": "2026-06-06T18:00:00.000Z",
-          "url": "https://x.com/haider1/status/2063320013772063128",
-          "public_metrics": {},
-          "matched_terms": [
-            "labor"
-          ]
         }
       ]
     },
@@ -296,20 +297,7 @@
         "existential",
         "scenario"
       ],
-      "posts": [
-        {
-          "id": "2063320013772063128",
-          "type": "repost",
-          "text": "i'm genuinely worried about Mythos release because i've had early access, and in my limited testing, it can: - automate an entire software company - explain how to take over the world - reason about existential risk for 16 hours - design a new programming language - threaten the ",
-          "created_at": "2026-06-06T18:00:00.000Z",
-          "url": "https://x.com/haider1/status/2063320013772063128",
-          "public_metrics": {},
-          "matched_terms": [
-            "labor",
-            "existential"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-7-when-capability-deployment-impact": {
       "id": "chapter-7-when-capability-deployment-impact",
@@ -361,17 +349,6 @@
           "matched_terms": [
             "2026"
           ]
-        },
-        {
-          "id": "2063244676468179348",
-          "type": "repost",
-          "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her, yet there’s no “uncanny valley” effect. Video CyberRobo (@CyberRobooo) Seeing UBTech launch pre-orders for their UWORLD su",
-          "created_at": "2026-06-06T13:00:38.000Z",
-          "url": "https://x.com/CyberRobooo/status/2063244676468179348",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
         }
       ]
     },
@@ -391,6 +368,17 @@
         "action"
       ],
       "posts": [
+        {
+          "id": "2064108916611420273",
+          "type": "repost",
+          "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: • 150 kW peak compute payload • 120 kW average compute payload • 70 kW per ton • Compute provider interchangeable Dimensions: • Wingspan: 70 meters • Deployed height: 2",
+          "created_at": "2026-06-08T22:14:49.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2064108916611420273",
+          "public_metrics": {},
+          "matched_terms": [
+            "capability"
+          ]
+        },
         {
           "id": "2063760159357190373",
           "type": "repost",

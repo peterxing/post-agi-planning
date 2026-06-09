@@ -309,6 +309,8 @@ That is why the people who understand the stack will see the bottlenecks before 
 
 The recent reality feed keeps rhyming with this. Compute deals, recursive AI research labs, and consumer-visible robotics all point to the same pressure: AI is becoming an industrial process that improves the next industrial process. Do not treat any one post as gospel. Treat the cluster as a map. If AI starts helping build the next AI, then compute access, research automation, energy capacity, deployment permission, and institutional trust become leverage points, not background details.
 
+SpaceX's newly detailed AI1 satellite concept is a useful stress test for this chapter's thesis. Whether orbital AI compute scales quickly or slowly, the direction is clear: serious actors are now treating power, cooling, launch capacity, networking, and compute density as one system. That should update how you think about infrastructure. The next bottleneck may not be "who has the cleverest model?" but "who can turn energy into reliable intelligence at scale, in places where regulation, land, heat, and grid connection do not strangle deployment?"
+
 The useful signal is not that every demo deserves belief. It is that the boundary keeps moving from screen work into service work and physical work. Humanoid robot pre-orders, AI-assisted public-service prototypes, and operators using Codex inside real farms all point to the same deployment layer: intelligence becomes valuable when it touches permits, land, machines, maintenance, customers, and trust. The bottleneck shifts from "can the model answer?" to "can a real institution or operator absorb the answer safely?"
 
 ### Energy as the floor of abundance
@@ -843,3 +845,4 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Business Insider, Diamandis discussing Musk, AI abundance, retirement, UBI/UHI: https://www.businessinsider.com/elon-musk-peter-diamandis-retirement-saving-abundance-ai-universal-income-2026-4
 - Business Insider, Diamandis on kids, MTP, curiosity, mindset, AI era: https://www.businessinsider.com/peter-diamandis-ai-skills-children-skills-careers-strategy-parenting-success-2026-4
 - Polymarket, OpenAI announces it has achieved AGI before 2027?: https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027/openai-announces-it-has-achieved-agi-before-2027
+- Bloomberg, Elon Musk shows detailed design of AI data center satellite: https://www.bloomberg.com/news/articles/2026-06-08/elon-musk-shows-more-detailed-design-of-ai-data-center-satellite
