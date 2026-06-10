@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-10T11:09:59.713Z",
+  "generatedAt": "2026-06-10T22:18:49.441Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,47 +24,50 @@
       ],
       "posts": [
         {
-          "id": "2064467466450088078",
+          "id": "2064788701532635301",
           "type": "repost",
-          "text": "It's already June 9th, and Gemini 3.5 Pro and GPT-5.6 are nearing release (Google even already announced 3.5 Pro during i/o) Rumor has it that GPT-5.6 will be released as early as next week. So far, it's safe to say that - guardrails aside - Anthropic is truly the frontier lab th",
-          "created_at": "2026-06-09T21:59:34.000Z",
-          "url": "https://x.com/kimmonismus/status/2064467466450088078",
+          "text": "Dario Amodei just published an unusually candid essay about where AI is heading. The tl;dr with quotes. His new piece, Policy on the AI Exponential, reads more like a warning from the person building the thing. The core problem is timing. AI moves on an exponential. He is very cl",
+          "created_at": "2026-06-10T19:16:03.000Z",
+          "url": "https://x.com/kimmonismus/status/2064788701532635301",
           "public_metrics": {},
           "matched_terms": [
-            "codex"
+            "acceleration",
+            "exponential",
+            "frontier model"
           ]
         },
         {
-          "id": "2064248075502444951",
+          "id": "2064783418844762489",
           "type": "repost",
-          "text": "Economic output per person from 1820 until a year or two after we reach AGI. Once we reach AGI, output will be decoupled from human labor. This graph would need to be 10X higher to show where we will be in 10 years. AGI by the end of this year. We will all be rich.",
-          "created_at": "2026-06-09T07:27:47.000Z",
-          "url": "https://x.com/davidpattersonx/status/2064248075502444951",
+          "text": "AI is advancing at a pace our policymaking institutions were never built for—and the gap between the two is becoming the central challenge of the technology. In his latest essay, our CEO Dario Amodei lays out how to close it. We're launching three new initiatives to support the e",
+          "created_at": "2026-06-10T18:55:03.000Z",
+          "url": "https://x.com/AnthropicAI/status/2064783418844762489",
           "public_metrics": {},
           "matched_terms": [
-            "agi"
+            "exponential"
           ]
         },
         {
-          "id": "2064039540256338326",
+          "id": "2064781775247950326",
           "type": "repost",
-          "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI: - Dario Amodei (Anthropic), writing in January 2026: we may be \"only 1-2 years away\" from the current generation of AI autonomously building the next - Anthropic, Frontier",
-          "created_at": "2026-06-08T17:39:09.000Z",
-          "url": "https://x.com/deredleritt3r/status/2064039540256338326",
+          "text": "Today I'm publishing a new essay, Policy on the AI Exponential. AI is progressing extremely fast—much faster than the policy process was built to handle. The essay lays out where I think the technology is now, and the action needed to close the gap: darioamodei.com/post/policy-…",
+          "created_at": "2026-06-10T18:48:31.000Z",
+          "url": "https://x.com/DarioAmodei/status/2064781775247950326",
           "public_metrics": {},
           "matched_terms": [
-            "automation"
+            "exponential"
           ]
         },
         {
-          "id": "2063977460631277801",
+          "id": "2064728655922647385",
           "type": "repost",
-          "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
-          "created_at": "2026-06-08T13:32:28.000Z",
-          "url": "https://x.com/TeksEdge/status/2063977460631277801",
+          "text": "This is one of the most important parts of the Mythos 5 announcement: Drug design. Anthropic says its internal protein design experts used Mythos 5 to accelerate parts of the drug design process by around 10x. In one example, Mythos 5 used protein design and bioinformatics tools ",
+          "created_at": "2026-06-10T15:17:27.000Z",
+          "url": "https://x.com/kimmonismus/status/2064728655922647385",
           "public_metrics": {},
           "matched_terms": [
-            "agi"
+            "future",
+            "agent"
           ]
         }
       ]
@@ -86,6 +89,17 @@
       ],
       "posts": [
         {
+          "id": "2064726855253631098",
+          "type": "repost",
+          "text": "it's insane to me that this isn't all over mainstream media right now. for the first time in human history, a drug built to reverse aging was just put into a living person a company called Life Biosciences dosed the first patient in their trial for something called ER-100 it come",
+          "created_at": "2026-06-10T15:10:17.000Z",
+          "url": "https://x.com/itsolelehmann/status/2064726855253631098",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging"
+          ]
+        },
+        {
           "id": "2064544325954859262",
           "type": "repost",
           "text": "After 25 years of brave & brilliant work by hundreds of scientists in my lab to understand then safely reverse aging for the first time, it was moving to witness the first human dose being delivered 🥹 nature.com/articles/d41586-0…",
@@ -102,17 +116,6 @@
           "text": "Huge news for anti aging field / progress David Sinclair plans to test an oral \"reprogramming\" drug mixture in humans as part of the $101 million XPRIZE Healthspan competition. The goal is to see whether a treatment can produce measurable age restoration across the body, not just",
           "created_at": "2026-06-10T00:17:20.000Z",
           "url": "https://x.com/Dr_Singularity/status/2064502135551631861",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging"
-          ]
-        },
-        {
-          "id": "2064400619583213821",
-          "type": "repost",
-          "text": "Today, @lifebiosciences confirmed the first patient has been dosed with an epigenetic restoration drug candidate. An exciting milestone 🚀 Life Biosciences is the OG cellular rejuvenation using epigenetic restoration to reverse diseases of aging. It was cofounded by @davidasincla",
-          "created_at": "2026-06-09T17:33:57.000Z",
-          "url": "https://x.com/JoinLifespan/status/2064400619583213821",
           "public_metrics": {},
           "matched_terms": [
             "aging"
@@ -175,17 +178,6 @@
           "matched_terms": [
             "jobs"
           ]
-        },
-        {
-          "id": "2063977460631277801",
-          "type": "repost",
-          "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
-          "created_at": "2026-06-08T13:32:28.000Z",
-          "url": "https://x.com/TeksEdge/status/2063977460631277801",
-          "public_metrics": {},
-          "matched_terms": [
-            "family"
-          ]
         }
       ]
     },
@@ -206,27 +198,25 @@
       ],
       "posts": [
         {
-          "id": "2064108916611420273",
+          "id": "2064788701532635301",
           "type": "repost",
-          "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: • 150 kW peak compute payload • 120 kW average compute payload • 70 kW per ton • Compute provider interchangeable Dimensions: • Wingspan: 70 meters • Deployed height: 2",
-          "created_at": "2026-06-08T22:14:49.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2064108916611420273",
+          "text": "Dario Amodei just published an unusually candid essay about where AI is heading. The tl;dr with quotes. His new piece, Policy on the AI Exponential, reads more like a warning from the person building the thing. The core problem is timing. AI moves on an exponential. He is very cl",
+          "created_at": "2026-06-10T19:16:03.000Z",
+          "url": "https://x.com/kimmonismus/status/2064788701532635301",
           "public_metrics": {},
           "matched_terms": [
-            "compute",
             "power"
           ]
         },
         {
-          "id": "2063986818991702217",
+          "id": "2064734796379463681",
           "type": "repost",
-          "text": "The Tesla Cybercab is ~3.4 times more efficient than a Waymo I-PACE. The Cybercab is built from the ground up as a Robotaxi. The Waymo is a retrofitted platform with a sensor suite that adds excess weight, drag, and constant compute/sensor power draw.",
-          "created_at": "2026-06-08T14:09:39.000Z",
-          "url": "https://x.com/niccruzpatane/status/2063986818991702217",
+          "text": "OpenAI appears to be preparing for a possible IPO within the next year, but Sam Altman is keeping the door open. If recursive self-improvement starts looking real, staying private could become the smarter move. At the same time, OpenAI’s enormous compute needs may push it toward ",
+          "created_at": "2026-06-10T15:41:51.000Z",
+          "url": "https://x.com/kimmonismus/status/2064734796379463681",
           "public_metrics": {},
           "matched_terms": [
-            "compute",
-            "power"
+            "compute"
           ]
         }
       ]
@@ -247,6 +237,18 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2064726855253631098",
+          "type": "repost",
+          "text": "it's insane to me that this isn't all over mainstream media right now. for the first time in human history, a drug built to reverse aging was just put into a living person a company called Life Biosciences dosed the first patient in their trial for something called ER-100 it come",
+          "created_at": "2026-06-10T15:10:17.000Z",
+          "url": "https://x.com/itsolelehmann/status/2064726855253631098",
+          "public_metrics": {},
+          "matched_terms": [
+            "work",
+            "purpose"
+          ]
+        },
         {
           "id": "2064544325954859262",
           "type": "repost",
@@ -275,17 +277,6 @@
           "text": "It's already June 9th, and Gemini 3.5 Pro and GPT-5.6 are nearing release (Google even already announced 3.5 Pro during i/o) Rumor has it that GPT-5.6 will be released as early as next week. So far, it's safe to say that - guardrails aside - Anthropic is truly the frontier lab th",
           "created_at": "2026-06-09T21:59:34.000Z",
           "url": "https://x.com/kimmonismus/status/2064467466450088078",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
-          ]
-        },
-        {
-          "id": "2064394151441863006",
-          "type": "repost",
-          "text": "Fable 5 is state-of-the-art on nearly all tested benchmarks, with exceptional performance in software engineering, knowledge work, scientific research, and vision. The longer and more complex the task, the larger Fable 5’s lead over our other models.",
-          "created_at": "2026-06-09T17:08:14.000Z",
-          "url": "https://x.com/claudeai/status/2064394151441863006",
           "public_metrics": {},
           "matched_terms": [
             "work"
@@ -328,6 +319,17 @@
       ],
       "posts": [
         {
+          "id": "2064778155857006704",
+          "type": "repost",
+          "text": "NewLimit made major progress in the past year toward our mission of radically extending human healthspan. Check out this talk where we run through what we've built, and our vision for where it's going. Jacob Kimmel (@jacobkimmel) every year @newlimit, we host friends at the lab &",
+          "created_at": "2026-06-10T18:34:08.000Z",
+          "url": "https://x.com/brian_armstrong/status/2064778155857006704",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026"
+          ]
+        },
+        {
           "id": "2064491364256035289",
           "type": "repost",
           "text": "Tesla AI chip design engineering reviews are so great! Team is awesome. Our AI6 chip might set a record for most amount of usable intelligence from a wafer when factoring in yield.",
@@ -339,15 +341,14 @@
           ]
         },
         {
-          "id": "2064039540256338326",
+          "id": "2064393252430561377",
           "type": "repost",
-          "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI: - Dario Amodei (Anthropic), writing in January 2026: we may be \"only 1-2 years away\" from the current generation of AI autonomously building the next - Anthropic, Frontier",
-          "created_at": "2026-06-08T17:39:09.000Z",
-          "url": "https://x.com/deredleritt3r/status/2064039540256338326",
+          "text": "Can you feel the singularity technologyreview.com/2026/06…",
+          "created_at": "2026-06-09T17:04:40.000Z",
+          "url": "https://x.com/jarrenfeldman/status/2064393252430561377",
           "public_metrics": {},
           "matched_terms": [
-            "2026",
-            "2027"
+            "2026"
           ]
         }
       ]
@@ -369,14 +370,25 @@
       ],
       "posts": [
         {
-          "id": "2064108916611420273",
+          "id": "2064783418844762489",
           "type": "repost",
-          "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: • 150 kW peak compute payload • 120 kW average compute payload • 70 kW per ton • Compute provider interchangeable Dimensions: • Wingspan: 70 meters • Deployed height: 2",
-          "created_at": "2026-06-08T22:14:49.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2064108916611420273",
+          "text": "AI is advancing at a pace our policymaking institutions were never built for—and the gap between the two is becoming the central challenge of the technology. In his latest essay, our CEO Dario Amodei lays out how to close it. We're launching three new initiatives to support the e",
+          "created_at": "2026-06-10T18:55:03.000Z",
+          "url": "https://x.com/AnthropicAI/status/2064783418844762489",
           "public_metrics": {},
           "matched_terms": [
-            "capability"
+            "action"
+          ]
+        },
+        {
+          "id": "2064781775247950326",
+          "type": "repost",
+          "text": "Today I'm publishing a new essay, Policy on the AI Exponential. AI is progressing extremely fast—much faster than the policy process was built to handle. The essay lays out where I think the technology is now, and the action needed to close the gap: darioamodei.com/post/policy-…",
+          "created_at": "2026-06-10T18:48:31.000Z",
+          "url": "https://x.com/DarioAmodei/status/2064781775247950326",
+          "public_metrics": {},
+          "matched_terms": [
+            "action"
           ]
         }
       ]
@@ -410,6 +422,17 @@
         "human potential"
       ],
       "posts": [
+        {
+          "id": "2064778155857006704",
+          "type": "repost",
+          "text": "NewLimit made major progress in the past year toward our mission of radically extending human healthspan. Check out this talk where we run through what we've built, and our vision for where it's going. Jacob Kimmel (@jacobkimmel) every year @newlimit, we host friends at the lab &",
+          "created_at": "2026-06-10T18:34:08.000Z",
+          "url": "https://x.com/brian_armstrong/status/2064778155857006704",
+          "public_metrics": {},
+          "matched_terms": [
+            "healthspan"
+          ]
+        },
         {
           "id": "2064502135551631861",
           "type": "repost",
@@ -448,7 +471,20 @@
         "community",
         "legitimacy"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2064728655922647385",
+          "type": "repost",
+          "text": "This is one of the most important parts of the Mythos 5 announcement: Drug design. Anthropic says its internal protein design experts used Mythos 5 to accelerate parts of the drug design process by around 10x. In one example, Mythos 5 used protein design and bioinformatics tools ",
+          "created_at": "2026-06-10T15:17:27.000Z",
+          "url": "https://x.com/kimmonismus/status/2064728655922647385",
+          "public_metrics": {},
+          "matched_terms": [
+            "leader",
+            "community"
+          ]
+        }
+      ]
     }
   }
 }
