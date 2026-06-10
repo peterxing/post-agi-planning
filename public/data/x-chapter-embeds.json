@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-09T12:08:22.157Z",
+  "generatedAt": "2026-06-10T11:08:20.148Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,17 @@
       ],
       "posts": [
         {
+          "id": "2064467466450088078",
+          "type": "repost",
+          "text": "It's already June 9th, and Gemini 3.5 Pro and GPT-5.6 are nearing release (Google even already announced 3.5 Pro during i/o) Rumor has it that GPT-5.6 will be released as early as next week. So far, it's safe to say that - guardrails aside - Anthropic is truly the frontier lab th",
+          "created_at": "2026-06-09T21:59:34.000Z",
+          "url": "https://x.com/kimmonismus/status/2064467466450088078",
+          "public_metrics": {},
+          "matched_terms": [
+            "codex"
+          ]
+        },
+        {
           "id": "2064248075502444951",
           "type": "repost",
           "text": "Economic output per person from 1820 until a year or two after we reach AGI. Once we reach AGI, output will be decoupled from human labor. This graph would need to be 10X higher to show where we will be in 10 years. AGI by the end of this year. We will all be rich.",
@@ -32,17 +43,6 @@
           "public_metrics": {},
           "matched_terms": [
             "agi"
-          ]
-        },
-        {
-          "id": "2064054837294354677",
-          "type": "repost",
-          "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in because they're designed for different traffic. How do we build infrastructure agents can use? anthropic.com/research/agent…",
-          "created_at": "2026-06-08T18:39:56.000Z",
-          "url": "https://x.com/AnthropicAI/status/2064054837294354677",
-          "public_metrics": {},
-          "matched_terms": [
-            "agent"
           ]
         },
         {
@@ -86,14 +86,48 @@
       ],
       "posts": [
         {
-          "id": "2063714787091956179",
+          "id": "2064544325954859262",
           "type": "repost",
-          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
-          "created_at": "2026-06-07T20:08:41.000Z",
-          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
+          "text": "After 25 years of brave & brilliant work by hundreds of scientists in my lab to understand then safely reverse aging for the first time, it was moving to witness the first human dose being delivered 🥹 nature.com/articles/d41586-0…",
+          "created_at": "2026-06-10T03:04:59.000Z",
+          "url": "https://x.com/davidasinclair/status/2064544325954859262",
           "public_metrics": {},
           "matched_terms": [
             "aging"
+          ]
+        },
+        {
+          "id": "2064502135551631861",
+          "type": "repost",
+          "text": "Huge news for anti aging field / progress David Sinclair plans to test an oral \"reprogramming\" drug mixture in humans as part of the $101 million XPRIZE Healthspan competition. The goal is to see whether a treatment can produce measurable age restoration across the body, not just",
+          "created_at": "2026-06-10T00:17:20.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2064502135551631861",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging"
+          ]
+        },
+        {
+          "id": "2064400619583213821",
+          "type": "repost",
+          "text": "Today, @lifebiosciences confirmed the first patient has been dosed with an epigenetic restoration drug candidate. An exciting milestone 🚀 Life Biosciences is the OG cellular rejuvenation using epigenetic restoration to reverse diseases of aging. It was cofounded by @davidasincla",
+          "created_at": "2026-06-09T17:33:57.000Z",
+          "url": "https://x.com/JoinLifespan/status/2064400619583213821",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging"
+          ]
+        },
+        {
+          "id": "2064338655544545747",
+          "type": "repost",
+          "text": "It'll be the first time ER-100 technology they claim can reverse aging in cells has been tested on a human wired.com/story/longevity-st…",
+          "created_at": "2026-06-09T13:27:43.000Z",
+          "url": "https://x.com/WIRED/status/2064338655544545747",
+          "public_metrics": {},
+          "matched_terms": [
+            "aging",
+            "longevity"
           ]
         }
       ]
@@ -132,6 +166,17 @@
       ],
       "posts": [
         {
+          "id": "2064542381958177239",
+          "type": "post",
+          "text": "certified installer that came with the @Starlink subscription said he had 4 back to back jobs yesterday and he can’t keep up with demand in regional nsw Peter Xing (@peterxing) just connected to starlink - gg legacy wireless for regional areas… starlink.com/residential?ref… — htt",
+          "created_at": "2026-06-10T02:57:15.000Z",
+          "url": "https://x.com/peterxing/status/2064542381958177239",
+          "public_metrics": {},
+          "matched_terms": [
+            "jobs"
+          ]
+        },
+        {
           "id": "2063977460631277801",
           "type": "repost",
           "text": "🔥Holy 💩! New King of the Open Source LLMs! Beats Leading OS Models. Time to start testing to verify benchmarks. 🏆 Nex-N2-Pro beats ✅ Kimi-K2.6: 86% (13/14) ✅ MiniMax: 100% (8/8) ✅ GLM-5.1: 100% (13/13) ✅ DeepSeek-V4-Pro: 92% (11/12) » Opus 4.7: 45% (5/11) » GPT-5.5: 30% (3/10)",
@@ -140,28 +185,6 @@
           "public_metrics": {},
           "matched_terms": [
             "family"
-          ]
-        },
-        {
-          "id": "2063653239287943541",
-          "type": "repost",
-          "text": "A new system is coming, and it's coming soon. Almost everything will change: work, medicine, science, money, education, cities, bodies, intelligence, and daily life. We are moving toward Star Trek level technology and lifestyles. But we won't stop there. Star Trek will be only th",
-          "created_at": "2026-06-07T16:04:07.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2063653239287943541",
-          "public_metrics": {},
-          "matched_terms": [
-            "education"
-          ]
-        },
-        {
-          "id": "2063564469926867006",
-          "type": "repost",
-          "text": "society if we spent a trillion building TSU clusters around the Sun instead of building AI factories with soon to be obsolete GPUs on Earth",
-          "created_at": "2026-06-07T10:11:23.000Z",
-          "url": "https://x.com/beffjezos/status/2063564469926867006",
-          "public_metrics": {},
-          "matched_terms": [
-            "society"
           ]
         }
       ]
@@ -195,17 +218,6 @@
           ]
         },
         {
-          "id": "2064054837294354677",
-          "type": "repost",
-          "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in because they're designed for different traffic. How do we build infrastructure agents can use? anthropic.com/research/agent…",
-          "created_at": "2026-06-08T18:39:56.000Z",
-          "url": "https://x.com/AnthropicAI/status/2064054837294354677",
-          "public_metrics": {},
-          "matched_terms": [
-            "infrastructure"
-          ]
-        },
-        {
           "id": "2063986818991702217",
           "type": "repost",
           "text": "The Tesla Cybercab is ~3.4 times more efficient than a Waymo I-PACE. The Cybercab is built from the ground up as a Robotaxi. The Waymo is a retrofitted platform with a sensor suite that adds excess weight, drag, and constant compute/sensor power draw.",
@@ -215,17 +227,6 @@
           "matched_terms": [
             "compute",
             "power"
-          ]
-        },
-        {
-          "id": "2063714787091956179",
-          "type": "repost",
-          "text": "Imagine you had the energy, metabolism, and mental agility of your younger self - without the aches and pains that come from aging. That’s what we’re attempting to build at @NewLimit and it will be one of the most important achievements in human history ever if it works. We're on",
-          "created_at": "2026-06-07T20:08:41.000Z",
-          "url": "https://x.com/brian_armstrong/status/2063714787091956179",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy"
           ]
         }
       ]
@@ -247,33 +248,44 @@
       ],
       "posts": [
         {
-          "id": "2064248075502444951",
+          "id": "2064544325954859262",
           "type": "repost",
-          "text": "Economic output per person from 1820 until a year or two after we reach AGI. Once we reach AGI, output will be decoupled from human labor. This graph would need to be 10X higher to show where we will be in 10 years. AGI by the end of this year. We will all be rich.",
-          "created_at": "2026-06-09T07:27:47.000Z",
-          "url": "https://x.com/davidpattersonx/status/2064248075502444951",
+          "text": "After 25 years of brave & brilliant work by hundreds of scientists in my lab to understand then safely reverse aging for the first time, it was moving to witness the first human dose being delivered 🥹 nature.com/articles/d41586-0…",
+          "created_at": "2026-06-10T03:04:59.000Z",
+          "url": "https://x.com/davidasinclair/status/2064544325954859262",
           "public_metrics": {},
           "matched_terms": [
-            "labor"
+            "work"
           ]
         },
         {
-          "id": "2063697162748260627",
-          "type": "repost",
-          "text": "Here’s your monthly reminder that you shouldn’t be prompting coding agents anymore. You should be designing loops that prompt your agents.",
-          "created_at": "2026-06-07T18:58:39.000Z",
-          "url": "https://x.com/steipete/status/2063697162748260627",
+          "id": "2064542381958177239",
+          "type": "post",
+          "text": "certified installer that came with the @Starlink subscription said he had 4 back to back jobs yesterday and he can’t keep up with demand in regional nsw Peter Xing (@peterxing) just connected to starlink - gg legacy wireless for regional areas… starlink.com/residential?ref… — htt",
+          "created_at": "2026-06-10T02:57:15.000Z",
+          "url": "https://x.com/peterxing/status/2064542381958177239",
           "public_metrics": {},
           "matched_terms": [
-            "agents"
+            "jobs"
           ]
         },
         {
-          "id": "2063653239287943541",
+          "id": "2064467466450088078",
           "type": "repost",
-          "text": "A new system is coming, and it's coming soon. Almost everything will change: work, medicine, science, money, education, cities, bodies, intelligence, and daily life. We are moving toward Star Trek level technology and lifestyles. But we won't stop there. Star Trek will be only th",
-          "created_at": "2026-06-07T16:04:07.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2063653239287943541",
+          "text": "It's already June 9th, and Gemini 3.5 Pro and GPT-5.6 are nearing release (Google even already announced 3.5 Pro during i/o) Rumor has it that GPT-5.6 will be released as early as next week. So far, it's safe to say that - guardrails aside - Anthropic is truly the frontier lab th",
+          "created_at": "2026-06-09T21:59:34.000Z",
+          "url": "https://x.com/kimmonismus/status/2064467466450088078",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
+          ]
+        },
+        {
+          "id": "2064394151441863006",
+          "type": "repost",
+          "text": "Fable 5 is state-of-the-art on nearly all tested benchmarks, with exceptional performance in software engineering, knowledge work, scientific research, and vision. The longer and more complex the task, the larger Fable 5’s lead over our other models.",
+          "created_at": "2026-06-09T17:08:14.000Z",
+          "url": "https://x.com/claudeai/status/2064394151441863006",
           "public_metrics": {},
           "matched_terms": [
             "work"
@@ -316,6 +328,17 @@
       ],
       "posts": [
         {
+          "id": "2064491364256035289",
+          "type": "repost",
+          "text": "Tesla AI chip design engineering reviews are so great! Team is awesome. Our AI6 chip might set a record for most amount of usable intelligence from a wafer when factoring in yield.",
+          "created_at": "2026-06-09T23:34:32.000Z",
+          "url": "https://x.com/elonmusk/status/2064491364256035289",
+          "public_metrics": {},
+          "matched_terms": [
+            "when"
+          ]
+        },
+        {
           "id": "2064039540256338326",
           "type": "repost",
           "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI: - Dario Amodei (Anthropic), writing in January 2026: we may be \"only 1-2 years away\" from the current generation of AI autonomously building the next - Anthropic, Frontier",
@@ -325,29 +348,6 @@
           "matched_terms": [
             "2026",
             "2027"
-          ]
-        },
-        {
-          "id": "2063712102876156172",
-          "type": "repost",
-          "text": "Demis Hassabis is arguably the most serious scientist around. He's not someone who engages in hype to sell products. But when even someone like Demis says the following, it should give us all pause: - \"He [Demis] equated its arrival [AGI, around 2030] to the singularity - a point",
-          "created_at": "2026-06-07T19:58:01.000Z",
-          "url": "https://x.com/kimmonismus/status/2063712102876156172",
-          "public_metrics": {},
-          "matched_terms": [
-            "when",
-            "2030"
-          ]
-        },
-        {
-          "id": "2063432076838179153",
-          "type": "repost",
-          "text": "A doctor from 1985 seeing 2026 medicine would be stunned. mRNA vaccines. Cancer immunotherapy. CAR-T cells. Gene editing. AI protein design. Lab grown organoids. Personal genome sequencing. Robotic surgery. Blood tests that can detect cancer signals. Drugs that make people lose 2",
-          "created_at": "2026-06-07T01:25:18.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2063432076838179153",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026"
           ]
         }
       ]
@@ -377,18 +377,6 @@
           "public_metrics": {},
           "matched_terms": [
             "capability"
-          ]
-        },
-        {
-          "id": "2063760159357190373",
-          "type": "repost",
-          "text": "The Ontario Teachers’ Pension Plan is sitting on a potential windfall of as much as $11.6 billion from an initial investment of about $300 million into @SpaceX in 2019. This would make it the single most successful investment the pension plan has ever made. The Teachers portfolio",
-          "created_at": "2026-06-07T23:08:59.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2063760159357190373",
-          "public_metrics": {},
-          "matched_terms": [
-            "plan",
-            "assets"
           ]
         }
       ]
@@ -421,7 +409,30 @@
         "enhancement",
         "human potential"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2064502135551631861",
+          "type": "repost",
+          "text": "Huge news for anti aging field / progress David Sinclair plans to test an oral \"reprogramming\" drug mixture in humans as part of the $101 million XPRIZE Healthspan competition. The goal is to see whether a treatment can produce measurable age restoration across the body, not just",
+          "created_at": "2026-06-10T00:17:20.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2064502135551631861",
+          "public_metrics": {},
+          "matched_terms": [
+            "healthspan"
+          ]
+        },
+        {
+          "id": "2064338655544545747",
+          "type": "repost",
+          "text": "It'll be the first time ER-100 technology they claim can reverse aging in cells has been tested on a human wired.com/story/longevity-st…",
+          "created_at": "2026-06-09T13:27:43.000Z",
+          "url": "https://x.com/WIRED/status/2064338655544545747",
+          "public_metrics": {},
+          "matched_terms": [
+            "longevity"
+          ]
+        }
+      ]
     },
     "chapter-11-leaders-build-the-better-branch": {
       "id": "chapter-11-leaders-build-the-better-branch",

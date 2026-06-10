@@ -668,6 +668,8 @@ I care about this because fragility is not theoretical. Waking up in a hospital 
 
 A post-AGI plan should include a health and longevity strategy. Not biohacking theatre. Basics first: sleep, strength, nutrition, metabolic health, relationships, mental health, preventive screening, medical literacy, and access to care. Then add the emerging frontier: personalised diagnostics, AI-assisted health guidance, longevity research, and careful evaluation of new interventions.
 
+The frontier is starting to move from keynote optimism into clinical evidence. When companies begin dosing patients with epigenetic-restoration candidates, do not treat that as immortality arriving by press release. Treat it as a signal that healthspan may become an investable, insurable, and policy-relevant planning category faster than old retirement models assume.
+
 ### The augmentation ethics
 
 Enhancement creates game theory. If one student uses AI tutors, others may need to. If one worker uses agents, others may need to. If one company uses AI-managed operations, competitors may need to. If some people adopt cognitive augmentation, others may feel forced to choose between privacy and relevance.
@@ -846,3 +848,4 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Business Insider, Diamandis on kids, MTP, curiosity, mindset, AI era: https://www.businessinsider.com/peter-diamandis-ai-skills-children-skills-careers-strategy-parenting-success-2026-4
 - Polymarket, OpenAI announces it has achieved AGI before 2027?: https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027/openai-announces-it-has-achieved-agi-before-2027
 - Bloomberg, Elon Musk shows detailed design of AI data center satellite: https://www.bloomberg.com/news/articles/2026-06-08/elon-musk-shows-more-detailed-design-of-ai-data-center-satellite
+- Lifespan.io / Life Biosciences epigenetic restoration dosing signal: https://x.com/JoinLifespan/status/2064400619583213821
