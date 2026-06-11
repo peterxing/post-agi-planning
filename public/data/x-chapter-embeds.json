@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-10T22:18:49.441Z",
+  "generatedAt": "2026-06-11T22:12:55.617Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,50 +24,36 @@
       ],
       "posts": [
         {
-          "id": "2064788701532635301",
+          "id": "2065043948310261800",
           "type": "repost",
-          "text": "Dario Amodei just published an unusually candid essay about where AI is heading. The tl;dr with quotes. His new piece, Policy on the AI Exponential, reads more like a warning from the person building the thing. The core problem is timing. AI moves on an exponential. He is very cl",
-          "created_at": "2026-06-10T19:16:03.000Z",
-          "url": "https://x.com/kimmonismus/status/2064788701532635301",
+          "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect real-world driving data, analyze test quality, document issues, and support vehicle engineering teams. The role includes 5–8 h",
+          "created_at": "2026-06-11T12:10:18.000Z",
+          "url": "https://x.com/TeslaZoa/status/2065043948310261800",
           "public_metrics": {},
           "matched_terms": [
-            "acceleration",
-            "exponential",
-            "frontier model"
+            "future"
           ]
         },
         {
-          "id": "2064783418844762489",
+          "id": "2064629008038334569",
           "type": "repost",
-          "text": "AI is advancing at a pace our policymaking institutions were never built for—and the gap between the two is becoming the central challenge of the technology. In his latest essay, our CEO Dario Amodei lays out how to close it. We're launching three new initiatives to support the e",
-          "created_at": "2026-06-10T18:55:03.000Z",
-          "url": "https://x.com/AnthropicAI/status/2064783418844762489",
+          "text": "Anthropic has now AGI-pilled China they have made it a race there is no turning back now. changes of strategy are no longer possible",
+          "created_at": "2026-06-10T08:41:29.000Z",
+          "url": "https://x.com/scaling01/status/2064629008038334569",
           "public_metrics": {},
           "matched_terms": [
-            "exponential"
+            "agi"
           ]
         },
         {
-          "id": "2064781775247950326",
+          "id": "2064509430650065278",
           "type": "repost",
-          "text": "Today I'm publishing a new essay, Policy on the AI Exponential. AI is progressing extremely fast—much faster than the policy process was built to handle. The essay lays out where I think the technology is now, and the action needed to close the gap: darioamodei.com/post/policy-…",
-          "created_at": "2026-06-10T18:48:31.000Z",
-          "url": "https://x.com/DarioAmodei/status/2064781775247950326",
+          "text": "So I gave Fable 5 the watchmaker benchmark: a full Swiss lever movement in Three.js. Real gear ratios (18,000 bph), working escapement, breathing hairspring — and the hands tell actual time. It verified its own work with vision, in a loop, until done. ⌚ Video Victor M (@victormus",
+          "created_at": "2026-06-10T00:46:19.000Z",
+          "url": "https://x.com/quanghuynt14/status/2064509430650065278",
           "public_metrics": {},
           "matched_terms": [
-            "exponential"
-          ]
-        },
-        {
-          "id": "2064728655922647385",
-          "type": "repost",
-          "text": "This is one of the most important parts of the Mythos 5 announcement: Drug design. Anthropic says its internal protein design experts used Mythos 5 to accelerate parts of the drug design process by around 10x. In one example, Mythos 5 used protein design and bioinformatics tools ",
-          "created_at": "2026-06-10T15:17:27.000Z",
-          "url": "https://x.com/kimmonismus/status/2064728655922647385",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "agent"
+            "agi"
           ]
         }
       ]
@@ -89,44 +75,47 @@
       ],
       "posts": [
         {
-          "id": "2064726855253631098",
+          "id": "2065179505438634178",
           "type": "repost",
-          "text": "it's insane to me that this isn't all over mainstream media right now. for the first time in human history, a drug built to reverse aging was just put into a living person a company called Life Biosciences dosed the first patient in their trial for something called ER-100 it come",
-          "created_at": "2026-06-10T15:10:17.000Z",
-          "url": "https://x.com/itsolelehmann/status/2064726855253631098",
+          "text": "Anthropic just retook the AI crown from GPT 5.5, and split its model in two: Fable for the public, Mythos for trusted organizations. Apple admitted it lost the foundation model race and handed Siri's brain to Google. -- Brian Armstrong's NewLimit: $435M raised, $3.1B valuation, r",
+          "created_at": "2026-06-11T21:08:57.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065179505438634178",
           "public_metrics": {},
           "matched_terms": [
-            "aging"
+            "aging",
+            "longevity"
           ]
         },
         {
-          "id": "2064544325954859262",
+          "id": "2065134923111956978",
           "type": "repost",
-          "text": "After 25 years of brave & brilliant work by hundreds of scientists in my lab to understand then safely reverse aging for the first time, it was moving to witness the first human dose being delivered 🥹 nature.com/articles/d41586-0…",
-          "created_at": "2026-06-10T03:04:59.000Z",
-          "url": "https://x.com/davidasinclair/status/2064544325954859262",
+          "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin priority. organ printing, genetics, cryotherapy. - China published a 5-year national biotech plan. gene therapy, BCIs, AI d",
+          "created_at": "2026-06-11T18:11:48.000Z",
+          "url": "https://x.com/m_goes_distance/status/2065134923111956978",
           "public_metrics": {},
           "matched_terms": [
-            "aging"
+            "aging",
+            "longevity"
           ]
         },
         {
-          "id": "2064502135551631861",
+          "id": "2065109542883455039",
           "type": "repost",
-          "text": "Huge news for anti aging field / progress David Sinclair plans to test an oral \"reprogramming\" drug mixture in humans as part of the $101 million XPRIZE Healthspan competition. The goal is to see whether a treatment can produce measurable age restoration across the body, not just",
-          "created_at": "2026-06-10T00:17:20.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2064502135551631861",
+          "text": "Russia just committed $26 billion to anti-aging research and made longevity a national priority. Welcome to the longevity arms race!",
+          "created_at": "2026-06-11T16:30:57.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065109542883455039",
           "public_metrics": {},
           "matched_terms": [
-            "aging"
+            "aging",
+            "longevity"
           ]
         },
         {
-          "id": "2064338655544545747",
+          "id": "2065015411897233754",
           "type": "repost",
-          "text": "It'll be the first time ER-100 technology they claim can reverse aging in cells has been tested on a human wired.com/story/longevity-st…",
-          "created_at": "2026-06-09T13:27:43.000Z",
-          "url": "https://x.com/WIRED/status/2064338655544545747",
+          "text": "Researchers from across disciplines will gather this August to explore whether entropy offers a unifying framework for understanding aging. vist.ly/57cph #longevity #geroscience #entropy #aging #research",
+          "created_at": "2026-06-11T10:16:54.000Z",
+          "url": "https://x.com/LongevityTech/status/2065015411897233754",
           "public_metrics": {},
           "matched_terms": [
             "aging",
@@ -150,7 +139,19 @@
         "democratisation",
         "supply"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2064771688575705252",
+          "type": "repost",
+          "text": "Post Singularity abundance in form of (just having more money and stuff) is not the goal. What I mean is that it's not just about material wealth so everyone can have yach and/or private jet. But that doesn't mean increasing material wealth is irrelevant. It's very important. Mor",
+          "created_at": "2026-06-10T18:08:26.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2064771688575705252",
+          "public_metrics": {},
+          "matched_terms": [
+            "abundance"
+          ]
+        }
+      ]
     },
     "chapter-3-who-needs-a-plan-the-human-stack": {
       "id": "chapter-3-who-needs-a-plan-the-human-stack",
@@ -169,14 +170,26 @@
       ],
       "posts": [
         {
-          "id": "2064542381958177239",
-          "type": "post",
-          "text": "certified installer that came with the @Starlink subscription said he had 4 back to back jobs yesterday and he can’t keep up with demand in regional nsw Peter Xing (@peterxing) just connected to starlink - gg legacy wireless for regional areas… starlink.com/residential?ref… — htt",
-          "created_at": "2026-06-10T02:57:15.000Z",
-          "url": "https://x.com/peterxing/status/2064542381958177239",
+          "id": "2064779263480639939",
+          "type": "repost",
+          "text": "One day, personal Tesla vehicles will be able to navigate public streets all by themselves. They won’t just be limited to parking lots. You’ll be able to have your own autonomous chauffeur that can drop you off, pick up family, pick up or deliver an order, etc. No more DUIs No mo",
+          "created_at": "2026-06-10T18:38:32.000Z",
+          "url": "https://x.com/niccruzpatane/status/2064779263480639939",
           "public_metrics": {},
           "matched_terms": [
-            "jobs"
+            "family"
+          ]
+        },
+        {
+          "id": "2064762015130718455",
+          "type": "repost",
+          "text": "Dario Amodei says his AI risk warnings are not \"doom marketing\" The discussion is much deeper than social media clips suggest, covering tasks vs jobs, new work, tax policy, and how society should respond \"society should see the risks early and take them seriously\" Video",
+          "created_at": "2026-06-10T17:30:00.000Z",
+          "url": "https://x.com/haider1/status/2064762015130718455",
+          "public_metrics": {},
+          "matched_terms": [
+            "jobs",
+            "society"
           ]
         }
       ]
@@ -198,25 +211,25 @@
       ],
       "posts": [
         {
-          "id": "2064788701532635301",
+          "id": "2065181176143520062",
           "type": "repost",
-          "text": "Dario Amodei just published an unusually candid essay about where AI is heading. The tl;dr with quotes. His new piece, Policy on the AI Exponential, reads more like a warning from the person building the thing. The core problem is timing. AI moves on an exponential. He is very cl",
-          "created_at": "2026-06-10T19:16:03.000Z",
-          "url": "https://x.com/kimmonismus/status/2064788701532635301",
+          "text": "Tech companies will spend $650B on AI data centers in 2026 alone. For context: the entire Marshall Plan — which rebuilt postwar Europe across multiple nations and years — cost roughly $160B in today's dollars. We are funding civilization-level infrastructure at 4x Marshall Plan s",
+          "created_at": "2026-06-11T21:15:36.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065181176143520062",
           "public_metrics": {},
           "matched_terms": [
-            "power"
+            "infrastructure"
           ]
         },
         {
-          "id": "2064734796379463681",
+          "id": "2064835800747962424",
           "type": "repost",
-          "text": "OpenAI appears to be preparing for a possible IPO within the next year, but Sam Altman is keeping the door open. If recursive self-improvement starts looking real, staying private could become the smarter move. At the same time, OpenAI’s enormous compute needs may push it toward ",
-          "created_at": "2026-06-10T15:41:51.000Z",
-          "url": "https://x.com/kimmonismus/status/2064734796379463681",
+          "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizational thresholds and technologies. Stay alive for just a few more years, and you may experience it all.",
+          "created_at": "2026-06-10T22:23:12.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2064835800747962424",
           "public_metrics": {},
           "matched_terms": [
-            "compute"
+            "robots"
           ]
         }
       ]
@@ -238,45 +251,34 @@
       ],
       "posts": [
         {
-          "id": "2064726855253631098",
+          "id": "2064762015130718455",
           "type": "repost",
-          "text": "it's insane to me that this isn't all over mainstream media right now. for the first time in human history, a drug built to reverse aging was just put into a living person a company called Life Biosciences dosed the first patient in their trial for something called ER-100 it come",
-          "created_at": "2026-06-10T15:10:17.000Z",
-          "url": "https://x.com/itsolelehmann/status/2064726855253631098",
+          "text": "Dario Amodei says his AI risk warnings are not \"doom marketing\" The discussion is much deeper than social media clips suggest, covering tasks vs jobs, new work, tax policy, and how society should respond \"society should see the risks early and take them seriously\" Video",
+          "created_at": "2026-06-10T17:30:00.000Z",
+          "url": "https://x.com/haider1/status/2064762015130718455",
           "public_metrics": {},
           "matched_terms": [
             "work",
-            "purpose"
+            "jobs"
           ]
         },
         {
-          "id": "2064544325954859262",
+          "id": "2064721584259060214",
           "type": "repost",
-          "text": "After 25 years of brave & brilliant work by hundreds of scientists in my lab to understand then safely reverse aging for the first time, it was moving to witness the first human dose being delivered 🥹 nature.com/articles/d41586-0…",
-          "created_at": "2026-06-10T03:04:59.000Z",
-          "url": "https://x.com/davidasinclair/status/2064544325954859262",
+          "text": "Alpha School is building 4 types of high schools: Service, Division 1 Athletics, Entrepreneurship and \"get into a Top 20 university\" high schools: Service high schools will be where you do things like spend a year in Africa building an Alpha School and doing your top 1% academics",
+          "created_at": "2026-06-10T14:49:21.000Z",
+          "url": "https://x.com/p_kuperman/status/2064721584259060214",
           "public_metrics": {},
           "matched_terms": [
             "work"
           ]
         },
         {
-          "id": "2064542381958177239",
-          "type": "post",
-          "text": "certified installer that came with the @Starlink subscription said he had 4 back to back jobs yesterday and he can’t keep up with demand in regional nsw Peter Xing (@peterxing) just connected to starlink - gg legacy wireless for regional areas… starlink.com/residential?ref… — htt",
-          "created_at": "2026-06-10T02:57:15.000Z",
-          "url": "https://x.com/peterxing/status/2064542381958177239",
-          "public_metrics": {},
-          "matched_terms": [
-            "jobs"
-          ]
-        },
-        {
-          "id": "2064467466450088078",
+          "id": "2064509430650065278",
           "type": "repost",
-          "text": "It's already June 9th, and Gemini 3.5 Pro and GPT-5.6 are nearing release (Google even already announced 3.5 Pro during i/o) Rumor has it that GPT-5.6 will be released as early as next week. So far, it's safe to say that - guardrails aside - Anthropic is truly the frontier lab th",
-          "created_at": "2026-06-09T21:59:34.000Z",
-          "url": "https://x.com/kimmonismus/status/2064467466450088078",
+          "text": "So I gave Fable 5 the watchmaker benchmark: a full Swiss lever movement in Three.js. Real gear ratios (18,000 bph), working escapement, breathing hairspring — and the hands tell actual time. It verified its own work with vision, in a loop, until done. ⌚ Video Victor M (@victormus",
+          "created_at": "2026-06-10T00:46:19.000Z",
+          "url": "https://x.com/quanghuynt14/status/2064509430650065278",
           "public_metrics": {},
           "matched_terms": [
             "work"
@@ -300,7 +302,19 @@
         "existential",
         "scenario"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2065043948310261800",
+          "type": "repost",
+          "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect real-world driving data, analyze test quality, document issues, and support vehicle engineering teams. The role includes 5–8 h",
+          "created_at": "2026-06-11T12:10:18.000Z",
+          "url": "https://x.com/TeslaZoa/status/2065043948310261800",
+          "public_metrics": {},
+          "matched_terms": [
+            "scenario"
+          ]
+        }
+      ]
     },
     "chapter-7-when-capability-deployment-impact": {
       "id": "chapter-7-when-capability-deployment-impact",
@@ -319,36 +333,36 @@
       ],
       "posts": [
         {
-          "id": "2064778155857006704",
+          "id": "2065181176143520062",
           "type": "repost",
-          "text": "NewLimit made major progress in the past year toward our mission of radically extending human healthspan. Check out this talk where we run through what we've built, and our vision for where it's going. Jacob Kimmel (@jacobkimmel) every year @newlimit, we host friends at the lab &",
-          "created_at": "2026-06-10T18:34:08.000Z",
-          "url": "https://x.com/brian_armstrong/status/2064778155857006704",
+          "text": "Tech companies will spend $650B on AI data centers in 2026 alone. For context: the entire Marshall Plan — which rebuilt postwar Europe across multiple nations and years — cost roughly $160B in today's dollars. We are funding civilization-level infrastructure at 4x Marshall Plan s",
+          "created_at": "2026-06-11T21:15:36.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065181176143520062",
           "public_metrics": {},
           "matched_terms": [
             "2026"
           ]
         },
         {
-          "id": "2064491364256035289",
+          "id": "2064721584259060214",
           "type": "repost",
-          "text": "Tesla AI chip design engineering reviews are so great! Team is awesome. Our AI6 chip might set a record for most amount of usable intelligence from a wafer when factoring in yield.",
-          "created_at": "2026-06-09T23:34:32.000Z",
-          "url": "https://x.com/elonmusk/status/2064491364256035289",
+          "text": "Alpha School is building 4 types of high schools: Service, Division 1 Athletics, Entrepreneurship and \"get into a Top 20 university\" high schools: Service high schools will be where you do things like spend a year in Africa building an Alpha School and doing your top 1% academics",
+          "created_at": "2026-06-10T14:49:21.000Z",
+          "url": "https://x.com/p_kuperman/status/2064721584259060214",
           "public_metrics": {},
           "matched_terms": [
             "when"
           ]
         },
         {
-          "id": "2064393252430561377",
+          "id": "2064687081058967890",
           "type": "repost",
-          "text": "Can you feel the singularity technologyreview.com/2026/06…",
-          "created_at": "2026-06-09T17:04:40.000Z",
-          "url": "https://x.com/jarrenfeldman/status/2064393252430561377",
+          "text": "Robotaxi is getting really good at parallel parking when arriving at destinations. Video",
+          "created_at": "2026-06-10T12:32:14.000Z",
+          "url": "https://x.com/scotsrule08/status/2064687081058967890",
           "public_metrics": {},
           "matched_terms": [
-            "2026"
+            "when"
           ]
         }
       ]
@@ -370,25 +384,14 @@
       ],
       "posts": [
         {
-          "id": "2064783418844762489",
+          "id": "2064629008038334569",
           "type": "repost",
-          "text": "AI is advancing at a pace our policymaking institutions were never built for—and the gap between the two is becoming the central challenge of the technology. In his latest essay, our CEO Dario Amodei lays out how to close it. We're launching three new initiatives to support the e",
-          "created_at": "2026-06-10T18:55:03.000Z",
-          "url": "https://x.com/AnthropicAI/status/2064783418844762489",
+          "text": "Anthropic has now AGI-pilled China they have made it a race there is no turning back now. changes of strategy are no longer possible",
+          "created_at": "2026-06-10T08:41:29.000Z",
+          "url": "https://x.com/scaling01/status/2064629008038334569",
           "public_metrics": {},
           "matched_terms": [
-            "action"
-          ]
-        },
-        {
-          "id": "2064781775247950326",
-          "type": "repost",
-          "text": "Today I'm publishing a new essay, Policy on the AI Exponential. AI is progressing extremely fast—much faster than the policy process was built to handle. The essay lays out where I think the technology is now, and the action needed to close the gap: darioamodei.com/post/policy-…",
-          "created_at": "2026-06-10T18:48:31.000Z",
-          "url": "https://x.com/DarioAmodei/status/2064781775247950326",
-          "public_metrics": {},
-          "matched_terms": [
-            "action"
+            "strategy"
           ]
         }
       ]
@@ -423,33 +426,46 @@
       ],
       "posts": [
         {
-          "id": "2064778155857006704",
+          "id": "2065179505438634178",
           "type": "repost",
-          "text": "NewLimit made major progress in the past year toward our mission of radically extending human healthspan. Check out this talk where we run through what we've built, and our vision for where it's going. Jacob Kimmel (@jacobkimmel) every year @newlimit, we host friends at the lab &",
-          "created_at": "2026-06-10T18:34:08.000Z",
-          "url": "https://x.com/brian_armstrong/status/2064778155857006704",
+          "text": "Anthropic just retook the AI crown from GPT 5.5, and split its model in two: Fable for the public, Mythos for trusted organizations. Apple admitted it lost the foundation model race and handed Siri's brain to Google. -- Brian Armstrong's NewLimit: $435M raised, $3.1B valuation, r",
+          "created_at": "2026-06-11T21:08:57.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065179505438634178",
           "public_metrics": {},
           "matched_terms": [
-            "healthspan"
+            "longevity"
           ]
         },
         {
-          "id": "2064502135551631861",
+          "id": "2065134923111956978",
           "type": "repost",
-          "text": "Huge news for anti aging field / progress David Sinclair plans to test an oral \"reprogramming\" drug mixture in humans as part of the $101 million XPRIZE Healthspan competition. The goal is to see whether a treatment can produce measurable age restoration across the body, not just",
-          "created_at": "2026-06-10T00:17:20.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2064502135551631861",
+          "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin priority. organ printing, genetics, cryotherapy. - China published a 5-year national biotech plan. gene therapy, BCIs, AI d",
+          "created_at": "2026-06-11T18:11:48.000Z",
+          "url": "https://x.com/m_goes_distance/status/2065134923111956978",
           "public_metrics": {},
           "matched_terms": [
-            "healthspan"
+            "longevity",
+            "bci",
+            "enhancement"
           ]
         },
         {
-          "id": "2064338655544545747",
+          "id": "2065109542883455039",
           "type": "repost",
-          "text": "It'll be the first time ER-100 technology they claim can reverse aging in cells has been tested on a human wired.com/story/longevity-st…",
-          "created_at": "2026-06-09T13:27:43.000Z",
-          "url": "https://x.com/WIRED/status/2064338655544545747",
+          "text": "Russia just committed $26 billion to anti-aging research and made longevity a national priority. Welcome to the longevity arms race!",
+          "created_at": "2026-06-11T16:30:57.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065109542883455039",
+          "public_metrics": {},
+          "matched_terms": [
+            "longevity"
+          ]
+        },
+        {
+          "id": "2065015411897233754",
+          "type": "repost",
+          "text": "Researchers from across disciplines will gather this August to explore whether entropy offers a unifying framework for understanding aging. vist.ly/57cph #longevity #geroscience #entropy #aging #research",
+          "created_at": "2026-06-11T10:16:54.000Z",
+          "url": "https://x.com/LongevityTech/status/2065015411897233754",
           "public_metrics": {},
           "matched_terms": [
             "longevity"
@@ -471,20 +487,7 @@
         "community",
         "legitimacy"
       ],
-      "posts": [
-        {
-          "id": "2064728655922647385",
-          "type": "repost",
-          "text": "This is one of the most important parts of the Mythos 5 announcement: Drug design. Anthropic says its internal protein design experts used Mythos 5 to accelerate parts of the drug design process by around 10x. In one example, Mythos 5 used protein design and bioinformatics tools ",
-          "created_at": "2026-06-10T15:17:27.000Z",
-          "url": "https://x.com/kimmonismus/status/2064728655922647385",
-          "public_metrics": {},
-          "matched_terms": [
-            "leader",
-            "community"
-          ]
-        }
-      ]
+      "posts": []
     }
   }
 }
