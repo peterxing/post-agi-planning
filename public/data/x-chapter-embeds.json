@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T22:12:55.617Z",
+  "generatedAt": "2026-06-12T21:59:19.406Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,17 @@
       ],
       "posts": [
         {
+          "id": "2065417175570289011",
+          "type": "repost",
+          "text": "🚨The #SpaceX #IPO today is likely the beginning of the process for deflating the massive AI #bubble that’s been built over the last few years. I’m not saying #AI isn’t a valuable technology, but I am saying that the expectation that AI labs will reap all its value and the overbu",
+          "created_at": "2026-06-12T12:53:22.000Z",
+          "url": "https://x.com/AGraylin/status/2065417175570289011",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
+        {
           "id": "2065043948310261800",
           "type": "repost",
           "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect real-world driving data, analyze test quality, document issues, and support vehicle engineering teams. The role includes 5–8 h",
@@ -32,17 +43,6 @@
           "public_metrics": {},
           "matched_terms": [
             "future"
-          ]
-        },
-        {
-          "id": "2064629008038334569",
-          "type": "repost",
-          "text": "Anthropic has now AGI-pilled China they have made it a race there is no turning back now. changes of strategy are no longer possible",
-          "created_at": "2026-06-10T08:41:29.000Z",
-          "url": "https://x.com/scaling01/status/2064629008038334569",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
           ]
         },
         {
@@ -74,6 +74,19 @@
         "human potential"
       ],
       "posts": [
+        {
+          "id": "2065221880391540977",
+          "type": "repost",
+          "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement, dying broke — for one where AI cures aging, colonizes Mars, and generates post-scarcity abundance while you do what you ac",
+          "created_at": "2026-06-11T23:57:20.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065221880391540977",
+          "public_metrics": {},
+          "matched_terms": [
+            "scarcity",
+            "abundance",
+            "aging"
+          ]
+        },
         {
           "id": "2065179505438634178",
           "type": "repost",
@@ -109,18 +122,6 @@
             "aging",
             "longevity"
           ]
-        },
-        {
-          "id": "2065015411897233754",
-          "type": "repost",
-          "text": "Researchers from across disciplines will gather this August to explore whether entropy offers a unifying framework for understanding aging. vist.ly/57cph #longevity #geroscience #entropy #aging #research",
-          "created_at": "2026-06-11T10:16:54.000Z",
-          "url": "https://x.com/LongevityTech/status/2065015411897233754",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
         }
       ]
     },
@@ -140,6 +141,17 @@
         "supply"
       ],
       "posts": [
+        {
+          "id": "2065221880391540977",
+          "type": "repost",
+          "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement, dying broke — for one where AI cures aging, colonizes Mars, and generates post-scarcity abundance while you do what you ac",
+          "created_at": "2026-06-11T23:57:20.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065221880391540977",
+          "public_metrics": {},
+          "matched_terms": [
+            "abundance"
+          ]
+        },
         {
           "id": "2064771688575705252",
           "type": "repost",
@@ -168,31 +180,7 @@
         "governance",
         "society"
       ],
-      "posts": [
-        {
-          "id": "2064779263480639939",
-          "type": "repost",
-          "text": "One day, personal Tesla vehicles will be able to navigate public streets all by themselves. They won’t just be limited to parking lots. You’ll be able to have your own autonomous chauffeur that can drop you off, pick up family, pick up or deliver an order, etc. No more DUIs No mo",
-          "created_at": "2026-06-10T18:38:32.000Z",
-          "url": "https://x.com/niccruzpatane/status/2064779263480639939",
-          "public_metrics": {},
-          "matched_terms": [
-            "family"
-          ]
-        },
-        {
-          "id": "2064762015130718455",
-          "type": "repost",
-          "text": "Dario Amodei says his AI risk warnings are not \"doom marketing\" The discussion is much deeper than social media clips suggest, covering tasks vs jobs, new work, tax policy, and how society should respond \"society should see the risks early and take them seriously\" Video",
-          "created_at": "2026-06-10T17:30:00.000Z",
-          "url": "https://x.com/haider1/status/2064762015130718455",
-          "public_metrics": {},
-          "matched_terms": [
-            "jobs",
-            "society"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -222,14 +210,14 @@
           ]
         },
         {
-          "id": "2064835800747962424",
+          "id": "2065094707173044577",
           "type": "repost",
-          "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizational thresholds and technologies. Stay alive for just a few more years, and you may experience it all.",
-          "created_at": "2026-06-10T22:23:12.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2064835800747962424",
+          "text": "A new $150 million @Tesla Megapack battery energy storage system has been completed in New South Wales, Australia. It's next to a big solar farm. These batteries will get more renewable energy into the grid and lower bills.",
+          "created_at": "2026-06-11T15:32:00.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2065094707173044577",
           "public_metrics": {},
           "matched_terms": [
-            "robots"
+            "energy"
           ]
         }
       ]
@@ -250,29 +238,6 @@
         "purpose"
       ],
       "posts": [
-        {
-          "id": "2064762015130718455",
-          "type": "repost",
-          "text": "Dario Amodei says his AI risk warnings are not \"doom marketing\" The discussion is much deeper than social media clips suggest, covering tasks vs jobs, new work, tax policy, and how society should respond \"society should see the risks early and take them seriously\" Video",
-          "created_at": "2026-06-10T17:30:00.000Z",
-          "url": "https://x.com/haider1/status/2064762015130718455",
-          "public_metrics": {},
-          "matched_terms": [
-            "work",
-            "jobs"
-          ]
-        },
-        {
-          "id": "2064721584259060214",
-          "type": "repost",
-          "text": "Alpha School is building 4 types of high schools: Service, Division 1 Athletics, Entrepreneurship and \"get into a Top 20 university\" high schools: Service high schools will be where you do things like spend a year in Africa building an Alpha School and doing your top 1% academics",
-          "created_at": "2026-06-10T14:49:21.000Z",
-          "url": "https://x.com/p_kuperman/status/2064721584259060214",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
-          ]
-        },
         {
           "id": "2064509430650065278",
           "type": "repost",
@@ -344,17 +309,6 @@
           ]
         },
         {
-          "id": "2064721584259060214",
-          "type": "repost",
-          "text": "Alpha School is building 4 types of high schools: Service, Division 1 Athletics, Entrepreneurship and \"get into a Top 20 university\" high schools: Service high schools will be where you do things like spend a year in Africa building an Alpha School and doing your top 1% academics",
-          "created_at": "2026-06-10T14:49:21.000Z",
-          "url": "https://x.com/p_kuperman/status/2064721584259060214",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
-        },
-        {
           "id": "2064687081058967890",
           "type": "repost",
           "text": "Robotaxi is getting really good at parallel parking when arriving at destinations. Video",
@@ -382,19 +336,7 @@
         "assets",
         "action"
       ],
-      "posts": [
-        {
-          "id": "2064629008038334569",
-          "type": "repost",
-          "text": "Anthropic has now AGI-pilled China they have made it a race there is no turning back now. changes of strategy are no longer possible",
-          "created_at": "2026-06-10T08:41:29.000Z",
-          "url": "https://x.com/scaling01/status/2064629008038334569",
-          "public_metrics": {},
-          "matched_terms": [
-            "strategy"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
