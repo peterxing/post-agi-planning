@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-13T09:27:14.948Z",
+  "generatedAt": "2026-06-13T11:08:22.853Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -35,6 +35,19 @@
           ]
         },
         {
+          "id": "2065549739266048120",
+          "type": "repost",
+          "text": "Beautiful paper from Google DeepMind. Explains the pathways from AGI to ASI, and why that jump could happen through several routes. The authors frame the AGI-to-ASI transition around 4 technical pathways: - continued scaling of compute, model size, data, and test-time inference; ",
+          "created_at": "2026-06-12T21:40:08.000Z",
+          "url": "https://x.com/rohanpaul_ai/status/2065549739266048120",
+          "public_metrics": {},
+          "matched_terms": [
+            "future",
+            "agi",
+            "agent"
+          ]
+        },
+        {
           "id": "2065547393974636647",
           "type": "repost",
           "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
@@ -56,17 +69,6 @@
             "future",
             "agi",
             "agent"
-          ]
-        },
-        {
-          "id": "2065417175570289011",
-          "type": "repost",
-          "text": "🚨The #SpaceX #IPO today is likely the beginning of the process for deflating the massive AI #bubble that’s been built over the last few years. I’m not saying #AI isn’t a valuable technology, but I am saying that the expectation that AI labs will reap all its value and the overbu",
-          "created_at": "2026-06-12T12:53:22.000Z",
-          "url": "https://x.com/AGraylin/status/2065417175570289011",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
           ]
         }
       ]
@@ -197,6 +199,18 @@
           ]
         },
         {
+          "id": "2065549739266048120",
+          "type": "repost",
+          "text": "Beautiful paper from Google DeepMind. Explains the pathways from AGI to ASI, and why that jump could happen through several routes. The authors frame the AGI-to-ASI transition around 4 technical pathways: - continued scaling of compute, model size, data, and test-time inference; ",
+          "created_at": "2026-06-12T21:40:08.000Z",
+          "url": "https://x.com/rohanpaul_ai/status/2065549739266048120",
+          "public_metrics": {},
+          "matched_terms": [
+            "energy",
+            "compute"
+          ]
+        },
+        {
           "id": "2065547393974636647",
           "type": "repost",
           "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
@@ -218,17 +232,6 @@
             "energy",
             "compute",
             "infrastructure"
-          ]
-        },
-        {
-          "id": "2065094707173044577",
-          "type": "repost",
-          "text": "A new $150 million @Tesla Megapack battery energy storage system has been completed in New South Wales, Australia. It's next to a big solar farm. These batteries will get more renewable energy into the grid and lower bills.",
-          "created_at": "2026-06-11T15:32:00.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2065094707173044577",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy"
           ]
         }
       ]
