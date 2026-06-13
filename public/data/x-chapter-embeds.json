@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T21:59:19.406Z",
+  "generatedAt": "2026-06-13T09:27:14.948Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,41 @@
       ],
       "posts": [
         {
+          "id": "2065597531644743999",
+          "type": "repost",
+          "text": "The US government, citing national security authorities, has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national, whether inside or outside the United States, including foreign national Anthropic employees. The net effect of th",
+          "created_at": "2026-06-13T00:50:03.000Z",
+          "url": "https://x.com/AnthropicAI/status/2065597531644743999",
+          "public_metrics": {},
+          "matched_terms": [
+            "disruption"
+          ]
+        },
+        {
+          "id": "2065547393974636647",
+          "type": "repost",
+          "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
+          "created_at": "2026-06-12T21:30:49.000Z",
+          "url": "https://x.com/elonmusk/status/2065547393974636647",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
+        {
+          "id": "2065487181662286301",
+          "type": "repost",
+          "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analysis The paper uses three levels. AGI = roughly average human performance across most cognitive tasks. ASI = a system that be",
+          "created_at": "2026-06-12T17:31:33.000Z",
+          "url": "https://x.com/kimmonismus/status/2065487181662286301",
+          "public_metrics": {},
+          "matched_terms": [
+            "future",
+            "agi",
+            "agent"
+          ]
+        },
+        {
           "id": "2065417175570289011",
           "type": "repost",
           "text": "🚨The #SpaceX #IPO today is likely the beginning of the process for deflating the massive AI #bubble that’s been built over the last few years. I’m not saying #AI isn’t a valuable technology, but I am saying that the expectation that AI labs will reap all its value and the overbu",
@@ -32,28 +67,6 @@
           "public_metrics": {},
           "matched_terms": [
             "future"
-          ]
-        },
-        {
-          "id": "2065043948310261800",
-          "type": "repost",
-          "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect real-world driving data, analyze test quality, document issues, and support vehicle engineering teams. The role includes 5–8 h",
-          "created_at": "2026-06-11T12:10:18.000Z",
-          "url": "https://x.com/TeslaZoa/status/2065043948310261800",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
-          ]
-        },
-        {
-          "id": "2064509430650065278",
-          "type": "repost",
-          "text": "So I gave Fable 5 the watchmaker benchmark: a full Swiss lever movement in Three.js. Real gear ratios (18,000 bph), working escapement, breathing hairspring — and the hands tell actual time. It verified its own work with vision, in a loop, until done. ⌚ Video Victor M (@victormus",
-          "created_at": "2026-06-10T00:46:19.000Z",
-          "url": "https://x.com/quanghuynt14/status/2064509430650065278",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
           ]
         }
       ]
@@ -75,52 +88,14 @@
       ],
       "posts": [
         {
-          "id": "2065221880391540977",
+          "id": "2065464150239711260",
           "type": "repost",
-          "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement, dying broke — for one where AI cures aging, colonizes Mars, and generates post-scarcity abundance while you do what you ac",
-          "created_at": "2026-06-11T23:57:20.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065221880391540977",
+          "text": "picture this 8 of the world's biggest problems getting solved in the next 12-18 months 1. obesity: retatrutide phase 3 confirmed 30% bodyweight lost. 65% of patients no longer clinically obese. FDA submission late 2026 2. testosterone decline: FDA is expanding testosterone therap",
+          "created_at": "2026-06-12T16:00:02.000Z",
+          "url": "https://x.com/m_goes_distance/status/2065464150239711260",
           "public_metrics": {},
           "matched_terms": [
-            "scarcity",
-            "abundance",
             "aging"
-          ]
-        },
-        {
-          "id": "2065179505438634178",
-          "type": "repost",
-          "text": "Anthropic just retook the AI crown from GPT 5.5, and split its model in two: Fable for the public, Mythos for trusted organizations. Apple admitted it lost the foundation model race and handed Siri's brain to Google. -- Brian Armstrong's NewLimit: $435M raised, $3.1B valuation, r",
-          "created_at": "2026-06-11T21:08:57.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065179505438634178",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
-        },
-        {
-          "id": "2065134923111956978",
-          "type": "repost",
-          "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin priority. organ printing, genetics, cryotherapy. - China published a 5-year national biotech plan. gene therapy, BCIs, AI d",
-          "created_at": "2026-06-11T18:11:48.000Z",
-          "url": "https://x.com/m_goes_distance/status/2065134923111956978",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
-        },
-        {
-          "id": "2065109542883455039",
-          "type": "repost",
-          "text": "Russia just committed $26 billion to anti-aging research and made longevity a national priority. Welcome to the longevity arms race!",
-          "created_at": "2026-06-11T16:30:57.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065109542883455039",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
           ]
         }
       ]
@@ -142,25 +117,14 @@
       ],
       "posts": [
         {
-          "id": "2065221880391540977",
+          "id": "2065597531644743999",
           "type": "repost",
-          "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement, dying broke — for one where AI cures aging, colonizes Mars, and generates post-scarcity abundance while you do what you ac",
-          "created_at": "2026-06-11T23:57:20.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065221880391540977",
+          "text": "The US government, citing national security authorities, has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national, whether inside or outside the United States, including foreign national Anthropic employees. The net effect of th",
+          "created_at": "2026-06-13T00:50:03.000Z",
+          "url": "https://x.com/AnthropicAI/status/2065597531644743999",
           "public_metrics": {},
           "matched_terms": [
-            "abundance"
-          ]
-        },
-        {
-          "id": "2064771688575705252",
-          "type": "repost",
-          "text": "Post Singularity abundance in form of (just having more money and stuff) is not the goal. What I mean is that it's not just about material wealth so everyone can have yach and/or private jet. But that doesn't mean increasing material wealth is irrelevant. It's very important. Mor",
-          "created_at": "2026-06-10T18:08:26.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2064771688575705252",
-          "public_metrics": {},
-          "matched_terms": [
-            "abundance"
+            "disruption"
           ]
         }
       ]
@@ -180,7 +144,30 @@
         "governance",
         "society"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2065625327649640916",
+          "type": "repost",
+          "text": "🌘Kimi-K2.7-Code Weights & code We explore endless possibilities together with the community🤝 huggingface.co/moonshotai/Ki…",
+          "created_at": "2026-06-13T02:40:30.000Z",
+          "url": "https://x.com/KimiDevs/status/2065625327649640916",
+          "public_metrics": {},
+          "matched_terms": [
+            "community"
+          ]
+        },
+        {
+          "id": "2065551778104377537",
+          "type": "repost",
+          "text": "All of my smartest friends are either > doubling down on AI and starting companies to create generational wealth as soon as possible > taking their money to buy piece of land in the middle of nowhere and walking away from society as a whole Nothing in between",
+          "created_at": "2026-06-12T21:48:14.000Z",
+          "url": "https://x.com/BoringBiz_/status/2065551778104377537",
+          "public_metrics": {},
+          "matched_terms": [
+            "society"
+          ]
+        }
+      ]
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -199,13 +186,37 @@
       ],
       "posts": [
         {
-          "id": "2065181176143520062",
+          "id": "2065558076459975164",
           "type": "repost",
-          "text": "Tech companies will spend $650B on AI data centers in 2026 alone. For context: the entire Marshall Plan — which rebuilt postwar Europe across multiple nations and years — cost roughly $160B in today's dollars. We are funding civilization-level infrastructure at 4x Marshall Plan s",
-          "created_at": "2026-06-11T21:15:36.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065181176143520062",
+          "text": "The best indicator of an individual's predictive power is their track record, and Elon has consistently proven he can deliver what he promises. The things SpaceX & Tesla have done were seen as CRAZY 30 years ago. Video",
+          "created_at": "2026-06-12T22:13:16.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2065558076459975164",
           "public_metrics": {},
           "matched_terms": [
+            "power"
+          ]
+        },
+        {
+          "id": "2065547393974636647",
+          "type": "repost",
+          "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
+          "created_at": "2026-06-12T21:30:49.000Z",
+          "url": "https://x.com/elonmusk/status/2065547393974636647",
+          "public_metrics": {},
+          "matched_terms": [
+            "power"
+          ]
+        },
+        {
+          "id": "2065487181662286301",
+          "type": "repost",
+          "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analysis The paper uses three levels. AGI = roughly average human performance across most cognitive tasks. ASI = a system that be",
+          "created_at": "2026-06-12T17:31:33.000Z",
+          "url": "https://x.com/kimmonismus/status/2065487181662286301",
+          "public_metrics": {},
+          "matched_terms": [
+            "energy",
+            "compute",
             "infrastructure"
           ]
         },
@@ -239,11 +250,22 @@
       ],
       "posts": [
         {
-          "id": "2064509430650065278",
+          "id": "2065630251242213498",
           "type": "repost",
-          "text": "So I gave Fable 5 the watchmaker benchmark: a full Swiss lever movement in Three.js. Real gear ratios (18,000 bph), working escapement, breathing hairspring — and the hands tell actual time. It verified its own work with vision, in a loop, until done. ⌚ Video Victor M (@victormus",
-          "created_at": "2026-06-10T00:46:19.000Z",
-          "url": "https://x.com/quanghuynt14/status/2064509430650065278",
+          "text": "Jensen Huang says the internet is moving from serving billions of people to serving billions of AI agents These agents will communicate, collaborate, and solve company problems while staying guardrailed and sandboxed \"the internet may soon be used mostly by 100 billion agents wor",
+          "created_at": "2026-06-13T03:00:04.000Z",
+          "url": "https://x.com/haider1/status/2065630251242213498",
+          "public_metrics": {},
+          "matched_terms": [
+            "agents"
+          ]
+        },
+        {
+          "id": "2065488375235166234",
+          "type": "repost",
+          "text": "No, you don't get it. He does not have $1 trillion sitting in cash, it is 99% stock in his companies. To make that wealth liquid would mean selling all that stock which would swiftly destroy *both* the companies (Tesla, SpaceX, others) and the wealth. If he sold it all, he'd end ",
+          "created_at": "2026-06-12T17:36:18.000Z",
+          "url": "https://x.com/ErikVoorhees/status/2065488375235166234",
           "public_metrics": {},
           "matched_terms": [
             "work"
@@ -267,19 +289,7 @@
         "existential",
         "scenario"
       ],
-      "posts": [
-        {
-          "id": "2065043948310261800",
-          "type": "repost",
-          "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect real-world driving data, analyze test quality, document issues, and support vehicle engineering teams. The role includes 5–8 h",
-          "created_at": "2026-06-11T12:10:18.000Z",
-          "url": "https://x.com/TeslaZoa/status/2065043948310261800",
-          "public_metrics": {},
-          "matched_terms": [
-            "scenario"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-7-when-capability-deployment-impact": {
       "id": "chapter-7-when-capability-deployment-impact",
@@ -298,25 +308,25 @@
       ],
       "posts": [
         {
-          "id": "2065181176143520062",
+          "id": "2065594822606696494",
           "type": "repost",
-          "text": "Tech companies will spend $650B on AI data centers in 2026 alone. For context: the entire Marshall Plan — which rebuilt postwar Europe across multiple nations and years — cost roughly $160B in today's dollars. We are funding civilization-level infrastructure at 4x Marshall Plan s",
-          "created_at": "2026-06-11T21:15:36.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065181176143520062",
+          "text": "we are speedrunning creating the Zones of Thought from the Vinge universe. you will only be able to think superhuman thoughts in America Alex Isenstadt (@axiosalex) NEWS: The Trump administration is blocking foreign governments, companies and individuals from accessing Anthropic'",
+          "created_at": "2026-06-13T00:39:17.000Z",
+          "url": "https://x.com/tszzl/status/2065594822606696494",
           "public_metrics": {},
           "matched_terms": [
             "2026"
           ]
         },
         {
-          "id": "2064687081058967890",
+          "id": "2065464150239711260",
           "type": "repost",
-          "text": "Robotaxi is getting really good at parallel parking when arriving at destinations. Video",
-          "created_at": "2026-06-10T12:32:14.000Z",
-          "url": "https://x.com/scotsrule08/status/2064687081058967890",
+          "text": "picture this 8 of the world's biggest problems getting solved in the next 12-18 months 1. obesity: retatrutide phase 3 confirmed 30% bodyweight lost. 65% of patients no longer clinically obese. FDA submission late 2026 2. testosterone decline: FDA is expanding testosterone therap",
+          "created_at": "2026-06-12T16:00:02.000Z",
+          "url": "https://x.com/m_goes_distance/status/2065464150239711260",
           "public_metrics": {},
           "matched_terms": [
-            "when"
+            "2026"
           ]
         }
       ]
@@ -336,7 +346,30 @@
         "assets",
         "action"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2065436935188058208",
+          "type": "repost",
+          "text": "MiniMax M3, Open-Weight, Now On Hugging Face , with only ~428B parameters and ~23B activated parameters Weights: huggingface.co/MiniMaxAI/Min… MiniMax Sparse Attention: huggingface.co/papers/2606.1… MiniMax (official) (@MiniMax_AI) Introducing MiniMax M3: The First Open-Weights M",
+          "created_at": "2026-06-12T14:11:53.000Z",
+          "url": "https://x.com/MiniMax_AI/status/2065436935188058208",
+          "public_metrics": {},
+          "matched_terms": [
+            "plan"
+          ]
+        },
+        {
+          "id": "2065403324912763296",
+          "type": "repost",
+          "text": "SpaceX President Gwynne Shotwell in new interview on a potential merger with @Tesla: \"That might make Elon’s life a little easier. There’s no question that there are synergies between Tesla and SpaceX and our futures definitely there’s a convergence of what we’re all trying to ac",
+          "created_at": "2026-06-12T11:58:20.000Z",
+          "url": "https://x.com/SawyerMerritt/status/2065403324912763296",
+          "public_metrics": {},
+          "matched_terms": [
+            "capability"
+          ]
+        }
+      ]
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
@@ -366,54 +399,7 @@
         "enhancement",
         "human potential"
       ],
-      "posts": [
-        {
-          "id": "2065179505438634178",
-          "type": "repost",
-          "text": "Anthropic just retook the AI crown from GPT 5.5, and split its model in two: Fable for the public, Mythos for trusted organizations. Apple admitted it lost the foundation model race and handed Siri's brain to Google. -- Brian Armstrong's NewLimit: $435M raised, $3.1B valuation, r",
-          "created_at": "2026-06-11T21:08:57.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065179505438634178",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        },
-        {
-          "id": "2065134923111956978",
-          "type": "repost",
-          "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin priority. organ printing, genetics, cryotherapy. - China published a 5-year national biotech plan. gene therapy, BCIs, AI d",
-          "created_at": "2026-06-11T18:11:48.000Z",
-          "url": "https://x.com/m_goes_distance/status/2065134923111956978",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity",
-            "bci",
-            "enhancement"
-          ]
-        },
-        {
-          "id": "2065109542883455039",
-          "type": "repost",
-          "text": "Russia just committed $26 billion to anti-aging research and made longevity a national priority. Welcome to the longevity arms race!",
-          "created_at": "2026-06-11T16:30:57.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065109542883455039",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        },
-        {
-          "id": "2065015411897233754",
-          "type": "repost",
-          "text": "Researchers from across disciplines will gather this August to explore whether entropy offers a unifying framework for understanding aging. vist.ly/57cph #longevity #geroscience #entropy #aging #research",
-          "created_at": "2026-06-11T10:16:54.000Z",
-          "url": "https://x.com/LongevityTech/status/2065015411897233754",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-11-leaders-build-the-better-branch": {
       "id": "chapter-11-leaders-build-the-better-branch",
@@ -429,7 +415,19 @@
         "community",
         "legitimacy"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2065625327649640916",
+          "type": "repost",
+          "text": "🌘Kimi-K2.7-Code Weights & code We explore endless possibilities together with the community🤝 huggingface.co/moonshotai/Ki…",
+          "created_at": "2026-06-13T02:40:30.000Z",
+          "url": "https://x.com/KimiDevs/status/2065625327649640916",
+          "public_metrics": {},
+          "matched_terms": [
+            "community"
+          ]
+        }
+      ]
     }
   }
 }

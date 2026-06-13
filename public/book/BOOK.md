@@ -38,6 +38,8 @@ The tool becomes a colleague. The colleague becomes a team. The team becomes an 
 
 That is the feeling many people are noticing now. It is not simply that AI is getting better. It is that the time between impossible, demo, product, and normal is collapsing. A capability that looked like a research frontier becomes a product. A product becomes a workflow. A workflow becomes an expectation. Then everyone pretends it was obvious all along.
 
+When frontier lab leaders say AI is moving on an exponential while public institutions move at committee speed, hear it as a planning constraint, not a press cycle. Policy can still matter enormously, but it may arrive late, unevenly, and after households, firms, schools, and local governments have already absorbed the first shock. That widens the gap this book is built for: you need a private and community operating model that updates faster than formal consensus.
+
 The old planning model assumes society gives us time. Study. Get a job. Buy insurance. Save for retirement. Raise children. Trust that institutions will absorb disruption over decades, ideally with a committee, a consultation paper, and a PDF nobody reads.
 
 That model worked when technology changed tools faster than it changed labour itself. AGI changes the planning assumption. If AI can perform most economically useful cognitive work, and robotics can eventually perform much of the physical work, then labour income, education, taxation, pensions, insurance, politics, social status, and purpose all move.
@@ -308,6 +310,10 @@ Models sit on compute. Compute sits on data centres. Data centres sit on energy,
 That is why the people who understand the stack will see the bottlenecks before everyone else. It is not enough to ask which model is best. Ask: where is compute constrained? Where is power constrained? Which workflows are ready for agents? Which data is accessible? Which leaders can move? Which sectors have both the need and the permission to change?
 
 The recent reality feed keeps rhyming with this. Compute deals, recursive AI research labs, and consumer-visible robotics all point to the same pressure: AI is becoming an industrial process that improves the next industrial process. Do not treat any one post as gospel. Treat the cluster as a map. If AI starts helping build the next AI, then compute access, research automation, energy capacity, deployment permission, and institutional trust become leverage points, not background details.
+
+The capital allocation is starting to look civilisational, not merely corporate. When credible industry watchers frame 2026 AI data-centre spend in the hundreds of billions of dollars, compare it less to another software cycle and more to wartime or reconstruction-scale infrastructure. That should update scenario weights without turning into hype: if the money keeps flowing, the constraint shifts toward power, cooling, chips, land, permitting, grid connection, and the organisations that can convert raw compute into useful deployment.
+
+Drug design is one of the cleanest tests of the abundance engine because it connects compute directly to human outcomes. When frontier labs report internal experts using advanced models to accelerate parts of protein or drug-design workflows by an order of magnitude, the point is not that every molecule becomes medicine overnight. The point is that intelligence is starting to compress the search process in domains where each extra experiment used to cost time, capital, and scarce expert attention. That should update Chapter 4's infrastructure thesis and Chapter 10's healthspan thesis at the same time: better models are not just better chatbots; they are new productive capacity for biology.
 
 SpaceX's newly detailed AI1 satellite concept is a useful stress test for this chapter's thesis. Whether orbital AI compute scales quickly or slowly, the direction is clear: serious actors are now treating power, cooling, launch capacity, networking, and compute density as one system. That should update how you think about infrastructure. The next bottleneck may not be "who has the cleverest model?" but "who can turn energy into reliable intelligence at scale, in places where regulation, land, heat, and grid connection do not strangle deployment?"
 
@@ -670,6 +676,8 @@ A post-AGI plan should include a health and longevity strategy. Not biohacking t
 
 The frontier is starting to move from keynote optimism into clinical evidence. When companies begin dosing patients with epigenetic-restoration candidates, do not treat that as immortality arriving by press release. Treat it as a signal that healthspan may become an investable, insurable, and policy-relevant planning category faster than old retirement models assume.
 
+The newer signal is geopolitical. When major states start treating longevity, gene therapy, organ printing, brain-computer interfaces, and AI-assisted biology as national priorities, enhancement stops looking like a lifestyle niche and starts looking like strategic capacity. That should not make you credulous about every breakthrough claim. It should make you watch who funds the labs, who controls access, who writes the rules, and whether healthy life extension becomes broad human capability or another scarce advantage.
+
 ### The augmentation ethics
 
 Enhancement creates game theory. If one student uses AI tutors, others may need to. If one worker uses agents, others may need to. If one company uses AI-managed operations, competitors may need to. If some people adopt cognitive augmentation, others may feel forced to choose between privacy and relevance.
@@ -848,4 +856,8 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Business Insider, Diamandis on kids, MTP, curiosity, mindset, AI era: https://www.businessinsider.com/peter-diamandis-ai-skills-children-skills-careers-strategy-parenting-success-2026-4
 - Polymarket, OpenAI announces it has achieved AGI before 2027?: https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027/openai-announces-it-has-achieved-agi-before-2027
 - Bloomberg, Elon Musk shows detailed design of AI data center satellite: https://www.bloomberg.com/news/articles/2026-06-08/elon-musk-shows-more-detailed-design-of-ai-data-center-satellite
+- X signal, Peter Diamandis on 2026 AI data-centre capital expenditure: https://x.com/PeterDiamandis/status/2065181176143520062
+- X signal, Dario Amodei / Anthropic AI exponential policy discussion: https://x.com/DarioAmodei/status/2064781775247950326
+- X signal, Mythos 5 drug-design acceleration discussion: https://x.com/kimmonismus/status/2064728655922647385
 - Lifespan.io / Life Biosciences epigenetic restoration dosing signal: https://x.com/JoinLifespan/status/2064400619583213821
+- X signal, longevity and human enhancement geopolitical race discussion: https://x.com/m_goes_distance/status/2065134923111956978

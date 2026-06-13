@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T07:10:04.678Z",
+  "generatedAt": "2026-06-13T09:27:14.948Z",
   "windowHours": 24,
   "sourceStatus": {
     "x": "missing-token",
@@ -9,7 +9,7 @@
     {
       "id": "poly-653788",
       "source": "polymarket",
-      "timestamp": "2026-06-08T07:04:55.472897Z",
+      "timestamp": "2026-06-13T09:23:08.901556Z",
       "headline": "OpenAI announces it has achieved AGI before 2027?",
       "summary": "OpenAI announces it has achieved AGI before 2027? - market probability 12.5%",
       "url": "https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027",
@@ -17,7 +17,7 @@
       "targetYear": 2026,
       "targetMonth": 11,
       "probabilityDelta": -0.0975,
-      "significance": 0.8127160736329174,
+      "significance": 0.7846649254056401,
       "tags": [
         "polymarket",
         "prediction-market",
