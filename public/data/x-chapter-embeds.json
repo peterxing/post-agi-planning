@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T19:08:23.357Z",
+  "generatedAt": "2026-06-14T21:36:10.921Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -129,17 +129,6 @@
           "matched_terms": [
             "disruption"
           ]
-        },
-        {
-          "id": "2065597531644743999",
-          "type": "repost",
-          "text": "The US government, citing national security authorities, has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national, whether inside or outside the United States, including foreign national Anthropic employees. The net effect of th",
-          "created_at": "2026-06-13T00:50:03.000Z",
-          "url": "https://x.com/AnthropicAI/status/2065597531644743999",
-          "public_metrics": {},
-          "matched_terms": [
-            "disruption"
-          ]
         }
       ]
     },
@@ -228,19 +217,7 @@
         "trust",
         "purpose"
       ],
-      "posts": [
-        {
-          "id": "2065630251242213498",
-          "type": "repost",
-          "text": "Jensen Huang says the internet is moving from serving billions of people to serving billions of AI agents These agents will communicate, collaborate, and solve company problems while staying guardrailed and sandboxed \"the internet may soon be used mostly by 100 billion agents wor",
-          "created_at": "2026-06-13T03:00:04.000Z",
-          "url": "https://x.com/haider1/status/2065630251242213498",
-          "public_metrics": {},
-          "matched_terms": [
-            "agents"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-6-five-futures-one-portfolio": {
       "id": "chapter-6-five-futures-one-portfolio",
@@ -277,6 +254,18 @@
       ],
       "posts": [
         {
+          "id": "2066148650879955059",
+          "type": "repost",
+          "text": "it's happening... i think the current situation between anthropic and the U.S. government is pretty similar to what AI 2027 predicted by @DKokotajlo when the government starts worrying about national security and model access it begins tightening its grip",
+          "created_at": "2026-06-14T13:20:00.000Z",
+          "url": "https://x.com/haider1/status/2066148650879955059",
+          "public_metrics": {},
+          "matched_terms": [
+            "when",
+            "2027"
+          ]
+        },
+        {
           "id": "2065784751345287314",
           "type": "repost",
           "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
@@ -285,17 +274,6 @@
           "public_metrics": {},
           "matched_terms": [
             "when"
-          ]
-        },
-        {
-          "id": "2065594822606696494",
-          "type": "repost",
-          "text": "we are speedrunning creating the Zones of Thought from the Vinge universe. you will only be able to think superhuman thoughts in America Alex Isenstadt (@axiosalex) NEWS: The Trump administration is blocking foreign governments, companies and individuals from accessing Anthropic'",
-          "created_at": "2026-06-13T00:39:17.000Z",
-          "url": "https://x.com/tszzl/status/2065594822606696494",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026"
           ]
         },
         {
@@ -353,7 +331,19 @@
         "public ai",
         "access"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066148650879955059",
+          "type": "repost",
+          "text": "it's happening... i think the current situation between anthropic and the U.S. government is pretty similar to what AI 2027 predicted by @DKokotajlo when the government starts worrying about national security and model access it begins tightening its grip",
+          "created_at": "2026-06-14T13:20:00.000Z",
+          "url": "https://x.com/haider1/status/2066148650879955059",
+          "public_metrics": {},
+          "matched_terms": [
+            "access"
+          ]
+        }
+      ]
     },
     "chapter-10-human-enhancement-staying-in-the-game": {
       "id": "chapter-10-human-enhancement-staying-in-the-game",
