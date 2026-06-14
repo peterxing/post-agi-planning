@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T03:08:22.189Z",
+  "generatedAt": "2026-06-14T19:08:23.357Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,41 @@
       ],
       "posts": [
         {
+          "id": "2065962140775981431",
+          "type": "repost",
+          "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it has been imo a good proxy for human capital generally",
+          "created_at": "2026-06-14T00:58:52.000Z",
+          "url": "https://x.com/tszzl/status/2065962140775981431",
+          "public_metrics": {},
+          "matched_terms": [
+            "future",
+            "agi"
+          ]
+        },
+        {
+          "id": "2065938989899464770",
+          "type": "repost",
+          "text": "This is one of the most pivotal events in history because of the precedent it sets. Even if it doesn't stick, the cat is out of the bag: the government can now unilaterally decide who gets to use AI. Over the last few days I had fully transitioned to orchestrating with Fable. It ",
+          "created_at": "2026-06-13T23:26:53.000Z",
+          "url": "https://x.com/DaveBlundin/status/2065938989899464770",
+          "public_metrics": {},
+          "matched_terms": [
+            "future",
+            "disruption"
+          ]
+        },
+        {
+          "id": "2065814996060164489",
+          "type": "repost",
+          "text": "If models like Fable 5 are already being kept away from the public, imagine the drama once AGI shows up.",
+          "created_at": "2026-06-13T15:14:10.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2065814996060164489",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
           "id": "2065784751345287314",
           "type": "repost",
           "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
@@ -34,43 +69,6 @@
             "future",
             "agi",
             "frontier model",
-            "agent"
-          ]
-        },
-        {
-          "id": "2065597531644743999",
-          "type": "repost",
-          "text": "The US government, citing national security authorities, has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national, whether inside or outside the United States, including foreign national Anthropic employees. The net effect of th",
-          "created_at": "2026-06-13T00:50:03.000Z",
-          "url": "https://x.com/AnthropicAI/status/2065597531644743999",
-          "public_metrics": {},
-          "matched_terms": [
-            "disruption"
-          ]
-        },
-        {
-          "id": "2065549739266048120",
-          "type": "repost",
-          "text": "Beautiful paper from Google DeepMind. Explains the pathways from AGI to ASI, and why that jump could happen through several routes. The authors frame the AGI-to-ASI transition around 4 technical pathways: - continued scaling of compute, model size, data, and test-time inference; ",
-          "created_at": "2026-06-12T21:40:08.000Z",
-          "url": "https://x.com/rohanpaul_ai/status/2065549739266048120",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "agi",
-            "agent"
-          ]
-        },
-        {
-          "id": "2065487181662286301",
-          "type": "repost",
-          "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analysis The paper uses three levels. AGI = roughly average human performance across most cognitive tasks. ASI = a system that be",
-          "created_at": "2026-06-12T17:31:33.000Z",
-          "url": "https://x.com/kimmonismus/status/2065487181662286301",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "agi",
             "agent"
           ]
         }
@@ -121,6 +119,17 @@
         "supply"
       ],
       "posts": [
+        {
+          "id": "2065938989899464770",
+          "type": "repost",
+          "text": "This is one of the most pivotal events in history because of the precedent it sets. Even if it doesn't stick, the cat is out of the bag: the government can now unilaterally decide who gets to use AI. Over the last few days I had fully transitioned to orchestrating with Fable. It ",
+          "created_at": "2026-06-13T23:26:53.000Z",
+          "url": "https://x.com/DaveBlundin/status/2065938989899464770",
+          "public_metrics": {},
+          "matched_terms": [
+            "disruption"
+          ]
+        },
         {
           "id": "2065597531644743999",
           "type": "repost",
@@ -191,17 +200,6 @@
       ],
       "posts": [
         {
-          "id": "2065558076459975164",
-          "type": "repost",
-          "text": "The best indicator of an individual's predictive power is their track record, and Elon has consistently proven he can deliver what he promises. The things SpaceX & Tesla have done were seen as CRAZY 30 years ago. Video",
-          "created_at": "2026-06-12T22:13:16.000Z",
-          "url": "https://x.com/PeterDiamandis/status/2065558076459975164",
-          "public_metrics": {},
-          "matched_terms": [
-            "power"
-          ]
-        },
-        {
           "id": "2065549739266048120",
           "type": "repost",
           "text": "Beautiful paper from Google DeepMind. Explains the pathways from AGI to ASI, and why that jump could happen through several routes. The authors frame the AGI-to-ASI transition around 4 technical pathways: - continued scaling of compute, model size, data, and test-time inference; ",
@@ -211,19 +209,6 @@
           "matched_terms": [
             "energy",
             "compute"
-          ]
-        },
-        {
-          "id": "2065487181662286301",
-          "type": "repost",
-          "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analysis The paper uses three levels. AGI = roughly average human performance across most cognitive tasks. ASI = a system that be",
-          "created_at": "2026-06-12T17:31:33.000Z",
-          "url": "https://x.com/kimmonismus/status/2065487181662286301",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy",
-            "compute",
-            "infrastructure"
           ]
         }
       ]
@@ -253,17 +238,6 @@
           "public_metrics": {},
           "matched_terms": [
             "agents"
-          ]
-        },
-        {
-          "id": "2065488375235166234",
-          "type": "repost",
-          "text": "No, you don't get it. He does not have $1 trillion sitting in cash, it is 99% stock in his companies. To make that wealth liquid would mean selling all that stock which would swiftly destroy *both* the companies (Tesla, SpaceX, others) and the wealth. If he sold it all, he'd end ",
-          "created_at": "2026-06-12T17:36:18.000Z",
-          "url": "https://x.com/ErikVoorhees/status/2065488375235166234",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
           ]
         }
       ]
@@ -362,17 +336,6 @@
           "public_metrics": {},
           "matched_terms": [
             "plan"
-          ]
-        },
-        {
-          "id": "2065403324912763296",
-          "type": "repost",
-          "text": "SpaceX President Gwynne Shotwell in new interview on a potential merger with @Tesla: \"That might make Elon’s life a little easier. There’s no question that there are synergies between Tesla and SpaceX and our futures definitely there’s a convergence of what we’re all trying to ac",
-          "created_at": "2026-06-12T11:58:20.000Z",
-          "url": "https://x.com/SawyerMerritt/status/2065403324912763296",
-          "public_metrics": {},
-          "matched_terms": [
-            "capability"
           ]
         }
       ]
