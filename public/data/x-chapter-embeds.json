@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-13T21:35:43.305Z",
+  "generatedAt": "2026-06-14T03:08:22.189Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,20 @@
       ],
       "posts": [
         {
+          "id": "2065784751345287314",
+          "type": "repost",
+          "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
+          "created_at": "2026-06-13T13:13:59.000Z",
+          "url": "https://x.com/jietang/status/2065784751345287314",
+          "public_metrics": {},
+          "matched_terms": [
+            "future",
+            "agi",
+            "frontier model",
+            "agent"
+          ]
+        },
+        {
           "id": "2065597531644743999",
           "type": "repost",
           "text": "The US government, citing national security authorities, has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national, whether inside or outside the United States, including foreign national Anthropic employees. The net effect of th",
@@ -45,17 +59,6 @@
             "future",
             "agi",
             "agent"
-          ]
-        },
-        {
-          "id": "2065547393974636647",
-          "type": "repost",
-          "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
-          "created_at": "2026-06-12T21:30:49.000Z",
-          "url": "https://x.com/elonmusk/status/2065547393974636647",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
           ]
         },
         {
@@ -211,17 +214,6 @@
           ]
         },
         {
-          "id": "2065547393974636647",
-          "type": "repost",
-          "text": "Looking forward to taking our exciting partnership with Nvidia to the next-level NVIDIA (@nvidia) Huge congratulations to the @SpaceX team on a historic IPO debut. Fueling the next frontier of space and AI. 🌌 NVIDIA's partnership with SpaceX spans nearly a decade, from hand-deli",
-          "created_at": "2026-06-12T21:30:49.000Z",
-          "url": "https://x.com/elonmusk/status/2065547393974636647",
-          "public_metrics": {},
-          "matched_terms": [
-            "power"
-          ]
-        },
-        {
           "id": "2065487181662286301",
           "type": "repost",
           "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analysis The paper uses three levels. AGI = roughly average human performance across most cognitive tasks. ASI = a system that be",
@@ -310,6 +302,17 @@
         "2030"
       ],
       "posts": [
+        {
+          "id": "2065784751345287314",
+          "type": "repost",
+          "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
+          "created_at": "2026-06-13T13:13:59.000Z",
+          "url": "https://x.com/jietang/status/2065784751345287314",
+          "public_metrics": {},
+          "matched_terms": [
+            "when"
+          ]
+        },
         {
           "id": "2065594822606696494",
           "type": "repost",
