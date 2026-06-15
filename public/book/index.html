@@ -186,6 +186,48 @@
       border-color: var(--line);
     }
 
+    .system-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 26px;
+      max-width: 860px;
+    }
+
+    .system-strip span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.72);
+      padding: 6px 9px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .domain-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .domain-chips span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel2);
+      padding: 4px 8px;
+      color: #36362f;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
     .scenario-board {
       background: #11120f;
       color: white;
@@ -1234,6 +1276,7 @@
       </div>
       <div class="navlinks">
         <a href="#summary">Operating Map</a>
+        <a href="#forecast">Forecast</a>
         <a href="#timelines">Timelines & Tools</a>
         <a href="#x-trail">Live thinking trail</a>
         <a href="#map">Map</a>
@@ -1247,13 +1290,79 @@
   <main>
     <section class="hero" id="top">
       <div>
-        <span class="kicker"><span class="pulse"></span> Living book + realtime planning model</span>
+        <span class="kicker"><span class="pulse"></span> Future Timeline & Civilization Forecast / 2025-2036</span>
         <h1>Hitchhiker's Guide to the Singularity</h1>
         <p><strong><em>How to prepare and plan for when artificial intelligence does everything better than humans can</em></strong></p>
         <p>When intelligence becomes cheap, every plan changes. This is the field guide for the moment the future stops arriving politely — with a lived story of scarcity, migration, and mortality, then a practical loop to model timelines, protect what matters, and build toward abundance instead of panic.</p>
         <div class="hero-actions">
           <a href="#model">Run your post-AGI plan</a>
           <a class="secondary" href="#read">Read the field guide</a>
+        </div>
+        <div class="system-strip" aria-label="Book system status">
+          <span>System: Rehoboam</span>
+          <span>Author: Peter Xing</span>
+          <span>Status: live signal overlay active</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="field-guide" id="forecast">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The timeline of the next decade.</h2>
+          <p>Base predictions come from the AI Futures Model, Future Timeline, and forecasting research, then get pressured by live market and social signals. Filter by the system you care about, but keep the whole civilisation stack in view.</p>
+        </div>
+        <div class="guide-grid">
+          <div class="guide-card">
+            <span class="tag">REHOBOAM / 01</span>
+            <strong>Forecast engine</strong>
+            <p>The book is not a static argument. It is a ship computer for the next decade: capability, deployment, markets, household exposure, and social trust update together.</p>
+            <div class="domain-chips" aria-label="Forecast domains">
+              <span>All</span><span>Individual</span><span>Social</span><span>Technology</span><span>Economic</span><span>Geopolitical</span><span>Governance</span>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">CHAPTER 02</span>
+            <strong>Six forces turning scarcity into abundance</strong>
+            <p>Once intelligence is digitised, it rides Peter Diamandis's Six Ds: deception, disruption, demonetisation, dematerialisation and democratisation.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">STACK / 01</span>
+            <strong>Energy & compute</strong>
+            <p>Cheap energy is the floor of abundance; compute is access to intelligence. Solar, storage, fusion pilots, photonics and post-silicon chips become planning inputs.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">STACK / 02</span>
+            <strong>Robots & capital</strong>
+            <p>Physical AGI arrives as humanoid labour and machine ownership. The practical question is who owns the productive assets, not only who uses the tools.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">STACK / 03</span>
+            <strong>Policy & trust</strong>
+            <p>The bottleneck is not only capability. Permits, transmission, institutional trust and legitimacy decide how fast abundance reaches ordinary people.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">CHAPTER 06</span>
+            <strong>Do not bet on one future</strong>
+            <p>Hold a portfolio: rapid disruption, fast abundance, gentle singularity, long horizon, existential risk, and the human-merger thread running through all of them.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">CHAPTER 08</span>
+            <strong>Find your starting vector</strong>
+            <p>Use four phases: create the first one-page plan, build capability, own productive assets, then become a node in the better future.</p>
+          </div>
+
+          <div class="guide-card">
+            <span class="tag">REALITY SIGNALS</span>
+            <strong>Already on the board</strong>
+            <p>The signal feed is not prophecy. It is a running list of datapoints from recent quarters showing which branch is loading.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -1520,11 +1629,12 @@
           <a class="chapter" href="#chapter-8-your-1000-day-moonshot-plan">
             <span class="num">Chapter 08</span>
             <h3>The 1000-Day Moonshot Plan</h3>
-            <p>A practical 30-day, 180-day, 365-day, and 1000-day plan for becoming a useful node in the better future.</p>
+            <p>Find your starting vector: answer six questions, then map yourself onto four phases from first plan to useful node in the better future.</p>
             <ul>
-              <li>Create the first plan.</li>
-              <li>Build capability and productive assets.</li>
-              <li>Compound into community and leadership.</li>
+              <li>0-30 days: create the one-page plan.</li>
+              <li>30-180 days: build capability and AI orchestration.</li>
+              <li>180-365 days: own or access productive assets.</li>
+              <li>365-1000 days: plug into community and distribution.</li>
             </ul>
           </a>
 
@@ -1626,8 +1736,8 @@
     <section id="x-trail">
       <div class="wrap">
         <div class="section-head">
-          <h2>Post-AGI planning signals.</h2>
-          <p>One consolidated feed of X posts, market signals, and frontier developments — all focused on post-AGI planning. No chapter groupings. Just the signal.</p>
+          <h2>Reality signals already on the board.</h2>
+          <p>These are not predictions. They are datapoints from recent quarters that show which branch is loading: X posts, market signals, frontier-model shifts, robotics, energy, compute, governance and social trust.</p>
         </div>
         <div id="xStatus" class="status-line">Loading X chapter links...</div>
         <div id="xChapterEmbeds" class="x-grid"></div>
