@@ -313,6 +313,8 @@ The recent reality feed keeps rhyming with this. Compute deals, recursive AI res
 
 The capital allocation is starting to look civilisational, not merely corporate. When credible industry watchers frame 2026 AI data-centre spend in the hundreds of billions of dollars, compare it less to another software cycle and more to wartime or reconstruction-scale infrastructure. That should update scenario weights without turning into hype: if the money keeps flowing, the constraint shifts toward power, cooling, chips, land, permitting, grid connection, and the organisations that can convert raw compute into useful deployment.
 
+The latest compute-scale chatter keeps pointing at 2027 as a practical stress test. Even if "brain-scale" parameter counts are an imprecise proxy for intelligence, the direction matters: if data-centre buildout lets frontier labs train and serve systems an order of magnitude larger than today's public models, the planning question is no longer "will there be another chatbot?" It is "which institutions can buy, power, govern, and safely deploy industrial-scale cognition before everyone else has priced it in?"
+
 DeepMind's new AGI-to-ASI framing makes the same point from the technical side. If the routes beyond AGI include continued scaling, new AI paradigms, recursive improvement, and large multi-agent collectives, then the bottlenecks are not only model intelligence. They are energy, compute, research automation, verification, coordination, security, and the ability to run many capable agents without losing control of the work. That should move Chapter 4 from "AI needs data centres" to "AI progress may become an industrial flywheel whose limiting factors are physical capacity, institutional permission, and safe orchestration."
 
 Drug design is one of the cleanest tests of the abundance engine because it connects compute directly to human outcomes. When frontier labs report internal experts using advanced models to accelerate parts of protein or drug-design workflows by an order of magnitude, the point is not that every molecule becomes medicine overnight. The point is that intelligence is starting to compress the search process in domains where each extra experiment used to cost time, capital, and scarce expert attention. That should update Chapter 4's infrastructure thesis and Chapter 10's healthspan thesis at the same time: better models are not just better chatbots; they are new productive capacity for biology.
@@ -373,6 +375,8 @@ The work problem is therefore not only economic. It is psychological, social, an
 Many professions are built like ladders. Juniors do repetitive work, learn patterns, absorb judgment, and gradually become seniors. If AI automates the repetitive bottom rungs, the profession may still need experts, but it may not know how to grow them. This affects law, consulting, tax, software, finance, design, media, research, medicine, engineering, and education.
 
 The risk is not only unemployment. It is apprenticeship collapse. If the machine handles the tasks that once trained people, we need new ways to create judgment, taste, ethics, responsibility, and trust.
+
+Higher education is exposed to the same breakage. The old bargain was expensive but legible: tuition in, professional security out. If AI weakens the early-career ladder, that bargain loses legitimacy before universities lose buildings or brand names. Families will not keep paying old-economy prices for credentials that no longer reliably convert into work, status, or income. The planning implication is blunt: learn faster than the credential system, and build proof of capability that survives when the conversion machine wobbles.
 
 ### Defensible human advantage
 
@@ -863,6 +867,8 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Polymarket, OpenAI announces it has achieved AGI before 2027?: https://polymarket.com/event/openai-announces-it-has-achieved-agi-before-2027/openai-announces-it-has-achieved-agi-before-2027
 - Bloomberg, Elon Musk shows detailed design of AI data center satellite: https://www.bloomberg.com/news/articles/2026-06-08/elon-musk-shows-more-detailed-design-of-ai-data-center-satellite
 - X signal, Peter Diamandis on 2026 AI data-centre capital expenditure: https://x.com/PeterDiamandis/status/2065181176143520062
+- X signal, 2027 data-centre buildout and frontier model scale discussion: https://x.com/Dr_Singularity/status/2066282848223686754
+- X signal, higher education career-security bargain discussion: https://x.com/_The_Prophet__/status/2066222845705994382
 - Genewein et al., From AGI to ASI: https://arxiv.org/abs/2606.12683
 - X signal, Dario Amodei / Anthropic AI exponential policy discussion: https://x.com/DarioAmodei/status/2064781775247950326
 - X signal, Mythos 5 drug-design acceleration discussion: https://x.com/kimmonismus/status/2064728655922647385
