@@ -7,6 +7,14 @@
     {
       "source": "/book/",
       "destination": "/book/index.html"
+    },
+    {
+      "source": "/insurance",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/insurance/",
+      "destination": "/index.html"
     }
   ]
 }

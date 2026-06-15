@@ -13,6 +13,7 @@ import { GoalsList } from '@/components/GoalsList';
 import { TechTreeChecklist } from '@/components/TechTreeChecklist';
 import { LivedExperienceSummary } from '@/components/LivedExperienceSummary';
 import { SignalFeedPanel } from '@/components/SignalFeedPanel';
+import { InsurancePlan } from '@/components/InsurancePlan';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ import { Brain, Lightning } from '@phosphor-icons/react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 
-function App() {
+function RehoboamDashboard() {
   const currentYear = new Date().getFullYear();
   const [baseTimelineData, setBaseTimelineData] = useState<MonthData[]>([]);
   const [activeDomains, setActiveDomains] = useState<Domain[]>([]);
@@ -325,6 +326,16 @@ function App() {
       <Toaster />
     </div>
   );
+}
+
+function App() {
+  const pathname = typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') || '/' : '/';
+
+  if (pathname === '/insurance') {
+    return <InsurancePlan />;
+  }
+
+  return <RehoboamDashboard />;
 }
 
 export default App;
