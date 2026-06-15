@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-15T14:08:23.873Z",
+  "generatedAt": "2026-06-15T22:08:23.979Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -55,18 +55,6 @@
           "public_metrics": {},
           "matched_terms": [
             "future"
-          ]
-        },
-        {
-          "id": "2065962140775981431",
-          "type": "repost",
-          "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it has been imo a good proxy for human capital generally",
-          "created_at": "2026-06-14T00:58:52.000Z",
-          "url": "https://x.com/tszzl/status/2065962140775981431",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "agi"
           ]
         }
       ]
@@ -133,7 +121,19 @@
         "governance",
         "society"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066424067620741273",
+          "type": "repost",
+          "text": "NEWS: Tesla's Giga Berlin is raising Model Y production ~20% in July, the plant's manufacturing chief says in an interview with TOSV. Weekly output rises from ~5,200 cars to a target of 6,200. Andre Thierig, Tesla's senior director of manufacturing at Giga Berlin, says the plant ",
+          "created_at": "2026-06-15T07:34:24.000Z",
+          "url": "https://x.com/muskonomy/status/2066424067620741273",
+          "public_metrics": {},
+          "matched_terms": [
+            "jobs"
+          ]
+        }
+      ]
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -151,6 +151,19 @@
         "automation"
       ],
       "posts": [
+        {
+          "id": "2066512135094751480",
+          "type": "repost",
+          "text": "🚨 Elon Musk may be building something much bigger than most investors realize! According to the analysis, Tesla and SpaceX now have 7 major factory projects underway with more than $200 billion in combined CapEx planned or in progress. These projects span AI chips, AI training c",
+          "created_at": "2026-06-15T13:24:21.000Z",
+          "url": "https://x.com/herbertong/status/2066512135094751480",
+          "public_metrics": {},
+          "matched_terms": [
+            "energy",
+            "infrastructure",
+            "robots"
+          ]
+        },
         {
           "id": "2066282848223686754",
           "type": "repost",
@@ -205,6 +218,18 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2066424067620741273",
+          "type": "repost",
+          "text": "NEWS: Tesla's Giga Berlin is raising Model Y production ~20% in July, the plant's manufacturing chief says in an interview with TOSV. Weekly output rises from ~5,200 cars to a target of 6,200. Andre Thierig, Tesla's senior director of manufacturing at Giga Berlin, says the plant ",
+          "created_at": "2026-06-15T07:34:24.000Z",
+          "url": "https://x.com/muskonomy/status/2066424067620741273",
+          "public_metrics": {},
+          "matched_terms": [
+            "jobs",
+            "labor"
+          ]
+        },
         {
           "id": "2066222845705994382",
           "type": "repost",
@@ -302,15 +327,14 @@
           ]
         },
         {
-          "id": "2066148650879955059",
+          "id": "2065907659887251730",
           "type": "repost",
-          "text": "it's happening... i think the current situation between anthropic and the U.S. government is pretty similar to what AI 2027 predicted by @DKokotajlo when the government starts worrying about national security and model access it begins tightening its grip",
-          "created_at": "2026-06-14T13:20:00.000Z",
-          "url": "https://x.com/haider1/status/2066148650879955059",
+          "text": "The key to saving the environment is not looking backward, it’s moving forward. I realized this the first time I visited Italy twenty years ago. Everything was clean and green. The rivers sparkled. The lesson for me was obvious: the answer is not underdevelopment. The answer is p",
+          "created_at": "2026-06-13T21:22:23.000Z",
+          "url": "https://x.com/nayibbukele/status/2065907659887251730",
           "public_metrics": {},
           "matched_terms": [
-            "when",
-            "2027"
+            "when"
           ]
         }
       ]
@@ -345,19 +369,7 @@
         "public ai",
         "access"
       ],
-      "posts": [
-        {
-          "id": "2066148650879955059",
-          "type": "repost",
-          "text": "it's happening... i think the current situation between anthropic and the U.S. government is pretty similar to what AI 2027 predicted by @DKokotajlo when the government starts worrying about national security and model access it begins tightening its grip",
-          "created_at": "2026-06-14T13:20:00.000Z",
-          "url": "https://x.com/haider1/status/2066148650879955059",
-          "public_metrics": {},
-          "matched_terms": [
-            "access"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-10-human-enhancement-staying-in-the-game": {
       "id": "chapter-10-human-enhancement-staying-in-the-game",
