@@ -321,6 +321,8 @@ Drug design is one of the cleanest tests of the abundance engine because it conn
 
 SpaceX's newly detailed AI1 satellite concept is a useful stress test for this chapter's thesis. Whether orbital AI compute scales quickly or slowly, the direction is clear: serious actors are now treating power, cooling, launch capacity, networking, and compute density as one system. That should update how you think about infrastructure. The next bottleneck may not be "who has the cleverest model?" but "who can turn energy into reliable intelligence at scale, in places where regulation, land, heat, and grid connection do not strangle deployment?"
 
+The same logic applies to "brain-scale" model speculation. Do not anchor on any single parameter count as destiny; parameters are not magic. But when serious observers start tying 2027 AGI claims to data-centre buildout, model scale, test-time compute, and energy availability, treat the claim as an infrastructure signal. The question is not only whether a 100-trillion-parameter system is the right target. It is whether enough power, chips, cooling, capital, and deployment surface exist to keep moving the frontier faster than institutions can adapt.
+
 The useful signal is not that every demo deserves belief. It is that the boundary keeps moving from screen work into service work and physical work. Humanoid robot pre-orders, AI-assisted public-service prototypes, and operators using Codex inside real farms all point to the same deployment layer: intelligence becomes valuable when it touches permits, land, machines, maintenance, customers, and trust. The bottleneck shifts from "can the model answer?" to "can a real institution or operator absorb the answer safely?"
 
 ### Energy as the floor of abundance
@@ -385,6 +387,8 @@ Do not ask, "What can I learn that AI cannot do?" That question gets smaller eve
 Ask instead: where can I combine AI, human trust, physical-world context, capital, taste, regulation, relationships, mission, and accountability into something defensible?
 
 The future belongs less to people who can perform isolated tasks and more to people who can orchestrate systems. The AI-native worker is not merely faster at email. They are a conductor of agents, tools, data, people, and physical capacity. They know when to delegate to AI, when to verify, when to bring in humans, when to build, when to stop, and when to take responsibility.
+
+At the firm level, watch for a deeper balance-sheet shift. The old company owned workflows, customer relationships, brand, data, software, and process knowledge. The AI-native company owns a compounding cognition loop: every workflow becomes a training surface, every decision becomes a trace, every customer interaction becomes a chance to improve the system. That does not eliminate humans. It changes where human leverage sits: designing the loop, owning the distribution, setting the taste bar, carrying accountability, and deciding what should never be automated.
 
 Watch the legal layer, not just the labour market. If governments begin creating explicit categories for AI-operated or robot-operated entities, the question shifts from "which tasks can AI do?" to "which organisations can AI legally inhabit?" That would accelerate the owner/operator divide: people with capital, compliance, distribution, and agent infrastructure could run productive systems with very small human teams, while everyone else competes for the remaining trust, accountability, and physical-context work.
 
@@ -685,6 +689,8 @@ I care about this because fragility is not theoretical. Waking up in a hospital 
 A post-AGI plan should include a health and longevity strategy. Not biohacking theatre. Basics first: sleep, strength, nutrition, metabolic health, relationships, mental health, preventive screening, medical literacy, and access to care. Then add the emerging frontier: personalised diagnostics, AI-assisted health guidance, longevity research, and careful evaluation of new interventions.
 
 The frontier is starting to move from keynote optimism into clinical evidence. When companies begin dosing patients with epigenetic-restoration candidates, do not treat that as immortality arriving by press release. Treat it as a signal that healthspan may become an investable, insurable, and policy-relevant planning category faster than old retirement models assume.
+
+The science is also becoming more mappable. A comprehensive atlas of human cellular senescence does not make ageing solved, but it turns a vague enemy into a more legible one: which cells change, where they accumulate, how they differ by tissue, and how they interact with their environment. That is exactly the kind of substrate AI can compound on: better targets, better diagnostics, better trial design, and eventually better prevention.
 
 The newer signal is geopolitical. When major states start treating longevity, gene therapy, organ printing, brain-computer interfaces, and AI-assisted biology as national priorities, enhancement stops looking like a lifestyle niche and starts looking like strategic capacity. That should not make you credulous about every breakthrough claim. It should make you watch who funds the labs, who controls access, who writes the rules, and whether healthy life extension becomes broad human capability or another scarce advantage.
 

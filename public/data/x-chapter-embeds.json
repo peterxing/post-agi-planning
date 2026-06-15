@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T21:36:10.921Z",
+  "generatedAt": "2026-06-15T14:08:23.873Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,40 @@
       ],
       "posts": [
         {
+          "id": "2066282848223686754",
+          "type": "repost",
+          "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6T. IMO, we need to reach brain size scale, or something close to it, to build true AGI/ASI. Parameters are not everything, ",
+          "created_at": "2026-06-14T22:13:15.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2066282848223686754",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
+          "id": "2066236717015728227",
+          "type": "repost",
+          "text": "🖥️ Best Local LLMs for Consumer GPUs — llama.cpp Guide (June 2026) What I actually run on consumer hardware right now. Every model below runs via llama.cpp with a simple one-liner — no Docker, no Python env, no cloud. ━━━ 8-16GB VRAM ━━━ 🔹 Gemma 4-12B (Google) • Smartest model ",
+          "created_at": "2026-06-14T19:09:56.000Z",
+          "url": "https://x.com/TraffAlex/status/2066236717015728227",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi",
+            "agent"
+          ]
+        },
+        {
+          "id": "2066222845705994382",
+          "type": "repost",
+          "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For decades, the degree was sold as a conversion machine: tuition in, professional security out. Families tolerated insane price",
+          "created_at": "2026-06-14T18:14:49.000Z",
+          "url": "https://x.com/_The_Prophet__/status/2066222845705994382",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
+        {
           "id": "2065962140775981431",
           "type": "repost",
           "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it has been imo a good proxy for human capital generally",
@@ -33,43 +67,6 @@
           "matched_terms": [
             "future",
             "agi"
-          ]
-        },
-        {
-          "id": "2065938989899464770",
-          "type": "repost",
-          "text": "This is one of the most pivotal events in history because of the precedent it sets. Even if it doesn't stick, the cat is out of the bag: the government can now unilaterally decide who gets to use AI. Over the last few days I had fully transitioned to orchestrating with Fable. It ",
-          "created_at": "2026-06-13T23:26:53.000Z",
-          "url": "https://x.com/DaveBlundin/status/2065938989899464770",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "disruption"
-          ]
-        },
-        {
-          "id": "2065814996060164489",
-          "type": "repost",
-          "text": "If models like Fable 5 are already being kept away from the public, imagine the drama once AGI shows up.",
-          "created_at": "2026-06-13T15:14:10.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2065814996060164489",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
-          ]
-        },
-        {
-          "id": "2065784751345287314",
-          "type": "repost",
-          "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
-          "created_at": "2026-06-13T13:13:59.000Z",
-          "url": "https://x.com/jietang/status/2065784751345287314",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "agi",
-            "frontier model",
-            "agent"
           ]
         }
       ]
@@ -91,14 +88,15 @@
       ],
       "posts": [
         {
-          "id": "2065464150239711260",
+          "id": "2066451429003239475",
           "type": "repost",
-          "text": "picture this 8 of the world's biggest problems getting solved in the next 12-18 months 1. obesity: retatrutide phase 3 confirmed 30% bodyweight lost. 65% of patients no longer clinically obese. FDA submission late 2026 2. testosterone decline: FDA is expanding testosterone therap",
-          "created_at": "2026-06-12T16:00:02.000Z",
-          "url": "https://x.com/m_goes_distance/status/2065464150239711260",
+          "text": "Scientists just published the first comprehensive atlas of human cellular senescence in aging. They are mapping where \"zombie cells\" appear in the human body, how they differ across tissues, and how they interact with their surrounding environment. These cells stop dividing, but ",
+          "created_at": "2026-06-15T09:23:08.000Z",
+          "url": "https://x.com/kimmonismus/status/2066451429003239475",
           "public_metrics": {},
           "matched_terms": [
-            "aging"
+            "aging",
+            "longevity"
           ]
         }
       ]
@@ -118,19 +116,7 @@
         "democratisation",
         "supply"
       ],
-      "posts": [
-        {
-          "id": "2065938989899464770",
-          "type": "repost",
-          "text": "This is one of the most pivotal events in history because of the precedent it sets. Even if it doesn't stick, the cat is out of the bag: the government can now unilaterally decide who gets to use AI. Over the last few days I had fully transitioned to orchestrating with Fable. It ",
-          "created_at": "2026-06-13T23:26:53.000Z",
-          "url": "https://x.com/DaveBlundin/status/2065938989899464770",
-          "public_metrics": {},
-          "matched_terms": [
-            "disruption"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-3-who-needs-a-plan-the-human-stack": {
       "id": "chapter-3-who-needs-a-plan-the-human-stack",
@@ -147,30 +133,7 @@
         "governance",
         "society"
       ],
-      "posts": [
-        {
-          "id": "2065625327649640916",
-          "type": "repost",
-          "text": "🌘Kimi-K2.7-Code Weights & code We explore endless possibilities together with the community🤝 huggingface.co/moonshotai/Ki…",
-          "created_at": "2026-06-13T02:40:30.000Z",
-          "url": "https://x.com/KimiDevs/status/2065625327649640916",
-          "public_metrics": {},
-          "matched_terms": [
-            "community"
-          ]
-        },
-        {
-          "id": "2065551778104377537",
-          "type": "repost",
-          "text": "All of my smartest friends are either > doubling down on AI and starting companies to create generational wealth as soon as possible > taking their money to buy piece of land in the middle of nowhere and walking away from society as a whole Nothing in between",
-          "created_at": "2026-06-12T21:48:14.000Z",
-          "url": "https://x.com/BoringBiz_/status/2065551778104377537",
-          "public_metrics": {},
-          "matched_terms": [
-            "society"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -189,15 +152,39 @@
       ],
       "posts": [
         {
-          "id": "2065549739266048120",
+          "id": "2066282848223686754",
           "type": "repost",
-          "text": "Beautiful paper from Google DeepMind. Explains the pathways from AGI to ASI, and why that jump could happen through several routes. The authors frame the AGI-to-ASI transition around 4 technical pathways: - continued scaling of compute, model size, data, and test-time inference; ",
-          "created_at": "2026-06-12T21:40:08.000Z",
-          "url": "https://x.com/rohanpaul_ai/status/2065549739266048120",
+          "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6T. IMO, we need to reach brain size scale, or something close to it, to build true AGI/ASI. Parameters are not everything, ",
+          "created_at": "2026-06-14T22:13:15.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2066282848223686754",
           "public_metrics": {},
           "matched_terms": [
             "energy",
             "compute"
+          ]
+        },
+        {
+          "id": "2066274490254766144",
+          "type": "repost",
+          "text": "Not impossible, but definitely requires factories on the Moon and Mars to achieve. By then, I don’t think dollars will be used as currency. Just mass and energy.",
+          "created_at": "2026-06-14T21:40:02.000Z",
+          "url": "https://x.com/elonmusk/status/2066274490254766144",
+          "public_metrics": {},
+          "matched_terms": [
+            "energy"
+          ]
+        },
+        {
+          "id": "2066218843022999690",
+          "type": "repost",
+          "text": "⚡️Satya is describing the new balance sheet of the firm. The old firm owned people, processes, software, customer relationships, brand, data, and IP. The new firm will own a compounding cognition loop. Every workflow becomes a training surface. Every decision becomes a trace. Eve",
+          "created_at": "2026-06-14T17:58:55.000Z",
+          "url": "https://x.com/_The_Prophet__/status/2066218843022999690",
+          "public_metrics": {},
+          "matched_terms": [
+            "power",
+            "infrastructure",
+            "sovereignty"
           ]
         }
       ]
@@ -217,7 +204,33 @@
         "trust",
         "purpose"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066222845705994382",
+          "type": "repost",
+          "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For decades, the degree was sold as a conversion machine: tuition in, professional security out. Families tolerated insane price",
+          "created_at": "2026-06-14T18:14:49.000Z",
+          "url": "https://x.com/_The_Prophet__/status/2066222845705994382",
+          "public_metrics": {},
+          "matched_terms": [
+            "work",
+            "jobs"
+          ]
+        },
+        {
+          "id": "2066218843022999690",
+          "type": "repost",
+          "text": "⚡️Satya is describing the new balance sheet of the firm. The old firm owned people, processes, software, customer relationships, brand, data, and IP. The new firm will own a compounding cognition loop. Every workflow becomes a training surface. Every decision becomes a trace. Eve",
+          "created_at": "2026-06-14T17:58:55.000Z",
+          "url": "https://x.com/_The_Prophet__/status/2066218843022999690",
+          "public_metrics": {},
+          "matched_terms": [
+            "work",
+            "labor",
+            "agents"
+          ]
+        }
+      ]
     },
     "chapter-6-five-futures-one-portfolio": {
       "id": "chapter-6-five-futures-one-portfolio",
@@ -254,6 +267,41 @@
       ],
       "posts": [
         {
+          "id": "2066273584645869808",
+          "type": "repost",
+          "text": "I think SpaceX might be able to reach approximately $1T revenue in 2030",
+          "created_at": "2026-06-14T21:36:26.000Z",
+          "url": "https://x.com/elonmusk/status/2066273584645869808",
+          "public_metrics": {},
+          "matched_terms": [
+            "2030"
+          ]
+        },
+        {
+          "id": "2066251446493057310",
+          "type": "repost",
+          "text": "2027 will likely be the first year that gives us some very tiny glimpses of the 2030s (just early 2030s) Our capabilities will be vastly more powerful by mid to late 2026 than they are today. 2030s will be amazing. Golden era of humanity will begin. And the most amazing part is h",
+          "created_at": "2026-06-14T20:08:28.000Z",
+          "url": "https://x.com/Dr_Singularity/status/2066251446493057310",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026",
+            "2027"
+          ]
+        },
+        {
+          "id": "2066236717015728227",
+          "type": "repost",
+          "text": "🖥️ Best Local LLMs for Consumer GPUs — llama.cpp Guide (June 2026) What I actually run on consumer hardware right now. Every model below runs via llama.cpp with a simple one-liner — no Docker, no Python env, no cloud. ━━━ 8-16GB VRAM ━━━ 🔹 Gemma 4-12B (Google) • Smartest model ",
+          "created_at": "2026-06-14T19:09:56.000Z",
+          "url": "https://x.com/TraffAlex/status/2066236717015728227",
+          "public_metrics": {},
+          "matched_terms": [
+            "prediction",
+            "2026"
+          ]
+        },
+        {
           "id": "2066148650879955059",
           "type": "repost",
           "text": "it's happening... i think the current situation between anthropic and the U.S. government is pretty similar to what AI 2027 predicted by @DKokotajlo when the government starts worrying about national security and model access it begins tightening its grip",
@@ -263,28 +311,6 @@
           "matched_terms": [
             "when",
             "2027"
-          ]
-        },
-        {
-          "id": "2065784751345287314",
-          "type": "repost",
-          "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time when access to frontier models is abruptly cut off for non-technical reasons, we are even more convinced of one thing: scienc",
-          "created_at": "2026-06-13T13:13:59.000Z",
-          "url": "https://x.com/jietang/status/2065784751345287314",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
-        },
-        {
-          "id": "2065464150239711260",
-          "type": "repost",
-          "text": "picture this 8 of the world's biggest problems getting solved in the next 12-18 months 1. obesity: retatrutide phase 3 confirmed 30% bodyweight lost. 65% of patients no longer clinically obese. FDA submission late 2026 2. testosterone decline: FDA is expanding testosterone therap",
-          "created_at": "2026-06-12T16:00:02.000Z",
-          "url": "https://x.com/m_goes_distance/status/2065464150239711260",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026"
           ]
         }
       ]
@@ -304,19 +330,7 @@
         "assets",
         "action"
       ],
-      "posts": [
-        {
-          "id": "2065436935188058208",
-          "type": "repost",
-          "text": "MiniMax M3, Open-Weight, Now On Hugging Face , with only ~428B parameters and ~23B activated parameters Weights: huggingface.co/MiniMaxAI/Min… MiniMax Sparse Attention: huggingface.co/papers/2606.1… MiniMax (official) (@MiniMax_AI) Introducing MiniMax M3: The First Open-Weights M",
-          "created_at": "2026-06-12T14:11:53.000Z",
-          "url": "https://x.com/MiniMax_AI/status/2065436935188058208",
-          "public_metrics": {},
-          "matched_terms": [
-            "plan"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
@@ -358,7 +372,19 @@
         "enhancement",
         "human potential"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066451429003239475",
+          "type": "repost",
+          "text": "Scientists just published the first comprehensive atlas of human cellular senescence in aging. They are mapping where \"zombie cells\" appear in the human body, how they differ across tissues, and how they interact with their surrounding environment. These cells stop dividing, but ",
+          "created_at": "2026-06-15T09:23:08.000Z",
+          "url": "https://x.com/kimmonismus/status/2066451429003239475",
+          "public_metrics": {},
+          "matched_terms": [
+            "longevity"
+          ]
+        }
+      ]
     },
     "chapter-11-leaders-build-the-better-branch": {
       "id": "chapter-11-leaders-build-the-better-branch",
@@ -374,19 +400,7 @@
         "community",
         "legitimacy"
       ],
-      "posts": [
-        {
-          "id": "2065625327649640916",
-          "type": "repost",
-          "text": "🌘Kimi-K2.7-Code Weights & code We explore endless possibilities together with the community🤝 huggingface.co/moonshotai/Ki…",
-          "created_at": "2026-06-13T02:40:30.000Z",
-          "url": "https://x.com/KimiDevs/status/2065625327649640916",
-          "public_metrics": {},
-          "matched_terms": [
-            "community"
-          ]
-        }
-      ]
+      "posts": []
     }
   }
 }
