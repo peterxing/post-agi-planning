@@ -582,6 +582,8 @@ Over six months, build capacity. Learn AI deeply. Automate repetitive workflows.
 
 If you run a business, redesign one workflow around agents. If you are an educator, redesign one learning experience around curiosity and agency. If you are a public-sector leader, identify one process where AI can improve service delivery without undermining trust. If you are a parent, run a household conversation about what skills matter in a world where memorisation is cheap and agency is priceless.
 
+Agent capability becomes more serious when the agent can spend money, call paid APIs, and provision software inside bounded rules. Treat payment-enabled agents as a 30-180 day signal: your plan should not only ask what AI can draft, but what it can safely buy, book, deploy, monitor, and unwind on your behalf. The practical move is to build one small sandbox with spending limits, approvals, logs, and a human override before competitors make this ordinary.
+
 ### Phase 3: 180-365 days - own or access productive assets
 
 The next layer is productive capacity. Can you own or access energy, compute, land, tools, data, distribution, trusted relationships, or specialised knowledge that becomes more valuable as AI accelerates? Can you build a small AI-native business? Can you join a network that compounds your capability? Can you invest in health, education, robotics, energy, biotech, or infrastructure exposure within your risk tolerance?

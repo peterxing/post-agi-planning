@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T06:08:21.274Z",
+  "generatedAt": "2026-06-16T07:08:22.319Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -47,6 +47,17 @@
           ]
         },
         {
+          "id": "2066647737613832624",
+          "type": "repost",
+          "text": "In partnership with @stripe, Hermes Agent now supports a full suite of Stripe skills. Your agent can buy things, pay per-call APIs, and provision its own SaaS, with configurable safety limits on every action.",
+          "created_at": "2026-06-15T22:23:11.000Z",
+          "url": "https://x.com/NousResearch/status/2066647737613832624",
+          "public_metrics": {},
+          "matched_terms": [
+            "agent"
+          ]
+        },
+        {
           "id": "2066530103157244201",
           "type": "repost",
           "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
@@ -55,17 +66,6 @@
           "public_metrics": {},
           "matched_terms": [
             "future"
-          ]
-        },
-        {
-          "id": "2066282848223686754",
-          "type": "repost",
-          "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6T. IMO, we need to reach brain size scale, or something close to it, to build true AGI/ASI. Parameters are not everything, ",
-          "created_at": "2026-06-14T22:13:15.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2066282848223686754",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
           ]
         }
       ]
@@ -115,7 +115,19 @@
         "democratisation",
         "supply"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2065377579130142937",
+          "type": "repost",
+          "text": "🌘 Kimi-K2.7-Code, our latest coding model, is now released and open-sourced! 🔷 Improved coding & agent performance over K2.6: +21.8% on Kimi Code Bench v2, +11.0% on Program Bench, and +31.5% on MLS Bench Lite. 🔷 Reasoning efficiency: Less overthinking, with 30% lower reasonin",
+          "created_at": "2026-06-12T10:16:02.000Z",
+          "url": "https://x.com/Kimi_Moonshot/status/2065377579130142937",
+          "public_metrics": {},
+          "matched_terms": [
+            "moonshot"
+          ]
+        }
+      ]
     },
     "chapter-3-who-needs-a-plan-the-human-stack": {
       "id": "chapter-3-who-needs-a-plan-the-human-stack",
@@ -142,6 +154,17 @@
           "public_metrics": {},
           "matched_terms": [
             "jobs"
+          ]
+        },
+        {
+          "id": "2061887500541366489",
+          "type": "repost",
+          "text": "Seven new models launching at Build: let’s go! Reasoning. Code. Image. Transcribe. Voice. Built from scratch on a clean data lineage, designed for efficiency, working seamlessly as a family of models Thread 🧵 #MSBuild",
+          "created_at": "2026-06-02T19:07:42.000Z",
+          "url": "https://x.com/MicrosoftAI/status/2061887500541366489",
+          "public_metrics": {},
+          "matched_terms": [
+            "family"
           ]
         }
       ]
@@ -299,18 +322,6 @@
           ]
         },
         {
-          "id": "2066251446493057310",
-          "type": "repost",
-          "text": "2027 will likely be the first year that gives us some very tiny glimpses of the 2030s (just early 2030s) Our capabilities will be vastly more powerful by mid to late 2026 than they are today. 2030s will be amazing. Golden era of humanity will begin. And the most amazing part is h",
-          "created_at": "2026-06-14T20:08:28.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2066251446493057310",
-          "public_metrics": {},
-          "matched_terms": [
-            "2026",
-            "2027"
-          ]
-        },
-        {
           "id": "2065907659887251730",
           "type": "repost",
           "text": "The key to saving the environment is not looking backward, it’s moving forward. I realized this the first time I visited Italy twenty years ago. Everything was clean and green. The rivers sparkled. The lesson for me was obvious: the answer is not underdevelopment. The answer is p",
@@ -338,7 +349,19 @@
         "assets",
         "action"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066647737613832624",
+          "type": "repost",
+          "text": "In partnership with @stripe, Hermes Agent now supports a full suite of Stripe skills. Your agent can buy things, pay per-call APIs, and provision its own SaaS, with configurable safety limits on every action.",
+          "created_at": "2026-06-15T22:23:11.000Z",
+          "url": "https://x.com/NousResearch/status/2066647737613832624",
+          "public_metrics": {},
+          "matched_terms": [
+            "action"
+          ]
+        }
+      ]
     },
     "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute": {
       "id": "chapter-9-the-distribution-layer-ubi-universal-high-income-and-universal-compute",
