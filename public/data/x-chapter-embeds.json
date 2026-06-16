@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T03:08:20.765Z",
+  "generatedAt": "2026-06-16T06:08:21.274Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -23,6 +23,18 @@
         "disruption"
       ],
       "posts": [
+        {
+          "id": "2066700136018071841",
+          "type": "repost",
+          "text": "Announcing Artificial Analysis Intelligence Index v4.1: a shift toward agentic workloads, featuring upgraded benchmarks and new per-task metrics The Artificial Analysis Intelligence Index is our synthesis metric for assessing model intelligence and tracking AI progress. v4.1 mark",
+          "created_at": "2026-06-16T01:51:24.000Z",
+          "url": "https://x.com/ArtificialAnlys/status/2066700136018071841",
+          "public_metrics": {},
+          "matched_terms": [
+            "frontier model",
+            "agent"
+          ]
+        },
         {
           "id": "2066678678587621522",
           "type": "repost",
