@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T08:08:26.830Z",
+  "generatedAt": "2026-06-16T22:21:56.287Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -193,31 +193,6 @@
           "matched_terms": [
             "power"
           ]
-        },
-        {
-          "id": "2066512135094751480",
-          "type": "repost",
-          "text": "🚨 Elon Musk may be building something much bigger than most investors realize! According to the analysis, Tesla and SpaceX now have 7 major factory projects underway with more than $200 billion in combined CapEx planned or in progress. These projects span AI chips, AI training c",
-          "created_at": "2026-06-15T13:24:21.000Z",
-          "url": "https://x.com/herbertong/status/2066512135094751480",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy",
-            "infrastructure",
-            "robots"
-          ]
-        },
-        {
-          "id": "2066282848223686754",
-          "type": "repost",
-          "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6T. IMO, we need to reach brain size scale, or something close to it, to build true AGI/ASI. Parameters are not everything, ",
-          "created_at": "2026-06-14T22:13:15.000Z",
-          "url": "https://x.com/Dr_Singularity/status/2066282848223686754",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy",
-            "compute"
-          ]
         }
       ]
     },
@@ -237,6 +212,28 @@
         "purpose"
       ],
       "posts": [
+        {
+          "id": "2066873915717136548",
+          "type": "repost",
+          "text": "SpaceX has exercised the option to acquire @cursor_ai in an all-stock transaction with the goal of building the world’s most useful AI models. For the past few months, SpaceXAI has been jointly training a model with Cursor, which will be released in Cursor and Grok Build soon. We",
+          "created_at": "2026-06-16T13:21:56.000Z",
+          "url": "https://x.com/SpaceX/status/2066873915717136548",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
+          ]
+        },
+        {
+          "id": "2066560321200816391",
+          "type": "repost",
+          "text": "Optimus can work 24 hours a day, never complain, never need oxygen, and never ask for a day off… Time to build the Moon Base! Video",
+          "created_at": "2026-06-15T16:35:50.000Z",
+          "url": "https://x.com/GuntherEagleman/status/2066560321200816391",
+          "public_metrics": {},
+          "matched_terms": [
+            "work"
+          ]
+        },
         {
           "id": "2066424067620741273",
           "type": "repost",
@@ -286,6 +283,28 @@
       ],
       "posts": [
         {
+          "id": "2066868561973506317",
+          "type": "repost",
+          "text": "🚨 $SPCX IPO has put a real market value on Elon Musk's ability to execute! Now investors are asking: could Tesla be next? Tesla has already checked off several major 2026 milestones, including expanding unsupervised Robotaxi service, ramping Cybercab production, and growing FSD ",
+          "created_at": "2026-06-16T13:00:40.000Z",
+          "url": "https://x.com/herbertong/status/2066868561973506317",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026"
+          ]
+        },
+        {
+          "id": "2066836174249852977",
+          "type": "repost",
+          "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million paying customers, more than $2 billion in annualized revenue, and is projected to hit $6 billion by end of 2026. At $60 bil",
+          "created_at": "2026-06-16T10:51:58.000Z",
+          "url": "https://x.com/BullTheoryio/status/2066836174249852977",
+          "public_metrics": {},
+          "matched_terms": [
+            "2026"
+          ]
+        },
+        {
           "id": "2066644087340495081",
           "type": "repost",
           "text": "JUST IN: OpenAI's GPT-5.6 projected to be released next week. 83% chance. polymarket.com/event/when-wi…",
@@ -295,17 +314,6 @@
           "matched_terms": [
             "polymarket",
             "when"
-          ]
-        },
-        {
-          "id": "2066273584645869808",
-          "type": "repost",
-          "text": "I think SpaceX might be able to reach approximately $1T revenue in 2030",
-          "created_at": "2026-06-14T21:36:26.000Z",
-          "url": "https://x.com/elonmusk/status/2066273584645869808",
-          "public_metrics": {},
-          "matched_terms": [
-            "2030"
           ]
         }
       ]
@@ -353,6 +361,17 @@
         "access"
       ],
       "posts": [
+        {
+          "id": "2066873915717136548",
+          "type": "repost",
+          "text": "SpaceX has exercised the option to acquire @cursor_ai in an all-stock transaction with the goal of building the world’s most useful AI models. For the past few months, SpaceXAI has been jointly training a model with Cursor, which will be released in Cursor and Grok Build soon. We",
+          "created_at": "2026-06-16T13:21:56.000Z",
+          "url": "https://x.com/SpaceX/status/2066873915717136548",
+          "public_metrics": {},
+          "matched_terms": [
+            "distribution"
+          ]
+        },
         {
           "id": "2066678678587621522",
           "type": "repost",
