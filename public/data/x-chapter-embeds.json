@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T07:08:22.319Z",
+  "generatedAt": "2026-06-16T08:08:26.830Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -23,6 +23,17 @@
         "disruption"
       ],
       "posts": [
+        {
+          "id": "2066752564809605584",
+          "type": "repost",
+          "text": "DeepSeek Completes First External Funding Round, Raising $7.4 Billion - DeepSeek has completed its first external fundraising round, raising more than RMB 50 billion (approximately $7.4 billion). The company was reportedly valued at over $50 billion. - Investors are investing thr",
+          "created_at": "2026-06-16T05:19:44.000Z",
+          "url": "https://x.com/jukan05/status/2066752564809605584",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
         {
           "id": "2066700136018071841",
           "type": "repost",
@@ -56,17 +67,6 @@
           "matched_terms": [
             "agent"
           ]
-        },
-        {
-          "id": "2066530103157244201",
-          "type": "repost",
-          "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
-          "created_at": "2026-06-15T14:35:45.000Z",
-          "url": "https://x.com/kimmonismus/status/2066530103157244201",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
-          ]
         }
       ]
     },
@@ -85,20 +85,7 @@
         "transhumanism",
         "human potential"
       ],
-      "posts": [
-        {
-          "id": "2066451429003239475",
-          "type": "repost",
-          "text": "Scientists just published the first comprehensive atlas of human cellular senescence in aging. They are mapping where \"zombie cells\" appear in the human body, how they differ across tissues, and how they interact with their surrounding environment. These cells stop dividing, but ",
-          "created_at": "2026-06-15T09:23:08.000Z",
-          "url": "https://x.com/kimmonismus/status/2066451429003239475",
-          "public_metrics": {},
-          "matched_terms": [
-            "aging",
-            "longevity"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-2-the-abundance-engine": {
       "id": "chapter-2-the-abundance-engine",
@@ -186,6 +173,17 @@
       ],
       "posts": [
         {
+          "id": "2066752564809605584",
+          "type": "repost",
+          "text": "DeepSeek Completes First External Funding Round, Raising $7.4 Billion - DeepSeek has completed its first external fundraising round, raising more than RMB 50 billion (approximately $7.4 billion). The company was reportedly valued at over $50 billion. - Investors are investing thr",
+          "created_at": "2026-06-16T05:19:44.000Z",
+          "url": "https://x.com/jukan05/status/2066752564809605584",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute"
+          ]
+        },
+        {
           "id": "2066530103157244201",
           "type": "repost",
           "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
@@ -219,17 +217,6 @@
           "matched_terms": [
             "energy",
             "compute"
-          ]
-        },
-        {
-          "id": "2066274490254766144",
-          "type": "repost",
-          "text": "Not impossible, but definitely requires factories on the Moon and Mars to achieve. By then, I don’t think dollars will be used as currency. Just mass and energy.",
-          "created_at": "2026-06-14T21:40:02.000Z",
-          "url": "https://x.com/elonmusk/status/2066274490254766144",
-          "public_metrics": {},
-          "matched_terms": [
-            "energy"
           ]
         }
       ]
@@ -320,17 +307,6 @@
           "matched_terms": [
             "2030"
           ]
-        },
-        {
-          "id": "2065907659887251730",
-          "type": "repost",
-          "text": "The key to saving the environment is not looking backward, it’s moving forward. I realized this the first time I visited Italy twenty years ago. Everything was clean and green. The rivers sparkled. The lesson for me was obvious: the answer is not underdevelopment. The answer is p",
-          "created_at": "2026-06-13T21:22:23.000Z",
-          "url": "https://x.com/nayibbukele/status/2065907659887251730",
-          "public_metrics": {},
-          "matched_terms": [
-            "when"
-          ]
         }
       ]
     },
@@ -403,19 +379,7 @@
         "enhancement",
         "human potential"
       ],
-      "posts": [
-        {
-          "id": "2066451429003239475",
-          "type": "repost",
-          "text": "Scientists just published the first comprehensive atlas of human cellular senescence in aging. They are mapping where \"zombie cells\" appear in the human body, how they differ across tissues, and how they interact with their surrounding environment. These cells stop dividing, but ",
-          "created_at": "2026-06-15T09:23:08.000Z",
-          "url": "https://x.com/kimmonismus/status/2066451429003239475",
-          "public_metrics": {},
-          "matched_terms": [
-            "longevity"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-11-leaders-build-the-better-branch": {
       "id": "chapter-11-leaders-build-the-better-branch",

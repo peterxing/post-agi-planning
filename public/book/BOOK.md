@@ -323,6 +323,8 @@ SpaceX's newly detailed AI1 satellite concept is a useful stress test for this c
 
 The same logic applies to "brain-scale" model speculation. Do not anchor on any single parameter count as destiny; parameters are not magic. But when serious observers start tying 2027 AGI claims to data-centre buildout, model scale, test-time compute, and energy availability, treat the claim as an infrastructure signal. The question is not only whether a 100-trillion-parameter system is the right target. It is whether enough power, chips, cooling, capital, and deployment surface exist to keep moving the frontier faster than institutions can adapt.
 
+Capital is part of the compute stack too. When a leading AI lab can reportedly raise billions at frontier-scale valuations, read it as more than startup news. It means investors are pricing compute, talent, data, inference distribution, and national strategic position as one bundled asset. For households and institutions, the planning lesson is not to chase every private valuation. It is to notice that intelligence capacity is becoming a capital market, and capital markets can pull infrastructure timelines forward faster than public policy expects.
+
 The useful signal is not that every demo deserves belief. It is that the boundary keeps moving from screen work into service work and physical work. Humanoid robot pre-orders, AI-assisted public-service prototypes, and operators using Codex inside real farms all point to the same deployment layer: intelligence becomes valuable when it touches permits, land, machines, maintenance, customers, and trust. The bottleneck shifts from "can the model answer?" to "can a real institution or operator absorb the answer safely?"
 
 ### Energy as the floor of abundance
