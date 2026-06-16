@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-15T22:26:46.070Z",
+  "generatedAt": "2026-06-16T03:08:20.765Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,6 +24,28 @@
       ],
       "posts": [
         {
+          "id": "2066678678587621522",
+          "type": "repost",
+          "text": "If AGI is achievable & labs can be banned from using a model internally ONLY if they release the model publicly, the Big Three labs may decide it is better to capture all the value from AGI themselves by expansion & acquisition. Sharing AI access with other firms triggers risk.",
+          "created_at": "2026-06-16T00:26:08.000Z",
+          "url": "https://x.com/emollick/status/2066678678587621522",
+          "public_metrics": {},
+          "matched_terms": [
+            "agi"
+          ]
+        },
+        {
+          "id": "2066530103157244201",
+          "type": "repost",
+          "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
+          "created_at": "2026-06-15T14:35:45.000Z",
+          "url": "https://x.com/kimmonismus/status/2066530103157244201",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
+        {
           "id": "2066282848223686754",
           "type": "repost",
           "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6T. IMO, we need to reach brain size scale, or something close to it, to build true AGI/ASI. Parameters are not everything, ",
@@ -32,29 +54,6 @@
           "public_metrics": {},
           "matched_terms": [
             "agi"
-          ]
-        },
-        {
-          "id": "2066236717015728227",
-          "type": "repost",
-          "text": "🖥️ Best Local LLMs for Consumer GPUs — llama.cpp Guide (June 2026) What I actually run on consumer hardware right now. Every model below runs via llama.cpp with a simple one-liner — no Docker, no Python env, no cloud. ━━━ 8-16GB VRAM ━━━ 🔹 Gemma 4-12B (Google) • Smartest model ",
-          "created_at": "2026-06-14T19:09:56.000Z",
-          "url": "https://x.com/TraffAlex/status/2066236717015728227",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi",
-            "agent"
-          ]
-        },
-        {
-          "id": "2066222845705994382",
-          "type": "repost",
-          "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For decades, the degree was sold as a conversion machine: tuition in, professional security out. Families tolerated insane price",
-          "created_at": "2026-06-14T18:14:49.000Z",
-          "url": "https://x.com/_The_Prophet__/status/2066222845705994382",
-          "public_metrics": {},
-          "matched_terms": [
-            "future"
           ]
         }
       ]
@@ -152,6 +151,17 @@
       ],
       "posts": [
         {
+          "id": "2066530103157244201",
+          "type": "repost",
+          "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
+          "created_at": "2026-06-15T14:35:45.000Z",
+          "url": "https://x.com/kimmonismus/status/2066530103157244201",
+          "public_metrics": {},
+          "matched_terms": [
+            "power"
+          ]
+        },
+        {
           "id": "2066512135094751480",
           "type": "repost",
           "text": "🚨 Elon Musk may be building something much bigger than most investors realize! According to the analysis, Tesla and SpaceX now have 7 major factory projects underway with more than $200 billion in combined CapEx planned or in progress. These projects span AI chips, AI training c",
@@ -186,19 +196,6 @@
           "matched_terms": [
             "energy"
           ]
-        },
-        {
-          "id": "2066218843022999690",
-          "type": "repost",
-          "text": "⚡️Satya is describing the new balance sheet of the firm. The old firm owned people, processes, software, customer relationships, brand, data, and IP. The new firm will own a compounding cognition loop. Every workflow becomes a training surface. Every decision becomes a trace. Eve",
-          "created_at": "2026-06-14T17:58:55.000Z",
-          "url": "https://x.com/_The_Prophet__/status/2066218843022999690",
-          "public_metrics": {},
-          "matched_terms": [
-            "power",
-            "infrastructure",
-            "sovereignty"
-          ]
         }
       ]
     },
@@ -228,31 +225,6 @@
           "matched_terms": [
             "jobs",
             "labor"
-          ]
-        },
-        {
-          "id": "2066222845705994382",
-          "type": "repost",
-          "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For decades, the degree was sold as a conversion machine: tuition in, professional security out. Families tolerated insane price",
-          "created_at": "2026-06-14T18:14:49.000Z",
-          "url": "https://x.com/_The_Prophet__/status/2066222845705994382",
-          "public_metrics": {},
-          "matched_terms": [
-            "work",
-            "jobs"
-          ]
-        },
-        {
-          "id": "2066218843022999690",
-          "type": "repost",
-          "text": "⚡️Satya is describing the new balance sheet of the firm. The old firm owned people, processes, software, customer relationships, brand, data, and IP. The new firm will own a compounding cognition loop. Every workflow becomes a training surface. Every decision becomes a trace. Eve",
-          "created_at": "2026-06-14T17:58:55.000Z",
-          "url": "https://x.com/_The_Prophet__/status/2066218843022999690",
-          "public_metrics": {},
-          "matched_terms": [
-            "work",
-            "labor",
-            "agents"
           ]
         }
       ]
@@ -292,6 +264,18 @@
       ],
       "posts": [
         {
+          "id": "2066644087340495081",
+          "type": "repost",
+          "text": "JUST IN: OpenAI's GPT-5.6 projected to be released next week. 83% chance. polymarket.com/event/when-wi…",
+          "created_at": "2026-06-15T22:08:41.000Z",
+          "url": "https://x.com/Polymarket/status/2066644087340495081",
+          "public_metrics": {},
+          "matched_terms": [
+            "polymarket",
+            "when"
+          ]
+        },
+        {
           "id": "2066273584645869808",
           "type": "repost",
           "text": "I think SpaceX might be able to reach approximately $1T revenue in 2030",
@@ -312,18 +296,6 @@
           "matched_terms": [
             "2026",
             "2027"
-          ]
-        },
-        {
-          "id": "2066236717015728227",
-          "type": "repost",
-          "text": "🖥️ Best Local LLMs for Consumer GPUs — llama.cpp Guide (June 2026) What I actually run on consumer hardware right now. Every model below runs via llama.cpp with a simple one-liner — no Docker, no Python env, no cloud. ━━━ 8-16GB VRAM ━━━ 🔹 Gemma 4-12B (Google) • Smartest model ",
-          "created_at": "2026-06-14T19:09:56.000Z",
-          "url": "https://x.com/TraffAlex/status/2066236717015728227",
-          "public_metrics": {},
-          "matched_terms": [
-            "prediction",
-            "2026"
           ]
         },
         {
@@ -369,7 +341,19 @@
         "public ai",
         "access"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2066678678587621522",
+          "type": "repost",
+          "text": "If AGI is achievable & labs can be banned from using a model internally ONLY if they release the model publicly, the Big Three labs may decide it is better to capture all the value from AGI themselves by expansion & acquisition. Sharing AI access with other firms triggers risk.",
+          "created_at": "2026-06-16T00:26:08.000Z",
+          "url": "https://x.com/emollick/status/2066678678587621522",
+          "public_metrics": {},
+          "matched_terms": [
+            "access"
+          ]
+        }
+      ]
     },
     "chapter-10-human-enhancement-staying-in-the-game": {
       "id": "chapter-10-human-enhancement-staying-in-the-game",

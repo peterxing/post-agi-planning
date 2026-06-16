@@ -635,6 +635,8 @@ The danger is passivity. A world where people receive enough to consume but lose
 
 Universal Compute may matter as much as income. If intelligence becomes the primary productive tool, then access to compute becomes access to opportunity. Public AI services, school access, community compute credits, open models, secure cloud environments, AI literacy programmes, and low-cost agent platforms could become the next generation of public infrastructure.
 
+But access is not only a subsidy question. If frontier AGI becomes valuable enough that leading labs can capture more upside by expanding internally, acquiring distribution, or restricting partner access than by broadly releasing capability, then Universal Compute has to solve an ownership problem as well as a cloud-bill problem. Watch the incentives: safety rules, release rules, national-security rules, and platform terms can all push intelligence either toward public infrastructure or toward a handful of vertically integrated empires.
+
 Imagine a child in a small town with access to a world-class AI tutor, robotics simulator, science mentor, coding partner, language coach, health education guide, and creative studio. Imagine a small business owner with access to AI operations, accounting, marketing, procurement, legal triage, and design support. Imagine a local council with AI tools for planning approvals, infrastructure modelling, emergency response, translation, community engagement, and budgeting.
 
 That is what democratisation looks like when it is real.
@@ -874,6 +876,7 @@ For each scenario, write one action for the next 30 days, the next 6 months, and
 - Bloomberg, Elon Musk shows detailed design of AI data center satellite: https://www.bloomberg.com/news/articles/2026-06-08/elon-musk-shows-more-detailed-design-of-ai-data-center-satellite
 - X signal, Peter Diamandis on 2026 AI data-centre capital expenditure: https://x.com/PeterDiamandis/status/2065181176143520062
 - X signal, 2027 data-centre buildout and frontier model scale discussion: https://x.com/Dr_Singularity/status/2066282848223686754
+- X signal, Ethan Mollick on AGI access incentives and lab consolidation: https://x.com/emollick/status/2066678678587621522
 - X signal, higher education career-security bargain discussion: https://x.com/_The_Prophet__/status/2066222845705994382
 - Genewein et al., From AGI to ASI: https://arxiv.org/abs/2606.12683
 - X signal, Dario Amodei / Anthropic AI exponential policy discussion: https://x.com/DarioAmodei/status/2064781775247950326
