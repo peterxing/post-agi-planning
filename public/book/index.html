@@ -769,6 +769,16 @@
       accent-color: var(--accent);
     }
 
+    input[type="number"] {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      min-height: 42px;
+      padding: 8px 10px;
+    }
+
     .hint {
       color: var(--muted);
       font-size: 13px;
@@ -895,6 +905,172 @@
       height: 100%;
       width: var(--w);
       background: var(--c);
+    }
+
+    .capital-heading {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+
+    .capital-heading h3 {
+      margin-bottom: 6px;
+    }
+
+    .capital-total {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      min-width: 96px;
+      text-align: right;
+      background: var(--panel2);
+    }
+
+    .capital-total small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .capital-total strong {
+      display: block;
+      font-family: var(--mono);
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .net-worth-control {
+      display: grid;
+      grid-template-columns: 1fr 190px;
+      gap: 12px;
+      align-items: end;
+      border-top: 1px solid var(--line);
+      padding: 14px 0;
+    }
+
+    .net-worth-control label {
+      font-weight: 650;
+    }
+
+    .net-worth-control span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    .net-worth-control input {
+      width: 100%;
+      font-family: var(--mono);
+      text-align: right;
+    }
+
+    .capital-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .capital-actions button {
+      min-height: 34px;
+      padding: 7px 10px;
+    }
+
+    .capital-rows {
+      margin-top: 8px;
+    }
+
+    .capital-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 96px 142px;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding: 13px 0;
+    }
+
+    .capital-row:first-child {
+      border-top: 0;
+    }
+
+    .capital-copy strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .capital-copy p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .capital-track {
+      display: block;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .capital-track i {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      background: var(--c);
+    }
+
+    .percent-control {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 0 8px;
+    }
+
+    .percent-control input {
+      min-height: 40px;
+      border: 0;
+      padding: 0;
+      text-align: right;
+      font-family: var(--mono);
+      background: transparent;
+    }
+
+    .percent-control span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .percent-control input[readonly] {
+      color: var(--accent3);
+      cursor: default;
+    }
+
+    .capital-amount {
+      justify-self: end;
+      font-family: var(--mono);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .capital-status {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .actions-list {
@@ -1252,8 +1428,14 @@
         position: static;
       }
 
-      .alloc-row {
+      .alloc-row, .capital-heading, .net-worth-control, .capital-row {
         grid-template-columns: 1fr;
+      }
+
+      .capital-total,
+      .capital-amount {
+        justify-self: start;
+        text-align: left;
       }
 
       .scenario-board {
@@ -1835,6 +2017,100 @@
             </div>
           </div>
 
+          <div class="panel capital-panel">
+            <div class="capital-heading">
+              <div>
+                <h3>Capital allocation</h3>
+                <p class="hint">Enter net worth, then allocate capital by percentage. The adaptive reserve auto-balances so the total always equals 100%.</p>
+              </div>
+              <div class="capital-total">
+                <small>Total</small>
+                <strong id="capitalTotal">100%</strong>
+              </div>
+            </div>
+
+            <div class="net-worth-control">
+              <label for="netWorth">
+                Net worth
+                <span>Used to convert each allocation into an AUD amount.</span>
+              </label>
+              <input id="netWorth" type="number" min="0" step="10000" value="1000000" inputmode="decimal" aria-label="Net worth in Australian dollars">
+            </div>
+
+            <div class="capital-actions">
+              <button type="button" id="applySuggestedAllocation">Use model mix</button>
+              <button type="button" id="equalAllocation">Equal 20%</button>
+            </div>
+
+            <div class="capital-rows" aria-label="Capital allocation percentages">
+              <div class="capital-row">
+                <div class="capital-copy">
+                  <strong>Liquidity + debt defence</strong>
+                  <p>Cash buffer, debt reduction, essential expenses, and near-term optionality.</p>
+                  <span class="capital-track"><i id="capLiquidityBar" style="--w:22%;--c:#c44f2d"></i></span>
+                </div>
+                <label class="percent-control" for="capLiquidity">
+                  <input id="capLiquidity" type="number" min="0" max="100" step="1" value="22" inputmode="numeric">
+                  <span>%</span>
+                </label>
+                <strong id="capLiquidityAmount" class="capital-amount">A$0</strong>
+              </div>
+
+              <div class="capital-row">
+                <div class="capital-copy">
+                  <strong>Energy + compute infrastructure</strong>
+                  <p>Power resilience, connectivity, local automation, compute access, and critical tools.</p>
+                  <span class="capital-track"><i id="capEnergyBar" style="--w:18%;--c:#0e7c66"></i></span>
+                </div>
+                <label class="percent-control" for="capEnergy">
+                  <input id="capEnergy" type="number" min="0" max="100" step="1" value="18" inputmode="numeric">
+                  <span>%</span>
+                </label>
+                <strong id="capEnergyAmount" class="capital-amount">A$0</strong>
+              </div>
+
+              <div class="capital-row">
+                <div class="capital-copy">
+                  <strong>AI-native upside</strong>
+                  <p>Productive assets, software leverage, agent workflows, equity exposure, and venture optionality.</p>
+                  <span class="capital-track"><i id="capAiBar" style="--w:28%;--c:#2f5f98"></i></span>
+                </div>
+                <label class="percent-control" for="capAi">
+                  <input id="capAi" type="number" min="0" max="100" step="1" value="28" inputmode="numeric">
+                  <span>%</span>
+                </label>
+                <strong id="capAiAmount" class="capital-amount">A$0</strong>
+              </div>
+
+              <div class="capital-row">
+                <div class="capital-copy">
+                  <strong>Community resilience</strong>
+                  <p>Shared infrastructure, trusted people, local continuity, health access, and practical fallback capacity.</p>
+                  <span class="capital-track"><i id="capCommunityBar" style="--w:12%;--c:#9f2424"></i></span>
+                </div>
+                <label class="percent-control" for="capCommunity">
+                  <input id="capCommunity" type="number" min="0" max="100" step="1" value="12" inputmode="numeric">
+                  <span>%</span>
+                </label>
+                <strong id="capCommunityAmount" class="capital-amount">A$0</strong>
+              </div>
+
+              <div class="capital-row">
+                <div class="capital-copy">
+                  <strong>Adaptive reserve + human upgrade</strong>
+                  <p>Automatically balances the plan: health, education, relocation, family obligations, and new facts.</p>
+                  <span class="capital-track"><i id="capReserveBar" style="--w:20%;--c:#9b5c00"></i></span>
+                </div>
+                <label class="percent-control" for="capReserve">
+                  <input id="capReserve" type="number" min="0" max="100" step="1" value="20" readonly aria-readonly="true">
+                  <span>%</span>
+                </label>
+                <strong id="capReserveAmount" class="capital-amount">A$0</strong>
+              </div>
+            </div>
+            <div id="capitalStatus" class="capital-status">Allocated A$1,000,000 across five buckets.</div>
+          </div>
+
           <div class="panel">
             <h3>Realtime readout</h3>
             <div class="scoregrid">
@@ -1966,6 +2242,24 @@
       safety: "#9f2424",
       learning: "#9b5c00"
     };
+    const capitalInputIds = ["capLiquidity", "capEnergy", "capAi", "capCommunity"];
+    const balanceCapitalId = "capReserve";
+    const capitalAllocationIds = [...capitalInputIds, balanceCapitalId];
+    const capitalLabels = {
+      capLiquidity: "Liquidity + debt defence",
+      capEnergy: "Energy + compute infrastructure",
+      capAi: "AI-native upside",
+      capCommunity: "Community resilience",
+      capReserve: "Adaptive reserve + human upgrade"
+    };
+    const capitalColors = {
+      capLiquidity: colors.liquidity,
+      capEnergy: colors.resilience,
+      capAi: colors.opportunity,
+      capCommunity: colors.safety,
+      capReserve: colors.learning
+    };
+    let latestSuggestedAllocation = null;
 
     function value(id) {
       return Number(document.getElementById(id).value);
@@ -1994,6 +2288,116 @@
 
     function months(n) {
       return `${Math.round(Number(n) || 0)} months`;
+    }
+
+    function cleanPercent(n) {
+      return Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+    }
+
+    function formatMoney(n) {
+      try {
+        return new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency: "AUD",
+          maximumFractionDigits: 0
+        }).format(Math.max(0, Number(n) || 0));
+      } catch (_) {
+        return `A$${Math.round(Math.max(0, Number(n) || 0)).toLocaleString()}`;
+      }
+    }
+
+    function netWorthAmount() {
+      const input = document.getElementById("netWorth");
+      return Math.max(0, Number(input?.value) || 0);
+    }
+
+    function rebalanceCapitalAllocation(changedId) {
+      const changedInput = changedId ? document.getElementById(changedId) : null;
+      if (changedInput && capitalInputIds.includes(changedId)) {
+        const otherTotal = capitalInputIds
+          .filter(id => id !== changedId)
+          .reduce((sum, id) => sum + cleanPercent(document.getElementById(id)?.value), 0);
+        changedInput.value = Math.min(cleanPercent(changedInput.value), Math.max(0, 100 - otherTotal));
+      }
+
+      let runningTotal = 0;
+      const values = {};
+      capitalInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        const value = Math.min(cleanPercent(input?.value), Math.max(0, 100 - runningTotal));
+        if (input) input.value = value;
+        values[id] = value;
+        runningTotal += value;
+      });
+
+      const balance = Math.max(0, 100 - runningTotal);
+      const balanceInput = document.getElementById(balanceCapitalId);
+      if (balanceInput) balanceInput.value = balance;
+      values[balanceCapitalId] = balance;
+      return values;
+    }
+
+    function renderCapitalAllocation(changedId) {
+      const values = rebalanceCapitalAllocation(changedId);
+      const netWorth = netWorthAmount();
+      let total = 0;
+      capitalAllocationIds.forEach(id => {
+        const percentage = cleanPercent(values[id]);
+        total += percentage;
+        const amount = netWorth * percentage / 100;
+        const amountEl = document.getElementById(id + "Amount");
+        const barEl = document.getElementById(id + "Bar");
+        if (amountEl) amountEl.textContent = formatMoney(amount);
+        if (barEl) {
+          barEl.style.setProperty("--w", `${percentage}%`);
+          barEl.style.setProperty("--c", capitalColors[id]);
+        }
+      });
+
+      const totalEl = document.getElementById("capitalTotal");
+      const statusEl = document.getElementById("capitalStatus");
+      if (totalEl) totalEl.textContent = `${total}%`;
+      if (statusEl) {
+        statusEl.textContent = `${formatMoney(netWorth)} allocated across five buckets. ${capitalLabels[balanceCapitalId]} is ${values[balanceCapitalId]}% and keeps the plan balanced at 100%.`;
+      }
+    }
+
+    function setCapitalAllocation(nextValues) {
+      capitalInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input && nextValues[id] !== undefined) input.value = cleanPercent(nextValues[id]);
+      });
+      renderCapitalAllocation();
+      saveModelState();
+    }
+
+    function applySuggestedCapitalAllocation() {
+      if (!latestSuggestedAllocation) return;
+      const values = {
+        capLiquidity: latestSuggestedAllocation[0]?.value || 0,
+        capEnergy: latestSuggestedAllocation[1]?.value || 0,
+        capAi: latestSuggestedAllocation[2]?.value || 0,
+        capCommunity: latestSuggestedAllocation[3]?.value || 0
+      };
+      setCapitalAllocation(values);
+    }
+
+    function applyEqualCapitalAllocation() {
+      setCapitalAllocation({
+        capLiquidity: 20,
+        capEnergy: 20,
+        capAi: 20,
+        capCommunity: 20
+      });
+    }
+
+    function saveModelState() {
+      const state = Object.fromEntries(ids.map(id => [id, value(id)]));
+      state.netWorth = netWorthAmount();
+      capitalAllocationIds.forEach(id => {
+        state[id] = cleanPercent(document.getElementById(id)?.value);
+      });
+      localStorage.setItem("postAgiPlanningModel", JSON.stringify(state));
     }
 
     function scenarioRiskLoad(s) {
@@ -2519,7 +2923,9 @@
         { label: "Health + human upgrade", value: 12 + (s.abundance + s.gentle) * 20 + s.long * 12 + severity * 0.05, color: colors.learning }
       ];
       const total = allocation.reduce((a, b) => a + b.value, 0) || 1;
-      renderAllocation(allocation.map(item => ({ ...item, value: item.value / total * 100 })));
+      latestSuggestedAllocation = allocation.map(item => ({ ...item, value: item.value / total * 100 }));
+      renderAllocation(latestSuggestedAllocation);
+      renderCapitalAllocation();
 
       const actions = [];
       if (urgency > 65) {
@@ -2550,7 +2956,7 @@
       }
       renderActions(actions.slice(0, 5));
 
-      localStorage.setItem("postAgiPlanningModel", JSON.stringify(Object.fromEntries(ids.map(id => [id, value(id)]))));
+      saveModelState();
       submitSurveySoon();
     }
 
@@ -2560,11 +2966,28 @@
         ids.forEach(id => {
           if (saved[id] !== undefined) document.getElementById(id).value = saved[id];
         });
+        if (saved.netWorth !== undefined) document.getElementById("netWorth").value = Math.max(0, Number(saved.netWorth) || 0);
+        capitalAllocationIds.forEach(id => {
+          if (saved[id] !== undefined) document.getElementById(id).value = cleanPercent(saved[id]);
+        });
+        rebalanceCapitalAllocation();
       } catch (_) {}
     }
 
     restore();
     ids.forEach(id => document.getElementById(id).addEventListener("input", update));
+    capitalInputIds.forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        renderCapitalAllocation(id);
+        saveModelState();
+      });
+    });
+    document.getElementById("netWorth").addEventListener("input", () => {
+      renderCapitalAllocation();
+      saveModelState();
+    });
+    document.getElementById("applySuggestedAllocation").addEventListener("click", applySuggestedCapitalAllocation);
+    document.getElementById("equalAllocation").addEventListener("click", applyEqualCapitalAllocation);
     document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     update();
     loadSurveyAggregate();
