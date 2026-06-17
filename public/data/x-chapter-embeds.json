@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T22:21:56.287Z",
+  "generatedAt": "2026-06-17T22:09:26.891Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -24,48 +24,48 @@
       ],
       "posts": [
         {
-          "id": "2066752564809605584",
+          "id": "2067135640249209175",
           "type": "repost",
-          "text": "DeepSeek Completes First External Funding Round, Raising $7.4 Billion - DeepSeek has completed its first external fundraising round, raising more than RMB 50 billion (approximately $7.4 billion). The company was reportedly valued at over $50 billion. - Investors are investing thr",
-          "created_at": "2026-06-16T05:19:44.000Z",
-          "url": "https://x.com/jukan05/status/2066752564809605584",
+          "text": "Z ai’s GLM-5.2 is the new leading open weights model on the Artificial Analysis Intelligence Index scoring 51 and it sits on the Pareto frontier of Intelligence vs Cost per Task @Zai_org’s GLM-5.2 is the same size as GLM-5.1 (744B total / 40B active parameters) but scores 11 poin",
+          "created_at": "2026-06-17T06:41:56.000Z",
+          "url": "https://x.com/ArtificialAnlys/status/2067135640249209175",
+          "public_metrics": {},
+          "matched_terms": [
+            "agent"
+          ]
+        },
+        {
+          "id": "2067112502022775078",
+          "type": "repost",
+          "text": "Sam Altman says AI has already surpassed humans in some areas but struggles with long-horizon judgment The field was held back by scientists who were too certain about what scaling could not achieve, while other people now say: \"it looks like the exponential is continuing beautif",
+          "created_at": "2026-06-17T05:10:00.000Z",
+          "url": "https://x.com/haider1/status/2067112502022775078",
+          "public_metrics": {},
+          "matched_terms": [
+            "exponential"
+          ]
+        },
+        {
+          "id": "2067019412960379007",
+          "type": "repost",
+          "text": "Sam Altman: \"By September of this year, we will use 500,000 A-100 equivalent GPUs as an AI research intern.\" - Talks about the \"intern\" as a future event. Contrary to my earlier speculation, they don't have it yet. - More clarity on \"hundreds of thousands of GPUs\": it means 500K ",
+          "created_at": "2026-06-16T23:00:06.000Z",
+          "url": "https://x.com/deredleritt3r/status/2067019412960379007",
           "public_metrics": {},
           "matched_terms": [
             "future"
           ]
         },
         {
-          "id": "2066700136018071841",
+          "id": "2067017188834218054",
           "type": "repost",
-          "text": "Announcing Artificial Analysis Intelligence Index v4.1: a shift toward agentic workloads, featuring upgraded benchmarks and new per-task metrics The Artificial Analysis Intelligence Index is our synthesis metric for assessing model intelligence and tracking AI progress. v4.1 mark",
-          "created_at": "2026-06-16T01:51:24.000Z",
-          "url": "https://x.com/ArtificialAnlys/status/2066700136018071841",
+          "text": "The world is going to be desperately short on compute for the rest of time. No matter how many chips we make, demand will outrun supply. Scaling models in parameter count, context length, and thinking tokens continues to yield increasingly better models with consistently slower, ",
+          "created_at": "2026-06-16T22:51:15.000Z",
+          "url": "https://x.com/DaveBlundin/status/2067017188834218054",
           "public_metrics": {},
           "matched_terms": [
-            "frontier model",
-            "agent"
-          ]
-        },
-        {
-          "id": "2066678678587621522",
-          "type": "repost",
-          "text": "If AGI is achievable & labs can be banned from using a model internally ONLY if they release the model publicly, the Big Three labs may decide it is better to capture all the value from AGI themselves by expansion & acquisition. Sharing AI access with other firms triggers risk.",
-          "created_at": "2026-06-16T00:26:08.000Z",
-          "url": "https://x.com/emollick/status/2066678678587621522",
-          "public_metrics": {},
-          "matched_terms": [
-            "agi"
-          ]
-        },
-        {
-          "id": "2066647737613832624",
-          "type": "repost",
-          "text": "In partnership with @stripe, Hermes Agent now supports a full suite of Stripe skills. Your agent can buy things, pay per-call APIs, and provision its own SaaS, with configurable safety limits on every action.",
-          "created_at": "2026-06-15T22:23:11.000Z",
-          "url": "https://x.com/NousResearch/status/2066647737613832624",
-          "public_metrics": {},
-          "matched_terms": [
-            "agent"
+            "future",
+            "frontier model"
           ]
         }
       ]
@@ -104,14 +104,14 @@
       ],
       "posts": [
         {
-          "id": "2065377579130142937",
+          "id": "2067017188834218054",
           "type": "repost",
-          "text": "🌘 Kimi-K2.7-Code, our latest coding model, is now released and open-sourced! 🔷 Improved coding & agent performance over K2.6: +21.8% on Kimi Code Bench v2, +11.0% on Program Bench, and +31.5% on MLS Bench Lite. 🔷 Reasoning efficiency: Less overthinking, with 30% lower reasonin",
-          "created_at": "2026-06-12T10:16:02.000Z",
-          "url": "https://x.com/Kimi_Moonshot/status/2065377579130142937",
+          "text": "The world is going to be desperately short on compute for the rest of time. No matter how many chips we make, demand will outrun supply. Scaling models in parameter count, context length, and thinking tokens continues to yield increasingly better models with consistently slower, ",
+          "created_at": "2026-06-16T22:51:15.000Z",
+          "url": "https://x.com/DaveBlundin/status/2067017188834218054",
           "public_metrics": {},
           "matched_terms": [
-            "moonshot"
+            "supply"
           ]
         }
       ]
@@ -131,30 +131,7 @@
         "governance",
         "society"
       ],
-      "posts": [
-        {
-          "id": "2066424067620741273",
-          "type": "repost",
-          "text": "NEWS: Tesla's Giga Berlin is raising Model Y production ~20% in July, the plant's manufacturing chief says in an interview with TOSV. Weekly output rises from ~5,200 cars to a target of 6,200. Andre Thierig, Tesla's senior director of manufacturing at Giga Berlin, says the plant ",
-          "created_at": "2026-06-15T07:34:24.000Z",
-          "url": "https://x.com/muskonomy/status/2066424067620741273",
-          "public_metrics": {},
-          "matched_terms": [
-            "jobs"
-          ]
-        },
-        {
-          "id": "2061887500541366489",
-          "type": "repost",
-          "text": "Seven new models launching at Build: let’s go! Reasoning. Code. Image. Transcribe. Voice. Built from scratch on a clean data lineage, designed for efficiency, working seamlessly as a family of models Thread 🧵 #MSBuild",
-          "created_at": "2026-06-02T19:07:42.000Z",
-          "url": "https://x.com/MicrosoftAI/status/2061887500541366489",
-          "public_metrics": {},
-          "matched_terms": [
-            "family"
-          ]
-        }
-      ]
+      "posts": []
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -173,25 +150,37 @@
       ],
       "posts": [
         {
-          "id": "2066752564809605584",
+          "id": "2067046036921618707",
           "type": "repost",
-          "text": "DeepSeek Completes First External Funding Round, Raising $7.4 Billion - DeepSeek has completed its first external fundraising round, raising more than RMB 50 billion (approximately $7.4 billion). The company was reportedly valued at over $50 billion. - Investors are investing thr",
-          "created_at": "2026-06-16T05:19:44.000Z",
-          "url": "https://x.com/jukan05/status/2066752564809605584",
+          "text": ".@realGeorgeHotz doesn’t follow the script. From jailbreaking the iPhone at 17 and reverse-engineering the PS3 to building open-source self-driving technology at @comma_ai, he's consistently pushed the boundaries of what's possible. Now, as founder of @__tinygrad__, he’s focused ",
+          "created_at": "2026-06-17T00:45:53.000Z",
+          "url": "https://x.com/AIatAMD/status/2067046036921618707",
           "public_metrics": {},
           "matched_terms": [
             "compute"
           ]
         },
         {
-          "id": "2066530103157244201",
+          "id": "2066962211025940641",
           "type": "repost",
-          "text": "I believe many people still do not realize that we are in the midst of a new global power struggle over the future. The fact that China’s access to Claude alone is viewed as an immense risk to national security (!) demonstrates the kind of weapons these models represent. The race",
-          "created_at": "2026-06-15T14:35:45.000Z",
-          "url": "https://x.com/kimmonismus/status/2066530103157244201",
+          "text": "I don’t think anyone can fully understand the concept of what @SpaceX is going to achieve. • Al Satellites are deployed • Starship Full Reusability and Scale • Humanity becomes a multiplanetary species • Terafab factory producing AI chips • Moonbase w/ Mass Driver • Billions of S",
+          "created_at": "2026-06-16T19:12:48.000Z",
+          "url": "https://x.com/niccruzpatane/status/2066962211025940641",
           "public_metrics": {},
           "matched_terms": [
-            "power"
+            "energy",
+            "compute"
+          ]
+        },
+        {
+          "id": "2066929277757800833",
+          "type": "repost",
+          "text": "New cursor model being teased at compile - same size as Claude opus and gpt 5.5 - trained from scratch, no more kimi base - 10-20x more compute vs composer - generally intelligent, not just coding Releases in the “Next couple of weeks”",
+          "created_at": "2026-06-16T17:01:56.000Z",
+          "url": "https://x.com/NickADobos/status/2066929277757800833",
+          "public_metrics": {},
+          "matched_terms": [
+            "compute"
           ]
         }
       ]
@@ -213,37 +202,14 @@
       ],
       "posts": [
         {
-          "id": "2066873915717136548",
+          "id": "2067044209476223373",
           "type": "repost",
-          "text": "SpaceX has exercised the option to acquire @cursor_ai in an all-stock transaction with the goal of building the world’s most useful AI models. For the past few months, SpaceXAI has been jointly training a model with Cursor, which will be released in Cursor and Grok Build soon. We",
-          "created_at": "2026-06-16T13:21:56.000Z",
-          "url": "https://x.com/SpaceX/status/2066873915717136548",
+          "text": "Thanks @satyanadella 👏 Great work with @Azure on one of the largest MLPerf Training submission to-date on NVIDIA Blackwell: 8,192 GPUs on NVIDIA GB200 NVL72 systems, Llama 3.1 405B training target met in only 7.07 minutes. More to come! Satya Nadella (@satyanadella) New Azure mi",
+          "created_at": "2026-06-17T00:38:38.000Z",
+          "url": "https://x.com/nvidia/status/2067044209476223373",
           "public_metrics": {},
           "matched_terms": [
             "work"
-          ]
-        },
-        {
-          "id": "2066560321200816391",
-          "type": "repost",
-          "text": "Optimus can work 24 hours a day, never complain, never need oxygen, and never ask for a day off… Time to build the Moon Base! Video",
-          "created_at": "2026-06-15T16:35:50.000Z",
-          "url": "https://x.com/GuntherEagleman/status/2066560321200816391",
-          "public_metrics": {},
-          "matched_terms": [
-            "work"
-          ]
-        },
-        {
-          "id": "2066424067620741273",
-          "type": "repost",
-          "text": "NEWS: Tesla's Giga Berlin is raising Model Y production ~20% in July, the plant's manufacturing chief says in an interview with TOSV. Weekly output rises from ~5,200 cars to a target of 6,200. Andre Thierig, Tesla's senior director of manufacturing at Giga Berlin, says the plant ",
-          "created_at": "2026-06-15T07:34:24.000Z",
-          "url": "https://x.com/muskonomy/status/2066424067620741273",
-          "public_metrics": {},
-          "matched_terms": [
-            "jobs",
-            "labor"
           ]
         }
       ]
@@ -283,36 +249,35 @@
       ],
       "posts": [
         {
-          "id": "2066868561973506317",
+          "id": "2067162171419812289",
           "type": "repost",
-          "text": "🚨 $SPCX IPO has put a real market value on Elon Musk's ability to execute! Now investors are asking: could Tesla be next? Tesla has already checked off several major 2026 milestones, including expanding unsupervised Robotaxi service, ramping Cybercab production, and growing FSD ",
-          "created_at": "2026-06-16T13:00:40.000Z",
-          "url": "https://x.com/herbertong/status/2066868561973506317",
+          "text": "NEWS: Tesla Robotaxis have not caused a single at-fault crash since February 2026, according to NHTSA's latest monthly data. NHTSA released its Standing General Order data for the period ending May 15, 2026. Tesla reported one new incident in April. The Robotaxi was stopped and a",
+          "created_at": "2026-06-17T08:27:22.000Z",
+          "url": "https://x.com/muskonomy/status/2067162171419812289",
           "public_metrics": {},
           "matched_terms": [
             "2026"
           ]
         },
         {
-          "id": "2066836174249852977",
+          "id": "2067044209476223373",
           "type": "repost",
-          "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million paying customers, more than $2 billion in annualized revenue, and is projected to hit $6 billion by end of 2026. At $60 bil",
-          "created_at": "2026-06-16T10:51:58.000Z",
-          "url": "https://x.com/BullTheoryio/status/2066836174249852977",
+          "text": "Thanks @satyanadella 👏 Great work with @Azure on one of the largest MLPerf Training submission to-date on NVIDIA Blackwell: 8,192 GPUs on NVIDIA GB200 NVL72 systems, Llama 3.1 405B training target met in only 7.07 minutes. More to come! Satya Nadella (@satyanadella) New Azure mi",
+          "created_at": "2026-06-17T00:38:38.000Z",
+          "url": "https://x.com/nvidia/status/2067044209476223373",
           "public_metrics": {},
           "matched_terms": [
-            "2026"
+            "when"
           ]
         },
         {
-          "id": "2066644087340495081",
+          "id": "2067019412960379007",
           "type": "repost",
-          "text": "JUST IN: OpenAI's GPT-5.6 projected to be released next week. 83% chance. polymarket.com/event/when-wi…",
-          "created_at": "2026-06-15T22:08:41.000Z",
-          "url": "https://x.com/Polymarket/status/2066644087340495081",
+          "text": "Sam Altman: \"By September of this year, we will use 500,000 A-100 equivalent GPUs as an AI research intern.\" - Talks about the \"intern\" as a future event. Contrary to my earlier speculation, they don't have it yet. - More clarity on \"hundreds of thousands of GPUs\": it means 500K ",
+          "created_at": "2026-06-16T23:00:06.000Z",
+          "url": "https://x.com/deredleritt3r/status/2067019412960379007",
           "public_metrics": {},
           "matched_terms": [
-            "polymarket",
             "when"
           ]
         }
@@ -335,14 +300,14 @@
       ],
       "posts": [
         {
-          "id": "2066647737613832624",
+          "id": "2066938937344495629",
           "type": "repost",
-          "text": "In partnership with @stripe, Hermes Agent now supports a full suite of Stripe skills. Your agent can buy things, pay per-call APIs, and provision its own SaaS, with configurable safety limits on every action.",
-          "created_at": "2026-06-15T22:23:11.000Z",
-          "url": "https://x.com/NousResearch/status/2066647737613832624",
+          "text": "Introducing GLM-5.2: Frontier Intelligence, Open Weights - Significant improvements in coding and agentic tasks - Strong long-horizon capabilities with a 1M context window - Two levels of reasoning effort: GLM-5.2 (max) pushes the limits, while GLM-5.2 (high) strikes a strong bal",
+          "created_at": "2026-06-16T17:40:19.000Z",
+          "url": "https://x.com/Zai_org/status/2066938937344495629",
           "public_metrics": {},
           "matched_terms": [
-            "action"
+            "plan"
           ]
         }
       ]
@@ -362,22 +327,11 @@
       ],
       "posts": [
         {
-          "id": "2066873915717136548",
+          "id": "2067223764312510619",
           "type": "repost",
-          "text": "SpaceX has exercised the option to acquire @cursor_ai in an all-stock transaction with the goal of building the world’s most useful AI models. For the past few months, SpaceXAI has been jointly training a model with Cursor, which will be released in Cursor and Grok Build soon. We",
-          "created_at": "2026-06-16T13:21:56.000Z",
-          "url": "https://x.com/SpaceX/status/2066873915717136548",
-          "public_metrics": {},
-          "matched_terms": [
-            "distribution"
-          ]
-        },
-        {
-          "id": "2066678678587621522",
-          "type": "repost",
-          "text": "If AGI is achievable & labs can be banned from using a model internally ONLY if they release the model publicly, the Big Three labs may decide it is better to capture all the value from AGI themselves by expansion & acquisition. Sharing AI access with other firms triggers risk.",
-          "created_at": "2026-06-16T00:26:08.000Z",
-          "url": "https://x.com/emollick/status/2066678678587621522",
+          "text": "Today, all the key Frontierlab CEOs are meeting for a two-hour lunch. Topic: Trump administration, Anthropic and model access. Even Dario Amodei and Sam Altman are meeting. Officially, the agenda is about how AI can drive economic growth and how societies can stay resilient - esp",
+          "created_at": "2026-06-17T12:32:07.000Z",
+          "url": "https://x.com/kimmonismus/status/2067223764312510619",
           "public_metrics": {},
           "matched_terms": [
             "access"
