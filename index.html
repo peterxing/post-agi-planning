@@ -1,19 +1,1848 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rehoboam | Future Timeline & Civilization Forecast</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="/src/main.css" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rehoboam · Hitchhiker's Guide to the Singularity — Peter Xing</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%23b11f4b' stroke-width='2.5'/><circle cx='16' cy='16' r='5' fill='%23b11f4b'/></svg>" />
+<meta name="description" content="An interactive civilization-forecast system (2025–2036) and living book for navigating the arrival of superintelligence — building toward abundance instead of panic. By Peter Xing." />
+<script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("scoutTheme");
+    let stored = null;
+    try { stored = localStorage.getItem("pap-theme"); } catch (e) {}
+    const theme = param || stored ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body {
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.mono { font-family: Consolas, "Courier New", Courier, monospace; }
+a { color: var(--cp-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3, h4 { line-height: 1.18; font-weight: 700; letter-spacing: -0.02em; }
+section { position: relative; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+.eyebrow {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--cp-accent); font-weight: 600; margin-bottom: 14px;
+}
+.section-pad { padding: 88px 0; }
+.section-head { max-width: 720px; margin-bottom: 44px; }
+.section-head h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); margin-bottom: 16px; }
+.section-head p { color: var(--cp-text-muted); font-size: 1.06rem; }
+.divider-line { height: 1px; background: linear-gradient(90deg, transparent, var(--cp-border), transparent); border: 0; }
+
+/* Starfield backdrop */
+.starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.9; }
+html[data-theme="light"] .starfield { opacity: 0.35; }
+.content { position: relative; z-index: 1; }
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--cp-panel); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--cp-border);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+.brand { display: flex; align-items: center; gap: 11px; font-weight: 700; letter-spacing: 0.04em; }
+.brand-mark { width: 30px; height: 30px; flex: 0 0 30px; }
+.brand-text { font-size: 0.95rem; }
+.brand-text small { display: block; font-family: Consolas, monospace; font-size: 0.6rem; letter-spacing: 0.22em; color: var(--cp-text-muted); font-weight: 500; }
+.nav-links { display: flex; align-items: center; gap: 6px; }
+.nav-links a { color: var(--cp-text-muted); font-size: 0.86rem; padding: 7px 11px; border-radius: 0.625rem; transition: all .16s; font-weight: 500; }
+.nav-links a:hover { color: var(--cp-text); background: var(--cp-surface-soft); text-decoration: none; }
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 0.625rem; cursor: pointer;
+  background: var(--cp-surface); border: 1px solid var(--cp-border); color: var(--cp-text);
+  transition: all .16s;
+}
+.theme-toggle:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+.nav-toggle-btn { display: none; background: none; border: 1px solid var(--cp-border); border-radius: 0.625rem; width: 38px; height: 38px; color: var(--cp-text); cursor: pointer; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: inherit; font-size: 0.92rem; font-weight: 600;
+  padding: 12px 22px; border-radius: 0.625rem; border: 1px solid transparent;
+  transition: all .16s; text-decoration: none;
+}
+.btn-primary { background: var(--cp-accent); color: var(--cp-accent-fg); }
+.btn-primary:hover { background: var(--cp-accent-hover); text-decoration: none; transform: translateY(-1px); }
+.btn-ghost { background: var(--cp-surface); color: var(--cp-text); border-color: var(--cp-border); }
+.btn-ghost:hover { border-color: var(--cp-accent); color: var(--cp-accent); text-decoration: none; }
+
+/* HERO */
+.hero { padding: 132px 0 70px; position: relative; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); margin-bottom: 20px; letter-spacing: -0.035em; }
+.hero h1 .accent { color: var(--cp-accent); }
+.hero-tag { font-size: 1.16rem; color: var(--cp-text-muted); margin-bottom: 14px; max-width: 540px; }
+.hero-quote { font-size: 1.02rem; color: var(--cp-text-soft); font-style: italic; border-left: 2px solid var(--cp-accent); padding-left: 16px; margin: 22px 0 30px; max-width: 520px; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-meta { margin-top: 26px; font-family: Consolas, monospace; font-size: 0.78rem; color: var(--cp-text-muted); letter-spacing: 0.04em; }
+.hero-meta span { color: var(--cp-accent); }
+
+/* Live signal panel in hero */
+.signal-panel { background: var(--cp-panel-strong); border: 1px solid var(--cp-border); border-radius: 16px; padding: 22px; box-shadow: var(--cp-shadow); }
+.signal-panel h3 { font-size: 0.72rem; font-family: Consolas, monospace; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cp-success); box-shadow: 0 0 0 0 var(--cp-success); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,.5);} 70%{ box-shadow: 0 0 0 8px rgba(74,222,128,0);} 100%{ box-shadow:0 0 0 0 rgba(74,222,128,0);} }
+.signal-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--cp-border); }
+.signal-row:last-child { border-bottom: 0; }
+.signal-q { font-size: 0.82rem; color: var(--cp-text); max-width: 230px; }
+.signal-prob { font-family: Consolas, monospace; font-weight: 700; font-size: 1.05rem; }
+.signal-prob.up { color: var(--cp-success); }
+.signal-prob.dn { color: var(--cp-danger); }
+.signal-src { font-family: Consolas, monospace; font-size: 0.62rem; color: var(--cp-text-muted); letter-spacing: 0.1em; }
+a.signal-src-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: color .15s; }
+a.signal-src-link:hover { color: var(--cp-accent); }
+.signal-src-link .sig-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cp-accent); display: inline-block; }
+.signal-src-link[data-recency="recent"] .sig-dot { background: var(--cp-text-muted); }
+/* TIMELINE / REHOBOAM */
+.timeline-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
+.filter-label { font-family: Consolas, monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cp-text-muted); margin-right: 6px; }
+.chip {
+  font-family: Consolas, monospace; font-size: 0.74rem; letter-spacing: 0.04em;
+  padding: 6px 13px; border-radius: 999px; cursor: pointer; user-select: none;
+  background: var(--cp-surface); border: 1px solid var(--cp-border); color: var(--cp-text-muted);
+  transition: all .15s;
+}
+.chip:hover { border-color: var(--cp-border-strong); color: var(--cp-text); }
+.chip.active { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); }
+.overlay-toggle { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--cp-text-muted); cursor: pointer; user-select: none; }
+.switch { position: relative; width: 38px; height: 20px; border-radius: 999px; background: var(--cp-border-strong); transition: background .2s; flex: 0 0 38px; }
+.switch.on { background: var(--cp-accent); }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.switch.on::after { transform: translateX(18px); }
+
+.timeline { position: relative; margin-top: 26px; padding-left: 0; }
+.tl-spine { position: absolute; left: 116px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--cp-accent), var(--cp-border)); }
+@media (max-width: 720px){ .tl-spine { left: 8px; } }
+.year-block { position: relative; margin-bottom: 18px; }
+.year-row { display: grid; grid-template-columns: 100px 1fr; gap: 26px; align-items: start; }
+@media (max-width: 720px){ .year-row { grid-template-columns: 1fr; gap: 8px; padding-left: 28px; } }
+.year-tag { text-align: right; position: sticky; top: 70px; }
+@media (max-width: 720px){ .year-tag { text-align: left; position: static; } }
+.year-num { font-size: 1.7rem; font-weight: 800; font-family: Consolas, monospace; letter-spacing: -0.02em; }
+.year-meta { font-family: Consolas, monospace; font-size: 0.64rem; color: var(--cp-text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.year-dot { position: absolute; left: 110px; top: 12px; width: 14px; height: 14px; border-radius: 50%; background: var(--cp-accent); border: 3px solid var(--cp-bg); z-index: 2; }
+@media (max-width: 720px){ .year-dot { left: 2px; } }
+.year-summary { font-size: 0.92rem; color: var(--cp-text-soft); font-style: italic; margin-bottom: 12px; }
+.events { display: grid; gap: 8px; }
+.event {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--cp-surface); border: 1px solid var(--cp-border); border-left-width: 3px;
+  border-radius: 0.625rem; padding: 11px 14px; transition: all .15s;
+}
+.event:hover { border-color: var(--cp-border-strong); transform: translateX(3px); }
+.event.high { border-left-color: var(--cp-accent); }
+.event.signal { border-left-color: var(--cp-warning); background: var(--cp-accent-soft); }
+.event-dot { font-family: Consolas, monospace; font-size: 0.6rem; color: var(--cp-text-muted); margin-top: 4px; min-width: 56px; letter-spacing: 0.06em; text-transform: uppercase; }
+.event-body { flex: 1; }
+.event-title { font-size: 0.92rem; font-weight: 500; }
+.event-tags { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-family: Consolas, monospace; font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: var(--cp-surface-soft); color: var(--cp-text-muted); border: 1px solid var(--cp-border); }
+.tag.impact { color: var(--cp-accent); border-color: var(--cp-accent); }
+.tag.prob { color: var(--cp-success); border-color: var(--cp-success); }
+.tl-empty { padding: 6px 0 0 2px; color: var(--cp-text-muted); font-size: 0.84rem; font-style: italic; }
+
+/* X / @peterxing signal cards */
+.tl-signal { margin-top: 10px; background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-left: 3px solid var(--cp-text); border-radius: 0.625rem; padding: 13px 15px; }
+.tl-signal-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+.tl-x { width: 26px; height: 26px; border-radius: 7px; background: var(--cp-text); color: var(--cp-bg); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 26px; }
+.tl-x svg { width: 13px; height: 13px; fill: currentColor; display: block; }
+.tl-signal-who { display: flex; flex-direction: column; line-height: 1.18; }
+.tl-signal-name { font-weight: 700; font-size: 0.84rem; }
+.tl-signal-handle { font-family: Consolas, monospace; font-size: 0.64rem; color: var(--cp-text-muted); }
+.tl-signal-badge { margin-left: auto; font-family: Consolas, monospace; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cp-warning); border: 1px solid var(--cp-warning); border-radius: 999px; padding: 2px 9px; }
+.tl-signal[data-kind="repost"] .tl-signal-badge { color: var(--cp-accent); border-color: var(--cp-accent); }
+.tl-signal[data-kind="like"] .tl-signal-badge { color: var(--cp-danger); border-color: var(--cp-danger); }
+.tl-signal[data-kind="bookmark"] .tl-signal-badge { color: var(--cp-link); border-color: var(--cp-link); }
+.tl-signal[data-kind="quote"] .tl-signal-badge { color: var(--cp-success); border-color: var(--cp-success); }
+.tl-signal-maps { font-family: Consolas, monospace; font-size: 0.6rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 6px; }
+.tl-signal-maps b { color: var(--cp-accent); font-weight: 600; }
+.tl-signal-text { font-size: 0.9rem; color: var(--cp-text); line-height: 1.5; margin-bottom: 10px; }
+.tl-signal-foot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.tl-signal-date { font-family: Consolas, monospace; font-size: 0.64rem; color: var(--cp-text-muted); }
+.tl-signal-metrics { font-family: Consolas, monospace; font-size: 0.64rem; color: var(--cp-text-muted); display: flex; gap: 12px; }
+.tl-signal-actions { margin-left: auto; display: flex; gap: 8px; }
+.tl-signal-link, .tl-signal-load { font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; text-decoration: none; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--cp-border); color: var(--cp-text-muted); background: var(--cp-surface); cursor: pointer; transition: all .15s; }
+.tl-signal-link:hover, .tl-signal-load:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+.tl-signal-load[disabled] { opacity: .55; cursor: default; }
+.tl-embed:not(:empty) { margin-top: 12px; }
+.tl-signal-search { margin-top: 9px; display: inline-flex; align-items: center; gap: 8px; font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; color: var(--cp-text-muted); text-decoration: none; }
+.tl-signal-search:hover { color: var(--cp-accent); }
+.tl-signal-search .tl-x { width: 18px; height: 18px; border-radius: 5px; flex-basis: 18px; }
+.tl-signal-search .tl-x svg { width: 9px; height: 9px; }
+/* Compact variant: a signal card sits directly under each individual prediction (per-event mapping). */
+.event-body .tl-signal { margin-top: 8px; padding: 9px 11px; }
+.event-body .tl-signal-head { margin-bottom: 6px; }
+.event-body .tl-signal-text { font-size: 0.82rem; line-height: 1.45; margin-bottom: 7px; }
+.event-body .tl-signal-search { margin-top: 7px; font-size: 0.62rem; }
+.sig-stamp { margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border: 1px solid var(--cp-border); border-radius: 999px; background: var(--cp-accent-soft); color: var(--cp-text-muted); font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; }
+
+/* Generic card grid */
+.grid { display: grid; gap: 20px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 880px){ .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; } }
+.card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; padding: 24px; box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14); transition: all .18s; }
+.card:hover { border-color: var(--cp-border-strong); transform: translateY(-2px); }
+.card-num { font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-accent); letter-spacing: 0.14em; margin-bottom: 10px; }
+.card h3 { font-size: 1.18rem; margin-bottom: 8px; }
+.card p { font-size: 0.92rem; color: var(--cp-text-muted); }
+
+/* SIX Ds engine */
+.dband { display: flex; flex-direction: column; gap: 2px; }
+.drow { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--cp-border); }
+@media (max-width: 720px){ .drow { grid-template-columns: 1fr; gap: 4px; } }
+.drow:last-child { border-bottom: 0; }
+.dword { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+.dword span { color: var(--cp-accent); }
+.ddesc { font-size: 0.92rem; color: var(--cp-text-muted); }
+
+/* FUTURES portfolio */
+.fut-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.fut-tab { cursor: pointer; padding: 9px 16px; border-radius: 0.625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); font-size: 0.86rem; font-weight: 600; color: var(--cp-text-muted); transition: all .15s; display: flex; align-items: center; gap: 9px; }
+.fut-tab:hover { border-color: var(--cp-border-strong); color: var(--cp-text); }
+.fut-tab.active { border-color: var(--cp-accent); color: var(--cp-text); background: var(--cp-accent-soft); }
+.fut-tab .dotmark { width: 9px; height: 9px; border-radius: 50%; }
+.fut-panel { display: none; }
+.fut-panel.active { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 30px; animation: fade .25s ease; }
+@media (max-width: 880px){ .fut-panel.active { grid-template-columns: 1fr; } }
+@keyframes fade { from { opacity: 0; transform: translateY(6px);} to{ opacity:1; transform:none;} }
+.fut-panel h3 { font-size: 1.5rem; margin-bottom: 6px; }
+.fut-prob { font-family: Consolas, monospace; font-size: 0.78rem; color: var(--cp-text-muted); margin-bottom: 16px; }
+.fut-panel p { color: var(--cp-text-muted); margin-bottom: 14px; }
+.fut-list { list-style: none; }
+.fut-list li { font-size: 0.9rem; padding: 7px 0 7px 24px; position: relative; color: var(--cp-text); }
+.fut-list li::before { content: "→"; position: absolute; left: 0; color: var(--cp-accent); font-weight: 700; }
+.fut-side { background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-radius: 16px; padding: 22px; }
+.fut-side h4 { font-family: Consolas, monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 12px; }
+.bar-row { margin-bottom: 14px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 5px; }
+.bar-track { height: 7px; border-radius: 999px; background: var(--cp-surface-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; background: var(--cp-accent); transition: width .5s ease; }
+
+/* One Portfolio — net-worth allocator */
+.portfolio-builder { margin-top: 34px; background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-radius: 16px; padding: 26px 26px 24px; }
+.pb-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 26px; flex-wrap: wrap; margin-bottom: 20px; }
+.pb-head h3 { font-size: 1.4rem; margin-bottom: 7px; }
+.pb-head p { color: var(--cp-text-muted); font-size: 0.92rem; max-width: 540px; line-height: 1.6; }
+.pb-networth { flex: 0 0 auto; }
+.pb-networth label { display: block; font-family: Consolas, monospace; font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 7px; }
+.pb-input-wrap { display: flex; align-items: center; gap: 3px; border: 1px solid var(--cp-border); border-radius: 0.625rem; background: var(--cp-surface); padding: 0 14px; transition: border-color .15s; }
+.pb-input-wrap:focus-within { border-color: var(--cp-accent); }
+.pb-curr { color: var(--cp-text-muted); font-weight: 700; font-size: 1.05rem; }
+#netWorthInput { border: 0; background: transparent; color: var(--cp-text); font-family: Consolas, monospace; font-size: 1.3rem; font-weight: 700; padding: 11px 0; width: 150px; outline: none; }
+.alloc-row { display: grid; grid-template-columns: 1.25fr 1.4fr 0.95fr; align-items: center; gap: 18px; padding: 13px 0; border-top: 1px solid var(--cp-border); }
+.alloc-row:first-child { border-top: 0; }
+.alloc-meta { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.alloc-dot { width: 11px; height: 11px; border-radius: 50%; flex: 0 0 11px; }
+.alloc-name { font-size: 0.94rem; font-weight: 600; }
+.alloc-sub { font-family: Consolas, monospace; font-size: 0.66rem; color: var(--cp-text-muted); margin-top: 2px; }
+.alloc-slider { width: 100%; cursor: pointer; height: 6px; }
+.alloc-vals { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.alloc-pct { display: inline-flex; align-items: center; gap: 3px; color: var(--cp-text-muted); font-size: 0.85rem; }
+.alloc-num { width: 50px; border: 1px solid var(--cp-border); border-radius: 7px; background: var(--cp-surface); color: var(--cp-text); font-family: Consolas, monospace; font-size: 0.9rem; font-weight: 700; text-align: right; padding: 6px 7px; outline: none; }
+.alloc-num:focus { border-color: var(--cp-accent); }
+.alloc-dollar { font-size: 0.96rem; font-weight: 700; min-width: 94px; text-align: right; }
+.pb-bar { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--cp-surface-soft); margin: 18px 0 16px; }
+.pb-bar span { height: 100%; transition: width .25s ease; }
+.pb-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.pb-total { display: flex; align-items: center; gap: 11px; font-size: 0.9rem; color: var(--cp-text-muted); }
+#allocTotal { font-size: 1.25rem; font-weight: 800; padding: 3px 12px; border-radius: 0.625rem; border: 1px solid var(--cp-border); color: var(--cp-text); }
+#allocTotal.ok { color: var(--cp-success); border-color: var(--cp-success); }
+#allocTotal.off { color: var(--cp-warning); border-color: var(--cp-warning); }
+.pb-hint { font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-text-muted); }
+.pb-hint.ok { color: var(--cp-success); }
+.pb-hint.off { color: var(--cp-warning); }
+.pb-actions { display: flex; gap: 10px; }
+.pb-actions .btn { padding: 9px 15px; font-size: 0.84rem; }
+.hedge-chip { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+.hedge-chip-name { font-size: 1.04rem; font-weight: 700; }
+.hedge-chip-stat { display: flex; align-items: baseline; gap: 8px; }
+.hedge-chip-stat .mono { font-size: 1.7rem; font-weight: 800; color: var(--cp-text); }
+.hedge-chip-of { font-size: 0.76rem; color: var(--cp-text-muted); }
+.hedge-chip-dollar { font-size: 1.04rem; color: var(--cp-accent); font-weight: 700; margin-top: 4px; }
+.hedge-jump { margin-top: 16px; cursor: pointer; background: none; border: 0; padding: 0; color: var(--cp-accent); font-family: inherit; font-size: 0.84rem; font-weight: 600; }
+.hedge-jump:hover { text-decoration: underline; }
+@media (max-width: 620px){ .alloc-row { grid-template-columns: 1fr; gap: 9px; } .alloc-vals { justify-content: space-between; } .pb-networth { width: 100%; } #netWorthInput { width: 100%; } }
+
+/* BOOK accordion */
+.book-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 50px; }
+@media (max-width: 880px){ .book-hero { grid-template-columns: 1fr; } }
+.routekey { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 18px; }
+.routekey span { display: inline-flex; align-items: center; gap: 7px; font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-text-muted); }
+.routekey i { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }
+.chapter { border: 1px solid var(--cp-border); border-radius: 0.625rem; margin-bottom: 10px; background: var(--cp-surface); overflow: hidden; }
+.ch-head { display: flex; align-items: center; gap: 16px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background .15s; }
+.ch-head:hover { background: var(--cp-surface-soft); }
+.ch-idx { font-family: Consolas, monospace; font-size: 0.82rem; color: var(--cp-accent); font-weight: 700; min-width: 42px; }
+.ch-title { flex: 1; font-weight: 600; font-size: 1rem; }
+.ch-route { font-family: Consolas, monospace; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--cp-border); color: var(--cp-text-muted); }
+.ch-caret { transition: transform .2s; color: var(--cp-text-muted); }
+.chapter.open .ch-caret { transform: rotate(90deg); }
+.ch-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.chapter.open .ch-body { max-height: 640px; }
+.ch-inner { padding: 0 20px 20px 78px; color: var(--cp-text-muted); font-size: 0.92rem; }
+.ch-inner p { margin-bottom: 10px; }
+.ch-inner strong { color: var(--cp-text); }
+
+/* MOONSHOT planner */
+.planner { background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-radius: 18px; padding: 30px; box-shadow: var(--cp-shadow); }
+.planner-steps { display: flex; gap: 6px; margin-bottom: 24px; }
+.pstep { flex: 1; height: 5px; border-radius: 999px; background: var(--cp-surface-soft); transition: background .3s; }
+.pstep.done { background: var(--cp-accent); }
+.q-block { animation: fade .25s ease; }
+.q-num { font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-accent); letter-spacing: 0.14em; margin-bottom: 8px; }
+.q-text { font-size: 1.32rem; font-weight: 700; margin-bottom: 22px; }
+.opts { display: grid; gap: 10px; }
+.opt { display: flex; align-items: center; gap: 13px; padding: 15px 18px; border: 1px solid var(--cp-border); border-radius: 0.625rem; background: var(--cp-surface); cursor: pointer; transition: all .15s; font-size: 0.96rem; }
+.opt:hover { border-color: var(--cp-accent); }
+.opt.sel { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+.opt-key { font-family: Consolas, monospace; width: 26px; height: 26px; flex: 0 0 26px; border-radius: 7px; background: var(--cp-surface-soft); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: var(--cp-text-muted); }
+.opt.sel .opt-key { background: var(--cp-accent); color: var(--cp-accent-fg); }
+.planner-nav { display: flex; justify-content: space-between; margin-top: 26px; }
+.result { text-align: center; animation: fade .3s ease; }
+.score-ring { width: 168px; height: 168px; margin: 0 auto 18px; }
+.result h3 { font-size: 1.7rem; margin-bottom: 8px; }
+.result .verdict { font-size: 1.04rem; color: var(--cp-text-muted); max-width: 540px; margin: 0 auto 26px; }
+.profile-bars { max-width: 560px; margin: 0 auto 28px; text-align: left; }
+.checklist { max-width: 600px; margin: 0 auto; text-align: left; display: grid; gap: 9px; }
+.check-item { display: flex; gap: 12px; align-items: flex-start; padding: 13px 16px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 0.625rem; font-size: 0.92rem; }
+.check-item .ci-ico { color: var(--cp-accent); flex: 0 0 auto; margin-top: 1px; }
+
+/* FOOTER */
+.footer { border-top: 1px solid var(--cp-border); padding: 56px 0 40px; margin-top: 40px; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 36px; margin-bottom: 40px; }
+@media (max-width: 720px){ .footer-grid { grid-template-columns: 1fr; gap: 24px; } }
+.footer h4 { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 14px; }
+.footer ul { list-style: none; }
+.footer li { margin-bottom: 8px; font-size: 0.88rem; }
+.footer a { color: var(--cp-text-muted); }
+.footer a:hover { color: var(--cp-accent); }
+.footer-note { font-size: 0.8rem; color: var(--cp-text-soft); border-top: 1px solid var(--cp-border); padding-top: 24px; line-height: 1.7; }
+.disclaimer { margin-top: 14px; font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-text-muted); }
+
+@media (max-width: 880px){
+  .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; position: absolute; top: 60px; left: 0; right: 0; flex-direction: column; background: var(--cp-panel-strong); backdrop-filter: blur(14px); padding: 12px; border-bottom: 1px solid var(--cp-border); gap: 2px; }
+  .nav-links.open a { padding: 12px; }
+  .nav-toggle-btn { display: inline-flex; align-items: center; justify-content: center; }
+}
+/* READER */
+.reader { position: fixed; inset: 0; z-index: 1000; background: var(--cp-bg); display: flex; flex-direction: column; }
+.reader[hidden] { display: none; }
+.reader-rail { position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 3; background: transparent; }
+#rdBar { height: 100%; width: 0%; background: var(--cp-accent); transition: width .08s linear; }
+.reader-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 22px; border-bottom: 1px solid var(--cp-border); background: var(--cp-panel-strong); backdrop-filter: blur(12px); z-index: 2; }
+.reader-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.88rem; min-width: 0; }
+.reader-brand .brand-mark { width: 24px; height: 24px; flex: 0 0 24px; }
+.reader-brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reader-progress { font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-text-muted); letter-spacing: 0.1em; white-space: nowrap; }
+.reader-close { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 0.625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.reader-close:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+.reader-scroll { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+.reader-article { max-width: 720px; margin: 0 auto; padding: 54px 28px 32px; }
+.reader-route { font-family: Consolas, monospace; font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 11px; border-radius: 999px; display: inline-block; margin-bottom: 20px; border: 1px solid; }
+.reader-eyebrow { font-family: Consolas, monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 14px; }
+.reader-article h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); letter-spacing: -0.03em; margin-bottom: 22px; }
+.reader-article h2 { font-size: 1.4rem; margin: 38px 0 12px; letter-spacing: -0.01em; }
+.reader-article h3 { font-size: 1.08rem; margin: 28px 0 8px; color: var(--cp-text); }
+.reader-article p { font-size: 1.09rem; line-height: 1.85; color: var(--cp-text); margin-bottom: 19px; }
+.reader-article p.lede { font-size: 1.24rem; line-height: 1.7; color: var(--cp-text-muted); margin-bottom: 26px; }
+.reader-article p.first::first-letter { font-size: 3.4rem; line-height: 0.82; font-weight: 800; float: left; padding: 6px 12px 0 0; color: var(--cp-accent); font-family: Consolas, monospace; }
+.reader-article blockquote { border-left: 3px solid var(--cp-accent); padding: 4px 0 4px 22px; margin: 26px 0; font-size: 1.18rem; font-style: italic; color: var(--cp-text-soft); }
+.reader-article ul, .reader-article ol { margin: 0 0 19px 24px; }
+.reader-article li { font-size: 1.06rem; line-height: 1.72; margin-bottom: 9px; color: var(--cp-text); }
+.reader-article strong { color: var(--cp-text); font-weight: 700; }
+.reader-article em { color: var(--cp-text-soft); }
+.reader-article hr { border: 0; height: 1px; background: var(--cp-border); margin: 34px auto; width: 60%; }
+.reader-article .pullbox { background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-left: 3px solid var(--cp-accent); border-radius: 14px; padding: 20px 22px; margin: 28px 0; }
+.reader-article .pullbox h4 { font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 11px; }
+.reader-article .pullbox p:last-child { margin-bottom: 0; }
+.reader-article .pullbox p { font-size: 1rem; }
+.reader-article .signoff { font-family: Consolas, monospace; font-size: 0.82rem; color: var(--cp-text-muted); letter-spacing: 0.04em; margin-top: 30px; }
+.reader-foot { max-width: 720px; margin: 0 auto; padding: 6px 28px 80px; display: flex; justify-content: space-between; gap: 12px; }
+.reader-foot button { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 600; padding: 11px 18px; border-radius: 0.625rem; border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); transition: all .15s; max-width: 48%; text-align: left; }
+.reader-foot button:hover:not([disabled]) { border-color: var(--cp-accent); color: var(--cp-accent); }
+.reader-foot button[disabled] { opacity: 0.35; cursor: not-allowed; }
+.reader-foot .rd-dir { font-family: Consolas, monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cp-text-muted); display: block; }
+.read-btn { margin-top: 16px; }
+.ch-read { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; cursor: pointer; font-family: inherit; font-size: 0.84rem; font-weight: 600; color: var(--cp-accent); background: none; border: 0; padding: 0; }
+.ch-read:hover { text-decoration: underline; }
+@media (max-width: 720px){ .reader-article { padding: 40px 20px 28px; } .reader-foot button { font-size: 0.8rem; } }
+</style>
 </head>
-
 <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-</body>
+<canvas class="starfield" id="starfield"></canvas>
+<div class="content">
 
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" style="color:var(--cp-text)">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
+        <path d="M16 2 L16 11 M16 21 L16 30 M2 16 L11 16 M21 16 L30 16" stroke="var(--cp-accent)" stroke-width="1.2" opacity="0.6"/>
+      </svg>
+      <span class="brand-text">REHOBOAM<small>HITCHHIKER'S GUIDE · SINGULARITY</small></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#timeline">Timeline</a>
+      <a href="#engine">Abundance Engine</a>
+      <a href="#futures">Five Futures</a>
+      <a href="#book">The Book</a>
+      <a href="#moonshot">1000-Day Plan</a>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      </button>
+      <button class="nav-toggle-btn" id="navToggle" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<a id="top"></a>
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Future Timeline &amp; Civilization Forecast · 2025–2036</div>
+      <h1>The Hitchhiker's Guide to the <span class="accent">Singularity</span></h1>
+      <p class="hero-tag">How to prepare and plan for when artificial intelligence does everything better than humans can.</p>
+      <p class="hero-quote">"When intelligence becomes cheap, every plan changes. This is a map for building toward abundance instead of panic."</p>
+      <div class="hero-cta">
+        <a href="#timeline" class="btn btn-primary">Open the forecast
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#book" class="btn btn-ghost">Read the living book</a>
+      </div>
+      <div class="hero-meta">SYSTEM: REHOBOAM &nbsp;·&nbsp; AUTHOR: <span>PETER XING</span> &nbsp;·&nbsp; STATUS: <span>LIVE SIGNAL OVERLAY ACTIVE</span></div>
+    </div>
+    <aside class="signal-panel" id="signalPanel">
+      <h3><span class="pulse-dot"></span> Live probability pressure</h3>
+      <div id="signalList"></div>
+      <div class="signal-src" style="margin-top:14px">SOURCE: X API · POLYMARKET · SIMULATED OVERLAY</div>
+    </aside>
+  </div>
+</header>
+
+<hr class="divider-line" />
+<section class="section-pad" id="timeline">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">REHOBOAM · Forecast Engine</div>
+      <h2>The timeline of the next decade</h2>
+      <p>Base predictions synthesized from the AI Futures Model, Future Timeline, and forecasting research — then pressured in real time by live market and social signals. <strong style="color:var(--cp-text)">Every individual prediction</strong> is matched daily to its own most relevant real <strong style="color:var(--cp-text)">@peterxing</strong> signal, pulled <strong style="color:var(--cp-text)">realtime from the X API</strong> — his own <em>posts</em>, <em>reposts</em>, <em>likes</em> &amp; <em>bookmarks</em>. A signal from the <strong style="color:var(--cp-text)">past week</strong> is preferred; otherwise his <em>most recent</em> signal on that topic is shown, honestly dated. Tap <em>Load live post</em> to embed it; predictions he has never posted about open a live <em>latest-posts</em> search instead. Filter by the system you care about.</p>
+      <div class="sig-stamp" id="predStamp" hidden></div>
+      <div class="sig-stamp" id="sigStamp" hidden></div>
+    </div>
+
+    <div class="timeline-controls">
+      <span class="filter-label">Domain</span>
+      <div class="chip active" data-domain="all">All</div>
+      <div class="chip" data-domain="individual">Individual</div>
+      <div class="chip" data-domain="social">Social</div>
+      <div class="chip" data-domain="technology">Technology</div>
+      <div class="chip" data-domain="economic">Economic</div>
+      <div class="chip" data-domain="geopolitical">Geopolitical</div>
+      <div class="chip" data-domain="governance">Governance</div>
+      <label class="overlay-toggle" id="overlayToggle">
+        <span class="switch on" id="overlaySwitch"></span> Live signal overlay
+      </label>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="tl-spine"></div>
+      <div id="timelineBody"></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="engine">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Chapter 02 · The Abundance Engine</div>
+      <h2>Six forces turning scarcity into abundance</h2>
+      <p>Every exponential technology moves through the same six steps — Peter Diamandis's "Six Ds." Once something is digitised, it rides the curve from deceptive to democratised. Intelligence is now on that path.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:28px">
+      <div class="dband" id="sixDs"></div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-num">STACK / 01</div>
+        <h3>Energy &amp; compute</h3>
+        <p>Cheap, abundant energy is the floor of abundance; compute is access to intelligence. Solar + storage + fusion pilots meet photonic and post-silicon chips.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">STACK / 02</div>
+        <h3>Robots &amp; capital</h3>
+        <p>Physical AGI arrives as humanoid labour (Optimus-class) and decentralised AI token networks let ordinary people own a slice of the machines.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">STACK / 03</div>
+        <h3>Policy &amp; trust</h3>
+        <p>The real bottleneck isn't capability — it's bureaucracy. US permits average 4.5 years, transmission lines 10. Trust and rules decide how fast abundance reaches people.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="futures">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Chapter 06 · Five Futures, One Portfolio</div>
+      <h2>Don't bet on one future. Hold a portfolio.</h2>
+      <p>Nobody knows exactly how this unfolds, so the rational move is to prepare across scenarios at once — a spread of bets that pays off whichever branch we land in, plus a sixth thread running through all of them.</p>
+    </div>
+
+    <div class="fut-tabs" id="futTabs"></div>
+    <div id="futPanels"></div>
+
+    <div class="portfolio-builder" id="portfolioBuilder">
+      <div class="pb-head">
+        <div>
+          <h3>One portfolio — allocate your net worth</h3>
+          <p>You can't know which branch arrives, so spread your hedge across all six. Enter your net worth, drag the sliders, and aim for a mix that totals 100%.</p>
+        </div>
+        <div class="pb-networth">
+          <label for="netWorthInput">Your net worth</label>
+          <div class="pb-input-wrap"><span class="pb-curr">$</span><input type="text" id="netWorthInput" inputmode="numeric" autocomplete="off" value="100,000"></div>
+        </div>
+      </div>
+      <div id="allocRows"></div>
+      <div class="pb-bar" id="allocStackBar"></div>
+      <div class="pb-foot">
+        <div class="pb-total"><span>Total allocated</span><span id="allocTotal" class="mono">100%</span><span id="allocHint" class="pb-hint"></span></div>
+        <div class="pb-actions">
+          <button id="allocNormalize" class="btn btn-ghost">Normalize to 100%</button>
+          <button id="allocReset" class="btn btn-ghost">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="book">
+  <div class="wrap">
+    <div class="book-hero">
+      <div>
+        <div class="eyebrow">Living Book · by Peter Xing</div>
+        <h2 style="font-size:clamp(1.9rem,4vw,2.9rem);margin-bottom:16px">An intergalactic navigation map, not a textbook</h2>
+        <p style="color:var(--cp-text-muted);font-size:1.05rem;margin-bottom:10px">Each chapter is a star system. Pick a route through the singularity — follow capability if you want to know <em>when</em>, abundance if you want to know <em>how to thrive</em>, or risk if you want to know <em>what could go wrong</em>.</p>
+        <div class="routekey">
+          <span><i style="background:var(--cp-link)"></i> Capability route</span>
+          <span><i style="background:var(--cp-success)"></i> Abundance route</span>
+          <span><i style="background:var(--cp-danger)"></i> Risk route</span>
+        </div>
+        <button class="btn btn-primary read-btn" id="readBookBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Read the full book
+        </button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <svg id="starmap" viewBox="0 0 420 300" style="width:100%;display:block"></svg>
+      </div>
+    </div>
+
+    <div id="chapters"></div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="moonshot">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Chapter 08 · Your 1000-Day Moonshot Plan</div>
+      <h2>Find your starting vector</h2>
+      <p>Answer six questions and Rehoboam maps you onto the four phases of a 1000-day plan — from your first 30-day move to becoming a node in the better future. No accounts, nothing stored; it runs entirely in your browser.</p>
+    </div>
+
+    <div class="planner" id="planner">
+      <div class="planner-steps" id="plannerSteps"></div>
+      <div id="plannerBody"></div>
+    </div>
+
+    <div class="grid grid-4" style="margin-top:28px">
+      <div class="card"><div class="card-num">PHASE 1 · 0–30 DAYS</div><h3>Create your first plan</h3><p>Write the one-page version. Name your survival floor, your skills, and the single asset you'd most like to own.</p></div>
+      <div class="card"><div class="card-num">PHASE 2 · 30–180 DAYS</div><h3>Build capability</h3><p>Learn to orchestrate AI instead of competing with it. Compound one durable, hard-to-automate skill.</p></div>
+      <div class="card"><div class="card-num">PHASE 3 · 180–365 DAYS</div><h3>Own productive assets</h3><p>Get access to things that produce — energy, compute, audience, equity, or a share of the robots.</p></div>
+      <div class="card"><div class="card-num">PHASE 4 · 365–1000 DAYS</div><h3>Become a node</h3><p>Plug into a community and a distribution layer. Help build the better branch instead of just surviving it.</p></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="signals">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Reality Signals · Already on the board</div>
+      <h2>The future already started arriving</h2>
+      <p>These aren't predictions. They're datapoints <strong style="color:var(--cp-text)">@peterxing</strong> is tracking right now — pulled live from his latest <strong style="color:var(--cp-text)">X posts &amp; reposts</strong>, refreshed daily — that tell you which branch is loading.</p>
+    </div>
+    <div class="grid grid-3" id="signalsGrid"></div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<div class="reader" id="reader" hidden role="dialog" aria-modal="true" aria-label="Book reader">
+  <div class="reader-rail"><div id="rdBar"></div></div>
+  <div class="reader-topbar">
+    <div class="reader-brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/></svg>
+      <span>Hitchhiker's Guide to the Singularity</span>
+    </div>
+    <div class="reader-progress" id="rdProgress">CH 1 / 13</div>
+    <button class="reader-close" id="rdClose" aria-label="Close reader">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="reader-scroll" id="rdScroll">
+    <article class="reader-article" id="rdBody"></article>
+    <div class="reader-foot">
+      <button id="rdPrev"><span><span class="rd-dir">Previous</span><span id="rdPrevT"></span></span></button>
+      <button id="rdNext" style="text-align:right"><span style="text-align:right;display:block"><span class="rd-dir">Next</span><span id="rdNextT"></span></span></button>
+    </div>
+  </div>
+</div>
+
+<div id="bookSource" hidden>
+<article data-idx="0">
+<div class="reader-eyebrow">Front Matter</div>
+<span class="reader-route" style="color:var(--cp-link);border-color:var(--cp-link)">Capability route</span>
+<h1>How to Use This Book</h1>
+<p class="lede">Don't Panic. Carry a towel, and a plan.</p>
+<p class="first">Every guide to a dangerous and wonderful place begins with the same two words, printed in large friendly letters, because they are the two most important words you will ever read about the future: <strong>Don't Panic.</strong> Panic is the only genuinely useless response to a singularity. It burns energy you'll need, narrows the field of view exactly when you want it wide, and convinces you that because you can't control everything, you can't control anything. This book is the opposite of panic. It is a navigation map for the strangest stretch of road humanity has ever driven, written by someone who has spent his life watching the road change shape under his feet.</p>
+<p>So let me be clear about what this is and isn't. This is not a textbook. Textbooks assume the territory holds still. This territory does not hold still; it is being repaved, in real time, by machines that are getting better at everything faster than any committee can hold a meeting about it. What you're holding is closer to an <strong>intergalactic navigation map</strong> — a star chart where each chapter is a system you can fly to, in roughly any order, depending on what you came here to find.</p>
+<h2>Three routes through the same sky</h2>
+<p>There are three ways to read this book, and they're colour-coded like flight paths on the map at the front of the planning tool.</p>
+<ul>
+<li><strong>The Capability route</strong> is for the question <em>when?</em> If you mostly want to know how fast this is coming and how to tell real signal from hype, follow the blue systems: How to Use This Book, the Opening, Energy &amp; Compute, and the chapter on When.</li>
+<li><strong>The Abundance route</strong> is for the question <em>how do I actually thrive?</em> If you want a life plan more than a forecast, follow the green systems: My Why, the Abundance Engine, the Human Stack, Work After Work, the 1000-Day Moonshot Plan, the Distribution Layer, and Build the Better Branch.</li>
+<li><strong>The Risk route</strong> is for the question <em>what could go wrong, and what do I do about it?</em> Follow the red systems: Five Futures, and Human Enhancement.</li>
+</ul>
+<p>You don't have to pick one. Most people switch routes halfway through, which is the entire point of a map: you can see where the roads connect.</p>
+<h2>This is a living document</h2>
+<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits Rehoboam — a timeline engine running from 2025 to 2036 — and over the base predictions we layer <strong>live probability pressure</strong> ingested from prediction markets and the public conversation. That means a number you read today may have moved by the time you finish the chapter. Good. A forecast that never updates isn't a forecast; it's a fossil. When you see a percentage, read it as a weather report, not a prophecy.</p>
+<div class="pullbox">
+<h4>If you only have ten minutes</h4>
+<p>Read the Opening, skim the Five Futures, and do the six-question planner at the end. That's enough to stop the free-floating dread and convert it into a first move. Everything else is depth you can add later.</p>
+</div>
+<h2>Who you are changes where to start</h2>
+<p>If you're <strong>anxious</strong> — if the headlines have you lying awake doing the maths on your own obsolescence — start with My Why. You are not the first person to watch a livelihood evaporate, and the chapter is there to prove it.</p>
+<p>If you're a <strong>builder</strong> — already shipping, already using these tools daily, wondering where the edge goes next — skip to the Abundance Engine and the Distribution Layer, where the leverage lives.</p>
+<p>If you're a <strong>skeptic</strong> — convinced this is another hype cycle that will deflate like the last one — start with When. I'm not going to ask you to believe anything. I'm going to hand you the instruments and let you read the dials yourself.</p>
+<p>However you travel, keep the towel handy. In the original Guide, a towel is the most useful thing an interstellar hitchhiker can carry, partly for practical reasons and partly because anyone who can keep track of their towel through chaos is clearly someone who has their act together. In this book, the towel is your <strong>plan</strong>: a small, portable thing you can wrap around yourself when the future gets cold and unfamiliar. By the last page you'll have woven one. Let's begin.</p>
+<p class="signoff">// Peter Xing — somewhere mid-singularity, with a towel</p>
+</article>
+
+<article data-idx="1">
+<div class="reader-eyebrow">Opening</div>
+<span class="reader-route" style="color:var(--cp-link);border-color:var(--cp-link)">Capability route</span>
+<h1>The Future Stopped Arriving Politely</h1>
+<p class="lede">When intelligence becomes cheap, every plan changes.</p>
+<p class="first">For most of human history, the future had manners. It sent word ahead. The plough, the printing press, the steam engine, the internet — each arrived with decades of warning, time enough for a person to learn the new trade, for a town to retool, for a generation to raise the next one into a world only slightly stranger than its own. You could see change coming the way you can see weather coming across a wide plain. You had time to bring in the washing.</p>
+<p>That era is over. The future no longer RSVPs. It shows up at your door, unannounced, mid-sentence, and starts rearranging the furniture while you're still asking who invited it. A model that could barely write a coherent paragraph in 2022 was, within a few short years, drafting most of the world's new code, passing the exams we use to gate the professions, and completing in minutes the kind of multi-hour task we used to hand to a trained adult. The line on the chart did not bend gently. It went vertical while we were arguing about whether it was real.</p>
+<h2>The feeling has a name</h2>
+<p>There's a specific vertigo people feel right now, and naming it helps. It's the sensation of a plan dissolving while you're still standing on it. You did the responsible thing — you picked a field, climbed a ladder, banked your skills like firewood for winter — and now you can smell the smoke of those skills being burned for cheap by something that doesn't sleep, doesn't unionise, and didn't have to spend ten years getting good. It is a profoundly disorienting thing to have the ground rules of a life rewritten in the middle of living it.</p>
+<p>I want to be honest about that feeling because I've lived inside it, and because the worst advice you can give a frightened person is to pretend there's nothing to be afraid of. There is something here worth taking seriously. But fear, like panic, is a terrible navigator. It only knows two directions: freeze, or run. And neither of those is a plan.</p>
+<blockquote>The opposite of a scary future isn't a safe future. It's a future you've prepared for.</blockquote>
+<h2>Two stories are competing for your nervous system</h2>
+<p>Right now, two narratives are fighting for the right to live in your head rent-free. The first is the <strong>scarcity story</strong>: the machines take everything, the few who own them win, and the rest of us are managed decline — a story of bunkers, hoarding, and zero-sum dread. The second is the <strong>abundance story</strong>: intelligence becomes so cheap that the cost of solving problems collapses, and for the first time we can run the species without rationing — a story of energy too cheap to meter, medicine that designs itself, and work that finally becomes optional rather than obligatory.</p>
+<p>Here is the thing almost nobody tells you: <strong>both stories are technically available.</strong> The technology doesn't pick. We do — through what we build, what we own, what we vote for, and what we refuse. The same engine that could strand a billion people could also lift them. The fork isn't in the silicon. It's in us.</p>
+<h2>What this book is for</h2>
+<p>This book exists to move you from being a passenger in someone else's forecast to being a navigator in your own. It won't promise you the abundance branch — nobody honest can. But it will do four things: show you the engine that's driving all of this, so it stops feeling like magic; map the real timeline, so you can tell a genuine signal from a viral panic; lay out the full spread of futures, so you can hedge across all of them instead of betting your life on one; and hand you a concrete, 1000-day plan you can start this week.</p>
+<p>The future stopped arriving politely. Fine. We'll meet it at the door anyway — not with panic, and not with denial, but with a map, a towel, and the quiet confidence of people who decided to build toward abundance on purpose. Turn the page. The first system on the chart is the one I know best, because it's mine.</p>
+<p class="signoff">// Don't Panic. Pack a plan.</p>
+</article>
+<article data-idx="2">
+<div class="reader-eyebrow">Chapter 01</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>From Scarcity to Abundance — My Why</h1>
+<p class="lede">I have watched my own skills become worthless four times. This is the fifth, and I'm not afraid anymore.</p>
+<p class="first">I was born in Harbin, in the far north of China, where the Songhua River freezes solid enough to drive on and the province takes its name — Heilongjiang, the Black Dragon River — from the dark water that marks the Russian border. It is a city built for endurance. Winter there is not a season; it is an opponent. I mention this not for romance but because the first thing the north teaches you is that scarcity is the default setting of the universe, and everything good has to be wrestled out of it. I believed that for a long time. This book is the story of how I stopped believing it.</p>
+<p>When I was young, my family did what tens of millions of families have done in the great human migration of the last century: we left. We moved to Hobart, at the bottom of the world, about as far from the Black Dragon River as the map allows — a quiet island city where I was a kid from Harbin trying to decode a language and a culture from scratch. Later we moved again, to Sydney. If you have ever been the migrant child in the room, you know the particular education it gives you. You learn that the value of a skill is not fixed. It is set by a market, and the market does not care how hard you worked to acquire it.</p>
+<h2>The ladder that kept dissolving</h2>
+<p>My parents were educated, capable people, and they arrived into an economy that priced their credentials at a steep discount. So we climbed the migrant ladder — the one where you trade whatever skill the new country will pay for this year, and then re-skill when that rung gives way. I watched it happen up close, and then I lived it myself.</p>
+<p>I taught English — a skill that felt safe right up until it didn't. I worked in <strong>travel agencies</strong>, helping people book the trips they couldn't book themselves, until the internet quietly demonetised the entire profession and the shopfronts emptied out. I drove and dispatched in the <strong>taxi</strong> world, until an app erased the value of knowing the streets. I moved into <strong>tax advisory</strong>, a respectable knowledge profession that felt like solid ground — the kind of expertise that takes years to build and was supposed to be safe from automation precisely because it was complicated.</p>
+<p>Four times I banked a skill like firewood for winter. Four times I watched technology walk up and burn the woodpile for cheap. By the fourth time, I had stopped taking it personally. A pattern that repeats that cleanly isn't bad luck. It's a law.</p>
+<blockquote>Every skill I ever owned was a candle. Technology kept turning on the lights.</blockquote>
+<h2>The hospital bed</h2>
+<p>The turn — the real one, the one that rewired how I see all of this — didn't happen at a desk. It happened in a hospital bed. There is a particular clarity that arrives when your own body, the one asset you assumed was permanent, turns out to be just another system that can fail. Lying there, I did the thing you do: I added it up. The skills, the ladders, the re-skilling, the fragile machinery of the self. And I realised I had spent my whole life optimising inside a scarcity frame — fighting for a bigger slice of a pie I assumed was fixed in size.</p>
+<p>What if the pie wasn't fixed? What if the thing that had repeatedly destroyed the value of my skills — technology, relentlessly making the once-expensive cheap — was not my enemy but the single most powerful force for abundance the universe had ever produced? The same demonetisation that erased the travel agent put a travel agent in everyone's pocket. The same app that erased my knowledge of the streets gave a billion people a driver. I had been standing inside the engine of abundance the whole time, mistaking it for a wrecking ball because it kept knocking down <em>my</em> wall.</p>
+<p>That's when I became a transhumanist — not in the cartoon sense of wanting to be a robot, but in the literal sense of believing the human condition is not a fixed cage. If a body can fail, a body can be repaired, augmented, extended. If a skill can be devalued, intelligence itself can be made abundant. The thing that frightened me became the thing that freed me, the moment I changed which story I was standing inside.</p>
+<h2>Why I'm telling you this</h2>
+<p>I'm not telling you my history for sympathy. I'm telling you because right now, for the first time, <strong>everyone</strong> is about to become the migrant in the room. The thing that happened to travel agents and taxi drivers and now, yes, tax advisors and coders and radiologists — the sudden, brutal repricing of a hard-won skill — is going to happen to nearly every profession at once, on a compressed timeline. Most people have never lived through it. I've lived through it four times. So consider me the person at the front of the lifeboat who has already been in the cold water and is here to tell you: you can survive this, and more than survive it. But only if you stop defending the woodpile and start learning to live where the lights are always on.</p>
+<p>The rest of this book is what I learned standing in that engine. It starts with how the engine actually works.</p>
+<p class="signoff">// Harbin → Hobart → Sydney → here</p>
+</article>
+
+<article data-idx="3">
+<div class="reader-eyebrow">Chapter 02</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>The Abundance Engine</h1>
+<p class="lede">Once a thing becomes information, it falls down a six-step waterfall — and comes out nearly free.</p>
+<p class="first">Here is the most important machine you will never see, because it has no housing and makes no sound. I call it the Abundance Engine, and once you can see it running, you cannot un-see it. It explains why the camera in your pocket would have cost more than your house forty years ago, why a phone call across the planet went from a luxury to a rounding error, and why the value of every skill I ever owned kept evaporating. It is the same process every time. It runs in six steps, and each one feeds the next.</p>
+<h2>The six steps of the waterfall</h2>
+<p>The engine turns on the moment something becomes <strong>digitised</strong> — the moment it stops being a physical object and becomes information. A photograph stops being chemistry on paper and becomes a file. A map stops being folded cardboard and becomes data. The instant a thing becomes information, it stops obeying the laws of physical scarcity and starts obeying the laws of computing, which are the most generous laws in the economy.</p>
+<p>The second step is the trap that fools almost everyone: <strong>deceptive</strong>. Digital growth is exponential, and exponential growth in its early stages looks like nothing at all. Doubling a tiny number gives you a slightly less tiny number. The first digital cameras were worse than film; the first AI models were a party trick. This is the stage where the experts confidently declare the technology a toy — because at that exact moment, it genuinely looks like one. The deception is that "small and bad" is the larval form of "everywhere and unstoppable."</p>
+<p>Then the doublings get big enough to bite, and the technology turns <strong>disruptive</strong>. It becomes good enough to replace the old way, and the old way — the film company, the travel agency, the taxi medallion — discovers that its entire business has been quietly hollowed out while it was reassuring shareholders. By the time disruption is obvious, it's already over.</p>
+<p>The fourth step is the one I felt personally, four times: <strong>demonetised</strong>. The money drains out. The thing that used to cost a fortune now costs almost nothing, and an entire profession's worth of revenue simply vanishes from the economy. This feels like catastrophe from the inside and looks like progress from the outside — and both are true at once.</p>
+<p>Fifth, the technology becomes <strong>dematerialised</strong>. The dedicated physical objects disappear, absorbed into a single device. Your phone ate the camera, the map, the compass, the calculator, the stereo, the video library, the travel agent, the taxi dispatcher, the flashlight, and about fifty other products that used to be separate things you had to buy. Whole shelves of the economy collapsed into an app drawer.</p>
+<p>And finally, the technology becomes <strong>democratised</strong>. What was once available only to governments, corporations, or the rich is suddenly in the hands of nearly everyone on Earth. A teenager in any city now carries more computing power, more knowledge, and more creative capability than a superpower commanded a generation ago. That is the payoff at the bottom of the waterfall: not just cheaper, but <em>universal</em>.</p>
+<div class="pullbox">
+<h4>The Six Ds, in one breath</h4>
+<p>Digitised → Deceptive → Disruptive → Demonetised → Dematerialised → Democratised. Anything that falls into the top of this waterfall comes out the bottom nearly free, and in everyone's hands.</p>
+</div>
+<h2>Now point the engine at intelligence itself</h2>
+<p>For decades, this engine only ate things we'd turned into information: photos, music, maps, communication. The objects fell down the waterfall and came out free. But there was always one input the engine couldn't touch — the thing doing the digitising in the first place. <strong>Intelligence.</strong> Thinking. The expensive, slow, scarce human act of understanding a problem and solving it.</p>
+<p>That's what changed. We have now digitised cognition itself. Intelligence has fallen into the top of the waterfall, and it is moving down the six steps faster than anything in history. We are somewhere around <strong>deceptive-tipping-into-disruptive</strong> right now — which is precisely why half the world calls it overhyped and the other half is quietly terrified. Both are reading the same gauge at the larval moment. But the waterfall doesn't stop. Intelligence is about to be demonetised, dematerialised, and democratised, exactly like the camera and the phone call before it.</p>
+<p>Sit with what that means. When the cost of solving a problem approaches zero, the constraint on human flourishing stops being "can we afford to fix this?" and becomes "do we choose to?" That is the engine of abundance, finally pointed at the master resource. Every other chapter in this book is a consequence of this one. The next question is which part of being human survives a world where thinking is free — and that's the Human Stack.</p>
+<p class="signoff">// The waterfall always wins. Stand at the bottom.</p>
+</article>
+
+<article data-idx="4">
+<div class="reader-eyebrow">Chapter 03</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>The Human Stack</h1>
+<p class="lede">When machines can do everything, the question isn't what you can do. It's what you're for.</p>
+<p class="first">Computer people talk about "the stack" — the layers of a system, each one resting on the one beneath it, from the raw silicon at the bottom to the friendly app at the top. I've found it's also the clearest way to think about a human life during the singularity, because the machines are going to climb our stack from the bottom up, one layer at a time, and your job is to know which layer you're standing on and where to climb next. There are four layers. Let's go up them.</p>
+<h2>Layer one — Survival</h2>
+<p>At the bottom is the body and its needs: food, shelter, safety, health, the heartbeat that keeps the whole stack running. For all of history this layer was expensive and uncertain, which is why most human effort, most of the time, went into simply staying alive. The promise of the Abundance Engine is that this layer gets radically cheaper. Energy too cheap to ration. Food produced without the old constraints. Medicine that designs itself molecule by molecule. The body, which I once watched fail in a hospital bed, becoming a maintainable, upgradeable system rather than a slow-ticking clock. When survival stops consuming all your effort, the rest of the stack opens up. This is the foundation, and it's the layer abundance secures first.</p>
+<h2>Layer two — Economic</h2>
+<p>The next layer up is how you earn, how you exchange value, how you participate in the economy. This is the layer being repriced right now, in real time, and it's where the fear lives — because this is the layer where "what you can do" used to equal "what you're worth." When a machine can do your economic function cheaper, that equation breaks, and it breaks suddenly. I've had this layer collapse under me four times. The work after this chapter — Work After Work, the Distribution Layer, the 1000-Day Plan — is mostly about rebuilding this layer on new foundations: owning rather than only labouring, distributing rather than only producing, and plugging into the new income structures before you need them.</p>
+<h2>Layer three — Social</h2>
+<p>Above the economic layer is the social one: belonging, status, love, community, the web of relationships that tells a human being they matter. Here's the good news that almost no one says out loud — <strong>this layer is the hardest for machines to take and the most undervalued by the economy that's about to be disrupted.</strong> A model can write your code and draft your contracts, but it cannot be your friend's friend, cannot hold a community together, cannot give the particular gift of one human choosing to show up for another. As the lower layers automate, this layer doesn't shrink in importance. It grows. The people who thrive in the transition will be the ones who invested in this layer while everyone else was still defending the economic one.</p>
+<blockquote>Machines will climb the stack from the bottom. Your job is to keep climbing one layer ahead of them.</blockquote>
+<h2>Layer four — Potential</h2>
+<p>At the top of the stack is the layer we've barely been able to afford as a species: self-actualisation, meaning, creativity, the pursuit of becoming more than you were. For nearly everyone in history, this layer was a luxury — you got to it only after a lifetime of securing the layers below, if you got to it at all. The genuine, radical promise of abundance is that this top layer becomes the <em>default</em> human condition rather than the rare reward. A world where survival is cheap, the economy is restructured around ownership and contribution, and social bonds are valued — is a world where billions of people get to ask, for the first time, "what am I actually <em>for</em>?" and have the resources to go find out.</p>
+<div class="pullbox">
+<h4>Read your own stack</h4>
+<p>Which layer is taking most of your energy right now — survival, economic, social, or potential? That's your current altitude. The strategy for the whole transition is simple to state and hard to do: keep climbing one layer ahead of the machines.</p>
+</div>
+<h2>Why the stack matters more than the jobs debate</h2>
+<p>Most of the public argument about AI is stuck on layer two: "will it take my job?" That's the wrong altitude to fight at, because layer two is exactly the layer the machines will win. The stack reframes the whole question. The goal was never to out-compute the computer at the economic layer — you can't, any more than I could out-compute the app that knew the streets. The goal is to understand that as the bottom layers get automated and cheap, the centre of gravity of a human life rises. Survival becomes a solved problem. Economics becomes about ownership and distribution. And the social and potential layers — the most human layers, the ones we've always shortchanged — become the main event.</p>
+<p>That is the abundance case in one diagram: not humans versus machines for the same jobs, but humans finally freed to climb to the top of their own stack. The next two chapters get concrete about the foundation that makes it possible — the raw energy and compute underneath everything — and then about what actually happens to work.</p>
+<p class="signoff">// Know your layer. Climb one ahead.</p>
+</article>
+<article data-idx="5">
+<div class="reader-eyebrow">Chapter 04</div>
+<span class="reader-route" style="color:var(--cp-link);border-color:var(--cp-link)">Capability route</span>
+<h1>Energy, Compute, Capacity</h1>
+<p class="lede">Intelligence is just electricity that learned to think. Follow the power, and you can see the future.</p>
+<p class="first">If you want to know how fast the future is really moving, ignore the demos and the press releases and watch three dials instead: energy, compute, and the capacity to turn one into the other. Everything else is downstream. An AI model is not magic; it is a very large amount of electricity, run through a very large amount of silicon, in a very specific pattern. That's it. Which is wonderful news, actually, because it means the future isn't unknowable — it's an engineering problem with a power bill, and power bills can be forecast.</p>
+<h2>Compute is the new oil, and it's behaving like the old computers</h2>
+<p>For half a century, the amount of computing you could buy for a dollar doubled on a metronome, and that single exponential gave us everything from the moon landings to the phone in your pocket. The training of frontier AI models is now riding an even steeper curve — the compute poured into the largest systems has been climbing far faster than the old hardware trend alone, because we've stacked three exponentials on top of each other: chips keep getting better, we keep building bigger clusters of them, and we keep finding cleverer ways to use each chip. When you multiply three exponentials together, you get a number that does not feel real. That's the engine behind the jump from "writes a clumsy paragraph" to "completes a day's expert work" in a handful of years.</p>
+<p>This is why the people closest to the metal are the most certain something big is happening. They're not reading tea leaves. They're reading purchase orders. The semiconductors, the data centres, the megawatts — these are physical things with long lead times that you can count, and the count is going vertical.</p>
+<div class="pullbox">
+<h4>The three dials</h4>
+<p><strong>Energy</strong> — can we generate the power? <strong>Compute</strong> — can we build the chips and data centres? <strong>Capacity</strong> — can we connect them fast enough? When all three rise together, capability rises with them. Right now all three are rising together.</p>
+</div>
+<h2>Which means the real bottleneck is energy</h2>
+<p>Here's the twist that tells you where this is heading. As compute scales, the binding constraint stops being "can we make the chips?" and becomes "can we power them?" A frontier data centre is, in energy terms, a small city that never sleeps. The race for artificial intelligence is quietly becoming a race for <strong>electricity</strong> — which is the most important sentence in this chapter, because it tells you exactly where the abundance branch and the scarcity branch fork.</p>
+<p>If we meet that energy demand the cheap, dirty, scarce way, we get a future where intelligence is rationed by whoever controls the grid, and the scarcity story writes itself. But if we meet it the abundant way — with the staggering drop in the cost of solar, with storage that keeps getting cheaper, with the long-promised arrival of advanced nuclear and eventually fusion — then we don't just power the AI. We accidentally solve the energy problem for everything else too. Cheap, clean, abundant energy is the foundation layer of the entire Human Stack. Win it, and survival gets cheap for eight billion people, not just the data centres.</p>
+<blockquote>Whoever makes energy abundant makes everything abundant. Intelligence is just the first customer.</blockquote>
+<h2>The feedback loop that compresses the timeline</h2>
+<p>Now stack one more idea on top, because it's the one that makes the forecasts in this book aggressive. The AI we're building is increasingly being pointed back at the problems of building AI: designing better chips, optimising the data centres, discovering better materials, writing the code for the next model. When a technology starts improving the tools that improve itself, the curve stops being a straight exponential and starts to <em>compress</em> — each cycle of improvement makes the next cycle faster.</p>
+<p>This is the mechanism behind the most striking near-term forecasts: the idea that the heavy lifting of getting to genuinely general machine intelligence happens in a compressed window around <strong>2026 and 2027</strong>, rather than over the leisurely decades people instinctively expect. It's not that someone flips a switch. It's that the loop tightens. The same way the Abundance Engine's "deceptive" phase suddenly turns "disruptive," the energy-compute-capability loop suddenly turns from "impressive" to "unrecognisable."</p>
+<h2>What to actually watch</h2>
+<p>So when you're trying to separate real signal from noise, don't watch the chatbots. Watch the dials. Watch the energy deals — the data centres being plugged directly into power plants. Watch the chip supply — who can build, who can buy. Watch the capacity build-out — the construction, the grid upgrades, the cooling. These are the leading indicators, and they're public. When the energy and compute build-out accelerates, capability follows it about a year later, as reliably as thunder follows lightning. The timeline in the planning tool is built on exactly this: follow the power, and you can see the shape of what's coming. The next chapter asks the question everyone's energy and compute is really pointed at — what happens to <em>work</em>.</p>
+<p class="signoff">// Follow the power.</p>
+</article>
+
+<article data-idx="6">
+<div class="reader-eyebrow">Chapter 05</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>Work After Work</h1>
+<p class="lede">For ten thousand years we've asked children what they want to <em>do</em>. Soon we'll have to ask what they want to <em>be</em>.</p>
+<p class="first">There is a question we ask every child, so automatically that we've forgotten it's a choice: "What do you want to be when you grow up?" But listen to the answers — firefighter, doctor, teacher, coder — and you'll notice we're not really asking what they want to <em>be</em>. We're asking what job they want to <em>have</em>. For ten thousand years, since the first farmer traded the freedom of the hunt for the security of the harvest, a human being's identity and their economic function have been welded together. This chapter is about what happens when the welding torch is finally switched off — because it's about to be.</p>
+<h2>The uncomfortable part first</h2>
+<p>I'm not going to soften this, because I've lived it and you deserve the truth. A very large fraction of what we currently call "work" is cognitive labour that a sufficiently advanced machine can do faster, cheaper, and tirelessly. Not just the routine kind — the prestigious kind too. The law, the medicine, the accounting, the coding, the analysis, the writing. The professions we told a whole generation were "safe" because they required a degree are, if anything, <em>more</em> exposed, because they're made of exactly the digitised information the Abundance Engine eats first.</p>
+<p>I watched this happen to the travel agent and the taxi driver and then, in slow motion, to my own knowledge profession. So I have no patience for the comfortable lie that says "the jobs will just transform like they always have, don't worry." Sometimes the jobs don't transform. Sometimes they end, and the people in them have to build something new from a standing start. Pretending otherwise isn't kindness; it's leaving people unprepared for cold water I've already been in.</p>
+<h2>But "the end of jobs" is not "the end of work"</h2>
+<p>Here's where the abundance frame changes everything. We have quietly confused two different things: <strong>jobs</strong> (a specific bundle of tasks an employer pays you to perform) and <strong>work</strong> (the human need to contribute, to build, to matter, to pour yourself into something). The jobs are in danger. The work — the deep human drive behind it — is not going anywhere. It's about to be liberated from the job.</p>
+<p>Think about what people do with their <em>free</em> time, the time no one pays them for. They make music. They coach kids' teams. They restore old furniture, write novels nobody asked for, garden, care for elderly parents, build communities, mod video games, volunteer. Vast oceans of genuinely valuable human activity already happen entirely outside the wage economy. We just don't call it "work" because no one writes a paycheque for it. The transition we're entering is, at its most hopeful, the great <strong>unbundling</strong> of work from jobs — and the revaluing of all that human contribution we've been getting for free.</p>
+<blockquote>The machines aren't coming for your purpose. They're coming for your job. Those were never supposed to be the same thing.</blockquote>
+<h2>The bridge: how people eat in the meantime</h2>
+<p>Of course, none of that liberation matters if you can't pay rent during the transition, and this is where the serious thinking is happening. If machines produce most of the economic value, then the question becomes how that abundance gets distributed to people who are no longer selling their labour for it. A few ideas are moving from fringe to mainstream fast:</p>
+<ul>
+<li><strong>Universal Basic Income</strong> — a floor of money under everyone, unconditionally, so that the productivity of the machines becomes a dividend to the people rather than a windfall to a few.</li>
+<li><strong>Universal High Income</strong> — the more ambitious version: not a subsistence floor but a genuinely comfortable one, on the logic that if abundance is real, the floor should reflect it.</li>
+<li><strong>Universal Compute</strong> — perhaps the most interesting: giving every person not just money but a share of the actual productive resource — a slice of the intelligence itself — to direct, rent, or build with. In a world where compute is the means of production, owning a piece of it is owning a piece of the future.</li>
+</ul>
+<p>I don't know which of these wins, and anyone who tells you they're certain is selling something. But notice the shape they share: every one of them is a mechanism for making sure the bottom of the Human Stack — survival — gets <em>decoupled from having a job</em>. That decoupling is the whole ballgame.</p>
+<h2>What you actually do on Monday</h2>
+<p>So what do you do with this, practically, while the policy fights play out? Two things. First, start shifting your own centre of gravity up the stack now — invest in the parts of your contribution that are ownership, relationship, and creativity rather than rented hours. Second, stop defining yourself by your job title, gently, before the world does it for you. The people who will navigate this best are the ones who already have an answer to "what do you want to <em>be</em>?" that doesn't depend on what they're paid to <em>do</em>.</p>
+<p>That's the optimistic case, and I believe it. But belief isn't a strategy, and hope isn't a hedge. The honest thing is to plan for the whole spread of outcomes — the good, the messy, and the genuinely dangerous. So the next chapter stops describing one future and starts mapping all of them at once.</p>
+<p class="signoff">// End of jobs ≠ end of work.</p>
+</article>
+<article data-idx="7">
+<div class="reader-eyebrow">Chapter 06</div>
+<span class="reader-route" style="color:var(--cp-danger);border-color:var(--cp-danger)">Risk route</span>
+<h1>Five Futures, One Portfolio</h1>
+<p class="lede">Stop betting your life on a single prediction. Diversify across all of them.</p>
+<p class="first">The single biggest mistake intelligent people make about the future is treating it like a multiple-choice question with one correct answer they're trying to guess. They pick the scenario that matches their temperament — the optimist picks utopia, the pessimist picks collapse — and then they spend their energy defending that pick against the others, as if the future were a debate they could win. But the future isn't a prediction to be guessed. It's a distribution of outcomes to be <strong>hedged</strong>. The smartest thing you can do is borrow the one idea that finance figured out a century ago: don't bet the house on a single outcome. Build a portfolio.</p>
+<p>So here are the five futures I think are genuinely live, plus a sixth thread that runs through all of them. For each, I'll name it, give it an honest probability-weight, and — most importantly — tell you what to actually <em>do</em> to be positioned for it. You're not picking one. You're allocating across all of them, the way you'd allocate a portfolio you couldn't afford to lose.</p>
+<h2>Future 1 — Abundance (the branch worth building)</h2>
+<p>The Abundance Engine runs to completion. Intelligence and energy both get radically cheap, the distribution mechanisms work, and the bottom of the Human Stack is secured for billions. Work unbundles from jobs, survival stops being a daily fight, and the species spends its newfound surplus climbing toward the potential layer. This is the future this whole book is rooting for. <strong>How to hedge for it:</strong> build skills in ownership, creativity, and community now; learn to direct AI rather than compete with it; get close to the abundance — the tools, the assets, the networks — while it's still early.</p>
+<h2>Future 2 — Gradual Transition (the muddle-through)</h2>
+<p>The most boring future, and quite possibly the most likely: it's neither heaven nor hell, just a messy, uneven, decade-long grind. Some industries get flattened while others barely notice. Policy lurches and over-corrects. Some regions thrive, others stagnate. There's disruption and dislocation, but also adaptation, the way every previous technological wave eventually settled. <strong>How to hedge for it:</strong> stay adaptable, keep re-skilling, build a financial buffer, and don't bet everything on the transition being either instant or painless. Resilience beats prediction here.</p>
+<h2>Future 3 — Concentration (the scarcity branch)</h2>
+<p>The dark mirror of abundance. The technology works, but the <em>distribution</em> doesn't. The gains concentrate in a few hands — whoever owns the compute, the energy, the models — and instead of a dividend to humanity we get the largest power imbalance in history. The Abundance Engine produces abundance, but it's hoarded. This is the future the scarcity story warns about, and it's not paranoid; it's a real branch on the tree. <strong>How to hedge for it:</strong> get on the ownership side of the line, however small your stake; support the policy and distribution mechanisms that widen access; build community resilience that doesn't depend on a benevolent owner.</p>
+<h2>Future 4 — Turbulence (the rough crossing)</h2>
+<p>The transition happens too fast for our institutions to absorb. Not extinction, but serious instability — economic shocks, political upheaval, the social fabric straining as old certainties dissolve faster than new ones form. We come out the other side, but the crossing is rough and some things break. <strong>How to hedge for it:</strong> antifragility — local community, practical skills, financial buffers, low fixed costs, and relationships you can rely on when systems wobble. The towel, in other words.</p>
+<h2>Future 5 — Existential (the tail we don't ignore)</h2>
+<p>The low-probability, maximum-consequence branch: we build something more capable than us and fail to keep it aligned with human flourishing, or we use it to do something catastrophic to ourselves. I weight this low, but "low" is not "zero," and the consequence is the whole board. <strong>How to hedge for it:</strong> support the serious safety and governance work, take alignment seriously rather than mocking it, and refuse the two lazy responses — blind acceleration and blind panic. This is the branch where being a thoughtful participant actually matters.</p>
+<div class="pullbox">
+<h4>The sixth thread — Human Merger</h4>
+<p>Running through all five futures is a quieter possibility: that we don't stay separate from the machines at all. Through interfaces, augmentation, and enhancement, the line between "us" and "the tools" blurs, and the question stops being "what will AI do to humans" and becomes "what will humans become." This thread gets its own chapter near the end, because it changes the meaning of every other future.</p>
+</div>
+<h2>Building your portfolio</h2>
+<p>Look back at the five and notice something: almost none of the hedges contradict each other. Building skills in ownership and creativity, staying adaptable, getting on the ownership side, building local resilience, supporting good governance — these moves position you well across <em>multiple</em> futures at once. That's the magic of the portfolio approach. You don't have to know which future arrives. You just have to make the moves that pay off across the widest spread of them, and avoid the moves that only pay off if you guessed exactly right.</p>
+<p>The interactive version of this chapter in the planning tool lets you set your own weights and see your portfolio. Play with it. But the meta-lesson is the durable one: stop trying to predict the future, and start building the version of yourself that's ready for several of them. The next chapter narrows the lens back down to the single question everyone actually wants answered — <em>when?</em></p>
+<p class="signoff">// Don't predict. Diversify.</p>
+</article>
+
+<article data-idx="8">
+<div class="reader-eyebrow">Chapter 07</div>
+<span class="reader-route" style="color:var(--cp-link);border-color:var(--cp-link)">Capability route</span>
+<h1>When — Capability, Deployment, Impact</h1>
+<p class="lede">"When does AI change everything?" is three questions wearing a trench coat.</p>
+<p class="first">Whenever someone asks me "when does AI really change everything?", I've learned to ask them which "when" they mean — because the question is actually three questions wearing a trench coat, and most arguments about timelines are really just two people answering different ones. There are three separate clocks ticking, at three different speeds, and once you can read all three you stop being confused by the headlines and start being able to forecast.</p>
+<h2>Clock one — Capability</h2>
+<p>The first clock measures what the technology <em>can</em> do in a lab, at the frontier, under ideal conditions. This is the fastest clock, and it's the one the researchers watch. By this clock, the progress is breathtaking: systems that move from struggling with grade-school problems to outperforming experts in a few years. The serious people building these systems — including figures like Demis Hassabis, who is about as credible as this field gets — talk about <strong>genuinely general machine intelligence arriving around the end of this decade, roughly 2030</strong>, with the heavy conceptual lifting happening in a compressed window not far in front of us. And beyond that, the prospect of systems that don't just match human intelligence but exceed it — a transition some place around <strong>the mid-2030s</strong>. On the capability clock, "everything changes" is shockingly close.</p>
+<h2>Clock two — Deployment</h2>
+<p>The second clock measures how fast that capability actually gets into products, workflows, and hands. This clock runs slower, because the world has friction: integration takes time, regulation pumps the brakes, enterprises move cautiously, and people have to learn new habits. A capability that exists in a lab in one year might not reshape your industry for another two or three or five. This gap is exactly why skeptics and believers talk past each other — the believer is reading the capability clock ("it can already do this!") and the skeptic is reading the deployment clock ("but nobody at my office uses it"). Both are correct. They're just reading different dials.</p>
+<blockquote>Capability tells you what's possible. Deployment tells you what's arrived. Impact tells you what it did to you.</blockquote>
+<h2>Clock three — Impact</h2>
+<p>The third clock is the slowest and the one that actually matters for your life: how long until the deployed capability produces real consequences — economic, social, personal. Impact lags deployment the way deployment lags capability. The electricity was invented decades before it rewired the factory floor; the internet existed for years before it gutted the travel agency I worked in. Impact is where the Abundance Engine's "deceptive" phase lives — the technology is real and deployed, but the consequences are still building underground before they surface all at once.</p>
+<p>Here's the trap, and it caught me personally: people calibrate their sense of safety to the <em>impact</em> clock while the <em>capability</em> clock races ahead. They look around, see their own job still intact, and conclude there's nothing to prepare for — right up until the impact clock catches up to the capability clock that ran years earlier, and the change arrives all at once, feeling sudden even though it was visible the whole time.</p>
+<div class="pullbox">
+<h4>How to read the three clocks</h4>
+<p>When you see a scary or exciting AI headline, ask: is this a <strong>capability</strong> claim (a lab result), a <strong>deployment</strong> claim (a product shipping), or an <strong>impact</strong> claim (something that actually changed)? Most hype conflates the three. Most wisdom separates them.</p>
+</div>
+<h2>So — when?</h2>
+<p>My honest synthesis, the one encoded in the planning tool's timeline: the capability clock says the core breakthroughs land in the second half of this decade, plausibly with general intelligence around 2030 and the first signs of something beyond it by the mid-2030s. The deployment clock says you'll feel it arriving in waves across the late 2020s and into the 2030s, industry by industry, unevenly. And the impact clock says the consequences — the ones that reshape work, the economy, and daily life — compound quietly and then surface faster than almost anyone expects, because that's what impact always does.</p>
+<p>Which leaves you with a strange and useful gift: a warning. The gap between the clocks is the preparation window. The capability is visible now; the impact hasn't fully landed yet; and the space between them is exactly the time you have to position yourself. Most people will waste it, because the impact clock makes the future feel further away than it is. You won't — because you can read all three clocks, and you know the window is open <em>now</em>. The next chapter is what to do with it: a concrete plan measured not in years, but in the next thousand days.</p>
+<p class="signoff">// Three clocks. Read all of them.</p>
+</article>
+
+<article data-idx="9">
+<div class="reader-eyebrow">Chapter 08</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>Your 1000-Day Moonshot Plan</h1>
+<p class="lede">A thousand days is long enough to change your life and short enough to start today.</p>
+<p class="first">Everything until now has been the map. This is where you start driving. I chose a thousand days deliberately — a little under three years — because it sits in the sweet spot between two failures. A plan measured in weeks is too short to change anything structural about your life; a plan measured in decades is so vague it never starts. A thousand days is long enough to retrain, rebuild, relocate, or reinvent — and short enough that the clock is already running. By the end of it, the world will be meaningfully different, and the only question is whether you arrive at that world as its author or its passenger. Here's the plan, in four phases.</p>
+<h2>Phase 1 — Days 0–30: Orient</h2>
+<p>The first month is not about dramatic action. It's about ending the disorientation, because you cannot navigate from panic. Three moves. First, <strong>start using the frontier tools every single day</strong> — not to admire them, but to build an intuition in your own hands for what they can and can't do. You cannot plan around a technology you've only read about. Second, <strong>read your own Human Stack</strong>: honestly assess which layer is consuming your energy and how exposed your current economic function is to the Abundance Engine. Third, <strong>build a buffer</strong> — cut fixed costs, bank a few months of runway. Optionality is the foundation everything else is built on. You're not changing your life yet. You're clearing the fog and securing the base camp.</p>
+<h2>Phase 2 — Days 30–180: Position</h2>
+<p>The next five months are about moving your centre of gravity. Now that you can see the board, start shifting weight from rented hours toward owned assets and durable skills. <strong>Pick one capability that compounds</strong> — something at the intersection of what you're good at and what gets <em>more</em> valuable as AI gets cheaper (directing AI, building things, leading people, holding communities together). Go deep on it. Simultaneously, <strong>get on the ownership side of at least one line</strong>: equity, a stake, a piece of something that appreciates rather than only a wage that gets repriced. And start <strong>building in public</strong> — putting your work, your thinking, your projects where others can find them. This is the phase where you stop defending the old woodpile and start wiring up the lights.</p>
+<div class="pullbox">
+<h4>The thousand-day clock</h4>
+<p>Phase 1 (0–30 days): Orient. Phase 2 (30–180): Position. Phase 3 (180–365): Build. Phase 4 (365–1000): Become a node. Each phase rests on the one before it — don't skip the base camp.</p>
+</div>
+<h2>Phase 3 — Days 180–365: Build</h2>
+<p>By the second half of year one, you stop preparing and start shipping. Take the capability you went deep on and the ownership stake you secured, and <strong>build something real</strong> — a product, a service, a body of work, a small business, a creative output that exists in the world and that AI makes you dramatically more capable of producing alone. This is the phase where the leverage shows up: a single motivated person directing abundant intelligence can now do what used to take a whole team. Use that. The goal by day 365 is to have at least one thing you built and own that generates value independent of any job that could be repriced out from under you.</p>
+<h2>Phase 4 — Days 365–1000: Become a Node</h2>
+<p>The final and longest phase is the one most people never reach, and it's the most important. Having built something, you now <strong>plug into a network and a distribution layer</strong> — you stop being an isolated individual and become a node in something larger. You connect your work to a community, a market, a movement. You help other people make their own crossing, which is both the right thing to do and, not coincidentally, how durable value gets built in a networked world. By day 1000, the goal is not just that you survived the transition, but that you've become a point of stability and contribution that others can connect to. You've gone from passenger, to author, to part of the infrastructure of the better branch.</p>
+<h2>Start the clock</h2>
+<p>The interactive planner in the tool turns this into six questions and hands you a personalised readiness score, your current phase, and a checklist. Use it — but understand that the planner is just a mirror. The real plan is the thousand days themselves, and they start on the day you decide they do. The cruellest thing about the preparation window from the last chapter is that it's silent; no alarm goes off to tell you it's open. So let this be the alarm. Day zero is today. The next two chapters are about the world you're building toward as you go — first how value actually flows in it, then what we ourselves become.</p>
+<p class="signoff">// Day zero is today.</p>
+</article>
+<article data-idx="10">
+<div class="reader-eyebrow">Chapter 09</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>The Distribution Layer</h1>
+<p class="lede">Abundance that can't reach people isn't abundance. It's a warehouse with the doors welded shut.</p>
+<p class="first">Imagine we win the hard part. Imagine intelligence becomes free, energy becomes clean and cheap, and the machines can produce almost anything we need at almost no cost. Picture a warehouse the size of a continent, stacked floor to ceiling with everything a human being could want — solved diseases, abundant food, free education, limitless creative tools. Now picture the doors welded shut, with a tollbooth out front. That is the failure mode that haunts me most, because it's the one we're least prepared for. We are pouring trillions into <em>producing</em> abundance and almost nothing into <em>distributing</em> it. The production problem is being solved by the smartest people alive. The distribution problem is the one left for us.</p>
+<h2>Why production and distribution are different problems</h2>
+<p>It's tempting to assume that if we make enough of everything, distribution takes care of itself. It never has. We have produced enough food to feed everyone on Earth for decades, and people still go hungry — not because the calories don't exist, but because the <em>channels</em> to move them to the people who need them are broken, blocked, or unbuilt. Abundance is necessary but not sufficient. The thing that converts "we made a lot of it" into "everyone has it" is a distribution layer — the set of mechanisms, institutions, and rights that decide who actually gets to touch the abundance. Get the distribution layer wrong and you don't get the Abundance future from the portfolio chapter; you get the Concentration future, with all the wealth and none of the sharing.</p>
+<blockquote>The twentieth century learned to produce enough. The twenty-first has to learn to distribute it.</blockquote>
+<h2>What the new distribution layer might be made of</h2>
+<p>So what does a distribution layer for the age of abundance actually look like? It's being invented right now, in fragments, and you can already see the pieces. The income mechanisms from the Work After Work chapter are part of it — UBI, Universal High Income, and especially <strong>Universal Compute</strong>, which is distribution at the level of the means of production itself rather than just the proceeds. But money is only one channel. The deeper distribution layer is about <em>access</em>:</p>
+<ul>
+<li><strong>Open models and open tools</strong> — keeping frontier capability available to everyone, not locked behind a single gate. Every open release is a brick in the distribution layer.</li>
+<li><strong>Protocols over platforms</strong> — building the abundance on shared, neutral rails that no one owner can toll, the way the early internet's open protocols spread access far wider than any walled garden could.</li>
+<li><strong>Cooperative and community ownership</strong> — structures where the people who use the abundance also own a piece of the engine producing it, so the dividend flows outward by design rather than by charity.</li>
+<li><strong>Education and capability</strong> — because access you don't know how to use is access in name only. The distribution layer includes teaching people to <em>direct</em> the abundance, not just receive it.</li>
+</ul>
+<h2>This is the most leveraged work of our time</h2>
+<p>Here's why I put this chapter on the abundance route and not the risk route, even though it describes a danger. The distribution problem is the one place where ordinary, motivated people have the most leverage. You probably can't move the frontier of model capability — that's happening in a handful of labs with budgets the size of nations. But the distribution layer is wide open, under-built, and desperately short of people working on it. Every community you help plug in, every open tool you support, every cooperative structure you help build, every person you teach to use these tools — that's distribution-layer work, and it's the work that decides which branch we land on.</p>
+<div class="pullbox">
+<h4>The leverage point</h4>
+<p>You may not be able to change how fast the abundance is produced. But you can change how widely it's distributed — and that, not the production, is what separates the Abundance future from the Concentration future.</p>
+</div>
+<p>This is what I meant, back in the 1000-day plan, by "become a node." A node is a piece of the distribution layer. When you connect your work to a community and help others cross, you are personally widening the channel through which abundance reaches people. The production of the future is being handled. The <em>distribution</em> of it is the open commission, and it has your name on it if you want it. The final two chapters turn to the deepest question of all — not how the abundance reaches us, but what we become once it does.</p>
+<p class="signoff">// Build the channels, not just the warehouse.</p>
+</article>
+
+<article data-idx="11">
+<div class="reader-eyebrow">Chapter 10</div>
+<span class="reader-route" style="color:var(--cp-danger);border-color:var(--cp-danger)">Risk route</span>
+<h1>Human Enhancement</h1>
+<p class="lede">The most important question isn't what AI will do to humans. It's what humans will choose to become.</p>
+<p class="first">Almost every conversation about the future of intelligence makes the same hidden assumption: that there will be "the AI" over here, and "us" over there, two separate species staring across a widening gap, and the only question is who ends up on top. But that framing may turn out to be the great misunderstanding of the age. The line between the tool and the user has never been as fixed as we pretend, and it is about to get blurrier than at any point in human history. The deepest question of the singularity isn't <em>what will AI do to humans</em>. It's <em>what will humans choose to become</em> — and that's the sixth thread that runs through every one of the five futures.</p>
+<h2>The line was always blurry</h2>
+<p>We tell ourselves a story in which humans are natural and tools are separate, but it has never really been true. The moment a human picked up a stick to reach further than an arm allows, the boundary started moving. Writing offloaded memory onto clay and paper. The phone in your pocket is already a cognitive prosthesis — you no longer remember phone numbers or directions because you've outsourced that cognition to a device you carry everywhere. We are already cyborgs in the literal sense that our thinking is distributed across our biology and our tools. The only thing changing is the <em>intimacy</em> and <em>capability</em> of the connection. As I learned in that hospital bed, the body and mind we think of as fixed are really just the current version — and versions can be revised.</p>
+<h2>The spectrum of becoming</h2>
+<p>Enhancement isn't one thing; it's a spectrum, and we're already moving along it. At the near end: the tools we already use to augment our minds, getting tighter and more capable — AI that drafts alongside your thoughts, that extends your memory and reach. Further along: the medical frontier, where the same Abundance Engine pointed at biology starts to treat ageing itself as an engineering problem, raising the real prospect of dramatically extended healthy lifespans — what some call longevity escape velocity, the point where life expectancy rises faster than time passes. And at the far end: direct interfaces between mind and machine, the merging of human cognition with abundant artificial intelligence, until "human" and "AI" stop being two things in competition and become a continuum.</p>
+<blockquote>We have never been purely natural. We have always been the species that builds itself.</blockquote>
+<h2>Why this is on the risk route</h2>
+<p>I deliberately put this chapter in red, not green, and I want to be honest about why. Enhancement is the most double-edged branch on the whole tree. The same capabilities that could heal every disease and let us flourish beyond current limits could also deepen every inequality we already have. If enhancement is abundant and distributed — part of the distribution layer from the last chapter — it could be the most liberating development in human history. If it's scarce and hoarded, it could split humanity into the enhanced and the left-behind in a way that makes every previous inequality look quaint. The technology doesn't decide which. We do. Again.</p>
+<p>There are real risks here that deserve sober respect, not hand-waving: questions of identity, of consent, of what we lose as well as what we gain, of who gets to define "better." Anyone who approaches human enhancement with pure techno-optimism and no humility is being reckless with the most precious thing there is. But anyone who approaches it with pure refusal — who insists the human condition is sacred and fixed and must never be touched — is making a different error, because the human condition has never been fixed, and "leave it exactly as it is" includes leaving in all the suffering, disease, and limitation we finally have the power to address.</p>
+<div class="pullbox">
+<h4>The transhumanist's actual position</h4>
+<p>Not "replace the human with the machine." Rather: the human condition is not a cage but a starting point, and we have a responsibility to improve it wisely, widely, and with our eyes open to the risks.</p>
+</div>
+<h2>The choice is the point</h2>
+<p>I became a transhumanist in a hospital bed, watching the one asset I assumed was permanent turn out to be revisable. What I understood then, and believe more strongly now, is that enhancement is not something that will simply <em>happen to</em> us, like weather. It's a series of choices — individual and collective — about what we value, what we're willing to become, and whether we'll do it together or let it fracture us. The future of intelligence and the future of humanity are not two separate stories. They're converging into one, and the question of what we become is the most important question we'll ever get to answer. Which brings us, finally, to the only chapter that matters — the one about choosing.</p>
+<p class="signoff">// Not what AI does to us. What we choose to be.</p>
+</article>
+
+<article data-idx="12">
+<div class="reader-eyebrow">Chapter 11 · Closing</div>
+<span class="reader-route" style="color:var(--cp-success);border-color:var(--cp-success)">Abundance route</span>
+<h1>Build the Better Branch</h1>
+<p class="lede">The future isn't a forecast you receive. It's a branch you choose, and then build.</p>
+<p class="first">We've reached the end of the map, so let me tell you the one thing I most want you to carry out of this book. Through all the timelines and probabilities and the Six Ds and the five futures, there has been a single idea hiding underneath everything, and it's this: <strong>the future is not a thing that happens to you. It's a thing you help build.</strong> Every chapter has been quietly making the same argument from a different angle — that the technology doesn't choose the outcome, we do; that the fork isn't in the silicon, it's in us. The whole book has been walking toward this point, which is also a starting point. The map ends here. The road begins.</p>
+<h2>What we actually learned</h2>
+<p>Look back at the journey. We started with a feeling — the vertigo of a plan dissolving while you stand on it — and we refused to let it become panic. We found the engine underneath the chaos: the Abundance Engine, turning the once-expensive into the nearly-free, now pointed at intelligence itself. We learned to read our own lives as a stack, and to climb one layer ahead of the machines. We followed the power to see how fast it's really moving, and we learned to read the three clocks so the headlines could never disorient us again. We refused to bet our lives on a single prediction, and built a portfolio across all five futures instead. We made a thousand-day plan. We saw that abundance means nothing without distribution, and that distribution is the work with our name on it. And we faced the deepest question — not what the machines will do to us, but what we'll choose to become.</p>
+<p>That's not a small kit to carry out the door. That's a navigator's toolkit. The disorientation you might have felt on the first page — does it feel different now? It should. Not because the future got safer, but because you got oriented.</p>
+<blockquote>You don't have to be optimistic about the future. You have to be <em>useful</em> to it.</blockquote>
+<h2>The branch is real, and it's chosen daily</h2>
+<p>I called this chapter "Build the Better Branch" because of how the planning model thinks about the future — as a tree of branching possibilities, with probability flowing between them in real time as the world makes its choices. The abundance branch is real. It is genuinely, technically available. But it is not the default, and nobody is going to hand it to us. It gets built — or not — by the accumulated choices of millions of people deciding, in their own thousand days, to position for it, to widen the distribution layer, to climb their stack, to become nodes, to choose wisely what we become. Every one of those choices nudges the probability. You are not a spectator to the branching. You're one of the hands on it.</p>
+<p>This is the opposite of both the doomer's despair and the cheerleader's blind optimism. The doomer says the bad branch is fixed, so why try. The cheerleader says the good branch is fixed, so no need to try. Both are excuses for passivity. The truth is harder and far more hopeful: the branch is <em>open</em>, which means your effort is one of the things that decides it. That's not a burden. That's the most meaningful job a person has ever been offered.</p>
+<h2>A few large, friendly words to end on</h2>
+<p>So here, at the bottom of the star chart, is everything compressed into the smallest space it will fit. <strong>Don't panic</strong> — panic is the one response guaranteed to waste the window. <strong>Carry your towel</strong> — keep your plan close, the small portable thing you wrap around yourself when the future gets cold. <strong>Read the dials, not the headlines.</strong> <strong>Hedge across the futures, don't bet on one.</strong> <strong>Climb one layer ahead.</strong> <strong>Build something you own, then become a node others can connect to.</strong> And widen the channel, so the abundance reaches more than just the few.</p>
+<p>The future stopped arriving politely. That was the first sentence of the journey, and it's still true. But we don't need it to be polite. We've got a map now, and a towel, and a thousand days that start today. The better branch won't build itself — and that, after everything, turns out to be the best news in this entire book. Because it means it can be built. So let's go build it.</p>
+<p class="signoff">// The map ends. The road begins. Don't Panic.</p>
+</article>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="#top" style="color:var(--cp-text);margin-bottom:14px">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
+          </svg>
+          <span class="brand-text">REHOBOAM<small>HITCHHIKER'S GUIDE · SINGULARITY</small></span>
+        </a>
+        <p style="color:var(--cp-text-muted);font-size:0.9rem;max-width:340px;margin-top:8px">A living book and realtime planning model for the arrival of superintelligence. Build toward abundance instead of panic.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#timeline">Forecast timeline</a></li>
+          <li><a href="#engine">Abundance engine</a></li>
+          <li><a href="#futures">Five futures</a></li>
+          <li><a href="#book">Chapters</a></li>
+          <li><a href="#moonshot">1000-day plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Model inputs</h4>
+        <ul>
+          <li>AI Futures Model</li>
+          <li>Future Timeline</li>
+          <li>Forecasting research</li>
+          <li>X API signal overlay</li>
+          <li>Polymarket market data</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-note">
+      Base predictions synthesized from the AI Futures Model, Future Timeline, and forecasting research. Live probability pressure overlays are ingested from X API and Polymarket market data. Written and maintained by <strong style="color:var(--cp-text)">Peter Xing</strong>.
+      <div class="disclaimer">// A reimagining of the Rehoboam forecast system &amp; "Hitchhiker's Guide to the Singularity." Probabilities and live signals shown here are illustrative simulations for planning, not financial or safety advice. The future is a branch you help choose.</div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /content -->
+<script>
+/* ---------- Theme toggle ---------- */
+const root = document.documentElement;
+const iconSun = document.getElementById('iconSun');
+const iconMoon = document.getElementById('iconMoon');
+function syncThemeIcon(){
+  const dark = root.getAttribute('data-theme') === 'dark';
+  iconSun.style.display = dark ? 'none' : 'block';
+  iconMoon.style.display = dark ? 'block' : 'none';
+}
+syncThemeIcon();
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('pap-theme', next); } catch(e){}
+  syncThemeIcon();
+  drawStarfield();
+});
+
+/* ---------- Mobile nav ---------- */
+const navLinks = document.getElementById('navLinks');
+document.getElementById('navToggle').addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+/* ---------- Starfield ---------- */
+const sfCanvas = document.getElementById('starfield');
+const sfCtx = sfCanvas.getContext('2d');
+let stars = [];
+function initStars(){
+  sfCanvas.width = window.innerWidth;
+  sfCanvas.height = window.innerHeight;
+  const count = Math.min(150, Math.floor(window.innerWidth * window.innerHeight / 9000));
+  stars = Array.from({length: count}, () => ({
+    x: Math.random() * sfCanvas.width,
+    y: Math.random() * sfCanvas.height,
+    r: Math.random() * 1.3 + 0.2,
+    a: Math.random() * 0.6 + 0.2,
+    tw: Math.random() * 0.02 + 0.004,
+    dir: Math.random() > 0.5 ? 1 : -1
+  }));
+}
+function drawStarfield(){
+  const dark = root.getAttribute('data-theme') === 'dark';
+  const col = dark ? '253,142,161' : '177,31,75';
+  sfCtx.clearRect(0,0,sfCanvas.width,sfCanvas.height);
+  stars.forEach(s => {
+    s.a += s.tw * s.dir;
+    if (s.a > 0.85 || s.a < 0.15) s.dir *= -1;
+    sfCtx.beginPath();
+    sfCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sfCtx.fillStyle = `rgba(${col},${s.a})`;
+    sfCtx.fill();
+  });
+  requestAnimationFrame(drawStarfield);
+}
+initStars();
+drawStarfield();
+window.addEventListener('resize', initStars);
+
+/* ---------- Hero live signal panel ---------- */
+const signals = [
+  { q: "OpenAI announces AGI before 2027", p: 38 },
+  { q: "Humanoid robots in mass production by 2027", p: 61 },
+  { q: "UBI pilot in a G7 nation by 2027", p: 44 },
+  { q: "Fusion supplies grid power by 2030", p: 29 },
+  { q: "ASI emerges before 2036", p: 57 }
+];
+function renderSignals(){
+  const el = document.getElementById('signalList');
+  el.innerHTML = signals.map((s,i) => `
+    <div class="signal-row">
+      <div>
+        <div class="signal-q">${s.q}</div>
+        <div class="signal-src">${i % 2 ? 'POLYMARKET' : 'X · SOCIAL'}</div>
+      </div>
+      <div class="signal-prob ${s._d >= 0 ? 'up':'dn'}" data-i="${i}">${s.p}%</div>
+    </div>`).join('');
+}
+renderSignals();
+setInterval(() => {
+  signals.forEach(s => {
+    const d = (Math.random() - 0.5) * 4;
+    s._d = d;
+    s.p = Math.max(5, Math.min(95, Math.round((s.p + d) * 10) / 10));
+  });
+  document.querySelectorAll('#signalList .signal-prob').forEach(el => {
+    const s = signals[+el.dataset.i];
+    el.textContent = s.p + '%';
+    el.className = 'signal-prob ' + (s._d >= 0 ? 'up' : 'dn');
+  });
+}, 2600);
+
+/* ---------- REHOBOAM timeline data ---------- */
+const D = { I:'individual', S:'social', T:'technology', E:'economic', G:'geopolitical', V:'governance' };
+/* Inline baseline (offline fallback). The live site overrides this from predictions.json — a sidecar
+   revised daily from the latest news online and @peterxing's X posts/reposts (add / update / remove). */
+let timelineData = [
+  { year: 2026, summary: "The year agents go mainstream and the first cracks in the old career ladder appear.", events: [
+    { t: "AR glasses reach mainstream adoption", d: D.T, high: true, prob: 64 },
+    { t: "Autonomous taxis operate in 20+ cities", d: D.T, high: true, prob: 58 },
+    { t: "UBI pilots launch in 30+ cities worldwide", d: D.E, high: true, prob: 47 },
+    { t: "Four-day workweek at 500+ major companies", d: D.E, high: false },
+    { t: "Lab-grown meat reaches price parity", d: D.T, high: false },
+    { t: "First commercial quantum computer ships", d: D.T, high: true },
+    { t: "Personalized genomic medicine goes retail", d: D.I, high: false },
+    { t: "Deepfake detection mandated for platforms", d: D.V, high: false },
+    { t: "AI therapy assistants cleared for clinics", d: D.I, high: false },
+    { t: "Signal: OpenAI hints at AGI before 2027", d: D.T, signal: true, prob: 38 },
+  ]},
+  { year: 2027, summary: "Capability compresses. A single company is briefly worth a trillion dollars on AI alone.", events: [
+    { t: "AI agents autonomously run business operations", d: D.E, high: true, prob: 55 },
+    { t: "First trillion-dollar pure-AI company", d: D.E, high: true },
+    { t: "Brain-computer interfaces approved for medical use", d: D.T, high: true },
+    { t: "Online credentials begin to surpass degrees", d: D.I, high: false },
+    { t: "Regional conflict flares over water scarcity", d: D.G, high: false },
+    { t: "Birth rates fall below replacement in 80% of nations", d: D.S, high: false },
+    { t: "Signal: most software written end-to-end by AI", d: D.T, signal: true, prob: 49 },
+  ]},
+  { year: 2028, summary: "AGI-class systems pass the benchmarks. Institutions scramble to adapt the rules.", events: [
+    { t: "AGI passes comprehensive reasoning benchmarks", d: D.T, high: true, prob: 52 },
+    { t: "Education unbundles into personalized mastery maps", d: D.I, high: false },
+    { t: "Carbon markets exceed $600B in value", d: D.E, high: false },
+    { t: "DAOs gain legal recognition in 40+ jurisdictions", d: D.V, high: true },
+    { t: "CRISPR therapies become routine", d: D.T, high: false },
+    { t: "Cognitive-enhancement tools see mass adoption", d: D.I, high: false },
+    { t: "Space-mining rights disputed at the UN", d: D.G, high: false },
+  ]},
+  { year: 2029, summary: "The labour shock becomes undeniable — and so does the abundance dividend that could offset it.", events: [
+    { t: "Automation eliminates ~25% of current jobs", d: D.E, high: true, prob: 46 },
+    { t: "First fusion power delivered to the grid", d: D.T, high: true },
+    { t: "Loneliness declared a public-health crisis", d: D.S, high: true },
+    { t: "Climate refugees exceed 120 million", d: D.G, high: true },
+    { t: "Global life expectancy reaches 87", d: D.I, high: false },
+    { t: "Photonic processors start replacing silicon", d: D.T, high: false },
+    { t: "Social-credit systems run in 35+ countries", d: D.V, high: true },
+  ]},
+  { year: 2030, summary: "The gentle-singularity branch comes into view: AI-designed medicine, universal clean energy.", events: [
+    { t: "AI-designed drugs gain FDA approval", d: D.T, high: true, prob: 51 },
+    { t: "First crewed-resupply mission to a Mars base", d: D.T, high: false },
+    { t: "Green energy hits universal cost parity", d: D.E, high: true },
+    { t: "Companion robots enter elderly care at scale", d: D.S, high: false },
+    { t: "Neural implants restore mobility", d: D.I, high: true },
+    { t: "Global AI-safety treaty signed", d: D.V, high: true },
+    { t: "Changing careers every 5 years becomes the norm", d: D.E, high: false },
+  ]},
+  { year: 2031, summary: "Credentials and even materials science quietly cross their thresholds.", events: [
+    { t: "Micro-credentials eclipse university degrees", d: D.I, high: false },
+    { t: "Room-temperature superconductors commercialized", d: D.T, high: true },
+  ]},
+  { year: 2032, summary: "Synthetic biology and digital money reshape the substrate of daily life.", events: [
+    { t: "Synthetic biology yields artificial organisms", d: D.T, high: true },
+    { t: "Continuous identity & provenance verification", d: D.V, high: false },
+    { t: "Digital currencies largely replace cash", d: D.E, high: false },
+  ]},
+  { year: 2033, summary: "Scarcity flares at the edges even as abundance compounds at the core.", events: [
+    { t: "Degrees decompose into verified skill cores", d: D.I, high: false },
+    { t: "Acute rare-earth shortage triggers a crisis", d: D.G, high: true },
+    { t: "Biometric surveillance restricted by treaty", d: D.V, high: false },
+  ]},
+  { year: 2034, summary: "The social fabric is visibly rewoven around lifelong learning and new family forms.", events: [
+    { t: "Marriage rates hit an all-time low", d: D.S, high: false },
+    { t: "Ambient lifelong learning becomes default", d: D.I, high: false },
+    { t: "First CRISPR-edited humans reach adulthood", d: D.T, high: true },
+  ]},
+  { year: 2035, summary: "Artificial superintelligence emerges — the branch point everything pointed toward.", events: [
+    { t: "Artificial superintelligence emerges", d: D.T, high: true, prob: 41 },
+    { t: "Schools recenter on community, leadership & well-being", d: D.S, high: false },
+  ]},
+  { year: 2036, summary: "Post-threshold. The question shifts from 'when' to 'who does abundance reach?'", events: [
+    { t: "Distribution layer becomes the defining political fight", d: D.V, high: true },
+    { t: "Universal high income debated in major economies", d: D.E, high: true },
+    { t: "Human–AI merger moves from fringe to policy", d: D.I, high: false },
+  ]},
+];
+const domainNames = { individual:'Individual', social:'Social', technology:'Technology', economic:'Economic', geopolitical:'Geopolitical', governance:'Governance' };
+let activeDomain = 'all';
+let overlayOn = true;
+
+/* ---------- @peterxing X signals mapped to predictions ---------- */
+const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
+/* Inline fallback. The live site overrides this from signals.json (regenerated daily by scraping his
+   timeline and matching each prediction to his most relevant real post). We keep NO embedded posts
+   inline, so if signals.json is ever unavailable every branch shows a live from:peterxing search
+   instead of a stale post. */
+let xSignals = {};
+/* Per-event search fallback is derived from each prediction's own title (see deriveSearch), so every
+   prediction shows at least a live from:peterxing chip even offline / if signals.json is unavailable. */
+let xSearch = {};
+
+const SIG_KIND = {
+  post:     { noun:'post',     icon:'',         verb:'' },
+  repost:   { noun:'repost',   icon:'\u21bb',   verb:'reposted' },
+  like:     { noun:'like',     icon:'\u2665',   verb:'liked' },
+  bookmark: { noun:'bookmark', icon:'\uD83D\uDD16', verb:'bookmarked' },
+  quote:    { noun:'quote',    icon:'\u201c',   verb:'quoted' },
+};
+/* Badge text reflects BOTH kind and recency: a past-week item is labelled "Past-week …", otherwise
+   it is his "Most recent …" post/repost on that topic (honestly dated below). */
+function sigBadge(kind, recency){
+  const noun = (SIG_KIND[kind] || SIG_KIND.post).noun;
+  const when = recency === 'week' ? 'Past-week' : 'Most recent';
+  return when + ' ' + noun;
+}
+
+/* A prediction is identified by "YEAR-INDEX" (index = its position in that year's events array). The same
+   id is computed by refresh-signals.js, so each prediction's signals.json embed lines up 1:1 here. */
+function deriveSearch(title){
+  const stop = new Set(['the','a','an','and','or','of','to','in','on','for','with','by','from','at','as','is','are','be','into','signal','live','most','first','new','their','our','its','over','under','toward']);
+  const ws = String(title).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !stop.has(w));
+  return ws.slice(0, 3).join(' ') || String(title).slice(0, 24);
+}
+function signalCard(sig){
+  const kind = sig.kind || 'post';
+  const author = sig.author || 'peterxing';
+  const K = SIG_KIND[kind] || SIG_KIND.post;
+  const isPost = kind === 'post';
+  const dispName = isPost ? 'Peter Xing' : ('@' + author);
+  const actionLine = isPost ? '@peterxing' : `${K.icon} @peterxing ${K.verb} &middot; @${author}`;
+  return `
+    <div class="tl-signal" data-kind="${kind}">
+      <div class="tl-signal-head">
+        <span class="tl-x">${X_SVG}</span>
+        <span class="tl-signal-who">
+          <span class="tl-signal-name">${dispName}</span>
+          <span class="tl-signal-handle">${actionLine}</span>
+        </span>
+        <span class="tl-signal-badge">${sigBadge(kind, sig.recency)}</span>
+      </div>
+      <div class="tl-signal-text">${sig.text}</div>
+      <div class="tl-signal-foot">
+        <span class="tl-signal-date">${sig.date}</span>
+        <span class="tl-signal-metrics"><span>&#9829; ${sig.likes}</span><span>&#8635; ${sig.rts}</span></span>
+        <span class="tl-signal-actions">
+          <button class="tl-signal-load" data-tweet="${sig.id}">Load live post &#8635;</button>
+          <a class="tl-signal-link" href="https://x.com/${author}/status/${sig.id}" target="_blank" rel="noopener">View on X &rarr;</a>
+        </span>
+      </div>
+      <div class="tl-embed"></div>
+    </div>`;
+}
+function searchChip(kw){
+  const q = encodeURIComponent('(from:peterxing) ' + kw);
+  return `<a class="tl-signal-search" href="https://x.com/search?q=${q}&f=live" target="_blank" rel="noopener"><span class="tl-x">${X_SVG}</span> @peterxing&#39;s latest on &ldquo;${kw}&rdquo; &rarr;</a>`;
+}
+
+function renderTimeline(){
+  const body = document.getElementById('timelineBody');
+  body.innerHTML = timelineData.map(yr => {
+    const high = yr.events.filter(e => e.high && (activeDomain === 'all' || e.d === activeDomain)).length;
+    const evCount = yr.events.filter(e => activeDomain === 'all' || e.d === activeDomain).length;
+    let shown = 0;
+    const rows = yr.events.map((e, idx) => {
+      if (!(activeDomain === 'all' || e.d === activeDomain)) return '';
+      if (!(overlayOn || !e.signal)) return '';
+      shown++;
+      const id = yr.year + '-' + idx;                      // 1:1 with signals.json
+      const sig = xSignals[id];
+      const sigHtml = sig ? signalCard(sig) : searchChip(xSearch[id] || deriveSearch(e.t));
+      return `
+        <div class="event ${e.signal ? 'signal' : (e.high ? 'high' : '')}">
+          <div class="event-dot">${e.signal ? 'SIGNAL' : domainNames[e.d].slice(0, 4)}</div>
+          <div class="event-body">
+            <div class="event-title">${e.t}</div>
+            <div class="event-tags">
+              <span class="tag">${domainNames[e.d]}</span>
+              ${e.high ? '<span class="tag impact">High impact</span>' : ''}
+              ${(overlayOn && e.prob != null) ? `<span class="tag prob">${e.prob}% live</span>` : ''}
+            </div>
+            ${sigHtml}
+          </div>
+        </div>`;
+    }).join('');
+    const eventsHtml = shown ? rows : '<div class="tl-empty">No events in this domain for ' + yr.year + '.</div>';
+    return `
+      <div class="year-block">
+        <div class="year-dot"></div>
+        <div class="year-row">
+          <div class="year-tag">
+            <div class="year-num">${yr.year}</div>
+            <div class="year-meta">${evCount} events · ${high} high</div>
+          </div>
+          <div>
+            <div class="year-summary">${yr.summary}</div>
+            <div class="events">${eventsHtml}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+renderTimeline();
+
+/* Daily-revised predictions: a sidecar predictions.json (years / summary / events) revised daily from
+   the latest news online and @peterxing's X posts/reposts (add / update / remove) overrides the inline
+   baseline. Falls back silently to the baseline if it is unavailable or malformed. */
+(function loadPredictions(){
+  if (location.protocol === 'file:') return; // offline file:// — keep inline baseline
+  fetch('predictions.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d || !Array.isArray(d.years) || !d.years.length) return;
+      const clean = d.years.filter(y => y && typeof y.year === 'number' && Array.isArray(y.events) && typeof y.summary === 'string');
+      if (!clean.length) return;
+      clean.sort((a, b) => a.year - b.year);
+      timelineData = clean;
+      renderTimeline();
+      const stamp = document.getElementById('predStamp');
+      if (stamp && d.updated){
+        const dt = new Date(d.updated);
+        if (!isNaN(dt.getTime())){
+          stamp.textContent = '\u25C8 Predictions revised from the latest news & @peterxing\u2019s X activity \u00b7 last revised '
+            + dt.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+          stamp.hidden = false;
+        }
+      }
+    })
+    .catch(()=>{});
+})();
+
+/* Daily-refreshed signals: a sidecar signals.json (regenerated daily by scraping @peterxing's
+   timeline and matching each prediction to his most relevant real post) overrides the inline fallback. */
+(function loadSignals(){
+  if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
+  fetch('signals.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d) return;
+      if (d.embeds && typeof d.embeds === 'object') xSignals = d.embeds;
+      if (d.search && typeof d.search === 'object') xSearch = d.search;
+      if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
+      renderTimeline();
+      const stamp = document.getElementById('sigStamp');
+      if (stamp && d.updated){
+        const dt = new Date(d.updated);
+        if (!isNaN(dt.getTime())){
+          stamp.textContent = '\u21bb @peterxing activity \u00b7 X API realtime \u00b7 matched daily \u00b7 last update '
+            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+          stamp.hidden = false;
+        }
+      }
+    })
+    .catch(()=>{});
+})();
+let twPromise = null;
+function loadTwitter(){
+  if (twPromise) return twPromise;
+  twPromise = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://platform.twitter.com/widgets.js';
+    s.async = true; s.charset = 'utf-8';
+    s.onload = () => res(window.twttr); s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  return twPromise;
+}
+document.getElementById('timelineBody').addEventListener('click', async (e) => {
+  const btn = e.target.closest('.tl-signal-load');
+  if (!btn) return;
+  const id = btn.dataset.tweet;
+  const wrap = btn.closest('.tl-signal').querySelector('.tl-embed');
+  btn.disabled = true; btn.textContent = 'Loading\u2026';
+  try {
+    const tw = await loadTwitter();
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    wrap.innerHTML = '';
+    const el = await tw.widgets.createTweet(id, wrap, { theme, conversation: 'none', dnt: true, align: 'center' });
+    if (!el) throw new Error('unavailable');
+    btn.remove();
+  } catch (err) {
+    const link = btn.closest('.tl-signal').querySelector('.tl-signal-link');
+    const href = link ? link.getAttribute('href') : ('https://x.com/peterxing/status/' + id);
+    wrap.innerHTML = '<a class="tl-signal-link" href="' + href + '" target="_blank" rel="noopener">Open on X &rarr;</a>';
+    btn.disabled = false; btn.textContent = 'Load live post \u21bb';
+  }
+});
+
+document.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeDomain = chip.dataset.domain;
+  renderTimeline();
+}));
+document.getElementById('overlayToggle').addEventListener('click', () => {
+  overlayOn = !overlayOn;
+  document.getElementById('overlaySwitch').classList.toggle('on', overlayOn);
+  renderTimeline();
+});
+
+/* ---------- Six Ds ---------- */
+const sixDs = [
+  ['Digitised', 'Once intelligence is represented as data, it inherits the exponential. Models, weights and tokens replace handcrafted expertise.'],
+  ['Deceptive', 'Early progress looks underwhelming — chatbots that hallucinate — so most people dismiss the curve right before it bends.'],
+  ['Disruptive', 'Cheaper, better AI undercuts incumbents: search, coding, translation, tutoring, diagnosis, design — all reorganised.'],
+  ['Demonetised', 'The marginal cost of intelligence falls toward zero. What cost a salary now costs an API call.'],
+  ['Dematerialised', 'Whole product categories collapse into software — the studio, the office, the call centre, the analyst all fit on a phone.'],
+  ['Democratised', 'Finally, the capability is everywhere and cheap. A teenager with a laptop wields what nations once couldn\'t buy.'],
+];
+document.getElementById('sixDs').innerHTML = sixDs.map((d,i) => `
+  <div class="drow">
+    <div class="dword"><span>${String(i+1).padStart(2,'0')}</span> &nbsp;${d[0]}</div>
+    <div class="ddesc">${d[1]}</div>
+  </div>`).join('');
+
+/* ---------- Five Futures, One Portfolio ---------- */
+const futures = [
+  { key:'S1', name:'Disorderly Labour Shock', col:'var(--cp-danger)', prob:'Plausible · near-term', desc:'Capability outruns institutions. Jobs vanish faster than safety nets adapt, and the gains pool at the top before redistribution catches up.',
+    moves:['Hold a cash & skills buffer for 12–18 months','Diversify income away from a single automatable role','Back UBI / distribution politics early','Build local, hard-to-offshore relationships'] },
+  { key:'S2', name:'Fast Abundance', col:'var(--cp-success)', prob:'Plausible · 2029–2033', desc:'Energy, compute and robotics compound and the dividend actually reaches people. Costs of the essentials fall through the floor.',
+    moves:['Own a slice of productive assets early','Learn to direct AI, not compete with it','Position for a demonetised cost of living','Help build distribution so abundance spreads'] },
+  { key:'S3', name:'The Gentle Singularity', col:'var(--cp-accent)', prob:'Central case', desc:'No single dramatic day — capability seeps into everything gradually. Most people barely notice the threshold being crossed.',
+    moves:['Treat adaptation as a continuous practice','Re-skill on a rolling 6-month cadence','Automate your own life first to feel the curve','Keep optionality; avoid 10-year bets'] },
+  { key:'S4', name:'The Long Horizon', col:'var(--cp-link)', prob:'Possible · slower', desc:'Bottlenecks — energy build-out, regulation, trust, robotics — stretch timelines into the 2040s. The change is real but unhurried.',
+    moves:['Invest in durable, compounding skills','Don\'t over-rotate on hype cycles','Build institutions and community capacity','Stay solvent and patient'] },
+  { key:'S5', name:'Existential Risk', col:'#b45309', prob:'Low probability · high stakes', desc:'Misaligned or weaponised superintelligence threatens catastrophe. Low odds, but the downside is unbounded — so it earns a hedge.',
+    moves:['Support alignment & governance work','Favour resilient, decentralised systems','Avoid single points of catastrophic failure','Treat safety as everyone\'s problem'] },
+  { key:'S6', name:'The Sixth Thread: Human Merger', col:'var(--cp-warning)', prob:'Runs through all five', desc:'Across every branch, the line between human and machine blurs — BCIs, cognitive tools, biological enhancement. We don\'t just witness the change; we become it.',
+    moves:['Stay curious about enhancement, not fearful','Guard agency and identity deliberately','Keep a human core: relationships, meaning, body','Decide your own augmentation boundaries'] },
+];
+const allocBuckets = [
+  { name:'Cash & skills buffer',    sub:'Hedges S1 · Disorderly Labour Shock', col:'var(--cp-danger)',  def:20 },
+  { name:'Productive assets',       sub:'Hedges S2 · Fast Abundance',           col:'var(--cp-success)', def:30 },
+  { name:'Adaptive re-skilling',    sub:'Hedges S3 · The Gentle Singularity',   col:'var(--cp-accent)',  def:20 },
+  { name:'Community & local ties',  sub:'Hedges S4 · The Long Horizon',         col:'var(--cp-link)',    def:15 },
+  { name:'Alignment & safety',      sub:'Hedges S5 · Existential Risk',         col:'#b45309',           def:5  },
+  { name:'Enhancement optionality', sub:'Hedges S6 · The Sixth Thread',         col:'var(--cp-warning)', def:10 },
+];
+document.getElementById('futTabs').innerHTML = futures.map((f,i) =>
+  `<div class="fut-tab ${i===0?'active':''}" data-i="${i}"><span class="dotmark" style="background:${f.col}"></span>${f.key} · ${f.name}</div>`).join('');
+document.getElementById('futPanels').innerHTML = futures.map((f,i) => `
+  <div class="fut-panel ${i===0?'active':''}" data-i="${i}">
+    <div>
+      <h3>${f.name}</h3>
+      <div class="fut-prob">LIKELIHOOD: ${f.prob.toUpperCase()}</div>
+      <p>${f.desc}</p>
+      <ul class="fut-list">${f.moves.map(m=>`<li>${m}</li>`).join('')}</ul>
+    </div>
+    <div class="fut-side" data-hedgechip="${i}">
+      <h4>Your hedge for this branch</h4>
+      <div class="hedge-chip"><span class="alloc-dot" style="background:${f.col}"></span><span class="hedge-chip-name">${allocBuckets[i].name}</span></div>
+      <div class="hedge-chip-stat"><span class="mono" data-chip-pct>0%</span><span class="hedge-chip-of">of net worth</span></div>
+      <div class="hedge-chip-dollar mono" data-chip-dollar>$0</div>
+      <button class="hedge-jump" data-jump>Adjust your allocation ↓</button>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('.fut-tab').forEach(tab => tab.addEventListener('click', () => {
+  const i = tab.dataset.i;
+  document.querySelectorAll('.fut-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.fut-panel').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelector(`.fut-panel[data-i="${i}"]`).classList.add('active');
+}));
+
+/* ---------- One Portfolio: net-worth allocator ---------- */
+(function(){
+  const rowsEl = document.getElementById('allocRows');
+  const totalEl = document.getElementById('allocTotal');
+  const hintEl = document.getElementById('allocHint');
+  const stackEl = document.getElementById('allocStackBar');
+  const nwInput = document.getElementById('netWorthInput');
+  if(!rowsEl) return;
+  let weights = allocBuckets.map(b => b.def);
+  let netWorth = 100000;
+  const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+  const parseNW = s => { const n = parseFloat(String(s).replace(/[^0-9.]/g,'')); return isNaN(n) ? 0 : n; };
+  const clamp = n => Math.max(0, Math.min(100, Math.round(n || 0)));
+
+  rowsEl.innerHTML = allocBuckets.map((b,i) => `
+    <div class="alloc-row" data-i="${i}">
+      <div class="alloc-meta">
+        <span class="alloc-dot" style="background:${b.col}"></span>
+        <div class="alloc-text"><div class="alloc-name">${b.name}</div><div class="alloc-sub">${b.sub}</div></div>
+      </div>
+      <input type="range" class="alloc-slider" min="0" max="100" step="1" value="${weights[i]}" aria-label="${b.name} allocation percent" style="accent-color:${b.col}">
+      <div class="alloc-vals">
+        <span class="alloc-pct"><input type="number" class="alloc-num" min="0" max="100" step="1" value="${weights[i]}">%</span>
+        <span class="alloc-dollar mono" data-dollar>${fmt(netWorth*weights[i]/100)}</span>
+      </div>
+    </div>`).join('');
+
+  const rowEls = [...rowsEl.querySelectorAll('.alloc-row')];
+
+  function render(){
+    const total = weights.reduce((a,b)=>a+b,0);
+    rowEls.forEach((row,i) => {
+      row.querySelector('.alloc-slider').value = weights[i];
+      const num = row.querySelector('.alloc-num');
+      if(document.activeElement !== num) num.value = weights[i];
+      row.querySelector('[data-dollar]').textContent = fmt(netWorth*weights[i]/100);
+    });
+    totalEl.textContent = total + '%';
+    totalEl.classList.toggle('ok', total === 100);
+    totalEl.classList.toggle('off', total !== 100);
+    const off = total - 100;
+    hintEl.textContent = off === 0 ? 'Balanced ✓' : (off < 0 ? (100 - total) + '% unallocated' : '+' + off + '% over');
+    hintEl.classList.toggle('ok', off === 0);
+    hintEl.classList.toggle('off', off !== 0);
+    const denom = total > 0 ? total : 1;
+    stackEl.innerHTML = allocBuckets.map((b,i) => weights[i] > 0 ? `<span style="width:${weights[i]/denom*100}%;background:${b.col}"></span>` : '').join('');
+    document.querySelectorAll('[data-hedgechip]').forEach(el => {
+      const i = +el.dataset.hedgechip;
+      const p = el.querySelector('[data-chip-pct]'); const d = el.querySelector('[data-chip-dollar]');
+      if(p) p.textContent = weights[i] + '%';
+      if(d) d.textContent = fmt(netWorth*weights[i]/100);
+    });
+  }
+
+  rowEls.forEach((row,i) => {
+    row.querySelector('.alloc-slider').addEventListener('input', e => { weights[i] = clamp(+e.target.value); render(); });
+    row.querySelector('.alloc-num').addEventListener('input', e => { weights[i] = clamp(+e.target.value); render(); });
+  });
+  nwInput.addEventListener('input', () => { netWorth = parseNW(nwInput.value); render(); });
+
+  document.getElementById('allocNormalize').addEventListener('click', () => {
+    const total = weights.reduce((a,b)=>a+b,0);
+    if(total === 0){ weights = allocBuckets.map(b=>b.def); render(); return; }
+    const raw = weights.map(w => w/total*100);
+    const out = raw.map(Math.floor);
+    const rem = 100 - out.reduce((a,b)=>a+b,0);
+    const order = raw.map((v,i)=>[i, v - Math.floor(v)]).sort((a,b)=>b[1]-a[1]);
+    for(let k=0; k<rem; k++) out[order[k % order.length][0]]++;
+    weights = out; render();
+  });
+  document.getElementById('allocReset').addEventListener('click', () => {
+    weights = allocBuckets.map(b=>b.def); netWorth = 100000; nwInput.value = '100,000'; render();
+  });
+  document.addEventListener('click', e => {
+    if(e.target.closest('[data-jump]')) document.getElementById('portfolioBuilder').scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  render();
+})();
+
+/* ---------- Book star map ---------- */
+const systems = [
+  { id:'op', x:50,  y:240, label:'Opening', sub:'launch vector', col:'var(--cp-link)' },
+  { id:'01', x:120, y:170, label:'01 · Why', sub:'origin system', col:'var(--cp-success)' },
+  { id:'02', x:200, y:215, label:'02 · Abundance', sub:'engine room', col:'var(--cp-success)' },
+  { id:'03', x:165, y:110, label:'03 · Human Stack', sub:'ordinary life', col:'var(--cp-success)' },
+  { id:'04', x:265, y:140, label:'04 · Energy', sub:'compute lanes', col:'var(--cp-link)' },
+  { id:'05', x:300, y:225, label:'05 · Work', sub:'new ladders', col:'var(--cp-success)' },
+  { id:'06', x:355, y:90,  label:'06 · Portfolio', sub:'scenario bets', col:'var(--cp-danger)' },
+];
+const links = [['op','01'],['01','02'],['02','03'],['02','04'],['04','06'],['02','05'],['05','06'],['03','04']];
+const sm = document.getElementById('starmap');
+const byId = Object.fromEntries(systems.map(s=>[s.id,s]));
+let smHtml = `<rect x="0" y="0" width="420" height="300" fill="var(--cp-bg-elevated)"/>`;
+for (let i=0;i<70;i++){ smHtml += `<circle cx="${Math.random()*420}" cy="${Math.random()*300}" r="${Math.random()*1.1+0.2}" fill="var(--cp-text-muted)" opacity="${Math.random()*0.5+0.2}"/>`; }
+links.forEach(([a,b]) => { const A=byId[a],B=byId[b]; smHtml += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="var(--cp-border-strong)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>`; });
+systems.forEach(s => {
+  smHtml += `<g class="sysnode" data-sys="${s.id}" style="cursor:pointer">
+    <circle cx="${s.x}" cy="${s.y}" r="7" fill="${s.col}"/>
+    <circle cx="${s.x}" cy="${s.y}" r="13" fill="none" stroke="${s.col}" stroke-width="1" opacity="0.4"/>
+    <text x="${s.x}" y="${s.y-18}" text-anchor="middle" fill="var(--cp-text)" font-size="9" font-family="Consolas,monospace" font-weight="700">${s.label}</text>
+    <text x="${s.x}" y="${s.y+24}" text-anchor="middle" fill="var(--cp-text-muted)" font-size="7" font-family="Consolas,monospace">${s.sub}</text>
+  </g>`;
+});
+sm.innerHTML = smHtml;
+
+/* ---------- Chapters ---------- */
+const chapters = [
+  { idx:'00', route:'Capability', rc:'var(--cp-link)', title:'How to Use This Book', body:'<p>This is a navigation map, not a manual. Pick a <strong>route</strong> — capability, abundance, or risk — and jump between star systems. It\'s a living document: forecasts update as reality sends new signals.</p>' },
+  { idx:'—', route:'Capability', rc:'var(--cp-link)', title:'Opening — The Future Stopped Arriving Politely', body:'<p>For decades the future RSVP\'d in advance. Now it just shows up. <strong>When intelligence becomes cheap, every plan changes</strong> — so the task is to build toward abundance instead of bracing for panic.</p>' },
+  { idx:'01', route:'Abundance', rc:'var(--cp-success)', title:'From Scarcity to Abundance — My Why', body:'<p>Peter\'s origin: from Harbin on the Black Dragon River to Hobart and Sydney, climbing the migrant ladder as hard-won skills — English, travel agencies, taxis, tax advisory — were devalued one by one by software. A hospital bed became the turn toward transhumanism: <strong>if scarcity made us, abundance can remake us.</strong></p>' },
+  { idx:'02', route:'Abundance', rc:'var(--cp-success)', title:'The Abundance Engine', body:'<p>The <strong>Six Ds</strong> carry every exponential from digitisation to democratisation. The abundance stack — energy, compute, robots, capital, policy, trust — is assembling now: physical AGI and Optimus-class labour, decentralised AI token networks, AGI compressing into 2026–2027, Diamandis\'s "middle of the singularity," Hassabis\'s AGI around 2030. The bottleneck isn\'t intelligence; it\'s <strong>bureaucracy</strong>.</p>' },
+  { idx:'03', route:'Abundance', rc:'var(--cp-success)', title:'The Human Stack', body:'<p>Four layers to secure, bottom-up: <strong>survival, economic, social, and potential.</strong> The goal is adaptive plans, not bunker fantasies — resilience you can actually live inside.</p>' },
+  { idx:'04', route:'Capability', rc:'var(--cp-link)', title:'Energy, Compute, Capacity', body:'<p>Energy is the floor of abundance; compute is your access to intelligence. Pair them with productive infrastructure — homes, farms, workshops, community hubs — so the curve produces <strong>things people can touch</strong>, not just charts.</p>' },
+  { idx:'05', route:'Abundance', rc:'var(--cp-success)', title:'Work After Work', body:'<p>The ladder breaks before the top disappears. Four work identities replace the single career, and — per <em>Alyse\'s View</em> — sometimes the winning move is simply to <strong>keep it simple</strong> and stay human-shaped.</p>' },
+  { idx:'06', route:'Risk', rc:'var(--cp-danger)', title:'Five Futures, One Portfolio', body:'<p>Disorderly labour shock, fast abundance, the gentle singularity, the long horizon, and existential risk — plus a sixth thread, the human merger, running through them all. Don\'t predict one; <strong>hold a portfolio</strong> that pays off across branches.</p>' },
+  { idx:'07', route:'Capability', rc:'var(--cp-link)', title:'When — Capability, Deployment, Impact', body:'<p>Separate three clocks: when a capability exists, when it\'s deployed, and when it actually hits your life. Read prediction markets and reality signals, then <strong>build your own watchlist.</strong></p>' },
+  { idx:'08', route:'Abundance', rc:'var(--cp-success)', title:'Your 1000-Day Moonshot Plan', body:'<p>Four phases: <strong>0–30 days</strong> create your first plan, <strong>30–180</strong> build capability, <strong>180–365</strong> own or access productive assets, <strong>365–1000</strong> become a node in the better future.</p>' },
+  { idx:'09', route:'Abundance', rc:'var(--cp-success)', title:'The Distribution Layer', body:'<p>UBI is the floor, <strong>Universal High Income</strong> is the aspiration, and <strong>Universal Compute</strong> is the leverage — making sure the dividend of abundance reaches people, not just balance sheets.</p>' },
+  { idx:'10', route:'Risk', rc:'var(--cp-danger)', title:'Human Enhancement', body:'<p>Longevity escape velocity, BCIs and cognitive tools move enhancement from fringe to mainstream. The question stops being <em>whether</em> and becomes <strong>how you keep agency and meaning</strong> while you change.</p>' },
+  { idx:'11', route:'Abundance', rc:'var(--cp-success)', title:'Build the Better Branch', body:'<p>The future isn\'t something that happens to you — it\'s a branch you help select. <strong>Become a node</strong>: build, connect, distribute, and steer toward the abundant timeline on purpose.</p>' },
+];
+document.getElementById('chapters').innerHTML = chapters.map((c,i) => `
+  <div class="chapter" data-ch="${c.idx}">
+    <div class="ch-head">
+      <span class="ch-idx">${c.idx}</span>
+      <span class="ch-title">${c.title}</span>
+      <span class="ch-route" style="color:${c.rc};border-color:${c.rc}">${c.route}</span>
+      <svg class="ch-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+    </div>
+    <div class="ch-body"><div class="ch-inner">${c.body}<button class="ch-read" data-open="${i}">Read full chapter →</button></div></div>
+  </div>`).join('');
+document.querySelectorAll('.chapter .ch-head').forEach(h => h.addEventListener('click', () => {
+  h.parentElement.classList.toggle('open');
+}));
+function openChapter(idx){
+  const ch = document.querySelector(`.chapter[data-ch="${idx}"]`);
+  if(!ch) return;
+  ch.classList.add('open');
+  ch.scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.querySelectorAll('.sysnode').forEach(n => n.addEventListener('click', () => {
+  const map = { op:1,'01':2,'02':3,'03':4,'04':5,'05':6,'06':7 };
+  const idx = map[n.dataset.sys];
+  if(idx != null && window.openReader) window.openReader(idx);
+}));
+
+/* ---------- 1000-Day Moonshot planner ---------- */
+const questions = [
+  { q:"How soon do you think AI meaningfully changes your daily work?", dim:'urgency',
+    opts:[ ["Already has","a",3],["Within ~2 years","b",3],["3–5 years out","c",2],["Not in my field","d",0] ] },
+  { q:"If your income stopped tomorrow, how long could you sustain yourself?", dim:'survival',
+    opts:[ ["Under a month","a",0],["1–6 months","b",1],["6–18 months","c",2],["18+ months / passive income","d",3] ] },
+  { q:"How are you adapting your skills right now?", dim:'capability',
+    opts:[ ["Not really","a",0],["Reading & watching","b",1],["Using AI tools weekly","c",2],["Building & orchestrating AI daily","d",3] ] },
+  { q:"Do you own anything that produces value while you sleep?", dim:'assets',
+    opts:[ ["No","a",0],["A little savings","b",1],["Some equity / audience / property","c",2],["Diversified productive assets","d",3] ] },
+  { q:"How plugged in are you to a community or network?", dim:'community',
+    opts:[ ["Mostly on my own","a",0],["A few loose ties","b",1],["An active community or two","c",2],["A network I actively build","d",3] ] },
+  { q:"Which future are you actually preparing for?", dim:'portfolio',
+    opts:[ ["None in particular","a",0],["Just the bad one","b",1],["Just the good one","c",1],["A portfolio across all five","d",3] ] },
+];
+let answers = new Array(questions.length).fill(null);
+let qi = 0;
+
+function renderPlanner(){
+  document.getElementById('plannerSteps').innerHTML =
+    questions.map((_,i)=>`<div class="pstep ${i<=qi||answers[i]!=null?'done':''}"></div>`).join('') + `<div class="pstep ${qi>=questions.length?'done':''}"></div>`;
+  const body = document.getElementById('plannerBody');
+  if (qi < questions.length){
+    const Q = questions[qi];
+    body.innerHTML = `
+      <div class="q-block">
+        <div class="q-num">QUESTION ${qi+1} / ${questions.length}</div>
+        <div class="q-text">${Q.q}</div>
+        <div class="opts">
+          ${Q.opts.map((o,j)=>`<div class="opt ${answers[qi]===j?'sel':''}" data-j="${j}"><span class="opt-key">${o[1].toUpperCase()}</span>${o[0]}</div>`).join('')}
+        </div>
+        <div class="planner-nav">
+          <button class="btn btn-ghost" id="prevBtn" ${qi===0?'style="visibility:hidden"':''}>Back</button>
+          <button class="btn btn-primary" id="nextBtn" ${answers[qi]==null?'disabled style="opacity:.5;cursor:not-allowed"':''}>${qi===questions.length-1?'See my plan':'Next'}</button>
+        </div>
+      </div>`;
+    body.querySelectorAll('.opt').forEach(o => o.addEventListener('click', () => {
+      answers[qi] = +o.dataset.j;
+      renderPlanner();
+    }));
+    document.getElementById('nextBtn').addEventListener('click', () => { if(answers[qi]!=null){ qi++; renderPlanner(); } });
+    const pv = document.getElementById('prevBtn'); if(pv) pv.addEventListener('click', () => { qi--; renderPlanner(); });
+  } else {
+    renderResult(body);
+  }
+}
+
+function renderResult(body){
+  const dims = { survival:0, capability:0, assets:0, community:0, portfolio:0, urgency:0 };
+  questions.forEach((Q,i) => { if(answers[i]!=null) dims[Q.dim] += Q.opts[answers[i]][2]; });
+  const total = Object.values(dims).reduce((a,b)=>a+b,0);
+  const pct = Math.round((total/18)*100);
+  let phase, verdict;
+  if (pct < 30){ phase='Phase 1 · 0–30 days'; verdict='You\'re at the launch pad. Start by writing the one-page version of your plan — name your survival floor, your skills, and the single asset you\'d most like to own.'; }
+  else if (pct < 55){ phase='Phase 2 · 30–180 days'; verdict='You\'ve got a foundation. Now compound capability: learn to orchestrate AI instead of competing with it, and pick one durable, hard-to-automate skill.'; }
+  else if (pct < 80){ phase='Phase 3 · 180–365 days'; verdict='You\'re resilient. Convert that into ownership — get access to things that produce: energy, compute, audience, equity, or a share of the robots.'; }
+  else { phase='Phase 4 · 365–1000 days'; verdict='You\'re ahead of the curve. Become a node: plug into a community and a distribution layer, and help build the better branch instead of just surviving it.'; }
+
+  const bars = [ ['Survival floor', dims.survival],['Capability', dims.capability],['Productive assets', dims.assets],['Community', dims.community],['Portfolio breadth', dims.portfolio] ];
+  const checklist = [];
+  if (dims.survival < 2) checklist.push('Build a 6+ month cash & skills buffer before anything else.');
+  if (dims.capability < 2) checklist.push('Use AI tools daily until directing them feels native.');
+  if (dims.assets < 2) checklist.push('Acquire one productive asset — audience, equity, or a slice of compute.');
+  if (dims.community < 2) checklist.push('Join or build one community that compounds over time.');
+  if (dims.portfolio < 3) checklist.push('Hedge across all five futures, not just the one you fear or hope for.');
+  if (dims.urgency < 2) checklist.push('Assume impact arrives sooner than comfortable — plan on a 1000-day clock.');
+  if (!checklist.length) checklist.push('You\'re well-positioned — now help others up the ladder and steer the distribution layer.');
+
+  const C = 2*Math.PI*52; const off = C*(1-pct/100);
+  body.innerHTML = `
+    <div class="result">
+      <svg class="score-ring" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="var(--cp-surface-soft)" stroke-width="10"/>
+        <circle cx="60" cy="60" r="52" fill="none" stroke="var(--cp-accent)" stroke-width="10" stroke-linecap="round"
+          stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 60 60)" id="ring"/>
+        <text x="60" y="56" text-anchor="middle" font-size="26" font-weight="800" fill="var(--cp-text)" font-family="Consolas,monospace">${pct}</text>
+        <text x="60" y="74" text-anchor="middle" font-size="9" fill="var(--cp-text-muted)" font-family="Consolas,monospace">READINESS</text>
+      </svg>
+      <div class="q-num">${phase.toUpperCase()}</div>
+      <h3>Your starting vector</h3>
+      <p class="verdict">${verdict}</p>
+      <div class="profile-bars">
+        ${bars.map(b=>{const p=Math.round((b[1]/3)*100);return `
+          <div class="bar-row">
+            <div class="bar-label"><span>${b[0]}</span><span class="mono">${b[1]}/3</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:0%" data-w="${p}"></div></div>
+          </div>`;}).join('')}
+      </div>
+      <h4 style="font-family:Consolas,monospace;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--cp-text-muted);margin:8px 0 14px;text-align:center">Your next moves</h4>
+      <div class="checklist">
+        ${checklist.map(c=>`<div class="check-item"><span class="ci-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>${c}</div>`).join('')}
+      </div>
+      <div style="margin-top:26px"><button class="btn btn-ghost" id="restartBtn">Start over</button></div>
+    </div>`;
+  requestAnimationFrame(() => {
+    const r = document.getElementById('ring'); if(r) r.style.transition='stroke-dashoffset 1s ease', r.style.strokeDashoffset=off;
+    body.querySelectorAll('.bar-fill').forEach(f => setTimeout(()=>f.style.width=f.dataset.w+'%',120));
+  });
+  document.getElementById('restartBtn').addEventListener('click', () => { answers=new Array(questions.length).fill(null); qi=0; renderPlanner(); });
+}
+renderPlanner();
+
+/* ---------- Reality signals grid ---------- */
+/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this daily from
+   signals.json's reality[] — @peterxing's most notable recent real post/repost per theme. */
+const realitySignals = [
+  { tag:'LABOUR', t:'Recent-grad unemployment ticked up to ~5.7%, with underemployment above 40% — the entry rung is thinning first.', src:'Labour data · 2025' },
+  { tag:'CODE', t:'Frontier labs report the vast majority of new code is AI-written; leaders forecast most software engineering done end-to-end by agents within a year.', src:'Anthropic / industry' },
+  { tag:'ROBOTS', t:'Humanoid robots moved from demo to pilot production lines — physical AGI is leaving the lab.', src:'Optimus-class programs' },
+  { tag:'CAPABILITY', t:'Task-horizon benchmarks keep climbing exponentially with no flattening — models now do multi-hour human tasks in minutes.', src:'METR task horizon' },
+  { tag:'MARKETS', t:'Prediction markets price meaningful odds on AGI-flavoured milestones before 2027 — and update daily.', src:'Polymarket overlay' },
+  { tag:'ABUNDANCE', t:'Solar + storage keep setting cost-record lows while fusion pilots inch toward the grid — the energy floor is dropping.', src:'Energy research' },
+];
+function realityCard(s){
+  const tag = s.tag || 'SIGNAL';
+  let srcHtml;
+  if (s.id){
+    const author = s.author || 'peterxing';
+    const K = SIG_KIND[s.kind] || SIG_KIND.post;
+    const via = (s.kind && s.kind !== 'post') ? `${K.icon} @peterxing ${K.verb} &middot; @${author}` : '@peterxing';
+    srcHtml = `<a class="signal-src signal-src-link" data-recency="${s.recency || 'recent'}" href="https://x.com/${author}/status/${s.id}" target="_blank" rel="noopener"><span class="sig-dot"></span>${via} &middot; ${s.date || ''} &rarr;</a>`;
+  } else {
+    srcHtml = `<div class="signal-src">${String(s.src || '').toUpperCase()}</div>`;
+  }
+  return `
+    <div class="card">
+      <div class="card-num">${tag}</div>
+      <p style="color:var(--cp-text);font-size:0.98rem;margin-bottom:12px">${s.t}</p>
+      ${srcHtml}
+    </div>`;
+}
+function renderReality(list){
+  const grid = document.getElementById('signalsGrid');
+  if (!grid || !Array.isArray(list) || !list.length) return;
+  grid.innerHTML = list.map(realityCard).join('');
+}
+renderReality(realitySignals);
+
+/* ---------- Immersive book reader ---------- */
+(function(){
+  const reader = document.getElementById('reader');
+  const rdBody = document.getElementById('rdBody');
+  const rdScroll = document.getElementById('rdScroll');
+  const rdBar = document.getElementById('rdBar');
+  const rdProgress = document.getElementById('rdProgress');
+  const rdPrev = document.getElementById('rdPrev');
+  const rdNext = document.getElementById('rdNext');
+  const rdPrevT = document.getElementById('rdPrevT');
+  const rdNextT = document.getElementById('rdNextT');
+  const source = document.getElementById('bookSource');
+  const total = chapters.length;
+  let current = -1;
+
+  function updateBar(){
+    const max = rdScroll.scrollHeight - rdScroll.clientHeight;
+    const pct = max > 8 ? (rdScroll.scrollTop / max) * 100 : 0;
+    rdBar.style.width = Math.max(0, Math.min(100, pct)).toFixed(1) + '%';
+  }
+
+  window.openReader = function(n){
+    n = Math.max(0, Math.min(total - 1, n | 0));
+    const art = source.querySelector('article[data-idx="' + n + '"]');
+    if(!art) return;
+    current = n;
+    rdBody.innerHTML = art.innerHTML;
+    rdProgress.textContent = 'CH ' + (n + 1) + ' / ' + total;
+    rdPrev.disabled = n === 0;
+    rdNext.disabled = n === total - 1;
+    rdPrevT.textContent = n > 0 ? chapters[n - 1].title : '';
+    rdNextT.textContent = n < total - 1 ? chapters[n + 1].title : '';
+    reader.hidden = false;
+    document.body.style.overflow = 'hidden';
+    rdScroll.scrollTop = 0;
+    rdBar.style.width = '0%';
+    document.getElementById('rdClose').focus();
+  };
+
+  function closeReader(){
+    reader.hidden = true;
+    document.body.style.overflow = '';
+    current = -1;
+  }
+
+  rdScroll.addEventListener('scroll', updateBar, { passive: true });
+  document.getElementById('rdClose').addEventListener('click', closeReader);
+  rdPrev.addEventListener('click', () => { if(current > 0) window.openReader(current - 1); });
+  rdNext.addEventListener('click', () => { if(current < total - 1) window.openReader(current + 1); });
+  document.addEventListener('keydown', (e) => {
+    if(reader.hidden) return;
+    if(e.key === 'Escape') closeReader();
+    else if(e.key === 'ArrowLeft' && current > 0) window.openReader(current - 1);
+    else if(e.key === 'ArrowRight' && current < total - 1) window.openReader(current + 1);
+  });
+
+  const rb = document.getElementById('readBookBtn');
+  if(rb) rb.addEventListener('click', () => window.openReader(0));
+
+  document.getElementById('chapters').addEventListener('click', (e) => {
+    const btn = e.target.closest('.ch-read');
+    if(!btn) return;
+    e.stopPropagation();
+    window.openReader(parseInt(btn.dataset.open, 10));
+  });
+})();
+
+/* APP-JS-DONE */
+</script>
+</body>
 </html>

@@ -1,5 +1,21 @@
-node_modules/
-dist/
+# Secrets — NEVER commit. Credentials live OUTSIDE this repo (e.g. ../pap-secrets/.env).
 .env
-.env.local
-.DS_Store
+.env.*
+!.env.example
+*.local
+
+# Vercel project linking / local state
+.vercel
+
+# Generated or cached artifacts (recreated by the refresh engine on each run)
+signals-debug.json
+timeline-raw.json
+x-activity.json
+url.txt
+
+# Logs
+*.log
+
+# Large binaries / dependencies (install separately)
+cloudflared.exe
+node_modules/

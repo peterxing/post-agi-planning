@@ -1,86 +1,106 @@
 # Post-AGI Planning
 
-A timeline planning app that combines:
+A living, data-driven civilization-forecast for the post-AGI transition — a REHOBOAM-style
+predictive timeline spanning **2026–2036** across six domains (Individual, Social, Technology,
+Economic, Geopolitical, Governance), paired with a long-form book and a **Reality Signals** grid.
 
-- **Base forecast timeline** (AI Futures Model + Future Timeline style predictions)
-- **Live signal feed** from **X API** and **Polymarket API**
-- **Probability overlay engine** that shifts month/domain probabilities from incoming market + event signals
+**Live:** [peterxing.com](https://peterxing.com) · [post-agi-planning.vercel.app](https://post-agi-planning.vercel.app)
 
----
-
-## What’s new in this update
-
-### 1) Live Signals Feed tab
-- New **Signals** tab shows significant events in near-real-time
-- Includes source, domain mapping, significance score, target month, and delta impact
-- Displays domain-level rollup of net pressure (`+/-` percentage points)
-
-### 2) Timeline probability impact overlay
-- Live signals now affect the timeline probabilities via bounded deltas
-- Effects decay over subsequent months (default 3-month horizon)
-- Signal items are also injected into month predictions as `[Signal] ...` entries with source links
-
-### 3) Signal ingestion pipeline
-- New script: `scripts/update-live-signals.mjs`
-- Pulls:
-  - **X API** (`/2/tweets/search/recent`) when `X_BEARER_TOKEN` is provided
-  - **Polymarket Gamma API** (`/markets`) for active markets
-- Applies a strict **post-AGI implication relevance filter**:
-  - keeps signals tied to AI capability/compute/governance/energy/supply-chain implications
-  - removes unrelated noise (sports/celebrity/general non-implication markets)
-- Writes snapshot to:
-  - `public/data/live-signals.json`
+Every individual prediction is continuously matched to the single most relevant **real** post or
+repost from [@peterxing](https://x.com/peterxing)'s realtime X (Twitter) activity, and the
+"Reality Signals" section is refreshed from his most notable recent posts/reposts per theme — so the
+timeline visibly evolves as the future arrives.
 
 ---
 
-## Quick start
+## How it works
 
-```bash
-npm install
-npm run signals:update
-npm run dev
+The site is a single self-contained `index.html` (no build step) that fetches two JSON sidecars at
+runtime and renders the timeline + signal cards. A Node engine regenerates those sidecars from live
+data:
+
+```
+index.html ──fetch──▶ predictions.json   (the forecast: source of truth, evolves as reality moves)
+            └─fetch──▶ signals.json       (per-prediction X matches + the Reality Signals grid)
+                              ▲
+                              │  rewritten by
+                  refresh-signals.js ──uses──▶ x-client.js  (authenticated X API v2 harvest)
 ```
 
-Open the app and go to the **Signals** tab.
+- **`predictions.json`** — the curated forecast. Each year has a `summary`, an `events[]` list (each
+  `{ t, d, high?, prob? }`), and a `match` block of keywords. This is the single source of truth for
+  the timeline; editing it changes the site (no HTML edit needed).
+- **`refresh-signals.js`** — expands `predictions.json` into one matcher *per individual prediction*
+  (keyed `"YEAR-INDEX"`), harvests @peterxing's realtime timeline via the X API v2 (posts + reposts
+  always; likes + bookmarks when a user-context token is configured), greedily assigns each prediction
+  its most relevant distinct post/repost (preferring the past week, otherwise his most recent on-topic
+  item, honestly dated), and also builds the **Reality Signals** grid (one card per theme). It writes
+  `signals.json` (public) and `signals-debug.json` (local). If the X API is unavailable it falls back
+  to an auth-free syndication scrape, so the site never blanks.
+- **`x-client.js` / `x-auth.js`** — the X API v2 client and the one-time OAuth2 PKCE login. Credentials
+  are loaded from a `.env` file kept **outside** this repo (see Security below); nothing is hardcoded.
 
----
+## Repository layout
 
-## Environment variables
+| File | Purpose |
+|------|---------|
+| `index.html` | The entire site (timeline, book, Reality Signals). Clawpilot theme, light/dark. |
+| `predictions.json` | The forecast — source of truth for the timeline. |
+| `signals.json` | Per-prediction X matches + the Reality Signals grid (generated). |
+| `refresh-signals.js` | The matching + reality-grid engine. |
+| `x-client.js`, `x-auth.js` | X API v2 client + OAuth2 login helper. |
+| `harvest-loop.js` | Optional continuous-harvest helper. |
+| `validate-predictions.js` | Schema validator for `predictions.json`. |
+| `verify-site.js`, `verify-perpred.js`, `verify-reality.js`, `verify-id.js` | Headless (Edge/Playwright) checks. |
+| `server.js` | Minimal hardened static server for local preview (default-deny). |
+| `launch.ps1`, `watchdog.ps1` | Local server + Cloudflare tunnel launcher / watchdog. |
+| `deploy.ps1`, `vercel.json`, `_headers` | Vercel production deploy + caching/headers. |
+| `REVISE-PREDICTIONS.md` | Schema + rules for evolving the forecast. |
+| `X-API-SETUP.md` | How to provision X API credentials (incl. likes/bookmarks). |
+| `.env.example` | Template for the credentials file (copy outside the repo). |
 
-Create a `.env` file (optional but recommended):
+## Local preview
 
 ```bash
-# Required for X ingestion
-X_BEARER_TOKEN=...
-
-# Optional tuning
-X_QUERY=(AGI OR ASI OR "artificial general intelligence" OR OpenAI OR Anthropic OR DeepMind OR xAI) lang:en -is:retweet
-X_MAX_RESULTS=40
-
-POLYMARKET_API_BASE=https://gamma-api.polymarket.com
-POLYMARKET_LIMIT=400
-
-SIGNAL_WINDOW_HOURS=24
-SIGNAL_MAX_ITEMS=120
+node server.js
+# → serves the site on http://127.0.0.1:8787/
 ```
 
-If `X_BEARER_TOKEN` is missing, the script still runs and ingests Polymarket-only signals.
+`index.html` validates the JSON at runtime and falls back to an inline baseline if a sidecar is
+missing or malformed, so it renders even offline.
 
----
+## Refreshing the data
 
-## NPM scripts
+1. Provision X API credentials — copy `.env.example` to a secrets location **outside** this repo
+   (e.g. `../pap-secrets/.env`) and fill it in. See `X-API-SETUP.md`.
+2. (Optional) Run `node x-auth.js` once to add likes + bookmarks via OAuth2.
+3. Edit `predictions.json` if reality has moved (see `REVISE-PREDICTIONS.md`), then
+   `node validate-predictions.js`.
+4. `node refresh-signals.js` — rewrites `signals.json` from his realtime activity.
+5. Verify: `node verify-perpred.js http://127.0.0.1:8787/` and
+   `node verify-reality.js http://127.0.0.1:8787/` (both print `RESULT: PASS`).
 
-```bash
-npm run dev
-npm run build
-npm run signals:update
-npm run signals:update:with-build
+## Deploy
+
+Static deploy to Vercel (production is aliased to `peterxing.com` and `post-agi-planning.vercel.app`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1
 ```
 
----
+There is no build step — `index.html` + the JSON sidecars are served as-is.
 
-## Notes
+## Security
 
-- This is a **decision-support signal layer**, not an oracle.
-- Deltas are intentionally bounded to avoid runaway probability swings.
-- Improve calibration by tuning keyword maps, significance formulas, and per-domain weighting over time.
+- **Secrets never live in this repo.** X API keys/tokens are read from a `.env` file kept outside the
+  repository; `.gitignore` ignores all `.env*` (except `.env.example`). The engine loads them at
+  runtime via `x-client.js` — nothing is hardcoded, printed, served, or committed.
+- The harvested raw activity dump (which may include private bookmarks) and other generated artifacts
+  (`x-activity.json`, `signals-debug.json`, `timeline-raw.json`, logs) are git-ignored and never
+  published. Only the curated, public `signals.json` ships.
+- `server.js` is default-deny: it serves only `index.html` + the JSON sidecars + static assets, and
+  404s any server-side script.
+
+## License
+
+[MIT](./LICENSE)

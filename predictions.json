@@ -1,0 +1,723 @@
+{
+  "updated": "2026-06-18T12:28:08.117Z",
+  "basis": "Revised 18 Jun 2026 — governance and capital-markets news drove today's changes. (1) ADDED a 2026 governance event: frontier-model pre-deployment testing has gone live — OpenAI, Microsoft and xAI now grant government regulators early-access evaluations before wide release, while the EU AI Act's general-purpose/frontier-model rules are actively enforced by the European AI Office and national AI Safety Institutes (UK AISI included) with mandatory red-teaming and conformity assessments (kersai, osasai, lablab.ai, EU AI Office), aligned with @peterxing's reposts on the frontier-lab CEO policy lunch (@kimmonismus) and @NousResearch. (2) ADDED a 2026 markets event: Nvidia became the first company near a ~$5T market cap on AI-GPU demand, with analysts projecting $3-4T/yr AI capex by 2030 (intellectia.ai, marketdigests, brightcoding.dev), echoed by his @nvidia and markets reposts. (3) UPDATED the 2027 'compute is the binding constraint' prob 64->66 after Sam Altman's '500,000 GPUs by September' and 'desperately short on compute' remarks that he reposted (@deredleritt3r, @DaveBlundin). (4) UPDATED the 2030 'AI-designed drugs gain FDA approval' event 51->54 and sharpened it: 170+ AI-discovered candidates are now in clinical trials with 15-20 entering pivotal Phase III in 2026 after Insilico's rentosertib Phase IIa success and the FDA's Q2-2026 AI-drug guidance (axis-intelligence, healthcarediscovery.ai). No predictions were removed — nothing was falsified today; yesterday's SpaceX-IPO and open-weights-parity events remain grounded in his reposts.",
+  "domains": {
+    "individual": "Individual",
+    "social": "Social",
+    "technology": "Technology",
+    "economic": "Economic",
+    "geopolitical": "Geopolitical",
+    "governance": "Governance"
+  },
+  "years": [
+    {
+      "year": 2026,
+      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor, and the first binding frontier-model safety rules take effect.",
+      "events": [
+        {
+          "t": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
+          "d": "technology",
+          "high": true,
+          "prob": 74
+        },
+        {
+          "t": "Autonomous taxis operate in 20+ cities",
+          "d": "technology",
+          "high": true,
+          "prob": 58
+        },
+        {
+          "t": "UBI pilots launch in 30+ cities worldwide",
+          "d": "economic",
+          "high": true,
+          "prob": 47
+        },
+        {
+          "t": "First commercial quantum computer ships",
+          "d": "technology",
+          "high": true
+        },
+        {
+          "t": "Humanoid robots top 1,000 on live factory lines (Tesla Optimus Gen 3)",
+          "d": "technology",
+          "high": true,
+          "prob": 70
+        },
+        {
+          "t": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
+          "d": "economic",
+          "high": true,
+          "prob": 78
+        },
+        {
+          "t": "Four-day workweek at 500+ major companies",
+          "d": "economic",
+          "high": false
+        },
+        {
+          "t": "Personalized genomic medicine goes retail",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Deepfake detection mandated for platforms",
+          "d": "governance",
+          "high": false
+        },
+        {
+          "t": "AI therapy assistants cleared for clinics",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
+          "d": "economic",
+          "high": true,
+          "prob": 88
+        },
+        {
+          "t": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
+          "d": "technology",
+          "high": true,
+          "prob": 73
+        },
+        {
+          "t": "Nvidia becomes the first company near a $5T market cap on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
+          "d": "economic",
+          "high": true,
+          "prob": 80
+        },
+        {
+          "t": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
+          "d": "governance",
+          "high": true,
+          "prob": 68
+        },
+        {
+          "t": "Signal: AGI consensus slips to the early-2030s as labs ship agents, not AGI",
+          "d": "technology",
+          "signal": true,
+          "prob": 42
+        }
+      ],
+      "match": {
+        "headline": "AI agents go mainstream",
+        "search": "AI agents",
+        "phrases": [
+          "ai agent",
+          "ai agents",
+          "agentic",
+          "autonomous agent",
+          "coding agent",
+          "claude code",
+          "open model",
+          "local model",
+          "frontier model",
+          "open source ai",
+          "open weights"
+        ],
+        "strong": [
+          "agent",
+          "agents",
+          "exo",
+          "codex",
+          "opencode",
+          "llm",
+          "llms",
+          "inference",
+          "llama",
+          "mistral",
+          "deepseek",
+          "gguf",
+          "glm",
+          "qwen"
+        ],
+        "weak": [
+          "model",
+          "models",
+          "ai",
+          "local",
+          "prompt"
+        ]
+      }
+    },
+    {
+      "year": 2027,
+      "summary": "Capability — and capital — compress. AI labs cross trillion-dollar valuations, compute becomes the binding constraint, and humanoid production and fusion hit landmark milestones.",
+      "events": [
+        {
+          "t": "AI agents autonomously run business operations",
+          "d": "economic",
+          "high": true,
+          "prob": 55
+        },
+        {
+          "t": "First trillion-dollar pure-AI company",
+          "d": "economic",
+          "high": true,
+          "prob": 77
+        },
+        {
+          "t": "Brain-computer interfaces approved for medical use",
+          "d": "technology",
+          "high": true
+        },
+        {
+          "t": "Display AR glasses reach mainstream adoption, catalyzed by Apple's market entry",
+          "d": "technology",
+          "high": true,
+          "prob": 53
+        },
+        {
+          "t": "Humanoid-robot output scales toward ~1M units/yr",
+          "d": "economic",
+          "high": true,
+          "prob": 52
+        },
+        {
+          "t": "Fusion's first commercial plant breaks ground after SPARC's 2026 net-gain (Q≈1.5)",
+          "d": "technology",
+          "high": true,
+          "prob": 52
+        },
+        {
+          "t": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
+          "d": "economic",
+          "high": true,
+          "prob": 66
+        },
+        {
+          "t": "Online credentials begin to surpass degrees",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Regional conflict flares over water scarcity",
+          "d": "geopolitical",
+          "high": false
+        },
+        {
+          "t": "Birth rates fall below replacement in 80% of nations",
+          "d": "social",
+          "high": false
+        },
+        {
+          "t": "Signal: most software written end-to-end by AI",
+          "d": "technology",
+          "signal": true,
+          "prob": 49
+        }
+      ],
+      "match": {
+        "headline": "First trillion-dollar pure-AI company",
+        "search": "AI company valuation",
+        "phrases": [
+          "trillion dollar",
+          "market cap",
+          "pure ai",
+          "ai company",
+          "first ai company",
+          "trillion parameter"
+        ],
+        "strong": [
+          "trillion",
+          "valuation",
+          "nvidia",
+          "ipo",
+          "revenue",
+          "arr",
+          "acquisition"
+        ],
+        "weak": [
+          "company",
+          "billion",
+          "market",
+          "stock",
+          "startup"
+        ]
+      }
+    },
+    {
+      "year": 2028,
+      "summary": "AGI-class systems clear the benchmarks, but the field recalibrates: 'true' AGI consensus slips toward the early-2030s as institutions scramble to adapt the rules.",
+      "events": [
+        {
+          "t": "Functional AGI clears the benchmarks; 'true AGI' consensus slips to the early-2030s",
+          "d": "technology",
+          "high": true,
+          "prob": 44
+        },
+        {
+          "t": "Education unbundles into personalized mastery maps",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Carbon markets exceed $600B in value",
+          "d": "economic",
+          "high": false
+        },
+        {
+          "t": "DAOs gain legal recognition in 40+ jurisdictions",
+          "d": "governance",
+          "high": true
+        },
+        {
+          "t": "CRISPR therapies become routine",
+          "d": "technology",
+          "high": false
+        },
+        {
+          "t": "Cognitive-enhancement tools see mass adoption",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Space-mining rights disputed at the UN",
+          "d": "geopolitical",
+          "high": false
+        },
+        {
+          "t": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
+          "d": "technology",
+          "high": true,
+          "prob": 43
+        }
+      ],
+      "match": {
+        "headline": "AGI passes comprehensive reasoning benchmarks",
+        "search": "AGI",
+        "phrases": [
+          "artificial general intelligence",
+          "human level",
+          "arc agi",
+          "frontier math",
+          "reasoning benchmark",
+          "passes the",
+          "general intelligence"
+        ],
+        "strong": [
+          "agi",
+          "reasoning",
+          "benchmark",
+          "benchmarks",
+          "o3",
+          "gpt"
+        ],
+        "weak": [
+          "reason",
+          "intelligence",
+          "model"
+        ]
+      }
+    },
+    {
+      "year": 2029,
+      "summary": "The labour shock becomes undeniable — and so does the abundance dividend that could offset it.",
+      "events": [
+        {
+          "t": "Automation eliminates ~25% of current jobs",
+          "d": "economic",
+          "high": true,
+          "prob": 46
+        },
+        {
+          "t": "Loneliness declared a public-health crisis",
+          "d": "social",
+          "high": true
+        },
+        {
+          "t": "Climate refugees exceed 120 million",
+          "d": "geopolitical",
+          "high": true
+        },
+        {
+          "t": "Global life expectancy reaches 87",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Photonic processors start replacing silicon",
+          "d": "technology",
+          "high": false
+        },
+        {
+          "t": "Social-credit systems run in 35+ countries",
+          "d": "governance",
+          "high": true
+        }
+      ],
+      "match": {
+        "headline": "Automation eliminates ~25% of current jobs",
+        "search": "automation jobs",
+        "phrases": [
+          "white collar",
+          "minimum wage",
+          "future of work",
+          "job losses",
+          "labour market",
+          "labor market",
+          "mass unemployment"
+        ],
+        "strong": [
+          "job",
+          "jobs",
+          "automation",
+          "teleoperation",
+          "unemploy",
+          "unemployment",
+          "workforce",
+          "robot",
+          "robots",
+          "humanoid"
+        ],
+        "weak": [
+          "work",
+          "labour",
+          "labor",
+          "wage",
+          "employ"
+        ]
+      }
+    },
+    {
+      "year": 2030,
+      "summary": "The gentle-singularity branch comes into view: AI-designed medicine, universal clean energy.",
+      "events": [
+        {
+          "t": "AI-designed drugs gain FDA approval (170+ AI-discovered candidates now in trials; 15-20 in pivotal Phase III by 2026)",
+          "d": "technology",
+          "high": true,
+          "prob": 54
+        },
+        {
+          "t": "First crewed-resupply mission to a Mars base",
+          "d": "technology",
+          "high": false
+        },
+        {
+          "t": "Green energy hits universal cost parity",
+          "d": "economic",
+          "high": true
+        },
+        {
+          "t": "Companion robots enter elderly care at scale",
+          "d": "social",
+          "high": false
+        },
+        {
+          "t": "Neural implants restore mobility",
+          "d": "individual",
+          "high": true
+        },
+        {
+          "t": "Global AI-safety treaty signed",
+          "d": "governance",
+          "high": true
+        },
+        {
+          "t": "Career half-life drops below 5 years as AI reskilling becomes universal",
+          "d": "economic",
+          "high": true,
+          "prob": 60
+        }
+      ],
+      "match": {
+        "headline": "AI-designed drugs gain FDA approval",
+        "search": "AI drug discovery longevity",
+        "phrases": [
+          "ai designed",
+          "drug discovery",
+          "clinical trial",
+          "fda approval",
+          "extend human life",
+          "protein folding",
+          "drug candidate"
+        ],
+        "strong": [
+          "drug",
+          "drugs",
+          "longevity",
+          "fda",
+          "protein",
+          "cancer",
+          "clinical",
+          "biotech",
+          "disease"
+        ],
+        "weak": [
+          "health",
+          "medicine",
+          "bio",
+          "cure",
+          "aging",
+          "ageing"
+        ]
+      }
+    },
+    {
+      "year": 2031,
+      "summary": "Credentials quietly cross their threshold — while the room-temperature-superconductor dream stays unproven after LK-99, now chased by AI-driven materials discovery.",
+      "events": [
+        {
+          "t": "Micro-credentials eclipse university degrees",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
+          "d": "technology",
+          "high": false
+        }
+      ],
+      "match": {
+        "headline": "Room-temperature superconductor remains unproven; AI hunts candidates",
+        "search": "room temperature superconductor",
+        "phrases": [
+          "room temperature",
+          "room temp",
+          "lk 99",
+          "superconducting material"
+        ],
+        "strong": [
+          "superconduct",
+          "superconductor",
+          "superconductors",
+          "superconductivity",
+          "lk99"
+        ],
+        "weak": [
+          "quantum",
+          "material",
+          "materials"
+        ]
+      }
+    },
+    {
+      "year": 2032,
+      "summary": "Synthetic biology and digital money reshape the substrate of daily life.",
+      "events": [
+        {
+          "t": "Synthetic biology yields artificial organisms",
+          "d": "technology",
+          "high": true
+        },
+        {
+          "t": "Continuous identity & provenance verification",
+          "d": "governance",
+          "high": false
+        },
+        {
+          "t": "Digital currencies largely replace cash",
+          "d": "economic",
+          "high": false
+        }
+      ],
+      "match": {
+        "headline": "Synthetic biology yields artificial organisms",
+        "search": "synthetic biology",
+        "phrases": [
+          "synthetic biology",
+          "artificial cell",
+          "artificial organism",
+          "artificial life",
+          "synthetic cell",
+          "de novo"
+        ],
+        "strong": [
+          "xenobot",
+          "xenobots",
+          "organism",
+          "organisms",
+          "genome",
+          "biology",
+          "biosynthetic"
+        ],
+        "weak": [
+          "cell",
+          "cells",
+          "bio",
+          "dna",
+          "life"
+        ]
+      }
+    },
+    {
+      "year": 2033,
+      "summary": "Scarcity flares at the edges even as abundance compounds at the core.",
+      "events": [
+        {
+          "t": "Degrees decompose into verified skill cores",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "Acute rare-earth shortage triggers a crisis",
+          "d": "geopolitical",
+          "high": true
+        },
+        {
+          "t": "Biometric surveillance restricted by treaty",
+          "d": "governance",
+          "high": false
+        }
+      ],
+      "match": {
+        "headline": "Acute rare-earth & compute shortages",
+        "search": "rare earth supply chain",
+        "phrases": [
+          "rare earth",
+          "rare earths",
+          "supply chain",
+          "export control",
+          "chip ban",
+          "compute shortage"
+        ],
+        "strong": [
+          "lithium",
+          "mineral",
+          "minerals",
+          "tariff",
+          "tariffs",
+          "semiconductor",
+          "semiconductors"
+        ],
+        "weak": [
+          "supply",
+          "shortage",
+          "export",
+          "mining",
+          "chips"
+        ]
+      }
+    },
+    {
+      "year": 2034,
+      "summary": "The social fabric is visibly rewoven around lifelong learning and new family forms.",
+      "events": [
+        {
+          "t": "Marriage rates hit an all-time low",
+          "d": "social",
+          "high": false
+        },
+        {
+          "t": "Ambient lifelong learning becomes default",
+          "d": "individual",
+          "high": false
+        },
+        {
+          "t": "First CRISPR-edited humans reach adulthood",
+          "d": "technology",
+          "high": true
+        }
+      ],
+      "match": {
+        "headline": "First CRISPR-edited humans reach adulthood",
+        "search": "CRISPR gene editing",
+        "phrases": [
+          "gene editing",
+          "genome editing",
+          "gene edited",
+          "designer baby",
+          "designer babies"
+        ],
+        "strong": [
+          "crispr",
+          "germline",
+          "embryo",
+          "embryos",
+          "genome"
+        ],
+        "weak": [
+          "gene",
+          "genes",
+          "dna",
+          "edit",
+          "editing"
+        ]
+      }
+    },
+    {
+      "year": 2035,
+      "summary": "Artificial superintelligence emerges — the branch point everything pointed toward.",
+      "events": [
+        {
+          "t": "Artificial superintelligence emerges",
+          "d": "technology",
+          "high": true,
+          "prob": 41
+        },
+        {
+          "t": "Schools recenter on community, leadership & well-being",
+          "d": "social",
+          "high": false
+        }
+      ],
+      "match": {
+        "headline": "Artificial superintelligence emerges",
+        "search": "superintelligence",
+        "phrases": [
+          "artificial superintelligence",
+          "recursive self",
+          "self improving",
+          "intelligence explosion",
+          "super intelligence"
+        ],
+        "strong": [
+          "superintelligence",
+          "superintelligent",
+          "singularity",
+          "asi",
+          "superhuman"
+        ],
+        "weak": [
+          "intelligence",
+          "exponential",
+          "alignment"
+        ]
+      }
+    },
+    {
+      "year": 2036,
+      "summary": "Post-threshold. The question shifts from 'when' to 'who does abundance reach?'",
+      "events": [
+        {
+          "t": "Distribution layer becomes the defining political fight",
+          "d": "governance",
+          "high": true
+        },
+        {
+          "t": "Universal high income debated in major economies",
+          "d": "economic",
+          "high": true
+        },
+        {
+          "t": "Human–AI merger moves from fringe to policy",
+          "d": "individual",
+          "high": false
+        }
+      ],
+      "match": {
+        "headline": "Universal high income debated worldwide",
+        "search": "universal basic income",
+        "phrases": [
+          "universal basic income",
+          "universal high income",
+          "basic income",
+          "wealth redistribution",
+          "high income"
+        ],
+        "strong": [
+          "ubi",
+          "redistribution",
+          "redistribute"
+        ],
+        "weak": [
+          "income",
+          "welfare",
+          "inequality"
+        ]
+      }
+    }
+  ]
+}
