@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T22:09:26.891Z",
+  "generatedAt": "2026-06-18T22:23:42.359Z",
   "username": "peterxing",
   "sourceStatus": {
     "x": "scraped(raw=20)",
@@ -23,6 +23,17 @@
         "disruption"
       ],
       "posts": [
+        {
+          "id": "2067291316418212053",
+          "type": "repost",
+          "text": "Sam Altman made a notable statement at the G7 summit. Altman said that the debate over whether AI is useful is over, arguing that far more powerful AI systems will emerge in the coming years. He also suggested that AI could reshape both the global economy and scientific discovery",
+          "created_at": "2026-06-17T17:00:32.000Z",
+          "url": "https://x.com/arrakis_ai/status/2067291316418212053",
+          "public_metrics": {},
+          "matched_terms": [
+            "future"
+          ]
+        },
         {
           "id": "2067135640249209175",
           "type": "repost",
@@ -54,18 +65,6 @@
           "public_metrics": {},
           "matched_terms": [
             "future"
-          ]
-        },
-        {
-          "id": "2067017188834218054",
-          "type": "repost",
-          "text": "The world is going to be desperately short on compute for the rest of time. No matter how many chips we make, demand will outrun supply. Scaling models in parameter count, context length, and thinking tokens continues to yield increasingly better models with consistently slower, ",
-          "created_at": "2026-06-16T22:51:15.000Z",
-          "url": "https://x.com/DaveBlundin/status/2067017188834218054",
-          "public_metrics": {},
-          "matched_terms": [
-            "future",
-            "frontier model"
           ]
         }
       ]
@@ -131,7 +130,31 @@
         "governance",
         "society"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2067367079343226981",
+          "type": "repost",
+          "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboration and call it cheating. This needs to end.",
+          "created_at": "2026-06-17T22:01:36.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2067367079343226981",
+          "public_metrics": {},
+          "matched_terms": [
+            "education"
+          ]
+        },
+        {
+          "id": "2067291316418212053",
+          "type": "repost",
+          "text": "Sam Altman made a notable statement at the G7 summit. Altman said that the debate over whether AI is useful is over, arguing that far more powerful AI systems will emerge in the coming years. He also suggested that AI could reshape both the global economy and scientific discovery",
+          "created_at": "2026-06-17T17:00:32.000Z",
+          "url": "https://x.com/arrakis_ai/status/2067291316418212053",
+          "public_metrics": {},
+          "matched_terms": [
+            "governance",
+            "society"
+          ]
+        }
+      ]
     },
     "chapter-4-the-new-currency-energy-compute-and-productive-capacity": {
       "id": "chapter-4-the-new-currency-energy-compute-and-productive-capacity",
@@ -368,7 +391,19 @@
         "community",
         "legitimacy"
       ],
-      "posts": []
+      "posts": [
+        {
+          "id": "2067367079343226981",
+          "type": "repost",
+          "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboration and call it cheating. This needs to end.",
+          "created_at": "2026-06-17T22:01:36.000Z",
+          "url": "https://x.com/PeterDiamandis/status/2067367079343226981",
+          "public_metrics": {},
+          "matched_terms": [
+            "education"
+          ]
+        }
+      ]
     }
   }
 }
