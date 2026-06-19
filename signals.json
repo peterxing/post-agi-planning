@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T23:40:23.773Z",
+  "updated": "2026-06-19T23:50:30.948Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,7 +22,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 521,
+      "likes": 522,
       "rts": 36
     },
     "2026-3": {
@@ -33,8 +33,8 @@
       "date": "16 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "AI will achieve Stockfish-level coding and generalized computer use",
-      "likes": 54440,
-      "rts": 5711
+      "likes": 54441,
+      "rts": 5712
     },
     "2026-4": {
       "id": "2064835800747962424",
@@ -55,7 +55,7 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 190,
+      "likes": 193,
       "rts": 20
     },
     "2026-7": {
@@ -110,7 +110,7 @@
       "date": "17 Jun 2026",
       "maps": "Nvidia becomes the first company near a $5T market cap on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "Thanks @satyanadella 👏 Great work with @Azure on one of the largest MLPerf Training submission to-date on NVIDIA Blackwell: 8,192 GPUs on NVIDIA GB200 NVL72…",
-      "likes": 497,
+      "likes": 498,
       "rts": 59
     },
     "2026-13": {
@@ -165,8 +165,8 @@
       "date": "19 Jun 2026",
       "maps": "Brain-computer interfaces approved for medical use",
       "text": "Fueled by massive increases in the capability of AI, we are going to see incredible things happen in: • Human longevity • Disease prevention &amp; cures • Ge…",
-      "likes": 442,
-      "rts": 33
+      "likes": 443,
+      "rts": 34
     },
     "2027-4": {
       "id": "2063244676468179348",
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 3312,
-      "rts": 196
+      "likes": 3410,
+      "rts": 203
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -319,8 +319,8 @@
       "date": "14 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "Not impossible, but definitely requires factories on the Moon and Mars to achieve. By then, I don’t think dollars will be used as currency. Just mass and ene…",
-      "likes": 30158,
-      "rts": 1920
+      "likes": 30159,
+      "rts": 1921
     },
     "2030-3": {
       "id": "2062881091787100350",
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3058,
+      "likes": 3062,
       "rts": 182
     }
   },
@@ -498,8 +498,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "19 Jun 2026",
-      "likes": 21000,
-      "rts": 1481
+      "likes": 21216,
+      "rts": 1513
     },
     {
       "tag": "CODE",
@@ -509,7 +509,7 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11372,
+      "likes": 11373,
       "rts": 1583
     },
     {
