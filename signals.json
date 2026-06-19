@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T05:26:03.691Z",
+  "updated": "2026-06-19T06:26:15.592Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,8 +22,8 @@
       "date": "16 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "AI will achieve Stockfish-level coding and generalized computer use",
-      "likes": 54405,
-      "rts": 5685
+      "likes": 54407,
+      "rts": 5687
     },
     "2026-4": {
       "id": "2064835800747962424",
@@ -44,7 +44,7 @@
       "date": "18 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Let’s get ready, my friends. Negotiations with Trump appear to be going well, and Anthropic is confident that Fable 5 will be available again in the coming d…",
-      "likes": 897,
+      "likes": 899,
       "rts": 38
     },
     "2026-7": {
@@ -110,7 +110,7 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 7547,
+      "likes": 7554,
       "rts": 782
     },
     "2026-14": {
@@ -187,7 +187,7 @@
       "date": "11 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement,…",
-      "likes": 1524,
+      "likes": 1523,
       "rts": 147
     },
     "2027-10": {
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Signal: most software written end-to-end by AI",
       "text": "Until today, I held off on the $149/month FSD subscription here in Australia. ​But the v14.3.3 (2026.16.6) rollout that just hit local might changed my mind.…",
-      "likes": 65,
-      "rts": 3
+      "likes": 80,
+      "rts": 5
     },
     "2028-0": {
       "id": "2066282848223686754",
@@ -220,8 +220,8 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 2922,
-      "rts": 443
+      "likes": 2928,
+      "rts": 444
     },
     "2028-2": {
       "id": "2066868561973506317",
@@ -308,7 +308,7 @@
       "date": "14 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "Not impossible, but definitely requires factories on the Moon and Mars to achieve. By then, I don’t think dollars will be used as currency. Just mass and ene…",
-      "likes": 30141,
+      "likes": 30142,
       "rts": 1919
     },
     "2030-3": {
@@ -330,7 +330,7 @@
       "date": "06 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
-      "likes": 4391,
+      "likes": 4392,
       "rts": 1372
     },
     "2031-0": {
@@ -385,7 +385,7 @@
       "date": "17 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "Important to note @Zai_org train on @Huawei Ascend chips, no NVIDA (!) So you have frontier -3 months on a fully Chinese stack, 90% cheaper. Would estimate t…",
-      "likes": 1153,
+      "likes": 1155,
       "rts": 105
     },
     "2033-0": {
@@ -499,8 +499,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 10925,
-      "rts": 1509
+      "likes": 10948,
+      "rts": 1513
     },
     {
       "tag": "ROBOTS",
