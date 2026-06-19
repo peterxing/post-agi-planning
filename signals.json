@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T02:18:19.639Z",
+  "updated": "2026-06-19T03:19:11.120Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,8 +22,8 @@
       "date": "16 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "AI will achieve Stockfish-level coding and generalized computer use",
-      "likes": 54398,
-      "rts": 5682
+      "likes": 54402,
+      "rts": 5684
     },
     "2026-4": {
       "id": "2064835800747962424",
@@ -44,7 +44,7 @@
       "date": "18 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Let’s get ready, my friends. Negotiations with Trump appear to be going well, and Anthropic is confident that Fable 5 will be available again in the coming d…",
-      "likes": 884,
+      "likes": 891,
       "rts": 38
     },
     "2026-7": {
@@ -77,8 +77,8 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12239,
-      "rts": 1433
+      "likes": 12240,
+      "rts": 1432
     },
     "2026-11": {
       "id": "2067135640249209175",
@@ -88,7 +88,7 @@
       "date": "17 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "Z ai’s GLM-5.2 is the new leading open weights model on the Artificial Analysis Intelligence Index scoring 51 and it sits on the Pareto frontier of Intellige…",
-      "likes": 1926,
+      "likes": 1927,
       "rts": 239
     },
     "2026-12": {
@@ -110,8 +110,8 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 7528,
-      "rts": 780
+      "likes": 7533,
+      "rts": 782
     },
     "2026-14": {
       "id": "2058780196560380228",
@@ -220,8 +220,8 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 2892,
-      "rts": 440
+      "likes": 2900,
+      "rts": 441
     },
     "2028-2": {
       "id": "2066868561973506317",
@@ -308,7 +308,7 @@
       "date": "14 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "Not impossible, but definitely requires factories on the Moon and Mars to achieve. By then, I don’t think dollars will be used as currency. Just mass and ene…",
-      "likes": 30137,
+      "likes": 30140,
       "rts": 1918
     },
     "2030-3": {
@@ -330,7 +330,7 @@
       "date": "06 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
-      "likes": 4389,
+      "likes": 4390,
       "rts": 1373
     },
     "2031-0": {
@@ -488,7 +488,7 @@
       "author": "Kimi_Moonshot",
       "recency": "week",
       "date": "12 Jun 2026",
-      "likes": 13927,
+      "likes": 13929,
       "rts": 1739
     },
     {
@@ -499,8 +499,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 10807,
-      "rts": 1488
+      "likes": 10849,
+      "rts": 1493
     },
     {
       "tag": "ROBOTS",
@@ -521,7 +521,7 @@
       "author": "NousResearch",
       "recency": "week",
       "date": "15 Jun 2026",
-      "likes": 4658,
+      "likes": 4660,
       "rts": 364
     },
     {
