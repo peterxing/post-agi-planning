@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T09:27:30.257Z",
+  "updated": "2026-06-21T10:30:03.669Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -33,19 +33,19 @@
       "date": "20 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "this will be true across all walks of life I would expect our whole lives to be recorded and the sheer signal density of your physical and digital presence t…",
-      "likes": 875,
+      "likes": 887,
       "rts": 47
     },
     "2026-4": {
-      "id": "2064835800747962424",
+      "id": "2068095502835384433",
       "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "recent",
-      "date": "10 Jun 2026",
+      "author": "niccruzpatane",
+      "recency": "week",
+      "date": "19 Jun 2026",
       "maps": "Humanoid robots top 1,000 on live factory lines (Tesla Optimus Gen 3)",
-      "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizatio…",
-      "likes": 526,
-      "rts": 65
+      "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
+      "likes": 1239,
+      "rts": 148
     },
     "2026-5": {
       "id": "2068079318484549714",
@@ -55,7 +55,7 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 460,
+      "likes": 462,
       "rts": 44
     },
     "2026-7": {
@@ -143,7 +143,7 @@
       "date": "16 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Copilot Cowork is now generally available worldwide, now with multi-model support! Every organization can put long-running agents to work on complex, multi-s…",
-      "likes": 2662,
+      "likes": 2663,
       "rts": 477
     },
     "2027-1": {
@@ -169,15 +169,15 @@
       "rts": 36
     },
     "2027-4": {
-      "id": "2063244676468179348",
+      "id": "2064835800747962424",
       "kind": "repost",
-      "author": "CyberRobooo",
+      "author": "Dr_Singularity",
       "recency": "recent",
-      "date": "06 Jun 2026",
+      "date": "10 Jun 2026",
       "maps": "Humanoid-robot output scales toward ~1M units/yr",
-      "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her,…",
-      "likes": 212,
-      "rts": 34
+      "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizatio…",
+      "likes": 526,
+      "rts": 65
     },
     "2027-6": {
       "id": "2067019412960379007",
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 7967,
-      "rts": 526
+      "likes": 7987,
+      "rts": 527
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -242,7 +242,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3018,
+      "likes": 3019,
       "rts": 453
     },
     "2028-2": {
@@ -275,7 +275,7 @@
       "date": "12 Jun 2026",
       "maps": "Cognitive-enhancement tools see mass adoption",
       "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1336,
+      "likes": 1337,
       "rts": 183
     },
     "2028-7": {
@@ -323,15 +323,15 @@
       "rts": 1916
     },
     "2030-3": {
-      "id": "2062881091787100350",
+      "id": "2063244676468179348",
       "kind": "repost",
-      "author": "mario_bollini",
+      "author": "CyberRobooo",
       "recency": "recent",
-      "date": "05 Jun 2026",
+      "date": "06 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
-      "text": "We’ve been dancing with Spot for years but this kind of thing just doesn’t work with quadrupeds. But it does with humanoids! Excited for a future with robot …",
-      "likes": 341,
-      "rts": 60
+      "text": "Honestly it looks incredibly realistic. UWORLD’s Super Bionic humanoid robots,showing face for first time When she blinks, you’re instinctively drawn to her,…",
+      "likes": 212,
+      "rts": 34
     },
     "2030-4": {
       "id": "2063214389155463478",
@@ -407,7 +407,7 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1222,
+      "likes": 1223,
       "rts": 39
     },
     "2033-1": {
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3127,
+      "likes": 3128,
       "rts": 187
     }
   },
@@ -491,17 +491,6 @@
   },
   "reality": [
     {
-      "tag": "ABUNDANCE",
-      "t": "Things won’t be measure in dollars then, just mass &amp; energy",
-      "id": "2068042141851390372",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "week",
-      "date": "19 Jun 2026",
-      "likes": 40249,
-      "rts": 3200
-    },
-    {
       "tag": "CODE",
       "t": "Introducing GLM-5.2: Frontier Intelligence, Open Weights - Significant improvements in coding and agentic tasks - Strong long-horizon capabilities …",
       "id": "2066938937344495629",
@@ -509,8 +498,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11744,
-      "rts": 1633
+      "likes": 11765,
+      "rts": 1634
     },
     {
       "tag": "MARKETS",
@@ -520,8 +509,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 4845,
-      "rts": 1277
+      "likes": 4980,
+      "rts": 1311
     },
     {
       "tag": "CAPABILITY",
@@ -531,7 +520,7 @@
       "author": "NickADobos",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 5862,
+      "likes": 5861,
       "rts": 244
     },
     {
@@ -542,19 +531,30 @@
       "author": "NousResearch",
       "recency": "week",
       "date": "15 Jun 2026",
-      "likes": 4668,
+      "likes": 4667,
       "rts": 366
     },
     {
+      "tag": "ABUNDANCE",
+      "t": "Tesla just trademarked \"AMAZING ABUNDANCE\" 🚀🚀",
+      "id": "2068459033422344317",
+      "kind": "repost",
+      "author": "xdNiBoR",
+      "recency": "week",
+      "date": "20 Jun 2026",
+      "likes": 1973,
+      "rts": 142
+    },
+    {
       "tag": "ROBOTS",
-      "t": "People forget Tesla has $40B in cash. Such an underrated company. Tesla said they plan on spending over $25B in 2026 alone, which is nearly triple …",
-      "id": "2067775676753510832",
+      "t": "Okay, this is cool. “MEGAPOD” sounds related to Digital Optimus. Instead of letting the grid sit unused during off-peak high-demand travel days/hol…",
+      "id": "2068358252409024657",
       "kind": "repost",
       "author": "niccruzpatane",
       "recency": "week",
-      "date": "19 Jun 2026",
-      "likes": 2731,
-      "rts": 255
+      "date": "20 Jun 2026",
+      "likes": 522,
+      "rts": 71
     }
   ]
 }
