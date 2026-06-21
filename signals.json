@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T04:20:09.835Z",
+  "updated": "2026-06-21T05:21:25.030Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,7 +22,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1414,
+      "likes": 1416,
       "rts": 93
     },
     "2026-3": {
@@ -33,7 +33,7 @@
       "date": "20 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "this will be true across all walks of life I would expect our whole lives to be recorded and the sheer signal density of your physical and digital presence t…",
-      "likes": 791,
+      "likes": 812,
       "rts": 44
     },
     "2026-4": {
@@ -55,8 +55,8 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 450,
-      "rts": 42
+      "likes": 451,
+      "rts": 43
     },
     "2026-7": {
       "id": "2065828140396556553",
@@ -88,7 +88,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12235,
+      "likes": 12234,
       "rts": 1429
     },
     "2026-11": {
@@ -121,7 +121,7 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 8086,
+      "likes": 8088,
       "rts": 834
     },
     "2026-14": {
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 7823,
-      "rts": 519
+      "likes": 7860,
+      "rts": 523
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -374,7 +374,7 @@
       "date": "08 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
       "text": "New Science Blog: Why has AI advanced faster in coding than in biology? To agents, bio databases are like cities built before cars—maddening to drive in beca…",
-      "likes": 3686,
+      "likes": 3687,
       "rts": 500
     },
     "2032-1": {
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3119,
+      "likes": 3121,
       "rts": 187
     }
   },
@@ -498,8 +498,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "19 Jun 2026",
-      "likes": 39492,
-      "rts": 3154
+      "likes": 39658,
+      "rts": 3165
     },
     {
       "tag": "CODE",
@@ -509,8 +509,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11672,
-      "rts": 1620
+      "likes": 11687,
+      "rts": 1622
     },
     {
       "tag": "CAPABILITY",
@@ -524,6 +524,17 @@
       "rts": 244
     },
     {
+      "tag": "MARKETS",
+      "t": "Since 2008, $15B taxpayer dollars have been invested in California High Speed Rail. There is no working track and zero passengers so far. In the sa…",
+      "id": "2068386025932751246",
+      "kind": "repost",
+      "author": "WR4NYGov",
+      "recency": "week",
+      "date": "20 Jun 2026",
+      "likes": 4132,
+      "rts": 1111
+    },
+    {
       "tag": "GOVERNANCE",
       "t": "In partnership with @stripe, Hermes Agent now supports a full suite of Stripe skills. Your agent can buy things, pay per-call APIs, and provision i…",
       "id": "2066647737613832624",
@@ -533,17 +544,6 @@
       "date": "15 Jun 2026",
       "likes": 4667,
       "rts": 366
-    },
-    {
-      "tag": "MARKETS",
-      "t": "Since 2008, $15B taxpayer dollars have been invested in California High Speed Rail. There is no working track and zero passengers so far. In the sa…",
-      "id": "2068386025932751246",
-      "kind": "repost",
-      "author": "WR4NYGov",
-      "recency": "week",
-      "date": "20 Jun 2026",
-      "likes": 3904,
-      "rts": 1061
     },
     {
       "tag": "ROBOTS",
