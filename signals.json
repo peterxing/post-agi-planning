@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T07:25:32.365Z",
+  "updated": "2026-06-21T08:26:21.010Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,8 +22,8 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1420,
-      "rts": 93
+      "likes": 1422,
+      "rts": 94
     },
     "2026-3": {
       "id": "2068402928961065390",
@@ -33,8 +33,8 @@
       "date": "20 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "this will be true across all walks of life I would expect our whole lives to be recorded and the sheer signal density of your physical and digital presence t…",
-      "likes": 852,
-      "rts": 46
+      "likes": 863,
+      "rts": 47
     },
     "2026-4": {
       "id": "2064835800747962424",
@@ -55,8 +55,8 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 454,
-      "rts": 43
+      "likes": 457,
+      "rts": 44
     },
     "2026-7": {
       "id": "2065828140396556553",
@@ -88,7 +88,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12234,
+      "likes": 12233,
       "rts": 1429
     },
     "2026-11": {
@@ -99,7 +99,7 @@
       "date": "17 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "Z ai’s GLM-5.2 is the new leading open weights model on the Artificial Analysis Intelligence Index scoring 51 and it sits on the Pareto frontier of Intellige…",
-      "likes": 1947,
+      "likes": 1948,
       "rts": 242
     },
     "2026-12": {
@@ -121,8 +121,8 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 8088,
-      "rts": 835
+      "likes": 8090,
+      "rts": 836
     },
     "2026-14": {
       "id": "2065630251242213498",
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 7916,
-      "rts": 524
+      "likes": 7945,
+      "rts": 525
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -342,7 +342,7 @@
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
       "likes": 4388,
-      "rts": 1371
+      "rts": 1372
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3122,
+      "likes": 3124,
       "rts": 187
     }
   },
@@ -498,8 +498,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "19 Jun 2026",
-      "likes": 39967,
-      "rts": 3186
+      "likes": 40122,
+      "rts": 3190
     },
     {
       "tag": "CODE",
@@ -509,8 +509,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11712,
-      "rts": 1628
+      "likes": 11732,
+      "rts": 1630
     },
     {
       "tag": "CAPABILITY",
@@ -531,8 +531,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 4561,
-      "rts": 1210
+      "likes": 4728,
+      "rts": 1240
     },
     {
       "tag": "GOVERNANCE",
