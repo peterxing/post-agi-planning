@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T12:33:28.811Z",
+  "updated": "2026-06-21T13:35:16.036Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,7 +22,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1431,
+      "likes": 1434,
       "rts": 94
     },
     "2026-3": {
@@ -33,8 +33,8 @@
       "date": "20 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "No wattage will go unused. Tesla is developing Digital Optimus units powered by the grid at large Supercharger sites, utilizing capacity that would otherwise…",
-      "likes": 442,
-      "rts": 62
+      "likes": 450,
+      "rts": 63
     },
     "2026-4": {
       "id": "2068095502835384433",
@@ -44,7 +44,7 @@
       "date": "19 Jun 2026",
       "maps": "Humanoid robots top 1,000 on live factory lines (Tesla Optimus Gen 3)",
       "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
-      "likes": 1245,
+      "likes": 1250,
       "rts": 148
     },
     "2026-5": {
@@ -55,7 +55,7 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 464,
+      "likes": 465,
       "rts": 44
     },
     "2026-7": {
@@ -143,8 +143,8 @@
       "date": "20 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "this will be true across all walks of life I would expect our whole lives to be recorded and the sheer signal density of your physical and digital presence t…",
-      "likes": 911,
-      "rts": 49
+      "likes": 932,
+      "rts": 52
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8022,
-      "rts": 529
+      "likes": 8041,
+      "rts": 531
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -242,8 +242,8 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3020,
-      "rts": 453
+      "likes": 3021,
+      "rts": 454
     },
     "2028-2": {
       "id": "2066868561973506317",
@@ -275,7 +275,7 @@
       "date": "12 Jun 2026",
       "maps": "Cognitive-enhancement tools see mass adoption",
       "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1338,
+      "likes": 1339,
       "rts": 183
     },
     "2028-7": {
@@ -319,8 +319,8 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3165,
-      "rts": 225
+      "likes": 3200,
+      "rts": 231
     },
     "2030-3": {
       "id": "2068463951088689152",
@@ -330,8 +330,8 @@
       "date": "20 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
-      "likes": 221,
-      "rts": 23
+      "likes": 291,
+      "rts": 31
     },
     "2030-4": {
       "id": "2063214389155463478",
@@ -407,7 +407,7 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1223,
+      "likes": 1222,
       "rts": 39
     },
     "2033-1": {
@@ -440,7 +440,7 @@
       "date": "05 Jun 2026",
       "maps": "First CRISPR-edited humans reach adulthood",
       "text": "holy shit. it happened they just edited human embryo DNA. this is the beginning of the end of genetic diseases.",
-      "likes": 2245,
+      "likes": 2244,
       "rts": 203
     },
     "2035-0": {
@@ -498,8 +498,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11796,
-      "rts": 1640
+      "likes": 11821,
+      "rts": 1641
     },
     {
       "tag": "MARKETS",
@@ -509,8 +509,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 5360,
-      "rts": 1425
+      "likes": 5528,
+      "rts": 1478
     },
     {
       "tag": "GOVERNANCE",
@@ -520,7 +520,7 @@
       "author": "NousResearch",
       "recency": "week",
       "date": "15 Jun 2026",
-      "likes": 4668,
+      "likes": 4669,
       "rts": 366
     },
     {
@@ -542,8 +542,8 @@
       "author": "xdNiBoR",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 2117,
-      "rts": 157
+      "likes": 2194,
+      "rts": 166
     },
     {
       "tag": "ROBOTS",
@@ -553,8 +553,8 @@
       "author": "niccruzpatane",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 567,
-      "rts": 78
+      "likes": 581,
+      "rts": 79
     }
   ]
 }
