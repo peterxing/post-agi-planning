@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-22T02:48:53.880Z",
+  "updated": "2026-06-22T03:50:53.894Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -33,7 +33,7 @@
       "date": "20 Jun 2026",
       "maps": "First commercial quantum computer ships",
       "text": "No wattage will go unused. Tesla is developing Digital Optimus units powered by the grid at large Supercharger sites, utilizing capacity that would otherwise…",
-      "likes": 501,
+      "likes": 502,
       "rts": 70
     },
     "2026-4": {
@@ -66,7 +66,7 @@
       "date": "20 Jun 2026",
       "maps": "Personalized genomic medicine goes retail",
       "text": "Age reversal will change medicine, insurance, retirement, work, family, and the meaning of life itself. Society has barely begun to imagine what is coming.",
-      "likes": 159,
+      "likes": 164,
       "rts": 14
     },
     "2026-9": {
@@ -143,8 +143,8 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 984,
-      "rts": 234
+      "likes": 2360,
+      "rts": 531
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -198,7 +198,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8133,
+      "likes": 8134,
       "rts": 537
     },
     "2027-8": {
@@ -286,7 +286,7 @@
       "date": "20 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "JUST IN: New study shows data centers has reduced the cost of electricity in America.",
-      "likes": 2507,
+      "likes": 2509,
       "rts": 163
     },
     "2029-0": {
@@ -319,8 +319,8 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3268,
-      "rts": 237
+      "likes": 3270,
+      "rts": 238
     },
     "2030-3": {
       "id": "2068463951088689152",
@@ -330,7 +330,7 @@
       "date": "20 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
-      "likes": 460,
+      "likes": 461,
       "rts": 55
     },
     "2030-4": {
@@ -385,8 +385,8 @@
       "date": "09 Jun 2026",
       "maps": "Continuous identity & provenance verification",
       "text": "Whoa, I might’ve just experienced the Longest Continuous Tesla Actually Smart Summon ever in my Model 3. My car drove itself for 0.4 miles for over 2:40 stra…",
-      "likes": 1747,
-      "rts": 126
+      "likes": 1748,
+      "rts": 125
     },
     "2032-2": {
       "id": "2067208281727054123",
@@ -396,7 +396,7 @@
       "date": "17 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "Important to note @Zai_org train on @Huawei Ascend chips, no NVIDA (!) So you have frontier -3 months on a fully Chinese stack, 90% cheaper. Would estimate t…",
-      "likes": 1169,
+      "likes": 1170,
       "rts": 106
     },
     "2033-0": {
@@ -418,8 +418,8 @@
       "date": "21 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2084,
-      "rts": 222
+      "likes": 2158,
+      "rts": 237
     },
     "2034-1": {
       "id": "2062288421406785710",
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3124,
+      "likes": 3123,
       "rts": 187
     }
   },
@@ -498,8 +498,8 @@
       "author": "Zai_org",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 11972,
-      "rts": 1661
+      "likes": 11980,
+      "rts": 1662
     },
     {
       "tag": "MARKETS",
@@ -509,8 +509,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 6345,
-      "rts": 1797
+      "likes": 6371,
+      "rts": 1802
     },
     {
       "tag": "CODE",
@@ -520,7 +520,7 @@
       "author": "satyanadella",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 2663,
+      "likes": 2662,
       "rts": 478
     },
     {
@@ -531,7 +531,7 @@
       "author": "FirstSquawk",
       "recency": "week",
       "date": "21 Jun 2026",
-      "likes": 1515,
+      "likes": 1523,
       "rts": 134
     },
     {
@@ -542,8 +542,8 @@
       "author": "israfill",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 1372,
-      "rts": 125
+      "likes": 1388,
+      "rts": 126
     },
     {
       "tag": "ROBOTS",
