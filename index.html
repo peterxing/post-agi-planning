@@ -391,6 +391,24 @@ a.signal-src-link:hover { color: var(--cp-accent); }
 .footer-note { font-size: 0.8rem; color: var(--cp-text-soft); border-top: 1px solid var(--cp-border); padding-top: 24px; line-height: 1.7; }
 .disclaimer { margin-top: 14px; font-family: Consolas, monospace; font-size: 0.72rem; color: var(--cp-text-muted); }
 
+.author-layout { display: grid; grid-template-columns: 1.55fr 1fr; gap: 34px; align-items: start; margin-bottom: 44px; }
+.author-bio p { font-size: 1.06rem; line-height: 1.8; color: var(--cp-text-muted); margin-bottom: 18px; }
+.author-link { display: inline-block; margin-top: 4px; color: var(--cp-accent); font-weight: 600; text-decoration: none; }
+.author-link:hover { color: var(--cp-accent-hover); }
+.author-side h4 { font-family: Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 14px; }
+.author-roles { list-style: none; margin: 0; padding: 0; }
+.author-roles li { padding: 13px 0; border-top: 1px solid var(--cp-border); }
+.author-roles li:first-child { border-top: 0; padding-top: 0; }
+.author-roles strong { display: block; color: var(--cp-text); font-size: 0.98rem; margin-bottom: 2px; }
+.author-roles span { font-size: 0.85rem; color: var(--cp-text-muted); line-height: 1.45; }
+.author-talks .eyebrow { color: var(--cp-accent); }
+.author-talk { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+.author-talk .talk-venue { font-family: Consolas, monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 8px; }
+.author-talk h5 { font-size: 1.05rem; line-height: 1.32; color: var(--cp-text); margin-bottom: 8px; font-weight: 700; letter-spacing: -0.01em; }
+.author-talk p { font-size: 0.9rem; line-height: 1.6; color: var(--cp-text-muted); margin: 0; }
+.author-talk .talk-go { margin-top: auto; padding-top: 14px; color: var(--cp-accent); font-size: 0.8rem; font-weight: 600; }
+@media (max-width: 760px){ .author-layout { grid-template-columns: 1fr; gap: 24px; } }
+
 @media (max-width: 880px){
   .hero-grid { grid-template-columns: 1fr; gap: 36px; }
   .nav-links { display: none; }
@@ -659,6 +677,63 @@ a.signal-src-link:hover { color: var(--cp-accent); }
       <p>These aren't predictions. They're datapoints <strong style="color:var(--cp-text)">@peterxing</strong> is tracking right now — pulled live from his latest <strong style="color:var(--cp-text)">X posts &amp; reposts</strong>, refreshed daily — that tell you which branch is loading.</p>
     </div>
     <div class="grid grid-3" id="signalsGrid"></div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+
+<section class="section-pad" id="author">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">About the Author · Refreshed daily</div>
+      <h2 id="authorName">Peter Xing</h2>
+      <p id="authorHeadline">Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.</p>
+    </div>
+    <div class="author-layout">
+      <div class="author-bio" id="authorBio">
+        <p>Peter Xing is a futurist, keynote speaker and technologist working at the intersection of artificial intelligence, longevity science and human augmentation. He is a Data &amp; AI Specialist at Microsoft — helping the public sector and education adopt AI responsibly — and serves on the expert faculty at Singularity University covering transhumanism and emerging technologies.</p>
+        <p>He co-founded Transhumanism Australia, a non-profit community advancing healthy life extension, intelligence augmentation and human wellbeing through science and technology, and previously led emerging-technology and innovation practices at KPMG and Deloitte across generative AI, web3, automation and extended reality. His talks turn exponential change into something you can actually plan for — hope for the best, prepare for the worst, and help build the better branch.</p>
+        <a class="author-link" id="authorLink" href="https://www.linkedin.com/in/peter-xing/" target="_blank" rel="noopener">View LinkedIn profile →</a>
+      </div>
+      <aside class="card author-side">
+        <h4>At a glance</h4>
+        <ul class="author-roles" id="authorRoles">
+          <li><strong>Microsoft</strong><span>Data &amp; AI Specialist · Public Sector &amp; Education</span></li>
+          <li><strong>Singularity University</strong><span>Expert Faculty · Transhumanism &amp; Emerging Tech</span></li>
+          <li><strong>Transhumanism Australia</strong><span>Co-founder</span></li>
+          <li><strong>Formerly KPMG &amp; Deloitte</strong><span>Emerging Technology &amp; Innovation</span></li>
+        </ul>
+      </aside>
+    </div>
+    <div class="author-talks">
+      <div class="eyebrow" style="margin-bottom:16px">Recent &amp; featured talks</div>
+      <div class="grid grid-2" id="authorTalks">
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=6YbEO5Lqm_c" target="_blank" rel="noopener">
+          <span class="talk-venue">Keynote · 2026</span>
+          <h5>AI Agents Will Run Your Workday by 2027</h5>
+          <p>How autonomous agents reshape every workflow — and how to stay augmented, not automated.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://humansplus.ai/podcast/peter-xing-on-transhumanism-brain-computer-interfaces-cognitive-offloading-and-ai-agents-ac-ep6/" target="_blank" rel="noopener">
+          <span class="talk-venue">Humans + AI Podcast · 2025</span>
+          <h5>Brain–Computer Interfaces &amp; Cognitive Offloading</h5>
+          <p>Transhumanism, BCIs and living and working alongside AI agents.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://futuristicpod.com/2023/10/06/futuristic-14-peter-xing-transhumanism/" target="_blank" rel="noopener">
+          <span class="talk-venue">Futuristic Podcast #14 · 2023</span>
+          <h5>The Transhumanist Mindset</h5>
+          <p>Healthy longevity, intelligence augmentation and becoming more than human.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.su.org/experts/peter-xing" target="_blank" rel="noopener">
+          <span class="talk-venue">Singularity University</span>
+          <h5>AI, Governance &amp; Exponential Foresight</h5>
+          <p>Expert-faculty sessions on AI governance, biotech and exponential technology for leaders.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1018,6 +1093,7 @@ a.signal-src-link:hover { color: var(--cp-accent); }
           <li><a href="#futures">Five futures</a></li>
           <li><a href="#book">Chapters</a></li>
           <li><a href="#moonshot">1000-day plan</a></li>
+          <li><a href="#author">About the author</a></li>
         </ul>
       </div>
       <div>
@@ -1359,6 +1435,46 @@ renderTimeline();
 
 /* Daily-refreshed signals: a sidecar signals.json (regenerated daily by scraping @peterxing's
    timeline and matching each prediction to his most relevant real post) overrides the inline fallback. */
+/* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
+   LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
+(function loadAuthor(){
+  if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
+  fetch('author.json?_=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d) return;
+      var S = function(v){ return v == null ? '' : String(v); };
+      if (d.name)     { var n = document.getElementById('authorName');     if (n) n.textContent = d.name; }
+      if (d.headline) { var h = document.getElementById('authorHeadline'); if (h) h.textContent = d.headline; }
+      if (d.linkedin) { var lk = document.getElementById('authorLink');    if (lk) lk.href = d.linkedin; }
+      if (Array.isArray(d.bio) && d.bio.length) {
+        var bioEl = document.getElementById('authorBio');
+        if (bioEl) {
+          var link = bioEl.querySelector('.author-link');
+          bioEl.innerHTML = d.bio.map(function(p){ return '<p>' + S(p) + '</p>'; }).join('') + (link ? link.outerHTML : '');
+        }
+      }
+      if (Array.isArray(d.roles) && d.roles.length) {
+        var rolesEl = document.getElementById('authorRoles');
+        if (rolesEl) rolesEl.innerHTML = d.roles.map(function(r){
+          return '<li><strong>' + S(r.org) + '</strong><span>' + S(r.detail) + '</span></li>';
+        }).join('');
+      }
+      if (Array.isArray(d.talks) && d.talks.length) {
+        var talksEl = document.getElementById('authorTalks');
+        if (talksEl) talksEl.innerHTML = d.talks.map(function(t){
+          var meta = S(t.venue) + (t.year ? ' · ' + S(t.year) : '');
+          return '<a class="card author-talk" href="' + S(t.url) + '" target="_blank" rel="noopener">' +
+                 '<span class="talk-venue">' + meta + '</span>' +
+                 '<h5>' + S(t.title) + '</h5>' +
+                 '<p>' + S(t.blurb) + '</p>' +
+                 '<span class="talk-go">Watch / listen →</span></a>';
+        }).join('');
+      }
+    })
+    .catch(function(){});
+})();
+
 (function loadSignals(){
   if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
   fetch('signals.json?_=' + Date.now())

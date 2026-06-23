@@ -1,0 +1,47 @@
+{
+  "updated": "2026-06-23",
+  "note": "About-the-Author data, refreshed daily from Peter Xing's LinkedIn profile (linkedin.com/in/peter-xing) and his latest talks/keynotes posted online. Bio + roles change rarely (anti-thrash); the talks[] list and 'updated' date are kept current. The site falls back to the inline copy in index.html if this file is missing.",
+  "name": "Peter Xing",
+  "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
+  "linkedin": "https://www.linkedin.com/in/peter-xing/",
+  "bio": [
+    "Peter Xing is a futurist, keynote speaker and technologist working at the intersection of artificial intelligence, longevity science and human augmentation. He is a Data &amp; AI Specialist at Microsoft \u2014 helping the public sector and education adopt AI responsibly \u2014 and serves on the expert faculty at Singularity University covering transhumanism and emerging technologies.",
+    "He co-founded Transhumanism Australia, a non-profit community advancing healthy life extension, intelligence augmentation and human wellbeing through science and technology, and previously led emerging-technology and innovation practices at KPMG and Deloitte across generative AI, web3, automation and extended reality. His talks turn exponential change into something you can actually plan for \u2014 hope for the best, prepare for the worst, and help build the better branch."
+  ],
+  "roles": [
+    { "org": "Microsoft", "detail": "Data &amp; AI Specialist \u00b7 Public Sector &amp; Education" },
+    { "org": "Singularity University", "detail": "Expert Faculty \u00b7 Transhumanism &amp; Emerging Tech" },
+    { "org": "Transhumanism Australia", "detail": "Co-founder" },
+    { "org": "Formerly KPMG &amp; Deloitte", "detail": "Emerging Technology &amp; Innovation" }
+  ],
+  "talks": [
+    {
+      "title": "Peter Xing says AI Agents Will Run Your Workday by 2027",
+      "venue": "Singularity South Africa",
+      "year": "2026",
+      "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
+      "blurb": "How autonomous agents reshape every workflow \u2014 and how to stay augmented, not automated."
+    },
+    {
+      "title": "AGI May Arrive Faster Than We Think",
+      "venue": "Singularity South Africa Summit",
+      "year": "2025",
+      "url": "https://gadget.co.za/humanagi15w/",
+      "blurb": "Forecasting human-level AI timelines and decoupling work from income for a post-AGI economy."
+    },
+    {
+      "title": "Brain\u2013Computer Interfaces &amp; Cognitive Offloading",
+      "venue": "Amplifying Cognition Podcast",
+      "year": "2025",
+      "url": "https://humansplus.ai/podcast/peter-xing-on-transhumanism-brain-computer-interfaces-cognitive-offloading-and-ai-agents-ac-ep6/",
+      "blurb": "Transhumanism, BCIs and living and working alongside AI agents."
+    },
+    {
+      "title": "The Transhumanist Mindset",
+      "venue": "Futuristic Podcast #14",
+      "year": "2023",
+      "url": "https://futuristicpod.com/2023/10/06/futuristic-14-peter-xing-transhumanism/",
+      "blurb": "Healthy longevity, intelligence augmentation and becoming more than human."
+    }
+  ]
+}

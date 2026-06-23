@@ -9,7 +9,7 @@ const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.css':'
 // Default-deny: the public site only needs these files + static image/style assets. Everything else
 // (server-side scripts x-*.js / refresh-signals.js / server.js, *.ps1, *.md, debug/raw JSON, etc.) is
 // 404'd so the Cloudflare tunnel never leaks operational code, secrets paths, or the raw harvest.
-const ALLOW_FILES = new Set(['index.html', 'signals.json', 'predictions.json']);
+const ALLOW_FILES = new Set(['index.html', 'signals.json', 'predictions.json', 'author.json']);
 const ALLOW_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.css', '.woff', '.woff2']);
 
 http.createServer((req, res) => {
