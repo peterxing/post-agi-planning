@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T02:10:37.724Z",
+  "updated": "2026-06-23T03:12:08.887Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -99,8 +99,8 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 663,
-      "rts": 86
+      "likes": 684,
+      "rts": 89
     },
     "2026-12": {
       "id": "2067044209476223373",
@@ -121,7 +121,7 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 8104,
+      "likes": 8106,
       "rts": 838
     },
     "2026-14": {
@@ -143,8 +143,8 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 34543,
-      "rts": 5420
+      "likes": 34993,
+      "rts": 5495
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -154,7 +154,7 @@
       "date": "15 Jun 2026",
       "maps": "First trillion-dollar pure-AI company",
       "text": "SpaceX stock closed its second day of trading up 19.6% today, pushing the company's market cap above $2.5 trillion for the first time. SpaceX added $420 bill…",
-      "likes": 5850,
+      "likes": 5849,
       "rts": 360
     },
     "2027-2": {
@@ -198,7 +198,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8149,
+      "likes": 8150,
       "rts": 537
     },
     "2027-8": {
@@ -264,7 +264,7 @@
       "date": "04 Jun 2026",
       "maps": "CRISPR therapies become routine",
       "text": "The human body became a software engineering problem the minute CRISPR arrived. Now, AI writes better code than humans, with every disease becoming a potenti…",
-      "likes": 1137,
+      "likes": 1136,
       "rts": 128
     },
     "2028-5": {
@@ -286,7 +286,7 @@
       "date": "20 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "JUST IN: New study shows data centers has reduced the cost of electricity in America.",
-      "likes": 2520,
+      "likes": 2521,
       "rts": 164
     },
     "2029-0": {
@@ -319,7 +319,7 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3279,
+      "likes": 3280,
       "rts": 239
     },
     "2030-3": {
@@ -341,7 +341,7 @@
       "date": "06 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
-      "likes": 4374,
+      "likes": 4373,
       "rts": 1366
     },
     "2031-0": {
@@ -353,18 +353,18 @@
       "maps": "Micro-credentials eclipse university degrees",
       "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For d…",
       "likes": 232,
-      "rts": 41
+      "rts": 42
     },
     "2031-1": {
-      "id": "2064771688575705252",
+      "id": "2068897865456332807",
       "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "recent",
-      "date": "10 Jun 2026",
+      "author": "SawyerMerritt",
+      "recency": "week",
+      "date": "22 Jun 2026",
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
-      "text": "Post Singularity abundance in form of (just having more money and stuff) is not the goal. What I mean is that it's not just about material wealth so everyone…",
-      "likes": 223,
-      "rts": 23
+      "text": "SpaceX is set to launch its first Starfall Demo mission this Tuesday aboard its Falcon 9 rocket. The mission will test a new cargo return vehicle (pictured b…",
+      "likes": 4069,
+      "rts": 359
     },
     "2032-0": {
       "id": "2064054837294354677",
@@ -418,8 +418,8 @@
       "date": "21 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2704,
-      "rts": 285
+      "likes": 2706,
+      "rts": 286
     },
     "2034-1": {
       "id": "2062288421406785710",
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3129,
+      "likes": 3130,
       "rts": 187
     }
   },
@@ -498,8 +498,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 6575,
-      "rts": 1863
+      "likes": 6577,
+      "rts": 1862
     },
     {
       "tag": "CODE",
@@ -542,8 +542,8 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1169,
-      "rts": 58
+      "likes": 1184,
+      "rts": 59
     },
     {
       "tag": "ABUNDANCE",
