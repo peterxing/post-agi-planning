@@ -1,6 +1,6 @@
 {
-  "updated": "2026-06-18T12:28:08.117Z",
-  "basis": "Revised 18 Jun 2026 — governance and capital-markets news drove today's changes. (1) ADDED a 2026 governance event: frontier-model pre-deployment testing has gone live — OpenAI, Microsoft and xAI now grant government regulators early-access evaluations before wide release, while the EU AI Act's general-purpose/frontier-model rules are actively enforced by the European AI Office and national AI Safety Institutes (UK AISI included) with mandatory red-teaming and conformity assessments (kersai, osasai, lablab.ai, EU AI Office), aligned with @peterxing's reposts on the frontier-lab CEO policy lunch (@kimmonismus) and @NousResearch. (2) ADDED a 2026 markets event: Nvidia became the first company near a ~$5T market cap on AI-GPU demand, with analysts projecting $3-4T/yr AI capex by 2030 (intellectia.ai, marketdigests, brightcoding.dev), echoed by his @nvidia and markets reposts. (3) UPDATED the 2027 'compute is the binding constraint' prob 64->66 after Sam Altman's '500,000 GPUs by September' and 'desperately short on compute' remarks that he reposted (@deredleritt3r, @DaveBlundin). (4) UPDATED the 2030 'AI-designed drugs gain FDA approval' event 51->54 and sharpened it: 170+ AI-discovered candidates are now in clinical trials with 15-20 entering pivotal Phase III in 2026 after Insilico's rentosertib Phase IIa success and the FDA's Q2-2026 AI-drug guidance (axis-intelligence, healthcarediscovery.ai). No predictions were removed — nothing was falsified today; yesterday's SpaceX-IPO and open-weights-parity events remain grounded in his reposts.",
+  "updated": "2026-06-23T12:09:40.914Z",
+  "basis": "Revised 23 Jun 2026 — one well-grounded markets update; no other prediction changed this hour (anti-thrash hourly cadence). UPDATED the 2026 markets event: Nvidia has now CROSSED a $5T market cap (~$5.05T) to become the world's most valuable company on AI-GPU demand — a milestone that on 18 Jun was still only 'near ~$5T', so the wording was sharpened from 'near' to 'crosses … world's most valuable' and prob 80->83 (companiesmarketcap.com puts NVDA at ~$5.05T and #1 globally; intellectia.ai/sqmagazine size the AI-chip market at ~$1.3T with Nvidia at ~85-92% share). Grounding also includes @peterxing's @nvidia and markets reposts. Everything else was deliberately left intact: the 2026 open-weights-parity event remains exactly right (his 22 Jun @ArtificialAnlys repost — 'GLM-5.2 leads open weights models, #3 overall on GDPval-AA'), and the near-term capability picture stays consistent with the timeline — frontier labs still put AGI in the 2025-2027 'agentic AGI' window while the 'jagged frontier' (top models fail ~1 in 3 production tasks) keeps 'true AGI' sliding to the early-2030s (Stanford 2026 AI Index; Artificial Analysis) — so the 2028 benchmark event and the 'AGI-consensus-slips' signal were not touched, and no predictions were added or removed.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -82,10 +82,10 @@
           "prob": 73
         },
         {
-          "t": "Nvidia becomes the first company near a $5T market cap on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
+          "t": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
           "d": "economic",
           "high": true,
-          "prob": 80
+          "prob": 83
         },
         {
           "t": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T11:11:35.933Z",
+  "updated": "2026-06-23T12:15:21.340Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,7 +22,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1449,
+      "likes": 1450,
       "rts": 93
     },
     "2026-3": {
@@ -89,7 +89,7 @@
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "SpaceX has exercised the option to acquire @cursor_ai in an all-stock transaction with the goal of building the world’s most useful AI models. For the past f…",
       "likes": 36569,
-      "rts": 4312
+      "rts": 4313
     },
     "2026-11": {
       "id": "2069121548670406947",
@@ -99,8 +99,8 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 830,
-      "rts": 103
+      "likes": 845,
+      "rts": 104
     },
     "2026-12": {
       "id": "2067044209476223373",
@@ -108,7 +108,7 @@
       "author": "nvidia",
       "recency": "week",
       "date": "17 Jun 2026",
-      "maps": "Nvidia becomes the first company near a $5T market cap on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
+      "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "Thanks @satyanadella 👏 Great work with @Azure on one of the largest MLPerf Training submission to-date on NVIDIA Blackwell: 8,192 GPUs on NVIDIA GB200 NVL72…",
       "likes": 508,
       "rts": 63
@@ -121,7 +121,7 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 8104,
+      "likes": 8105,
       "rts": 838
     },
     "2026-14": {
@@ -143,8 +143,8 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 36910,
-      "rts": 5817
+      "likes": 37042,
+      "rts": 5832
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -198,8 +198,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8151,
-      "rts": 537
+      "likes": 8152,
+      "rts": 538
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -341,7 +341,7 @@
       "date": "06 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
-      "likes": 4370,
+      "likes": 4372,
       "rts": 1366
     },
     "2031-0": {
@@ -363,8 +363,8 @@
       "date": "22 Jun 2026",
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
       "text": "SpaceX is set to launch its first Starfall Demo mission this Tuesday aboard its Falcon 9 rocket. The mission will test a new cargo return vehicle (pictured b…",
-      "likes": 4193,
-      "rts": 367
+      "likes": 4227,
+      "rts": 372
     },
     "2032-0": {
       "id": "2064054837294354677",
@@ -418,8 +418,8 @@
       "date": "21 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2722,
-      "rts": 287
+      "likes": 2726,
+      "rts": 288
     },
     "2034-1": {
       "id": "2062288421406785710",
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3131,
+      "likes": 3132,
       "rts": 187
     }
   },
@@ -498,8 +498,8 @@
       "author": "WR4NYGov",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 6597,
-      "rts": 1874
+      "likes": 6599,
+      "rts": 1875
     },
     {
       "tag": "CODE",
@@ -509,7 +509,7 @@
       "author": "satyanadella",
       "recency": "week",
       "date": "16 Jun 2026",
-      "likes": 2672,
+      "likes": 2674,
       "rts": 478
     },
     {
@@ -520,8 +520,8 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1739,
-      "rts": 86
+      "likes": 1822,
+      "rts": 91
     },
     {
       "tag": "GOVERNANCE",
@@ -531,7 +531,7 @@
       "author": "FirstSquawk",
       "recency": "week",
       "date": "21 Jun 2026",
-      "likes": 1540,
+      "likes": 1541,
       "rts": 133
     },
     {
@@ -543,7 +543,7 @@
       "recency": "week",
       "date": "19 Jun 2026",
       "likes": 1265,
-      "rts": 151
+      "rts": 152
     },
     {
       "tag": "CAPABILITY",
@@ -553,7 +553,7 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1268,
+      "likes": 1289,
       "rts": 63
     }
   ]
