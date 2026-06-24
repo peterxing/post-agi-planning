@@ -53,8 +53,8 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
 2. **Add** genuinely new, well-sourced predictions to the right year/domain (e.g. a newly-credible
    milestone). Keep titles crisp and falsifiable; set a realistic `prob`.
 3. **Update** predictions when reality moves: recalibrate dates/probabilities, sharpen wording, or
-   move an event to a different year. (E.g. AGI consensus sliding to the early-2030s; trillion-dollar
-   AI valuations; humanoid-robot ramp; fusion net-gain milestones.)
+   move an event to a different year. (E.g. trillion-dollar AI valuations; humanoid-robot ramp;
+   fusion net-gain milestones.)
 4. **Remove** predictions that are outdated, falsified, or no longer credible (e.g. a debunked claim,
    or a milestone that already happened and is no longer "future"). Removing the last stale event in
    a year is fine; keep at least the year's `summary` and `match`.
@@ -64,6 +64,14 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    pointing at a real domain key. Don't rename domain keys.
 7. **Stay on theme.** This file carries no styling — the Clawpilot theme lives in `index.html`. Never
    add colors/markup here.
+8. **Anchor the AGI timeline to Peter's on-record call — do NOT revert it to a "2030s AGI" consensus.**
+   The timeline must stay consistent with the book's Chapter 07 thesis: AI reaches genuine human-level
+   capability (AGI) by the **END OF 2026**; it becomes disruptive for **EVERY industry throughout
+   2027**; and the first **superintelligent** systems emerge in the **2028–2030 window** — posture
+   "hope for the best, but prepare for the worst." Keep the 2026 live-signal row and the 2028 anchor
+   event expressing THIS call (not the old "AGI consensus slips to the early-2030s" / "true AGI in the
+   2030s" framing). You may recalibrate the probabilities as reality moves and add well-sourced
+   nuance, but do not reframe these back to a mainstream 2030s-AGI timeline.
 
 ## Procedure
 

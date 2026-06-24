@@ -1,8 +1,19 @@
 {
-  "updated": "2026-06-24T06:13:48.559Z",
+  "updated": "2026-06-24T06:34:21.201Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
+    "2026-0": {
+      "id": "2065630251242213498",
+      "kind": "repost",
+      "author": "haider1",
+      "recency": "recent",
+      "date": "13 Jun 2026",
+      "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
+      "text": "Jensen Huang says the internet is moving from serving billions of people to serving billions of AI agents These agents will communicate, collaborate, and sol…",
+      "likes": 86,
+      "rts": 17
+    },
     "2026-1": {
       "id": "2065043948310261800",
       "kind": "repost",
@@ -110,7 +121,7 @@
       "date": "23 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "GOOD NEWS 🇬🇧🇮🇹 NatPower and @Tesla have announced a massive $4–$5 billion partnership to build new battery storage infrastructure across Italy and the UK…",
-      "likes": 502,
+      "likes": 504,
       "rts": 68
     },
     "2026-13": {
@@ -125,15 +136,15 @@
       "rts": 839
     },
     "2026-14": {
-      "id": "2065630251242213498",
+      "id": "2066251446493057310",
       "kind": "repost",
-      "author": "haider1",
+      "author": "Dr_Singularity",
       "recency": "recent",
-      "date": "13 Jun 2026",
-      "maps": "Signal: AGI consensus slips to the early-2030s as labs ship agents, not AGI",
-      "text": "Jensen Huang says the internet is moving from serving billions of people to serving billions of AI agents These agents will communicate, collaborate, and sol…",
-      "likes": 86,
-      "rts": 17
+      "date": "14 Jun 2026",
+      "maps": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",
+      "text": "2027 will likely be the first year that gives us some very tiny glimpses of the 2030s (just early 2030s) Our capabilities will be vastly more powerful by mid…",
+      "likes": 489,
+      "rts": 50
     },
     "2027-0": {
       "id": "2068861630327443966",
@@ -143,7 +154,7 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 37983,
+      "likes": 37985,
       "rts": 6002
     },
     "2027-1": {
@@ -180,15 +191,15 @@
       "rts": 65
     },
     "2027-6": {
-      "id": "2065181176143520062",
+      "id": "2066282848223686754",
       "kind": "repost",
-      "author": "PeterDiamandis",
+      "author": "Dr_Singularity",
       "recency": "recent",
-      "date": "11 Jun 2026",
+      "date": "14 Jun 2026",
       "maps": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
-      "text": "Tech companies will spend $650B on AI data centers in 2026 alone. For context: the entire Marshall Plan — which rebuilt postwar Europe across multiple nation…",
-      "likes": 1010,
-      "rts": 119
+      "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6…",
+      "likes": 284,
+      "rts": 30
     },
     "2027-7": {
       "id": "2068051762708099449",
@@ -209,7 +220,7 @@
       "date": "11 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "Anthropic's CEO admitted AI job displacement may be \"intrinsic.\" Here's my question: Would you trade the old economy — 40-year careers, mandatory retirement,…",
-      "likes": 1522,
+      "likes": 1521,
       "rts": 147
     },
     "2027-10": {
@@ -224,15 +235,15 @@
       "rts": 10
     },
     "2028-0": {
-      "id": "2066282848223686754",
+      "id": "2065577387870310736",
       "kind": "repost",
-      "author": "Dr_Singularity",
+      "author": "haider1",
       "recency": "recent",
-      "date": "14 Jun 2026",
-      "maps": "Functional AGI clears the benchmarks; 'true AGI' consensus slips to the early-2030s",
-      "text": "In 2027 due to data centers buildout, AI models can finally reach brain scale size (~100–150T parameters). Current most advanced AI models are likely at ~5-6…",
-      "likes": 284,
-      "rts": 30
+      "date": "12 Jun 2026",
+      "maps": "Superintelligence emerges — recursive self-improvement begins (my 2028–2030 window)",
+      "text": "anthropic, openai, and google keep saying they are working toward superintelligence and recursive self-improvement (RSI) is also within the pipeline, which i…",
+      "likes": 94,
+      "rts": 7
     },
     "2028-1": {
       "id": "2067367079343226981",
@@ -253,7 +264,7 @@
       "date": "23 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 945,
+      "likes": 951,
       "rts": 104
     },
     "2028-4": {
@@ -266,17 +277,6 @@
       "text": "The human body became a software engineering problem the minute CRISPR arrived. Now, AI writes better code than humans, with every disease becoming a potenti…",
       "likes": 1137,
       "rts": 129
-    },
-    "2028-5": {
-      "id": "2065487181662286301",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "recent",
-      "date": "12 Jun 2026",
-      "maps": "Cognitive-enhancement tools see mass adoption",
-      "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1336,
-      "rts": 183
     },
     "2028-7": {
       "id": "2068369247701442577",
@@ -374,7 +374,7 @@
       "date": "23 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
       "text": "It is now conceivable that we might achieve biosingularity much earlier than I had predicted 20 years ago (circa 2040s). I had coined this term for a time wh…",
-      "likes": 238,
+      "likes": 243,
       "rts": 33
     },
     "2032-1": {
@@ -444,15 +444,15 @@
       "rts": 203
     },
     "2035-0": {
-      "id": "2065577387870310736",
+      "id": "2065487181662286301",
       "kind": "repost",
-      "author": "haider1",
+      "author": "kimmonismus",
       "recency": "recent",
       "date": "12 Jun 2026",
       "maps": "Artificial superintelligence emerges",
-      "text": "anthropic, openai, and google keep saying they are working toward superintelligence and recursive self-improvement (RSI) is also within the pipeline, which i…",
-      "likes": 94,
-      "rts": 7
+      "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
+      "likes": 1336,
+      "rts": 183
     },
     "2035-1": {
       "id": "2067634693441233118",
@@ -462,18 +462,18 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3133,
+      "likes": 3132,
       "rts": 188
     }
   },
   "search": {
-    "2026-0": "smart glasses mass",
     "2026-6": "four workweek",
     "2026-8": "deepfake detection mandated",
     "2027-3": "display glasses catalyzed",
     "2027-5": "fusion plant breaks",
     "2027-9": "birth rates fall",
     "2028-3": "daos legal recognition",
+    "2028-5": "cognitive enhancement tools",
     "2028-6": "space mining rights",
     "2029-1": "loneliness declared public",
     "2029-2": "climate refugees exceed",
@@ -509,7 +509,7 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2494,
+      "likes": 2499,
       "rts": 125
     },
     {

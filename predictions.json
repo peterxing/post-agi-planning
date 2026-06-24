@@ -1,6 +1,6 @@
 {
-  "updated": "2026-06-23T12:09:40.914Z",
-  "basis": "Revised 23 Jun 2026 — one well-grounded markets update; no other prediction changed this hour (anti-thrash hourly cadence). UPDATED the 2026 markets event: Nvidia has now CROSSED a $5T market cap (~$5.05T) to become the world's most valuable company on AI-GPU demand — a milestone that on 18 Jun was still only 'near ~$5T', so the wording was sharpened from 'near' to 'crosses … world's most valuable' and prob 80->83 (companiesmarketcap.com puts NVDA at ~$5.05T and #1 globally; intellectia.ai/sqmagazine size the AI-chip market at ~$1.3T with Nvidia at ~85-92% share). Grounding also includes @peterxing's @nvidia and markets reposts. Everything else was deliberately left intact: the 2026 open-weights-parity event remains exactly right (his 22 Jun @ArtificialAnlys repost — 'GLM-5.2 leads open weights models, #3 overall on GDPval-AA'), and the near-term capability picture stays consistent with the timeline — frontier labs still put AGI in the 2025-2027 'agentic AGI' window while the 'jagged frontier' (top models fail ~1 in 3 production tasks) keeps 'true AGI' sliding to the early-2030s (Stanford 2026 AI Index; Artificial Analysis) — so the 2028 benchmark event and the 'AGI-consensus-slips' signal were not touched, and no predictions were added or removed.",
+  "updated": "2026-06-24T06:31:27.682Z",
+  "basis": "Revised 24 Jun 2026 — recalibrated the AGI timeline to match Peter Xing's on-record, first-person call (the same anchor thesis as Chapter 07 of the book): AI reaches genuine human-level capability (AGI) by the END OF 2026, becomes disruptive for EVERY industry throughout 2027, and the first superintelligent systems emerge in the 2028–2030 window — so the posture is 'hope for the best, but prepare for the worst.' The 2026 live-signal row was changed from the old 'AGI consensus slips to the early-2030s' framing to this call (prob 70), the 2028 anchor event was reframed from 'true AGI slips to the early-2030s' to 'superintelligence emerges (2028–2030 window)' (prob 41), and the 2026/2027/2028 year summaries were aligned to the same throughline. This is Peter's deliberate, contrarian personal forecast — it supersedes the mainstream 'jagged-frontier / true-AGI-in-the-2030s' consensus previously reflected here and should NOT be reverted to a 2030s-AGI framing. The prior revision's market/Nvidia ($5T cap) and open-weights-parity events were left intact.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -12,7 +12,7 @@
   "years": [
     {
       "year": 2026,
-      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor, and the first binding frontier-model safety rules take effect.",
+      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor, and the first binding frontier-model safety rules take effect. Against a cautious consensus, my own call is that AI reaches genuine human-level capability (AGI) by year-end.",
       "events": [
         {
           "t": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
@@ -94,10 +94,10 @@
           "prob": 68
         },
         {
-          "t": "Signal: AGI consensus slips to the early-2030s as labs ship agents, not AGI",
+          "t": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",
           "d": "technology",
           "signal": true,
-          "prob": 42
+          "prob": 70
         }
       ],
       "match": {
@@ -143,7 +143,7 @@
     },
     {
       "year": 2027,
-      "summary": "Capability — and capital — compress. AI labs cross trillion-dollar valuations, compute becomes the binding constraint, and humanoid production and fusion hit landmark milestones.",
+      "summary": "Capability — and capital — compress. With human-level AI now shipping, its disruption ripples across every industry as AI labs cross trillion-dollar valuations, compute becomes the binding constraint, and humanoid production and fusion hit landmark milestones.",
       "events": [
         {
           "t": "AI agents autonomously run business operations",
@@ -239,13 +239,13 @@
     },
     {
       "year": 2028,
-      "summary": "AGI-class systems clear the benchmarks, but the field recalibrates: 'true' AGI consensus slips toward the early-2030s as institutions scramble to adapt the rules.",
+      "summary": "Human-level AI has shipped and the frontier compounds fast — on my call, the first superintelligent systems emerge in the 2028–2030 window as institutions scramble to adapt the rules.",
       "events": [
         {
-          "t": "Functional AGI clears the benchmarks; 'true AGI' consensus slips to the early-2030s",
+          "t": "Superintelligence emerges — recursive self-improvement begins (my 2028–2030 window)",
           "d": "technology",
           "high": true,
-          "prob": 44
+          "prob": 41
         },
         {
           "t": "Education unbundles into personalized mastery maps",
