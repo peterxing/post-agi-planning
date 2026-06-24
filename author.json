@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23",
+  "updated": "2026-06-24",
   "note": "About-the-Author data, refreshed daily from Peter Xing's LinkedIn profile (linkedin.com/in/peter-xing) and his latest talks/keynotes posted online. Bio + roles change rarely (anti-thrash); the talks[] list and 'updated' date are kept current. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -16,32 +16,32 @@
   ],
   "talks": [
     {
-      "title": "Peter Xing says AI Agents Will Run Your Workday by 2027",
-      "venue": "Singularity South Africa",
+      "title": "AI Agents Will Run Your Workday by 2027",
+      "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
       "blurb": "How autonomous agents reshape every workflow \u2014 and how to stay augmented, not automated."
     },
     {
-      "title": "AGI May Arrive Faster Than We Think",
-      "venue": "Singularity South Africa Summit",
+      "title": "AGI for Everyone: Empowering Individuals with AI",
+      "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2025",
-      "url": "https://gadget.co.za/humanagi15w/",
-      "blurb": "Forecasting human-level AI timelines and decoupling work from income for a post-AGI economy."
+      "url": "https://www.youtube.com/watch?v=p22wV3MiHtM",
+      "blurb": "Putting frontier AI in everyone's hands so individuals \u2014 not just institutions \u2014 capture the upside."
+    },
+    {
+      "title": "Post-AGI Planning: Are You Ready for Superintelligence?",
+      "venue": "Exponential Africa (Singularity South Africa)",
+      "year": "2025",
+      "url": "https://www.youtube.com/watch?v=vWJYdMq3fTs",
+      "blurb": "A roadmap for the post-AGI economy \u2014 exponential timelines, governance and decoupling work from income."
     },
     {
       "title": "Brain\u2013Computer Interfaces &amp; Cognitive Offloading",
       "venue": "Amplifying Cognition Podcast",
-      "year": "2025",
+      "year": "2023",
       "url": "https://humansplus.ai/podcast/peter-xing-on-transhumanism-brain-computer-interfaces-cognitive-offloading-and-ai-agents-ac-ep6/",
       "blurb": "Transhumanism, BCIs and living and working alongside AI agents."
-    },
-    {
-      "title": "The Transhumanist Mindset",
-      "venue": "Futuristic Podcast #14",
-      "year": "2023",
-      "url": "https://futuristicpod.com/2023/10/06/futuristic-14-peter-xing-transhumanism/",
-      "blurb": "Healthy longevity, intelligence augmentation and becoming more than human."
     }
   ]
 }
