@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T07:13:17.287Z",
+  "updated": "2026-06-24T09:13:03.503Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -99,7 +99,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12224,
+      "likes": 12225,
       "rts": 1422
     },
     "2026-11": {
@@ -110,8 +110,8 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 948,
-      "rts": 119
+      "likes": 952,
+      "rts": 122
     },
     "2026-12": {
       "id": "2069343498382499904",
@@ -121,7 +121,7 @@
       "date": "23 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "GOOD NEWS 🇬🇧🇮🇹 NatPower and @Tesla have announced a massive $4–$5 billion partnership to build new battery storage infrastructure across Italy and the UK…",
-      "likes": 508,
+      "likes": 512,
       "rts": 69
     },
     "2026-13": {
@@ -154,8 +154,8 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 37990,
-      "rts": 6002
+      "likes": 38011,
+      "rts": 6006
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -264,7 +264,7 @@
       "date": "23 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 962,
+      "likes": 981,
       "rts": 107
     },
     "2028-4": {
@@ -374,8 +374,8 @@
       "date": "23 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
       "text": "It is now conceivable that we might achieve biosingularity much earlier than I had predicted 20 years ago (circa 2040s). I had coined this term for a time wh…",
-      "likes": 252,
-      "rts": 34
+      "likes": 256,
+      "rts": 36
     },
     "2032-1": {
       "id": "2064473814696685704",
@@ -499,7 +499,7 @@
       "recency": "week",
       "date": "20 Jun 2026",
       "likes": 6631,
-      "rts": 1907
+      "rts": 1908
     },
     {
       "tag": "LONGEVITY",
@@ -509,8 +509,8 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2504,
-      "rts": 125
+      "likes": 2514,
+      "rts": 126
     },
     {
       "tag": "GOVERNANCE",
