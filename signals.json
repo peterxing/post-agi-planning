@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T09:19:41.250Z",
+  "updated": "2026-06-24T11:22:48.281Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -15,15 +15,15 @@
       "rts": 17
     },
     "2026-1": {
-      "id": "2065043948310261800",
+      "id": "2069690992270184651",
       "kind": "repost",
-      "author": "TeslaZoa",
-      "recency": "recent",
-      "date": "11 Jun 2026",
+      "author": "SUSouthAfrica",
+      "recency": "week",
+      "date": "24 Jun 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
-      "text": "🚨 🇯🇵 Tesla is hiring an Autonomous Driving Test Driver in Yokohama, Japan Tesla is recruiting a full-time Autopilot test driver in Yokohama to collect rea…",
-      "likes": 124,
-      "rts": 16
+      "text": "What happens when AI stops assisting companies and starts running them? @peterxing explores the path toward fully autonomous organisations.",
+      "likes": 1,
+      "rts": 1
     },
     "2026-2": {
       "id": "2067940878358876321",
@@ -33,7 +33,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1451,
+      "likes": 1452,
       "rts": 93
     },
     "2026-3": {
@@ -89,7 +89,7 @@
       "maps": "AI therapy assistants cleared for clinics",
       "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin …",
       "likes": 485,
-      "rts": 99
+      "rts": 100
     },
     "2026-10": {
       "id": "2066836174249852977",
@@ -110,19 +110,19 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 955,
+      "likes": 962,
       "rts": 122
     },
     "2026-12": {
-      "id": "2069343498382499904",
+      "id": "2069500411476885914",
       "kind": "repost",
-      "author": "tslaming",
+      "author": "arcinstitute",
       "recency": "week",
       "date": "23 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
-      "text": "GOOD NEWS 🇬🇧🇮🇹 NatPower and @Tesla have announced a massive $4–$5 billion partnership to build new battery storage infrastructure across Italy and the UK…",
-      "likes": 513,
-      "rts": 70
+      "text": "The future of biology is agentic. We're proud to work with NVIDIA on the Evo series of models and are excited to see the NVIDIA BioNeMo Agent Toolkit launch …",
+      "likes": 178,
+      "rts": 22
     },
     "2026-13": {
       "id": "2065784751345287314",
@@ -147,15 +147,15 @@
       "rts": 50
     },
     "2027-0": {
-      "id": "2068861630327443966",
+      "id": "2069594488578900254",
       "kind": "repost",
-      "author": "SakanaAILabs",
+      "author": "AlexFinn",
       "recency": "week",
-      "date": "22 Jun 2026",
+      "date": "24 Jun 2026",
       "maps": "AI agents autonomously run business operations",
-      "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 38031,
-      "rts": 6009
+      "text": "MASSIVE Hermes Agent update over the last few days Totally changes the way I use Hermes Here's 8 new features you need to start using immediately: 1. Native …",
+      "likes": 1082,
+      "rts": 55
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -169,15 +169,15 @@
       "rts": 360
     },
     "2027-2": {
-      "id": "2067784024333164651",
+      "id": "2069192808016273813",
       "kind": "repost",
-      "author": "stevenmarkryan",
+      "author": "SumnerLN",
       "recency": "week",
-      "date": "19 Jun 2026",
+      "date": "22 Jun 2026",
       "maps": "Brain-computer interfaces approved for medical use",
-      "text": "Fueled by massive increases in the capability of AI, we are going to see incredible things happen in: • Human longevity • Disease prevention &amp; cures • Ge…",
-      "likes": 487,
-      "rts": 36
+      "text": "Implanted Brain-Computer Interfaces are getting fast! They're approaching speeds that match unimpaired people typing. But... more electrodes won't be enough …",
+      "likes": 313,
+      "rts": 42
     },
     "2027-4": {
       "id": "2064835800747962424",
@@ -209,7 +209,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8155,
+      "likes": 8156,
       "rts": 539
     },
     "2027-8": {
@@ -253,7 +253,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3019,
+      "likes": 3020,
       "rts": 456
     },
     "2028-2": {
@@ -264,8 +264,8 @@
       "date": "23 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 989,
-      "rts": 108
+      "likes": 1031,
+      "rts": 118
     },
     "2028-4": {
       "id": "2062475109382660161",
@@ -331,7 +331,7 @@
       "maps": "Companion robots enter elderly care at scale",
       "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
       "likes": 469,
-      "rts": 56
+      "rts": 55
     },
     "2030-4": {
       "id": "2063214389155463478",
@@ -363,19 +363,19 @@
       "date": "22 Jun 2026",
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
       "text": "SpaceX is set to launch its first Starfall Demo mission this Tuesday aboard its Falcon 9 rocket. The mission will test a new cargo return vehicle (pictured b…",
-      "likes": 4492,
+      "likes": 4494,
       "rts": 403
     },
     "2032-0": {
-      "id": "2069505915791778094",
+      "id": "2067784024333164651",
       "kind": "repost",
-      "author": "DeryaTR_",
+      "author": "stevenmarkryan",
       "recency": "week",
-      "date": "23 Jun 2026",
+      "date": "19 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
-      "text": "It is now conceivable that we might achieve biosingularity much earlier than I had predicted 20 years ago (circa 2040s). I had coined this term for a time wh…",
-      "likes": 271,
-      "rts": 38
+      "text": "Fueled by massive increases in the capability of AI, we are going to see incredible things happen in: • Human longevity • Disease prevention &amp; cures • Ge…",
+      "likes": 487,
+      "rts": 36
     },
     "2032-1": {
       "id": "2064473814696685704",
@@ -418,7 +418,7 @@
       "date": "21 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2734,
+      "likes": 2735,
       "rts": 290
     },
     "2034-1": {
@@ -429,7 +429,7 @@
       "date": "03 Jun 2026",
       "maps": "Ambient lifelong learning becomes default",
       "text": "OpenClaw 2026.6.1 is live 🦞 🪟 native Windows node host 🛠️ Skill Workshop for self-learning agents 📋 Workboard orchestration 🧠 MiniMax M3 support Windows…",
-      "likes": 1262,
+      "likes": 1263,
       "rts": 151
     },
     "2034-2": {
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3133,
+      "likes": 3134,
       "rts": 188
     }
   },
@@ -499,7 +499,7 @@
       "recency": "week",
       "date": "20 Jun 2026",
       "likes": 6631,
-      "rts": 1907
+      "rts": 1906
     },
     {
       "tag": "LONGEVITY",
@@ -509,7 +509,7 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2520,
+      "likes": 2531,
       "rts": 126
     },
     {
@@ -531,7 +531,7 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1367,
+      "likes": 1368,
       "rts": 73
     },
     {
@@ -542,7 +542,7 @@
       "author": "niccruzpatane",
       "recency": "week",
       "date": "19 Jun 2026",
-      "likes": 1266,
+      "likes": 1267,
       "rts": 152
     },
     {
@@ -553,7 +553,7 @@
       "author": "tszzl",
       "recency": "week",
       "date": "20 Jun 2026",
-      "likes": 1151,
+      "likes": 1152,
       "rts": 60
     }
   ]
