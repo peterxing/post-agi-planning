@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T09:13:03.503Z",
+  "updated": "2026-06-24T09:19:41.250Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -110,7 +110,7 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 952,
+      "likes": 955,
       "rts": 122
     },
     "2026-12": {
@@ -121,8 +121,8 @@
       "date": "23 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "GOOD NEWS 🇬🇧🇮🇹 NatPower and @Tesla have announced a massive $4–$5 billion partnership to build new battery storage infrastructure across Italy and the UK…",
-      "likes": 512,
-      "rts": 69
+      "likes": 513,
+      "rts": 70
     },
     "2026-13": {
       "id": "2065784751345287314",
@@ -154,8 +154,8 @@
       "date": "22 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "Introducing Sakana Fugu: A full multi-agent orchestration system accessible via a single model API. Our ‘Fugu Ultra’ model matches the performance of Fable a…",
-      "likes": 38011,
-      "rts": 6006
+      "likes": 38031,
+      "rts": 6009
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -264,8 +264,8 @@
       "date": "23 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 981,
-      "rts": 107
+      "likes": 989,
+      "rts": 108
     },
     "2028-4": {
       "id": "2062475109382660161",
@@ -286,7 +286,7 @@
       "date": "20 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "JUST IN: New study shows data centers has reduced the cost of electricity in America.",
-      "likes": 2521,
+      "likes": 2520,
       "rts": 164
     },
     "2029-0": {
@@ -364,7 +364,7 @@
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
       "text": "SpaceX is set to launch its first Starfall Demo mission this Tuesday aboard its Falcon 9 rocket. The mission will test a new cargo return vehicle (pictured b…",
       "likes": 4492,
-      "rts": 402
+      "rts": 403
     },
     "2032-0": {
       "id": "2069505915791778094",
@@ -374,8 +374,8 @@
       "date": "23 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
       "text": "It is now conceivable that we might achieve biosingularity much earlier than I had predicted 20 years ago (circa 2040s). I had coined this term for a time wh…",
-      "likes": 256,
-      "rts": 36
+      "likes": 271,
+      "rts": 38
     },
     "2032-1": {
       "id": "2064473814696685704",
@@ -396,7 +396,7 @@
       "date": "20 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "It's true, and largely to be expected. GLP-1 medications increase sperm counts and boost testosterone to the extent expected for comparable weight reductions…",
-      "likes": 642,
+      "likes": 643,
       "rts": 37
     },
     "2033-0": {
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3132,
+      "likes": 3133,
       "rts": 188
     }
   },
@@ -499,7 +499,7 @@
       "recency": "week",
       "date": "20 Jun 2026",
       "likes": 6631,
-      "rts": 1908
+      "rts": 1907
     },
     {
       "tag": "LONGEVITY",
@@ -509,7 +509,7 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2514,
+      "likes": 2520,
       "rts": 126
     },
     {
@@ -531,7 +531,7 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1366,
+      "likes": 1367,
       "rts": 73
     },
     {
