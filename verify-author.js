@@ -46,7 +46,7 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8787';
       ['section present', r.hasSection],
       ['name = Peter Xing', r.name === 'Peter Xing'],
       ['headline non-empty', r.headlineLen > 20],
-      ['2 bio paragraphs', r.bioParas === 2],
+      ['>=2 bio paragraphs', r.bioParas >= 2],
       ['4 roles', r.roles === 4],
       ['4 talks', r.talks === 4],
       ['talk titles non-empty', r.talkTitles.every(t => t && t.length > 3)],

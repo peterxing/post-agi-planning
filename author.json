@@ -1,17 +1,18 @@
 {
   "updated": "2026-06-24",
-  "note": "About-the-Author data, refreshed daily from Peter Xing's LinkedIn profile (linkedin.com/in/peter-xing) and his latest talks/keynotes posted online. Bio + roles change rarely (anti-thrash); talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
+  "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
   "linkedin": "https://www.linkedin.com/in/peter-xing/",
   "bio": [
-    "Peter Xing is a futurist, keynote speaker and technologist working at the intersection of artificial intelligence, longevity science and human augmentation. He is a Data &amp; AI Specialist at Microsoft — helping the public sector and education adopt AI responsibly — and serves on the expert faculty at Singularity University covering transhumanism and emerging technologies.",
-    "He co-founded Transhumanism Australia, a non-profit community advancing healthy life extension, intelligence augmentation and human wellbeing through science and technology, and previously led emerging-technology and innovation practices at KPMG and Deloitte across generative AI, web3, automation and extended reality. His talks turn exponential change into something you can actually plan for — hope for the best, prepare for the worst, and help build the better branch."
+    "Peter is a Cloud &amp; AI Platforms Lead for Public Sector &amp; Education at Microsoft, focusing on Azure including the Microsoft IQ stack and access to frontier AI models from OpenAI, Anthropic and SpaceXAI via Foundry, Fabric, Databricks and GitHub. Peter helps key stakeholders prioritise AI use cases that have the biggest impact for their organisation, and identifies opportunities to resource and accelerate projects via Microsoft's capabilities and partner ecosystem — from business &amp; solution envisioning, to proof of concepts, pilots and production.",
+    "Peter is also a Singularity Group &amp; TEDx speaker, and previously worked as a Global Director on emerging technology initiatives at KPMG and Deloitte to help organisations navigate and flourish in these unprecedented times of accelerating change and disruption.",
+    "Peter co-founded Transhumanism Australia, a venture studio and community in partnership with academic research institutions that works on accelerating projects for the global transhumanism movement with initiatives like Transhuman Coin and investing in startup founders in partnership with WAVIA (formerly SingularityU Australia). He is the author of the upcoming book, “The Hitchhiker's Guide to the Singularity” to help everyone prepare for our superintelligent AI future."
   ],
   "roles": [
     {
       "org": "Microsoft",
-      "detail": "Data &amp; AI Specialist · Public Sector &amp; Education"
+      "detail": "Cloud &amp; AI Platforms Lead · Public Sector &amp; Education"
     },
     {
       "org": "Singularity University",
