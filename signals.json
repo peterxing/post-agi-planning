@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T23:26:08.026Z",
+  "updated": "2026-06-25T00:29:58.866Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -34,7 +34,7 @@
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
       "likes": 1452,
-      "rts": 93
+      "rts": 94
     },
     "2026-3": {
       "id": "2068404492513558659",
@@ -100,7 +100,7 @@
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
       "likes": 12222,
-      "rts": 1424
+      "rts": 1425
     },
     "2026-11": {
       "id": "2069121548670406947",
@@ -143,7 +143,7 @@
       "date": "14 Jun 2026",
       "maps": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",
       "text": "2027 will likely be the first year that gives us some very tiny glimpses of the 2030s (just early 2030s) Our capabilities will be vastly more powerful by mid…",
-      "likes": 489,
+      "likes": 488,
       "rts": 50
     },
     "2027-0": {
@@ -154,7 +154,7 @@
       "date": "24 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "MASSIVE Hermes Agent update over the last few days Totally changes the way I use Hermes Here's 8 new features you need to start using immediately: 1. Native …",
-      "likes": 1436,
+      "likes": 1447,
       "rts": 87
     },
     "2027-1": {
@@ -165,7 +165,7 @@
       "date": "15 Jun 2026",
       "maps": "First trillion-dollar pure-AI company",
       "text": "SpaceX stock closed its second day of trading up 19.6% today, pushing the company's market cap above $2.5 trillion for the first time. SpaceX added $420 bill…",
-      "likes": 5847,
+      "likes": 5852,
       "rts": 361
     },
     "2027-2": {
@@ -198,8 +198,8 @@
       "date": "24 Jun 2026",
       "maps": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
       "text": "Tesla, Sunrun and Renew Home have announced a partnership to create the largest distributed power plant in the U.S. by providing more than 16 GW of flexible …",
-      "likes": 1459,
-      "rts": 195
+      "likes": 1500,
+      "rts": 202
     },
     "2027-7": {
       "id": "2068051762708099449",
@@ -209,8 +209,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8157,
-      "rts": 539
+      "likes": 8158,
+      "rts": 540
     },
     "2027-8": {
       "id": "2065221880391540977",
@@ -254,7 +254,7 @@
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
       "likes": 3021,
-      "rts": 456
+      "rts": 458
     },
     "2028-2": {
       "id": "2069438071678861421",
@@ -275,7 +275,7 @@
       "date": "04 Jun 2026",
       "maps": "CRISPR therapies become routine",
       "text": "The human body became a software engineering problem the minute CRISPR arrived. Now, AI writes better code than humans, with every disease becoming a potenti…",
-      "likes": 1136,
+      "likes": 1141,
       "rts": 129
     },
     "2028-7": {
@@ -320,7 +320,7 @@
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
       "likes": 3285,
-      "rts": 240
+      "rts": 241
     },
     "2030-3": {
       "id": "2068463951088689152",
@@ -342,7 +342,7 @@
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
       "likes": 4366,
-      "rts": 1363
+      "rts": 1365
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -419,7 +419,7 @@
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
       "likes": 2737,
-      "rts": 291
+      "rts": 292
     },
     "2034-1": {
       "id": "2062288421406785710",
@@ -440,7 +440,7 @@
       "date": "05 Jun 2026",
       "maps": "First CRISPR-edited humans reach adulthood",
       "text": "holy shit. it happened they just edited human embryo DNA. this is the beginning of the end of genetic diseases.",
-      "likes": 2238,
+      "likes": 2243,
       "rts": 203
     },
     "2035-0": {
@@ -462,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3136,
+      "likes": 3140,
       "rts": 187
     }
   },
@@ -502,17 +502,6 @@
       "rts": 130
     },
     {
-      "tag": "GOVERNANCE",
-      "t": "ELON MUSK: AI WILL FORCE GOVERNMENTS TO SEND CASH DIRECTLY TO PEOPLE AS DEFLATION BECOMES THE BIGGEST THREA",
-      "id": "2068527324203811294",
-      "kind": "repost",
-      "author": "FirstSquawk",
-      "recency": "week",
-      "date": "21 Jun 2026",
-      "likes": 1540,
-      "rts": 133
-    },
-    {
       "tag": "MARKETS",
       "t": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled t…",
       "id": "2069739102577021376",
@@ -520,8 +509,19 @@
       "author": "StockMKTNewz",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 1428,
-      "rts": 241
+      "likes": 1487,
+      "rts": 249
+    },
+    {
+      "tag": "GOVERNANCE",
+      "t": "ELON MUSK: AI WILL FORCE GOVERNMENTS TO SEND CASH DIRECTLY TO PEOPLE AS DEFLATION BECOMES THE BIGGEST THREA",
+      "id": "2068527324203811294",
+      "kind": "repost",
+      "author": "FirstSquawk",
+      "recency": "week",
+      "date": "21 Jun 2026",
+      "likes": 1539,
+      "rts": 133
     },
     {
       "tag": "CAPABILITY",
