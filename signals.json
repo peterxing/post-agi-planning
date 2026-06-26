@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T00:23:33.983Z",
+  "updated": "2026-06-26T01:26:07.144Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,8 +11,8 @@
       "date": "24 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
-      "likes": 4524,
-      "rts": 748
+      "likes": 4544,
+      "rts": 752
     },
     "2026-1": {
       "id": "2069690992270184651",
@@ -66,7 +66,7 @@
       "date": "19 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 471,
+      "likes": 470,
       "rts": 44
     },
     "2026-7": {
@@ -121,7 +121,7 @@
       "date": "23 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "The future of biology is agentic. We're proud to work with NVIDIA on the Evo series of models and are excited to see the NVIDIA BioNeMo Agent Toolkit launch …",
-      "likes": 286,
+      "likes": 287,
       "rts": 44
     },
     "2026-13": {
@@ -132,7 +132,7 @@
       "date": "13 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "GLM-5.2 is Fully Open, Frontier Intelligence Belongs to Everyone Today, the sudden restriction of certain frontier models is deeply regrettable. At a time wh…",
-      "likes": 8118,
+      "likes": 8119,
       "rts": 839
     },
     "2026-14": {
@@ -154,7 +154,7 @@
       "date": "24 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "MASSIVE Hermes Agent update over the last few days Totally changes the way I use Hermes Here's 8 new features you need to start using immediately: 1. Native …",
-      "likes": 1562,
+      "likes": 1563,
       "rts": 91
     },
     "2027-1": {
@@ -176,8 +176,8 @@
       "date": "22 Jun 2026",
       "maps": "Brain-computer interfaces approved for medical use",
       "text": "Implanted Brain-Computer Interfaces are getting fast! They're approaching speeds that match unimpaired people typing. But... more electrodes won't be enough …",
-      "likes": 317,
-      "rts": 45
+      "likes": 318,
+      "rts": 46
     },
     "2027-4": {
       "id": "2064835800747962424",
@@ -198,7 +198,7 @@
       "date": "24 Jun 2026",
       "maps": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
       "text": "Tesla, Sunrun and Renew Home have announced a partnership to create the largest distributed power plant in the U.S. by providing more than 16 GW of flexible …",
-      "likes": 1947,
+      "likes": 1951,
       "rts": 263
     },
     "2027-7": {
@@ -209,7 +209,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8171,
+      "likes": 8170,
       "rts": 539
     },
     "2027-8": {
@@ -231,7 +231,7 @@
       "date": "24 Jun 2026",
       "maps": "Signal: most software written end-to-end by AI",
       "text": "Post ASI: We will be able to rebuild your body at the cellular level. You will be able to change your appearance like software. You will be able to learn com…",
-      "likes": 496,
+      "likes": 497,
       "rts": 50
     },
     "2028-0": {
@@ -319,8 +319,8 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 2974,
-      "rts": 350
+      "likes": 2996,
+      "rts": 353
     },
     "2030-4": {
       "id": "2063214389155463478",
@@ -330,7 +330,7 @@
       "date": "06 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "It's been 20 years since Audrey Crews last held a paintbrush. After receiving a Neuralink brain implant, she's able to return to her passion for creating art…",
-      "likes": 4378,
+      "likes": 4376,
       "rts": 1361
     },
     "2031-0": {
@@ -478,7 +478,7 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2599,
+      "likes": 2600,
       "rts": 133
     },
     {
@@ -489,7 +489,7 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2189,
+      "likes": 2200,
       "rts": 192
     },
     {
@@ -500,7 +500,7 @@
       "author": "StockMKTNewz",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 1968,
+      "likes": 1970,
       "rts": 327
     },
     {
@@ -511,7 +511,7 @@
       "author": "FirstSquawk",
       "recency": "week",
       "date": "21 Jun 2026",
-      "likes": 1539,
+      "likes": 1538,
       "rts": 133
     },
     {
