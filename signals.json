@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T02:24:56.437Z",
+  "updated": "2026-06-26T03:27:42.550Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,8 +11,8 @@
       "date": "24 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
-      "likes": 4556,
-      "rts": 753
+      "likes": 4577,
+      "rts": 756
     },
     "2026-1": {
       "id": "2069690992270184651",
@@ -77,7 +77,7 @@
       "date": "20 Jun 2026",
       "maps": "Personalized genomic medicine goes retail",
       "text": "Age reversal will change medicine, insurance, retirement, work, family, and the meaning of life itself. Society has barely begun to imagine what is coming.",
-      "likes": 176,
+      "likes": 175,
       "rts": 15
     },
     "2026-9": {
@@ -99,7 +99,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12232,
+      "likes": 12233,
       "rts": 1424
     },
     "2026-11": {
@@ -198,7 +198,7 @@
       "date": "24 Jun 2026",
       "maps": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
       "text": "Tesla, Sunrun and Renew Home have announced a partnership to create the largest distributed power plant in the U.S. by providing more than 16 GW of flexible …",
-      "likes": 1955,
+      "likes": 1957,
       "rts": 265
     },
     "2027-7": {
@@ -231,8 +231,8 @@
       "date": "24 Jun 2026",
       "maps": "Signal: most software written end-to-end by AI",
       "text": "Post ASI: We will be able to rebuild your body at the cellular level. You will be able to change your appearance like software. You will be able to learn com…",
-      "likes": 499,
-      "rts": 51
+      "likes": 500,
+      "rts": 52
     },
     "2028-0": {
       "id": "2065577387870310736",
@@ -319,7 +319,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 3012,
+      "likes": 3014,
       "rts": 354
     },
     "2030-4": {
@@ -407,7 +407,7 @@
       "date": "21 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2736,
+      "likes": 2735,
       "rts": 293
     },
     "2034-2": {
@@ -418,7 +418,7 @@
       "date": "05 Jun 2026",
       "maps": "First CRISPR-edited humans reach adulthood",
       "text": "Genetic engineering in human embryos is here. Today, in a world first, @Columbia and @nucleusgenomics announce high-efficiency editing of human embryos. The …",
-      "likes": 387,
+      "likes": 388,
       "rts": 66
     },
     "2035-0": {
@@ -478,8 +478,8 @@
       "author": "ns123abc",
       "recency": "week",
       "date": "25 Jun 2026",
-      "likes": 2614,
-      "rts": 354
+      "likes": 2902,
+      "rts": 414
     },
     {
       "tag": "LONGEVITY",
@@ -500,7 +500,7 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2205,
+      "likes": 2212,
       "rts": 192
     },
     {
@@ -522,7 +522,7 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 1368,
+      "likes": 1367,
       "rts": 72
     },
     {
