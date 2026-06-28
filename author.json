@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24",
+  "updated": "2026-06-29",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -29,13 +29,6 @@
   ],
   "talks": [
     {
-      "title": "AI Agents Will Run Your Workday by 2027",
-      "venue": "Exponential Africa (Singularity South Africa)",
-      "year": "2026",
-      "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
-      "blurb": "How autonomous AI agents reshape every workflow — and how to stay augmented, not automated."
-    },
-    {
       "title": "Prepare for AGI",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
@@ -43,18 +36,25 @@
       "blurb": "A Microsoft Data &amp; AI specialist's case for planning now — hope for the best, prepare for the worst."
     },
     {
+      "title": "OpenClaw and the Rise of AI Agents",
+      "venue": "Exponential Africa (Singularity South Africa)",
+      "year": "2026",
+      "url": "https://www.youtube.com/watch?v=P91DZjE5nw0",
+      "blurb": "With Mic Mann on why AI agents are the next execution layer — software that doesn't just assist but plans, decides and acts."
+    },
+    {
+      "title": "AI Agents Will Run Your Workday by 2027",
+      "venue": "Exponential Africa (Singularity South Africa)",
+      "year": "2026",
+      "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
+      "blurb": "How autonomous AI agents reshape every workflow — and how to stay augmented, not automated."
+    },
+    {
       "title": "AGI for Everyone: Empowering Individuals with AI",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2025",
       "url": "https://www.youtube.com/watch?v=p22wV3MiHtM",
       "blurb": "Putting frontier AI in everyone's hands so individuals — not just institutions — capture the upside."
-    },
-    {
-      "title": "AGI May Arrive Faster Than We Think",
-      "venue": "Singularity South Africa Summit 2025",
-      "year": "2025",
-      "url": "https://gadget.co.za/humanagi15w/",
-      "blurb": "On exponential timelines, GPT-class breakthroughs and decoupling work from income at the SUSA Summit launch."
     }
   ]
 }

@@ -14,6 +14,7 @@ const ALLOW_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.i
 
 http.createServer((req, res) => {
   let url = decodeURIComponent(req.url.split('?')[0]);
+  url = url.replace(/\/{2,}/g, '/');
   if (url === '/' || url === '') url = '/index.html';
   const rel = path.normalize(url).replace(/^(\.\.[\/\\])+/, '');
   const file = path.join(DIR, rel);
