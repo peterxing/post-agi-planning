@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T06:40:21.631Z",
+  "updated": "2026-06-29T07:40:41.049Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,7 +11,7 @@
       "date": "26 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
-      "likes": 3461,
+      "likes": 3460,
       "rts": 470
     },
     "2026-1": {
@@ -121,8 +121,8 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 1418,
-      "rts": 82
+      "likes": 1488,
+      "rts": 85
     },
     "2026-13": {
       "id": "2070584331068969336",
@@ -209,7 +209,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8170,
+      "likes": 8171,
       "rts": 540
     },
     "2027-8": {
@@ -286,7 +286,7 @@
       "date": "26 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "Elon Musk has received regulatory approval to acquire startup Mesh Optical Technologies, a company founded by former SpaceX engineers working on optical data…",
-      "likes": 6099,
+      "likes": 6100,
       "rts": 708
     },
     "2029-0": {
@@ -330,8 +330,8 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5789,
-      "rts": 587
+      "likes": 5816,
+      "rts": 589
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -440,7 +440,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3150,
+      "likes": 3151,
       "rts": 188
     }
   },
@@ -478,8 +478,8 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39286,
-      "rts": 5616
+      "likes": 39306,
+      "rts": 5624
     },
     {
       "tag": "GOVERNANCE",
@@ -489,7 +489,7 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18309,
+      "likes": 18310,
       "rts": 1125
     },
     {
@@ -511,7 +511,7 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "22 Jun 2026",
-      "likes": 2610,
+      "likes": 2609,
       "rts": 134
     },
     {
