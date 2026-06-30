@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T14:23:48.002Z",
+  "updated": "2026-06-30T15:22:52.716Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -132,7 +132,7 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2045,
+      "likes": 2044,
       "rts": 115
     },
     "2026-14": {
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2529,
+      "likes": 2532,
       "rts": 209
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 6949,
-      "rts": 948
+      "likes": 7075,
+      "rts": 961
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -177,7 +177,7 @@
       "maps": "First trillion-dollar pure-AI company",
       "text": "SpaceX stock closed its second day of trading up 19.6% today, pushing the company's market cap above $2.5 trillion for the first time. SpaceX added $420 bill…",
       "likes": 5846,
-      "rts": 359
+      "rts": 358
     },
     "2027-2": {
       "id": "2069192808016273813",
@@ -268,15 +268,15 @@
       "rts": 458
     },
     "2028-2": {
-      "id": "2069438071678861421",
+      "id": "2066868561973506317",
       "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "week",
-      "date": "23 Jun 2026",
+      "author": "herbertong",
+      "recency": "recent",
+      "date": "16 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
-      "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 1092,
-      "rts": 123
+      "text": "🚨 $SPCX IPO has put a real market value on Elon Musk's ability to execute! Now investors are asking: could Tesla be next? Tesla has already checked off seve…",
+      "likes": 308,
+      "rts": 34
     },
     "2028-5": {
       "id": "2065134923111956978",
@@ -341,7 +341,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5900,
+      "likes": 5901,
       "rts": 599
     },
     "2031-0": {
@@ -489,8 +489,8 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39574,
-      "rts": 5668
+      "likes": 39583,
+      "rts": 5671
     },
     {
       "tag": "GOVERNANCE",
@@ -545,7 +545,7 @@
       "recency": "week",
       "date": "24 Jun 2026",
       "likes": 1983,
-      "rts": 328
+      "rts": 327
     }
   ]
 }
