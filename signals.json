@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T19:29:30.480Z",
+  "updated": "2026-06-30T20:31:50.151Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -132,7 +132,7 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2049,
+      "likes": 2050,
       "rts": 115
     },
     "2026-14": {
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2535,
+      "likes": 2537,
       "rts": 210
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7516,
-      "rts": 1019
+      "likes": 7564,
+      "rts": 1031
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -231,7 +231,7 @@
       "date": "21 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2732,
+      "likes": 2733,
       "rts": 292
     },
     "2027-10": {
@@ -297,7 +297,7 @@
       "date": "28 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 259,
+      "likes": 260,
       "rts": 40
     },
     "2029-0": {
@@ -330,7 +330,7 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3283,
+      "likes": 3284,
       "rts": 239
     },
     "2030-3": {
@@ -407,7 +407,7 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1224,
+      "likes": 1225,
       "rts": 39
     },
     "2033-1": {
@@ -418,7 +418,7 @@
       "date": "24 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "Absolutely insane: \"Jalapeño was co-developed from initial design to manufacturing tape-out in just nine months, and the custom AI accelerator program repres…",
-      "likes": 1078,
+      "likes": 1079,
       "rts": 70
     },
     "2034-2": {
@@ -489,7 +489,7 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39628,
+      "likes": 39639,
       "rts": 5676
     },
     {
@@ -511,7 +511,7 @@
       "author": "Alibaba_Qwen",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 4717,
+      "likes": 4718,
       "rts": 784
     },
     {
@@ -533,7 +533,7 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2273,
+      "likes": 2274,
       "rts": 199
     },
     {
