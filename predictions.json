@@ -1,6 +1,6 @@
 {
-  "updated": "2026-06-24T06:31:27.682Z",
-  "basis": "Revised 24 Jun 2026 — recalibrated the AGI timeline to match Peter Xing's on-record, first-person call (the same anchor thesis as Chapter 07 of the book): AI reaches genuine human-level capability (AGI) by the END OF 2026, becomes disruptive for EVERY industry throughout 2027, and the first superintelligent systems emerge in the 2028–2030 window — so the posture is 'hope for the best, but prepare for the worst.' The 2026 live-signal row was changed from the old 'AGI consensus slips to the early-2030s' framing to this call (prob 70), the 2028 anchor event was reframed from 'true AGI slips to the early-2030s' to 'superintelligence emerges (2028–2030 window)' (prob 41), and the 2026/2027/2028 year summaries were aligned to the same throughline. This is Peter's deliberate, contrarian personal forecast — it supersedes the mainstream 'jagged-frontier / true-AGI-in-the-2030s' consensus previously reflected here and should NOT be reverted to a 2030s-AGI framing. The prior revision's market/Nvidia ($5T cap) and open-weights-parity events were left intact.",
+  "updated": "2026-06-30T06:09:42.154Z",
+  "basis": "Revised 30 Jun 2026 — added one well-sourced 2026 economic event capturing the first humanoid-robot IPO wave, which broke AFTER the 24 Jun revision and is not otherwise captured: Agility Robotics announced (24 Jun 2026) a SPAC merger with Churchill Capital Corp XI at a $2.5B pre-money equity value (~$620M gross proceeds incl. a $200M Foxconn-led PIPE at $10/share), to trade as 'AGLT' on Nasdaq — the first US-listed pure-play humanoid-robotics company (Digit v5, $300M+ committed multi-year orders; partners Amazon/NVIDIA/SoftBank/Foxconn; customers GXO, Schaeffler, Toyota Canada, Mercado Libre; targeting up to 10,000 units/yr). In parallel China's Unitree cleared its IPO (AGIBOT past 10,000 units) and EngineAI confidentially filed in Hong Kong (~$1.5B, Shenzhen line at one robot/15 min). This moves humanoid robotics from a pure deployment story into a capital-markets story, complementing the existing 2026 humanoid-factory and AI-lab-IPO events (prob 85). Sources: Nasdaq press release & TechTimes (Agility, 24-25 Jun 2026); TechTimes (Unitree/AGIBOT, China humanoid duopoly); Hong Kong IPO reporting (EngineAI). All other predictions and the AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') are unchanged this run.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -12,7 +12,7 @@
   "years": [
     {
       "year": 2026,
-      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor, and the first binding frontier-model safety rules take effect. Against a cautious consensus, my own call is that AI reaches genuine human-level capability (AGI) by year-end.",
+      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor and their makers begin going public, and the first binding frontier-model safety rules take effect. Against a cautious consensus, my own call is that AI reaches genuine human-level capability (AGI) by year-end.",
       "events": [
         {
           "t": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
@@ -42,6 +42,12 @@
           "d": "technology",
           "high": true,
           "prob": 70
+        },
+        {
+          "t": "First humanoid-robot IPOs hit public markets — Agility Robotics goes public via a $2.5B SPAC (Nasdaq 'AGLT'), the first US pure-play humanoid maker, as China's Unitree clears its IPO and EngineAI files in Hong Kong",
+          "d": "economic",
+          "high": true,
+          "prob": 85
         },
         {
           "t": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",

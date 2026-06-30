@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T03:03:24.982Z",
+  "updated": "2026-06-30T06:10:37.361Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -59,6 +59,17 @@
       "rts": 10
     },
     "2026-5": {
+      "id": "2070623894562865579",
+      "kind": "repost",
+      "author": "kimmonismus",
+      "recency": "week",
+      "date": "26 Jun 2026",
+      "maps": "First humanoid-robot IPOs hit public markets — Agility Robotics goes public via a $2.5B SPAC (Nasdaq 'AGLT'), the first US pure-play humanoid maker, as China's Unitree clears its IPO and EngineAI files in Hong Kong",
+      "text": "Morgan Stanley just doubled its 2026 China humanoid robot shipment forecast again, from 28,000 to 50,000 units. In January, the bank expected 14,000 units. A…",
+      "likes": 308,
+      "rts": 32
+    },
+    "2026-6": {
       "id": "2070303973966254468",
       "kind": "repost",
       "author": "DanielCHTan97",
@@ -69,7 +80,7 @@
       "likes": 157,
       "rts": 8
     },
-    "2026-7": {
+    "2026-8": {
       "id": "2068371880671621503",
       "kind": "repost",
       "author": "pesottas",
@@ -80,7 +91,7 @@
       "likes": 175,
       "rts": 15
     },
-    "2026-9": {
+    "2026-10": {
       "id": "2070558745877262667",
       "kind": "repost",
       "author": "m_goes_distance",
@@ -91,7 +102,7 @@
       "likes": 207,
       "rts": 19
     },
-    "2026-10": {
+    "2026-11": {
       "id": "2066836174249852977",
       "kind": "repost",
       "author": "BullTheoryio",
@@ -99,10 +110,10 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12207,
+      "likes": 12208,
       "rts": 1422
     },
-    "2026-11": {
+    "2026-12": {
       "id": "2069121548670406947",
       "kind": "repost",
       "author": "ArtificialAnlys",
@@ -110,10 +121,10 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 982,
+      "likes": 981,
       "rts": 127
     },
-    "2026-12": {
+    "2026-13": {
       "id": "2071294235257536735",
       "kind": "repost",
       "author": "alexocheema",
@@ -121,10 +132,10 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 1996,
+      "likes": 2009,
       "rts": 114
     },
-    "2026-13": {
+    "2026-14": {
       "id": "2070584331068969336",
       "kind": "repost",
       "author": "METR_Evals",
@@ -135,7 +146,7 @@
       "likes": 2525,
       "rts": 209
     },
-    "2026-14": {
+    "2026-15": {
       "id": "2066251446493057310",
       "kind": "repost",
       "author": "Dr_Singularity",
@@ -154,7 +165,7 @@
       "date": "24 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
-      "likes": 4708,
+      "likes": 4711,
       "rts": 784
     },
     "2027-1": {
@@ -180,15 +191,15 @@
       "rts": 45
     },
     "2027-4": {
-      "id": "2070623894562865579",
+      "id": "2064835800747962424",
       "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "week",
-      "date": "26 Jun 2026",
+      "author": "Dr_Singularity",
+      "recency": "recent",
+      "date": "10 Jun 2026",
       "maps": "Humanoid-robot output scales toward ~1M units/yr",
-      "text": "Morgan Stanley just doubled its 2026 China humanoid robot shipment forecast again, from 28,000 to 50,000 units. In January, the bank expected 14,000 units. A…",
-      "likes": 308,
-      "rts": 32
+      "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizatio…",
+      "likes": 523,
+      "rts": 64
     },
     "2027-6": {
       "id": "2070930161361432856",
@@ -253,7 +264,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3024,
+      "likes": 3023,
       "rts": 458
     },
     "2028-2": {
@@ -286,7 +297,7 @@
       "date": "28 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 258,
+      "likes": 259,
       "rts": 39
     },
     "2029-0": {
@@ -330,7 +341,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5899,
+      "likes": 5900,
       "rts": 599
     },
     "2031-0": {
@@ -374,7 +385,7 @@
       "date": "09 Jun 2026",
       "maps": "Continuous identity & provenance verification",
       "text": "Whoa, I might’ve just experienced the Longest Continuous Tesla Actually Smart Summon ever in my Model 3. My car drove itself for 0.4 miles for over 2:40 stra…",
-      "likes": 1751,
+      "likes": 1752,
       "rts": 122
     },
     "2032-2": {
@@ -440,13 +451,13 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3149,
+      "likes": 3150,
       "rts": 188
     }
   },
   "search": {
-    "2026-6": "four workweek",
-    "2026-8": "deepfake detection mandated",
+    "2026-7": "four workweek",
+    "2026-9": "deepfake detection mandated",
     "2027-3": "display glasses catalyzed",
     "2027-5": "fusion plant breaks",
     "2027-9": "birth rates fall",
@@ -478,8 +489,8 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39465,
-      "rts": 5651
+      "likes": 39510,
+      "rts": 5658
     },
     {
       "tag": "GOVERNANCE",
@@ -489,7 +500,7 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18336,
+      "likes": 18344,
       "rts": 1126
     },
     {
