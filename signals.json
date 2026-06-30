@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T07:09:44.317Z",
+  "updated": "2026-06-30T08:11:12.227Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -33,7 +33,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1454,
+      "likes": 1455,
       "rts": 93
     },
     "2026-3": {
@@ -132,7 +132,7 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2017,
+      "likes": 2021,
       "rts": 114
     },
     "2026-14": {
@@ -158,15 +158,15 @@
       "rts": 51
     },
     "2027-0": {
-      "id": "2069720365442719867",
+      "id": "2071688039114342592",
       "kind": "repost",
-      "author": "Alibaba_Qwen",
+      "author": "openclaw",
       "recency": "week",
-      "date": "24 Jun 2026",
+      "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
-      "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
-      "likes": 4711,
-      "rts": 784
+      "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
+      "likes": 6005,
+      "rts": 829
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -341,7 +341,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5900,
+      "likes": 5901,
       "rts": 599
     },
     "2031-0": {
@@ -396,7 +396,7 @@
       "date": "20 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "It's true, and largely to be expected. GLP-1 medications increase sperm counts and boost testosterone to the extent expected for comparable weight reductions…",
-      "likes": 643,
+      "likes": 642,
       "rts": 37
     },
     "2033-0": {
@@ -489,8 +489,8 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39522,
-      "rts": 5662
+      "likes": 39535,
+      "rts": 5667
     },
     {
       "tag": "GOVERNANCE",
@@ -500,8 +500,19 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18348,
-      "rts": 1126
+      "likes": 18349,
+      "rts": 1127
+    },
+    {
+      "tag": "ROBOTS",
+      "t": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within…",
+      "id": "2069720365442719867",
+      "kind": "repost",
+      "author": "Alibaba_Qwen",
+      "recency": "week",
+      "date": "24 Jun 2026",
+      "likes": 4711,
+      "rts": 784
     },
     {
       "tag": "ABUNDANCE",
@@ -535,17 +546,6 @@
       "date": "24 Jun 2026",
       "likes": 1982,
       "rts": 328
-    },
-    {
-      "tag": "LONGEVITY",
-      "t": "Fun conversation on Longevity!",
-      "id": "2069534844758147529",
-      "kind": "repost",
-      "author": "PeterDiamandis",
-      "recency": "week",
-      "date": "23 Jun 2026",
-      "likes": 247,
-      "rts": 21
     }
   ]
 }
