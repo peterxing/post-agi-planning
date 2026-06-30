@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T10:15:56.437Z",
+  "updated": "2026-06-30T11:18:11.367Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -111,7 +111,7 @@
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
       "likes": 12210,
-      "rts": 1422
+      "rts": 1421
     },
     "2026-12": {
       "id": "2069121548670406947",
@@ -132,7 +132,7 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2031,
+      "likes": 2035,
       "rts": 114
     },
     "2026-14": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 6360,
-      "rts": 873
+      "likes": 6513,
+      "rts": 889
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -231,7 +231,7 @@
       "date": "21 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2733,
+      "likes": 2732,
       "rts": 293
     },
     "2027-10": {
@@ -490,7 +490,7 @@
       "recency": "week",
       "date": "26 Jun 2026",
       "likes": 39551,
-      "rts": 5669
+      "rts": 5670
     },
     {
       "tag": "GOVERNANCE",
@@ -500,7 +500,7 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18355,
+      "likes": 18356,
       "rts": 1127
     },
     {
@@ -511,7 +511,7 @@
       "author": "Alibaba_Qwen",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 4712,
+      "likes": 4714,
       "rts": 784
     },
     {
@@ -522,7 +522,7 @@
       "author": "jun_song",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 3336,
+      "likes": 3337,
       "rts": 213
     },
     {
