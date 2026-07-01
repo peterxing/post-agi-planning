@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T09:27:02.380Z",
+  "updated": "2026-07-01T10:27:53.196Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -77,8 +77,8 @@
       "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 714,
-      "rts": 66
+      "likes": 717,
+      "rts": 67
     },
     "2026-8": {
       "id": "2068371880671621503",
@@ -110,7 +110,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12205,
+      "likes": 12207,
       "rts": 1422
     },
     "2026-12": {
@@ -132,8 +132,8 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2049,
-      "rts": 115
+      "likes": 2050,
+      "rts": 116
     },
     "2026-14": {
       "id": "2070584331068969336",
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2541,
+      "likes": 2542,
       "rts": 210
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 8031,
-      "rts": 1084
+      "likes": 8056,
+      "rts": 1086
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -264,7 +264,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3023,
+      "likes": 3022,
       "rts": 457
     },
     "2028-2": {
@@ -341,7 +341,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5903,
+      "likes": 5904,
       "rts": 600
     },
     "2030-4": {
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 11116,
-      "rts": 1633
+      "likes": 11371,
+      "rts": 1686
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 75670,
-      "rts": 12022
+      "likes": 76824,
+      "rts": 12138
     },
     "2034-2": {
       "id": "2066189834822312195",
@@ -499,8 +499,8 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18378,
-      "rts": 1128
+      "likes": 18379,
+      "rts": 1129
     },
     {
       "tag": "ROBOTS",
@@ -510,8 +510,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 13889,
-      "rts": 1775
+      "likes": 17252,
+      "rts": 2138
     },
     {
       "tag": "ABUNDANCE",
@@ -554,8 +554,8 @@
       "author": "FudanUniversity",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 899,
-      "rts": 94
+      "likes": 922,
+      "rts": 96
     }
   ]
 }
