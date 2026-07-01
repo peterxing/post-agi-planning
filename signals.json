@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T05:09:31.753Z",
+  "updated": "2026-07-01T06:08:57.344Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -77,7 +77,7 @@
       "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 668,
+      "likes": 687,
       "rts": 63
     },
     "2026-8": {
@@ -111,7 +111,7 @@
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
       "likes": 12206,
-      "rts": 1421
+      "rts": 1422
     },
     "2026-12": {
       "id": "2069121548670406947",
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7936,
-      "rts": 1072
+      "likes": 7960,
+      "rts": 1075
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -330,7 +330,7 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3281,
+      "likes": 3282,
       "rts": 239
     },
     "2030-3": {
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 9694,
-      "rts": 1405
+      "likes": 10055,
+      "rts": 1457
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 65678,
-      "rts": 10770
+      "likes": 69695,
+      "rts": 11257
     },
     "2034-2": {
       "id": "2066189834822312195",
@@ -499,7 +499,7 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18377,
+      "likes": 18376,
       "rts": 1128
     },
     {
@@ -510,8 +510,8 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 5689,
-      "rts": 234
+      "likes": 5789,
+      "rts": 240
     },
     {
       "tag": "ROBOTS",
@@ -521,7 +521,7 @@
       "author": "Alibaba_Qwen",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 4720,
+      "likes": 4721,
       "rts": 784
     },
     {
@@ -543,7 +543,7 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2273,
+      "likes": 2272,
       "rts": 198
     },
     {
