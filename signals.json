@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T02:05:12.574Z",
+  "updated": "2026-07-01T03:04:09.072Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,7 +11,7 @@
       "date": "26 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
-      "likes": 3467,
+      "likes": 3468,
       "rts": 473
     },
     "2026-1": {
@@ -33,7 +33,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1455,
+      "likes": 1456,
       "rts": 93
     },
     "2026-3": {
@@ -132,7 +132,7 @@
       "date": "28 Jun 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2050,
+      "likes": 2049,
       "rts": 115
     },
     "2026-14": {
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2539,
+      "likes": 2540,
       "rts": 210
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7829,
-      "rts": 1062
+      "likes": 7867,
+      "rts": 1065
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -297,7 +297,7 @@
       "date": "28 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 260,
+      "likes": 261,
       "rts": 40
     },
     "2029-0": {
@@ -312,15 +312,15 @@
       "rts": 9
     },
     "2030-0": {
-      "id": "2063432076838179153",
+      "id": "2064400619583213821",
       "kind": "repost",
-      "author": "Dr_Singularity",
+      "author": "JoinLifespan",
       "recency": "recent",
-      "date": "07 Jun 2026",
+      "date": "09 Jun 2026",
       "maps": "AI-designed drugs gain FDA approval (170+ AI-discovered candidates now in trials; 15-20 in pivotal Phase III by 2026)",
-      "text": "A doctor from 1985 seeing 2026 medicine would be stunned. mRNA vaccines. Cancer immunotherapy. CAR-T cells. Gene editing. AI protein design. Lab grown organo…",
-      "likes": 563,
-      "rts": 90
+      "text": "Today, @lifebiosciences confirmed the first patient has been dosed with an epigenetic restoration drug candidate. An exciting milestone 🚀 Life Biosciences i…",
+      "likes": 1537,
+      "rts": 327
     },
     "2030-1": {
       "id": "2068190221263589394",
@@ -330,8 +330,8 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3282,
-      "rts": 239
+      "likes": 3281,
+      "rts": 238
     },
     "2030-3": {
       "id": "2069751801096909214",
@@ -341,7 +341,7 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5904,
+      "likes": 5903,
       "rts": 599
     },
     "2030-4": {
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 8184,
-      "rts": 1200
+      "likes": 8741,
+      "rts": 1272
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -407,7 +407,7 @@
       "date": "20 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "It's true, and largely to be expected. GLP-1 medications increase sperm counts and boost testosterone to the extent expected for comparable weight reductions…",
-      "likes": 643,
+      "likes": 644,
       "rts": 37
     },
     "2033-0": {
@@ -418,19 +418,19 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1225,
+      "likes": 1226,
       "rts": 39
     },
     "2033-1": {
-      "id": "2069795647956373632",
+      "id": "2072106151890809341",
       "kind": "repost",
-      "author": "kimmonismus",
+      "author": "AnthropicAI",
       "recency": "week",
-      "date": "24 Jun 2026",
+      "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
-      "text": "Absolutely insane: \"Jalapeño was co-developed from initial design to manufacturing tape-out in just nine months, and the custom AI accelerator program repres…",
-      "likes": 1079,
-      "rts": 70
+      "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
+      "likes": 52147,
+      "rts": 8798
     },
     "2034-2": {
       "id": "2066189834822312195",
@@ -499,8 +499,8 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39667,
-      "rts": 5676
+      "likes": 39680,
+      "rts": 5677
     },
     {
       "tag": "GOVERNANCE",
@@ -510,8 +510,19 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18372,
+      "likes": 18374,
       "rts": 1129
+    },
+    {
+      "tag": "LONGEVITY",
+      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
+      "id": "2071990699222860231",
+      "kind": "repost",
+      "author": "bryan_johnson",
+      "recency": "week",
+      "date": "30 Jun 2026",
+      "likes": 5329,
+      "rts": 222
     },
     {
       "tag": "ROBOTS",
@@ -523,17 +534,6 @@
       "date": "24 Jun 2026",
       "likes": 4718,
       "rts": 784
-    },
-    {
-      "tag": "LONGEVITY",
-      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
-      "id": "2071990699222860231",
-      "kind": "repost",
-      "author": "bryan_johnson",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "likes": 5174,
-      "rts": 219
     },
     {
       "tag": "ABUNDANCE",
@@ -554,7 +554,7 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2274,
+      "likes": 2273,
       "rts": 199
     }
   ]
