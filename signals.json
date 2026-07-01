@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T03:04:09.072Z",
+  "updated": "2026-07-01T05:09:31.753Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -70,15 +70,15 @@
       "rts": 32
     },
     "2026-6": {
-      "id": "2070303973966254468",
+      "id": "2072022961339437154",
       "kind": "repost",
-      "author": "DanielCHTan97",
+      "author": "AndrewE_Dunn",
       "recency": "week",
-      "date": "26 Jun 2026",
+      "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
-      "text": "Anthropic could dodge the USG ban on Fable right now by hiring every American citizen for minimum wage",
-      "likes": 157,
-      "rts": 8
+      "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
+      "likes": 668,
+      "rts": 63
     },
     "2026-8": {
       "id": "2068371880671621503",
@@ -110,7 +110,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12208,
+      "likes": 12206,
       "rts": 1421
     },
     "2026-12": {
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2540,
+      "likes": 2541,
       "rts": 210
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7867,
-      "rts": 1065
+      "likes": 7936,
+      "rts": 1072
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -187,7 +187,7 @@
       "date": "22 Jun 2026",
       "maps": "Brain-computer interfaces approved for medical use",
       "text": "Implanted Brain-Computer Interfaces are getting fast! They're approaching speeds that match unimpaired people typing. But... more electrodes won't be enough …",
-      "likes": 323,
+      "likes": 324,
       "rts": 45
     },
     "2027-4": {
@@ -220,7 +220,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8169,
+      "likes": 8170,
       "rts": 540
     },
     "2027-8": {
@@ -264,7 +264,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3025,
+      "likes": 3024,
       "rts": 458
     },
     "2028-2": {
@@ -331,7 +331,7 @@
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
       "likes": 3281,
-      "rts": 238
+      "rts": 239
     },
     "2030-3": {
       "id": "2069751801096909214",
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 8741,
-      "rts": 1272
+      "likes": 9694,
+      "rts": 1405
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 52147,
-      "rts": 8798
+      "likes": 65678,
+      "rts": 10770
     },
     "2034-2": {
       "id": "2066189834822312195",
@@ -451,7 +451,7 @@
       "date": "12 Jun 2026",
       "maps": "Artificial superintelligence emerges",
       "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1341,
+      "likes": 1342,
       "rts": 183
     },
     "2035-1": {
@@ -492,17 +492,6 @@
   },
   "reality": [
     {
-      "tag": "CAPABILITY",
-      "t": "Introducing a limited preview of GPT-5.6 Sol, our next generation frontier model, as well as GPT-5.6 Terra, a balanced model for efficient, everyda…",
-      "id": "2070555272230384038",
-      "kind": "repost",
-      "author": "OpenAI",
-      "recency": "week",
-      "date": "26 Jun 2026",
-      "likes": 39680,
-      "rts": 5677
-    },
-    {
       "tag": "GOVERNANCE",
       "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
       "id": "2070607488274358364",
@@ -510,8 +499,8 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18374,
-      "rts": 1129
+      "likes": 18377,
+      "rts": 1128
     },
     {
       "tag": "LONGEVITY",
@@ -521,8 +510,8 @@
       "author": "bryan_johnson",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 5329,
-      "rts": 222
+      "likes": 5689,
+      "rts": 234
     },
     {
       "tag": "ROBOTS",
@@ -532,7 +521,7 @@
       "author": "Alibaba_Qwen",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 4718,
+      "likes": 4720,
       "rts": 784
     },
     {
@@ -555,7 +544,18 @@
       "recency": "week",
       "date": "24 Jun 2026",
       "likes": 2273,
-      "rts": 199
+      "rts": 198
+    },
+    {
+      "tag": "MARKETS",
+      "t": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled t…",
+      "id": "2069739102577021376",
+      "kind": "repost",
+      "author": "StockMKTNewz",
+      "recency": "week",
+      "date": "24 Jun 2026",
+      "likes": 1982,
+      "rts": 328
     }
   ]
 }
