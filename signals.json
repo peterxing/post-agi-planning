@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T21:33:03.875Z",
+  "updated": "2026-07-01T02:05:12.574Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,7 +11,7 @@
       "date": "26 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
-      "likes": 3466,
+      "likes": 3467,
       "rts": 473
     },
     "2026-1": {
@@ -110,7 +110,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12209,
+      "likes": 12208,
       "rts": 1421
     },
     "2026-12": {
@@ -121,7 +121,7 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 980,
+      "likes": 981,
       "rts": 127
     },
     "2026-13": {
@@ -143,7 +143,7 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2537,
+      "likes": 2539,
       "rts": 210
     },
     "2026-15": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7623,
-      "rts": 1038
+      "likes": 7829,
+      "rts": 1062
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -187,7 +187,7 @@
       "date": "22 Jun 2026",
       "maps": "Brain-computer interfaces approved for medical use",
       "text": "Implanted Brain-Computer Interfaces are getting fast! They're approaching speeds that match unimpaired people typing. But... more electrodes won't be enough …",
-      "likes": 322,
+      "likes": 323,
       "rts": 45
     },
     "2027-4": {
@@ -220,7 +220,7 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8171,
+      "likes": 8169,
       "rts": 540
     },
     "2027-8": {
@@ -231,7 +231,7 @@
       "date": "21 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2733,
+      "likes": 2732,
       "rts": 292
     },
     "2027-10": {
@@ -264,7 +264,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3024,
+      "likes": 3025,
       "rts": 458
     },
     "2028-2": {
@@ -330,7 +330,7 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3283,
+      "likes": 3282,
       "rts": 239
     },
     "2030-3": {
@@ -341,8 +341,19 @@
       "date": "24 Jun 2026",
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5905,
+      "likes": 5904,
       "rts": 599
+    },
+    "2030-4": {
+      "id": "2072026718467166512",
+      "kind": "repost",
+      "author": "neuralink",
+      "recency": "week",
+      "date": "30 Jun 2026",
+      "maps": "Neural implants restore mobility",
+      "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
+      "likes": 8184,
+      "rts": 1200
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -429,7 +440,7 @@
       "date": "14 Jun 2026",
       "maps": "First CRISPR-edited humans reach adulthood",
       "text": "Human mortality follows an eerie pattern. After adulthood, your risk of dying doubles every 7–8 years, which is called Gompertz Law. Age 40 - 1× Age 48 - 2× …",
-      "likes": 429,
+      "likes": 426,
       "rts": 65
     },
     "2035-0": {
@@ -451,7 +462,7 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3150,
+      "likes": 3149,
       "rts": 188
     }
   },
@@ -470,7 +481,6 @@
     "2029-4": "photonic processors replacing",
     "2029-5": "social credit systems",
     "2030-2": "green energy universal",
-    "2030-4": "neural implants restore",
     "2030-5": "safety treaty signed",
     "2030-6": "career half life",
     "2033-2": "biometric surveillance restricted",
@@ -489,7 +499,7 @@
       "author": "OpenAI",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 39642,
+      "likes": 39667,
       "rts": 5676
     },
     {
@@ -501,7 +511,7 @@
       "recency": "week",
       "date": "26 Jun 2026",
       "likes": 18372,
-      "rts": 1128
+      "rts": 1129
     },
     {
       "tag": "ROBOTS",
@@ -515,6 +525,17 @@
       "rts": 784
     },
     {
+      "tag": "LONGEVITY",
+      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
+      "id": "2071990699222860231",
+      "kind": "repost",
+      "author": "bryan_johnson",
+      "recency": "week",
+      "date": "30 Jun 2026",
+      "likes": 5174,
+      "rts": 219
+    },
+    {
       "tag": "ABUNDANCE",
       "t": "The ultimate sovereignty starter pack: - Mac Studio M5 Ultra 750GB - Solar panels - Power generator - GLM-5.2 Building sovereignty right in your ow…",
       "id": "2070349616034582787",
@@ -522,7 +543,7 @@
       "author": "jun_song",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 3337,
+      "likes": 3336,
       "rts": 213
     },
     {
@@ -535,17 +556,6 @@
       "date": "24 Jun 2026",
       "likes": 2274,
       "rts": 199
-    },
-    {
-      "tag": "MARKETS",
-      "t": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled t…",
-      "id": "2069739102577021376",
-      "kind": "repost",
-      "author": "StockMKTNewz",
-      "recency": "week",
-      "date": "24 Jun 2026",
-      "likes": 1983,
-      "rts": 328
     }
   ]
 }
