@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T06:08:57.344Z",
+  "updated": "2026-07-01T09:27:02.380Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -11,14 +11,14 @@
       "date": "26 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
-      "likes": 3468,
+      "likes": 3470,
       "rts": 473
     },
     "2026-1": {
       "id": "2069690992270184651",
       "kind": "repost",
       "author": "SUSouthAfrica",
-      "recency": "week",
+      "recency": "recent",
       "date": "24 Jun 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
       "text": "What happens when AI stops assisting companies and starts running them? @peterxing explores the path toward fully autonomous organisations.",
@@ -33,7 +33,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1456,
+      "likes": 1457,
       "rts": 93
     },
     "2026-3": {
@@ -45,7 +45,7 @@
       "maps": "First commercial quantum computer ships",
       "text": "No wattage will go unused. Tesla is developing Digital Optimus units powered by the grid at large Supercharger sites, utilizing capacity that would otherwise…",
       "likes": 511,
-      "rts": 70
+      "rts": 69
     },
     "2026-4": {
       "id": "2068515386257973262",
@@ -77,8 +77,8 @@
       "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 687,
-      "rts": 63
+      "likes": 714,
+      "rts": 66
     },
     "2026-8": {
       "id": "2068371880671621503",
@@ -110,7 +110,7 @@
       "date": "16 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
       "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12206,
+      "likes": 12205,
       "rts": 1422
     },
     "2026-12": {
@@ -121,7 +121,7 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 981,
+      "likes": 980,
       "rts": 127
     },
     "2026-13": {
@@ -165,8 +165,8 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 7960,
-      "rts": 1075
+      "likes": 8031,
+      "rts": 1084
     },
     "2027-1": {
       "id": "2066612353978822929",
@@ -220,8 +220,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8170,
-      "rts": 540
+      "likes": 8169,
+      "rts": 539
     },
     "2027-8": {
       "id": "2068739273420116431",
@@ -264,8 +264,8 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3024,
-      "rts": 458
+      "likes": 3023,
+      "rts": 457
     },
     "2028-2": {
       "id": "2066868561973506317",
@@ -342,7 +342,7 @@
       "maps": "Companion robots enter elderly care at scale",
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
       "likes": 5903,
-      "rts": 599
+      "rts": 600
     },
     "2030-4": {
       "id": "2072026718467166512",
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 10055,
-      "rts": 1457
+      "likes": 11116,
+      "rts": 1633
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -418,7 +418,7 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1226,
+      "likes": 1225,
       "rts": 39
     },
     "2033-1": {
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 69695,
-      "rts": 11257
+      "likes": 75670,
+      "rts": 12022
     },
     "2034-2": {
       "id": "2066189834822312195",
@@ -499,30 +499,19 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18376,
+      "likes": 18378,
       "rts": 1128
     },
     {
-      "tag": "LONGEVITY",
-      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
-      "id": "2071990699222860231",
-      "kind": "repost",
-      "author": "bryan_johnson",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "likes": 5789,
-      "rts": 240
-    },
-    {
       "tag": "ROBOTS",
-      "t": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within…",
-      "id": "2069720365442719867",
+      "t": "Walking the Optimus production line in Fremont",
+      "id": "2072214077372518657",
       "kind": "repost",
-      "author": "Alibaba_Qwen",
+      "author": "elonmusk",
       "recency": "week",
-      "date": "24 Jun 2026",
-      "likes": 4721,
-      "rts": 784
+      "date": "01 Jul 2026",
+      "likes": 13889,
+      "rts": 1775
     },
     {
       "tag": "ABUNDANCE",
@@ -532,7 +521,7 @@
       "author": "jun_song",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 3336,
+      "likes": 3335,
       "rts": 213
     },
     {
@@ -543,8 +532,8 @@
       "author": "PatrickToulme",
       "recency": "week",
       "date": "24 Jun 2026",
-      "likes": 2272,
-      "rts": 198
+      "likes": 2273,
+      "rts": 199
     },
     {
       "tag": "MARKETS",
@@ -556,6 +545,17 @@
       "date": "24 Jun 2026",
       "likes": 1982,
       "rts": 328
+    },
+    {
+      "tag": "CAPABILITY",
+      "t": "Final exam at Fudan: students don't answer questions. They write them — to stump AI. 51 students, 10 questions each, 3 AI models (Claude, DeepSeek,…",
+      "id": "2071874530675749202",
+      "kind": "repost",
+      "author": "FudanUniversity",
+      "recency": "week",
+      "date": "30 Jun 2026",
+      "likes": 899,
+      "rts": 94
     }
   ]
 }
