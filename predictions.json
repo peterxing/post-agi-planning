@@ -1,6 +1,6 @@
 {
-  "updated": "2026-06-30T06:09:42.154Z",
-  "basis": "Revised 30 Jun 2026 — added one well-sourced 2026 economic event capturing the first humanoid-robot IPO wave, which broke AFTER the 24 Jun revision and is not otherwise captured: Agility Robotics announced (24 Jun 2026) a SPAC merger with Churchill Capital Corp XI at a $2.5B pre-money equity value (~$620M gross proceeds incl. a $200M Foxconn-led PIPE at $10/share), to trade as 'AGLT' on Nasdaq — the first US-listed pure-play humanoid-robotics company (Digit v5, $300M+ committed multi-year orders; partners Amazon/NVIDIA/SoftBank/Foxconn; customers GXO, Schaeffler, Toyota Canada, Mercado Libre; targeting up to 10,000 units/yr). In parallel China's Unitree cleared its IPO (AGIBOT past 10,000 units) and EngineAI confidentially filed in Hong Kong (~$1.5B, Shenzhen line at one robot/15 min). This moves humanoid robotics from a pure deployment story into a capital-markets story, complementing the existing 2026 humanoid-factory and AI-lab-IPO events (prob 85). Sources: Nasdaq press release & TechTimes (Agility, 24-25 Jun 2026); TechTimes (Unitree/AGIBOT, China humanoid duopoly); Hong Kong IPO reporting (EngineAI). All other predictions and the AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') are unchanged this run.",
+  "updated": "2026-07-02T05:05:17.017Z",
+  "basis": "Revised 2 Jul 2026 — sharpened the 2026 Anthropic IPO event to capture a well-sourced regulatory development that broke AFTER the 30 Jun revision and is @peterxing's single most-engaged recent repost (@AnthropicAI, 30 Jun 2026 23:52 UTC, ~84k likes): the US Department of Commerce LIFTED an 18-day export-control freeze on Anthropic's Claude Fable 5 & Mythos 5 frontier models (imposed mid-June over cyber-capability national-security concerns) after Anthropic agreed to stricter security protocols and ongoing government coordination, with global access to Fable 5 restoring from 1 Jul 2026. Multiple outlets note this CLEARS A MAJOR IPO HURDLE for Anthropic, so the existing '~$1T AI-lab listing expected Q4 2026' event now reflects the cleared freeze and its probability is nudged 78->80. Sources: CNBC ('Anthropic says Trump admin has lifted export controls on Claude Fable 5 and Mythos 5', 30 Jun 2026); Stocktwits ('Anthropic Clears Major IPO Hurdle As US Lifts Export Controls'); edgen.tech ('Anthropic ends 18-day standoff as US lifts export controls on 2 AI models'); plus @AnthropicAI's 30 Jun repost in @peterxing's timeline. All other predictions and the AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') are unchanged this run, and Chapter 07's 'When' forecast stays consistent — a chip/model export-control episode does not move near-term capability timing.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -50,10 +50,10 @@
           "prob": 85
         },
         {
-          "t": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
+          "t": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
           "d": "economic",
           "high": true,
-          "prob": 78
+          "prob": 80
         },
         {
           "t": "Four-day workweek at 500+ major companies",

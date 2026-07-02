@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02T04:02:22.697Z",
+  "updated": "2026-07-02T05:06:29.728Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,8 +22,8 @@
       "date": "01 Jul 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis,…",
-      "likes": 219,
-      "rts": 23
+      "likes": 225,
+      "rts": 24
     },
     "2026-2": {
       "id": "2067940878358876321",
@@ -75,9 +75,9 @@
       "author": "AndrewE_Dunn",
       "recency": "week",
       "date": "30 Jun 2026",
-      "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
+      "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 796,
+      "likes": 797,
       "rts": 77
     },
     "2026-8": {
@@ -132,8 +132,8 @@
       "date": "01 Jul 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We took a 30B model and split it in two to write tokens in parallel instead of one at a time. Introducing Nemotron-Labs-TwoTower: a diffusion language model …",
-      "likes": 2903,
-      "rts": 343
+      "likes": 3035,
+      "rts": 360
     },
     "2026-14": {
       "id": "2070584331068969336",
@@ -165,7 +165,7 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 8277,
+      "likes": 8284,
       "rts": 1112
     },
     "2027-1": {
@@ -221,7 +221,7 @@
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
       "likes": 8166,
-      "rts": 538
+      "rts": 539
     },
     "2027-8": {
       "id": "2068739273420116431",
@@ -286,8 +286,8 @@
       "date": "11 Jun 2026",
       "maps": "Cognitive-enhancement tools see mass adoption",
       "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin …",
-      "likes": 487,
-      "rts": 100
+      "likes": 486,
+      "rts": 99
     },
     "2028-7": {
       "id": "2071376599707214304",
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 14461,
-      "rts": 2132
+      "likes": 14577,
+      "rts": 2153
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -418,7 +418,7 @@
       "date": "14 Jun 2026",
       "maps": "Degrees decompose into verified skill cores",
       "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1225,
+      "likes": 1224,
       "rts": 39
     },
     "2033-1": {
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 83961,
-      "rts": 13000
+      "likes": 84035,
+      "rts": 13006
     },
     "2034-1": {
       "id": "2071294235257536735",
@@ -462,7 +462,7 @@
       "date": "12 Jun 2026",
       "maps": "Artificial superintelligence emerges",
       "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1341,
+      "likes": 1342,
       "rts": 183
     },
     "2035-1": {
@@ -509,8 +509,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 49229,
-      "rts": 5767
+      "likes": 49875,
+      "rts": 5843
     },
     {
       "tag": "GOVERNANCE",
@@ -542,7 +542,7 @@
       "author": "ns123abc",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 3294,
+      "likes": 3295,
       "rts": 268
     },
     {
@@ -564,8 +564,8 @@
       "author": "gdb",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 1791,
-      "rts": 121
+      "likes": 1804,
+      "rts": 122
     }
   ]
 }
