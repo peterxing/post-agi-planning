@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T23:19:41.953Z",
+  "updated": "2026-07-02T00:21:29.749Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -22,8 +22,8 @@
       "date": "01 Jul 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis,…",
-      "likes": 180,
-      "rts": 21
+      "likes": 197,
+      "rts": 22
     },
     "2026-2": {
       "id": "2067940878358876321",
@@ -33,7 +33,7 @@
       "date": "19 Jun 2026",
       "maps": "UBI pilots launch in 30+ cities worldwide",
       "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1457,
+      "likes": 1456,
       "rts": 93
     },
     "2026-3": {
@@ -77,7 +77,7 @@
       "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 789,
+      "likes": 793,
       "rts": 76
     },
     "2026-8": {
@@ -132,8 +132,8 @@
       "date": "01 Jul 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We took a 30B model and split it in two to write tokens in parallel instead of one at a time. Introducing Nemotron-Labs-TwoTower: a diffusion language model …",
-      "likes": 2041,
-      "rts": 234
+      "likes": 2254,
+      "rts": 256
     },
     "2026-14": {
       "id": "2070584331068969336",
@@ -165,7 +165,7 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 8260,
+      "likes": 8261,
       "rts": 1110
     },
     "2027-1": {
@@ -231,14 +231,14 @@
       "date": "21 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2732,
+      "likes": 2730,
       "rts": 292
     },
     "2027-10": {
       "id": "2069927375870054457",
       "kind": "repost",
       "author": "Dr_Singularity",
-      "recency": "week",
+      "recency": "recent",
       "date": "24 Jun 2026",
       "maps": "Signal: most software written end-to-end by AI",
       "text": "Post ASI: We will be able to rebuild your body at the cellular level. You will be able to change your appearance like software. You will be able to learn com…",
@@ -265,7 +265,7 @@
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
       "likes": 3023,
-      "rts": 458
+      "rts": 457
     },
     "2028-2": {
       "id": "2072017923754135819",
@@ -275,7 +275,7 @@
       "date": "30 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "Emad Mostaque on PostAGI: \"Right now, not a single institution is on your side. The companies won't look out for you, and the governments won't either. Most …",
-      "likes": 44,
+      "likes": 45,
       "rts": 13
     },
     "2028-5": {
@@ -330,7 +330,7 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3282,
+      "likes": 3283,
       "rts": 238
     },
     "2030-3": {
@@ -352,8 +352,8 @@
       "date": "30 Jun 2026",
       "maps": "Neural implants restore mobility",
       "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 14029,
-      "rts": 2073
+      "likes": 14123,
+      "rts": 2086
     },
     "2031-0": {
       "id": "2066222845705994382",
@@ -429,8 +429,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 83569,
-      "rts": 12964
+      "likes": 83681,
+      "rts": 12978
     },
     "2034-1": {
       "id": "2071294235257536735",
@@ -509,8 +509,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 45869,
-      "rts": 5311
+      "likes": 46532,
+      "rts": 5426
     },
     {
       "tag": "GOVERNANCE",
@@ -520,7 +520,7 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18383,
+      "likes": 18381,
       "rts": 1127
     },
     {
@@ -553,8 +553,8 @@
       "author": "ns123abc",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 3270,
-      "rts": 263
+      "likes": 3280,
+      "rts": 266
     },
     {
       "tag": "LONGEVITY",
@@ -564,8 +564,8 @@
       "author": "gdb",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 1696,
-      "rts": 114
+      "likes": 1717,
+      "rts": 116
     }
   ]
 }
