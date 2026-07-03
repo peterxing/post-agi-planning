@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02T05:06:29.728Z",
+  "updated": "2026-07-03T03:54:34.732Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api",
   "embeds": {
@@ -7,7 +7,7 @@
       "id": "2070347790115565792",
       "kind": "repost",
       "author": "minchoi",
-      "recency": "week",
+      "recency": "recent",
       "date": "26 Jun 2026",
       "maps": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
@@ -22,8 +22,8 @@
       "date": "01 Jul 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis,…",
-      "likes": 225,
-      "rts": 24
+      "likes": 250,
+      "rts": 23
     },
     "2026-2": {
       "id": "2067940878358876321",
@@ -70,15 +70,15 @@
       "rts": 32
     },
     "2026-6": {
-      "id": "2072022961339437154",
+      "id": "2072643073176158246",
       "kind": "repost",
-      "author": "AndrewE_Dunn",
+      "author": "kimmonismus",
       "recency": "week",
-      "date": "30 Jun 2026",
+      "date": "02 Jul 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
-      "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 797,
-      "rts": 77
+      "text": "A few more thoughts on OpenAI’s 5 percent stake for the US government. I do not think this is only about allowing US authorities to share in the profits, but…",
+      "likes": 188,
+      "rts": 20
     },
     "2026-8": {
       "id": "2068371880671621503",
@@ -103,15 +103,15 @@
       "rts": 20
     },
     "2026-11": {
-      "id": "2066836174249852977",
+      "id": "2070602201139933269",
       "kind": "repost",
-      "author": "BullTheoryio",
-      "recency": "recent",
-      "date": "16 Jun 2026",
+      "author": "SawyerMerritt",
+      "recency": "week",
+      "date": "26 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
-      "text": "BREAKING: SpaceX has agreed to acquire Cursor, the world's fastest growing software startup, for $60 billion in an all stock deal. Cursor has over 1 million …",
-      "likes": 12201,
-      "rts": 1422
+      "text": "Elon Musk has received regulatory approval to acquire startup Mesh Optical Technologies, a company founded by former SpaceX engineers working on optical data…",
+      "likes": 6104,
+      "rts": 700
     },
     "2026-12": {
       "id": "2069121548670406947",
@@ -121,7 +121,7 @@
       "date": "22 Jun 2026",
       "maps": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
       "text": "GLM-5.2 leads open weights models and sits at #3 overall on GDPval-AA, a real-world agentic work benchmark GLM-5.2 from @Zai_org scores 1524 Elo on GDPval-AA…",
-      "likes": 980,
+      "likes": 978,
       "rts": 127
     },
     "2026-13": {
@@ -132,8 +132,8 @@
       "date": "01 Jul 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We took a 30B model and split it in two to write tokens in parallel instead of one at a time. Introducing Nemotron-Labs-TwoTower: a diffusion language model …",
-      "likes": 3035,
-      "rts": 360
+      "likes": 4465,
+      "rts": 560
     },
     "2026-14": {
       "id": "2070584331068969336",
@@ -143,19 +143,19 @@
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2550,
+      "likes": 2547,
       "rts": 210
     },
     "2026-15": {
-      "id": "2066251446493057310",
+      "id": "2069896410581835917",
       "kind": "repost",
-      "author": "Dr_Singularity",
+      "author": "flowersslop",
       "recency": "recent",
-      "date": "14 Jun 2026",
+      "date": "24 Jun 2026",
       "maps": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",
-      "text": "2027 will likely be the first year that gives us some very tiny glimpses of the 2030s (just early 2030s) Our capabilities will be vastly more powerful by mid…",
-      "likes": 489,
-      "rts": 51
+      "text": "now imagine how it is for agi pilled normies like me to talk to non agi pilled normies id say its even worse because the people you mean at least understand …",
+      "likes": 204,
+      "rts": 9
     },
     "2027-0": {
       "id": "2071688039114342592",
@@ -165,19 +165,19 @@
       "date": "29 Jun 2026",
       "maps": "AI agents autonomously run business operations",
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
-      "likes": 8284,
+      "likes": 8310,
       "rts": 1112
     },
     "2027-1": {
-      "id": "2066612353978822929",
+      "id": "2072041356508184961",
       "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "15 Jun 2026",
+      "author": "ns123abc",
+      "recency": "week",
+      "date": "30 Jun 2026",
       "maps": "First trillion-dollar pure-AI company",
-      "text": "SpaceX stock closed its second day of trading up 19.6% today, pushing the company's market cap above $2.5 trillion for the first time. SpaceX added $420 bill…",
-      "likes": 5841,
-      "rts": 360
+      "text": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
+      "likes": 3302,
+      "rts": 271
     },
     "2027-2": {
       "id": "2069192808016273813",
@@ -191,15 +191,15 @@
       "rts": 45
     },
     "2027-4": {
-      "id": "2064835800747962424",
+      "id": "2068463951088689152",
       "kind": "repost",
-      "author": "Dr_Singularity",
+      "author": "LunixTwin",
       "recency": "recent",
-      "date": "10 Jun 2026",
+      "date": "20 Jun 2026",
       "maps": "Humanoid-robot output scales toward ~1M units/yr",
-      "text": "We're very close to ASI, LEV, advanced nanotech, FullDive VR, humanoid robots everywhere. In other words, we're close to 100s of insanely amazing civilizatio…",
-      "likes": 523,
-      "rts": 64
+      "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
+      "likes": 469,
+      "rts": 56
     },
     "2027-6": {
       "id": "2070930161361432856",
@@ -209,7 +209,7 @@
       "date": "27 Jun 2026",
       "maps": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
       "text": "Gavin Baker just did the math that explains why Elon Musk is building a chip factory and putting data centers in space. The numbers make terrestrial compute …",
-      "likes": 52,
+      "likes": 53,
       "rts": 12
     },
     "2027-7": {
@@ -220,8 +220,8 @@
       "date": "19 Jun 2026",
       "maps": "Online credentials begin to surpass degrees",
       "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8166,
-      "rts": 539
+      "likes": 8161,
+      "rts": 538
     },
     "2027-8": {
       "id": "2068739273420116431",
@@ -231,7 +231,7 @@
       "date": "21 Jun 2026",
       "maps": "Regional conflict flares over water scarcity",
       "text": "We are about to unlock a near infinite supply of resources in our solar system. The reality is an overwhelming amount of abundance. A near infinite supply of…",
-      "likes": 2730,
+      "likes": 2733,
       "rts": 292
     },
     "2027-10": {
@@ -242,19 +242,19 @@
       "date": "24 Jun 2026",
       "maps": "Signal: most software written end-to-end by AI",
       "text": "Post ASI: We will be able to rebuild your body at the cellular level. You will be able to change your appearance like software. You will be able to learn com…",
-      "likes": 514,
+      "likes": 515,
       "rts": 55
     },
     "2028-0": {
-      "id": "2065577387870310736",
+      "id": "2072015392013213773",
       "kind": "repost",
-      "author": "haider1",
-      "recency": "recent",
-      "date": "12 Jun 2026",
+      "author": "deredleritt3r",
+      "recency": "week",
+      "date": "30 Jun 2026",
       "maps": "Superintelligence emerges — recursive self-improvement begins (my 2028–2030 window)",
-      "text": "anthropic, openai, and google keep saying they are working toward superintelligence and recursive self-improvement (RSI) is also within the pipeline, which i…",
-      "likes": 95,
-      "rts": 7
+      "text": "Pro model performance on this benchmark: GPT-5.2 Pro: 8.5% GPT-5.4 Pro: 16.3% GPT-5.5 Pro: 20.5% GPT-5.6 Sol Pro: 31.5% Judging from this benchmark, the jump…",
+      "likes": 540,
+      "rts": 19
     },
     "2028-1": {
       "id": "2067367079343226981",
@@ -264,7 +264,7 @@
       "date": "17 Jun 2026",
       "maps": "Education unbundles into personalized mastery maps",
       "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3022,
+      "likes": 3024,
       "rts": 457
     },
     "2028-2": {
@@ -275,19 +275,8 @@
       "date": "30 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "Emad Mostaque on PostAGI: \"Right now, not a single institution is on your side. The companies won't look out for you, and the governments won't either. Most …",
-      "likes": 45,
+      "likes": 47,
       "rts": 13
-    },
-    "2028-5": {
-      "id": "2065134923111956978",
-      "kind": "repost",
-      "author": "m_goes_distance",
-      "recency": "recent",
-      "date": "11 Jun 2026",
-      "maps": "Cognitive-enhancement tools see mass adoption",
-      "text": "are you paying attention chad? the anti-aging and human enhancement arms race just went geopolitical - Russia committed $26B. Putin made longevity a Kremlin …",
-      "likes": 486,
-      "rts": 99
     },
     "2028-7": {
       "id": "2071376599707214304",
@@ -297,30 +286,30 @@
       "date": "28 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
       "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 262,
+      "likes": 261,
       "rts": 40
     },
     "2029-0": {
-      "id": "2064762015130718455",
+      "id": "2071904851437486150",
       "kind": "repost",
-      "author": "haider1",
-      "recency": "recent",
-      "date": "10 Jun 2026",
+      "author": "tphuang",
+      "recency": "week",
+      "date": "30 Jun 2026",
       "maps": "Automation eliminates ~25% of current jobs",
-      "text": "Dario Amodei says his AI risk warnings are not \"doom marketing\" The discussion is much deeper than social media clips suggest, covering tasks vs jobs, new wo…",
-      "likes": 73,
-      "rts": 9
+      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
+      "likes": 200,
+      "rts": 26
     },
     "2030-0": {
-      "id": "2065464150239711260",
+      "id": "2072026718467166512",
       "kind": "repost",
-      "author": "m_goes_distance",
-      "recency": "recent",
-      "date": "12 Jun 2026",
+      "author": "neuralink",
+      "recency": "week",
+      "date": "30 Jun 2026",
       "maps": "AI-designed drugs gain FDA approval (170+ AI-discovered candidates now in trials; 15-20 in pivotal Phase III by 2026)",
-      "text": "picture this 8 of the world's biggest problems getting solved in the next 12-18 months 1. obesity: retatrutide phase 3 confirmed 30% bodyweight lost. 65% of …",
-      "likes": 932,
-      "rts": 131
+      "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
+      "likes": 15489,
+      "rts": 2305
     },
     "2030-1": {
       "id": "2068190221263589394",
@@ -330,52 +319,30 @@
       "date": "20 Jun 2026",
       "maps": "First crewed-resupply mission to a Mars base",
       "text": "For reference, producing a single gram of antimatter requires roughly 25 TWh of energy. Also, a pure antimatter powered starship to mars will need about 1 - …",
-      "likes": 3281,
-      "rts": 238
+      "likes": 3283,
+      "rts": 237
     },
     "2030-3": {
-      "id": "2071904851437486150",
+      "id": "2069751801096909214",
       "kind": "repost",
-      "author": "tphuang",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "maps": "Companion robots enter elderly care at scale",
-      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
-      "likes": 196,
-      "rts": 25
-    },
-    "2030-4": {
-      "id": "2072026718467166512",
-      "kind": "repost",
-      "author": "neuralink",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "maps": "Neural implants restore mobility",
-      "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 14577,
-      "rts": 2153
-    },
-    "2031-0": {
-      "id": "2066222845705994382",
-      "kind": "repost",
-      "author": "_The_Prophet__",
+      "author": "UnitreeRobotics",
       "recency": "recent",
-      "date": "14 Jun 2026",
-      "maps": "Micro-credentials eclipse university degrees",
-      "text": "⚡️Higher ed is entering its margin call. The deeper truth is that the university system built a cost structure around a belief regime that is breaking. For d…",
-      "likes": 232,
-      "rts": 43
+      "date": "24 Jun 2026",
+      "maps": "Companion robots enter elderly care at scale",
+      "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
+      "likes": 5899,
+      "rts": 599
     },
     "2031-1": {
-      "id": "2064771688575705252",
+      "id": "2072534973337227446",
       "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "recent",
-      "date": "10 Jun 2026",
+      "author": "ChrissGPT",
+      "recency": "week",
+      "date": "02 Jul 2026",
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
-      "text": "Post Singularity abundance in form of (just having more money and stuff) is not the goal. What I mean is that it's not just about material wealth so everyone…",
-      "likes": 223,
-      "rts": 23
+      "text": "Sam Altman in the financial times: “In another year or two, we expect to have built systems with astonishing power, capable of delivering tremendous value to…",
+      "likes": 932,
+      "rts": 124
     },
     "2032-0": {
       "id": "2067784024333164651",
@@ -388,17 +355,6 @@
       "likes": 489,
       "rts": 36
     },
-    "2032-1": {
-      "id": "2064473814696685704",
-      "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "recent",
-      "date": "09 Jun 2026",
-      "maps": "Continuous identity & provenance verification",
-      "text": "Whoa, I might’ve just experienced the Longest Continuous Tesla Actually Smart Summon ever in my Model 3. My car drove itself for 0.4 miles for over 2:40 stra…",
-      "likes": 1753,
-      "rts": 124
-    },
     "2032-2": {
       "id": "2068429870950928849",
       "kind": "repost",
@@ -407,19 +363,8 @@
       "date": "20 Jun 2026",
       "maps": "Digital currencies largely replace cash",
       "text": "It's true, and largely to be expected. GLP-1 medications increase sperm counts and boost testosterone to the extent expected for comparable weight reductions…",
-      "likes": 643,
+      "likes": 644,
       "rts": 37
-    },
-    "2033-0": {
-      "id": "2065962140775981431",
-      "kind": "repost",
-      "author": "tszzl",
-      "recency": "recent",
-      "date": "14 Jun 2026",
-      "maps": "Degrees decompose into verified skill cores",
-      "text": "people in san francisco say “agi pilled” as a general term of art for describing people who reason about the future with any degree of analytical skill. it h…",
-      "likes": 1224,
-      "rts": 39
     },
     "2033-1": {
       "id": "2072106151890809341",
@@ -429,8 +374,8 @@
       "date": "30 Jun 2026",
       "maps": "Acute rare-earth shortage triggers a crisis",
       "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 84035,
-      "rts": 13006
+      "likes": 84688,
+      "rts": 13039
     },
     "2034-1": {
       "id": "2071294235257536735",
@@ -440,30 +385,19 @@
       "date": "28 Jun 2026",
       "maps": "Ambient lifelong learning becomes default",
       "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2052,
+      "likes": 2054,
       "rts": 116
     },
-    "2034-2": {
-      "id": "2066189834822312195",
-      "kind": "repost",
-      "author": "siimland",
-      "recency": "recent",
-      "date": "14 Jun 2026",
-      "maps": "First CRISPR-edited humans reach adulthood",
-      "text": "Human mortality follows an eerie pattern. After adulthood, your risk of dying doubles every 7–8 years, which is called Gompertz Law. Age 40 - 1× Age 48 - 2× …",
-      "likes": 425,
-      "rts": 65
-    },
     "2035-0": {
-      "id": "2065487181662286301",
+      "id": "2068079318484549714",
       "kind": "repost",
       "author": "kimmonismus",
       "recency": "recent",
-      "date": "12 Jun 2026",
+      "date": "19 Jun 2026",
       "maps": "Artificial superintelligence emerges",
-      "text": "Google DeepMind published a 60-page paper mapping the road from AGI to superintelligence, written by Hutter, Legg, and Genewein. No hype, just a sober analys…",
-      "likes": 1342,
-      "rts": 183
+      "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
+      "likes": 469,
+      "rts": 44
     },
     "2035-1": {
       "id": "2067634693441233118",
@@ -473,8 +407,19 @@
       "date": "18 Jun 2026",
       "maps": "Schools recenter on community, leadership & well-being",
       "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3148,
+      "likes": 3149,
       "rts": 187
+    },
+    "2036-1": {
+      "id": "2072700088481182100",
+      "kind": "repost",
+      "author": "elonmusk",
+      "recency": "week",
+      "date": "02 Jul 2026",
+      "maps": "Universal high income debated in major economies",
+      "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
+      "likes": 12576,
+      "rts": 1509
     }
   },
   "search": {
@@ -485,6 +430,7 @@
     "2027-9": "birth rates fall",
     "2028-3": "daos legal recognition",
     "2028-4": "crispr therapies",
+    "2028-5": "cognitive enhancement tools",
     "2028-6": "space mining rights",
     "2029-1": "loneliness declared public",
     "2029-2": "climate refugees exceed",
@@ -492,12 +438,16 @@
     "2029-4": "photonic processors replacing",
     "2029-5": "social credit systems",
     "2030-2": "green energy universal",
+    "2030-4": "neural implants restore",
     "2030-5": "safety treaty signed",
     "2030-6": "career half life",
+    "2031-0": "micro credentials eclipse",
+    "2032-1": "continuous identity provenance",
+    "2033-0": "degrees decompose verified",
     "2033-2": "biometric surveillance restricted",
     "2034-0": "marriage rates time",
+    "2034-2": "CRISPR gene editing",
     "2036-0": "distribution layer defining",
-    "2036-1": "universal basic income",
     "2036-2": "merger moves fringe"
   },
   "reality": [
@@ -509,8 +459,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 49875,
-      "rts": 5843
+      "likes": 58203,
+      "rts": 7238
     },
     {
       "tag": "GOVERNANCE",
@@ -520,8 +470,19 @@
       "author": "sama",
       "recency": "week",
       "date": "26 Jun 2026",
-      "likes": 18386,
-      "rts": 1127
+      "likes": 18391,
+      "rts": 1129
+    },
+    {
+      "tag": "ABUNDANCE",
+      "t": "you either die a frontier lab or live long enough to see yourself sell compute",
+      "id": "2072529159054938337",
+      "kind": "repost",
+      "author": "tszzl",
+      "recency": "week",
+      "date": "02 Jul 2026",
+      "likes": 5978,
+      "rts": 351
     },
     {
       "tag": "CODE",
@@ -531,41 +492,30 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "28 Jun 2026",
-      "likes": 5531,
+      "likes": 5539,
       "rts": 329
     },
     {
       "tag": "MARKETS",
-      "t": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
-      "id": "2072041356508184961",
+      "t": "Earlier this year, @SpaceX acquired @xAI (now SpaceXAI), which operates the Colossus datacenters in Memphis. As SpaceX continues to invest in the a…",
+      "id": "2072009696119022017",
       "kind": "repost",
-      "author": "ns123abc",
+      "author": "xAIMemphis",
       "recency": "week",
       "date": "30 Jun 2026",
-      "likes": 3295,
-      "rts": 268
+      "likes": 4124,
+      "rts": 966
     },
     {
-      "tag": "ABUNDANCE",
-      "t": "The ultimate sovereignty starter pack: - Mac Studio M5 Ultra 750GB - Solar panels - Power generator - GLM-5.2 Building sovereignty right in your ow…",
-      "id": "2070349616034582787",
+      "tag": "LABOUR",
+      "t": "This is crazier than you might think: Fable-5 now scores 16.10% on the Remote Labor Index What is RLI? The Remote Labor Index uses 240 real remote-…",
+      "id": "2072376968729817531",
       "kind": "repost",
-      "author": "jun_song",
-      "recency": "week",
-      "date": "26 Jun 2026",
-      "likes": 3336,
-      "rts": 213
-    },
-    {
-      "tag": "LONGEVITY",
-      "t": "Introducing GeneBench-Pro — testing whether models can handle the kind of judgment-heavy analysis that real-world computational biology requires. P…",
-      "id": "2072191801122038207",
-      "kind": "repost",
-      "author": "gdb",
+      "author": "kimmonismus",
       "recency": "week",
       "date": "01 Jul 2026",
-      "likes": 1804,
-      "rts": 122
+      "likes": 2078,
+      "rts": 158
     }
   ]
 }
