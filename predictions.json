@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-02T05:05:17.017Z",
-  "basis": "Revised 2 Jul 2026 — sharpened the 2026 Anthropic IPO event to capture a well-sourced regulatory development that broke AFTER the 30 Jun revision and is @peterxing's single most-engaged recent repost (@AnthropicAI, 30 Jun 2026 23:52 UTC, ~84k likes): the US Department of Commerce LIFTED an 18-day export-control freeze on Anthropic's Claude Fable 5 & Mythos 5 frontier models (imposed mid-June over cyber-capability national-security concerns) after Anthropic agreed to stricter security protocols and ongoing government coordination, with global access to Fable 5 restoring from 1 Jul 2026. Multiple outlets note this CLEARS A MAJOR IPO HURDLE for Anthropic, so the existing '~$1T AI-lab listing expected Q4 2026' event now reflects the cleared freeze and its probability is nudged 78->80. Sources: CNBC ('Anthropic says Trump admin has lifted export controls on Claude Fable 5 and Mythos 5', 30 Jun 2026); Stocktwits ('Anthropic Clears Major IPO Hurdle As US Lifts Export Controls'); edgen.tech ('Anthropic ends 18-day standoff as US lifts export controls on 2 AI models'); plus @AnthropicAI's 30 Jun repost in @peterxing's timeline. All other predictions and the AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') are unchanged this run, and Chapter 07's 'When' forecast stays consistent — a chip/model export-control episode does not move near-term capability timing.",
+  "updated": "2026-07-03T03:58:20.921Z",
+  "basis": "Revised 3 Jul 2026 — ADDED a 2026 governance event capturing a major, well-sourced development that broke on 2 Jul 2026 (after the 2 Jul 05:05Z revision) and is @peterxing's freshest repost theme (multiple @kimmonismus reposts, 2 Jul 2026, on 'OpenAI's 5 percent stake for the US government' and Sam Altman's statement): OpenAI has proposed voluntarily ceding a ~5% equity stake (~$42.6B at its ~$852B valuation) to the US government to seed a federal 'Public Wealth Fund' that would distribute AI upside (dividends/eventual IPO proceeds) directly to American citizens — an Alaska-Permanent-Fund-style mechanism — with Altman urging Google, Meta and Anthropic to match. Reported 2 Jul 2026 by the Financial Times, CNBC ('OpenAI proposes U.S. government own 5% stake to address political blowback'), Forbes ('OpenAI Reportedly Pitches Granting U.S. Government 5% Stake'), TechCrunch ('OpenAI proposed donating 5% of its equity to a US sovereign wealth fund') and Wion. Set prob 40 because it remains a preliminary, voluntary proposal with unresolved legal, governance and conflict-of-interest questions (the state as both regulator and shareholder), no finalized terms, and no confirmation that peer labs will join. The ~$852B OpenAI valuation is consistent with the existing 2026 Anthropic/OpenAI IPO event. All other predictions and the AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') are unchanged this run, and Chapter 07's 'When' forecast stays untouched and consistent — a state-equity/redistribution policy proposal does not move near-term capability timing.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -98,6 +98,12 @@
           "d": "governance",
           "high": true,
           "prob": 68
+        },
+        {
+          "t": "US government floated as an equity holder in frontier AI — OpenAI proposes ceding a ~5% stake (~$42.6B) into a federal 'Public Wealth Fund' to share AI upside with citizens; Altman urges Google, Meta & Anthropic to match",
+          "d": "governance",
+          "high": true,
+          "prob": 40
         },
         {
           "t": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",

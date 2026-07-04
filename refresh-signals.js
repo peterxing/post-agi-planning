@@ -380,6 +380,26 @@ async function ingestList(file, kind){
     }
   } catch(e){ console.error('[refresh] X API harvest error (' + e.message + ') — falling back to syndication scrape.'); }
 
+  // SECONDARY fallback: reuse the last good X API harvest cached in x-activity.json. Its REAL posts/
+  // reposts (+ any likes/bookmarks), honestly dated, beat the auth-free syndication scrape — which
+  // cannot see his reposts and lags months behind — whenever the live API is temporarily unavailable
+  // (e.g. a quota/credit outage or a transient error). Only items still within MAX_AGE_DAYS are used.
+  if (!timeline) {
+    try {
+      const cached = JSON.parse(fs.readFileSync(ACT, 'utf8').replace(/^\uFEFF/, ''));
+      const mapped = ((cached && Array.isArray(cached.items)) ? cached.items : [])
+        .map(it => ({ id: it.id, created: new Date(it.created), text: it.text, likes: it.likes, rts: it.rts, author: it.author || 'peterxing', kind: it.kind }))
+        .filter(it => !isNaN(it.created.getTime()) && (Date.now() - it.created.getTime()) <= MAX_AGE_DAYS * 864e5);
+      if (mapped.length) {
+        timeline = mapped;
+        apiCaps = cached.caps || null;
+        source = 'x-api-cache';
+        const cwhen = cached.when ? new Date(cached.when) : null;
+        console.error(`[refresh] X API unavailable — reusing last good cached harvest x-activity.json (${mapped.length} recent real items, harvested ${cwhen && !isNaN(cwhen.getTime()) ? fmtDate(cwhen) : 'unknown'}).`);
+      }
+    } catch(e){}
+  }
+
   if (!timeline) {
     source = 'syndication';
     // Harvest the auth-free syndication timeline; cache to timeline-raw.json. If the live fetch fails,

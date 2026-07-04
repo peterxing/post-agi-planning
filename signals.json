@@ -1,7 +1,7 @@
 {
-  "updated": "2026-07-03T03:54:34.732Z",
+  "updated": "2026-07-04T12:58:41.458Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
-  "source": "x-api",
+  "source": "x-api-cache",
   "embeds": {
     "2026-0": {
       "id": "2070347790115565792",
@@ -24,17 +24,6 @@
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis,…",
       "likes": 250,
       "rts": 23
-    },
-    "2026-2": {
-      "id": "2067940878358876321",
-      "kind": "repost",
-      "author": "PeterDiamandis",
-      "recency": "recent",
-      "date": "19 Jun 2026",
-      "maps": "UBI pilots launch in 30+ cities worldwide",
-      "text": "If we look at the last couple of years, we're speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1456,
-      "rts": 93
     },
     "2026-3": {
       "id": "2068404492513558659",
@@ -62,7 +51,7 @@
       "id": "2070623894562865579",
       "kind": "repost",
       "author": "kimmonismus",
-      "recency": "week",
+      "recency": "recent",
       "date": "26 Jun 2026",
       "maps": "First humanoid-robot IPOs hit public markets — Agility Robotics goes public via a $2.5B SPAC (Nasdaq 'AGLT'), the first US pure-play humanoid maker, as China's Unitree clears its IPO and EngineAI files in Hong Kong",
       "text": "Morgan Stanley just doubled its 2026 China humanoid robot shipment forecast again, from 28,000 to 50,000 units. In January, the bank expected 14,000 units. A…",
@@ -70,15 +59,15 @@
       "rts": 32
     },
     "2026-6": {
-      "id": "2072643073176158246",
+      "id": "2072022961339437154",
       "kind": "repost",
-      "author": "kimmonismus",
+      "author": "AndrewE_Dunn",
       "recency": "week",
-      "date": "02 Jul 2026",
+      "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
-      "text": "A few more thoughts on OpenAI’s 5 percent stake for the US government. I do not think this is only about allowing US authorities to share in the profits, but…",
-      "likes": 188,
-      "rts": 20
+      "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
+      "likes": 812,
+      "rts": 79
     },
     "2026-8": {
       "id": "2068371880671621503",
@@ -95,7 +84,7 @@
       "id": "2070558745877262667",
       "kind": "repost",
       "author": "m_goes_distance",
-      "recency": "week",
+      "recency": "recent",
       "date": "26 Jun 2026",
       "maps": "AI therapy assistants cleared for clinics",
       "text": "future in the next 18 months is so bright you don't want to miss out - full-body health scan takes 60 seconds instead of an hour. Midjourney leads the charge…",
@@ -103,15 +92,15 @@
       "rts": 20
     },
     "2026-11": {
-      "id": "2070602201139933269",
+      "id": "2072009696119022017",
       "kind": "repost",
-      "author": "SawyerMerritt",
+      "author": "xAIMemphis",
       "recency": "week",
-      "date": "26 Jun 2026",
+      "date": "30 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
-      "text": "Elon Musk has received regulatory approval to acquire startup Mesh Optical Technologies, a company founded by former SpaceX engineers working on optical data…",
-      "likes": 6104,
-      "rts": 700
+      "text": "Earlier this year, @SpaceX acquired @xAI (now SpaceXAI), which operates the Colossus datacenters in Memphis. As SpaceX continues to invest in the area, Space…",
+      "likes": 4124,
+      "rts": 966
     },
     "2026-12": {
       "id": "2069121548670406947",
@@ -139,7 +128,7 @@
       "id": "2070584331068969336",
       "kind": "repost",
       "author": "METR_Evals",
-      "recency": "week",
+      "recency": "recent",
       "date": "26 Jun 2026",
       "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
       "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
@@ -147,6 +136,17 @@
       "rts": 210
     },
     "2026-15": {
+      "id": "2072643073176158246",
+      "kind": "repost",
+      "author": "kimmonismus",
+      "recency": "week",
+      "date": "02 Jul 2026",
+      "maps": "US government floated as an equity holder in frontier AI — OpenAI proposes ceding a ~5% stake (~$42.6B) into a federal 'Public Wealth Fund' to share AI upside with citizens; Altman urges Google, Meta & Anthropic to match",
+      "text": "A few more thoughts on OpenAI’s 5 percent stake for the US government. I do not think this is only about allowing US authorities to share in the profits, but…",
+      "likes": 188,
+      "rts": 20
+    },
+    "2026-16": {
       "id": "2069896410581835917",
       "kind": "repost",
       "author": "flowersslop",
@@ -212,17 +212,6 @@
       "likes": 53,
       "rts": 12
     },
-    "2027-7": {
-      "id": "2068051762708099449",
-      "kind": "repost",
-      "author": "ns123abc",
-      "recency": "recent",
-      "date": "19 Jun 2026",
-      "maps": "Online credentials begin to surpass degrees",
-      "text": "🚨BREAKING: TRUMP ON ANTHROPIC REPORTER: Do you view Anthropic and to a degree its CEO, Dario Amodei, as a threat to national security? TRUMP: \"Well, not now…",
-      "likes": 8161,
-      "rts": 538
-    },
     "2027-8": {
       "id": "2068739273420116431",
       "kind": "repost",
@@ -255,17 +244,6 @@
       "text": "Pro model performance on this benchmark: GPT-5.2 Pro: 8.5% GPT-5.4 Pro: 16.3% GPT-5.5 Pro: 20.5% GPT-5.6 Sol Pro: 31.5% Judging from this benchmark, the jump…",
       "likes": 540,
       "rts": 19
-    },
-    "2028-1": {
-      "id": "2067367079343226981",
-      "kind": "repost",
-      "author": "PeterDiamandis",
-      "recency": "recent",
-      "date": "17 Jun 2026",
-      "maps": "Education unbundles into personalized mastery maps",
-      "text": "We built an entire education system to prepare kids for a world that no longer exists. We test memory in a world with infinite memory. We punish collaboratio…",
-      "likes": 3024,
-      "rts": 457
     },
     "2028-2": {
       "id": "2072017923754135819",
@@ -345,15 +323,15 @@
       "rts": 124
     },
     "2032-0": {
-      "id": "2067784024333164651",
+      "id": "2072191801122038207",
       "kind": "repost",
-      "author": "stevenmarkryan",
-      "recency": "recent",
-      "date": "19 Jun 2026",
+      "author": "gdb",
+      "recency": "week",
+      "date": "01 Jul 2026",
       "maps": "Synthetic biology yields artificial organisms",
-      "text": "Fueled by massive increases in the capability of AI, we are going to see incredible things happen in: • Human longevity • Disease prevention &amp; cures • Ge…",
-      "likes": 489,
-      "rts": 36
+      "text": "Introducing GeneBench-Pro — testing whether models can handle the kind of judgment-heavy analysis that real-world computational biology requires. Problems wo…",
+      "likes": 2091,
+      "rts": 147
     },
     "2032-2": {
       "id": "2068429870950928849",
@@ -389,26 +367,15 @@
       "rts": 116
     },
     "2035-0": {
-      "id": "2068079318484549714",
+      "id": "2069795647956373632",
       "kind": "repost",
       "author": "kimmonismus",
       "recency": "recent",
-      "date": "19 Jun 2026",
+      "date": "24 Jun 2026",
       "maps": "Artificial superintelligence emerges",
-      "text": "Another exponential, the Artificial Analysis one. It is that almost the entire field is moving upward at the same time. OpenAI, Anthropic, Google, xAI, Meta,…",
-      "likes": 469,
-      "rts": 44
-    },
-    "2035-1": {
-      "id": "2067634693441233118",
-      "kind": "repost",
-      "author": "deanwball",
-      "recency": "recent",
-      "date": "18 Jun 2026",
-      "maps": "Schools recenter on community, leadership & well-being",
-      "text": "I am pleased and honored to announce that, on July 6, I'll be joining @OpenAI as leader of a new team called Strategic Futures. Our mandate will be to help t…",
-      "likes": 3149,
-      "rts": 187
+      "text": "Absolutely insane: \"Jalapeño was co-developed from initial design to manufacturing tape-out in just nine months, and the custom AI accelerator program repres…",
+      "likes": 1077,
+      "rts": 69
     },
     "2036-1": {
       "id": "2072700088481182100",
@@ -423,11 +390,14 @@
     }
   },
   "search": {
+    "2026-2": "ubi",
     "2026-7": "four workweek",
     "2026-9": "deepfake detection mandated",
     "2027-3": "display glasses catalyzed",
     "2027-5": "fusion plant breaks",
+    "2027-7": "online credentials surpass",
     "2027-9": "birth rates fall",
+    "2028-1": "education unbundles personalized",
     "2028-3": "daos legal recognition",
     "2028-4": "crispr therapies",
     "2028-5": "cognitive enhancement tools",
@@ -447,6 +417,7 @@
     "2033-2": "biometric surveillance restricted",
     "2034-0": "marriage rates time",
     "2034-2": "CRISPR gene editing",
+    "2035-1": "schools recenter community",
     "2036-0": "distribution layer defining",
     "2036-2": "merger moves fringe"
   },
@@ -463,15 +434,26 @@
       "rts": 7238
     },
     {
-      "tag": "GOVERNANCE",
-      "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
-      "id": "2070607488274358364",
+      "tag": "LONGEVITY",
+      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
+      "id": "2071990699222860231",
       "kind": "repost",
-      "author": "sama",
+      "author": "bryan_johnson",
       "recency": "week",
-      "date": "26 Jun 2026",
-      "likes": 18391,
-      "rts": 1129
+      "date": "30 Jun 2026",
+      "likes": 7008,
+      "rts": 294
+    },
+    {
+      "tag": "MARKETS",
+      "t": "Introducing Open USD: a stablecoin built for the internet economy, designed by the businesses growing it.",
+      "id": "2071946305652367869",
+      "kind": "repost",
+      "author": "openstandard",
+      "recency": "week",
+      "date": "30 Jun 2026",
+      "likes": 5284,
+      "rts": 1055
     },
     {
       "tag": "ABUNDANCE",
@@ -494,17 +476,6 @@
       "date": "28 Jun 2026",
       "likes": 5539,
       "rts": 329
-    },
-    {
-      "tag": "MARKETS",
-      "t": "Earlier this year, @SpaceX acquired @xAI (now SpaceXAI), which operates the Colossus datacenters in Memphis. As SpaceX continues to invest in the a…",
-      "id": "2072009696119022017",
-      "kind": "repost",
-      "author": "xAIMemphis",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "likes": 4124,
-      "rts": 966
     },
     {
       "tag": "LABOUR",
