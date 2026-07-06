@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-05T23:09:16.457Z",
+  "updated": "2026-07-06T00:09:06.346Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -257,15 +257,15 @@
       "rts": 13
     },
     "2028-7": {
-      "id": "2071376599707214304",
+      "id": "2068369247701442577",
       "kind": "repost",
-      "author": "nextbigfuture",
-      "recency": "week",
-      "date": "28 Jun 2026",
+      "author": "PolymarketMoney",
+      "recency": "recent",
+      "date": "20 Jun 2026",
       "maps": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
-      "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 261,
-      "rts": 40
+      "text": "JUST IN: New study shows data centers has reduced the cost of electricity in America.",
+      "likes": 2514,
+      "rts": 165
     },
     "2029-0": {
       "id": "2071904851437486150",
