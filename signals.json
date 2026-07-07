@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T06:03:44.635Z",
+  "updated": "2026-07-07T23:17:25.503Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -62,7 +62,7 @@
       "id": "2072022961339437154",
       "kind": "repost",
       "author": "AndrewE_Dunn",
-      "recency": "week",
+      "recency": "recent",
       "date": "30 Jun 2026",
       "maps": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
@@ -92,15 +92,15 @@
       "rts": 20
     },
     "2026-11": {
-      "id": "2072009696119022017",
+      "id": "2070602201139933269",
       "kind": "repost",
-      "author": "xAIMemphis",
-      "recency": "week",
-      "date": "30 Jun 2026",
+      "author": "SawyerMerritt",
+      "recency": "recent",
+      "date": "26 Jun 2026",
       "maps": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
-      "text": "Earlier this year, @SpaceX acquired @xAI (now SpaceXAI), which operates the Colossus datacenters in Memphis. As SpaceX continues to invest in the area, Space…",
-      "likes": 4124,
-      "rts": 966
+      "text": "Elon Musk has received regulatory approval to acquire startup Mesh Optical Technologies, a company founded by former SpaceX engineers working on optical data…",
+      "likes": 6104,
+      "rts": 700
     },
     "2026-12": {
       "id": "2069121548670406947",
@@ -125,15 +125,15 @@
       "rts": 560
     },
     "2026-14": {
-      "id": "2070584331068969336",
+      "id": "2070555272230384038",
       "kind": "repost",
-      "author": "METR_Evals",
+      "author": "OpenAI",
       "recency": "recent",
       "date": "26 Jun 2026",
-      "maps": "Frontier-model pre-deployment testing goes live — OpenAI, Microsoft & xAI grant governments early-access evals as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
-      "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2547,
-      "rts": 210
+      "maps": "Frontier-model release review goes live on both sides of the Atlantic — the White House readies voluntary US frontier-release standards (FT-confirmed, announcement imminent) after ad-hoc controls gated GPT-5.6 'Sol' and Claude Fable 5 on cyber-risk benchmarks, as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
+      "text": "Introducing a limited preview of GPT-5.6 Sol, our next generation frontier model, as well as GPT-5.6 Terra, a balanced model for efficient, everyday work, an…",
+      "likes": 39967,
+      "rts": 5699
     },
     "2026-15": {
       "id": "2072643073176158246",
@@ -172,7 +172,7 @@
       "id": "2072041356508184961",
       "kind": "repost",
       "author": "ns123abc",
-      "recency": "week",
+      "recency": "recent",
       "date": "30 Jun 2026",
       "maps": "First trillion-dollar pure-AI company",
       "text": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
@@ -191,15 +191,15 @@
       "rts": 45
     },
     "2027-4": {
-      "id": "2068463951088689152",
+      "id": "2071904851437486150",
       "kind": "repost",
-      "author": "LunixTwin",
+      "author": "tphuang",
       "recency": "recent",
-      "date": "20 Jun 2026",
+      "date": "30 Jun 2026",
       "maps": "Humanoid-robot output scales toward ~1M units/yr",
-      "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
-      "likes": 469,
-      "rts": 56
+      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
+      "likes": 200,
+      "rts": 26
     },
     "2027-6": {
       "id": "2070930161361432856",
@@ -238,7 +238,7 @@
       "id": "2072015392013213773",
       "kind": "repost",
       "author": "deredleritt3r",
-      "recency": "week",
+      "recency": "recent",
       "date": "30 Jun 2026",
       "maps": "Superintelligence emerges — recursive self-improvement begins (my 2028–2030 window)",
       "text": "Pro model performance on this benchmark: GPT-5.2 Pro: 8.5% GPT-5.4 Pro: 16.3% GPT-5.5 Pro: 20.5% GPT-5.6 Sol Pro: 31.5% Judging from this benchmark, the jump…",
@@ -249,7 +249,7 @@
       "id": "2072017923754135819",
       "kind": "repost",
       "author": "soubhikdeb",
-      "recency": "week",
+      "recency": "recent",
       "date": "30 Jun 2026",
       "maps": "Carbon markets exceed $600B in value",
       "text": "Emad Mostaque on PostAGI: \"Right now, not a single institution is on your side. The companies won't look out for you, and the governments won't either. Most …",
@@ -268,26 +268,26 @@
       "rts": 165
     },
     "2029-0": {
-      "id": "2071904851437486150",
+      "id": "2072682046762152160",
       "kind": "repost",
-      "author": "tphuang",
+      "author": "daltonbrewer",
       "recency": "week",
-      "date": "30 Jun 2026",
+      "date": "02 Jul 2026",
       "maps": "Automation eliminates ~25% of current jobs",
-      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
-      "likes": 200,
-      "rts": 26
+      "text": "BREAKING: Tesla now has 102 Unsupervised Robotaxis operating in Texas, up from 84 100+ has been reached!!! $TSLA",
+      "likes": 2680,
+      "rts": 215
     },
     "2030-0": {
-      "id": "2072026718467166512",
+      "id": "2069184772941992403",
       "kind": "repost",
-      "author": "neuralink",
-      "recency": "week",
-      "date": "30 Jun 2026",
+      "author": "bryan_johnson",
+      "recency": "recent",
+      "date": "22 Jun 2026",
       "maps": "AI-designed drugs gain FDA approval (170+ AI-discovered candidates now in trials; 15-20 in pivotal Phase III by 2026)",
-      "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
-      "likes": 15489,
-      "rts": 2305
+      "text": "new longevity drugs just dropped on immortals rx… microdose GLP-1s peptides NAD+ etc. all new stuff: + jardiance + brenzavvy + wegovy + zepbound + foundayo +…",
+      "likes": 2610,
+      "rts": 134
     },
     "2030-1": {
       "id": "2068190221263589394",
@@ -310,6 +310,17 @@
       "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
       "likes": 5899,
       "rts": 599
+    },
+    "2030-4": {
+      "id": "2072026718467166512",
+      "kind": "repost",
+      "author": "neuralink",
+      "recency": "recent",
+      "date": "30 Jun 2026",
+      "maps": "Neural implants restore mobility",
+      "text": "The dura is the brain's armor: a membrane so tough that a surgeon normally cuts through it with a scalpel. For the first time in our clinical trials, we inse…",
+      "likes": 15489,
+      "rts": 2305
     },
     "2031-1": {
       "id": "2072534973337227446",
@@ -408,7 +419,6 @@
     "2029-4": "photonic processors replacing",
     "2029-5": "social credit systems",
     "2030-2": "green energy universal",
-    "2030-4": "neural implants restore",
     "2030-5": "safety treaty signed",
     "2030-6": "career half life",
     "2031-0": "micro credentials eclipse",
@@ -434,28 +444,6 @@
       "rts": 7238
     },
     {
-      "tag": "LONGEVITY",
-      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
-      "id": "2071990699222860231",
-      "kind": "repost",
-      "author": "bryan_johnson",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "likes": 7008,
-      "rts": 294
-    },
-    {
-      "tag": "MARKETS",
-      "t": "Introducing Open USD: a stablecoin built for the internet economy, designed by the businesses growing it.",
-      "id": "2071946305652367869",
-      "kind": "repost",
-      "author": "openstandard",
-      "recency": "week",
-      "date": "30 Jun 2026",
-      "likes": 5284,
-      "rts": 1055
-    },
-    {
       "tag": "ABUNDANCE",
       "t": "you either die a frontier lab or live long enough to see yourself sell compute",
       "id": "2072529159054938337",
@@ -465,6 +453,17 @@
       "date": "02 Jul 2026",
       "likes": 5978,
       "rts": 351
+    },
+    {
+      "tag": "CAPABILITY",
+      "t": "BREAKING: Tesla sets a new all-time sales record in Australia. 🇦🇺 • Tesla delivered 8,670 vehicles in June, its best month ever in Australia • Ju…",
+      "id": "2072627521892552956",
+      "kind": "repost",
+      "author": "cb_doge",
+      "recency": "week",
+      "date": "02 Jul 2026",
+      "likes": 2093,
+      "rts": 344
     },
     {
       "tag": "LABOUR",
@@ -478,15 +477,26 @@
       "rts": 158
     },
     {
-      "tag": "CAPABILITY",
-      "t": "Final exam at Fudan: students don't answer questions. They write them — to stump AI. 51 students, 10 questions each, 3 AI models (Claude, DeepSeek,…",
-      "id": "2071874530675749202",
+      "tag": "GOVERNANCE",
+      "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
+      "id": "2070607488274358364",
       "kind": "repost",
-      "author": "FudanUniversity",
-      "recency": "week",
+      "author": "sama",
+      "recency": "recent",
+      "date": "26 Jun 2026",
+      "likes": 18391,
+      "rts": 1129
+    },
+    {
+      "tag": "LONGEVITY",
+      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
+      "id": "2071990699222860231",
+      "kind": "repost",
+      "author": "bryan_johnson",
+      "recency": "recent",
       "date": "30 Jun 2026",
-      "likes": 1066,
-      "rts": 117
+      "likes": 7008,
+      "rts": 294
     }
   ]
 }
