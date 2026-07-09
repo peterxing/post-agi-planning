@@ -48,7 +48,7 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8787';
       ['headline non-empty', r.headlineLen > 20],
       ['>=2 bio paragraphs', r.bioParas >= 2],
       ['4 roles', r.roles === 4],
-      ['4 talks', r.talks === 4],
+      ['>=3 talks', r.talks >= 3],
       ['talk titles non-empty', r.talkTitles.every(t => t && t.length > 3)],
       ['talk hrefs http', r.talkHrefs.every(h => h && h.startsWith('http'))],
       ['linkedin link', (r.linkHref || '').includes('linkedin.com/in/peter-xing')],

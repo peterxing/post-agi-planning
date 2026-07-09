@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T05:19:41.422Z",
+  "updated": "2026-07-09T03:19:05.875Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -18,7 +18,7 @@
       "id": "2072329696667471937",
       "kind": "repost",
       "author": "davidpattersonx",
-      "recency": "week",
+      "recency": "recent",
       "date": "01 Jul 2026",
       "maps": "Autonomous taxis operate in 20+ cities",
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis,…",
@@ -117,7 +117,7 @@
       "id": "2072394812301480067",
       "kind": "repost",
       "author": "NVIDIAAI",
-      "recency": "week",
+      "recency": "recent",
       "date": "01 Jul 2026",
       "maps": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
       "text": "We took a 30B model and split it in two to write tokens in parallel instead of one at a time. Introducing Nemotron-Labs-TwoTower: a diffusion language model …",
@@ -323,15 +323,15 @@
       "rts": 124
     },
     "2032-0": {
-      "id": "2072191801122038207",
+      "id": "2069505915791778094",
       "kind": "repost",
-      "author": "gdb",
-      "recency": "week",
-      "date": "01 Jul 2026",
+      "author": "DeryaTR_",
+      "recency": "recent",
+      "date": "23 Jun 2026",
       "maps": "Synthetic biology yields artificial organisms",
-      "text": "Introducing GeneBench-Pro — testing whether models can handle the kind of judgment-heavy analysis that real-world computational biology requires. Problems wo…",
-      "likes": 2091,
-      "rts": 147
+      "text": "It is now conceivable that we might achieve biosingularity much earlier than I had predicted 20 years ago (circa 2040s). I had coined this term for a time wh…",
+      "likes": 456,
+      "rts": 74
     },
     "2032-2": {
       "id": "2068429870950928849",
@@ -423,17 +423,6 @@
   },
   "reality": [
     {
-      "tag": "ROBOTS",
-      "t": "Walking the Optimus production line in Fremont",
-      "id": "2072214077372518657",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "week",
-      "date": "01 Jul 2026",
-      "likes": 58203,
-      "rts": 7238
-    },
-    {
       "tag": "ABUNDANCE",
       "t": "you either die a frontier lab or live long enough to see yourself sell compute",
       "id": "2072529159054938337",
@@ -456,17 +445,6 @@
       "rts": 344
     },
     {
-      "tag": "LABOUR",
-      "t": "This is crazier than you might think: Fable-5 now scores 16.10% on the Remote Labor Index What is RLI? The Remote Labor Index uses 240 real remote-…",
-      "id": "2072376968729817531",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "week",
-      "date": "01 Jul 2026",
-      "likes": 2078,
-      "rts": 158
-    },
-    {
       "tag": "GOVERNANCE",
       "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
       "id": "2070607488274358364",
@@ -478,15 +456,37 @@
       "rts": 1129
     },
     {
-      "tag": "LONGEVITY",
-      "t": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity …",
-      "id": "2071990699222860231",
+      "tag": "CODE",
+      "t": "A few thoughts on OpenAI's Jalapeño chip announcement today: 1. This chip is most likely the first one virtually entirely developed by Codex/GPT. C…",
+      "id": "2069857412660801738",
       "kind": "repost",
-      "author": "bryan_johnson",
+      "author": "PatrickToulme",
       "recency": "recent",
-      "date": "30 Jun 2026",
-      "likes": 7008,
-      "rts": 294
+      "date": "24 Jun 2026",
+      "likes": 2270,
+      "rts": 199
+    },
+    {
+      "tag": "LONGEVITY",
+      "t": "Introducing GeneBench-Pro — testing whether models can handle the kind of judgment-heavy analysis that real-world computational biology requires. P…",
+      "id": "2072191801122038207",
+      "kind": "repost",
+      "author": "gdb",
+      "recency": "recent",
+      "date": "01 Jul 2026",
+      "likes": 2091,
+      "rts": 147
+    },
+    {
+      "tag": "LABOUR",
+      "t": "This is crazier than you might think: Fable-5 now scores 16.10% on the Remote Labor Index What is RLI? The Remote Labor Index uses 240 real remote-…",
+      "id": "2072376968729817531",
+      "kind": "repost",
+      "author": "kimmonismus",
+      "recency": "recent",
+      "date": "01 Jul 2026",
+      "likes": 2078,
+      "rts": 158
     }
   ]
 }
