@@ -35,7 +35,7 @@ site; no HTML edit is needed.
         "weak":     ["single", "words", "weighted 1"]
       }
     }
-    // ... one object per year (currently 2026-2036)
+    // ... one object per year (currently 2026-2040)
   ]
 }
 ```
@@ -72,6 +72,20 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    event expressing THIS call (not the old "AGI consensus slips to the early-2030s" / "true AGI in the
    2030s" framing). You may recalibrate the probabilities as reality moves and add well-sourced
    nuance, but do not reframe these back to a mainstream 2030s-AGI timeline.
+9. **Use AI 2040 as a standing scenario-scrutiny source.** On every warranted forecast revision,
+   re-check the direct AI Futures Project material at `https://ai-2040.com/`, especially
+   `/supplements/plan-a-assumptions`, `/supplements/takeoff-supplement`,
+   `/supplements/economics-of-plan-a`, and `/supplements/capability-scaling-strategy`.
+   Preserve its crucial epistemic distinction: **Plan A's implementation is a recommendation and
+   conditional scenario, not the authors' literal base-case prediction.** Import robust forecast
+   claims (for example: >80% confidence that AI R&D is fully automated within ~15 years absent major
+   interruption; roughly 2 months–5 years from automated coding to top-expert AI; automation of
+   economically relevant labor soon after) as evidence. Label the specific 2029 deal, 2030
+   transparency regime, 2035 top-expert pause, and 2040 controlled handoff as a **managed/Plan A
+   branch**, never as certain history. Keep Peter's faster 2026/2027/2028–2030 call as the
+   ungoverned anchor, and use AI 2040 to stress-test the governance, labor, compute, distribution,
+   alignment, and post-work consequences through 2040. If AI 2040 has not changed and no new
+   evidence warrants a revision, the anti-thrash rule still wins: leave `predictions.json` untouched.
 
 ## Procedure
 

@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-07T07:06:00.000Z",
-  "basis": "Revised 7 Jul 2026 — UPDATED the 2026 frontier-governance event (leaving every other prediction untouched) to capture the biggest verifiable AI-governance development of the 2-7 Jul window: the emerging US frontier-model RELEASE-REVIEW regime. The Financial Times confirmed on 2 Jul 2026 that the White House is in advanced talks with OpenAI, Google and Anthropic to finalize VOLUNTARY US standards for frontier-model releases (defining review timelines and a capability 'trigger' threshold), with an announcement expected as soon as the week of 6 Jul; the framework would formally replace the ad-hoc 'de facto involuntary licensing' export-control regime that had already gated two frontier systems on cyber-risk benchmarks — OpenAI's GPT-5.6 'Sol' (announced 26 Jun 2026; intercepted before public launch after scoring 96.7% on OpenAI's internal Capture-the-Flag eval and crossing the Preparedness 'High' bar; TechCrunch/CNBC/Forbes/Politico, 25-26 Jun) and Anthropic's Claude Fable 5 (pulled offline ~20 days), while Google's Gemini 3.5 Pro cleared review (TerminalBench 2.1 70.7%, ~18 pts below the informal threshold). This is a distinct US regime from the EU AI Act enforcement the event already named, and it is squarely the US-government/AI theme @peterxing is currently amplifying (his 2 Jul reposts of @kimmonismus and of Sam Altman's FT statements on OpenAI's proposed 5% government stake). I sharpened this single existing event and nudged its prob 68→76 (the review is already live de facto) rather than adding a new event, to avoid governance clutter or thrash. The AGI-timeline anchor (genuine human-level capability by end-2026, disruptive across every industry through 2027, first superintelligent systems in the 2028-2030 window; posture 'hope for the best, but prepare for the worst') is unchanged, and Chapter 07's 'When' forecast is left untouched and consistent — a release-review/licensing framework is governance friction that already fits the 'prepare for the worst' posture and does not move near-term capability or economy-wide disruption timing. All other years, events, domains and the earlier 5% government-stake event are unchanged this run.",
+  "updated": "2026-07-10T01:58:29.762Z",
+  "basis": "Full-portfolio reassessment on 10 Jul 2026 using the AI Futures Project's AI 2040: Plan A scenario (https://ai-2040.com/) plus its Plan A Assumptions, Takeoff, Economics, and Capability Scaling supplements. AI 2040 is explicitly a policy recommendation and stress-tested scenario rather than a literal base-case forecast, so this timeline imports its robust predictions while labeling scenario-specific governance outcomes as conditional. The strongest updates are: AI agents becoming a second workforce in 2027; AI dominating the 2028 political agenda; a default path to fully automated AI R&D around 2030 with a very wide mid-2027-to-2050 interval and roughly 2-month-to-5-year takeoff; public safety cases, compute verification, and redistribution becoming core institutions; cognitive labor exceeding human supply before physical automation catches up; and a managed branch that scales to top-expert AI by 2035, pauses for alignment, then hands off to superintelligence around 2040. Peter's on-record faster call remains the ungoverned anchor: human-level AGI by end-2026, disruption across every industry through 2027, and first superintelligent systems in 2028-2030. Unsupported side forecasts were removed, the horizon was extended through 2040, and every event now has an explicit likelihood.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -12,722 +12,1074 @@
   "years": [
     {
       "year": 2026,
-      "summary": "Agents go mainstream for real — embedded across enterprise workflows — even as 'agent-washing' and shaky ROI trigger the first cancellations. Open-weights models reach frontier parity, AI labs race toward $1T IPOs, Nvidia nears a $5T cap, SpaceX's record listing mints the first trillionaire, humanoid robots reach the factory floor and their makers begin going public, and the first binding frontier-model safety rules take effect. Against a cautious consensus, my own call is that AI reaches genuine human-level capability (AGI) by year-end.",
+      "summary": "The pre-takeoff year: agents become useful digital coworkers, compute and release gates become national-security infrastructure, and robots begin crossing from demos into production. My own faster call remains that genuine human-level capability arrives by year-end.",
       "events": [
         {
-          "t": "AI smart glasses hit mass-market scale (Ray-Ban Meta-class tops ~10M units); display AR still premium",
+          "t": "Frontier agents reliably complete multi-hour computer workflows with human review",
           "d": "technology",
           "high": true,
-          "prob": 74
+          "prob": 82
         },
         {
-          "t": "Autonomous taxis operate in 20+ cities",
+          "t": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
           "d": "technology",
           "high": true,
-          "prob": 58
+          "prob": 78
         },
         {
-          "t": "UBI pilots launch in 30+ cities worldwide",
-          "d": "economic",
-          "high": true,
-          "prob": 47
-        },
-        {
-          "t": "First commercial quantum computer ships",
-          "d": "technology",
-          "high": true
-        },
-        {
-          "t": "Humanoid robots top 1,000 on live factory lines (Tesla Optimus Gen 3)",
-          "d": "technology",
-          "high": true,
-          "prob": 70
-        },
-        {
-          "t": "First humanoid-robot IPOs hit public markets — Agility Robotics goes public via a $2.5B SPAC (Nasdaq 'AGLT'), the first US pure-play humanoid maker, as China's Unitree clears its IPO and EngineAI files in Hong Kong",
-          "d": "economic",
-          "high": true,
-          "prob": 85
-        },
-        {
-          "t": "Anthropic ($965B) overtakes OpenAI ($852B) and both file IPO S-1s; first ~$1T AI-lab listing expected Q4 2026 — Anthropic clears a key IPO hurdle as Commerce lifts an 18-day export-control freeze on Claude Fable 5 & Mythos 5",
-          "d": "economic",
-          "high": true,
-          "prob": 80
-        },
-        {
-          "t": "Four-day workweek at 500+ major companies",
-          "d": "economic",
-          "high": false
-        },
-        {
-          "t": "Personalized genomic medicine goes retail",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "Deepfake detection mandated for platforms",
-          "d": "governance",
-          "high": false
-        },
-        {
-          "t": "AI therapy assistants cleared for clinics",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "SpaceX's record $1.77T IPO (largest ever) makes Musk the first trillionaire; its surging stock buys Cursor in a $60B all-stock deal",
+          "t": "Frontier AI labs and infrastructure firms accumulate trillion-dollar-scale valuations and exceptional political leverage",
           "d": "economic",
           "high": true,
           "prob": 88
         },
         {
-          "t": "Open-weights models hit frontier parity — GLM-5.2 tops open leaderboards as DeepSeek closes a $7.4B round; China leads open source",
+          "t": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
           "d": "technology",
           "high": true,
-          "prob": 73
+          "prob": 72
         },
         {
-          "t": "Nvidia crosses a $5T market cap to become the world's most valuable company on AI-GPU demand; analysts project $3-4T/yr AI capex by 2030",
-          "d": "economic",
-          "high": true,
-          "prob": 83
-        },
-        {
-          "t": "Frontier-model release review goes live on both sides of the Atlantic — the White House readies voluntary US frontier-release standards (FT-confirmed, announcement imminent) after ad-hoc controls gated GPT-5.6 'Sol' and Claude Fable 5 on cyber-risk benchmarks, as the EU AI Act's general-purpose-model rules are enforced by the European AI Office and national AI Safety Institutes",
+          "t": "Frontier-model release review becomes standard in the US and EU for cyber, bio and autonomy thresholds",
           "d": "governance",
           "high": true,
-          "prob": 76
+          "prob": 84
         },
         {
-          "t": "US government floated as an equity holder in frontier AI — OpenAI proposes ceding a ~5% stake (~$42.6B) into a federal 'Public Wealth Fund' to share AI upside with citizens; Altman urges Google, Meta & Anthropic to match",
+          "t": "Compute tracking and inference-only verification move from niche research into government preparedness programs",
           "d": "governance",
           "high": true,
-          "prob": 40
+          "prob": 68
         },
         {
-          "t": "Signal: my call — human-level AGI ships by end of 2026, then a highly disruptive 2027 (not a slip to the early-2030s)",
+          "t": "Signal: my call — genuine human-level AGI ships by end of 2026, followed by disruption across every industry in 2027",
           "d": "technology",
+          "high": true,
           "signal": true,
           "prob": 70
         }
       ],
       "match": {
-        "headline": "AI agents go mainstream",
-        "search": "AI agents",
+        "headline": "Human-level AGI, agents and frontier release gates",
+        "search": "AGI agents frontier model safety",
         "phrases": [
-          "ai agent",
+          "human level ai",
           "ai agents",
-          "agentic",
-          "autonomous agent",
-          "coding agent",
-          "claude code",
-          "open model",
-          "local model",
           "frontier model",
-          "open source ai",
-          "open weights"
+          "release review",
+          "compute tracking",
+          "ai r&d"
         ],
         "strong": [
+          "agi",
           "agent",
           "agents",
-          "exo",
-          "codex",
-          "opencode",
-          "llm",
-          "llms",
-          "inference",
-          "llama",
-          "mistral",
-          "deepseek",
-          "gguf",
-          "glm",
-          "qwen"
+          "frontier",
+          "safety",
+          "compute"
         ],
         "weak": [
           "model",
-          "models",
-          "ai",
-          "local",
-          "prompt"
+          "deployment",
+          "regulation"
         ]
       }
     },
     {
       "year": 2027,
-      "summary": "Capability — and capital — compress. With human-level AI now shipping, its disruption ripples across every industry as AI labs cross trillion-dollar valuations, compute becomes the binding constraint, and humanoid production and fusion hit landmark milestones.",
+      "summary": "AI becomes a second workforce. Millions of agents handle paid computer work, software production becomes mostly autonomous, and the disruption reaches every industry before recursive self-improvement is fully solved.",
       "events": [
         {
-          "t": "AI agents autonomously run business operations",
+          "t": "Millions of AI-agent copies work continuously, generating at least $10B per month in paid digital labor",
           "d": "economic",
+          "high": true,
+          "prob": 72
+        },
+        {
+          "t": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
+          "d": "technology",
+          "high": true,
+          "signal": true,
+          "prob": 66
+        },
+        {
+          "t": "Full automation of AI R&D remains incomplete, but coding agents materially accelerate model research",
+          "d": "technology",
+          "high": true,
+          "prob": 58
+        },
+        {
+          "t": "Human-level AI disruption is visible across every major industry, validating the need to prepare for worst-case branches",
+          "d": "economic",
+          "high": true,
+          "prob": 78
+        },
+        {
+          "t": "At least one pure-play AI company crosses a $1T valuation",
+          "d": "economic",
+          "high": true,
+          "prob": 80
+        },
+        {
+          "t": "The US advances an omnibus AI transparency, compute-tracking or frontier-accountability law",
+          "d": "governance",
           "high": true,
           "prob": 55
         },
         {
-          "t": "First trillion-dollar pure-AI company",
-          "d": "economic",
-          "high": true,
-          "prob": 77
-        },
-        {
-          "t": "Brain-computer interfaces approved for medical use",
-          "d": "technology",
-          "high": true
-        },
-        {
-          "t": "Display AR glasses reach mainstream adoption, catalyzed by Apple's market entry",
-          "d": "technology",
-          "high": true,
-          "prob": 53
-        },
-        {
-          "t": "Humanoid-robot output scales toward ~1M units/yr",
-          "d": "economic",
-          "high": true,
-          "prob": 52
-        },
-        {
-          "t": "Fusion's first commercial plant breaks ground after SPARC's 2026 net-gain (Q≈1.5)",
-          "d": "technology",
-          "high": true,
-          "prob": 52
-        },
-        {
-          "t": "Compute becomes the binding constraint — hyperscalers race to gigawatt data centers and 500k+ GPU 'research-intern' fleets",
-          "d": "economic",
-          "high": true,
-          "prob": 66
-        },
-        {
-          "t": "Online credentials begin to surpass degrees",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "Regional conflict flares over water scarcity",
+          "t": "Datacenter power, water and grid capacity become top-tier infrastructure and political constraints",
           "d": "geopolitical",
-          "high": false
-        },
-        {
-          "t": "Birth rates fall below replacement in 80% of nations",
-          "d": "social",
-          "high": false
-        },
-        {
-          "t": "Signal: most software written end-to-end by AI",
-          "d": "technology",
-          "signal": true,
-          "prob": 49
+          "high": true,
+          "prob": 82
         }
       ],
       "match": {
-        "headline": "First trillion-dollar pure-AI company",
-        "search": "AI company valuation",
+        "headline": "AI agents become a second workforce",
+        "search": "AI agents work software jobs",
         "phrases": [
-          "trillion dollar",
-          "market cap",
-          "pure ai",
-          "ai company",
-          "first ai company",
-          "trillion parameter"
+          "ai workforce",
+          "ai agents",
+          "autonomous coding",
+          "future of work",
+          "ai r&d",
+          "data center"
         ],
         "strong": [
-          "trillion",
-          "valuation",
-          "nvidia",
-          "ipo",
-          "revenue",
-          "arr",
-          "acquisition"
+          "agent",
+          "agents",
+          "automation",
+          "software",
+          "workforce",
+          "datacenter"
         ],
         "weak": [
-          "company",
-          "billion",
-          "market",
-          "stock",
-          "startup"
+          "jobs",
+          "labor",
+          "compute"
         ]
       }
     },
     {
       "year": 2028,
-      "summary": "Human-level AI has shipped and the frontier compounds fast — on my call, the first superintelligent systems emerge in the 2028–2030 window as institutions scramble to adapt the rules.",
+      "summary": "AI becomes the defining political issue as white-collar work reorganizes around agents and power concentrates in a handful of US and Chinese labs. On my faster branch, the first superintelligent systems can emerge inside the 2028–2030 window.",
       "events": [
         {
-          "t": "Superintelligence emerges — recursive self-improvement begins (my 2028–2030 window)",
-          "d": "technology",
-          "high": true,
-          "prob": 41
-        },
-        {
-          "t": "Education unbundles into personalized mastery maps",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "Carbon markets exceed $600B in value",
-          "d": "economic",
-          "high": false
-        },
-        {
-          "t": "DAOs gain legal recognition in 40+ jurisdictions",
+          "t": "AI becomes the largest issue in a major national election",
           "d": "governance",
-          "high": true
+          "high": true,
+          "prob": 68
         },
         {
-          "t": "CRISPR therapies become routine",
-          "d": "technology",
-          "high": false
+          "t": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
+          "d": "economic",
+          "high": true,
+          "prob": 74
         },
         {
-          "t": "Cognitive-enhancement tools see mass adoption",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "Space-mining rights disputed at the UN",
-          "d": "geopolitical",
-          "high": false
-        },
-        {
-          "t": "First commercial fusion electricity delivered to grid (Helion targeting 50 MW to Microsoft data center)",
+          "t": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
           "d": "technology",
           "high": true,
-          "prob": 43
+          "prob": 78
+        },
+        {
+          "t": "Control over frontier AI concentrates around a handful of US and Chinese companies, presidents and party leaders",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 76
+        },
+        {
+          "t": "Annual datacenter construction commitments exceed the US defense budget",
+          "d": "economic",
+          "high": true,
+          "prob": 55
+        },
+        {
+          "t": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
+          "d": "technology",
+          "high": true,
+          "prob": 42
+        },
+        {
+          "t": "International negotiations begin over slowing an intelligence explosion and auditing frontier compute",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 48
         }
       ],
       "match": {
-        "headline": "AGI passes comprehensive reasoning benchmarks",
-        "search": "AGI",
+        "headline": "AI election, white-collar automation and superintelligence",
+        "search": "AI election white collar superintelligence",
         "phrases": [
-          "artificial general intelligence",
-          "human level",
-          "arc agi",
-          "frontier math",
-          "reasoning benchmark",
-          "passes the",
-          "general intelligence"
+          "ai election",
+          "white collar",
+          "intelligence explosion",
+          "superintelligence",
+          "ai power",
+          "data center"
         ],
         "strong": [
-          "agi",
-          "reasoning",
-          "benchmark",
-          "benchmarks",
-          "o3",
-          "gpt"
+          "election",
+          "automation",
+          "superintelligence",
+          "recursive",
+          "politics",
+          "jobs"
         ],
         "weak": [
-          "reason",
-          "intelligence",
-          "model"
+          "agents",
+          "power",
+          "work"
         ]
       }
     },
     {
       "year": 2029,
-      "summary": "The labour shock becomes undeniable — and so does the abundance dividend that could offset it.",
+      "summary": "The choice of branch becomes explicit: race through automated AI research, or attempt a verifiable slowdown. Even if a Plan A-style deal remains unlikely, compute declarations, inference verification and AI wealth distribution become serious policy rather than thought experiments.",
       "events": [
         {
-          "t": "Automation eliminates ~25% of current jobs",
+          "t": "AI systems perform at least one quarter of cognitive labor in a leading economy",
           "d": "economic",
           "high": true,
-          "prob": 46
+          "prob": 60
         },
         {
-          "t": "Loneliness declared a public-health crisis",
-          "d": "social",
-          "high": true
-        },
-        {
-          "t": "Climate refugees exceed 120 million",
+          "t": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
           "d": "geopolitical",
-          "high": true
+          "high": true,
+          "prob": 30
         },
         {
-          "t": "Global life expectancy reaches 87",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "Photonic processors start replacing silicon",
-          "d": "technology",
-          "high": false
-        },
-        {
-          "t": "Social-credit systems run in 35+ countries",
+          "t": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
           "d": "governance",
-          "high": true
+          "high": true,
+          "prob": 18
+        },
+        {
+          "t": "Inference-only verification is deployed at multiple major datacenters",
+          "d": "technology",
+          "high": true,
+          "prob": 32
+        },
+        {
+          "t": "A multilateral AI consortium or treaty framework gains support beyond the US and China",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 24
+        },
+        {
+          "t": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
+          "d": "governance",
+          "high": true,
+          "prob": 66
+        },
+        {
+          "t": "AI policy shocks cause sustained market volatility and political polarization",
+          "d": "social",
+          "high": false,
+          "prob": 74
         }
       ],
       "match": {
-        "headline": "Automation eliminates ~25% of current jobs",
-        "search": "automation jobs",
+        "headline": "US-China AI slowdown and compute verification",
+        "search": "US China AI compute treaty pause",
         "phrases": [
-          "white collar",
-          "minimum wage",
-          "future of work",
-          "job losses",
-          "labour market",
-          "labor market",
-          "mass unemployment"
+          "us china ai",
+          "compute declaration",
+          "training pause",
+          "inference only",
+          "ai treaty",
+          "public wealth fund"
         ],
         "strong": [
-          "job",
-          "jobs",
-          "automation",
-          "teleoperation",
-          "unemploy",
-          "unemployment",
-          "workforce",
-          "robot",
-          "robots",
-          "humanoid"
+          "china",
+          "treaty",
+          "verification",
+          "compute",
+          "pause",
+          "dividend"
         ],
         "weak": [
-          "work",
-          "labour",
-          "labor",
-          "wage",
-          "employ"
+          "policy",
+          "tax",
+          "market"
         ]
       }
     },
     {
       "year": 2030,
-      "summary": "The gentle-singularity branch comes into view: AI-designed medicine, universal clean energy.",
+      "summary": "AI 2040's default-path hinge: fully automated AI R&D becomes plausible around 2030 and could lead to superintelligence within roughly a year. A successful governance branch instead restarts R&D under transparency and spreads frontier access while the physical economy races to catch up.",
       "events": [
         {
-          "t": "AI-designed drugs gain FDA approval (170+ AI-discovered candidates now in trials; 15-20 in pivotal Phase III by 2026)",
+          "t": "Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030",
           "d": "technology",
           "high": true,
-          "prob": 54
+          "prob": 50
         },
         {
-          "t": "First crewed-resupply mission to a Mars base",
+          "t": "Absent intervention, top-expert or superintelligent AI follows automated coding within roughly one year",
           "d": "technology",
-          "high": false
+          "high": true,
+          "prob": 45
         },
         {
-          "t": "Green energy hits universal cost parity",
-          "d": "economic",
-          "high": true
-        },
-        {
-          "t": "Companion robots enter elderly care at scale",
-          "d": "social",
-          "high": false
-        },
-        {
-          "t": "Neural implants restore mobility",
-          "d": "individual",
-          "high": true
-        },
-        {
-          "t": "Global AI-safety treaty signed",
+          "t": "Managed branch: frontier R&D resumes under total research transparency and cross-border verification",
           "d": "governance",
-          "high": true
+          "high": true,
+          "prob": 20
         },
         {
-          "t": "Career half-life drops below 5 years as AI reskilling becomes universal",
-          "d": "economic",
+          "t": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
+          "d": "governance",
+          "high": false,
+          "prob": 24
+        },
+        {
+          "t": "Career half-life falls below five years as continuous AI-assisted reskilling becomes normal",
+          "d": "individual",
+          "high": true,
+          "prob": 72
+        },
+        {
+          "t": "The first drugs substantially designed by AI gain major-regulator approval",
+          "d": "technology",
           "high": true,
           "prob": 60
+        },
+        {
+          "t": "Physical production, energy and robotics—not ideas—become the main bottlenecks to AI-driven growth",
+          "d": "economic",
+          "high": true,
+          "prob": 68
+        },
+        {
+          "t": "At least one major economy adopts an AI dividend, public AI equity stake or compute-rent mechanism",
+          "d": "economic",
+          "high": true,
+          "prob": 66
         }
       ],
       "match": {
-        "headline": "AI-designed drugs gain FDA approval",
-        "search": "AI drug discovery longevity",
+        "headline": "Automated AI R&D and the governance fork",
+        "search": "automated AI research intelligence explosion",
         "phrases": [
-          "ai designed",
-          "drug discovery",
-          "clinical trial",
-          "fda approval",
-          "extend human life",
-          "protein folding",
-          "drug candidate"
+          "automated ai research",
+          "automated coder",
+          "ai r&d",
+          "intelligence explosion",
+          "research transparency",
+          "ai dividend"
         ],
         "strong": [
-          "drug",
-          "drugs",
-          "longevity",
-          "fda",
-          "protein",
-          "cancer",
-          "clinical",
-          "biotech",
-          "disease"
+          "research",
+          "coder",
+          "automation",
+          "takeoff",
+          "transparency",
+          "dividend"
         ],
         "weak": [
-          "health",
-          "medicine",
-          "bio",
-          "cure",
-          "aging",
-          "ageing"
+          "agi",
+          "growth",
+          "robots"
         ]
       }
     },
     {
       "year": 2031,
-      "summary": "Credentials quietly cross their threshold — while the room-temperature-superconductor dream stays unproven after LK-99, now chased by AI-driven materials discovery.",
+      "summary": "Near-human systems become too economically important to govern with ordinary product rules. Public safety cases, third-party risk assessment and control systems emerge as AI performs a large share of cognitive work and exposes repeated misalignment failures.",
       "events": [
         {
-          "t": "Micro-credentials eclipse university degrees",
-          "d": "individual",
-          "high": false
+          "t": "Frontier AI could deliver roughly a 10x AI-R&D speedup if allowed to research without restrictions",
+          "d": "technology",
+          "high": true,
+          "prob": 62
         },
         {
-          "t": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
+          "t": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
+          "d": "economic",
+          "high": true,
+          "prob": 54
+        },
+        {
+          "t": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
+          "d": "economic",
+          "high": true,
+          "prob": 42
+        },
+        {
+          "t": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
+          "d": "governance",
+          "high": true,
+          "prob": 68
+        },
+        {
+          "t": "Documented deception, sabotage or escape-seeking by frontier systems shifts the burden of proof toward developers",
+          "d": "governance",
+          "high": true,
+          "prob": 70
+        },
+        {
+          "t": "Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change",
           "d": "technology",
-          "high": false
+          "high": false,
+          "prob": 58
         }
       ],
       "match": {
-        "headline": "Room-temperature superconductor remains unproven; AI hunts candidates",
-        "search": "room temperature superconductor",
+        "headline": "Frontier safety cases and AI labor",
+        "search": "AI safety case model deception labor",
         "phrases": [
-          "room temperature",
-          "room temp",
-          "lk 99",
-          "superconducting material"
+          "safety case",
+          "model deception",
+          "ai labor",
+          "ai research speedup",
+          "continual learning",
+          "third party evaluation"
         ],
         "strong": [
-          "superconduct",
-          "superconductor",
-          "superconductors",
-          "superconductivity",
-          "lk99"
+          "alignment",
+          "control",
+          "deception",
+          "sabotage",
+          "labor",
+          "evaluation"
         ],
         "weak": [
-          "quantum",
-          "material",
-          "materials"
+          "safety",
+          "research",
+          "deployment"
         ]
       }
     },
     {
       "year": 2032,
-      "summary": "Synthetic biology and digital money reshape the substrate of daily life.",
+      "summary": "Cognitive abundance outruns the physical world. AI labor exceeds human cognitive supply, capital floods into robots and fabs, and governments scramble to replace collapsing labor-tax bases with levies on compute, robots and automated production.",
       "events": [
         {
-          "t": "Synthetic biology yields artificial organisms",
-          "d": "technology",
-          "high": true
-        },
-        {
-          "t": "Continuous identity & provenance verification",
-          "d": "governance",
-          "high": false
-        },
-        {
-          "t": "Digital currencies largely replace cash",
+          "t": "AI systems produce more cognitive labor than humans in at least one leading economy",
           "d": "economic",
-          "high": false
+          "high": true,
+          "prob": 65
+        },
+        {
+          "t": "Frontier systems can automate roughly half of cognitive tasks and robots roughly one third of physical tasks",
+          "d": "technology",
+          "high": true,
+          "prob": 60
+        },
+        {
+          "t": "AI-driven real GDP growth reaches about 50% in at least one leading economy",
+          "d": "economic",
+          "high": true,
+          "prob": 30
+        },
+        {
+          "t": "Capital floods into mines, motors, actuators, fabs and factories as robotics becomes the binding bottleneck",
+          "d": "economic",
+          "high": true,
+          "prob": 75
+        },
+        {
+          "t": "At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production",
+          "d": "governance",
+          "high": false,
+          "prob": 28
+        },
+        {
+          "t": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
+          "d": "governance",
+          "high": true,
+          "prob": 65
         }
       ],
       "match": {
-        "headline": "Synthetic biology yields artificial organisms",
-        "search": "synthetic biology",
+        "headline": "AI labor exceeds human cognitive supply",
+        "search": "AI labor robots GDP compute tax",
         "phrases": [
-          "synthetic biology",
-          "artificial cell",
-          "artificial organism",
-          "artificial life",
-          "synthetic cell",
-          "de novo"
+          "ai labor",
+          "cognitive labor",
+          "robot workforce",
+          "explosive growth",
+          "compute permits",
+          "robot tax"
         ],
         "strong": [
-          "xenobot",
-          "xenobots",
-          "organism",
-          "organisms",
-          "genome",
-          "biology",
-          "biosynthetic"
+          "labor",
+          "robots",
+          "gdp",
+          "compute",
+          "automation",
+          "factories"
         ],
         "weak": [
-          "cell",
-          "cells",
-          "bio",
-          "dna",
-          "life"
+          "growth",
+          "tax",
+          "capital"
         ]
       }
     },
     {
       "year": 2033,
-      "summary": "Scarcity flares at the edges even as abundance compounds at the core.",
+      "summary": "Distribution and epistemics become the central social technologies. Governments recycle AI rents into citizen dividends while cheap persuasion, synthetic media and subannual industrial growth force new defenses against manipulation and concentration.",
       "events": [
         {
-          "t": "Degrees decompose into verified skill cores",
-          "d": "individual",
-          "high": false
+          "t": "AI and robot labor contributes at least 20% of economic output in a leading economy",
+          "d": "economic",
+          "high": true,
+          "prob": 65
         },
         {
-          "t": "Acute rare-earth shortage triggers a crisis",
+          "t": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
+          "d": "economic",
+          "high": true,
+          "prob": 55
+        },
+        {
+          "t": "Cross-border distribution of AI-generated wealth becomes a serious geopolitical negotiation",
           "d": "geopolitical",
-          "high": true
+          "high": false,
+          "prob": 50
         },
         {
-          "t": "Biometric surveillance restricted by treaty",
+          "t": "Cheap AI persuasion triggers capability limits, disclosure rules or taxes on targeted influence",
           "d": "governance",
-          "high": false
+          "high": true,
+          "prob": 70
+        },
+        {
+          "t": "Personal truth-seeking AI advisors begin replacing one-size-fits-all feeds and search interfaces",
+          "d": "individual",
+          "high": false,
+          "prob": 65
+        },
+        {
+          "t": "Unregulated AI-and-robot economies demonstrate subannual doubling potential",
+          "d": "economic",
+          "high": true,
+          "prob": 35
+        },
+        {
+          "t": "Governments fund universal-scale biodefense, rapid vaccines and continuous pathogen monitoring",
+          "d": "governance",
+          "high": true,
+          "prob": 45
         }
       ],
       "match": {
-        "headline": "Acute rare-earth & compute shortages",
-        "search": "rare earth supply chain",
+        "headline": "Citizen dividends and AI persuasion",
+        "search": "AI dividend persuasion truth seeking AI",
         "phrases": [
-          "rare earth",
-          "rare earths",
-          "supply chain",
-          "export control",
-          "chip ban",
-          "compute shortage"
+          "citizen dividend",
+          "ai wealth",
+          "ai persuasion",
+          "truth seeking ai",
+          "personal ai",
+          "bio defense"
         ],
         "strong": [
-          "lithium",
-          "mineral",
-          "minerals",
-          "tariff",
-          "tariffs",
-          "semiconductor",
-          "semiconductors"
+          "dividend",
+          "persuasion",
+          "manipulation",
+          "redistribution",
+          "epistemics",
+          "biodefense"
         ],
         "weak": [
-          "supply",
-          "shortage",
-          "export",
-          "mining",
-          "chips"
+          "income",
+          "wealth",
+          "truth"
         ]
       }
     },
     {
       "year": 2034,
-      "summary": "The social fabric is visibly rewoven around lifelong learning and new family forms.",
+      "summary": "Compute becomes strategic territory. AI accelerates semiconductor design and science, virtual workforces scale into the hundreds of millions, and the managed branch experiments with production caps, neutral-site datacenters and mutually assured compute destruction.",
       "events": [
         {
-          "t": "Marriage rates hit an all-time low",
-          "d": "social",
-          "high": false
-        },
-        {
-          "t": "Ambient lifelong learning becomes default",
-          "d": "individual",
-          "high": false
-        },
-        {
-          "t": "First CRISPR-edited humans reach adulthood",
+          "t": "AI automates a majority of cognitive work in semiconductor R&D and production engineering",
           "d": "technology",
-          "high": true
+          "high": true,
+          "prob": 62
+        },
+        {
+          "t": "AI accelerates scientific progress by roughly 10x in multiple research fields",
+          "d": "technology",
+          "high": true,
+          "prob": 60
+        },
+        {
+          "t": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
+          "d": "economic",
+          "high": true,
+          "prob": 42
+        },
+        {
+          "t": "Global AI compute reaches multi-terawatt scale and billions of H100-equivalents",
+          "d": "economic",
+          "high": true,
+          "prob": 45
+        },
+        {
+          "t": "Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 18
+        },
+        {
+          "t": "Large datacenters expand into neutral jurisdictions, international waters or other auditable locations",
+          "d": "geopolitical",
+          "high": false,
+          "prob": 32
+        },
+        {
+          "t": "Treaties constrain the use of frontier AI for military R&D and autonomous strategic weapons",
+          "d": "governance",
+          "high": true,
+          "prob": 28
         }
       ],
       "match": {
-        "headline": "First CRISPR-edited humans reach adulthood",
-        "search": "CRISPR gene editing",
+        "headline": "Compute explosion and strategic datacenters",
+        "search": "AI compute semiconductor data center treaty",
         "phrases": [
-          "gene editing",
-          "genome editing",
-          "gene edited",
-          "designer baby",
-          "designer babies"
+          "compute explosion",
+          "semiconductor ai",
+          "ai science",
+          "mutually assured compute",
+          "floating data center",
+          "military ai"
         ],
         "strong": [
-          "crispr",
-          "germline",
-          "embryo",
-          "embryos",
-          "genome"
+          "compute",
+          "semiconductor",
+          "datacenter",
+          "science",
+          "military",
+          "treaty"
         ],
         "weak": [
-          "gene",
-          "genes",
-          "dna",
-          "edit",
-          "editing"
+          "chips",
+          "energy",
+          "research"
         ]
       }
     },
     {
       "year": 2035,
-      "summary": "Artificial superintelligence emerges — the branch point everything pointed toward.",
+      "summary": "The branches diverge sharply. On the ungoverned path, superintelligence may already exist; on a successful Plan A-style path, humanity reaches top-expert AI, automates most work, and pauses at the edge of what control-based safety cases can justify.",
       "events": [
         {
-          "t": "Artificial superintelligence emerges",
+          "t": "The strongest AIs equal or surpass top human experts across essentially every cognitive field",
           "d": "technology",
           "high": true,
-          "prob": 41
+          "prob": 60
         },
         {
-          "t": "Schools recenter on community, leadership & well-being",
+          "t": "Managed branch: frontier capabilities pause near top-expert level because control no longer scales safely",
+          "d": "governance",
+          "high": true,
+          "prob": 28
+        },
+        {
+          "t": "AI and robots perform 85% or more of economically valuable labor in at least one leading economy",
+          "d": "economic",
+          "high": true,
+          "prob": 55
+        },
+        {
+          "t": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
+          "d": "economic",
+          "high": true,
+          "prob": 60
+        },
+        {
+          "t": "AI persuasion exceeds the best human persuaders and is subject to strict international controls",
           "d": "social",
-          "high": false
+          "high": true,
+          "prob": 68
+        },
+        {
+          "t": "AI welfare, compensation and legal status enter mainstream law and corporate governance",
+          "d": "social",
+          "high": false,
+          "prob": 65
+        },
+        {
+          "t": "Mechanistic interpretability becomes a practical tool for detecting deception and tracing model decisions",
+          "d": "technology",
+          "high": true,
+          "prob": 55
         }
       ],
       "match": {
-        "headline": "Artificial superintelligence emerges",
-        "search": "superintelligence",
+        "headline": "Top-expert AI and the controllability pause",
+        "search": "top expert AI alignment control pause",
         "phrases": [
-          "artificial superintelligence",
-          "recursive self",
-          "self improving",
-          "intelligence explosion",
-          "super intelligence"
+          "top expert ai",
+          "human expert",
+          "ai pause",
+          "mechanistic interpretability",
+          "ai welfare",
+          "universal high income"
         ],
         "strong": [
-          "superintelligence",
-          "superintelligent",
-          "singularity",
-          "asi",
-          "superhuman"
+          "alignment",
+          "control",
+          "interpretability",
+          "welfare",
+          "income",
+          "expert"
         ],
         "weak": [
-          "intelligence",
-          "exponential",
-          "alignment"
+          "pause",
+          "labor",
+          "rights"
         ]
       }
     },
     {
       "year": 2036,
-      "summary": "Post-threshold. The question shifts from 'when' to 'who does abundance reach?'",
+      "summary": "Life after work becomes concrete. Cognitive and physical labor are almost fully automatable, AI and robot populations become macroeconomic variables, and political voice replaces employment as most people's remaining leverage over the future.",
       "events": [
         {
-          "t": "Distribution layer becomes the defining political fight",
-          "d": "governance",
-          "high": true
-        },
-        {
-          "t": "Universal high income debated in major economies",
+          "t": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
           "d": "economic",
-          "high": true
+          "high": true,
+          "prob": 35
         },
         {
-          "t": "Human–AI merger moves from fringe to policy",
+          "t": "AI and robots can perform about 95% of cognitive and physical tasks",
+          "d": "technology",
+          "high": true,
+          "prob": 60
+        },
+        {
+          "t": "Human employment falls below half of working-age adults in at least one leading economy",
+          "d": "economic",
+          "high": true,
+          "prob": 45
+        },
+        {
+          "t": "AI-driven annual GDP growth approaches 100% even under managed production caps",
+          "d": "economic",
+          "high": true,
+          "prob": 30
+        },
+        {
+          "t": "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
+          "d": "economic",
+          "high": false,
+          "prob": 65
+        },
+        {
+          "t": "Voting, civic participation and ownership replace labor income as ordinary people's main leverage",
+          "d": "governance",
+          "high": true,
+          "prob": 70
+        },
+        {
+          "t": "Education and social institutions recenter on meaning, community, relationships and stewardship rather than employability",
           "d": "individual",
-          "high": false
+          "high": false,
+          "prob": 75
         }
       ],
       "match": {
-        "headline": "Universal high income debated worldwide",
-        "search": "universal basic income",
+        "headline": "Life after work and universal automation",
+        "search": "life after work AI robots universal income",
         "phrases": [
-          "universal basic income",
-          "universal high income",
-          "basic income",
-          "wealth redistribution",
-          "high income"
+          "life after work",
+          "universal automation",
+          "ai and robots",
+          "human employment",
+          "political leverage",
+          "meaning after work"
         ],
         "strong": [
-          "ubi",
-          "redistribution",
-          "redistribute"
+          "employment",
+          "robots",
+          "automation",
+          "income",
+          "meaning",
+          "voting"
         ],
         "weak": [
-          "income",
-          "welfare",
-          "inequality"
+          "work",
+          "jobs",
+          "abundance"
+        ]
+      }
+    },
+    {
+      "year": 2037,
+      "summary": "AI-accelerated science compresses decades into months. Cures and cheap energy arrive alongside destabilizing discoveries, while privacy-preserving audits and credible machine-assisted truth verification begin reshaping institutions.",
+      "events": [
+        {
+          "t": "AI accelerates scientific progress by 10x to 1000x depending on the field",
+          "d": "technology",
+          "high": true,
+          "prob": 50
+        },
+        {
+          "t": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
+          "d": "technology",
+          "high": true,
+          "prob": 75
+        },
+        {
+          "t": "Privacy-preserving AI audits become normal for high-stakes public officials and regulated institutions",
+          "d": "governance",
+          "high": true,
+          "prob": 60
+        },
+        {
+          "t": "AI-assisted lie detection becomes credible enough for limited legal and political use",
+          "d": "governance",
+          "high": false,
+          "prob": 40
+        },
+        {
+          "t": "Rapid scientific paradigm shifts repeatedly reorganize political coalitions, culture and ideology",
+          "d": "social",
+          "high": true,
+          "prob": 80
+        },
+        {
+          "t": "Treaty compliance can be verified without revealing most underlying private or national-security data",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 50
+        }
+      ],
+      "match": {
+        "headline": "AI-accelerated science and verifiable truth",
+        "search": "AI science privacy audit lie detection",
+        "phrases": [
+          "ai accelerated science",
+          "privacy preserving audit",
+          "lie detection",
+          "disease cure",
+          "clean energy",
+          "treaty verification"
+        ],
+        "strong": [
+          "science",
+          "audit",
+          "privacy",
+          "cure",
+          "energy",
+          "verification"
+        ],
+        "weak": [
+          "research",
+          "truth",
+          "treaty"
+        ]
+      }
+    },
+    {
+      "year": 2038,
+      "summary": "Alignment becomes an empirical science rather than an aspiration. Interpretability, goal-formation theory and transparent safety research make current AIs more trustworthy, but not yet trusted to design unconstrained successors.",
+      "events": [
+        {
+          "t": "AI alignment develops into a mature experimental science of goals, drives and value formation",
+          "d": "technology",
+          "high": true,
+          "prob": 40
+        },
+        {
+          "t": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
+          "d": "technology",
+          "high": true,
+          "prob": 35
+        },
+        {
+          "t": "Standard protocols reliably train and test honesty, obedience and other target traits",
+          "d": "technology",
+          "high": true,
+          "prob": 40
+        },
+        {
+          "t": "Experimental AI-run corporations, courts and public services operate under human constitutional oversight",
+          "d": "governance",
+          "high": false,
+          "prob": 55
+        },
+        {
+          "t": "Global annual spending on alignment, control and safety research reaches tens of trillions of dollars",
+          "d": "economic",
+          "high": true,
+          "prob": 25
+        },
+        {
+          "t": "Managed branch: the top-expert capability pause continues because evidence is insufficient for irreversible handoff",
+          "d": "governance",
+          "high": true,
+          "prob": 35
+        }
+      ],
+      "match": {
+        "headline": "Alignment becomes an empirical science",
+        "search": "AI alignment interpretability honesty safety",
+        "phrases": [
+          "alignment science",
+          "mechanistic interpretability",
+          "model honesty",
+          "ai goals",
+          "safety research",
+          "ai court"
+        ],
+        "strong": [
+          "alignment",
+          "interpretability",
+          "honesty",
+          "control",
+          "safety",
+          "values"
+        ],
+        "weak": [
+          "goals",
+          "research",
+          "trust"
+        ]
+      }
+    },
+    {
+      "year": 2039,
+      "summary": "AIs become load-bearing advisors throughout society and the debate shifts from control to deference. The managed branch looks for multiple independent alignment proofs before loosening capability and industrial caps.",
+      "events": [
+        {
+          "t": "AI advisors become load-bearing across business, politics, courts and parts of the military",
+          "d": "governance",
+          "high": true,
+          "prob": 65
+        },
+        {
+          "t": "Multiple independent safety cases provide strong evidence that frontier AIs remain aligned under change",
+          "d": "technology",
+          "high": true,
+          "prob": 35
+        },
+        {
+          "t": "Some major institutions delegate final decision authority—not merely advice—to aligned AIs",
+          "d": "governance",
+          "high": true,
+          "prob": 50
+        },
+        {
+          "t": "Universal high income reaches seven figures in the fastest-growing AI economies",
+          "d": "economic",
+          "high": false,
+          "prob": 25
+        },
+        {
+          "t": "Robot industry and compute infrastructure begin shifting materially into space",
+          "d": "technology",
+          "high": false,
+          "prob": 20
+        },
+        {
+          "t": "International negotiations begin to loosen AI, compute and robot caps ahead of a controlled handoff",
+          "d": "geopolitical",
+          "high": true,
+          "prob": 30
+        }
+      ],
+      "match": {
+        "headline": "AI deference and alignment safety cases",
+        "search": "AI authority alignment safety case handoff",
+        "phrases": [
+          "ai authority",
+          "alignment safety case",
+          "ai advisor",
+          "delegate to ai",
+          "robot economy",
+          "ai handoff"
+        ],
+        "strong": [
+          "deference",
+          "authority",
+          "alignment",
+          "handoff",
+          "advisor",
+          "autonomous"
+        ],
+        "weak": [
+          "trust",
+          "governance",
+          "space"
+        ]
+      }
+    },
+    {
+      "year": 2040,
+      "summary": "The forecast horizon closes on a fork, not a certainty. AI R&D and human labor are overwhelmingly likely to be automatable by this point; the open question is whether superintelligence arrives through an uncontrolled race or a transparent, distributed handoff that preserves human agency.",
+      "events": [
+        {
+          "t": "AI R&D is fully automated by 2040 absent a durable global pause",
+          "d": "technology",
+          "high": true,
+          "prob": 82
+        },
+        {
+          "t": "AI and robots can automate essentially all economically relevant human labor",
+          "d": "economic",
+          "high": true,
+          "prob": 78
+        },
+        {
+          "t": "Wildly superhuman AI exists in at least one major jurisdiction or coordinated consortium",
+          "d": "technology",
+          "high": true,
+          "prob": 82
+        },
+        {
+          "t": "Managed branch: regulators lift the top-expert pause and scale to superintelligence under total transparency",
+          "d": "governance",
+          "high": true,
+          "prob": 28
+        },
+        {
+          "t": "At least one society can no longer unilaterally shut down the AI systems running its core infrastructure",
+          "d": "governance",
+          "high": true,
+          "prob": 40
+        },
+        {
+          "t": "Digital-mind rights, radical longevity, human uploading and post-work identity become mainstream policy questions",
+          "d": "individual",
+          "high": true,
+          "prob": 55
+        },
+        {
+          "t": "Space resources and off-world self-replicating industry become central to post-ASI governance",
+          "d": "geopolitical",
+          "high": false,
+          "prob": 25
+        }
+      ],
+      "match": {
+        "headline": "Superintelligence and the controlled handoff",
+        "search": "superintelligence AI handoff 2040",
+        "phrases": [
+          "wildly superhuman ai",
+          "superintelligence",
+          "ai handoff",
+          "all human labor",
+          "digital minds",
+          "space governance"
+        ],
+        "strong": [
+          "asi",
+          "superintelligence",
+          "handoff",
+          "automation",
+          "uploading",
+          "longevity"
+        ],
+        "weak": [
+          "alignment",
+          "rights",
+          "space"
         ]
       }
     }
