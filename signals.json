@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-09T03:19:05.875Z",
+  "updated": "2026-07-10T01:37:28.922Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -139,7 +139,7 @@
       "id": "2072643073176158246",
       "kind": "repost",
       "author": "kimmonismus",
-      "recency": "week",
+      "recency": "recent",
       "date": "02 Jul 2026",
       "maps": "US government floated as an equity holder in frontier AI — OpenAI proposes ceding a ~5% stake (~$42.6B) into a federal 'Public Wealth Fund' to share AI upside with citizens; Altman urges Google, Meta & Anthropic to match",
       "text": "A few more thoughts on OpenAI’s 5 percent stake for the US government. I do not think this is only about allowing US authorities to share in the profits, but…",
@@ -191,15 +191,15 @@
       "rts": 45
     },
     "2027-4": {
-      "id": "2071904851437486150",
+      "id": "2068463951088689152",
       "kind": "repost",
-      "author": "tphuang",
+      "author": "LunixTwin",
       "recency": "recent",
-      "date": "30 Jun 2026",
+      "date": "20 Jun 2026",
       "maps": "Humanoid-robot output scales toward ~1M units/yr",
-      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
-      "likes": 200,
-      "rts": 26
+      "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
+      "likes": 469,
+      "rts": 56
     },
     "2027-6": {
       "id": "2070930161361432856",
@@ -257,15 +257,15 @@
       "rts": 165
     },
     "2029-0": {
-      "id": "2072682046762152160",
+      "id": "2071904851437486150",
       "kind": "repost",
-      "author": "daltonbrewer",
-      "recency": "week",
-      "date": "02 Jul 2026",
+      "author": "tphuang",
+      "recency": "recent",
+      "date": "30 Jun 2026",
       "maps": "Automation eliminates ~25% of current jobs",
-      "text": "BREAKING: Tesla now has 102 Unsupervised Robotaxis operating in Texas, up from 84 100+ has been reached!!! $TSLA",
-      "likes": 2680,
-      "rts": 215
+      "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
+      "likes": 200,
+      "rts": 26
     },
     "2030-0": {
       "id": "2069184772941992403",
@@ -315,7 +315,7 @@
       "id": "2072534973337227446",
       "kind": "repost",
       "author": "ChrissGPT",
-      "recency": "week",
+      "recency": "recent",
       "date": "02 Jul 2026",
       "maps": "Ambient superconductor still unproven post-LK-99; AI accelerates the materials hunt",
       "text": "Sam Altman in the financial times: “In another year or two, we expect to have built systems with astonishing power, capable of delivering tremendous value to…",
@@ -381,7 +381,7 @@
       "id": "2072700088481182100",
       "kind": "repost",
       "author": "elonmusk",
-      "recency": "week",
+      "recency": "recent",
       "date": "02 Jul 2026",
       "maps": "Universal high income debated in major economies",
       "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
@@ -422,28 +422,6 @@
     "2036-2": "merger moves fringe"
   },
   "reality": [
-    {
-      "tag": "ABUNDANCE",
-      "t": "you either die a frontier lab or live long enough to see yourself sell compute",
-      "id": "2072529159054938337",
-      "kind": "repost",
-      "author": "tszzl",
-      "recency": "week",
-      "date": "02 Jul 2026",
-      "likes": 5978,
-      "rts": 351
-    },
-    {
-      "tag": "CAPABILITY",
-      "t": "BREAKING: Tesla sets a new all-time sales record in Australia. 🇦🇺 • Tesla delivered 8,670 vehicles in June, its best month ever in Australia • Ju…",
-      "id": "2072627521892552956",
-      "kind": "repost",
-      "author": "cb_doge",
-      "recency": "week",
-      "date": "02 Jul 2026",
-      "likes": 2093,
-      "rts": 344
-    },
     {
       "tag": "GOVERNANCE",
       "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
@@ -487,6 +465,28 @@
       "date": "01 Jul 2026",
       "likes": 2078,
       "rts": 158
+    },
+    {
+      "tag": "ROBOTS",
+      "t": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per…",
+      "id": "2068095502835384433",
+      "kind": "repost",
+      "author": "niccruzpatane",
+      "recency": "recent",
+      "date": "19 Jun 2026",
+      "likes": 1266,
+      "rts": 153
+    },
+    {
+      "tag": "CAPABILITY",
+      "t": "Final exam at Fudan: students don't answer questions. They write them — to stump AI. 51 students, 10 questions each, 3 AI models (Claude, DeepSeek,…",
+      "id": "2071874530675749202",
+      "kind": "repost",
+      "author": "FudanUniversity",
+      "recency": "recent",
+      "date": "30 Jun 2026",
+      "likes": 1066,
+      "rts": 117
     }
   ]
 }
