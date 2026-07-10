@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-09",
+  "updated": "2026-07-10",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
