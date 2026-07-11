@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-11T21:22:14.273Z",
+  "updated": "2026-07-11T21:32:36.149Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -24,17 +24,6 @@
       "text": "you either die a frontier lab or live long enough to see yourself sell compute",
       "likes": 5978,
       "rts": 351
-    },
-    "2026-2": {
-      "id": "2069739102577021376",
-      "kind": "repost",
-      "author": "StockMKTNewz",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Frontier AI labs and infrastructure firms accumulate trillion-dollar-scale valuations and exceptional political leverage",
-      "text": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled the roadmap…",
-      "likes": 1980,
-      "rts": 326
     },
     "2026-3": {
       "id": "2068515386257973262",
@@ -70,26 +59,26 @@
       "rts": 9
     },
     "2027-0": {
-      "id": "2069500411476885914",
+      "id": "2069096592729047485",
       "kind": "repost",
-      "author": "arcinstitute",
+      "author": "Dr_Singularity",
       "recency": "recent",
-      "date": "23 Jun 2026",
+      "date": "22 Jun 2026",
       "maps": "Millions of AI-agent copies work continuously, generating at least $10B per month in paid digital labor",
-      "text": "The future of biology is agentic. We're proud to work with NVIDIA on the Evo series of models and are excited to see the NVIDIA BioNeMo Agent Toolkit launch …",
-      "likes": 291,
-      "rts": 45
+      "text": "Like I've said many times before, a huge AI workforce is coming, we can say it's basically already here. We just need to scale it. We will start with billion…",
+      "likes": 190,
+      "rts": 29
     },
     "2027-2": {
-      "id": "2070347790115565792",
+      "id": "2069720365442719867",
       "kind": "repost",
-      "author": "minchoi",
+      "author": "Alibaba_Qwen",
       "recency": "recent",
-      "date": "26 Jun 2026",
+      "date": "24 Jun 2026",
       "maps": "Full automation of AI R&D remains incomplete, but coding agents materially accelerate model research",
-      "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
-      "likes": 3471,
-      "rts": 473
+      "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
+      "likes": 4737,
+      "rts": 783
     },
     "2028-1": {
       "id": "2071688039114342592",
@@ -101,28 +90,6 @@
       "text": "OpenClaw is now on iOS + Android 🦞 📱 Native mobile apps, finally 💬 Agents in your pocket 🔔 Channels, tasks, replies on the go Run agents from wherever yo…",
       "likes": 8310,
       "rts": 1112
-    },
-    "2028-2": {
-      "id": "2069720365442719867",
-      "kind": "repost",
-      "author": "Alibaba_Qwen",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
-      "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
-      "likes": 4737,
-      "rts": 783
-    },
-    "2029-1": {
-      "id": "2072041356508184961",
-      "kind": "repost",
-      "author": "ns123abc",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
-      "text": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
-      "likes": 3302,
-      "rts": 271
     },
     "2030-5": {
       "id": "2072022961339437154",
@@ -168,39 +135,6 @@
       "likes": 250,
       "rts": 23
     },
-    "2032-4": {
-      "id": "2069751801096909214",
-      "kind": "repost",
-      "author": "UnitreeRobotics",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production",
-      "text": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
-      "likes": 5899,
-      "rts": 599
-    },
-    "2032-5": {
-      "id": "2068463951088689152",
-      "kind": "repost",
-      "author": "LunixTwin",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
-      "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
-      "likes": 469,
-      "rts": 56
-    },
-    "2033-0": {
-      "id": "2068095502835384433",
-      "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "recent",
-      "date": "19 Jun 2026",
-      "maps": "AI and robot labor contributes at least 20% of economic output in a leading economy",
-      "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
-      "likes": 1266,
-      "rts": 153
-    },
     "2034-0": {
       "id": "2069795647956373632",
       "kind": "repost",
@@ -212,28 +146,6 @@
       "likes": 1077,
       "rts": 69
     },
-    "2034-1": {
-      "id": "2069370979084603672",
-      "kind": "repost",
-      "author": "SpaceX",
-      "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "AI accelerates scientific progress by roughly 10x in multiple research fields",
-      "text": "Today’s mission includes a demo of a new vehicle that will enable affordable, routine access to the microgravity environment for scientific research and in-s…",
-      "likes": 17091,
-      "rts": 2629
-    },
-    "2034-2": {
-      "id": "2068402928961065390",
-      "kind": "repost",
-      "author": "tszzl",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
-      "text": "this will be true across all walks of life I would expect our whole lives to be recorded and the sheer signal density of your physical and digital presence t…",
-      "likes": 1158,
-      "rts": 61
-    },
     "2034-3": {
       "id": "2070930161361432856",
       "kind": "repost",
@@ -244,28 +156,6 @@
       "text": "Gavin Baker just did the math that explains why Elon Musk is building a chip factory and putting data centers in space. The numbers make terrestrial compute …",
       "likes": 53,
       "rts": 12
-    },
-    "2034-4": {
-      "id": "2068358252409024657",
-      "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions",
-      "text": "Okay, this is cool. “MEGAPOD” sounds related to Digital Optimus. Instead of letting the grid sit unused during off-peak high-demand travel days/holidays, Tes…",
-      "likes": 637,
-      "rts": 87
-    },
-    "2034-6": {
-      "id": "2069690992270184651",
-      "kind": "repost",
-      "author": "SUSouthAfrica",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Treaties constrain the use of frontier AI for military R&D and autonomous strategic weapons",
-      "text": "What happens when AI stops assisting companies and starts running them? @peterxing explores the path toward fully autonomous organisations.",
-      "likes": 4,
-      "rts": 3
     },
     "2035-1": {
       "id": "2072191801122038207",
@@ -301,12 +191,23 @@
       "rts": 1509
     },
     "2036-0": {
+      "id": "2068095502835384433",
+      "kind": "repost",
+      "author": "niccruzpatane",
+      "recency": "recent",
+      "date": "19 Jun 2026",
+      "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
+      "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
+      "likes": 1266,
+      "rts": 153
+    },
+    "2036-1": {
       "id": "2071904851437486150",
       "kind": "repost",
       "author": "tphuang",
       "recency": "recent",
       "date": "30 Jun 2026",
-      "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
+      "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
       "text": "Oh boy, UBTech's U1 bionic robots now on sale. Low end goes for 119.8k RMB &amp; high end version are 880k &amp; 990k RMB. Uses RK3588 SoC &amp; proprietary …",
       "likes": 200,
       "rts": 26
@@ -322,17 +223,6 @@
       "likes": 209,
       "rts": 35
     },
-    "2038-4": {
-      "id": "2072069361792413878",
-      "kind": "repost",
-      "author": "NVIDIAAI",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Global annual spending on alignment, control and safety research reaches tens of trillions of dollars",
-      "text": "Most motion papers tailor one controller to one specific task. This year at SIGGRAPH, our research team asks: can motor control itself be pretrained and reus…",
-      "likes": 1441,
-      "rts": 187
-    },
     "2040-5": {
       "id": "2071990699222860231",
       "kind": "repost",
@@ -343,20 +233,10 @@
       "text": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity by buildin…",
       "likes": 7008,
       "rts": 294
-    },
-    "2040-6": {
-      "id": "2069927375870054457",
-      "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Space resources and off-world self-replicating industry become central to post-ASI governance",
-      "text": "Post ASI: We will be able to rebuild your body at the cellular level. You will be able to change your appearance like software. You will be able to learn com…",
-      "likes": 515,
-      "rts": 55
     }
   },
   "search": {
+    "2026-2": "frontier labs infrastructure",
     "2026-5": "compute tracking inference",
     "2027-1": "production software written",
     "2027-3": "disruption visible every",
@@ -364,18 +244,20 @@
     "2027-5": "advances omnibus transparency",
     "2027-6": "datacenter power water",
     "2028-0": "largest issue national",
+    "2028-2": "frontier labs industrialize",
     "2028-3": "control frontier concentrates",
     "2028-4": "annual datacenter construction",
     "2028-5": "superintelligence recursive self",
     "2028-6": "international negotiations slowing",
     "2029-0": "systems perform quarter",
+    "2029-1": "US China AI compute treaty pause",
     "2029-2": "managed branch china",
     "2029-3": "inference only verification",
     "2029-4": "multilateral consortium treaty",
     "2029-5": "erosion labor revenue",
     "2029-6": "policy shocks cause",
-    "2030-0": "absent sustained slowdown",
-    "2030-1": "automated AI research intelligence explosion",
+    "2030-0": "automated AI research intelligence explosion",
+    "2030-1": "absent intervention expert",
     "2030-2": "managed branch frontier",
     "2030-3": "managed branch algorithms",
     "2030-4": "career half life",
@@ -388,18 +270,24 @@
     "2031-5": "continual learning architectures",
     "2032-2": "driven real growth",
     "2032-3": "capital floods mines",
+    "2032-4": "jurisdiction caps auctions",
+    "2032-5": "systems shifting materially",
+    "2033-0": "robot labor contributes",
     "2033-1": "AI dividend persuasion truth seeking AI",
     "2033-2": "cross border distribution",
     "2033-3": "cheap persuasion triggers",
     "2033-4": "personal truth seeking",
     "2033-5": "unregulated robot economies",
     "2033-6": "governments fund universal",
+    "2034-1": "accelerates scientific progress",
+    "2034-2": "continuously agents form",
+    "2034-4": "managed branch powers",
     "2034-5": "datacenters expand neutral",
+    "2034-6": "treaties constrain frontier",
     "2035-0": "strongest equal surpass",
     "2035-4": "persuasion exceeds best",
     "2035-5": "welfare compensation legal",
     "2035-6": "mechanistic interpretability practical",
-    "2036-1": "robots perform cognitive",
     "2036-2": "employment falls half",
     "2036-3": "driven annual growth",
     "2036-4": "land energy materials",
@@ -414,6 +302,7 @@
     "2038-1": "interpretability tools translate",
     "2038-2": "standard protocols reliably",
     "2038-3": "experimental corporations courts",
+    "2038-4": "annual spending alignment",
     "2038-5": "managed branch expert",
     "2039-0": "advisors load bearing",
     "2039-1": "AI authority alignment safety case handoff",
@@ -425,19 +314,31 @@
     "2040-1": "robots automate essentially",
     "2040-2": "wildly superhuman exists",
     "2040-3": "superintelligence AI handoff 2040",
-    "2040-4": "society longer unilaterally"
+    "2040-4": "society longer unilaterally",
+    "2040-6": "space resources self"
   },
   "reality": [
     {
       "tag": "ROBOTS",
-      "t": "Walking the Optimus production line in Fremont",
-      "id": "2072214077372518657",
+      "t": "Unitree R1 | Price from $4,900, Ready Stock 🥳 Your Smart Robot Companion",
+      "id": "2069751801096909214",
       "kind": "repost",
-      "author": "elonmusk",
+      "author": "UnitreeRobotics",
       "recency": "recent",
-      "date": "01 Jul 2026",
-      "likes": 58203,
-      "rts": 7238
+      "date": "24 Jun 2026",
+      "likes": 5899,
+      "rts": 599
+    },
+    {
+      "tag": "CODE",
+      "t": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not vo…",
+      "id": "2070347790115565792",
+      "kind": "repost",
+      "author": "minchoi",
+      "recency": "recent",
+      "date": "26 Jun 2026",
+      "likes": 3471,
+      "rts": 473
     },
     {
       "tag": "ABUNDANCE",
@@ -460,17 +361,6 @@
       "date": "22 Jun 2026",
       "likes": 2610,
       "rts": 134
-    },
-    {
-      "tag": "CODE",
-      "t": "A few thoughts on OpenAI's Jalapeño chip announcement today: 1. This chip is most likely the first one virtually entirely developed by Codex/GPT. C…",
-      "id": "2069857412660801738",
-      "kind": "repost",
-      "author": "PatrickToulme",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "likes": 2270,
-      "rts": 199
     },
     {
       "tag": "CAPABILITY",

@@ -139,7 +139,10 @@ const DOMAIN = new Set(('ai agi asi ubi uhi bci llm llms gpu gpus agent agents a
 const SOFT = new Set(('mission million billion demonstrates platform platforms system systems business companies '
   + 'company services products projects programs general increase continues announced released available '
   + 'important different provides includes following community political national regional personal digital '
-  + 'standard standards process processes feature features version versions content channel channels').split(/\s+/));
+  + 'standard standards process processes feature features version versions content channel channels '
+  + 'research researches researched researching science scientific progress progresses progressed progressing '
+  + 'control controls controlled controlling expert experts expertise value valuable values valued work works '
+  + 'working form forms power powers post posts half short').split(/\s+/));
 // Per-event match terms derived from the event title: multi-word `phrases` (weight 3) + single
 // whole-word strong terms `sw` (weight 2). Whole-word (not prefix) avoids gene→general type bleed.
 function deriveEventTerms(title){
@@ -153,11 +156,11 @@ function deriveEventTerms(title){
 }
 // Which event in a year does the curated headline describe? (max title-word overlap; default 0.)
 function headlineIndex(events, headline){
-  const hw = new Set(String(headline || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !STOP.has(w)));
+  const hw = topicVariants(headline);
   if (!hw.size) return 0;
   let best = 0, bestScore = -1;
   events.forEach((e, i) => {
-    const ew = String(e && e.t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(/\s+/);
+    const ew = topicVariants(e && e.t);
     let s = 0; for (const w of ew) if (hw.has(w)) s++;
     if (s > bestScore) { bestScore = s; best = i; }
   });
@@ -219,7 +222,7 @@ function buildPredictions(){
       y.events.forEach((e, i) => {
         if (!e || !e.t) return;
         const ev = deriveEventTerms(e.t);
-        const slot = { id: y.year + '-' + i, year: y.year, evIndex: i, maps: e.t,
+        const slot = { id: y.year + '-' + i, year: y.year, evIndex: i, domain: e.d || '', maps: e.t,
           search: (i === hi && m.search) ? m.search : ev.search,
           phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [] };
         if (i === hi && hasCur) { // headline event keeps the curated high-quality terms
@@ -294,18 +297,82 @@ async function harvestLive(){
 // words) is rejected so a lone common word can't bind a post to an unrelated prediction.
 function scorePost(text, p){
   const norm = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
-  let score = 0, solid = 0, specificSingles = 0; const hit = [];
-  for (const ph of (p.phrases || [])) if (norm.includes(' ' + ph + ' ') || norm.includes(' ' + ph)) { score += 3; solid++; hit.push(ph); }
-  for (const w of (p.strong || [])) if (norm.includes(' ' + w)) { score += 2; solid++; hit.push(w); }
+  let score = 0, solid = 0, specificSingles = 0, phraseHits = 0; const hit = []; const concepts = new Set();
+  const concept = w => w.length > 4 && w.endsWith('s') ? w.slice(0, -1) : w;
+  for (const ph of (p.phrases || [])) if (norm.includes(' ' + ph + ' ') || norm.includes(' ' + ph)) {
+    score += 3; solid++; phraseHits++; hit.push(ph);
+  }
+  for (const w of (p.strong || [])) if (norm.includes(' ' + w)) {
+    score += 2; solid++; concepts.add(concept(w)); hit.push(w);
+  }
   for (const w of (p.sw || [])) if (norm.includes(' ' + w + ' ') || norm.includes(' ' + w + 's ') || (w.endsWith('s') && norm.includes(' ' + w.slice(0, -1) + ' '))) {
     score += 2;
-    if (DOMAIN.has(w)) solid++;
-    else if (w.length >= 7 && !SOFT.has(w)) specificSingles++;
+    if (DOMAIN.has(w)) { solid++; concepts.add(concept(w)); }
+    else if (w.length >= 7 && !SOFT.has(w)) { specificSingles++; concepts.add(concept(w)); }
     hit.push(w);
   }
   if (specificSingles >= 2) solid++;
   for (const w of (p.weak || []))   if (norm.includes(' ' + w + ' ')) { score += 1; hit.push(w); }
-  return { score, solid, hit };
+  return { score, solid, coverage: concepts.size + phraseHits * 2, hit };
+}
+
+// Conservative facet checks keep broad keyword overlap from implying support for a more specific claim.
+// A failed guard uses the live-search fallback instead, which is safer than a misleading real-item card.
+const FACET_GUARDS = [
+  {
+    domains: new Set(['governance', 'geopolitical']),
+    title: /\b(?:managed branch|governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?)\b/,
+    text: /\b(?:governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|risk|evaluation|interpretability|deception|misalignment|expert)\b/,
+  },
+  {
+    title: /\b(?:alignment|deception|sabotage|misalignment)\b/,
+    text: /\b(?:alignment|safety|risk|evaluation|interpretability|deception|sabotage|misalignment|control)\b/,
+  },
+  {
+    title: /\b(?:ai|artificial intelligence)\b/,
+    text: /\b(?:ai|artificial intelligence|agi|asi|model|models|agent|agents|robot|robots|llm|llms|gpt|claude|gemini|deepseek|qwen|codex|nvidia|benchmark|fable|frontier|lab|labs|compute)\b/,
+  },
+  {
+    title: /\b(?:coding|software|research|r d|scientific)\b/,
+    text: /\b(?:code|coding|software|programming|programmer|developer|engineering|research|researcher|r d|algorithm|training|scientific|science|experiment|discovery|design|manufacturing|tapeout|lab|labs|compute)\b/,
+  },
+  {
+    title: /\b(?:paid|revenue|valuation|market|income|tax|taxes|gdp|output|trillion|trillions|billion|billions|dollar|dollars)\b/,
+    text: /\b(?:paid|revenue|valuation|market|income|tax|taxes|gdp|output|trillion|trillions|billion|billions|dollar|dollars|profit|sales|wage|salary|funding|investment)\b/,
+  },
+  {
+    title: /\b(?:economic|economically|economy|workforce|employment|jobs)\b/,
+    text: /\b(?:economic|economically|economy|workforce|employment|jobs|work|labor|labour|revenue|market|income|gdp|output|price|profit|sales|wage|salary|funding|investment|forecast|forecasts|shipment|shipments|units)\b/,
+  },
+  {
+    title: /\b(?:valuation|valuations|market cap)\b/,
+    text: /\b(?:valuation|valuations|valued|worth|market cap|stock|shares)\b/,
+  },
+  {
+    title: /\b(?:tax|taxes|taxation|rents?|levies|levy)\b/,
+    text: /\b(?:tax|taxes|taxation|rents?|levies|levy|revenue|income)\b/,
+  },
+  {
+    title: /\b(?:doubling|growth|grows|grow)\b/,
+    text: /\b(?:doubling|double|doubles|growth|grows|grow|scaling|scale|exponential)\b/,
+  },
+  {
+    title: /\b(?:thousand|thousands|million|millions|billion|billions)\b/,
+    text: /\b(?:thousand|thousands|million|millions|billion|billions|mass|scale|scaling)\b/,
+  },
+  {
+    title: /\b(?:space|off world|orbital|lunar|moon|mars)\b/,
+    text: /\b(?:space|off world|orbital|orbit|lunar|moon|mars|rocket|starship|spacex)\b/,
+  },
+  {
+    title: /\bessentially all\b/,
+    text: /\b(?:all|everything|labor|labour|work|automate|automation|tasks)\b/,
+  },
+];
+function passesFacetGuards(text, p){
+  const normText = String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const normTitle = String(p.maps || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return FACET_GUARDS.every(g => (g.domains && !g.domains.has(p.domain)) || !g.title.test(normTitle) || g.text.test(normText));
 }
 
 // ---- 1. Parse the harvested timeline into posts + reposts -------------------------------------
@@ -470,12 +537,12 @@ async function ingestList(file, kind){
   const cands = [];
   for (const p of PREDICTIONS) {
     for (const t of eligible) {
-      const { score, solid, hit } = scorePost(t.text, p);
-      if (score < MIN_SCORE || solid < 1) continue;
+      const { score, solid, coverage, hit } = scorePost(t.text, p);
+      if (score < MIN_SCORE || solid < 1 || !passesFacetGuards(t.text, p)) continue;
       const ageDays = (now - t.created.getTime()) / 864e5;
       const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : 'recent';
       const eff = score + (tier === 'week' ? WEEK_BOOST : 0);
-      cands.push({ id: p.id, year: p.year, p, t, score, eff, tier, hit, created: t.created });
+      cands.push({ id: p.id, year: p.year, p, t, score, coverage, eff, tier, hit, created: t.created });
     }
   }
   cands.sort((a, b) => b.eff - a.eff || b.score - a.score || b.created - a.created);
@@ -501,7 +568,7 @@ async function ingestList(file, kind){
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
     embeds[p.id] = { id: pick.id, kind: pick.kind, author: author || 'peterxing', recency: c.tier, date: fmtDate(created), maps: p.maps, text, likes: lk, rts: rts || 0 };
-    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} s${c.score}] ${c.hit.slice(0, 4).join('/')}`;
+    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} s${c.score} c${c.coverage}] ${c.hit.slice(0, 4).join('/')}`;
   }
 
   // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
