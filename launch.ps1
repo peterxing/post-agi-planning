@@ -6,8 +6,7 @@ $dir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 # 1) Ensure the static server is listening on 8787
 $listening = $false
 try { $listening = (New-Object Net.Sockets.TcpClient).ConnectAsync('127.0.0.1',8787).Wait(800) } catch {}
-$nodeRunning = (Get-Process node -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0
-if (-not $nodeRunning) {
+if (-not $listening) {
   Start-Process -FilePath "node" -ArgumentList "`"$dir\server.js`"" -WorkingDirectory $dir -WindowStyle Hidden
   Start-Sleep -Seconds 2
 }
