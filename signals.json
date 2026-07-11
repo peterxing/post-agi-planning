@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-11T10:03:30.787Z",
+  "updated": "2026-07-11T11:06:03.162Z",
   "note": "Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed \"YEAR-INDEX\"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction's own title (the year's curated keywords apply to that year's headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:\"recent\"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.",
   "source": "x-api-cache",
   "embeds": {
@@ -26,15 +26,15 @@
       "rts": 351
     },
     "2026-2": {
-      "id": "2072041356508184961",
+      "id": "2069739102577021376",
       "kind": "repost",
-      "author": "ns123abc",
+      "author": "StockMKTNewz",
       "recency": "recent",
-      "date": "30 Jun 2026",
+      "date": "24 Jun 2026",
       "maps": "Frontier AI labs and infrastructure firms accumulate trillion-dollar-scale valuations and exceptional political leverage",
-      "text": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
-      "likes": 3302,
-      "rts": 271
+      "text": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled the roadmap…",
+      "likes": 1980,
+      "rts": 326
     },
     "2026-3": {
       "id": "2068515386257973262",
@@ -58,17 +58,6 @@
       "likes": 39967,
       "rts": 5699
     },
-    "2026-5": {
-      "id": "2072643073176158246",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "recent",
-      "date": "02 Jul 2026",
-      "maps": "Compute tracking and inference-only verification move from niche research into government preparedness programs",
-      "text": "A few more thoughts on OpenAI’s 5 percent stake for the US government. I do not think this is only about allowing US authorities to share in the profits, but…",
-      "likes": 188,
-      "rts": 20
-    },
     "2026-6": {
       "id": "2069896410581835917",
       "kind": "repost",
@@ -91,17 +80,6 @@
       "likes": 291,
       "rts": 45
     },
-    "2027-1": {
-      "id": "2072214077372518657",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "recent",
-      "date": "01 Jul 2026",
-      "maps": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
-      "text": "Walking the Optimus production line in Fremont",
-      "likes": 58203,
-      "rts": 7238
-    },
     "2027-2": {
       "id": "2070347790115565792",
       "kind": "repost",
@@ -112,28 +90,6 @@
       "text": "We are cooked. China's Alibaba just revealed Wan Streamer. AI agents can now see you, hear you, and talk back on video in real time. This is not voice mode a…",
       "likes": 3471,
       "rts": 473
-    },
-    "2027-5": {
-      "id": "2071487485172134131",
-      "kind": "repost",
-      "author": "aelluswamy",
-      "recency": "recent",
-      "date": "29 Jun 2026",
-      "maps": "The US advances an omnibus AI transparency, compute-tracking or frontier-accountability law",
-      "text": "FSD v14 Lite is now rolling out to AI3 early-access customers. Based on the feedback, will rollout to more customers over the next few weeks. This build dist…",
-      "likes": 13262,
-      "rts": 1716
-    },
-    "2027-6": {
-      "id": "2069765244142969282",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Datacenter power, water and grid capacity become top-tier infrastructure and political constraints",
-      "text": "Tesla, Sunrun and Renew Home have announced a partnership to create the largest distributed power plant in the U.S. by providing more than 16 GW of flexible …",
-      "likes": 1991,
-      "rts": 273
     },
     "2028-1": {
       "id": "2071688039114342592",
@@ -147,158 +103,26 @@
       "rts": 1112
     },
     "2028-2": {
-      "id": "2071357162195132454",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "recent",
-      "date": "28 Jun 2026",
-      "maps": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
-      "text": "In addition to their excellent and unique training data, the Cursor team is also making major engineering contributions to v9 SFT &amp; RL. It’s an honor and…",
-      "likes": 5539,
-      "rts": 329
-    },
-    "2028-3": {
-      "id": "2072106151890809341",
-      "kind": "repost",
-      "author": "AnthropicAI",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Control over frontier AI concentrates around a handful of US and Chinese companies, presidents and party leaders",
-      "text": "We’ve received notice that the Department of Commerce has lifted export controls on Claude Fable 5 and Mythos 5. We'll begin restoring access tomorrow, and w…",
-      "likes": 84688,
-      "rts": 13039
-    },
-    "2028-4": {
-      "id": "2072009696119022017",
-      "kind": "repost",
-      "author": "xAIMemphis",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Annual datacenter construction commitments exceed the US defense budget",
-      "text": "Earlier this year, @SpaceX acquired @xAI (now SpaceXAI), which operates the Colossus datacenters in Memphis. As SpaceX continues to invest in the area, Space…",
-      "likes": 4124,
-      "rts": 966
-    },
-    "2028-5": {
-      "id": "2071485027720823283",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "29 Jun 2026",
-      "maps": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
-      "text": "Here are the official release notes for FSD V14 Lite for HW3 @Tesla owners: • Distilled the intelligence from HW4 V14 into HW3. This allows HW3 to directly l…",
-      "likes": 2511,
-      "rts": 257
-    },
-    "2028-6": {
-      "id": "2072534973337227446",
-      "kind": "repost",
-      "author": "ChrissGPT",
-      "recency": "recent",
-      "date": "02 Jul 2026",
-      "maps": "International negotiations begin over slowing an intelligence explosion and auditing frontier compute",
-      "text": "Sam Altman in the financial times: “In another year or two, we expect to have built systems with astonishing power, capable of delivering tremendous value to…",
-      "likes": 932,
-      "rts": 124
-    },
-    "2029-0": {
-      "id": "2071946305652367869",
-      "kind": "repost",
-      "author": "openstandard",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "AI systems perform at least one quarter of cognitive labor in a leading economy",
-      "text": "Introducing Open USD: a stablecoin built for the internet economy, designed by the businesses growing it.",
-      "likes": 5284,
-      "rts": 1055
-    },
-    "2029-1": {
-      "id": "2068635123789242724",
-      "kind": "repost",
-      "author": "karlmehta",
-      "recency": "recent",
-      "date": "21 Jun 2026",
-      "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
-      "text": "Jensen Huang says AI just crossed the line where tokens became profitable - and that flips the whole compute market. \"Useful AI has arrived.\" \"If you just lo…",
-      "likes": 139,
-      "rts": 36
-    },
-    "2029-2": {
       "id": "2069720365442719867",
       "kind": "repost",
       "author": "Alibaba_Qwen",
       "recency": "recent",
       "date": "24 Jun 2026",
-      "maps": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
+      "maps": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
       "text": "📣📣 Meet Qwen-AgentWorld — a native language world model that simulates 7 agent environments (MCP, Search, Terminal, SWE, Web, OS, Android) within a single …",
       "likes": 4737,
       "rts": 783
     },
-    "2029-3": {
-      "id": "2069438071678861421",
+    "2029-1": {
+      "id": "2072041356508184961",
       "kind": "repost",
-      "author": "niccruzpatane",
+      "author": "ns123abc",
       "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "Inference-only verification is deployed at multiple major datacenters",
-      "text": "This morning, @SpaceX deployed their new spacecraft called Starfall for the first time. The disk-shaped reentry vehicle designed for returning payloads from …",
-      "likes": 1093,
-      "rts": 123
-    },
-    "2029-4": {
-      "id": "2069594488578900254",
-      "kind": "repost",
-      "author": "AlexFinn",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "A multilateral AI consortium or treaty framework gains support beyond the US and China",
-      "text": "MASSIVE Hermes Agent update over the last few days Totally changes the way I use Hermes Here's 8 new features you need to start using immediately: 1. Native …",
-      "likes": 1565,
-      "rts": 91
-    },
-    "2029-5": {
-      "id": "2070930161361432856",
-      "kind": "repost",
-      "author": "ihtesham2005",
-      "recency": "recent",
-      "date": "27 Jun 2026",
-      "maps": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
-      "text": "Gavin Baker just did the math that explains why Elon Musk is building a chip factory and putting data centers in space. The numbers make terrestrial compute …",
-      "likes": 53,
-      "rts": 12
-    },
-    "2030-1": {
-      "id": "2072394812301480067",
-      "kind": "repost",
-      "author": "NVIDIAAI",
-      "recency": "recent",
-      "date": "01 Jul 2026",
-      "maps": "Absent intervention, top-expert or superintelligent AI follows automated coding within roughly one year",
-      "text": "We took a 30B model and split it in two to write tokens in parallel instead of one at a time. Introducing Nemotron-Labs-TwoTower: a diffusion language model …",
-      "likes": 4465,
-      "rts": 560
-    },
-    "2030-2": {
-      "id": "2071566924803395741",
-      "kind": "repost",
-      "author": "AIatMeta",
-      "recency": "recent",
-      "date": "29 Jun 2026",
-      "maps": "Managed branch: frontier R&D resumes under total research transparency and cross-border verification",
-      "text": "We’re sharing the next major milestone in our non-invasive brain-to-text decoder research: Brain2Qwerty v2. Building on v1, which was published today in @Nat…",
-      "likes": 14078,
-      "rts": 2090
-    },
-    "2030-3": {
-      "id": "2069329697843151333",
-      "kind": "repost",
-      "author": "karlmehta",
-      "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
-      "text": "Satya Nadella reveals why every company may need its own AI model: the model becomes the new company database. \"To me, a model is like the database market.\" …",
-      "likes": 1704,
-      "rts": 252
+      "date": "30 Jun 2026",
+      "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
+      "text": "🚨BREAKING: Tesla just poached Intel's 18A architect to lead TERAFAB &gt;trillion watts of compute/year ITS HAPPENING",
+      "likes": 3302,
+      "rts": 271
     },
     "2030-5": {
       "id": "2072022961339437154",
@@ -311,39 +135,6 @@
       "likes": 812,
       "rts": 79
     },
-    "2030-6": {
-      "id": "2069431400059507131",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "Physical production, energy and robotics—not ideas—become the main bottlenecks to AI-driven growth",
-      "text": "Tesla has secured a massive Megapack order worth up to $5 billion from NatPower to supply more than 25 GWh of battery energy storage systems across Italy and…",
-      "likes": 3585,
-      "rts": 450
-    },
-    "2030-7": {
-      "id": "2068409089345134984",
-      "kind": "repost",
-      "author": "tszzl",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "At least one major economy adopts an AI dividend, public AI equity stake or compute-rent mechanism",
-      "text": "as the technology becomes more science fiction i see a lot of commentators, technical staff etc trying hard to not think thoughts that feel science fiction a…",
-      "likes": 2270,
-      "rts": 188
-    },
-    "2031-0": {
-      "id": "2070183632132845995",
-      "kind": "repost",
-      "author": "alephneuro",
-      "recency": "recent",
-      "date": "25 Jun 2026",
-      "maps": "Frontier AI could deliver roughly a 10x AI-R&D speedup if allowed to research without restrictions",
-      "text": "We recently obtained the highest-resolution 3D images of the human brain ever taken from outside the skull. This is the first look. Introducing Aleph, a rese…",
-      "likes": 6591,
-      "rts": 992
-    },
     "2031-1": {
       "id": "2070623894562865579",
       "kind": "repost",
@@ -354,39 +145,6 @@
       "text": "Morgan Stanley just doubled its 2026 China humanoid robot shipment forecast again, from 28,000 to 50,000 units. In January, the bank expected 14,000 units. A…",
       "likes": 308,
       "rts": 32
-    },
-    "2031-2": {
-      "id": "2071376599707214304",
-      "kind": "repost",
-      "author": "nextbigfuture",
-      "recency": "recent",
-      "date": "28 Jun 2026",
-      "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
-      "text": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI data cent…",
-      "likes": 261,
-      "rts": 40
-    },
-    "2031-3": {
-      "id": "2070584331068969336",
-      "kind": "repost",
-      "author": "METR_Evals",
-      "recency": "recent",
-      "date": "26 Jun 2026",
-      "maps": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
-      "text": "OpenAI gave METR early access to GPT-5.6 Sol for testing including raw chain-of-thought, a railfree version of the model, and internal information about the …",
-      "likes": 2547,
-      "rts": 210
-    },
-    "2031-5": {
-      "id": "2070602201139933269",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "26 Jun 2026",
-      "maps": "Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change",
-      "text": "Elon Musk has received regulatory approval to acquire startup Mesh Optical Technologies, a company founded by former SpaceX engineers working on optical data…",
-      "likes": 6104,
-      "rts": 700
     },
     "2032-0": {
       "id": "2072376968729817531",
@@ -410,17 +168,6 @@
       "likes": 250,
       "rts": 23
     },
-    "2032-3": {
-      "id": "2072016884460060832",
-      "kind": "repost",
-      "author": "TheHumanoidHub",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Capital floods into mines, motors, actuators, fabs and factories as robotics becomes the binding bottleneck",
-      "text": "Proception has launched its first products, ProHand 1.0 and ProGlove 1.0. - 22 total DoF with 18 actuated DoF (including a 2-DoF wrist) - Tendon-driven finge…",
-      "likes": 1726,
-      "rts": 220
-    },
     "2032-4": {
       "id": "2069751801096909214",
       "kind": "repost",
@@ -433,103 +180,37 @@
       "rts": 599
     },
     "2032-5": {
-      "id": "2068993447235572225",
-      "kind": "repost",
-      "author": "7NewsSydney",
-      "recency": "recent",
-      "date": "22 Jun 2026",
-      "maps": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
-      "text": "Self-driving cars and driverless robo-taxis are already operating on Australian roads, with technology advancing rapidly and early studies suggesting automat…",
-      "likes": 94,
-      "rts": 10
-    },
-    "2033-0": {
-      "id": "2070528961235575278",
-      "kind": "repost",
-      "author": "AnthropicAI",
-      "recency": "recent",
-      "date": "26 Jun 2026",
-      "maps": "AI and robot labor contributes at least 20% of economic output in a leading economy",
-      "text": "To keep pace with AI progress, we're advancing how we study Claude's economic impact. Hourly sampling and survey data show us how the cadences of life shape …",
-      "likes": 2766,
-      "rts": 370
-    },
-    "2033-1": {
-      "id": "2070303973966254468",
-      "kind": "repost",
-      "author": "DanielCHTan97",
-      "recency": "recent",
-      "date": "26 Jun 2026",
-      "maps": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
-      "text": "Anthropic could dodge the USG ban on Fable right now by hiring every American citizen for minimum wage",
-      "likes": 158,
-      "rts": 8
-    },
-    "2033-2": {
-      "id": "2071963092263768157",
-      "kind": "repost",
-      "author": "mattkrisiloff",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Cross-border distribution of AI-generated wealth becomes a serious geopolitical negotiation",
-      "text": "I’m so excited to share this update on @Conception – We’ve generated the first early human eggs derived from stem cells. This is a big deal -- the potential …",
-      "likes": 6376,
-      "rts": 878
-    },
-    "2033-3": {
-      "id": "2069978495690707147",
-      "kind": "repost",
-      "author": "emollick",
-      "recency": "recent",
-      "date": "25 Jun 2026",
-      "maps": "Cheap AI persuasion triggers capability limits, disclosure rules or taxes on targeted influence",
-      "text": "The capability overhang from the models we have today is big enough that large-scale change to work and society over the next 5+ years is now inevitable even…",
-      "likes": 1364,
-      "rts": 123
-    },
-    "2033-4": {
-      "id": "2069192808016273813",
-      "kind": "repost",
-      "author": "SumnerLN",
-      "recency": "recent",
-      "date": "22 Jun 2026",
-      "maps": "Personal truth-seeking AI advisors begin replacing one-size-fits-all feeds and search interfaces",
-      "text": "Implanted Brain-Computer Interfaces are getting fast! They're approaching speeds that match unimpaired people typing. But... more electrodes won't be enough …",
-      "likes": 324,
-      "rts": 45
-    },
-    "2033-5": {
       "id": "2068463951088689152",
       "kind": "repost",
       "author": "LunixTwin",
       "recency": "recent",
       "date": "20 Jun 2026",
-      "maps": "Unregulated AI-and-robot economies demonstrate subannual doubling potential",
+      "maps": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
       "text": "Jensen Huang explains why a future completely surrounded by robots is certain and reveals the one companion he wants with him everywhere \"Everything that mov…",
       "likes": 469,
       "rts": 56
     },
-    "2033-6": {
-      "id": "2072017923754135819",
+    "2033-0": {
+      "id": "2068095502835384433",
       "kind": "repost",
-      "author": "soubhikdeb",
+      "author": "niccruzpatane",
       "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "Governments fund universal-scale biodefense, rapid vaccines and continuous pathogen monitoring",
-      "text": "Emad Mostaque on PostAGI: \"Right now, not a single institution is on your side. The companies won't look out for you, and the governments won't either. Most …",
-      "likes": 47,
-      "rts": 13
+      "date": "19 Jun 2026",
+      "maps": "AI and robot labor contributes at least 20% of economic output in a leading economy",
+      "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
+      "likes": 1266,
+      "rts": 153
     },
     "2034-0": {
-      "id": "2069739102577021376",
+      "id": "2069795647956373632",
       "kind": "repost",
-      "author": "StockMKTNewz",
+      "author": "kimmonismus",
       "recency": "recent",
       "date": "24 Jun 2026",
       "maps": "AI automates a majority of cognitive work in semiconductor R&D and production engineering",
-      "text": "JAPAN JUST ANNOUNCED A $2.3 TRILLION INVESTMENT PLAN FOR AI AND SEMICONDUCTORS OVER THE NEXT 14 YEARS Prime Minister Sanae Takaichi just unveiled the roadmap…",
-      "likes": 1980,
-      "rts": 326
+      "text": "Absolutely insane: \"Jalapeño was co-developed from initial design to manufacturing tape-out in just nine months, and the custom AI accelerator program repres…",
+      "likes": 1077,
+      "rts": 69
     },
     "2034-1": {
       "id": "2069370979084603672",
@@ -554,26 +235,26 @@
       "rts": 61
     },
     "2034-3": {
-      "id": "2069075468519633279",
+      "id": "2070930161361432856",
       "kind": "repost",
-      "author": "SawyerMerritt",
+      "author": "ihtesham2005",
       "recency": "recent",
-      "date": "22 Jun 2026",
+      "date": "27 Jun 2026",
       "maps": "Global AI compute reaches multi-terawatt scale and billions of H100-equivalents",
-      "text": "SpaceX has signed a new compute lease deal with open-source AI startup Reflection that will pay @SpaceX $150 million per month. The payments would total abou…",
-      "likes": 3112,
-      "rts": 338
+      "text": "Gavin Baker just did the math that explains why Elon Musk is building a chip factory and putting data centers in space. The numbers make terrestrial compute …",
+      "likes": 53,
+      "rts": 12
     },
     "2034-4": {
-      "id": "2069306962182070595",
+      "id": "2068358252409024657",
       "kind": "repost",
-      "author": "haider1",
+      "author": "niccruzpatane",
       "recency": "recent",
-      "date": "23 Jun 2026",
+      "date": "20 Jun 2026",
       "maps": "Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions",
-      "text": "Anthropic co-founder Jack Clark: We're building systems that may be able to invent their own successors as soon as 2028 No researchers required. Just compute…",
-      "likes": 209,
-      "rts": 35
+      "text": "Okay, this is cool. “MEGAPOD” sounds related to Digital Optimus. Instead of letting the grid sit unused during off-peak high-demand travel days/holidays, Tes…",
+      "likes": 637,
+      "rts": 87
     },
     "2034-6": {
       "id": "2069690992270184651",
@@ -619,17 +300,6 @@
       "likes": 12576,
       "rts": 1509
     },
-    "2035-4": {
-      "id": "2071977017474789557",
-      "kind": "repost",
-      "author": "john_my07",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "AI persuasion exceeds the best human persuaders and is subject to strict international controls",
-      "text": "Seedance 2.0 on OpenArt AI Prompt: Main subject: young Korean woman, early 20s, natural everyday appearance, faded charcoal-grey sleeveless crop top, loose h…",
-      "likes": 14627,
-      "rts": 1189
-    },
     "2036-0": {
       "id": "2071904851437486150",
       "kind": "repost",
@@ -641,137 +311,16 @@
       "likes": 200,
       "rts": 26
     },
-    "2036-1": {
-      "id": "2068095502835384433",
-      "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "recent",
-      "date": "19 Jun 2026",
-      "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
-      "text": "Pretty crazy to think that @Tesla could potentially generate upwards of $250 billion per year on just this plot of land in the future. ($25,000 per Optimus r…",
-      "likes": 1266,
-      "rts": 153
-    },
-    "2036-2": {
-      "id": "2071294235257536735",
-      "kind": "repost",
-      "author": "alexocheema",
-      "recency": "recent",
-      "date": "28 Jun 2026",
-      "maps": "Human employment falls below half of working-age adults in at least one leading economy",
-      "text": "We’ve been working with NVIDIA in their HQ for the past month. We’re going to make Local AI The Default. BIG news to share at Local AI summit, SF, July 2nd.",
-      "likes": 2054,
-      "rts": 116
-    },
-    "2036-4": {
-      "id": "2068897865456332807",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "22 Jun 2026",
-      "maps": "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
-      "text": "SpaceX is set to launch its first Starfall Demo mission this Tuesday aboard its Falcon 9 rocket. The mission will test a new cargo return vehicle (pictured b…",
-      "likes": 4497,
-      "rts": 400
-    },
-    "2036-6": {
-      "id": "2068371880671621503",
-      "kind": "repost",
-      "author": "pesottas",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "Education and social institutions recenter on meaning, community, relationships and stewardship rather than employability",
-      "text": "Age reversal will change medicine, insurance, retirement, work, family, and the meaning of life itself. Society has barely begun to imagine what is coming.",
-      "likes": 175,
-      "rts": 15
-    },
     "2037-0": {
-      "id": "2071990699222860231",
+      "id": "2069306962182070595",
       "kind": "repost",
-      "author": "bryan_johnson",
-      "recency": "recent",
-      "date": "30 Jun 2026",
-      "maps": "AI accelerates scientific progress by 10x to 1000x depending on the field",
-      "text": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity by buildin…",
-      "likes": 7008,
-      "rts": 294
-    },
-    "2037-1": {
-      "id": "2069435515829645480",
-      "kind": "repost",
-      "author": "ihtesham2005",
+      "author": "haider1",
       "recency": "recent",
       "date": "23 Jun 2026",
-      "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
-      "text": "Demis Hassabis just described the exact architecture he is building to cure all human disease and said the breakthrough will not come gradually. It will hit …",
-      "likes": 1078,
-      "rts": 180
-    },
-    "2037-2": {
-      "id": "2071002354636202324",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "recent",
-      "date": "27 Jun 2026",
-      "maps": "Privacy-preserving AI audits become normal for high-stakes public officials and regulated institutions",
-      "text": "Some additional @Tesla Cybercab info from the official documents: • Cybercab includes an Active Hood that raises during certain pedestrian impacts to reduce …",
-      "likes": 4122,
-      "rts": 537
-    },
-    "2037-3": {
-      "id": "2070254377831727283",
-      "kind": "repost",
-      "author": "ns123abc",
-      "recency": "recent",
-      "date": "25 Jun 2026",
-      "maps": "AI-assisted lie detection becomes credible enough for limited legal and political use",
-      "text": "🚨 BREAKING: U.S. government will decide who gets access to GPT-5.6 OpenAI will release GPT-5.6 only in a limited preview to a small group of partners. Sam A…",
-      "likes": 6240,
-      "rts": 896
-    },
-    "2037-4": {
-      "id": "2069990565530214798",
-      "kind": "repost",
-      "author": "Rothmus",
-      "recency": "recent",
-      "date": "25 Jun 2026",
-      "maps": "Rapid scientific paradigm shifts repeatedly reorganize political coalitions, culture and ideology",
-      "text": "“We are going to have a multi-racial nation in Singapore. This is not a Malay nation. This is not a Chinese nation. This is not an Indian nation. Everybody w…",
-      "likes": 3146,
-      "rts": 980
-    },
-    "2037-5": {
-      "id": "2068692276298342898",
-      "kind": "repost",
-      "author": "TeslaZoa",
-      "recency": "recent",
-      "date": "21 Jun 2026",
-      "maps": "Treaty compliance can be verified without revealing most underlying private or national-security data",
-      "text": "🚨 Theoretical Physicist Lawrence M. Krauss Praises Tesla FSD Theoretical physicist and best-selling author Lawrence M. Krauss shared a strong endorsement of…",
-      "likes": 1083,
-      "rts": 167
-    },
-    "2038-0": {
-      "id": "2070579706701987909",
-      "kind": "repost",
-      "author": "SumnerLN",
-      "recency": "recent",
-      "date": "26 Jun 2026",
-      "maps": "AI alignment develops into a mature experimental science of goals, drives and value formation",
-      "text": "It’s been a big week (month? year? decade?) for ultrasound and I’m getting dozens of DMs so I’m going to do another one of these “the science behind” threads…",
-      "likes": 259,
-      "rts": 47
-    },
-    "2038-1": {
-      "id": "2069857412660801738",
-      "kind": "repost",
-      "author": "PatrickToulme",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
-      "text": "A few thoughts on OpenAI's Jalapeño chip announcement today: 1. This chip is most likely the first one virtually entirely developed by Codex/GPT. Codex with …",
-      "likes": 2270,
-      "rts": 199
+      "maps": "AI accelerates scientific progress by 10x to 1000x depending on the field",
+      "text": "Anthropic co-founder Jack Clark: We're building systems that may be able to invent their own successors as soon as 2028 No researchers required. Just compute…",
+      "likes": 209,
+      "rts": 35
     },
     "2038-4": {
       "id": "2072069361792413878",
@@ -784,60 +333,16 @@
       "likes": 1441,
       "rts": 187
     },
-    "2039-3": {
-      "id": "2069795647956373632",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "recent",
-      "date": "24 Jun 2026",
-      "maps": "Universal high income reaches seven figures in the fastest-growing AI economies",
-      "text": "Absolutely insane: \"Jalapeño was co-developed from initial design to manufacturing tape-out in just nine months, and the custom AI accelerator program repres…",
-      "likes": 1077,
-      "rts": 69
-    },
-    "2039-4": {
-      "id": "2069343498382499904",
-      "kind": "repost",
-      "author": "tslaming",
-      "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "Robot industry and compute infrastructure begin shifting materially into space",
-      "text": "GOOD NEWS 🇬🇧🇮🇹 NatPower and @Tesla have announced a massive $4–$5 billion partnership to build new battery storage infrastructure across Italy and the UK…",
-      "likes": 517,
-      "rts": 72
-    },
-    "2039-5": {
-      "id": "2068358252409024657",
-      "kind": "repost",
-      "author": "niccruzpatane",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "maps": "International negotiations begin to loosen AI, compute and robot caps ahead of a controlled handoff",
-      "text": "Okay, this is cool. “MEGAPOD” sounds related to Digital Optimus. Instead of letting the grid sit unused during off-peak high-demand travel days/holidays, Tes…",
-      "likes": 637,
-      "rts": 87
-    },
-    "2040-3": {
-      "id": "2069534844758147529",
-      "kind": "repost",
-      "author": "PeterDiamandis",
-      "recency": "recent",
-      "date": "23 Jun 2026",
-      "maps": "Managed branch: regulators lift the top-expert pause and scale to superintelligence under total transparency",
-      "text": "Fun conversation on Longevity!",
-      "likes": 247,
-      "rts": 23
-    },
     "2040-5": {
-      "id": "2071874530675749202",
+      "id": "2071990699222860231",
       "kind": "repost",
-      "author": "FudanUniversity",
+      "author": "bryan_johnson",
       "recency": "recent",
       "date": "30 Jun 2026",
       "maps": "Digital-mind rights, radical longevity, human uploading and post-work identity become mainstream policy questions",
-      "text": "Final exam at Fudan: students don't answer questions. They write them — to stump AI. 51 students, 10 questions each, 3 AI models (Claude, DeepSeek, MiniMax) …",
-      "likes": 1066,
-      "rts": 117
+      "text": "Breaking news for people who want to look hot, be young and not die. A few years ago, two college dropouts told me they could accelerate longevity by buildin…",
+      "likes": 7008,
+      "rts": 294
     },
     "2040-6": {
       "id": "2069927375870054457",
@@ -852,53 +357,87 @@
     }
   },
   "search": {
+    "2026-5": "compute tracking inference",
+    "2027-1": "production software written",
     "2027-3": "disruption visible every",
     "2027-4": "pure play crosses",
+    "2027-5": "advances omnibus transparency",
+    "2027-6": "datacenter power water",
     "2028-0": "largest issue national",
+    "2028-3": "control frontier concentrates",
+    "2028-4": "annual datacenter construction",
+    "2028-5": "superintelligence recursive self",
+    "2028-6": "international negotiations slowing",
+    "2029-0": "systems perform quarter",
+    "2029-2": "managed branch china",
+    "2029-3": "inference only verification",
+    "2029-4": "multilateral consortium treaty",
+    "2029-5": "erosion labor revenue",
     "2029-6": "policy shocks cause",
     "2030-0": "absent sustained slowdown",
+    "2030-1": "automated AI research intelligence explosion",
+    "2030-2": "managed branch frontier",
+    "2030-3": "managed branch algorithms",
     "2030-4": "career half life",
+    "2030-6": "physical production energy",
+    "2030-7": "economy adopts dividend",
+    "2031-0": "frontier could deliver",
+    "2031-2": "combined revenue largest",
+    "2031-3": "AI safety case model deception labor",
     "2031-4": "documented deception sabotage",
+    "2031-5": "continual learning architectures",
     "2032-2": "driven real growth",
+    "2032-3": "capital floods mines",
+    "2033-1": "AI dividend persuasion truth seeking AI",
+    "2033-2": "cross border distribution",
+    "2033-3": "cheap persuasion triggers",
+    "2033-4": "personal truth seeking",
+    "2033-5": "unregulated robot economies",
+    "2033-6": "governments fund universal",
     "2034-5": "datacenters expand neutral",
     "2035-0": "strongest equal surpass",
+    "2035-4": "persuasion exceeds best",
     "2035-5": "welfare compensation legal",
     "2035-6": "mechanistic interpretability practical",
+    "2036-1": "robots perform cognitive",
+    "2036-2": "employment falls half",
     "2036-3": "driven annual growth",
+    "2036-4": "land energy materials",
     "2036-5": "voting civic participation",
+    "2036-6": "education social institutions",
+    "2037-1": "driven research delivers",
+    "2037-2": "privacy preserving audits",
+    "2037-3": "assisted detection credible",
+    "2037-4": "rapid scientific paradigm",
+    "2037-5": "treaty compliance verified",
+    "2038-0": "AI alignment interpretability honesty safety",
+    "2038-1": "interpretability tools translate",
     "2038-2": "standard protocols reliably",
     "2038-3": "experimental corporations courts",
     "2038-5": "managed branch expert",
     "2039-0": "advisors load bearing",
     "2039-1": "AI authority alignment safety case handoff",
     "2039-2": "some institutions delegate",
+    "2039-3": "universal high income",
+    "2039-4": "robot industry compute",
+    "2039-5": "international negotiations loosen",
     "2040-0": "fully automated 2040",
     "2040-1": "robots automate essentially",
     "2040-2": "wildly superhuman exists",
+    "2040-3": "superintelligence AI handoff 2040",
     "2040-4": "society longer unilaterally"
   },
   "reality": [
     {
-      "tag": "GOVERNANCE",
-      "t": "Good new first: Sol is a smart, efficient, and a significant step forward. It is the same price as GPT-5.5. Also launching in the GPT-5.6 family is…",
-      "id": "2070607488274358364",
+      "tag": "ROBOTS",
+      "t": "Walking the Optimus production line in Fremont",
+      "id": "2072214077372518657",
       "kind": "repost",
-      "author": "sama",
+      "author": "elonmusk",
       "recency": "recent",
-      "date": "26 Jun 2026",
-      "likes": 18391,
-      "rts": 1129
-    },
-    {
-      "tag": "MARKETS",
-      "t": "Since 2008, $15B taxpayer dollars have been invested in California High Speed Rail. There is no working track and zero passengers so far. In the sa…",
-      "id": "2068386025932751246",
-      "kind": "repost",
-      "author": "WR4NYGov",
-      "recency": "recent",
-      "date": "20 Jun 2026",
-      "likes": 6500,
-      "rts": 1782
+      "date": "01 Jul 2026",
+      "likes": 58203,
+      "rts": 7238
     },
     {
       "tag": "ABUNDANCE",
@@ -924,25 +463,36 @@
     },
     {
       "tag": "CODE",
-      "t": "Agentic x402 transactions ↗️",
-      "id": "2069781593682522393",
+      "t": "A few thoughts on OpenAI's Jalapeño chip announcement today: 1. This chip is most likely the first one virtually entirely developed by Codex/GPT. C…",
+      "id": "2069857412660801738",
       "kind": "repost",
-      "author": "base",
+      "author": "PatrickToulme",
       "recency": "recent",
       "date": "24 Jun 2026",
-      "likes": 830,
-      "rts": 135
+      "likes": 2270,
+      "rts": 199
     },
     {
       "tag": "CAPABILITY",
-      "t": "bro GPT-5.6 Sol and GPT-5.5 aren't even comparable. even GPT-5.6 Luna beats 5.5 in this specific benchmark. also very interesting how GLM 5.2 score…",
-      "id": "2072016666414743646",
+      "t": "Final exam at Fudan: students don't answer questions. They write them — to stump AI. 51 students, 10 questions each, 3 AI models (Claude, DeepSeek,…",
+      "id": "2071874530675749202",
       "kind": "repost",
-      "author": "Hesamation",
+      "author": "FudanUniversity",
       "recency": "recent",
       "date": "30 Jun 2026",
-      "likes": 562,
-      "rts": 30
+      "likes": 1066,
+      "rts": 117
+    },
+    {
+      "tag": "MARKETS",
+      "t": "SpaceX will pass $100 billion in revenue in 2027 and likely $200 billion in revenue. The projection in 2028 assumes that SpaceX stops making new AI…",
+      "id": "2071376599707214304",
+      "kind": "repost",
+      "author": "nextbigfuture",
+      "recency": "recent",
+      "date": "28 Jun 2026",
+      "likes": 261,
+      "rts": 40
     }
   ]
 }

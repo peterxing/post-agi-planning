@@ -163,6 +163,20 @@ function headlineIndex(events, headline){
   });
   return best;
 }
+function topicVariants(text){
+  const out = new Set();
+  for (const w of String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(/\s+/)) {
+    if (!w || w === 'ai' || STOP.has(w)) continue;
+    out.add(w);
+    if (w.length > 4 && w.endsWith('s')) out.add(w.slice(0, -1));
+    else if (w.length > 3) out.add(w + 's');
+  }
+  return out;
+}
+function termMatchesTopic(term, topic){
+  const words = String(term || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(/\s+/).filter(Boolean);
+  return words.some(w => topic.has(w) || (w.length > 4 && w.endsWith('s') && topic.has(w.slice(0, -1))));
+}
 
 // "Reality Signals" themes: each card on the site's Reality-Signals grid is filled daily with @peterxing's
 // most notable RECENT real item on that theme (his actual post/repost text + link), so the grid evolves
@@ -209,10 +223,11 @@ function buildPredictions(){
           search: (i === hi && m.search) ? m.search : ev.search,
           phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [] };
         if (i === hi && hasCur) { // headline event keeps the curated high-quality terms
-          slot.phrases = [...new Set([...cur.phrases, ...slot.phrases])];
-          slot.strong = cur.strong.slice();
-          slot.weak = cur.weak.slice();
-        }
+           const topic = topicVariants(`${m.headline || ''} ${e.t}`);
+           slot.phrases = [...new Set([...cur.phrases.filter(t => termMatchesTopic(t, topic)), ...slot.phrases])];
+           slot.strong = cur.strong.filter(t => termMatchesTopic(t, topic));
+           slot.weak = cur.weak.filter(t => termMatchesTopic(t, topic));
+         }
         out.push(slot);
       });
     }
@@ -279,10 +294,16 @@ async function harvestLive(){
 // words) is rejected so a lone common word can't bind a post to an unrelated prediction.
 function scorePost(text, p){
   const norm = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
-  let score = 0, solid = 0; const hit = [];
+  let score = 0, solid = 0, specificSingles = 0; const hit = [];
   for (const ph of (p.phrases || [])) if (norm.includes(' ' + ph + ' ') || norm.includes(' ' + ph)) { score += 3; solid++; hit.push(ph); }
   for (const w of (p.strong || [])) if (norm.includes(' ' + w)) { score += 2; solid++; hit.push(w); }
-  for (const w of (p.sw || [])) if (norm.includes(' ' + w + ' ') || norm.includes(' ' + w + 's ') || (w.endsWith('s') && norm.includes(' ' + w.slice(0, -1) + ' '))) { score += 2; if (DOMAIN.has(w) || (w.length >= 7 && !SOFT.has(w))) solid++; hit.push(w); }
+  for (const w of (p.sw || [])) if (norm.includes(' ' + w + ' ') || norm.includes(' ' + w + 's ') || (w.endsWith('s') && norm.includes(' ' + w.slice(0, -1) + ' '))) {
+    score += 2;
+    if (DOMAIN.has(w)) solid++;
+    else if (w.length >= 7 && !SOFT.has(w)) specificSingles++;
+    hit.push(w);
+  }
+  if (specificSingles >= 2) solid++;
   for (const w of (p.weak || []))   if (norm.includes(' ' + w + ' ')) { score += 1; hit.push(w); }
   return { score, solid, hit };
 }
