@@ -1503,10 +1503,15 @@ renderTimeline();
       if (stamp && d.updated){
         const dt = new Date(d.updated);
         if (!isNaN(dt.getTime())){
-          stamp.textContent = '\u21bb @peterxing activity \u00b7 X API realtime \u00b7 matched daily \u00b7 last update '
-            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
-          stamp.hidden = false;
-        }
+         const sourceLabel = {
+           'x-api': 'X API realtime',
+           'x-api-cache': 'X API cached harvest',
+           'syndication': 'X public syndication'
+         }[d.source] || 'verified X activity';
+         stamp.textContent = '\u21bb @peterxing activity \u00b7 ' + sourceLabel + ' \u00b7 matched daily \u00b7 last update '
+           + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+         stamp.hidden = false;
+       }
       }
     })
     .catch(()=>{});
