@@ -838,6 +838,7 @@ function hasBoundQuantity(normText, nounPattern, minimum, rejectMonetary = false
   for (const m of normText.matchAll(qFirst)) {
     const before = normText.slice(Math.max(0, m.index - 24), m.index);
     const after = normText.slice(m.index + m[0].length, m.index + m[0].length + 18);
+    if (/\b(?:below|under|less than|fewer than|at most|up to|no more than|maximum of|nearly)\s*$/.test(before)) continue;
     if (rejectMonetary && (/\b(?:currency|usd|dollars?|revenue|valuation|worth|market cap)\s*$/.test(before)
         || /^\s+(?:market|industry|revenue|sales|valuation|deal|contract)\b/.test(after))) continue;
     if (scaledQuantity(m[1], m[2]) >= minimum) return true;
@@ -845,18 +846,32 @@ function hasBoundQuantity(normText, nounPattern, minimum, rejectMonetary = false
   const nFirst = new RegExp(`\\b(?:${nounPattern})\\b((?:\\s+[a-z0-9]+){0,5}?)\\s+${QUANTITY_TOKEN}\\s*(million|billion|trillion)?\\b`, 'g');
   for (const m of normText.matchAll(nFirst)) {
     const bridge = m[1] || '';
-    if (/\b(?:equivalent|currency|usd|dollars?|market|revenue|valuation|worth|sales|cost)\b/.test(bridge)) continue;
+    const after = normText.slice(m.index + m[0].length, m.index + m[0].length + 22);
+    if (/\b(?:equivalent|below|under|less than|fewer than|at most|up to|no more than|maximum|nearly|currency|usd|dollars?|market|revenue|valuation|worth|sales|cost)\b/.test(bridge)) continue;
+    if (rejectMonetary && /^\s+(?:currency|usd|dollars?|market|industry|revenue|sales|valuation|deal|contract)\b/.test(after)) continue;
     if (scaledQuantity(m[2], m[3]) >= minimum) return true;
   }
   return false;
 }
 function laborClauses(normText){
-  return normText.split(/\b(?:but|however|whereas|although)\b|[.;]/).map(s => s.trim()).filter(Boolean);
+  return normText.split(/\b(?:but|however|whereas|although)\b|;|(?<!\d)\.(?!\d)/).map(s => s.trim()).filter(Boolean);
 }
 function hasBoundLaborPercent(normText, minimum, scope){
+  const actor = '(?:ai(?: systems?)?|models?|agents?|robots?|automation)';
+  const action = '(?:perform|performs|produce|produces|provide|provides|do|does|complete|completes|automate|automates|handle|handles|account for|accounts for|make up|makes up)';
   for (const clause of laborClauses(normText)) {
-    if (!/\b(?:ai|model|models|agent|agents|robot|robots|robotic|automation|automated)\b/.test(clause) || !scope.test(clause)) continue;
-    for (const m of clause.matchAll(/\b(\d+(?:\.\d+)?) percent\b/g)) if (Number(m[1]) >= minimum) return true;
+    if (!scope.test(clause)) continue;
+    for (const m of clause.matchAll(/\b(\d+(?:\.\d+)?) percent\b/g)) {
+      if (Number(m[1]) < minimum) continue;
+      const prefix = clause.slice(Math.max(0, m.index - 140), m.index);
+      const suffix = clause.slice(m.index + m[0].length, m.index + m[0].length + 140);
+      const subjectPattern = new RegExp(`\\b${actor}\\b.{0,80}\\b${action}\\b[^.]{0,60}$`);
+      const sharePattern = new RegExp(`\\b${actor}\\b.{0,80}\\b(?:share|portion|fraction|percentage)\\b.{0,60}$`);
+      const byActorPattern = new RegExp(`^.{0,100}\\b(?:performed|produced|provided|done|completed|automated|handled) by ${actor}\\b`);
+      const bridge = prefix.slice(Math.max(0, prefix.search(new RegExp(`\\b${actor}\\b`))));
+      const negated = /\b(?:not|never|no longer|cannot|can t|doesn t|does not|do not|below|under|less than|at most|only)\b/.test(bridge);
+      if (!negated && (subjectPattern.test(prefix) || sharePattern.test(prefix) || byActorPattern.test(suffix))) return true;
+    }
   }
   return false;
 }
@@ -867,13 +882,27 @@ function hasExtremeLaborAutomation(normText){
 function hasCognitiveLaborMajority(normText){
   if (hasExtremeLaborAutomation(normText)) return true;
   if (hasBoundLaborPercent(normText, 50.000001, /\b(?:cognitive labor|cognitive labour|cognitive work|cognitive tasks)\b/)) return true;
-  return /\b(?:more than half|a majority|most) (?:of )?(?:all )?cognitive (?:labor|labour|work|tasks)\b/.test(normText)
-    || /\bcognitive (?:labor|labour|work|tasks)\b.{0,40}\b(?:exceeds?|outnumbers?|more than) (?:that of )?humans?\b/.test(normText)
+  if (/\b(?:ai|models?|agents?)\b.{0,40}\b(?:does not|do not|not|never|cannot|can t|fails? to)\b.{0,80}\b(?:produce|perform|provide|do|exceed|outnumber).{0,80}\bcognitive (?:labor|labour|work|tasks)\b/.test(normText)
+      || /\b(?:ai|models?|agents?)\b.{0,60}\b(?:does not|do not|not|never|cannot|can t)\b.{0,60}\bmore cognitive (?:labor|labour|work) than humans?\b/.test(normText)) return false;
+  return /\b(?:ai|models?|agents?)\b.{0,50}\b(?:perform|produce|provide|do|account for|make up)\b.{0,40}\b(?:more than half|a majority|most) (?:of )?(?:all )?cognitive (?:labor|labour|work|tasks)\b/.test(normText)
+    || /\b(?:more than half|a majority|most) (?:of )?(?:all )?cognitive (?:labor|labour|work|tasks)\b.{0,50}\b(?:is|are|comes? from|performed|produced|provided|done) by (?:ai|models?|agents?)\b/.test(normText)
+    || /\b(?:ai|models?|agents?)\b.{0,40}\bcognitive (?:labor|labour|work|tasks)\b.{0,40}\b(?:exceeds?|outnumbers?|more than) (?:that of )?humans?\b/.test(normText)
     || /\b(?:ai|models?|agents?)\b.{0,40}\b(?:produce|perform|provide|do) more cognitive (?:labor|labour|work) than humans?\b/.test(normText);
 }
 
+function normalizeGuardText(text){
+  return String(text || '').toLowerCase()
+    .replace(/(\d)\.(\d)/g, '$1decimalpoint$2')
+    .replace(/[$€£]/g, ' currency ')
+    .replace(/%/g, ' percent ')
+    .replace(/[^a-z0-9.;]+/g, ' ')
+    .replace(/(\d)decimalpoint(\d)/g, '$1.$2')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function passesFacetGuards(text, p){
-  const normText = String(text || '').toLowerCase().replace(/[$€£]/g, ' currency ').replace(/%/g, ' percent ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const normText = normalizeGuardText(text);
   const normTitle = String(p.maps || '').toLowerCase().replace(/%/g, ' percent ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
   if (/\badvanced robots can perform roughly one third of economically valuable physical tasks\b/.test(normTitle)) {
     return /\b(?:robot|robots|robotic|robotics|humanoid)\b/.test(normText)
@@ -914,12 +943,12 @@ function passesFacetGuards(text, p){
   if (/\bemployment falls below half\b/.test(normTitle)
       && !/\b(?:working age|adults employed|employed adults|employment rate|labor force participation|labour force participation|below half employed|less than half employed|50 percent unemployment|majority unemployed)\b/.test(normText)) return false;
   if (/\b200 million frontier ai workers and 2 billion advanced robots\b/.test(normTitle)) {
-    const aiScale = hasBoundQuantity(normText, '(?:ai workforce|ai workers?|ai agents?|agent copies|virtual workforce|virtual workers?)', 2e8);
+    const aiScale = hasBoundQuantity(normText, '(?:ai workforce|ai workers?|ai agents?|agent copies|copies of ai agents?|virtual workforce|virtual workers?)', 2e8, true);
     const robotScale = hasBoundQuantity(normText, '(?:advanced )?(?:robots?|humanoids?)', 2e9, true);
     if (!aiScale && !robotScale) return false;
   }
   if (/\bcontinuously running ai agents form a virtual workforce of at least 100 million copies\b/.test(normTitle)
-      && !hasBoundQuantity(normText, '(?:ai workforce|ai workers?|ai agents?|agent copies|virtual workforce|virtual workers?)', 1e8)) return false;
+      && !hasBoundQuantity(normText, '(?:ai workforce|ai workers?|ai agents?|agent copies|copies of ai agents?|virtual workforce|virtual workers?)', 1e8, true)) return false;
   if (/\b(?:space|off world|orbital|lunar|moon|mars)\b/.test(normTitle)
       && /\b(?:latent|embedding|activation|coordinate|j) space\b/.test(normText)
       && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(normText)) {
