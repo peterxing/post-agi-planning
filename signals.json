@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-12T01:10:54.595Z",
+  "updated": "2026-07-12T01:21:02.086Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Each prediction is matched to the newest item that first passes relevance, solidity, and facet guards; timestamp outranks topical score only after those gates. A signal may support at most 3 closely related predictions; otherwise the prediction receives an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
   "source": "x-api",
-  "sourceFetchedAt": "2026-07-12T01:10:54.127Z",
+  "sourceFetchedAt": "2026-07-12T01:21:01.545Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-11T21:23:51.000Z",
   "embeds": {
@@ -14,8 +14,8 @@
       "date": "11 Jul 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 787,
-      "rts": 109
+      "likes": 792,
+      "rts": 110
     },
     "2026-3": {
       "id": "2075584874396651995",
@@ -25,8 +25,8 @@
       "date": "10 Jul 2026",
       "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1056,
-      "rts": 101
+      "likes": 1058,
+      "rts": 103
     },
     "2026-6": {
       "id": "2076008533691138439",
@@ -36,8 +36,8 @@
       "date": "11 Jul 2026",
       "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 787,
-      "rts": 109
+      "likes": 792,
+      "rts": 110
     },
     "2027-2": {
       "id": "2075268970492657905",
@@ -58,8 +58,8 @@
       "date": "11 Jul 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 787,
-      "rts": 109
+      "likes": 792,
+      "rts": 110
     },
     "2028-2": {
       "id": "2075260651287805963",
@@ -80,7 +80,7 @@
       "date": "11 Jul 2026",
       "maps": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
       "text": "One thing I find striking in the discourse between AI 2040 and its detractors is that the two seem to be locked in to totally incompatible worldviews of how …",
-      "likes": 1943,
+      "likes": 1946,
       "rts": 247
     },
     "2030-4": {
@@ -102,8 +102,8 @@
       "date": "10 Jul 2026",
       "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1056,
-      "rts": 101
+      "likes": 1058,
+      "rts": 103
     },
     "2032-0": {
       "id": "2073827750289535063",
@@ -135,7 +135,7 @@
       "date": "11 Jul 2026",
       "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
       "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 197,
+      "likes": 198,
       "rts": 8
     },
     "2037-0": {
@@ -146,7 +146,7 @@
       "date": "10 Jul 2026",
       "maps": "AI accelerates scientific progress by 10x to 1000x depending on the field",
       "text": "This is not normal progress anymore. AI is not just another technology. It is a force multiplier for every technology. Science, robotics, medicine, energy, s…",
-      "likes": 795,
+      "likes": 796,
       "rts": 100
     },
     "2040-0": {
@@ -264,7 +264,7 @@
       "recency": "week",
       "date": "06 Jul 2026",
       "likes": 31237,
-      "rts": 4564
+      "rts": 4563
     },
     {
       "tag": "CODE",
@@ -285,8 +285,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "11 Jul 2026",
-      "likes": 12394,
-      "rts": 2291
+      "likes": 12427,
+      "rts": 2297
     },
     {
       "tag": "ROBOTS",
@@ -296,7 +296,7 @@
       "author": "Scobleizer",
       "recency": "week",
       "date": "10 Jul 2026",
-      "likes": 3059,
+      "likes": 3060,
       "rts": 159
     },
     {
