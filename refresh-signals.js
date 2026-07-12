@@ -538,6 +538,13 @@ const FACET_GUARDS = [
     ],
   },
   {
+    title: /\b(?:continuously running ai agents form a virtual workforce|100 million copies)\b/,
+    all: [
+      /\b(?:ai agents?|ai workforce|ai workers?|agent copies|virtual workforce|virtual workers?)\b/,
+      /\b(?:million|billion|trillion|copies|scale|scaling)\b/,
+    ],
+  },
+  {
     title: /\b(?:omnibus ai transparency|compute tracking or frontier accountability law)\b/,
     all: [
       /\b(?:ai|frontier|model|models|compute|lab|labs)\b/,
@@ -842,9 +849,9 @@ function passesFacetGuards(text, p){
         || !/\b(?:robot|robots|robotic|physical labor|physical work|physical tasks)\b/.test(normText)) return false;
   }
   if (/\bmore cognitive labor than humans\b/.test(normTitle)
-      && !/\b(?:more than humans|outnumber humans|majority|most|half|50 percent|over 50 percent)\b/.test(normText)) return false;
+      && !/\b(?:more than humans|outnumber humans|majority of cognitive|most cognitive|more than half|over 50 percent|more than 50 percent|two jobs|all jobs|nearly all work|almost all work|work optional)\b/.test(normText)) return false;
   if (/\b85 percent or more\b/.test(normTitle)
-      && !/\b(?:8[05] percent|90 percent|nearly all|almost all|all jobs|all work|two jobs|work optional)\b/.test(normText)) return false;
+      && !/\b(?:(?:85|8[6-9]|9[0-9]|100) percent|nearly all|almost all|all jobs|all work|two jobs|work optional)\b/.test(normText)) return false;
   if (/\b95 percent of cognitive and physical tasks\b/.test(normTitle)) {
     const hasThreshold = /\b(?:95 percent|nearly all|almost all|all tasks)\b/.test(normText)
       || (/\beverything\b/.test(normText) && /\b(?:do|perform|automate|able to|capable of|work optional)\b/.test(normText));
@@ -853,10 +860,11 @@ function passesFacetGuards(text, p){
   if (/\bemployment falls below half\b/.test(normTitle)
       && !/\b(?:working age|adults employed|employed adults|employment rate|labor force participation|labour force participation|below half employed|less than half employed|50 percent unemployment|majority unemployed)\b/.test(normText)) return false;
   if (/\b200 million frontier ai workers and 2 billion advanced robots\b/.test(normTitle)) {
-    const aiScale = /\b(?:ai workforce|ai workers|agents|agent copies|virtual workforce)\b/.test(normText)
-      && /\b(?:million|billion|trillion)\b/.test(normText);
-    const robotScale = /\b(?:robot|robots|robotic|humanoid)\b/.test(normText)
-      && /\b(?:billion|equivalent to .* humans?|human workers?)\b/.test(normText);
+    const aiScale = /\b(?:(?:[2-9]\d{2,}|[1-9]\d{3,}) million|(?:\d+|one|two|three|four|five|six|seven|eight|nine) billion|billions?|trillions?)(?: of)? (?:ai workers?|ai agents?|agent copies|virtual workers?)\b/.test(normText)
+      || /\b(?:ai workforce|ai workers?|ai agents?|agent copies|virtual workforce) (?:of |reaches? |scales? to )?(?:(?:[2-9]\d{2,}|[1-9]\d{3,}) million|(?:\d+|one|two|three|four|five|six|seven|eight|nine) billion|billions?|trillions?)\b/.test(normText);
+    const robotScale = /\b(?:\d+|one|two|three|four|five|six|seven|eight|nine) billion (?:advanced )?(?:robots?|humanoids?)\b/.test(normText)
+      || /\b(?:robots?|humanoids?) (?:number|reach|reaches|scale|scales to|total|equivalent to )*(?:\d+|one|two|three|four|five|six|seven|eight|nine) billion\b/.test(normText)
+      || /\b(?:\d+|one|two|three|four|five|six|seven|eight|nine) billion robots? (?:that are )?equivalent to (?:\d+|one|two|three|four|five|six|seven|eight|nine) billion humans?\b/.test(normText);
     if (!aiScale && !robotScale) return false;
   }
   if (/\b(?:space|off world|orbital|lunar|moon|mars)\b/.test(normTitle)
