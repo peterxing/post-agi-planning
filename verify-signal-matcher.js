@@ -1,0 +1,165 @@
+'use strict';
+
+const { detectConcepts, deriveEventTerms, qualifyPost } = require('./refresh-signals.js');
+
+function prediction(title, domain = 'technology'){
+  const terms = deriveEventTerms(title);
+  return {
+    maps: title,
+    domain,
+    phrases: terms.phrases,
+    strong: [],
+    sw: terms.sw,
+    weak: [],
+    concepts: detectConcepts(title),
+  };
+}
+
+const fixtures = [
+  {
+    name: 'AI5 tape-out supports semiconductor automation',
+    expect: true,
+    title: 'AI automates a majority of cognitive work in semiconductor R&D and production engineering',
+    text: 'The Tesla-Samsung AI5 chip reached tape-out and will be manufactured at the Taylor fab using a 2nm process.',
+  },
+  {
+    name: 'physician comparison supports top-expert capability',
+    expect: true,
+    title: 'Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field',
+    text: 'Physicians found fewer flaws in GPT-5.6 responses than physician-written responses.',
+  },
+  {
+    name: 'robot hand supports physical-task automation',
+    expect: true,
+    title: 'Advanced robots can perform roughly one third of economically valuable physical tasks',
+    text: 'A humanoid robot hand has 25 degrees of freedom, tactile sensing, and human-level dexterity.',
+  },
+  {
+    name: 'AI 2040 deal supports managed training pause',
+    expect: true,
+    domain: 'governance',
+    title: 'Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference',
+    text: 'AI 2040 Plan A says the US and China make a deal, AI R&D is slowed, and frontier labs scale more carefully.',
+  },
+  {
+    name: 'universal high income supports dividend policy',
+    expect: true,
+    domain: 'economic',
+    title: 'Universal high income or an AI dividend becomes a permanent institution in multiple major economies',
+    text: 'AI and robots will be able to do everything, resulting in universal high income. Work will be optional.',
+  },
+  {
+    name: 'global workspace supports AI welfare',
+    expect: true,
+    domain: 'social',
+    title: 'AI welfare, compensation and legal status enter mainstream law and corporate governance',
+    text: 'A global workspace in language models suggests Claude has a functional analog of access consciousness.',
+  },
+  {
+    name: 'mechanistic latent-space work supports interpretability',
+    expect: true,
+    title: 'Mechanistic interpretability becomes a practical tool for detecting deception and tracing model decisions',
+    text: 'LLMs are neurosymbolic in latent space; this is a mechanistic explanation of their internal representations.',
+  },
+  {
+    name: 'space solar supports off-world resources',
+    expect: true,
+    domain: 'governance',
+    title: 'Space resources and off-world self-replicating industry become central to post-ASI governance',
+    text: 'Solar power in space could provide useful work at enormous scale, making space energy more valuable than Earth output.',
+  },
+  {
+    name: 'mathematical J-space is not off-world space',
+    expect: false,
+    title: 'Robot industry and compute infrastructure begin shifting materially into space',
+    text: 'The model forms a latent J-space whose internal coordinates encode abstract concepts.',
+  },
+  {
+    name: 'building permit is not a compute or robot-production cap',
+    expect: false,
+    domain: 'governance',
+    title: 'At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production',
+    text: 'A Tesla facility building permit lists a cleaning robot alongside Superchargers.',
+  },
+  {
+    name: 'market cap is not a compute cap',
+    expect: false,
+    domain: 'governance',
+    title: 'Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions',
+    text: 'The frontier AI company reached a $100 billion market cap after leasing more compute.',
+  },
+  {
+    name: 'political power is not electrical power',
+    expect: false,
+    title: 'Physical production, energy and robotics—not ideas—become the main bottlenecks to AI-driven growth',
+    text: 'AI could irreversibly concentrate political power in a handful of institutions.',
+  },
+  {
+    name: 'battery factory is not a humanoid factory deployment',
+    expect: false,
+    title: 'Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor',
+    text: 'A Megapack order equals more than half the annual production capacity at Tesla’s battery factory.',
+  },
+  {
+    name: 'school learning is not continual model learning',
+    expect: false,
+    domain: 'governance',
+    title: 'Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change',
+    text: 'Education should teach students critical thinking and restore enthusiasm for learning at school.',
+  },
+  {
+    name: 'Mars propulsion is not off-world resource governance',
+    expect: false,
+    domain: 'governance',
+    title: 'Space resources and off-world self-replicating industry become central to post-ASI governance',
+    text: 'An antimatter starship to Mars would require 25 TWh of energy and many particle accelerators.',
+  },
+  {
+    name: 'compute lease is not a compute cap',
+    expect: false,
+    domain: 'governance',
+    title: 'Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions',
+    text: 'SpaceX signed a $6.3 billion compute lease with an open-source AI startup.',
+  },
+  {
+    name: 'transparent bilateral deal is not privacy-preserving treaty verification',
+    expect: false,
+    domain: 'geopolitical',
+    title: 'Treaty compliance can be verified without revealing most underlying private or national-security data',
+    text: 'The US and China make an AI deal, slow AI R&D, and make frontier labs more transparent.',
+  },
+  {
+    name: 'generic search agent is not a personal truth advisor',
+    expect: false,
+    title: 'Personal truth-seeking AI advisors begin replacing one-size-fits-all feeds and search interfaces',
+    text: 'Qwen AgentWorld simulates Search, Terminal, SWE, Web, OS and Android environments for agents.',
+  },
+  {
+    name: 'sixteen-percent labor score does not support eighty-five percent',
+    expect: false,
+    domain: 'economic',
+    title: 'AI and robots perform 85% or more of economically valuable labor in at least one leading economy',
+    text: 'Fable 5 reached 16.1% on the Remote Labor Index across 240 freelance projects.',
+  },
+  {
+    name: 'half-population robotaxi hiring does not support ninety-five percent automation',
+    expect: false,
+    title: 'AI and robots can perform about 95% of cognitive and physical tasks',
+    text: 'Tesla is hiring Robotaxi AI Safety Operators in metro areas covering half the US population.',
+  },
+];
+
+let failed = 0;
+for (const fixture of fixtures) {
+  const result = qualifyPost(fixture.text, prediction(fixture.title, fixture.domain), 1);
+  if (result.ok !== fixture.expect) {
+    failed++;
+    console.error(`FAIL: ${fixture.name} (expected ${fixture.expect}, got ${result.ok}; reason=${result.reason || 'matched'})`);
+  }
+}
+
+if (failed) {
+  console.error(`RESULT: FAIL (${failed}/${fixtures.length} matcher fixtures)`);
+  process.exit(1);
+}
+console.log(`RESULT: PASS (${fixtures.length} matcher fixtures)`);

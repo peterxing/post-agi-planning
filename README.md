@@ -25,9 +25,14 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
   repeated valuation/science/AI-R&D endpoints, conventional career milestones after full
   automation, and unlabelled top-expert milestones after an earlier ungoverned ASI branch all fail
   publication. Similar later events must advance a threshold, scope, deployment stage, or branch.
-- **`refresh-signals.js`** expands the forecast into one matcher per event. Relevance, solidity, and
-  claim-specific facet guards run first; valid candidates then rank by recency tier and timestamp.
-  One post can support at most three closely related predictions.
+- **`refresh-signals.js`** expands the forecast into one matcher per event. Literal scoring is
+  supplemented by a bounded concept ontology for semantically equivalent evidence (such as
+  tape-out/semiconductors, physicians/health, FSD/robotics, and UHI/dividends). Claim-specific facet
+  guards remain mandatory, and semantic-only matches are limited to recent activity. Assignment
+  maximizes unique relevant posts first, then allows at most three uses per post.
+- **`verify-signal-matcher.js`** runs positive and negative regression fixtures for the concept
+  matcher, including J-space vs off-world space, building permits vs compute permits, market cap vs
+  compute caps, political vs electrical power, and quantitative labor thresholds.
 - **`signals.json`** is the generated public output. `signals-debug.json` remains local and records
   source freshness, rejected stale sources, match coverage, and assignment details.
 - **`author.json`** drives the daily-refreshed About the Author section.
@@ -50,6 +55,7 @@ old. Raw activity and credentials stay outside the repository.
 npm install
 npm run validate
 npm run refresh
+npm run verify:matcher
 npm run serve
 ```
 

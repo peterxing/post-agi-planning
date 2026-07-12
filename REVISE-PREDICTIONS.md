@@ -100,11 +100,17 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    Peter-ungoverned branches explicitly so a later top-expert milestone does not appear to follow an
    earlier unqualified superintelligence milestone in the same world. Run `validate-predictions.js`;
    its duplicate-family, near-overlap, post-automation-career, and branch-order checks must pass.
-11. **Keep X matching fresh and conservative.** `refresh-signals.js` must try the authenticated X API,
-   then the live public profile feed, before caches. Reject caches older than the configured 36-hour
-   limit and reject the legacy syndication feed when its newest item is stale. For each prediction,
-   apply relevance, solidity, and claim-facet guards before ranking valid matches by recency and
-   timestamp. Never force a weak or stale embed: use the live `from:peterxing` search fallback.
+11. **Keep X matching fresh, broad, and conservative.** `refresh-signals.js` must try the authenticated
+   X API, then the live public profile feed, before caches. Reject caches older than the configured
+   36-hour limit and reject the legacy syndication feed when its newest item is stale. Literal title
+   terms may be supplemented by the controlled concept ontology, but one distinctive shared concept
+   or two substantive corroborating concepts are required, semantic-only matches are limited to
+   recent activity, and every applicable claim-facet guard remains mandatory. Allocate valid matches
+   unique-post-first, then reuse a post for no more than three closely related predictions. Run
+   `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
+   coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
+   weaken freshness or facet guards to increase the count; unsupported claims keep the live
+   `from:peterxing` search fallback.
 
 ## Procedure
 
@@ -115,6 +121,7 @@ cd C:\Users\peterxing\pap-deploy
 node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
+node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 # (index.html + signals.json are copied in the workflow's PUBLISH step too)

@@ -39,6 +39,7 @@ const RECENT_DAYS = Number(process.env.RECENT_DAYS || 7); // kept for back-compa
 // MIN_SCORE and the facet guards gate weak/spurious matches before recency is considered.
 const PAST_WEEK_DAYS = Number(process.env.PAST_WEEK_DAYS || 7);
 const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 800);
+const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
@@ -185,6 +186,68 @@ function termMatchesTopic(term, topic){
   return words.some(w => topic.has(w) || (w.length > 4 && w.endsWith('s') && topic.has(w.slice(0, -1))));
 }
 
+// Controlled concept expansion catches defensible semantic relationships that literal title words miss
+// (for example, "tape-out" -> semiconductors, "physicians" -> health, or "FSD" -> physical robotics).
+// `solo` concepts are specific enough to qualify on their own; broad concepts require corroboration.
+const MATCH_CONCEPTS = [
+  { name: 'capability', weight: 2, solo: true, rx: /\b(?:agi|asi|superintelligen\w*|human level|human expert|top expert|reasoning|benchmark|intelligence|sota|arc agi|outperform\w*|beats? experts?|human performance|physician written|fewer flaws)\b/ },
+  { name: 'agents', weight: 2, solo: true, rx: /\b(?:agent|agents|agentic|autonomous|subagents?|copilot|tool use|long horizon|ai advisors?|delegate to ai)\b/ },
+  { name: 'coding', weight: 2, solo: true, rx: /\b(?:code|coding|software|developer|programming|programmer|swe|algorithm|atcoder|codex|cursor)\b/ },
+  { name: 'research', weight: 2, solo: true, rx: /\b(?:research|science|scientist|proof|theorem|conjecture|math|physics|discovery|r d)\b/ },
+  { name: 'labor', weight: 2, solo: true, rx: /\b(?:job|jobs|employment|workforce|labor|labour|workers?|white collar|unemployment|knowledge work|freelance|human work)\b/ },
+  { name: 'robotics', weight: 2, solo: true, rx: /\b(?:robot|robots|robotic|robotics|robotaxi|humanoid|optimus|neo|physical ai|self driving|fsd)\b/ },
+  { name: 'production', weight: 1.5, solo: false, rx: /\b(?:manufactur\w*|factor(?:y|ies)|production|tape out|actuator|motor|assembly line)\b/ },
+  { name: 'compute', weight: 2, solo: true, rx: /\b(?:compute|gpu|gpus|chip|chips|semiconductor|datacenter|data center|parameters?|tokens per second|tps|inference|2nm|h100)\b/ },
+  { name: 'energy', weight: 2, solo: true, rx: /\b(?:energy|grid|solar|storage|battery|nuclear|fusion|electricity|gwh|gigawatt|terawatt)\b/ },
+  { name: 'health', weight: 2, solo: true, rx: /\b(?:health|medical|medicine|physician|drug|disease|cancer|vaccine|biotech|longevity|gene|genome|embryo|crispr|patient)\b/ },
+  { name: 'governance', weight: 1.5, solo: false, rx: /\b(?:policy|law|regulat\w*|government|treaty|permit|safety|evaluation|evals?|audit|verification|transparen\w*|pause|slowdown|slow|slowed|agreement|deal)\b/ },
+  { name: 'geopolitics', weight: 1.5, solo: false, rx: /\b(?:china|chinese|united states|u s|america|international|national|eu|europe|bilateral)\b/ },
+  { name: 'economy', weight: 1, solo: false, rx: /\b(?:revenue|valuation|market|gdp|econom\w*|income|trillion|billion|investment|stock|cost|price|sales|monetization)\b/ },
+  { name: 'distribution', weight: 2, solo: true, rx: /\b(?:dividend|ubi|universal high income|wealth|public fund|equity stake|tax|rents?|redistribution)\b/ },
+  { name: 'alignment', weight: 2, solo: true, rx: /\b(?:alignment|deception|sabotage|interpretability|honesty|obedience|misalignment|control problem)\b/ },
+  { name: 'interpretability', weight: 2, solo: true, rx: /\b(?:mechanistic|interpretab\w*|internal representations?|latent activations?|reasoning trace|global workspace)\b/ },
+  { name: 'persuasion', weight: 2, solo: true, rx: /\b(?:persuasion|manipulation|deepfake|truth seeking|targeted influence)\b/ },
+  { name: 'rights', weight: 2, solo: true, rx: /\b(?:rights?|welfare|legal status|moral agents?|consciousness|self awareness|sentien\w*)\b/ },
+  { name: 'augmentation', weight: 2, solo: true, rx: /\b(?:neuralink|brain computer|bci|neural implant|brain implant|human uploading|digital minds?)\b/ },
+  { name: 'institutions', weight: 1, solo: false, rx: /\b(?:corporations?|courts?|public services?|military|business|politics|election|government)\b/ },
+  { name: 'education', weight: 2, solo: true, rx: /\b(?:education|students?|teach|teaching|learning|school|university|critical thinking)\b/ },
+  { name: 'space', weight: 2, solo: true, rx: /\b(?:space|orbital|orbit|starlink|moon|lunar|mars|off world|spacex)\b/ },
+  { name: 'scenario2040', weight: 2, solo: true, rx: /\b(?:ai 2040|plan a|ai 2027)\b/ },
+  { name: 'openmodels', weight: 2, solo: true, rx: /\b(?:open source|open weight|local model|localllama|laptop runnable)\b/ },
+  { name: 'privacy', weight: 2, solo: true, rx: /\b(?:privacy|private data|confidential|zero knowledge)\b/ },
+  { name: 'biosecurity', weight: 2, solo: true, rx: /\b(?:biosecurity|biodefense|pathogen|pandemic|rapid vaccines?)\b/ },
+  { name: 'infrastructure', weight: 1, solo: false, rx: /\b(?:infrastructure|datacenter|data center|factory|grid|capacity|supply chain|chip|energy)\b/ },
+  { name: 'scale', weight: 1, solo: false, rx: /\b(?:scale|scaling|exponential|10x|100x|1000x|million|billion|trillion|vertical progress)\b/ },
+  { name: 'ai', weight: 0.5, solo: false, rx: /\b(?:ai|ai5|al5|model|models|gpt|claude|fable|grok|llm|llms|openai|anthropic|deepmind|minimax|glm)\b/ },
+];
+const MATCH_CONCEPT_BY_NAME = new Map(MATCH_CONCEPTS.map(c => [c.name, c]));
+function normalizeConceptText(text){
+  return String(text || '').toLowerCase().replace(/&(?:amp|gt|lt|quot|apos);/g, ' ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function detectConcepts(text){
+  const norm = normalizeConceptText(text);
+  const out = new Set();
+  for (const c of MATCH_CONCEPTS) if (c.rx.test(norm)) out.add(c.name);
+  if (out.has('research') && /\bburden of proof\b/.test(norm)
+      && !/\b(?:research|science|scientist|theorem|conjecture|math|physics|discovery|r d)\b/.test(norm)) {
+    out.delete('research');
+  }
+  if (out.has('education') && /\b(?:continual|machine|deep|reinforcement) learning\b/.test(norm)
+      && !/\b(?:education|student|students|teach|teaching|school|university|critical thinking)\b/.test(norm)) {
+    out.delete('education');
+  }
+  if (out.has('energy') && /\b(?:concentrate|political|institutional|government|corporate) power\b/.test(norm)
+      && !/\b(?:energy|electricity|grid|solar|battery|storage|nuclear|fusion|gwh|gigawatt|terawatt)\b/.test(norm)) {
+    out.delete('energy');
+  }
+  // Mathematical/representation "spaces" are not off-world activity.
+  if (out.has('space') && /\b(?:latent|embedding|activation|coordinate|j) space\b/.test(norm)
+      && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(norm)) {
+    out.delete('space');
+  }
+  return out;
+}
+
 // "Reality Signals" themes: each card on the site's Reality-Signals grid is filled daily with @peterxing's
 // most notable RECENT real item on that theme (his actual post/repost text + link), so the grid evolves
 // with his timeline. Keywords are matched whole-word (multi-word phrases matched as substrings).
@@ -228,7 +291,7 @@ function buildPredictions(){
         const ev = deriveEventTerms(e.t);
         const slot = { id: y.year + '-' + i, year: y.year, evIndex: i, domain: e.d || '', maps: e.t,
           search: (i === hi && m.search) ? m.search : ev.search,
-          phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [] };
+          phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [], concepts: detectConcepts(e.t) };
         if (i === hi && hasCur) { // headline event keeps the curated high-quality terms
            const topic = topicVariants(`${m.headline || ''} ${e.t}`);
            slot.phrases = [...new Set([...cur.phrases.filter(t => termMatchesTopic(t, topic)), ...slot.phrases])];
@@ -241,7 +304,7 @@ function buildPredictions(){
   }
   if (out.length) return out;
   // Offline fallback: inline defaults, one matcher per year (id = YEAR-0).
-  return DEFAULT_PREDICTIONS.map(p => ({ id: p.year + '-0', year: p.year, evIndex: 0, maps: p.maps, search: p.search, phrases: p.phrases, strong: p.strong, sw: [], weak: p.weak }));
+  return DEFAULT_PREDICTIONS.map(p => ({ id: p.year + '-0', year: p.year, evIndex: 0, maps: p.maps, search: p.search, phrases: p.phrases, strong: p.strong, sw: [], weak: p.weak, concepts: detectConcepts(p.maps) }));
 }
 
 
@@ -373,36 +436,186 @@ function recencyRank(created, now){
 // words) is rejected so a lone common word can't bind a post to an unrelated prediction.
 function scorePost(text, p){
   const norm = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
-  let score = 0, solid = 0, specificSingles = 0, phraseHits = 0; const hit = []; const concepts = new Set();
+  let score = 0, solid = 0, specificSingles = 0, phraseHits = 0; const hit = []; const lexicalConcepts = new Set();
   const concept = w => w.length > 4 && w.endsWith('s') ? w.slice(0, -1) : w;
   for (const ph of (p.phrases || [])) if (norm.includes(' ' + ph + ' ') || norm.includes(' ' + ph)) {
     score += 3; solid++; phraseHits++; hit.push(ph);
   }
   for (const w of (p.strong || [])) if (norm.includes(' ' + w)) {
-    score += 2; solid++; concepts.add(concept(w)); hit.push(w);
+    score += 2; solid++; lexicalConcepts.add(concept(w)); hit.push(w);
   }
   for (const w of (p.sw || [])) if (norm.includes(' ' + w + ' ') || norm.includes(' ' + w + 's ') || (w.endsWith('s') && norm.includes(' ' + w.slice(0, -1) + ' '))) {
     score += 2;
-    if (DOMAIN.has(w)) { solid++; concepts.add(concept(w)); }
-    else if (w.length >= 7 && !SOFT.has(w)) { specificSingles++; concepts.add(concept(w)); }
+    if (DOMAIN.has(w)) { solid++; lexicalConcepts.add(concept(w)); }
+    else if (w.length >= 7 && !SOFT.has(w)) { specificSingles++; lexicalConcepts.add(concept(w)); }
     hit.push(w);
   }
   if (specificSingles >= 2) solid++;
   for (const w of (p.weak || []))   if (norm.includes(' ' + w + ' ')) { score += 1; hit.push(w); }
-  return { score, solid, coverage: concepts.size + phraseHits * 2, hit };
+  const postConcepts = detectConcepts(text);
+  const conceptHits = [...(p.concepts || [])].filter(name => postConcepts.has(name));
+  const conceptScore = conceptHits.reduce((sum, name) => sum + (MATCH_CONCEPT_BY_NAME.get(name)?.weight || 0), 0);
+  const soloConceptHit = conceptHits.some(name => MATCH_CONCEPT_BY_NAME.get(name)?.solo);
+  const substantiveConceptHits = conceptHits.filter(name => (MATCH_CONCEPT_BY_NAME.get(name)?.weight || 0) >= 1.5).length;
+  const semanticValid = soloConceptHit || (substantiveConceptHits >= 2 && conceptScore >= 2.5);
+  return {
+    score,
+    solid,
+    coverage: lexicalConcepts.size + phraseHits * 2 + conceptHits.length,
+    hit,
+    conceptHits,
+    conceptScore,
+    semanticValid,
+  };
 }
 
 // Conservative facet checks keep broad keyword overlap from implying support for a more specific claim.
 // A failed guard uses the live-search fallback instead, which is safer than a misleading real-item card.
 const FACET_GUARDS = [
   {
+    title: /\b(?:genuine human level agi ships by end of 2026|my call.*human level agi)\b/,
+    text: /\b(?:agi|human level|superintelligen\w*|artificial general intelligence|clear way to agi)\b/,
+  },
+  {
+    title: /\b(?:humanoid robots move onto live factory lines|mass deployment of humanoid robots)\b/,
+    all: [
+      /\b(?:humanoid|robot|robots|robotic|robotics|optimus)\b/,
+      /\b(?:factory|factories|production line|assembly line|deployment|deployments|deployed|mass deployment)\b/,
+    ],
+  },
+  {
+    title: /\b(?:computer workflows?|multi hour workflows?|long horizon workflows?)\b/,
+    all: [
+      /\b(?:agent|agents|agentic|ai|model|models)\b/,
+      /\b(?:workflow|workflows|computer use|browser|desktop|long horizon|multi hour|hours long|task|tasks|benchmark)\b/,
+    ],
+  },
+  {
+    title: /\b(?:frontier r d resumes under total research transparency|cross border verification)\b/,
+    all: [
+      /\b(?:ai r d|ai research|frontier research|frontier lab|frontier labs|model research)\b/,
+      /\b(?:transparency|transparent|verification|verify|audit|auditable|inspection|inspections)\b/,
+      /\b(?:cross border|international|us and china|u s and china|bilateral|agreement|deal)\b/,
+    ],
+  },
+  {
+    title: /\b(?:top human expert capability|every cognitive field)\b/,
+    all: [
+      /\b(?:ai|model|models|gpt|claude|llm|llms|agi)\b/,
+      /\b(?:top expert|human expert|human level|expert level|physician|scientist|researcher|benchmark|benchmarks|sota)\b/,
+    ],
+  },
+  {
+    title: /\b(?:major powers adopt compute caps|mutually assured compute destruction)\b/,
+    all: [
+      /\b(?:compute|gpu|gpus|chip|chips|datacenter|data center|training run|training runs)\b/,
+      /\b(?:compute cap|compute caps|capped compute|training cap|training caps|mutually assured|destruction|destroy|shutdown|treaty limit)\b/,
+    ],
+  },
+  {
+    title: /\b(?:multilateral ai consortium|treaty framework gains support beyond the us and china)\b/,
+    text: /\b(?:multilateral|consortium|coalition|multiple countries|allied countries|global treaty|international framework|eu|europe|g7|g20|united nations)\b/,
+  },
+  {
+    title: /\b(?:robotics becomes the binding bottleneck|mines motors actuators fabs and factories)\b/,
+    all: [
+      /\b(?:robot|robots|robotic|robotics|humanoid|actuator|actuators|motor|motors|factory|factories|manufacturing|fab|fabs|semiconductor)\b/,
+      /\b(?:production|scale|scaling|capacity|bottleneck|constraint|cost|investment|capital|tape out|deployment|dexter\w*)\b/,
+    ],
+  },
+  {
+    title: /\b(?:compute tracking|inference only verification)\b/,
+    all: [
+      /\b(?:compute|inference|gpu|gpus|chip|chips|datacenter|data center)\b/,
+      /\b(?:tracking|track|verification|verify|audit|measurement|monitoring|reporting|declaration)\b/,
+    ],
+  },
+  {
+    title: /\b(?:ai agent copies|paid digital labor)\b/,
+    all: [
+      /\b(?:ai|agent|agents|agentic|digital|software|virtual workforce)\b/,
+      /\b(?:work|labor|labour|worker|workers|revenue|paid|earn|income)\b/,
+    ],
+  },
+  {
+    title: /\b(?:omnibus ai transparency|compute tracking or frontier accountability law)\b/,
+    all: [
+      /\b(?:ai|frontier|model|models|compute|lab|labs)\b/,
+      /\b(?:law|legislation|policy|regulation|regulator|transparency|accountability|tracking|audit|reporting|disclosure)\b/,
+    ],
+  },
+  {
+    title: /\b(?:white collar professions?|supervising and coordinating ai agents?)\b/,
+    all: [
+      /\b(?:white collar|knowledge work|professional|professionals|office work|remote labor|remote work|workforce)\b/,
+      /\b(?:ai|agent|agents|agentic|automated|automation|supervis\w*|coordinat\w*)\b/,
+    ],
+  },
+  {
+    title: /\b(?:profession by profession training|expert interviews|deployment data)\b/,
+    all: [
+      /\b(?:training|train|fine tuning|post training|dataset|data|environments?|interviews?|expert feedback|deployment data)\b/,
+      /\b(?:profession|professional|expert|domain|occupation|industry)\b/,
+    ],
+  },
+  {
+    title: /\b(?:datacenter construction commitments?|defense budget)\b/,
+    all: [
+      /\b(?:datacenter|data center|compute infrastructure|ai infrastructure|gpu|gpus)\b/,
+      /\b(?:construction|buildout|build out|capex|capital expenditure|commitment|commitments|investment|budget|spending|financing|billion|trillion)\b/,
+    ],
+  },
+  {
+    title: /\b(?:datacenter power water and grid capacity|infrastructure and political constraints)\b/,
+    all: [
+      /\b(?:datacenter|data center|energy|electricity|water|grid|solar|battery|storage)\b/,
+      /\b(?:capacity|constraint|constraints|bottleneck|bottlenecks|shortage|shortages|gigawatt|gwh|terawatt|scale)\b/,
+    ],
+  },
+  {
+    title: /\b(?:physical production energy and robotics|main bottlenecks to ai driven growth)\b/,
+    all: [
+      /\b(?:physical production|manufacturing|factory|factories|robot|robots|robotics|energy|electricity|grid|battery|storage|gwh|gigawatt|materials|supply chain)\b/,
+      /\b(?:bottleneck|bottlenecks|constraint|constraints|capacity|shortage|shortages|scale|scaling|gwh|gigawatt|production)\b/,
+    ],
+  },
+  {
+    title: /\b(?:top expert or superintelligent ai follows automated coding|within roughly one year)\b/,
+    all: [
+      /\b(?:automated coding|coding automation|ai r d|ai research|research automation|recursive self improvement|takeoff)\b/,
+      /\b(?:top expert|superintelligen\w*|agi|asi|one year|months|rapid|takeoff)\b/,
+    ],
+  },
+  {
+    title: /\b(?:fully automated ai r d|10x research speedup|research speedup)\b/,
+    all: [
+      /\b(?:ai|model|models|agent|agents|automated|automation)\b/,
+      /\b(?:research|science|scientist|discovery|r d|experiment|theorem|conjecture|proof|successors?)\b/,
+    ],
+  },
+  {
+    title: /\b(?:full automation of ai r d remains incomplete|coding agents materially accelerate model research)\b/,
+    all: [
+      /\b(?:coding agent|coding agents|code agent|code agents|software agent|software agents|codex|swe)\b/,
+      /\b(?:research|model|models|training|evaluation|eval|evals|benchmark|index)\b/,
+    ],
+  },
+  {
+    title: /\b(?:fully automated ai r d delivers roughly a 10x research speedup)\b/,
+    all: [
+      /\b(?:ai|model|models|gpt|claude|agent|agents|automated)\b/,
+      /\b(?:proof|conjecture|theorem|research level|physics problem|scientific discovery|experiment|research benchmark)\b/,
+      /\b(?:faster|speedup|accelerat\w*|parallel|hour|hours|day|days|10x|benchmark)\b/,
+    ],
+  },
+  {
     domains: new Set(['governance', 'geopolitical']),
     title: /\b(?:managed branch|governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|thresholds?|inspections?|declarations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|handoff)\b/,
-    text: /\b(?:governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|thresholds?|inspections?|declarations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|risk|evaluation|interpretability|deception|misalignment|expert|diplomacy|agreement)\b/,
+    text: /\b(?:governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|thresholds?|inspections?|declarations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|risk|evaluation|interpretability|deception|misalignment|expert|diplomacy|agreement|deal|talks)\b/,
   },
   {
     title: /\b(?:alignment|deception|sabotage|misalignment)\b/,
-    text: /\b(?:alignment|safety|risk|evaluation|interpretability|deception|sabotage|misalignment|control)\b/,
+    text: /\b(?:alignment|safety|risk|evaluation|interpretability|mechanistic|deception|sabotage|misalignment|control)\b/,
   },
   {
     title: /\b(?:safety bottleneck|internal deployment)\b/,
@@ -426,7 +639,7 @@ const FACET_GUARDS = [
     ],
   },
   {
-    title: /\b(?:managed branch|pause|pauses|paused|moratorium|halt|freeze)\b/,
+    title: /\b(?:pause|pauses|paused|moratorium|halt|freeze)\b/,
     all: [
       /\b(?:ai|model|models|frontier|training|compute|capability|capabilities|agi|asi)\b/,
       /\b(?:pause|pauses|paused|moratorium|halt|freeze|suspend|slow|slowed|limits?|training cap|compute cap|cap training|cap compute)\b/,
@@ -440,7 +653,7 @@ const FACET_GUARDS = [
     title: /\b(?:caps or auctions permits|caps permits|auctions permits|compute permits|robot production permits)\b/,
     all: [
       /\b(?:compute|ai|model|training|robot|robots|robotics|production)\b/,
-      /\b(?:cap|caps|capped|auction|auctions|quota|quotas|limit|limits|regulation|regulated|allocation)\b/,
+      /\b(?:compute caps?|training caps?|production caps?|robot caps?|capped compute|capped training|auction|auctions|quota|quotas|compute permit|training permit|frontier permit|production permit|robot production permit)\b/,
     ],
   },
   {
@@ -449,7 +662,7 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:ai|artificial intelligence)\b/,
-    text: /\b(?:ai|artificial intelligence|agi|asi|model|models|agent|agents|robot|robots|llm|llms|gpt|claude|gemini|deepseek|qwen|codex|nvidia|benchmark|fable|frontier|lab|labs|compute)\b/,
+    text: /\b(?:ai|ai5|al5|artificial intelligence|agi|asi|model|models|agent|agents|robot|robots|llm|llms|gpt|claude|gemini|deepseek|qwen|codex|nvidia|benchmark|fable|frontier|lab|labs|compute)\b/,
   },
   {
     title: /\b(?:coding|software|research|r d|scientific)\b/,
@@ -473,7 +686,7 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:citizen s dividend|citizen dividend|recurring dividend|ai dividend)\b/,
-    text: /\b(?:dividend|ubi|universal basic income|citizen payment|cash payment|basic income|income floor)\b/,
+    text: /\b(?:dividend|ubi|uhi|universal basic income|universal high income|citizen payment|cash payment|basic income|income floor)\b/,
   },
   {
     title: /\b(?:doubling|double|doubles)\b/,
@@ -487,21 +700,21 @@ const FACET_GUARDS = [
     title: /\b(?:compute reaches|terawatt|terawatts|h100 equivalents|h100)\b/,
     all: [
       /\b(?:compute|gpu|gpus|chip|chips|h100|data center|data centers|datacenter|datacenters)\b/,
-      /\b(?:terawatt|terawatts|gigawatt|gigawatts|billion|billions|equivalent|equivalents|capacity)\b/,
+      /\b(?:terawatt|terawatts|gigawatt|gigawatts|h100|gpu equivalents?|compute capacity|power capacity)\b/,
     ],
   },
   {
     title: /(?=.*\b(?:one third|one tenth|half|majority|85|95)\b)(?=.*\b(?:labor|labour|tasks?|work|cognitive|physical)\b)/,
     all: [
-      /\b(?:labor|labour|tasks?|work|jobs?|workforce|cognitive|physical)\b/,
-      /\b(?:percent|percentage|half|third|tenth|majority|most|85|95|one in|two in)\b/,
+      /\b(?:labor|labour|tasks?|work|jobs?|workforce|cognitive|physical|robot|robots|robotic|robotics|dexter\w*)\b/,
+      /\b(?:percent|percentage|half|third|tenth|majority|most|85|95|one in|two in|equivalent|human workers?|degrees? of freedom|dof|dexter\w*|human input|intervention free|million|billion|trillion)\b/,
     ],
   },
   {
     title: /\b(?:contributes at least|economic output|share of output)\b/,
     all: [
-      /\b(?:economic|economy|gdp|output|production|productivity)\b/,
-      /\b(?:percent|percentage|share|fraction|20|quarter|fifth)\b/,
+      /\b(?:economic|economy|gdp|output|production|productivity|revenue|worth)\b/,
+      /\b(?:percent|percentage|share|fraction|half|majority|quarter|fifth|million|billion|trillion)\b/,
     ],
   },
   {
@@ -510,7 +723,81 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:interpretability|human understandable|translate internal|model reasoning)\b/,
-    text: /\b(?:interpretability|interpretable|explain|explanation|translated|translation|human understandable|summary|summaries|reasoning trace|chain of thought|transparent|transparency)\b/,
+    text: /\b(?:interpretability|interpretable|mechanistic|explain|explanation|translated|translation|human understandable|summary|summaries|reasoning trace|chain of thought|transparent|transparency|internal representation|latent activation|global workspace)\b/,
+  },
+  {
+    title: /\b(?:disease|drug|medical|medicine|health|longevity|cancer|gene|genome|embryo|crispr)\b/,
+    text: /\b(?:disease|drug|medical|medicine|health|physician|patient|longevity|cancer|gene|genome|embryo|crispr|biotech|vaccine)\b/,
+  },
+  {
+    title: /\b(?:digital mind rights|ai welfare|moral agent|legal status|consciousness|self awareness|sentience)\b/,
+    text: /\b(?:rights?|welfare|moral agents?|legal status|consciousness|self awareness|sentien\w*|digital minds?)\b/,
+  },
+  {
+    title: /\b(?:human uploading|brain computer|neural implant|augmentation)\b/,
+    text: /\b(?:human uploading|brain computer|bci|neuralink|neural implant|brain implant|digital minds?)\b/,
+  },
+  {
+    title: /\b(?:education|teaching|learning|school|university)\b/,
+    text: /\b(?:education|students?|teach|teaching|learning|school|university|critical thinking)\b/,
+  },
+  {
+    title: /\b(?:privacy|private data|personal data)\b/,
+    text: /\b(?:privacy|private data|personal data|confidential|zero knowledge)\b/,
+  },
+  {
+    title: /\b(?:treaty compliance can be verified without revealing|national security data)\b/,
+    all: [
+      /\b(?:verification|verified|verify|audit|compliance|inspection|proof)\b/,
+      /\b(?:privacy|private|confidential|zero knowledge|national security|classified|without revealing)\b/,
+    ],
+  },
+  {
+    title: /\b(?:biosecurity|biodefense|pandemic|pathogen|rapid vaccine)\b/,
+    text: /\b(?:biosecurity|biodefense|pandemic|pathogen|rapid vaccine|rapid vaccines)\b/,
+  },
+  {
+    title: /\b(?:truth seeking ai advisors?|one size fits all feeds?|search interfaces?)\b/,
+    all: [
+      /\b(?:assistant|assistants|advisor|advisors|personal agent|personal agents|personal ai)\b/,
+      /\b(?:truth|personal|personalized|personalised|feed|feeds|search|information|recommendation)\b/,
+    ],
+  },
+  {
+    title: /\b(?:ai advisors become load bearing|business politics courts|parts of the military)\b/,
+    all: [
+      /\b(?:assistant|assistants|advisor|advisors|copilot|copilots|personal ai)\b/,
+      /\b(?:business|enterprise|workplace|m365|office|politics|government|court|courts|legal|military|defense|defence)\b/,
+    ],
+  },
+  {
+    title: /\b(?:military r d|strategic weapons?|autonomous strategic weapons?)\b/,
+    text: /\b(?:military|weapon|weapons|defense|defence|warfare|strategic systems|nuclear)\b/,
+  },
+  {
+    title: /\b(?:land energy raw materials|dominant scarcities|positional goods)\b/,
+    all: [
+      /\b(?:land|energy|electricity|grid|solar|raw materials|materials|minerals|resources|housing|property|positional goods)\b/,
+      /\b(?:scarcity|scarce|constraint|constraints|bottleneck|bottlenecks|shortage|shortages|dominant|value)\b/,
+    ],
+  },
+  {
+    title: /\b(?:voting civic participation and ownership|main leverage)\b/,
+    text: /\b(?:voting|vote|civic|citizen|participation|ownership|equity|political power|economic leverage)\b/,
+  },
+  {
+    title: /\b(?:robot industry and compute infrastructure.*space|shifting materially into space)\b/,
+    all: [
+      /\b(?:space|orbital|orbit|moon|lunar|mars|off world)\b/,
+      /\b(?:robot|robots|robotics|compute|datacenter|data center|chip|chips|manufacturing|factory|factories|industry)\b/,
+    ],
+  },
+  {
+    title: /\b(?:space resources and off world self replicating industry|post asi governance)\b/,
+    all: [
+      /\b(?:space resources|space solar|solar power in space|space energy|asteroid|mining|off world|orbital industry|moon|lunar|mars)\b/,
+      /\b(?:self replicating|replication|industry|manufacturing|resources|energy|solar|governance|law|rights|treaty)\b/,
+    ],
   },
   {
     title: /\b(?:space|off world|orbital|lunar|moon|mars)\b/,
@@ -526,12 +813,70 @@ const FACET_GUARDS = [
   },
 ];
 function passesFacetGuards(text, p){
-  const normText = String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
-  const normTitle = String(p.maps || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const normText = String(text || '').toLowerCase().replace(/%/g, ' percent ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const normTitle = String(p.maps || '').toLowerCase().replace(/%/g, ' percent ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (/\badvanced robots can perform roughly one third of economically valuable physical tasks\b/.test(normTitle)) {
+    return /\b(?:robot|robots|robotic|robotics|humanoid)\b/.test(normText)
+      && /\b(?:one third|third|33 percent|degrees? of freedom|dof|dexter\w*|human level|human input|intervention free|equivalent to .* humans?|human workers?)\b/.test(normText);
+  }
+  if (/\berosion of labor tax revenue makes ai dividends sovereign ai stakes and compute rents mainstream policy\b/.test(normTitle)
+      || /\ba recurring citizen s dividend funded by ai compute or robot rents launches\b/.test(normTitle)) {
+    return /\b(?:dividend|ubi|uhi|universal basic income|universal high income|sovereign ai stake|public ai fund|compute rent|robot rent|automated capital rent)\b/.test(normText);
+  }
+  if (/\bai automates a majority of cognitive work in semiconductor r d and production engineering\b/.test(normTitle)) {
+    return /\b(?:ai5|al5|ai chip|ai chips|semiconductor|foundry|chip|chips)\b/.test(normText)
+      && /\b(?:tape out|manufactur\w*|production|fab|fabs|foundry|process node|2nm)\b/.test(normText);
+  }
+  if (/\bdigital mind rights radical longevity human uploading and post work identity\b/.test(normTitle)) {
+    return /\b(?:rights?|welfare|legal status|moral agents?|consciousness|sentien\w*|longevity|biotech|germline|gene editing|anti aging|neuralink|brain computer|neural implant|human uploading|digital minds?|post work)\b/.test(normText);
+  }
+  if (/\bspace resources and off world self replicating industry become central to post asi governance\b/.test(normTitle)) {
+    return /\b(?:space resources|space solar|solar power in space|space energy|asteroid|mining|off world|orbital industry)\b/.test(normText)
+      && /\b(?:self replicating|replication|industry|manufacturing|resources|energy|solar|governance|law|rights|treaty)\b/.test(normText);
+  }
+  if (/\bone quarter of cognitive labor\b/.test(normTitle)
+      && !/\b(?:one quarter|quarter|25 percent|twenty five percent|at least 20 percent|at least 25 percent)\b/.test(normText)) return false;
+  if (/\bone third of cognitive labor\b/.test(normTitle)) {
+    if (!/\b(?:one third|third|33 percent|half|50 percent|majority|most)\b/.test(normText)
+        || !/\b(?:cognitive|white collar|knowledge work|office work|remote labor|remote work|jobs|workforce)\b/.test(normText)
+        || !/\b(?:robot|robots|robotic|physical labor|physical work|physical tasks)\b/.test(normText)) return false;
+  }
+  if (/\bmore cognitive labor than humans\b/.test(normTitle)
+      && !/\b(?:more than humans|outnumber humans|majority|most|half|50 percent|over 50 percent)\b/.test(normText)) return false;
+  if (/\b85 percent or more\b/.test(normTitle)
+      && !/\b(?:8[05] percent|90 percent|nearly all|almost all|all jobs|all work|two jobs|work optional)\b/.test(normText)) return false;
+  if (/\b95 percent of cognitive and physical tasks\b/.test(normTitle)) {
+    const hasThreshold = /\b(?:95 percent|nearly all|almost all|all tasks)\b/.test(normText)
+      || (/\beverything\b/.test(normText) && /\b(?:do|perform|automate|able to|capable of|work optional)\b/.test(normText));
+    if (!hasThreshold || !/\b(?:robot|robots|robotic|physical)\b/.test(normText)) return false;
+  }
+  if (/\bemployment falls below half\b/.test(normTitle)
+      && !/\b(?:working age|adults employed|employed adults|employment rate|labor force participation|labour force participation|below half employed|less than half employed|50 percent unemployment|majority unemployed)\b/.test(normText)) return false;
+  if (/\b200 million frontier ai workers and 2 billion advanced robots\b/.test(normTitle)) {
+    const aiScale = /\b(?:ai workforce|ai workers|agents|agent copies|virtual workforce)\b/.test(normText)
+      && /\b(?:million|billion|trillion)\b/.test(normText);
+    const robotScale = /\b(?:robot|robots|robotic|humanoid)\b/.test(normText)
+      && /\b(?:billion|equivalent to .* humans?|human workers?)\b/.test(normText);
+    if (!aiScale && !robotScale) return false;
+  }
+  if (/\b(?:space|off world|orbital|lunar|moon|mars)\b/.test(normTitle)
+      && /\b(?:latent|embedding|activation|coordinate|j) space\b/.test(normText)
+      && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(normText)) {
+    return false;
+  }
   return FACET_GUARDS.every(g => {
     if ((g.domains && !g.domains.has(p.domain)) || !g.title.test(normTitle)) return true;
     return g.all ? g.all.every(rx => rx.test(normText)) : g.text.test(normText);
   });
+}
+function qualifyPost(text, p, ageDays = 0){
+  const scored = scorePost(text, p);
+  const lexicalValid = scored.score >= MIN_SCORE && scored.solid >= 1;
+  const semanticValid = scored.semanticValid && (lexicalValid || ageDays <= SEMANTIC_MAX_AGE_DAYS);
+  if (!lexicalValid && !semanticValid) return { ok: false, reason: 'relevance', scored, lexicalValid, semanticValid };
+  const matchMethod = lexicalValid && semanticValid ? 'hybrid' : lexicalValid ? 'lexical' : 'semantic';
+  if (!passesFacetGuards(text, p)) return { ok: false, reason: 'facet', scored, lexicalValid, semanticValid, matchMethod };
+  return { ok: true, scored, lexicalValid, semanticValid, matchMethod };
 }
 
 // ---- 1. Parse the harvested timeline into posts + reposts -------------------------------------
@@ -597,7 +942,7 @@ async function ingestList(file, kind){
   return out;
 }
 
-(async () => {
+async function main(){
   let prev = {};
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
   const prevEmbeds = (prev && prev.embeds) || {};
@@ -758,36 +1103,139 @@ async function ingestList(file, kind){
   // An unavailable fresh source is an explicit search-only state; stale cards are never carried forward.
   if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — using the most recent topical post per prediction (honestly dated), else a live search.');
 
-  // ---- 3. Per-post relevance scoring -> newest-valid per-PREDICTION assignment --------------------
-  // Relevance, solidity, and facet guards are hard gates. Among valid candidates, recency tier and exact
-  // timestamp rank before relevance tie-breakers. A post may support a bounded number of related events.
+  // ---- 3. Guarded lexical + semantic scoring -> maximum-coverage assignment ------------------------
+  // Literal hits and the controlled concept ontology both remain subordinate to claim-specific facet
+  // guards. Semantic-only matches are limited to recent activity so broad historical backfilling cannot
+  // inflate coverage. Allocation maximizes unique relevant posts first, then bounded reuse.
   const candidateLists = {};
+  const guardRejections = {};
   for (const p of PREDICTIONS) {
     const cands = [];
     for (const t of eligible) {
-      const { score, solid, coverage, hit } = scorePost(t.text, p);
-      if (score < MIN_SCORE || solid < 1 || !passesFacetGuards(t.text, p)) continue;
       const ageDays = (now - t.created.getTime()) / 864e5;
+      const qualified = qualifyPost(t.text, p, ageDays);
+      const { scored, lexicalValid, semanticValid, matchMethod } = qualified;
+      if (!qualified.ok && qualified.reason === 'relevance') continue;
+      if (!qualified.ok) {
+        if (!guardRejections[p.id]) guardRejections[p.id] = { count: 0, samples: [] };
+        guardRejections[p.id].count++;
+        if (guardRejections[p.id].samples.length < 10) {
+          guardRejections[p.id].samples.push({
+            id: t.id,
+            author: t.author,
+            date: fmtDate(t.created),
+            method: matchMethod,
+            concepts: scored.conceptHits,
+            text: cleanText(t.text).slice(0, 160),
+          });
+        }
+        continue;
+      }
       const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : 'recent';
-      cands.push({ id: p.id, year: p.year, p, t, score, coverage, recencyRank: recencyRank(t.created, now), tier, hit, created: t.created });
+      cands.push({
+        id: p.id,
+        year: p.year,
+        p,
+        t,
+        score: scored.score,
+        coverage: scored.coverage,
+        conceptScore: scored.conceptScore,
+        conceptHits: scored.conceptHits,
+        recencyRank: recencyRank(t.created, now),
+        tier,
+        hit: scored.hit,
+        matchMethod,
+        created: t.created,
+      });
     }
-    cands.sort((a, b) => b.recencyRank - a.recencyRank || b.created - a.created || b.score - a.score || b.coverage - a.coverage);
+    cands.sort((a, b) =>
+      b.recencyRank - a.recencyRank
+      || b.created - a.created
+      || b.conceptScore - a.conceptScore
+      || b.score - a.score
+      || b.coverage - a.coverage);
     candidateLists[p.id] = cands;
   }
+  const candidateAudit = {};
+  for (const p of PREDICTIONS) {
+    candidateAudit[p.id] = candidateLists[p.id].slice(0, 3).map(c => ({
+      id: c.t.id,
+      author: c.t.author,
+      date: fmtDate(c.t.created),
+      tier: c.tier,
+      method: c.matchMethod,
+      score: c.score,
+      conceptScore: c.conceptScore,
+      concepts: c.conceptHits,
+      text: cleanText(c.t.text).slice(0, 160),
+    }));
+  }
 
-  const postUses = new Map();
-  const usedPosts = new Set();
+  // Phase 1: maximum-cardinality one-to-one matching. Augmenting paths prevent broad predictions from
+  // consuming a post that is the only valid option for a more constrained prediction.
   const picks = {};
-  // Assign the most constrained predictions first so bounded reuse does not crowd out niche topics.
+  const postOwner = new Map();
   const allocationOrder = PREDICTIONS.slice().sort((a, b) =>
     candidateLists[a.id].length - candidateLists[b.id].length || a.year - b.year || a.evIndex - b.evIndex);
-  for (const p of allocationOrder) {
-    const pick = candidateLists[p.id].find(c => (postUses.get(c.t.id) || 0) < MAX_POST_REUSE);
-    if (!pick) continue;
-    picks[p.id] = pick;
-    postUses.set(pick.t.id, (postUses.get(pick.t.id) || 0) + 1);
-    usedPosts.add(pick.t.id);
+  function assignUnique(predId, seenPosts, seenPreds){
+    if (seenPreds.has(predId)) return false;
+    seenPreds.add(predId);
+    for (const cand of candidateLists[predId]) {
+      if (seenPosts.has(cand.t.id)) continue;
+      seenPosts.add(cand.t.id);
+      const owner = postOwner.get(cand.t.id);
+      if (!owner || assignUnique(owner, seenPosts, seenPreds)) {
+        postOwner.set(cand.t.id, predId);
+        picks[predId] = cand;
+        return true;
+      }
+    }
+    return false;
   }
+  for (const p of allocationOrder) {
+    assignUnique(p.id, new Set(), new Set());
+  }
+  const maximumUniqueMatches = Object.keys(picks).length;
+
+  // Phase 2: augment the same graph with up to MAX_POST_REUSE slots per post. This preserves the
+  // maximum unique-post coverage while filling every additional defensible prediction it can.
+  const postOwners = new Map();
+  for (const [predId, cand] of Object.entries(picks)) {
+    if (!postOwners.has(cand.t.id)) postOwners.set(cand.t.id, new Set());
+    postOwners.get(cand.t.id).add(predId);
+  }
+  function setAssignment(predId, cand){
+    const old = picks[predId];
+    if (old) postOwners.get(old.t.id)?.delete(predId);
+    picks[predId] = cand;
+    if (!postOwners.has(cand.t.id)) postOwners.set(cand.t.id, new Set());
+    postOwners.get(cand.t.id).add(predId);
+  }
+  function assignWithCapacity(predId, seenPosts, seenPreds){
+    if (seenPreds.has(predId)) return false;
+    seenPreds.add(predId);
+    for (const cand of candidateLists[predId]) {
+      if (seenPosts.has(cand.t.id)) continue;
+      seenPosts.add(cand.t.id);
+      const owners = postOwners.get(cand.t.id) || new Set();
+      if (owners.size < MAX_POST_REUSE) {
+        setAssignment(predId, cand);
+        return true;
+      }
+      for (const owner of [...owners]) {
+        if (assignWithCapacity(owner, seenPosts, seenPreds)) {
+          setAssignment(predId, cand);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  for (const p of allocationOrder) {
+    if (!picks[p.id]) assignWithCapacity(p.id, new Set(), new Set());
+  }
+  const postUses = new Map([...postOwners.entries()].filter(([, owners]) => owners.size).map(([id, owners]) => [id, owners.size]));
+  const usedPosts = new Set(postUses.keys());
 
   // Build one embed (or search fallback) per prediction, keyed by "YEAR-INDEX". The X API harvest already
   // carries fresh metrics/text, so no extra per-pick liveness call is needed (avoids ~57 round-trips).
@@ -801,8 +1249,19 @@ async function ingestList(file, kind){
     const prevE = prevEmbeds[p.id];
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
-    embeds[p.id] = { id: pick.id, kind: pick.kind, author: author || 'peterxing', recency: c.tier, date: fmtDate(created), maps: p.maps, text, likes: lk, rts: rts || 0 };
-    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} r${c.recencyRank} s${c.score} c${c.coverage}] ${c.hit.slice(0, 4).join('/')}`;
+    embeds[p.id] = {
+      id: pick.id,
+      kind: pick.kind,
+      author: author || 'peterxing',
+      recency: c.tier,
+      matchMethod: c.matchMethod,
+      date: fmtDate(created),
+      maps: p.maps,
+      text,
+      likes: lk,
+      rts: rts || 0,
+    };
+    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} ${c.matchMethod} r${c.recencyRank} s${c.score} cs${c.conceptScore} c${c.coverage}] ${(c.conceptHits.length ? c.conceptHits : c.hit).slice(0, 4).join('/')}`;
   }
 
   // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
@@ -851,9 +1310,34 @@ async function ingestList(file, kind){
   const newestItemAgeHours = all.length ? Math.max(0, (Date.now() - all[0].created.getTime()) / 36e5) : null;
   const sourceFresh = source !== 'live-search' && sourceAgeHours <= SOURCE_CACHE_MAX_HOURS;
   const reusedPosts = [...postUses.values()].filter(v => v > 1).length;
+  const candidatePosts = new Set();
+  const pastWeekCandidatePosts = new Set();
+  for (const cands of Object.values(candidateLists)) for (const c of cands) {
+    candidatePosts.add(c.t.id);
+    if (c.tier === 'week') pastWeekCandidatePosts.add(c.t.id);
+  }
+  const usedPastWeekPosts = new Set(Object.values(picks).filter(c => c.tier === 'week').map(c => c.t.id));
+  const matchMethodTally = { lexical: 0, semantic: 0, hybrid: 0 };
+  for (const c of Object.values(picks)) matchMethodTally[c.matchMethod]++;
+  const matchablePredictions = PREDICTIONS.filter(p => candidateLists[p.id].length).length;
+  const unmatchedWithCandidates = PREDICTIONS.filter(p => candidateLists[p.id].length && !picks[p.id]).map(p => p.id);
+  const unusedRelevantPosts = [...candidatePosts].filter(id => !usedPosts.has(id));
+  const previousMatchedIds = new Set(Object.keys(prevEmbeds));
+  const currentMatchedIds = new Set(Object.keys(embeds));
+  const coverageChange = {
+    previousMatched: previousMatchedIds.size,
+    currentMatched: currentMatchedIds.size,
+    gained: [...currentMatchedIds].filter(id => !previousMatchedIds.has(id)),
+    lost: [...previousMatchedIds].filter(id => !currentMatchedIds.has(id)),
+  };
+  const eligibleById = new Map(eligible.map(t => [t.id, t]));
+  const unusedRelevantPostSamples = unusedRelevantPosts.slice(0, 20).map(id => {
+    const t = eligibleById.get(id);
+    return t ? { id, author: t.author, date: fmtDate(t.created), text: cleanText(t.text).slice(0, 160) } : { id };
+  });
   const out = {
     updated: new Date().toISOString(),
-    note: `Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than ${SOURCE_CACHE_MAX_HOURS} hours and stale legacy syndication snapshots are rejected rather than labeled current. Each prediction is matched to the newest item that first passes relevance, solidity, and facet guards; timestamp outranks topical score only after those gates. A signal may support at most ${MAX_POST_REUSE} closely related predictions; otherwise the prediction receives an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.`,
+    note: `Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than ${SOURCE_CACHE_MAX_HOURS} hours and stale legacy syndication snapshots are rejected rather than labeled current. Controlled semantic concepts supplement literal matching, but claim-specific facet guards remain mandatory and semantic-only matches are limited to ${SEMANTIC_MAX_AGE_DAYS} days. Assignment maximizes unique relevant posts before bounded reuse of at most ${MAX_POST_REUSE}; unsupported predictions receive an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.`,
     source,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
@@ -883,8 +1367,21 @@ async function ingestList(file, kind){
     freshMatches: sourceFresh ? Object.keys(embeds).length : 0,
     searches: Object.keys(search).length,
     maxPostReuse: MAX_POST_REUSE,
+    semanticMaxAgeDays: SEMANTIC_MAX_AGE_DAYS,
+    matchablePredictions,
+    unmatchedWithCandidates,
+    maximumUniqueMatches,
     uniqueMatchedPosts: usedPosts.size,
+    candidateRelevantPosts: candidatePosts.size,
+    unusedRelevantPosts: unusedRelevantPosts.length,
+    unusedRelevantPostSamples,
+    pastWeekRelevantPosts: pastWeekCandidatePosts.size,
+    uniquePastWeekPostsUsed: usedPastWeekPosts.size,
     reusedPosts,
+    matchMethods: matchMethodTally,
+    coverageChange,
+    guardRejections,
+    candidateAudit,
     embedKinds: kindTally,
     embedTiers: tierTally,
     reality: reality.map(r => r.kind === 'search' ? `${r.tag}: live search` : `${r.tag}: ${r.kind}:@${r.author} [${r.recency}] ${r.date}`),
@@ -894,6 +1391,13 @@ async function ingestList(file, kind){
     sampleBookmarks: sampleBy('bookmark'),
   }, null, 2) + '\n');
 
-  console.error(`[refresh] Wrote signals.json from ${source}: ${Object.keys(embeds).length}/${PREDICTIONS.length} predictions embedded using ${usedPosts.size} unique posts (reuse cap ${MAX_POST_REUSE}) [${Object.entries(kindTally).map(([k, v]) => v + ' ' + k).join(', ')}] {${Object.entries(tierTally).map(([k, v]) => v + ' ' + k).join(', ')}}, ${Object.keys(search).length} searches, ${reality.length} reality cards.`);
+  console.error(`[refresh] Wrote signals.json from ${source}: ${Object.keys(embeds).length}/${PREDICTIONS.length} predictions embedded using ${usedPosts.size} unique posts (maximum unique ${maximumUniqueMatches}, reuse cap ${MAX_POST_REUSE}) [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(kindTally).map(([k, v]) => v + ' ' + k).join(', ')}] {${Object.entries(tierTally).map(([k, v]) => v + ' ' + k).join(', ')}}, ${Object.keys(search).length} searches, ${reality.length} reality cards.`);
   console.log(JSON.stringify({ embeds: chosen, search: Object.keys(search), reality: reality.map(r => r.tag) }));
-})();
+}
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[refresh] Fatal:', err && err.stack ? err.stack : err);
+    process.exitCode = 1;
+  });
+}
+module.exports = { detectConcepts, deriveEventTerms, passesFacetGuards, qualifyPost, scorePost };

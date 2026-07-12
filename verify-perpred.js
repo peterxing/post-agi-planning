@@ -23,15 +23,27 @@ const SHOT = process.argv[3] || null;
       const ancient = dates.filter(t => /\b20(1\d|2[0-3])\b/.test(t));
       const badges = Array.from(document.querySelectorAll('.tl-signal-badge')).slice(0, 3).map(b => b.textContent.trim());
       const meta = await fetch('signals.json?verify=' + Date.now()).then(r => r.json()).catch(() => ({}));
+      const embedValues = Object.values(meta.embeds || {});
+      const methodCounts = {};
+      const postUses = {};
+      const badMethods = [];
+      for (const e of embedValues) {
+        methodCounts[e.matchMethod] = (methodCounts[e.matchMethod] || 0) + 1;
+        postUses[e.id] = (postUses[e.id] || 0) + 1;
+        if (!['lexical', 'semantic', 'hybrid'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
+      }
       return { events, cards, chips, strayCards, ancient, badges, sample: dates.slice(0, 3),
-        source: meta.source || '', sourceFresh: meta.sourceFresh === true };
+        source: meta.source || '', sourceFresh: meta.sourceFresh === true, methodCounts, badMethods,
+        maxReuse: Math.max(0, ...Object.values(postUses)) };
     });
     const ok = errors.length === 0 && stats.sourceFresh && stats.source !== 'live-search'
       && stats.strayCards === 0 && stats.ancient.length === 0
+      && stats.badMethods.length === 0 && stats.maxReuse <= 3
       && (stats.cards + stats.chips) >= stats.events - 2;
-    console.log(`[${theme}] events=${stats.events} cards=${stats.cards} chips=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} stray=${stats.strayCards} ancient=${stats.ancient.length} errs=${errors.length} badges=${JSON.stringify(stats.badges)} -> ${ok ? 'OK' : 'FAIL'}`);
+    console.log(`[${theme}] events=${stats.events} cards=${stats.cards} chips=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} stray=${stats.strayCards} ancient=${stats.ancient.length} errs=${errors.length} badges=${JSON.stringify(stats.badges)} -> ${ok ? 'OK' : 'FAIL'}`);
     if (errors.length) console.log('   ERRORS:', errors.slice(0, 4).join(' | '));
     if (stats.ancient.length) console.log('   ANCIENT:', stats.ancient.slice(0, 4).join(' | '));
+    if (stats.badMethods.length) console.log('   BAD METHODS:', stats.badMethods.slice(0, 4).join(' | '));
     if (SHOT) await page.screenshot({ path: SHOT.replace('THEME', theme), fullPage: false });
     if (!ok) pass = false;
     await ctx.close();
