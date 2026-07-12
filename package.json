@@ -1,8 +1,8 @@
 {
   "name": "post-agi-planning",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "REHOBOAM-style Post-AGI Planning timeline (2026-2036) + reality signals, refreshed from @peterxing's realtime X activity.",
+  "description": "REHOBOAM-style Post-AGI Planning timeline (2026-2040) with hourly @peterxing reality signals.",
   "homepage": "https://peterxing.com",
   "license": "MIT",
   "engines": {
@@ -12,7 +12,12 @@
     "serve": "node server.js",
     "refresh": "node refresh-signals.js",
     "validate": "node validate-predictions.js",
-    "verify": "node verify-perpred.js http://127.0.0.1:8787/",
-    "verify:reality": "node verify-reality.js http://127.0.0.1:8787/"
+    "verify": "node verify-site.js http://127.0.0.1:8787",
+    "verify:predictions": "node verify-perpred.js http://127.0.0.1:8787",
+    "verify:reality": "node verify-reality.js http://127.0.0.1:8787",
+    "verify:author": "node verify-author.js http://127.0.0.1:8787"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
   }
 }

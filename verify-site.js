@@ -1,8 +1,7 @@
 // verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors
 // and that no embed shows a pre-2024 (stale) dated card. Embeds may be his most-recent topical post
 // (honestly dated), so the strict past-week gate is not enforced here.
-//   set NODE_PATH to the pap-explore node_modules (where playwright is installed), then:
-//   node verify-site.js [url]
+//   npm install, then: node verify-site.js [url]
 const { chromium } = require('playwright');
 
 (async () => {

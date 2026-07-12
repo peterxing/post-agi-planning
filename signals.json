@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-12T00:55:30.186Z",
+  "updated": "2026-07-12T01:00:00.734Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Each prediction is matched to the newest item that first passes relevance, solidity, and facet guards; timestamp outranks topical score only after those gates. A signal may support at most 3 closely related predictions; otherwise the prediction receives an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
-  "source": "x-api-cache",
-  "sourceFetchedAt": "2026-07-12T00:54:09.395Z",
+  "source": "x-api",
+  "sourceFetchedAt": "2026-07-12T01:00:00.269Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-11T21:23:51.000Z",
   "embeds": {
@@ -14,30 +14,19 @@
       "date": "11 Jul 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 778,
+      "likes": 781,
       "rts": 108
     },
-    "2026-1": {
-      "id": "2075647948906533297",
+    "2026-3": {
+      "id": "2075584874396651995",
       "kind": "repost",
-      "author": "polynoamial",
+      "author": "CernBasher",
       "recency": "week",
       "date": "10 Jul 2026",
-      "maps": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
-      "text": "More test-time compute leads to greater intelligence. But as we push ttc from seconds to weeks, latency becomes a bottleneck. GPT-5.6 Sol Ultra scales parall…",
-      "likes": 1342,
-      "rts": 105
-    },
-    "2026-3": {
-      "id": "2075747220385632312",
-      "kind": "repost",
-      "author": "scaling01",
-      "recency": "week",
-      "date": "11 Jul 2026",
       "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
-      "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 195,
-      "rts": 8
+      "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
+      "likes": 1055,
+      "rts": 101
     },
     "2026-6": {
       "id": "2076008533691138439",
@@ -47,7 +36,7 @@
       "date": "11 Jul 2026",
       "maps": "Signal: my call — genuine human-level AGI ships by end of 2026, followed by disruption across every industry in 2027",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 778,
+      "likes": 781,
       "rts": 108
     },
     "2027-2": {
@@ -69,7 +58,7 @@
       "date": "11 Jul 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 778,
+      "likes": 781,
       "rts": 108
     },
     "2028-2": {
@@ -94,17 +83,6 @@
       "likes": 1942,
       "rts": 247
     },
-    "2029-2": {
-      "id": "2067208281727054123",
-      "kind": "repost",
-      "author": "EMostaque",
-      "recency": "recent",
-      "date": "17 Jun 2026",
-      "maps": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
-      "text": "Important to note @Zai_org train on @Huawei Ascend chips, no NVIDA (!) So you have frontier -3 months on a fully Chinese stack, 90% cheaper. Would estimate t…",
-      "likes": 1173,
-      "rts": 104
-    },
     "2030-5": {
       "id": "2072022961339437154",
       "kind": "repost",
@@ -124,7 +102,7 @@
       "date": "10 Jul 2026",
       "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1054,
+      "likes": 1055,
       "rts": 101
     },
     "2032-0": {
@@ -137,17 +115,6 @@
       "text": "Fable looks to be a big improvement on the Remote Labor Index -- 240 real freelance projects (game dev, design, data analysis, animation), judged by whether …",
       "likes": 303,
       "rts": 31
-    },
-    "2033-5": {
-      "id": "2075747220385632312",
-      "kind": "repost",
-      "author": "scaling01",
-      "recency": "week",
-      "date": "11 Jul 2026",
-      "maps": "Unregulated AI-and-robot economies demonstrate subannual doubling potential",
-      "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 195,
-      "rts": 8
     },
     "2034-3": {
       "id": "2070930161361432856",
@@ -168,7 +135,7 @@
       "date": "11 Jul 2026",
       "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
       "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 195,
+      "likes": 196,
       "rts": 8
     },
     "2037-0": {
@@ -181,17 +148,6 @@
       "text": "This is not normal progress anymore. AI is not just another technology. It is a force multiplier for every technology. Science, robotics, medicine, energy, s…",
       "likes": 795,
       "rts": 100
-    },
-    "2038-1": {
-      "id": "2074183977817043152",
-      "kind": "repost",
-      "author": "scaling01",
-      "recency": "week",
-      "date": "06 Jul 2026",
-      "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
-      "text": "Anthropic is claiming LLMs have developed a functional analog of access consciousness They \"observe that language models maintain a privileged set of interna…",
-      "likes": 723,
-      "rts": 53
     },
     "2040-1": {
       "id": "2072700088481182100",
@@ -217,6 +173,7 @@
     }
   },
   "search": {
+    "2026-1": "frontier labs spend",
     "2026-2": "frontier labs infrastructure",
     "2026-4": "frontier model release",
     "2026-5": "compute tracking inference",
@@ -232,6 +189,7 @@
     "2028-6": "international negotiations slowing",
     "2029-0": "systems perform quarter",
     "2029-1": "US China AI compute treaty pause",
+    "2029-2": "managed branch china",
     "2029-3": "inference only verification",
     "2029-4": "multilateral consortium treaty",
     "2029-5": "erosion labor revenue",
@@ -258,6 +216,7 @@
     "2033-2": "cross border distribution",
     "2033-3": "cheap persuasion triggers",
     "2033-4": "personal truth seeking",
+    "2033-5": "unregulated robot economies",
     "2033-6": "governments fund universal",
     "2034-0": "automates majority cognitive",
     "2034-1": "accelerates scientific progress",
@@ -284,6 +243,7 @@
     "2037-4": "rapid scientific paradigm",
     "2037-5": "treaty compliance verified",
     "2038-0": "AI alignment interpretability honesty safety",
+    "2038-1": "interpretability tools translate",
     "2038-2": "standard protocols reliably",
     "2038-3": "experimental corporations courts",
     "2038-4": "annual spending alignment",
@@ -302,6 +262,17 @@
   },
   "reality": [
     {
+      "tag": "MARKETS",
+      "t": "My husband and I are honored and thrilled to participate in the Invest America program and gift a share of our SpaceX stock to a Trump Account for …",
+      "id": "2074064376810614926",
+      "kind": "repost",
+      "author": "Gwynne_Shotwell",
+      "recency": "week",
+      "date": "06 Jul 2026",
+      "likes": 31237,
+      "rts": 4564
+    },
+    {
       "tag": "CODE",
       "t": "Announcing Grok 4.5, our first model trained specifically for coding and agents. It was trained with Cursor and offers frontier intelligence at lea…",
       "id": "2074915721684086811",
@@ -309,8 +280,8 @@
       "author": "SpaceXAI",
       "recency": "week",
       "date": "08 Jul 2026",
-      "likes": 27867,
-      "rts": 4071
+      "likes": 27869,
+      "rts": 4072
     },
     {
       "tag": "ABUNDANCE",
@@ -320,19 +291,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "11 Jul 2026",
-      "likes": 12343,
-      "rts": 2284
-    },
-    {
-      "tag": "LABOUR",
-      "t": "GPT-5.6-Sol one-shotted this voxel-based Manhattan. Just look at the precision... it's insane. It ran for almost a week, completely autonomously, t…",
-      "id": "2075268746315268138",
-      "kind": "repost",
-      "author": "mattshumer_",
-      "recency": "week",
-      "date": "09 Jul 2026",
-      "likes": 3953,
-      "rts": 175
+      "likes": 12360,
+      "rts": 2285
     },
     {
       "tag": "ROBOTS",
@@ -342,30 +302,30 @@
       "author": "Scobleizer",
       "recency": "week",
       "date": "10 Jul 2026",
-      "likes": 3057,
-      "rts": 158
-    },
-    {
-      "tag": "MARKETS",
-      "t": "Huge: China’s MiniMax Plans to Launch 2.7-Trillion Parameter Model (MiniMax Pro) tl;dr MiniMax is preparing a 2.7T parameter open-source model, pot…",
-      "id": "2074809466525016498",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "week",
-      "date": "08 Jul 2026",
-      "likes": 1219,
-      "rts": 105
+      "likes": 3059,
+      "rts": 159
     },
     {
       "tag": "CAPABILITY",
-      "t": "GPT-5.6 Sol (max) has the highest Presentation Elo of any model in AA-Briefcase AA-Briefcase is our new agentic knowledge work benchmark for testin…",
-      "id": "2075639143372325205",
+      "t": "Anthropic is claiming LLMs have developed a functional analog of access consciousness They \"observe that language models maintain a privileged set …",
+      "id": "2074183977817043152",
       "kind": "repost",
-      "author": "ArtificialAnlys",
+      "author": "scaling01",
       "recency": "week",
-      "date": "10 Jul 2026",
-      "likes": 655,
-      "rts": 48
+      "date": "06 Jul 2026",
+      "likes": 723,
+      "rts": 53
+    },
+    {
+      "tag": "LONGEVITY",
+      "t": "We are barely 6 months into 2026 here's some of the most unhinged biotech and longevity stuff this year alone: - germline editing hit 100% efficien…",
+      "id": "2074523839107588496",
+      "kind": "repost",
+      "author": "m_goes_distance",
+      "recency": "week",
+      "date": "07 Jul 2026",
+      "likes": 198,
+      "rts": 44
     }
   ]
 }

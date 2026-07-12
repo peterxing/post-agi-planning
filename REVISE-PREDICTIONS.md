@@ -5,7 +5,8 @@
 Both `index.html` (display) and `refresh-signals.js` (post matching) read it at runtime. The daily
 job REVISES it — **adds new predictions, updates existing ones, and removes outdated ones** — from
 the latest information online and from @peterxing's X posts/reposts. Editing this file changes the
-site; no HTML edit is needed.
+site; no HTML edit is needed. The hourly job reassesses it, but the anti-thrash rule means most
+hours update signals only and leave the forecast unchanged.
 
 ## Schema
 
@@ -47,9 +48,9 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
 ## Daily revision rules
 
 1. **Ground every change.** Base edits on (a) the latest news/research you can verify online and
-   (b) @peterxing's recent X posts/reposts (see `signals-debug.json` for his newest activity and the
-   harvested `timeline-raw.json`). Put a short, specific justification in `basis`. Never invent his
-   posts or activity.
+   (b) @peterxing's recent X posts/reposts (see `signals-debug.json` for source freshness and match
+   details; raw authenticated activity stays outside the repo). Put a short, specific justification
+   in `basis`. Never invent his posts or activity.
 2. **Add** genuinely new, well-sourced predictions to the right year/domain (e.g. a newly-credible
    milestone). Keep titles crisp and falsifiable; set a realistic `prob`.
 3. **Update** predictions when reality moves: recalibrate dates/probabilities, sharpen wording, or
@@ -86,6 +87,11 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    ungoverned anchor, and use AI 2040 to stress-test the governance, labor, compute, distribution,
    alignment, and post-work consequences through 2040. If AI 2040 has not changed and no new
    evidence warrants a revision, the anti-thrash rule still wins: leave `predictions.json` untouched.
+10. **Keep X matching fresh and conservative.** `refresh-signals.js` must try the authenticated X API,
+   then the live public profile feed, before caches. Reject caches older than the configured 36-hour
+   limit and reject the legacy syndication feed when its newest item is stale. For each prediction,
+   apply relevance, solidity, and claim-facet guards before ranking valid matches by recency and
+   timestamp. Never force a weak or stale embed: use the live `from:peterxing` search fallback.
 
 ## Procedure
 

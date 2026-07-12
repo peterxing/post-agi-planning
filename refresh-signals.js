@@ -44,6 +44,7 @@ const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
 const MAX_POST_REUSE = Math.max(1, Number(process.env.MAX_POST_REUSE) || 3);
 const SKIP_LIVE = process.env.X_SKIP_LIVE === '1';
+const SKIP_API = process.env.X_SKIP_API === '1';
 const SYND_URL = 'https://syndication.twitter.com/srv/timeline-profile/screen-name/peterxing?showReplies=false&lang=en&dnt=true';
 const RSS_URL = 'https://nitter.net/peterxing/rss';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
@@ -188,11 +189,11 @@ function termMatchesTopic(term, topic){
 // most notable RECENT real item on that theme (his actual post/repost text + link), so the grid evolves
 // with his timeline. Keywords are matched whole-word (multi-word phrases matched as substrings).
 const REALITY_THEMES = [
-  { tag: 'LABOUR',     kws: ['job', 'jobs', 'unemployment', 'layoff', 'layoffs', 'hiring', 'workforce', 'labor', 'labour', 'employment', 'white collar', 'wages', 'salary', 'ubi', 'recent graduate'] },
+  { tag: 'LABOUR',     kws: ['jobs', 'unemployment', 'layoff', 'layoffs', 'hiring', 'workforce', 'labor', 'labour', 'employment', 'white collar', 'wages', 'salary', 'ubi', 'recent graduate'] },
   { tag: 'CODE',       kws: ['code', 'coding', 'software', 'developer', 'developers', 'engineer', 'engineering', 'programming', 'programmer', 'agent', 'agents', 'agentic', 'vibe coding', 'devin', 'copilot'] },
   { tag: 'ROBOTS',     kws: ['robot', 'robots', 'humanoid', 'optimus', 'figure', 'automation', 'android', 'teleoperation', 'physical ai', 'unitree'] },
   { tag: 'CAPABILITY', kws: ['agi', 'asi', 'benchmark', 'reasoning', 'gpt', 'claude', 'gemini', 'grok', 'model', 'models', 'intelligence', 'superintelligence', 'llm', 'llms', 'frontier', 'o3', 'deepseek'] },
-  { tag: 'MARKETS',    kws: ['market', 'markets', 'valuation', 'trillion', 'billion', 'ipo', 'fund', 'funding', 'invest', 'investment', 'economy', 'stock', 'revenue', 'raise', 'nvidia', 'openai'] },
+  { tag: 'MARKETS',    kws: ['market', 'markets', 'market cap', 'valuation', 'ipo', 'fund', 'funding', 'invest', 'investment', 'economy', 'stock', 'revenue', 'raise', 'nvidia', 'openai'] },
   { tag: 'ABUNDANCE',  kws: ['energy', 'solar', 'fusion', 'nuclear', 'battery', 'grid', 'abundance', 'renewable', 'power', 'electricity', 'compute', 'datacenter', 'datacentre'] },
   { tag: 'LONGEVITY',  kws: ['longevity', 'aging', 'ageing', 'health', 'gene', 'crispr', 'biology', 'medicine', 'drug', 'drugs', 'cancer', 'disease', 'clinical', 'fda', 'protein', 'cell'] },
   { tag: 'GOVERNANCE', kws: ['policy', 'regulation', 'regulate', 'safety', 'governance', 'treaty', 'government', 'executive order', 'senate', 'congress', 'eu ai act', 'alignment'] },
@@ -404,6 +405,13 @@ const FACET_GUARDS = [
     text: /\b(?:alignment|safety|risk|evaluation|interpretability|deception|sabotage|misalignment|control)\b/,
   },
   {
+    title: /\b(?:safety bottleneck|internal deployment)\b/,
+    all: [
+      /\b(?:ai|model|models|frontier|lab|labs|compute|training|deployment)\b/,
+      /\b(?:safety|risk|evaluation|evals|internal deployment|control|security)\b/,
+    ],
+  },
+  {
     title: /\b(?:release review|review becomes standard|cyber bio|autonomy thresholds?)\b/,
     all: [
       /\b(?:ai|model|models|frontier|agi|lab|labs)\b/,
@@ -421,8 +429,12 @@ const FACET_GUARDS = [
     title: /\b(?:managed branch|pause|pauses|paused|moratorium|halt|freeze)\b/,
     all: [
       /\b(?:ai|model|models|frontier|training|compute|capability|capabilities|agi|asi)\b/,
-      /\b(?:pause|pauses|paused|moratorium|halt|freeze|suspend|slow|slowed|limit|cap|caps)\b/,
+      /\b(?:pause|pauses|paused|moratorium|halt|freeze|suspend|slow|slowed|limits?|training cap|compute cap|cap training|cap compute)\b/,
     ],
+  },
+  {
+    title: /\b(?:factory lines?|live factory|production lines?)\b/,
+    text: /\b(?:factory|factories|manufacturing|production line|assembly line|deployed|deployment|deployments)\b/,
   },
   {
     title: /\b(?:caps or auctions permits|caps permits|auctions permits|compute permits|robot production permits)\b/,
@@ -464,8 +476,8 @@ const FACET_GUARDS = [
     text: /\b(?:dividend|ubi|universal basic income|citizen payment|cash payment|basic income|income floor)\b/,
   },
   {
-    title: /\b(?:doubling|growth|grows|grow)\b/,
-    text: /\b(?:doubling|double|doubles|growth|grows|grow|exponential)\b/,
+    title: /\b(?:doubling|double|doubles)\b/,
+    text: /\b(?:doubling|double|doubles|exponential)\b/,
   },
   {
     title: /\b(?:thousand|thousands|million|millions|billion|billions)\b/,
@@ -495,6 +507,10 @@ const FACET_GUARDS = [
   {
     title: /\b(?:seven figures|seven figure)\b/,
     text: /\b(?:seven figures|seven figure|million|millions|1m|1 million)\b/,
+  },
+  {
+    title: /\b(?:interpretability|human understandable|translate internal|model reasoning)\b/,
+    text: /\b(?:interpretability|interpretable|explain|explanation|translated|translation|human understandable|summary|summaries|reasoning trace|chain of thought|transparent|transparency)\b/,
   },
   {
     title: /\b(?:space|off world|orbital|lunar|moon|mars)\b/,
@@ -596,8 +612,8 @@ async function ingestList(file, kind){
   let timeline = null; let apiCaps = null; let source = 'live-search'; let sourceWhen = null;
   const sourceAttempts = [];
   const staleSourcesRejected = [];
-  if (SKIP_LIVE) {
-    sourceAttempts.push({ source: 'live-sources', status: 'skipped-by-env', count: 0 });
+  if (SKIP_LIVE || SKIP_API) {
+    sourceAttempts.push({ source: SKIP_LIVE ? 'live-sources' : 'x-api', status: 'skipped-by-env', count: 0 });
   } else {
     try {
       const xc = require('./x-client.js');
@@ -816,13 +832,18 @@ async function ingestList(file, kind){
   // Keep the 6 strongest: past-week first, then most-engaged. Drop the internal sort key.
   realityAll.sort((a, b) => (b.recency === 'week') - (a.recency === 'week') || b._eng - a._eng);
   let reality = realityAll.slice(0, 6).map(({ _eng, ...r }) => r);
-  if (!reality.length) {
-    reality = REALITY_THEMES.slice(0, 6).map(th => ({
-      tag: th.tag,
-      t: `Open the latest @peterxing posts about ${th.tag.toLowerCase()} while verified activity access is unavailable.`,
-      kind: 'search',
-      search: th.kws.slice(0, 3).join(' '),
-    }));
+  if (reality.length < 6) {
+    const present = new Set(reality.map(r => r.tag));
+    for (const th of REALITY_THEMES) {
+      if (reality.length >= 6) break;
+      if (present.has(th.tag)) continue;
+      reality.push({
+        tag: th.tag,
+        t: `Open the latest @peterxing posts about ${th.tag.toLowerCase()} when no fresh relevant item is available.`,
+        kind: 'search',
+        search: th.kws.slice(0, 3).join(' '),
+      });
+    }
   }
 
   const sourceAgeHours = ageHours(sourceWhen);
