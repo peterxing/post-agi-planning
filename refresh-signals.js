@@ -1,13 +1,13 @@
-// refresh-signals.js — build past-week-only @peterxing X signals (posts + reposts) mapped to the
-// REHOBOAM timeline predictions, and write signals.json (loaded by index.html at runtime).
+// refresh-signals.js — match @peterxing's newest relevant X activity to every REHOBOAM prediction,
+// and write signals.json (loaded by index.html at runtime).
 //
-// HARVEST (X API v2 primary, syndication fallback)
+// HARVEST (X API v2 primary, live public RSS secondary)
 //   PRIMARY: the authenticated X API v2 (x-client.js → harvestActivity()). Using @peterxing's app
 //   credentials (pap-secrets/.env), it pulls his realtime timeline — POSTS + REPOSTS always, plus his
-//   LIKES + BOOKMARKS when a user-context token is configured (see X-API-SETUP.md). This breaks the
-//   auth-free syndication ceiling (which tops out months behind) and returns true past-week activity.
-//   FALLBACK: if the API is unavailable, the script fetches @peterxing's public syndication timeline
-//   (showReplies=false) and caches it to timeline-raw.json so the site never blanks.
+//   LIKES + BOOKMARKS when a user-context token is configured (see X-API-SETUP.md).
+//   SECONDARY: a fresh read-only RSS snapshot of his public profile. Fresh API/RSS reads always run
+//   before caches; caches older than SOURCE_CACHE_MAX_HOURS are rejected rather than called "latest".
+//   The legacy X syndication feed is last-resort only because it can lag the real profile by months.
 //
 // SOURCES & ACCESS
 //   posts     : original @peterxing tweets + quote-tweets.
@@ -16,18 +16,16 @@
 //   likes     : tweets @peterxing liked — requires an OAuth1/OAuth2 user-context token (X-API-SETUP.md).
 //   bookmarks : tweets @peterxing bookmarked — requires an OAuth2 user-context token (bookmark.read).
 //
-// MATCHING (per-post relevance, tiered by recency)
+// MATCHING (newest valid signal first)
 //   The prediction set is loaded from predictions.json (revised DAILY from the latest news + his posts —
 //   predictions are added / updated / removed there, not here). Every post is scored against every
-//   prediction: phrase(3) + strong-word(2) + weak-word(1). Each post is assigned to the single prediction
-//   it fits best, and each prediction takes its highest-scoring post. A PAST-WEEK post (<= PAST_WEEK_DAYS)
-//   is preferred (+WEEK_BOOST); when a topic has none, the most recent post on that topic within
-//   MAX_AGE_DAYS is shown instead (tier 'recent', honestly dated). Predictions with no relevant post fall
-//   back to a live from:peterxing search. X's auth-free feed is capped at his recent timeline, so "most
-//   recent" is the freshest the data allows.
+//   prediction: phrase(3) + strong-word(2) + weak-word(1). After relevance, solidity, and facet guards,
+//   candidates rank by recency tier and timestamp before relevance tie-breakers. A signal can support a
+//   small bounded number of related predictions (MAX_POST_REUSE) to improve coverage without repetition.
+//   Predictions with no valid signal fall back to an honest live from:peterxing search.
 //
 //   node refresh-signals.js                 # harvest + match + write signals.json (+ optional reposts.json)
-//   MAX_AGE_DAYS=365 PAST_WEEK_DAYS=7 node refresh-signals.js
+//   MAX_AGE_DAYS=365 SOURCE_CACHE_MAX_HOURS=36 MAX_POST_REUSE=3 node refresh-signals.js
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -38,15 +36,20 @@ const OUT = path.join(DIR, 'signals.json');
 const DBG = path.join(DIR, 'signals-debug.json');
 const PRED = path.join(DIR, 'predictions.json'); // daily-revised prediction set (source of truth)
 const RECENT_DAYS = Number(process.env.RECENT_DAYS || 7); // kept for back-compat (unused directly)
-// Recency tiers: a PAST-WEEK post (<= PAST_WEEK_DAYS) is preferred; otherwise the most recent post on
-// the topic within MAX_AGE_DAYS is shown (honestly dated). MIN_SCORE gates out weak/spurious matches.
+// MIN_SCORE and the facet guards gate weak/spurious matches before recency is considered.
 const PAST_WEEK_DAYS = Number(process.env.PAST_WEEK_DAYS || 7);
 const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 800);
-const WEEK_BOOST     = 3;
 const MIN_SCORE      = 2;
+const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
+const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
+const MAX_POST_REUSE = Math.max(1, Number(process.env.MAX_POST_REUSE) || 3);
+const SKIP_LIVE = process.env.X_SKIP_LIVE === '1';
 const SYND_URL = 'https://syndication.twitter.com/srv/timeline-profile/screen-name/peterxing?showReplies=false&lang=en&dnt=true';
+const RSS_URL = 'https://nitter.net/peterxing/rss';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
-const ACT = path.join('C:\\Users\\peterxing\\pap-secrets', 'x-activity.json'); // non-served raw activity dump
+const SECRET_DIR = 'C:\\Users\\peterxing\\pap-secrets';
+const ACT = path.join(SECRET_DIR, 'x-activity.json'); // non-served raw activity dump
+const RSS_CACHE = path.join(SECRET_DIR, 'x-public-rss-cache.json'); // non-served parsed public RSS cache
 
 // Prediction table fallback. The LIVE matching set is loaded from predictions.json (revised daily);
 // this inline copy is only used if that sidecar is missing/unparsable. Each post is scored against
@@ -185,7 +188,7 @@ function termMatchesTopic(term, topic){
 // most notable RECENT real item on that theme (his actual post/repost text + link), so the grid evolves
 // with his timeline. Keywords are matched whole-word (multi-word phrases matched as substrings).
 const REALITY_THEMES = [
-  { tag: 'LABOUR',     kws: ['job', 'jobs', 'unemployment', 'layoff', 'layoffs', 'hiring', 'workforce', 'labor', 'labour', 'employment', 'white collar', 'wages', 'salary', 'ubi', 'graduate'] },
+  { tag: 'LABOUR',     kws: ['job', 'jobs', 'unemployment', 'layoff', 'layoffs', 'hiring', 'workforce', 'labor', 'labour', 'employment', 'white collar', 'wages', 'salary', 'ubi', 'recent graduate'] },
   { tag: 'CODE',       kws: ['code', 'coding', 'software', 'developer', 'developers', 'engineer', 'engineering', 'programming', 'programmer', 'agent', 'agents', 'agentic', 'vibe coding', 'devin', 'copilot'] },
   { tag: 'ROBOTS',     kws: ['robot', 'robots', 'humanoid', 'optimus', 'figure', 'automation', 'android', 'teleoperation', 'physical ai', 'unitree'] },
   { tag: 'CAPABILITY', kws: ['agi', 'asi', 'benchmark', 'reasoning', 'gpt', 'claude', 'gemini', 'grok', 'model', 'models', 'intelligence', 'superintelligence', 'llm', 'llms', 'frontier', 'o3', 'deepseek'] },
@@ -245,12 +248,19 @@ function token(id){
   try { return ((Number(id) / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, ''); }
   catch(e){ return String(Math.floor(Number(id) / 1e15) * Math.PI); }
 }
-function get(url){
+function get(url, redirects = 0){
   return new Promise((res, rej) => {
     const req = https.get(url, { headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/json', 'Accept-Language': 'en-US,en;q=0.9'
+      'Accept': 'application/rss+xml,application/xml,text/xml,text/html,application/xhtml+xml,application/json',
+      'Accept-Language': 'en-US,en;q=0.9'
     } }, r => {
+      if (r.statusCode >= 300 && r.statusCode < 400 && r.headers.location && redirects < 3) {
+        const next = new URL(r.headers.location, url).toString();
+        r.resume();
+        res(get(next, redirects + 1));
+        return;
+      }
       let d = ''; r.on('data', c => d += c); r.on('end', () => res({ status: r.statusCode, body: d }));
     });
     req.on('error', rej);
@@ -291,6 +301,71 @@ async function harvestLive(){
   } catch(e){ return null; }
 }
 
+function xmlText(s){
+  return String(s || '')
+    .replace(/^<!\[CDATA\[|\]\]>$/g, '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<\/p>|<\/div>|<\/blockquote>|<\/li>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)))
+    .replace(/&quot;/gi, '"').replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function rssField(block, tag){
+  const m = block.match(new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${tag}>`, 'i'));
+  return m ? xmlText(m[1]) : '';
+}
+function parseRss(raw){
+  const blocks = String(raw || '').match(/<item(?:\s[^>]*)?>[\s\S]*?<\/item>/gi) || [];
+  const items = [];
+  for (const block of blocks) {
+    const rawTitle = rssField(block, 'title');
+    const creator = rssField(block, 'dc:creator').replace(/^@/, '') || 'peterxing';
+    const link = rssField(block, 'link');
+    const guid = rssField(block, 'guid');
+    const idMatch = `${guid} ${link}`.match(/\b(\d{15,})\b/);
+    const created = new Date(rssField(block, 'pubDate'));
+    if (!idMatch || isNaN(created.getTime()) || !rawTitle) continue;
+    const isRepost = /^RT by @peterxing:\s*/i.test(rawTitle) || creator.toLowerCase() !== 'peterxing';
+    const title = rawTitle.replace(/^RT by @peterxing:\s*/i, '').trim();
+    const description = rssField(block, 'description');
+    const text = (description && !description.startsWith(title) ? `${title} ${description}` : (description || title)).slice(0, 8000);
+    items.push({ id: idMatch[1], created, text, likes: 0, rts: 0, author: creator, kind: isRepost ? 'repost' : 'post' });
+  }
+  const byId = new Map();
+  for (const item of items) if (!byId.has(item.id)) byId.set(item.id, item);
+  return [...byId.values()].sort((a, b) => b.created - a.created);
+}
+async function harvestRss(){
+  try {
+    const r = await get(RSS_URL);
+    if (!r || r.status !== 200 || !r.body || r.body.length < 500) return null;
+    const items = parseRss(r.body);
+    return items.length ? items : null;
+  } catch(e){ return null; }
+}
+function mapCachedItems(items){
+  return (Array.isArray(items) ? items : [])
+    .map(it => ({ id: String(it.id || ''), created: new Date(it.created), text: it.text || '', likes: it.likes || 0,
+      rts: it.rts || 0, author: it.author || 'peterxing', kind: it.kind || 'post' }))
+    .filter(it => /^\d{15,}$/.test(it.id) && !isNaN(it.created.getTime()));
+}
+function ageHours(when){
+  const d = new Date(when);
+  return isNaN(d.getTime()) ? Infinity : Math.max(0, (Date.now() - d.getTime()) / 36e5);
+}
+function recencyRank(created, now){
+  const days = Math.max(0, (now - created.getTime()) / 864e5);
+  if (days <= 1) return 4;
+  if (days <= PAST_WEEK_DAYS) return 3;
+  if (days <= 30) return 2;
+  if (days <= 180) return 1;
+  return 0;
+}
+
 // Score a post's text against one prediction. Returns score + `solid` (count of high-specificity hits):
 // a hit is solid if it's a phrase, a curated strong term, or a single word that is topical (DOMAIN) or
 // long enough to be specific (>=7 chars and not in SOFT). A match with solid===0 (only generic single
@@ -321,12 +396,44 @@ function scorePost(text, p){
 const FACET_GUARDS = [
   {
     domains: new Set(['governance', 'geopolitical']),
-    title: /\b(?:managed branch|governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?)\b/,
-    text: /\b(?:governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|risk|evaluation|interpretability|deception|misalignment|expert)\b/,
+    title: /\b(?:managed branch|governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|thresholds?|inspections?|declarations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|handoff)\b/,
+    text: /\b(?:governance|government|regulation|regulator|treaty|law|policy|pause|safety|alignment|verification|transparency|negotiations?|reviews?|thresholds?|inspections?|declarations?|audits?|control|caps?|permits?|jurisdictions?|requirements?|rules?|risk|evaluation|interpretability|deception|misalignment|expert|diplomacy|agreement)\b/,
   },
   {
     title: /\b(?:alignment|deception|sabotage|misalignment)\b/,
     text: /\b(?:alignment|safety|risk|evaluation|interpretability|deception|sabotage|misalignment|control)\b/,
+  },
+  {
+    title: /\b(?:release review|review becomes standard|cyber bio|autonomy thresholds?)\b/,
+    all: [
+      /\b(?:ai|model|models|frontier|agi|lab|labs)\b/,
+      /\b(?:review|evaluation|evals?|thresholds?|safety|risk|regulation|policy|standard|cyber|biosecurity|autonomy)\b/,
+    ],
+  },
+  {
+    title: /\b(?:negotiations?|negotiate|bilateral|deal|treaty|accord)\b/,
+    all: [
+      /\b(?:us|u s|united states|china|chinese|international|bilateral)\b/,
+      /\b(?:negotiations?|negotiate|deal|treaty|agreement|accord|diplomacy|talks|inspections?|declarations?)\b/,
+    ],
+  },
+  {
+    title: /\b(?:managed branch|pause|pauses|paused|moratorium|halt|freeze)\b/,
+    all: [
+      /\b(?:ai|model|models|frontier|training|compute|capability|capabilities|agi|asi)\b/,
+      /\b(?:pause|pauses|paused|moratorium|halt|freeze|suspend|slow|slowed|limit|cap|caps)\b/,
+    ],
+  },
+  {
+    title: /\b(?:caps or auctions permits|caps permits|auctions permits|compute permits|robot production permits)\b/,
+    all: [
+      /\b(?:compute|ai|model|training|robot|robots|robotics|production)\b/,
+      /\b(?:cap|caps|capped|auction|auctions|quota|quotas|limit|limits|regulation|regulated|allocation)\b/,
+    ],
+  },
+  {
+    title: /\b(?:concentrates?|concentration|handful|control over frontier)\b/,
+    text: /\b(?:concentrates?|concentration|oligopoly|monopoly|dominance|handful|few companies|few labs|centralized|centralised|power over|control over)\b/,
   },
   {
     title: /\b(?:ai|artificial intelligence)\b/,
@@ -337,8 +444,8 @@ const FACET_GUARDS = [
     text: /\b(?:code|coding|software|programming|programmer|developer|engineering|research|researcher|r d|algorithm|training|scientific|science|experiment|discovery|design|manufacturing|tapeout|lab|labs|compute)\b/,
   },
   {
-    title: /\b(?:paid|revenue|valuation|market|income|tax|taxes|gdp|output|trillion|trillions|billion|billions|dollar|dollars)\b/,
-    text: /\b(?:paid|revenue|valuation|market|income|tax|taxes|gdp|output|trillion|trillions|billion|billions|dollar|dollars|profit|sales|wage|salary|funding|investment)\b/,
+    title: /\b(?:paid|revenue|income|tax|taxes|gdp|output|dollar|dollars)\b/,
+    text: /\b(?:paid|revenue|income|tax|taxes|gdp|output|dollar|dollars|profit|sales|wage|salary|funding|investment|rent|rents|earn|earns|earnings)\b/,
   },
   {
     title: /\b(?:economic|economically|economy|workforce|employment|jobs)\b/,
@@ -350,15 +457,44 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:tax|taxes|taxation|rents?|levies|levy)\b/,
-    text: /\b(?:tax|taxes|taxation|rents?|levies|levy|revenue|income)\b/,
+    text: /\b(?:tax|taxes|taxation|rents?|levies|levy)\b/,
+  },
+  {
+    title: /\b(?:citizen s dividend|citizen dividend|recurring dividend|ai dividend)\b/,
+    text: /\b(?:dividend|ubi|universal basic income|citizen payment|cash payment|basic income|income floor)\b/,
   },
   {
     title: /\b(?:doubling|growth|grows|grow)\b/,
-    text: /\b(?:doubling|double|doubles|growth|grows|grow|scaling|scale|exponential)\b/,
+    text: /\b(?:doubling|double|doubles|growth|grows|grow|exponential)\b/,
   },
   {
     title: /\b(?:thousand|thousands|million|millions|billion|billions)\b/,
     text: /\b(?:thousand|thousands|million|millions|billion|billions|mass|scale|scaling)\b/,
+  },
+  {
+    title: /\b(?:compute reaches|terawatt|terawatts|h100 equivalents|h100)\b/,
+    all: [
+      /\b(?:compute|gpu|gpus|chip|chips|h100|data center|data centers|datacenter|datacenters)\b/,
+      /\b(?:terawatt|terawatts|gigawatt|gigawatts|billion|billions|equivalent|equivalents|capacity)\b/,
+    ],
+  },
+  {
+    title: /(?=.*\b(?:one third|one tenth|half|majority|85|95)\b)(?=.*\b(?:labor|labour|tasks?|work|cognitive|physical)\b)/,
+    all: [
+      /\b(?:labor|labour|tasks?|work|jobs?|workforce|cognitive|physical)\b/,
+      /\b(?:percent|percentage|half|third|tenth|majority|most|85|95|one in|two in)\b/,
+    ],
+  },
+  {
+    title: /\b(?:contributes at least|economic output|share of output)\b/,
+    all: [
+      /\b(?:economic|economy|gdp|output|production|productivity)\b/,
+      /\b(?:percent|percentage|share|fraction|20|quarter|fifth)\b/,
+    ],
+  },
+  {
+    title: /\b(?:seven figures|seven figure)\b/,
+    text: /\b(?:seven figures|seven figure|million|millions|1m|1 million)\b/,
   },
   {
     title: /\b(?:space|off world|orbital|lunar|moon|mars)\b/,
@@ -366,13 +502,20 @@ const FACET_GUARDS = [
   },
   {
     title: /\bessentially all\b/,
-    text: /\b(?:all|everything|labor|labour|work|automate|automation|tasks)\b/,
+    all: [
+      /\b(?:automate|automates|automated|automation|perform|performs|do)\b/,
+      /\b(?:labor|labour|work|jobs|tasks|economically)\b/,
+      /\b(?:all|everything|every|essentially|nearly|almost|95|99)\b/,
+    ],
   },
 ];
 function passesFacetGuards(text, p){
   const normText = String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
   const normTitle = String(p.maps || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
-  return FACET_GUARDS.every(g => (g.domains && !g.domains.has(p.domain)) || !g.title.test(normTitle) || g.text.test(normText));
+  return FACET_GUARDS.every(g => {
+    if ((g.domains && !g.domains.has(p.domain)) || !g.title.test(normTitle)) return true;
+    return g.all ? g.all.every(rx => rx.test(normText)) : g.text.test(normText);
+  });
 }
 
 // ---- 1. Parse the harvested timeline into posts + reposts -------------------------------------
@@ -448,61 +591,132 @@ async function ingestList(file, kind){
   const predYears = new Set(PREDICTIONS.map(p => p.year)).size;
   console.error(`[refresh] Matching against ${PREDICTIONS.length} predictions across ${predYears} years.`);
 
-  // PRIMARY source: the X API v2 (authenticated, realtime) — posts + reposts always, plus likes and
-  // bookmarks when a user token is configured (see X-API-SETUP.md). Falls back to the auth-free
-  // syndication scrape if the API is unavailable, so the site never blanks.
-  let timeline = null; let apiCaps = null; let source = 'x-api';
-  try {
-    const xc = require('./x-client.js');
-    const act = await xc.harvestActivity({ maxPosts: 300 });
-    if (act && act.items && act.items.length) {
-      timeline = act.items
-        .map(it => ({ id: it.id, created: new Date(it.created), text: it.text, likes: it.likes, rts: it.rts, author: it.author || 'peterxing', kind: it.kind }))
-        .filter(it => !isNaN(it.created.getTime()));
-      apiCaps = act.caps;
-      // Non-served debug dump (kept OUT of pap-deploy so the raw feed — incl. private bookmarks — is never served).
-      try { fs.writeFileSync(ACT, JSON.stringify({ id: act.id, caps: act.caps, when: new Date().toISOString(), items: act.items.slice(0, 150) }, null, 2)); } catch(e){}
-      console.error(`[refresh] X API harvest: ${timeline.length} items (posts ${act.caps.posts}, reposts ${act.caps.reposts}, likes ${act.caps.likes}, bookmarks ${act.caps.bookmarks}).`);
-    } else {
-      console.error('[refresh] X API harvest returned nothing — falling back to syndication scrape.');
+  // Source order: authenticated X API -> live public RSS -> live legacy syndication / fresh caches.
+  // A cache beyond SOURCE_CACHE_MAX_HOURS is never accepted as "latest".
+  let timeline = null; let apiCaps = null; let source = 'live-search'; let sourceWhen = null;
+  const sourceAttempts = [];
+  const staleSourcesRejected = [];
+  if (SKIP_LIVE) {
+    sourceAttempts.push({ source: 'live-sources', status: 'skipped-by-env', count: 0 });
+  } else {
+    try {
+      const xc = require('./x-client.js');
+      const act = await xc.harvestActivity({ maxPosts: 300 });
+      if (act && act.items && act.items.length) {
+        timeline = mapCachedItems(act.items);
+        apiCaps = act.caps;
+        source = 'x-api';
+        sourceWhen = new Date();
+        // Non-served debug dump (kept OUT of pap-deploy so the raw feed — incl. private bookmarks — is never served).
+        try { fs.writeFileSync(ACT, JSON.stringify({ id: act.id, caps: act.caps, when: sourceWhen.toISOString(), items: act.items.slice(0, 300) }, null, 2)); } catch(e){}
+        sourceAttempts.push({ source: 'x-api', status: 'live', count: timeline.length });
+        console.error(`[refresh] X API harvest: ${timeline.length} items (posts ${act.caps.posts}, reposts ${act.caps.reposts}, likes ${act.caps.likes}, bookmarks ${act.caps.bookmarks}).`);
+      } else {
+        sourceAttempts.push({ source: 'x-api', status: 'unavailable', count: 0 });
+        console.error('[refresh] X API harvest returned nothing — trying the live public RSS profile.');
+      }
+    } catch(e){
+      sourceAttempts.push({ source: 'x-api', status: 'error', detail: e.message });
+      console.error('[refresh] X API harvest error (' + e.message + ') — trying the live public RSS profile.');
     }
-  } catch(e){ console.error('[refresh] X API harvest error (' + e.message + ') — falling back to syndication scrape.'); }
+  }
 
-  // SECONDARY fallback: reuse the last good X API harvest cached in x-activity.json. Its REAL posts/
-  // reposts (+ any likes/bookmarks), honestly dated, beat the auth-free syndication scrape — which
-  // cannot see his reposts and lags months behind — whenever the live API is temporarily unavailable
-  // (e.g. a quota/credit outage or a transient error). Only items still within MAX_AGE_DAYS are used.
+  if (!timeline && !SKIP_LIVE) {
+    const rss = await harvestRss();
+    if (rss && rss.length) {
+      timeline = rss;
+      source = 'public-rss';
+      sourceWhen = new Date();
+      sourceAttempts.push({ source: 'public-rss', status: 'live', count: rss.length });
+      try {
+        fs.writeFileSync(RSS_CACHE, JSON.stringify({
+          when: sourceWhen.toISOString(),
+          items: rss.map(it => ({ ...it, created: it.created.toISOString() })),
+        }, null, 2));
+      } catch(e){}
+      console.error(`[refresh] Live public RSS harvest: ${rss.length} items; newest ${fmtDate(rss[0].created)}.`);
+    } else {
+      sourceAttempts.push({ source: 'public-rss', status: 'unavailable', count: 0 });
+      console.error('[refresh] Live public RSS unavailable — checking other live/fresh sources.');
+    }
+  }
+
+  // The legacy syndication endpoint is fetched before caches, but accepted only when it contains a
+  // genuinely recent item; it is known to return a months-old profile slice even on a successful fetch.
+  let syndicationCandidate = null;
+  if (!timeline && !SKIP_LIVE) {
+    let raw = await harvestLive();
+    if (raw) {
+      const parsed = parseTimeline(raw) || [];
+      if (parsed.length) {
+        parsed.sort((a, b) => b.created - a.created);
+        const newestAgeDays = Math.max(0, (Date.now() - parsed[0].created.getTime()) / 864e5);
+        if (newestAgeDays <= SYNDICATION_MAX_ITEM_AGE_DAYS) {
+          syndicationCandidate = { source: 'syndication', when: new Date(), newest: parsed[0].created, items: parsed };
+          sourceAttempts.push({ source: 'syndication', status: 'live', count: parsed.length, newestAgeDays: Number(newestAgeDays.toFixed(1)) });
+        } else {
+          staleSourcesRejected.push({ source: 'syndication', reason: 'newest-item-too-old', newestAgeDays: Number(newestAgeDays.toFixed(1)) });
+          sourceAttempts.push({ source: 'syndication', status: 'stale-feed', count: parsed.length, newestAgeDays: Number(newestAgeDays.toFixed(1)) });
+        }
+        try { fs.writeFileSync(RAW, raw); } catch(e){}
+      }
+    } else {
+      sourceAttempts.push({ source: 'syndication', status: 'unavailable', count: 0 });
+    }
+  }
+
+  // Fresh caches are eligible only inside the explicit age window. Choose the freshest accepted cache;
+  // a stale cache is diagnostic evidence, not a source for public "latest" cards.
   if (!timeline) {
+    const cacheCandidates = [];
     try {
       const cached = JSON.parse(fs.readFileSync(ACT, 'utf8').replace(/^\uFEFF/, ''));
-      const mapped = ((cached && Array.isArray(cached.items)) ? cached.items : [])
-        .map(it => ({ id: it.id, created: new Date(it.created), text: it.text, likes: it.likes, rts: it.rts, author: it.author || 'peterxing', kind: it.kind }))
-        .filter(it => !isNaN(it.created.getTime()) && (Date.now() - it.created.getTime()) <= MAX_AGE_DAYS * 864e5);
+      const mapped = mapCachedItems(cached && cached.items);
+      const hours = ageHours(cached && cached.when);
       if (mapped.length) {
-        timeline = mapped;
-        apiCaps = cached.caps || null;
-        source = 'x-api-cache';
-        const cwhen = cached.when ? new Date(cached.when) : null;
-        console.error(`[refresh] X API unavailable — reusing last good cached harvest x-activity.json (${mapped.length} recent real items, harvested ${cwhen && !isNaN(cwhen.getTime()) ? fmtDate(cwhen) : 'unknown'}).`);
+        if (hours <= SOURCE_CACHE_MAX_HOURS) {
+          cacheCandidates.push({ source: 'x-api-cache', when: new Date(cached.when),
+            newest: new Date(Math.max(...mapped.map(it => it.created.getTime()))), items: mapped, caps: cached.caps || null });
+          sourceAttempts.push({ source: 'x-api-cache', status: 'fresh-cache', count: mapped.length, ageHours: Number(hours.toFixed(1)) });
+        } else {
+          staleSourcesRejected.push({ source: 'x-api-cache', reason: 'harvest-too-old', ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
+          sourceAttempts.push({ source: 'x-api-cache', status: 'rejected-stale-cache', count: mapped.length, ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
+        }
       }
     } catch(e){}
+    try {
+      const cached = JSON.parse(fs.readFileSync(RSS_CACHE, 'utf8').replace(/^\uFEFF/, ''));
+      const mapped = mapCachedItems(cached && cached.items);
+      const hours = ageHours(cached && cached.when);
+      if (mapped.length) {
+        if (hours <= SOURCE_CACHE_MAX_HOURS) {
+          cacheCandidates.push({ source: 'public-rss-cache', when: new Date(cached.when),
+            newest: new Date(Math.max(...mapped.map(it => it.created.getTime()))), items: mapped });
+          sourceAttempts.push({ source: 'public-rss-cache', status: 'fresh-cache', count: mapped.length, ageHours: Number(hours.toFixed(1)) });
+        } else {
+          staleSourcesRejected.push({ source: 'public-rss-cache', reason: 'harvest-too-old', ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
+          sourceAttempts.push({ source: 'public-rss-cache', status: 'rejected-stale-cache', count: mapped.length, ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
+        }
+      }
+    } catch(e){}
+    if (syndicationCandidate) cacheCandidates.push(syndicationCandidate);
+    cacheCandidates.sort((a, b) => b.newest - a.newest || b.when - a.when);
+    const chosenSource = cacheCandidates[0];
+    if (chosenSource) {
+      timeline = chosenSource.items;
+      source = chosenSource.source;
+      sourceWhen = chosenSource.when;
+      apiCaps = chosenSource.caps || null;
+      console.error(`[refresh] Using ${source}: ${timeline.length} items; source age ${ageHours(sourceWhen).toFixed(1)}h.`);
+    }
   }
 
   if (!timeline) {
-    source = 'syndication';
-    // Harvest the auth-free syndication timeline; cache to timeline-raw.json. If the live fetch fails,
-    // fall back to the cached copy so a transient network blip never blanks the site.
-    let raw = await harvestLive();
-    if (raw) {
-      try { fs.writeFileSync(RAW, raw); console.error('[refresh] Syndication harvest OK — cached timeline-raw.json.'); }
-      catch(e){ console.error('[refresh] Syndication harvest OK (cache write failed: ' + e.message + ').'); }
-    } else {
-      console.error('[refresh] Syndication harvest unavailable — falling back to cached timeline-raw.json.');
-      try { raw = fs.readFileSync(RAW, 'utf8').replace(/^\uFEFF/, ''); }
-      catch(e){ console.error('[refresh] No cached timeline-raw.json either. Keeping existing signals.json.'); process.exit(3); }
-    }
-    timeline = parseTimeline(raw);
-    if (!timeline) { console.error('[refresh] Could not parse the harvested timeline. Keeping existing signals.json.'); process.exit(3); }
+    timeline = [];
+    source = 'live-search';
+    sourceWhen = new Date();
+    sourceAttempts.push({ source: 'live-search', status: 'fallback', count: 0 });
+    console.error('[refresh] No fresh verified activity source is available — stale embeds are rejected; publishing live-search fallbacks.');
   }
 
   const reposts = await ingestList('reposts.json', 'repost');   // only posts + reposts are surfaced
@@ -525,34 +739,38 @@ async function ingestList(file, kind){
   const newest = all.length ? fmtDate(all[0].created) : '(none)';
   console.error(`[refresh] timeline=${counts.entries} (posts ${counts.posts}, reposts ${counts.reposts}); uniques ${counts.uniques}; newest ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
 
-  // A successfully-parsed harvest is enough; if nothing parsed at all, refuse to overwrite (broken harvest).
-  if (!timeline.length) { console.error('[refresh] Timeline parsed but empty — keeping existing signals.json.'); process.exit(4); }
+  // An unavailable fresh source is an explicit search-only state; stale cards are never carried forward.
   if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — using the most recent topical post per prediction (honestly dated), else a live search.');
 
-  // ---- 3. Per-post relevance scoring → tiered per-PREDICTION assignment --------------------------
-  // Score every eligible post against every PREDICTION (one per event); build (prediction, post) pairs.
-  // Past-week posts get +WEEK_BOOST so they win when present; otherwise the best recent topical post is
-  // used. Greedy assignment guarantees each post maps to one prediction and each prediction to one post,
-  // so each prediction surfaces a DISTINCT @peterxing item (no post is reused across predictions).
-  const cands = [];
+  // ---- 3. Per-post relevance scoring -> newest-valid per-PREDICTION assignment --------------------
+  // Relevance, solidity, and facet guards are hard gates. Among valid candidates, recency tier and exact
+  // timestamp rank before relevance tie-breakers. A post may support a bounded number of related events.
+  const candidateLists = {};
   for (const p of PREDICTIONS) {
+    const cands = [];
     for (const t of eligible) {
       const { score, solid, coverage, hit } = scorePost(t.text, p);
       if (score < MIN_SCORE || solid < 1 || !passesFacetGuards(t.text, p)) continue;
       const ageDays = (now - t.created.getTime()) / 864e5;
       const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : 'recent';
-      const eff = score + (tier === 'week' ? WEEK_BOOST : 0);
-      cands.push({ id: p.id, year: p.year, p, t, score, coverage, eff, tier, hit, created: t.created });
+      cands.push({ id: p.id, year: p.year, p, t, score, coverage, recencyRank: recencyRank(t.created, now), tier, hit, created: t.created });
     }
+    cands.sort((a, b) => b.recencyRank - a.recencyRank || b.created - a.created || b.score - a.score || b.coverage - a.coverage);
+    candidateLists[p.id] = cands;
   }
-  cands.sort((a, b) => b.eff - a.eff || b.score - a.score || b.created - a.created);
 
+  const postUses = new Map();
   const usedPosts = new Set();
-  const takenSlots = new Set();
   const picks = {};
-  for (const c of cands) {
-    if (usedPosts.has(c.t.id) || takenSlots.has(c.id)) continue;
-    usedPosts.add(c.t.id); takenSlots.add(c.id); picks[c.id] = c;
+  // Assign the most constrained predictions first so bounded reuse does not crowd out niche topics.
+  const allocationOrder = PREDICTIONS.slice().sort((a, b) =>
+    candidateLists[a.id].length - candidateLists[b.id].length || a.year - b.year || a.evIndex - b.evIndex);
+  for (const p of allocationOrder) {
+    const pick = candidateLists[p.id].find(c => (postUses.get(c.t.id) || 0) < MAX_POST_REUSE);
+    if (!pick) continue;
+    picks[p.id] = pick;
+    postUses.set(pick.t.id, (postUses.get(pick.t.id) || 0) + 1);
+    usedPosts.add(pick.t.id);
   }
 
   // Build one embed (or search fallback) per prediction, keyed by "YEAR-INDEX". The X API harvest already
@@ -568,14 +786,14 @@ async function ingestList(file, kind){
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
     embeds[p.id] = { id: pick.id, kind: pick.kind, author: author || 'peterxing', recency: c.tier, date: fmtDate(created), maps: p.maps, text, likes: lk, rts: rts || 0 };
-    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} s${c.score} c${c.coverage}] ${c.hit.slice(0, 4).join('/')}`;
+    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} r${c.recencyRank} s${c.score} c${c.coverage}] ${c.hit.slice(0, 4).join('/')}`;
   }
 
   // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
   // Surfaces @peterxing's own recent posts/reposts as "datapoints already on the board", one per theme,
-  // refreshed daily. Items already shown under a prediction are skipped so the grid adds fresh variety;
-  // each card prefers a past-week item, then keyword strength, then engagement (likes+rts), then recency.
-  const usedReality = new Set(usedPosts);
+  // refreshed hourly. Unused prediction items get a variety bonus, but used items remain eligible so a
+  // small live feed can still produce a complete Reality Signals grid without stale data.
+  const usedReality = new Set();
   const realityAll = [];
   for (const th of REALITY_THEMES) {
     let best = null;
@@ -586,7 +804,7 @@ async function ingestList(file, kind){
       const ageDays = (now - t.created.getTime()) / 864e5;
       const week = ageDays <= PAST_WEEK_DAYS;
       const eng = (t.likes || 0) + (t.rts || 0);
-      const rank = (week ? 1000 : 0) + s * 40 + Math.min(eng, 60) + (1 - ageDays / MAX_AGE_DAYS) * 10;
+      const rank = (week ? 1000 : 0) + (!usedPosts.has(t.id) ? 200 : 0) + s * 40 + Math.min(eng, 60) + (1 - ageDays / MAX_AGE_DAYS) * 10;
       if (!best || rank > best.rank) best = { t, s, hit, week, eng, rank };
     }
     if (!best) continue;
@@ -597,12 +815,28 @@ async function ingestList(file, kind){
   }
   // Keep the 6 strongest: past-week first, then most-engaged. Drop the internal sort key.
   realityAll.sort((a, b) => (b.recency === 'week') - (a.recency === 'week') || b._eng - a._eng);
-  const reality = realityAll.slice(0, 6).map(({ _eng, ...r }) => r);
+  let reality = realityAll.slice(0, 6).map(({ _eng, ...r }) => r);
+  if (!reality.length) {
+    reality = REALITY_THEMES.slice(0, 6).map(th => ({
+      tag: th.tag,
+      t: `Open the latest @peterxing posts about ${th.tag.toLowerCase()} while verified activity access is unavailable.`,
+      kind: 'search',
+      search: th.kws.slice(0, 3).join(' '),
+    }));
+  }
 
+  const sourceAgeHours = ageHours(sourceWhen);
+  const newestItemAt = all.length ? all[0].created.toISOString() : null;
+  const newestItemAgeHours = all.length ? Math.max(0, (Date.now() - all[0].created.getTime()) / 36e5) : null;
+  const sourceFresh = source !== 'live-search' && sourceAgeHours <= SOURCE_CACHE_MAX_HOURS;
+  const reusedPosts = [...postUses.values()].filter(v => v > 1).length;
   const out = {
     updated: new Date().toISOString(),
-    note: 'Per-PREDICTION @peterxing X signals matched daily by refresh-signals.js — every individual prediction (keyed "YEAR-INDEX"), not just every year, is mapped to its own distinct real @peterxing item. The Reality-Signals grid (reality[]) is likewise filled daily with his most notable recent real post/repost per theme. Primary source is the authenticated X API v2 (realtime): his POSTS and REPOSTS always, plus his LIKES and BOOKMARKS when a user-context token is configured. The script derives match terms from each prediction\'s own title (the year\'s curated keywords apply to that year\'s headline prediction) and assigns each prediction its single most relevant real item via greedy one-to-one matching: a past-week item is preferred, otherwise his most recent item on that topic (honestly dated, recency:"recent"), else a live from:peterxing search. Falls back to the auth-free syndication scrape if the API is unavailable.',
+    note: `Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than ${SOURCE_CACHE_MAX_HOURS} hours and stale legacy syndication snapshots are rejected rather than labeled current. Each prediction is matched to the newest item that first passes relevance, solidity, and facet guards; timestamp outranks topical score only after those gates. A signal may support at most ${MAX_POST_REUSE} closely related predictions; otherwise the prediction receives an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.`,
     source,
+    sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
+    sourceFresh,
+    newestItemAt,
     embeds, search, reality,
   };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
@@ -610,8 +844,35 @@ async function ingestList(file, kind){
   const kindTally = {}; const tierTally = {};
   for (const y in embeds) { const e = embeds[y]; kindTally[e.kind] = (kindTally[e.kind] || 0) + 1; tierTally[e.recency] = (tierTally[e.recency] || 0) + 1; }
   const sampleBy = (k) => eligible.filter(t => t.kind === k).slice(0, 6).map(t => ({ id: t.id, author: t.author, date: fmtDate(t.created), text: cleanText(t.text).slice(0, 90) }));
-  fs.writeFileSync(DBG, JSON.stringify({ updated: out.updated, source, apiCaps, counts, predictions: PREDICTIONS.length, matched: Object.keys(embeds).length, searches: Object.keys(search).length, embedKinds: kindTally, embedTiers: tierTally, reality: reality.map(r => `${r.tag}: ${r.kind}:@${r.author} [${r.recency}] ${r.date}`), chosen, sampleReposts: sampleBy('repost'), sampleLikes: sampleBy('like'), sampleBookmarks: sampleBy('bookmark') }, null, 2) + '\n');
+  fs.writeFileSync(DBG, JSON.stringify({
+    updated: out.updated,
+    source,
+    sourceFresh,
+    sourceFetchedAt: out.sourceFetchedAt,
+    sourceAgeHours: Number.isFinite(sourceAgeHours) ? Number(sourceAgeHours.toFixed(2)) : null,
+    newestItemAt,
+    newestItemAgeHours: newestItemAgeHours == null ? null : Number(newestItemAgeHours.toFixed(2)),
+    sourceCacheMaxHours: SOURCE_CACHE_MAX_HOURS,
+    sourceAttempts,
+    staleSourcesRejected,
+    apiCaps,
+    counts,
+    predictions: PREDICTIONS.length,
+    matched: Object.keys(embeds).length,
+    freshMatches: sourceFresh ? Object.keys(embeds).length : 0,
+    searches: Object.keys(search).length,
+    maxPostReuse: MAX_POST_REUSE,
+    uniqueMatchedPosts: usedPosts.size,
+    reusedPosts,
+    embedKinds: kindTally,
+    embedTiers: tierTally,
+    reality: reality.map(r => r.kind === 'search' ? `${r.tag}: live search` : `${r.tag}: ${r.kind}:@${r.author} [${r.recency}] ${r.date}`),
+    chosen,
+    sampleReposts: sampleBy('repost'),
+    sampleLikes: sampleBy('like'),
+    sampleBookmarks: sampleBy('bookmark'),
+  }, null, 2) + '\n');
 
-  console.error(`[refresh] Wrote signals.json: ${Object.keys(embeds).length}/${PREDICTIONS.length} predictions embedded [${Object.entries(kindTally).map(([k, v]) => v + ' ' + k).join(', ')}] {${Object.entries(tierTally).map(([k, v]) => v + ' ' + k).join(', ')}}, ${Object.keys(search).length} searches, ${reality.length} reality cards.`);
+  console.error(`[refresh] Wrote signals.json from ${source}: ${Object.keys(embeds).length}/${PREDICTIONS.length} predictions embedded using ${usedPosts.size} unique posts (reuse cap ${MAX_POST_REUSE}) [${Object.entries(kindTally).map(([k, v]) => v + ' ' + k).join(', ')}] {${Object.entries(tierTally).map(([k, v]) => v + ' ' + k).join(', ')}}, ${Object.keys(search).length} searches, ${reality.length} reality cards.`);
   console.log(JSON.stringify({ embeds: chosen, search: Object.keys(search), reality: reality.map(r => r.tag) }));
 })();

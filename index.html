@@ -524,7 +524,7 @@ a.signal-src-link:hover { color: var(--cp-accent); }
     <div class="section-head">
       <div class="eyebrow">REHOBOAM · Forecast Engine</div>
       <h2>The timeline of the next decade</h2>
-      <p>Base predictions synthesized from the AI Futures Model, Future Timeline, and forecasting research — then pressured in real time by live market and social signals. <strong style="color:var(--cp-text)">Every individual prediction</strong> is matched daily to its own most relevant real <strong style="color:var(--cp-text)">@peterxing</strong> signal, pulled <strong style="color:var(--cp-text)">realtime from the X API</strong> — his own <em>posts</em>, <em>reposts</em>, <em>likes</em> &amp; <em>bookmarks</em>. A signal from the <strong style="color:var(--cp-text)">past week</strong> is preferred; otherwise his <em>most recent</em> signal on that topic is shown, honestly dated. Tap <em>Load live post</em> to embed it; predictions he has never posted about open a live <em>latest-posts</em> search instead. Filter by the system you care about.</p>
+      <p>Base predictions synthesized from the AI Futures Model, Future Timeline, and forecasting research — then pressured in real time by live market and social signals. <strong style="color:var(--cp-text)">Every individual prediction</strong> is checked hourly against the newest relevant verified <strong style="color:var(--cp-text)">@peterxing</strong> activity available — authenticated X API first, then a live public profile feed. Relevance and facet guards run before recency, so the newest <em>related</em> post or repost wins rather than simply the newest post. Stale caches are rejected; where no fresh relevant item exists, the card opens an honest live <em>latest-posts</em> search. Filter by the system you care about.</p>
       <div class="sig-stamp" id="predStamp" hidden></div>
       <div class="sig-stamp" id="sigStamp" hidden></div>
     </div>
@@ -675,7 +675,7 @@ a.signal-src-link:hover { color: var(--cp-accent); }
     <div class="section-head">
       <div class="eyebrow">Reality Signals · Already on the board</div>
       <h2>The future already started arriving</h2>
-      <p>These aren't predictions. They're datapoints <strong style="color:var(--cp-text)">@peterxing</strong> is tracking right now — pulled live from his latest <strong style="color:var(--cp-text)">X posts &amp; reposts</strong>, refreshed daily — that tell you which branch is loading.</p>
+      <p>These aren't predictions. They're datapoints <strong style="color:var(--cp-text)">@peterxing</strong> is tracking right now — pulled from his latest verified <strong style="color:var(--cp-text)">X posts &amp; reposts</strong>, refreshed hourly — that tell you which branch is loading.</p>
     </div>
     <div class="grid grid-3" id="signalsGrid"></div>
   </div>
@@ -1309,8 +1309,8 @@ let overlayOn = true;
 
 /* ---------- @peterxing X signals mapped to predictions ---------- */
 const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
-/* Inline fallback. The live site overrides this from signals.json (regenerated daily by scraping his
-   timeline and matching each prediction to his most relevant real post). We keep NO embedded posts
+/* Inline fallback. The live site overrides this from signals.json (regenerated hourly from verified
+   X activity and matched to each prediction). We keep NO embedded posts
    inline, so if signals.json is ever unavailable every branch shows a live from:peterxing search
    instead of a stale post. */
 let xSignals = {};
@@ -1447,8 +1447,8 @@ renderTimeline();
     .catch(()=>{});
 })();
 
-/* Daily-refreshed signals: a sidecar signals.json (regenerated daily by scraping @peterxing's
-   timeline and matching each prediction to his most relevant real post) overrides the inline fallback. */
+/* Hourly-refreshed signals: a sidecar signals.json (regenerated from verified @peterxing activity
+   and matched newest-valid-first to each prediction) overrides the inline fallback. */
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
 (function loadAuthor(){
@@ -1505,10 +1505,13 @@ renderTimeline();
         if (!isNaN(dt.getTime())){
          const sourceLabel = {
            'x-api': 'X API realtime',
-           'x-api-cache': 'X API cached harvest',
-           'syndication': 'X public syndication'
+           'public-rss': 'live public X profile feed',
+           'public-rss-cache': 'recent public X profile snapshot',
+           'x-api-cache': 'recent X API snapshot',
+           'syndication': 'live X public syndication',
+           'live-search': 'live X searches (activity feed unavailable)'
          }[d.source] || 'verified X activity';
-         stamp.textContent = '\u21bb @peterxing activity \u00b7 ' + sourceLabel + ' \u00b7 matched daily \u00b7 last update '
+         stamp.textContent = '\u21bb @peterxing activity \u00b7 ' + sourceLabel + ' \u00b7 matched hourly \u00b7 last update '
            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
          stamp.hidden = false;
        }
@@ -1875,7 +1878,7 @@ function renderResult(body){
 renderPlanner();
 
 /* ---------- Reality signals grid ---------- */
-/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this daily from
+/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this hourly from
    signals.json's reality[] — @peterxing's most notable recent real post/repost per theme. */
 const realitySignals = [
   { tag:'LABOUR', t:'Recent-grad unemployment ticked up to ~5.7%, with underemployment above 40% — the entry rung is thinning first.', src:'Labour data · 2025' },
@@ -1888,7 +1891,10 @@ const realitySignals = [
 function realityCard(s){
   const tag = s.tag || 'SIGNAL';
   let srcHtml;
-  if (s.id){
+  if (s.kind === 'search' && s.search){
+    const q = encodeURIComponent('from:peterxing ' + s.search);
+    srcHtml = `<a class="signal-src signal-src-link" data-recency="search" href="https://x.com/search?q=${q}&src=typed_query&f=live" target="_blank" rel="noopener"><span class="sig-dot"></span>Search latest @peterxing posts &rarr;</a>`;
+  } else if (s.id){
     const author = s.author || 'peterxing';
     const K = SIG_KIND[s.kind] || SIG_KIND.post;
     const via = (s.kind && s.kind !== 'post') ? `${K.icon} @peterxing ${K.verb} &middot; @${author}` : '@peterxing';

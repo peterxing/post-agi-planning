@@ -18,7 +18,9 @@ const SHOT = process.argv[3] || null;
       const tags = cards.map(c => (c.querySelector('.card-num') || {}).textContent || '');
       const srcs = Array.from(links).map(a => a.textContent.trim().slice(0, 40));
       const hrefs = Array.from(links).map(a => a.getAttribute('href'));
-      const badHref = hrefs.filter(h => !/^https:\/\/x\.com\/[^/]+\/status\/\d+$/.test(h));
+      const badHref = hrefs.filter(h =>
+        !/^https:\/\/x\.com\/[^/]+\/status\/\d+$/.test(h)
+        && !/^https:\/\/x\.com\/search\?q=.+&src=typed_query&f=live$/.test(h));
       return { count: cards.length, links: links.length, tags, srcs, badHref };
     });
     const ok = errors.length === 0 && stats.count >= 3 && stats.links >= 3 && stats.badHref.length === 0;
