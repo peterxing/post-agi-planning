@@ -21,6 +21,10 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
 ```
 
 - **`predictions.json`** contains the probabilistic 2026–2040 forecast.
+- **`validate-predictions.js`** enforces schema plus portfolio coherence: exact/near duplicates,
+  repeated valuation/science/AI-R&D endpoints, conventional career milestones after full
+  automation, and unlabelled top-expert milestones after an earlier ungoverned ASI branch all fail
+  publication. Similar later events must advance a threshold, scope, deployment stage, or branch.
 - **`refresh-signals.js`** expands the forecast into one matcher per event. Relevance, solidity, and
   claim-specific facet guards run first; valid candidates then rank by recency tier and timestamp.
   One post can support at most three closely related predictions.

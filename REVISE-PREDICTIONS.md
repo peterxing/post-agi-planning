@@ -87,7 +87,20 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    ungoverned anchor, and use AI 2040 to stress-test the governance, labor, compute, distribution,
    alignment, and post-work consequences through 2040. If AI 2040 has not changed and no new
    evidence warrants a revision, the anti-thrash rule still wins: leave `predictions.json` untouched.
-10. **Keep X matching fresh and conservative.** `refresh-signals.js` must try the authenticated X API,
+10. **Run a portfolio-wide deduplication and chronology pass on every reassessment.** Flatten every
+   event across every year and compare the whole sequence—not only the year being edited. Remove or
+   merge exact duplicates, near-synonyms, and repeated endpoints at different dates. A later event
+   may resemble an earlier one only when it clearly advances a measurable threshold, expands the
+   scope, or names a genuinely different conditional branch. Remove weaker later milestones and any
+   event whose premise has already been eliminated by an earlier forecast (for example, conventional
+   career churn or AI-assisted reskilling after the timeline predicts full AI-R&D automation and
+   economy-wide job disruption). Keep quantitative series monotonic: cognitive/physical automation,
+   AI labor share, GDP growth, agent/robot scale, redistribution, scientific acceleration, and
+   capability levels must move forward rather than repeat or regress. Label managed, default, and
+   Peter-ungoverned branches explicitly so a later top-expert milestone does not appear to follow an
+   earlier unqualified superintelligence milestone in the same world. Run `validate-predictions.js`;
+   its duplicate-family, near-overlap, post-automation-career, and branch-order checks must pass.
+11. **Keep X matching fresh and conservative.** `refresh-signals.js` must try the authenticated X API,
    then the live public profile feed, before caches. Reject caches older than the configured 36-hour
    limit and reject the legacy syndication feed when its newest item is stale. For each prediction,
    apply relevance, solidity, and claim-facet guards before ranking valid matches by recency and

@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-12T01:00:00.734Z",
+  "updated": "2026-07-12T01:10:54.595Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Each prediction is matched to the newest item that first passes relevance, solidity, and facet guards; timestamp outranks topical score only after those gates. A signal may support at most 3 closely related predictions; otherwise the prediction receives an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
   "source": "x-api",
-  "sourceFetchedAt": "2026-07-12T01:00:00.269Z",
+  "sourceFetchedAt": "2026-07-12T01:10:54.127Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-11T21:23:51.000Z",
   "embeds": {
@@ -14,8 +14,8 @@
       "date": "11 Jul 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 781,
-      "rts": 108
+      "likes": 787,
+      "rts": 109
     },
     "2026-3": {
       "id": "2075584874396651995",
@@ -25,7 +25,7 @@
       "date": "10 Jul 2026",
       "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1055,
+      "likes": 1056,
       "rts": 101
     },
     "2026-6": {
@@ -34,10 +34,10 @@
       "author": "kimmonismus",
       "recency": "week",
       "date": "11 Jul 2026",
-      "maps": "Signal: my call — genuine human-level AGI ships by end of 2026, followed by disruption across every industry in 2027",
+      "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 781,
-      "rts": 108
+      "likes": 787,
+      "rts": 109
     },
     "2027-2": {
       "id": "2075268970492657905",
@@ -58,8 +58,8 @@
       "date": "11 Jul 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 781,
-      "rts": 108
+      "likes": 787,
+      "rts": 109
     },
     "2028-2": {
       "id": "2075260651287805963",
@@ -80,10 +80,10 @@
       "date": "11 Jul 2026",
       "maps": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
       "text": "One thing I find striking in the discourse between AI 2040 and its detractors is that the two seem to be locked in to totally incompatible worldviews of how …",
-      "likes": 1942,
+      "likes": 1943,
       "rts": 247
     },
-    "2030-5": {
+    "2030-4": {
       "id": "2072022961339437154",
       "kind": "repost",
       "author": "AndrewE_Dunn",
@@ -91,7 +91,7 @@
       "date": "30 Jun 2026",
       "maps": "The first drugs substantially designed by AI gain major-regulator approval",
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
-      "likes": 822,
+      "likes": 823,
       "rts": 79
     },
     "2031-2": {
@@ -102,7 +102,7 @@
       "date": "10 Jul 2026",
       "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1055,
+      "likes": 1056,
       "rts": 101
     },
     "2032-0": {
@@ -116,7 +116,7 @@
       "likes": 303,
       "rts": 31
     },
-    "2034-3": {
+    "2034-2": {
       "id": "2070930161361432856",
       "kind": "repost",
       "author": "ihtesham2005",
@@ -135,7 +135,7 @@
       "date": "11 Jul 2026",
       "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
       "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 196,
+      "likes": 197,
       "rts": 8
     },
     "2037-0": {
@@ -149,7 +149,7 @@
       "likes": 795,
       "rts": 100
     },
-    "2040-1": {
+    "2040-0": {
       "id": "2072700088481182100",
       "kind": "repost",
       "author": "elonmusk",
@@ -160,7 +160,7 @@
       "likes": 17275,
       "rts": 2039
     },
-    "2040-5": {
+    "2040-3": {
       "id": "2074523839107588496",
       "kind": "repost",
       "author": "m_goes_distance",
@@ -179,10 +179,9 @@
     "2026-5": "compute tracking inference",
     "2027-0": "AI agents work software jobs",
     "2027-1": "production software written",
-    "2027-3": "disruption visible every",
-    "2027-4": "pure play crosses",
-    "2027-5": "advances omnibus transparency",
-    "2027-6": "datacenter power water",
+    "2027-3": "operationally disruptive every",
+    "2027-4": "advances omnibus transparency",
+    "2027-5": "datacenter power water",
     "2028-0": "largest issue national",
     "2028-3": "control frontier concentrates",
     "2028-4": "annual datacenter construction",
@@ -195,18 +194,16 @@
     "2029-5": "erosion labor revenue",
     "2029-6": "policy shocks cause",
     "2030-0": "automated AI research intelligence explosion",
-    "2030-1": "absent intervention expert",
+    "2030-1": "2040 default branch",
     "2030-2": "managed branch frontier",
     "2030-3": "managed branch algorithms",
-    "2030-4": "career half life",
-    "2030-6": "physical production energy",
-    "2030-7": "economy adopts dividend",
-    "2031-0": "frontier could deliver",
+    "2030-5": "physical production energy",
+    "2031-0": "unpaused branch fully",
     "2031-1": "performs third cognitive",
     "2031-3": "AI safety case model deception labor",
     "2031-4": "documented deception sabotage",
     "2031-5": "continual learning architectures",
-    "2032-1": "frontier systems automate",
+    "2032-1": "advanced robots perform",
     "2032-2": "driven real growth",
     "2032-3": "capital floods mines",
     "2032-4": "jurisdiction caps auctions",
@@ -219,12 +216,11 @@
     "2033-5": "unregulated robot economies",
     "2033-6": "governments fund universal",
     "2034-0": "automates majority cognitive",
-    "2034-1": "accelerates scientific progress",
-    "2034-2": "continuously agents form",
-    "2034-4": "managed branch powers",
-    "2034-5": "datacenters expand neutral",
-    "2034-6": "treaties constrain frontier",
-    "2035-0": "strongest equal surpass",
+    "2034-1": "continuously agents form",
+    "2034-3": "managed branch powers",
+    "2034-4": "datacenters expand neutral",
+    "2034-5": "treaties constrain frontier",
+    "2035-0": "managed branch strongest",
     "2035-1": "top expert AI alignment control pause",
     "2035-2": "robots perform economically",
     "2035-3": "universal high income",
@@ -254,11 +250,9 @@
     "2039-3": "universal high income",
     "2039-4": "robot industry compute",
     "2039-5": "international negotiations loosen",
-    "2040-0": "fully automated 2040",
-    "2040-2": "wildly superhuman exists",
-    "2040-3": "superintelligence AI handoff 2040",
-    "2040-4": "society longer unilaterally",
-    "2040-6": "space resources self"
+    "2040-1": "managed branch regulators",
+    "2040-2": "society longer unilaterally",
+    "2040-4": "space resources self"
   },
   "reality": [
     {
@@ -280,7 +274,7 @@
       "author": "SpaceXAI",
       "recency": "week",
       "date": "08 Jul 2026",
-      "likes": 27869,
+      "likes": 27871,
       "rts": 4072
     },
     {
@@ -291,8 +285,8 @@
       "author": "elonmusk",
       "recency": "week",
       "date": "11 Jul 2026",
-      "likes": 12360,
-      "rts": 2285
+      "likes": 12394,
+      "rts": 2291
     },
     {
       "tag": "ROBOTS",

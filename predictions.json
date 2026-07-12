@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-10T01:58:29.762Z",
-  "basis": "Full-portfolio reassessment on 10 Jul 2026 using the AI Futures Project's AI 2040: Plan A scenario (https://ai-2040.com/) plus its Plan A Assumptions, Takeoff, Economics, and Capability Scaling supplements. AI 2040 is explicitly a policy recommendation and stress-tested scenario rather than a literal base-case forecast, so this timeline imports its robust predictions while labeling scenario-specific governance outcomes as conditional. The strongest updates are: AI agents becoming a second workforce in 2027; AI dominating the 2028 political agenda; a default path to fully automated AI R&D around 2030 with a very wide mid-2027-to-2050 interval and roughly 2-month-to-5-year takeoff; public safety cases, compute verification, and redistribution becoming core institutions; cognitive labor exceeding human supply before physical automation catches up; and a managed branch that scales to top-expert AI by 2035, pauses for alignment, then hands off to superintelligence around 2040. Peter's on-record faster call remains the ungoverned anchor: human-level AGI by end-2026, disruption across every industry through 2027, and first superintelligent systems in 2028-2030. Unsupported side forecasts were removed, the horizon was extended through 2040, and every event now has an explicit likelihood.",
+  "updated": "2026-07-12T01:08:42.753Z",
+  "basis": "Structural coherence audit requested by Peter on 12 Jul 2026, retaining the 10 Jul AI 2040 evidence base and its distinction between a policy recommendation/conditional Plan A branch and a literal base-case forecast. Six redundant or premise-conflicting events were removed: the 2027 $1T valuation repeated 2026's trillion-scale valuation milestone; the 2030 career-half-life/reskilling claim conflicted with the same timeline's economy-wide disruption and full AI-R&D automation; the 2030 AI-dividend adoption repeated the cleaner 2029 policy -> 2033 launch -> 2035 permanent-institution progression; the 2034 10x science claim repeated the stronger 2037 milestone; 2040 full AI-R&D automation repeated the 2030 unpaused-branch endpoint; and generic 2040 wildly superhuman AI repeated Peter's 2028-2030 ungoverned call plus the managed 2040 handoff. Related milestones were rewritten so the sequence advances monotonically across AGI/disruption, cognitive and physical automation, economic output, R&D acceleration, and managed-vs-ungoverned branches. Peter's anchor remains human-level AGI by end-2026, disruption across every industry through 2027, and first superintelligent systems in 2028-2030.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -51,7 +51,7 @@
           "prob": 68
         },
         {
-          "t": "Signal: my call — genuine human-level AGI ships by end of 2026, followed by disruption across every industry in 2027",
+          "t": "Signal: my call — genuine human-level AGI ships by end of 2026",
           "d": "technology",
           "high": true,
           "signal": true,
@@ -108,16 +108,10 @@
           "prob": 58
         },
         {
-          "t": "Human-level AI disruption is visible across every major industry, validating the need to prepare for worst-case branches",
+          "t": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
           "d": "economic",
           "high": true,
           "prob": 78
-        },
-        {
-          "t": "At least one pure-play AI company crosses a $1T valuation",
-          "d": "economic",
-          "high": true,
-          "prob": 80
         },
         {
           "t": "The US advances an omnibus AI transparency, compute-tracking or frontier-accountability law",
@@ -315,7 +309,7 @@
           "prob": 50
         },
         {
-          "t": "Absent intervention, top-expert or superintelligent AI follows automated coding within roughly one year",
+          "t": "AI 2040 default branch: top-expert or superintelligent AI follows automated coding within roughly one year",
           "d": "technology",
           "high": true,
           "prob": 45
@@ -333,12 +327,6 @@
           "prob": 24
         },
         {
-          "t": "Career half-life falls below five years as continuous AI-assisted reskilling becomes normal",
-          "d": "individual",
-          "high": true,
-          "prob": 72
-        },
-        {
           "t": "The first drugs substantially designed by AI gain major-regulator approval",
           "d": "technology",
           "high": true,
@@ -349,12 +337,6 @@
           "d": "economic",
           "high": true,
           "prob": 68
-        },
-        {
-          "t": "At least one major economy adopts an AI dividend, public AI equity stake or compute-rent mechanism",
-          "d": "economic",
-          "high": true,
-          "prob": 66
         }
       ],
       "match": {
@@ -365,16 +347,14 @@
           "automated coder",
           "ai r&d",
           "intelligence explosion",
-          "research transparency",
-          "ai dividend"
+          "research transparency"
         ],
         "strong": [
           "research",
           "coder",
           "automation",
           "takeoff",
-          "transparency",
-          "dividend"
+          "transparency"
         ],
         "weak": [
           "agi",
@@ -388,7 +368,7 @@
       "summary": "Near-human systems become too economically important to govern with ordinary product rules. Public safety cases, third-party risk assessment and control systems emerge as AI performs a large share of cognitive work and exposes repeated misalignment failures.",
       "events": [
         {
-          "t": "Frontier AI could deliver roughly a 10x AI-R&D speedup if allowed to research without restrictions",
+          "t": "On the unpaused branch, fully automated AI R&D delivers roughly a 10x research speedup",
           "d": "technology",
           "high": true,
           "prob": 62
@@ -461,7 +441,7 @@
           "prob": 65
         },
         {
-          "t": "Frontier systems can automate roughly half of cognitive tasks and robots roughly one third of physical tasks",
+          "t": "Advanced robots can perform roughly one third of economically valuable physical tasks",
           "d": "technology",
           "high": true,
           "prob": 60
@@ -522,10 +502,10 @@
       "summary": "Distribution and epistemics become the central social technologies. Governments recycle AI rents into citizen dividends while cheap persuasion, synthetic media and subannual industrial growth force new defenses against manipulation and concentration.",
       "events": [
         {
-          "t": "AI and robot labor contributes at least 20% of economic output in a leading economy",
+          "t": "AI-and-robot labor contributes at least half of economic output in a leading economy",
           "d": "economic",
           "high": true,
-          "prob": 65
+          "prob": 55
         },
         {
           "t": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
@@ -601,12 +581,6 @@
           "prob": 62
         },
         {
-          "t": "AI accelerates scientific progress by roughly 10x in multiple research fields",
-          "d": "technology",
-          "high": true,
-          "prob": 60
-        },
-        {
           "t": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
           "d": "economic",
           "high": true,
@@ -643,7 +617,6 @@
         "phrases": [
           "compute explosion",
           "semiconductor ai",
-          "ai science",
           "mutually assured compute",
           "floating data center",
           "military ai"
@@ -652,7 +625,6 @@
           "compute",
           "semiconductor",
           "datacenter",
-          "science",
           "military",
           "treaty"
         ],
@@ -668,7 +640,7 @@
       "summary": "The branches diverge sharply. On the ungoverned path, superintelligence may already exist; on a successful Plan A-style path, humanity reaches top-expert AI, automates most work, and pauses at the edge of what control-based safety cases can justify.",
       "events": [
         {
-          "t": "The strongest AIs equal or surpass top human experts across essentially every cognitive field",
+          "t": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
           "d": "technology",
           "high": true,
           "prob": 60
@@ -1015,25 +987,13 @@
       "summary": "The forecast horizon closes on a fork, not a certainty. AI R&D and human labor are overwhelmingly likely to be automatable by this point; the open question is whether superintelligence arrives through an uncontrolled race or a transparent, distributed handoff that preserves human agency.",
       "events": [
         {
-          "t": "AI R&D is fully automated by 2040 absent a durable global pause",
-          "d": "technology",
-          "high": true,
-          "prob": 82
-        },
-        {
           "t": "AI and robots can automate essentially all economically relevant human labor",
           "d": "economic",
           "high": true,
           "prob": 78
         },
         {
-          "t": "Wildly superhuman AI exists in at least one major jurisdiction or coordinated consortium",
-          "d": "technology",
-          "high": true,
-          "prob": 82
-        },
-        {
-          "t": "Managed branch: regulators lift the top-expert pause and scale to superintelligence under total transparency",
+          "t": "Managed branch: regulators lift the top-expert pause and transparently scale to wildly superhuman AI",
           "d": "governance",
           "high": true,
           "prob": 28
