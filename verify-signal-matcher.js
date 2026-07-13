@@ -42,6 +42,18 @@ const fixtures = [
     text: 'AI 2040 Plan A says the US and China make a deal, AI R&D is slowed, and frontier labs scale more carefully.',
   },
   {
+    name: 'generic AI research governance is not full R&D automation',
+    expect: false,
+    title: 'Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030',
+    text: 'Governments debate slowing AI research and publishing frontier model evaluations.',
+  },
+  {
+    name: 'end-to-end successor research supports full R&D automation',
+    expect: true,
+    title: 'Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030',
+    text: 'AI research is fully automated end to end, with agents training successor models without human researchers.',
+  },
+  {
     name: 'universal high income supports dividend policy',
     expect: true,
     domain: 'economic',
@@ -80,6 +92,20 @@ const fixtures = [
     domain: 'governance',
     title: 'At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production',
     text: 'A Tesla facility building permit lists a cleaning robot alongside Superchargers.',
+  },
+  {
+    name: 'ordinary rent collection is not an automated-capital tax shift',
+    expect: false,
+    domain: 'governance',
+    title: 'Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents',
+    text: 'A ride-sharing company fought city regulators over urban rent collection.',
+  },
+  {
+    name: 'automation levies support an automated-capital tax shift',
+    expect: true,
+    domain: 'governance',
+    title: 'Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents',
+    text: 'Governments are replacing payroll taxes with levies on AI compute, robots and automated capital.',
   },
   {
     name: 'market cap is not a compute cap',

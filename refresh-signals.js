@@ -1138,6 +1138,12 @@ function passesFacetGuards(text, p){
     }
     return false;
   }
+  if (/\babsent a sustained slowdown ai fully automates frontier ai r d by 2030\b/.test(normTitle)) {
+    return laborClauses(normText).some(clause =>
+      /\b(?:ai|artificial intelligence|model|models|agent|agents)\b/.test(clause)
+      && /\b(?:ai r d|ai research|model research|machine learning research|frontier research|successor models?|building smarter ai)\b/.test(clause)
+      && /\b(?:fully automat\w*|full automation|automat\w* end to end|end to end automation|without human(?: researchers?| input| review)?|replace(?:s|d|ment)? (?:ai )?researchers?|recursive self improvement)\b/.test(clause));
+  }
   if (/\bglobal ai compute reaches multi terawatt scale and billions of h100 equivalents\b/.test(normTitle)) {
     return hasBoundComputeScale(normText);
   }
@@ -1145,6 +1151,12 @@ function passesFacetGuards(text, p){
     return !hasExplicitPhysicalLimitation(normText)
       && /\b(?:robot|robots|robotic|robotics|humanoid)\b/.test(normText)
       && /\b(?:one third|third|33 percent|degrees? of freedom|dof|dexter\w*|human level|human input|intervention free|equivalent to .* humans?|human workers?)\b/.test(normText);
+  }
+  if (/\btax systems begin shifting materially from human income toward compute robot and automated capital rents\b/.test(normTitle)) {
+    return laborClauses(normText).some(clause =>
+      /\b(?:ai|artificial intelligence|compute|gpu|gpus|robot|robots|robotic|robotics|automation|automated capital)\b/.test(clause)
+      && /\b(?:tax|taxes|taxation|levy|levies|rent|rents|dividend|dividends|income|revenue|fiscal|payroll)\b/.test(clause)
+      && /\b(?:human income|labor tax|labour tax|payroll tax|wage tax|tax base|compute (?:tax|levy|rent)|gpu (?:tax|levy|rent)|robot (?:tax|levy|rent)|automation (?:tax|levy|rent)|automated capital|ai (?:tax|levy|rent|dividend)|shift|replace|instead|toward)\b/.test(clause));
   }
   if (/\berosion of labor tax revenue makes ai dividends sovereign ai stakes and compute rents mainstream policy\b/.test(normTitle)
       || /\ba recurring citizen s dividend funded by ai compute or robot rents launches\b/.test(normTitle)) {
