@@ -115,6 +115,18 @@ const fixtures = [
     text: 'Automated AI R&D now delivers a measured 10x research speedup using autonomous AI scientists.',
   },
   {
+    name: 'generic science progress is not a 10x to 1000x AI acceleration',
+    expect: false,
+    title: 'AI accelerates scientific progress by 10x to 1000x depending on the field',
+    text: 'AI is helping usher in a new era of science with exciting recent progress in mathematical physics.',
+  },
+  {
+    name: 'quantified AI science acceleration is accepted',
+    expect: true,
+    title: 'AI accelerates scientific progress by 10x to 1000x depending on the field',
+    text: 'AI agents accelerate scientific progress by a measured 10x across the evaluated fields.',
+  },
+  {
     name: 'hardware product unveiling is not a capital flood',
     expect: false,
     domain: 'economic',
@@ -187,6 +199,18 @@ const fixtures = [
     expect: false,
     title: 'AI-driven research delivers major disease cures and abundant low-cost clean energy',
     text: 'AI is a force multiplier for medicine, energy and every other technology.',
+  },
+  {
+    name: 'preclinical AI drug announcement is not regulator approval',
+    expect: false,
+    title: 'The first drugs substantially designed by AI gain major-regulator approval',
+    text: 'An AI company announced a new preclinical drug program but provided no candidate or clinical results.',
+  },
+  {
+    name: 'major-regulator approval of an AI-designed drug is accepted',
+    expect: true,
+    title: 'The first drugs substantially designed by AI gain major-regulator approval',
+    text: 'The FDA approved the first therapeutic substantially designed by AI after its clinical program.',
   },
   {
     name: 'delivered cures and cheap clean energy are accepted',

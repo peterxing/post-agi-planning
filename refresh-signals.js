@@ -1248,6 +1248,22 @@ function passesFacetGuards(text, p){
     return /\b(?:ai r d|ai research|research automation|automated research|ai scientist|ai scientists|autonomous research)\b/.test(normText)
       && /\b(?:10x|tenfold|research speedup|accelerat\w* research|faster research|months of research in|years of research in)\b/.test(normText);
   }
+  if (/\bthe first drugs substantially designed by ai gain major regulator approval\b/.test(normTitle)) {
+    return laborClauses(normText).some(clause =>
+      /\b(?:drug|drugs|medicine|medicines|therapeutic|therapeutics|molecule|molecules|compound|compounds)\b/.test(clause)
+      && (/\b(?:ai|artificial intelligence|machine learning)\b.{0,60}\b(?:design(?:ed|s)?|discover(?:ed|s)?|generat(?:ed|es)?|develop(?:ed|s)?)\b/.test(clause)
+        || /\b(?:design(?:ed)?|discover(?:ed)?|generat(?:ed)?|develop(?:ed)?)\b.{0,60}\b(?:by|with|using)\s+(?:ai|artificial intelligence|machine learning)\b/.test(clause))
+      && (/\b(?:fda|ema|mhra|tga|major regulator|regulatory authority)\b.{0,60}\b(?:approved|authorized|authorised|licensed)\b/.test(clause)
+        || /\b(?:received|gained|won|secured|obtained)\b.{0,30}\b(?:fda|ema|mhra|tga|major regulator|regulatory)\b.{0,20}\b(?:approval|authorization|authorisation)\b/.test(clause)
+        || /\b(?:received|gained|won|secured|obtained)\b.{0,30}\b(?:approval|authorization|authorisation)\b.{0,30}\b(?:from|by)\b.{0,12}\b(?:fda|ema|mhra|tga|major regulator|regulatory authority)\b/.test(clause)));
+  }
+  if (/\bai accelerates scientific progress by 10x to 1000x depending on the field\b/.test(normTitle)) {
+    return laborClauses(normText).some(clause =>
+      /\b(?:ai|artificial intelligence|machine learning|model|models|agent|agents)\b/.test(clause)
+      && /\b(?:science|scientific|research|discovery|discoveries|experiment|experiments)\b/.test(clause)
+      && /\b(?:accelerat\w*|speedup|faster|compress\w*)\b/.test(clause)
+      && /\b(?:10x|100x|1000x|tenfold|hundredfold|thousandfold|orders? of magnitude|10 to 1000 times|between 10 and 1000 times)\b/.test(clause));
+  }
   if (/\bcapital floods into mines motors actuators fabs and factories\b/.test(normTitle)) {
     return /\b(?:mine|mines|mining|motor|motors|actuator|actuators|fab|fabs|foundry|foundries|factory|factories|robotics)\b/.test(normText)
       && /\b(?:capital|investment|investments|investing|capex|financing|funding|funded|spending|dollars|billion|trillion)\b/.test(normText);
