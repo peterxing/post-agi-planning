@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Rehoboam · Hitchhiker's Guide to the Singularity — Peter Xing</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%23b11f4b' stroke-width='2.5'/><circle cx='16' cy='16' r='5' fill='%23b11f4b'/></svg>" />
-<meta name="description" content="An interactive civilization-forecast system (2025–2036) and living book for navigating the arrival of superintelligence — building toward abundance instead of panic. By Peter Xing." />
+<meta name="description" content="An interactive civilization-forecast system (2026–2040), undated post-superintelligence horizon, and living book for navigating the arrival of superintelligence. By Peter Xing." />
 <script>
   (() => {
     const param = new URLSearchParams(window.location.search).get("scoutTheme");
@@ -245,6 +245,29 @@ a.signal-src-link:hover { color: var(--cp-accent); }
 .event-body .tl-signal-text { font-size: 0.82rem; line-height: 1.45; margin-bottom: 7px; }
 .event-body .tl-signal-search { margin-top: 7px; font-size: 0.62rem; }
 .sig-stamp { margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border: 1px solid var(--cp-border); border-radius: 999px; background: var(--cp-accent-soft); color: var(--cp-text-muted); font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; }
+
+/* Undated, dependency-gated post-superintelligence horizon */
+.horizon-note { margin: -18px 0 28px; padding: 14px 16px; border: 1px solid var(--cp-border); border-left: 3px solid var(--cp-warning); border-radius: 0.625rem; background: var(--cp-surface-soft); color: var(--cp-text-muted); font-size: 0.88rem; }
+.horizon-note strong { color: var(--cp-text); }
+.horizon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.horizon-item { display: flex; flex-direction: column; min-width: 0; padding: 22px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); }
+.horizon-item:hover { border-color: var(--cp-border-strong); }
+.horizon-item-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.horizon-epistemic, .horizon-prob, .horizon-domain { font-family: Consolas, "Courier New", Courier, monospace; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--cp-border); border-radius: 999px; color: var(--cp-text-muted); }
+.horizon-epistemic[data-label="conditional"] { color: var(--cp-success); border-color: var(--cp-success); }
+.horizon-epistemic[data-label="speculative"] { color: var(--cp-warning); border-color: var(--cp-warning); }
+.horizon-prob { color: var(--cp-accent); border-color: var(--cp-accent); }
+.horizon-item h3 { font-size: 1.08rem; margin-bottom: 16px; }
+.horizon-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.horizon-block h4 { margin-bottom: 7px; color: var(--cp-text-muted); font-family: Consolas, "Courier New", Courier, monospace; font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.horizon-list { list-style: none; }
+.horizon-list li { position: relative; padding: 4px 0 4px 14px; color: var(--cp-text-muted); font-size: 0.8rem; line-height: 1.45; }
+.horizon-list li::before { content: "·"; position: absolute; left: 0; color: var(--cp-accent); font-weight: 700; }
+.horizon-caveat { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--cp-border); color: var(--cp-text-soft); font-size: 0.8rem; line-height: 1.5; }
+.horizon-caveat strong { color: var(--cp-warning); }
+.horizon-signal { margin-top: auto; padding-top: 6px; }
+@media (max-width: 880px){ .horizon-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px){ .horizon-item { padding: 18px; } .horizon-columns { grid-template-columns: 1fr; } }
 
 /* Generic card grid */
 .grid { display: grid; gap: 20px; }
@@ -498,7 +521,7 @@ a.signal-src-link:hover { color: var(--cp-accent); }
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">Future Timeline &amp; Civilization Forecast · 2025–2036</div>
+      <div class="eyebrow">Future Timeline &amp; Civilization Forecast · 2026–2040</div>
       <h1>The Hitchhiker's Guide to the <span class="accent">Singularity</span></h1>
       <p class="hero-tag">How to prepare and plan for when artificial intelligence does everything better than humans can.</p>
       <p class="hero-quote">"When intelligence becomes cheap, every plan changes. This is a map for building toward abundance instead of panic."</p>
@@ -547,6 +570,19 @@ a.signal-src-link:hover { color: var(--cp-accent); }
       <div class="tl-spine"></div>
       <div id="timelineBody"></div>
     </div>
+  </div>
+</section>
+
+<hr class="divider-line" />
+<section class="section-pad" id="post-superintelligence">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Beyond the dated forecast · Dependency gates</div>
+      <h2 id="horizonTitle">Post-superintelligence horizon</h2>
+      <p id="horizonSummary">Undated possibilities whose plausibility depends on aligned superintelligence and explicit technical prerequisites—not calendar promises.</p>
+    </div>
+    <div class="horizon-note"><strong>How to read this section:</strong> conditional plausibility is conditional on aligned superintelligence and every listed dependency; it is not a probability by 2040. Outward proto-Dyson expansion and inward Transcension are potentially mutually exclusive branches.</div>
+    <div class="horizon-grid" id="horizonBody"></div>
   </div>
 </section>
 
@@ -710,12 +746,42 @@ a.signal-src-link:hover { color: var(--cp-accent); }
     <div class="author-talks">
       <div class="eyebrow" style="margin-bottom:16px">Recent &amp; featured talks</div>
       <div class="grid grid-2" id="authorTalks">
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=K2e_ywxwqKM" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>           <h5>AI Will Run Entire Companies Autonomously</h5>           <p>On OpenAI's &quot;Level 5&quot; — Peter maps the scenarios where AI runs entire companies autonomously.</p>           <span class="talk-go">Watch / listen →</span>         </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=oBJ38mxmnko" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>           <h5>Prepare for AGI</h5>           <p>A Microsoft Data &amp; AI specialist's case for planning now — hope for the best, prepare for the worst.</p>           <span class="talk-go">Watch / listen →</span>         </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=P91DZjE5nw0" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>           <h5>OpenClaw and the Rise of AI Agents</h5>           <p>With Mic Mann on why AI agents are the next execution layer — software that doesn't just assist but plans, decides and acts.</p>           <span class="talk-go">Watch / listen →</span>         </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=6YbEO5Lqm_c" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>           <h5>AI Agents Will Run Your Workday by 2027</h5>           <p>How autonomous AI agents reshape every workflow — and how to stay augmented, not automated.</p>           <span class="talk-go">Watch / listen →</span>         </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=ex92otN02eA" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>           <h5>Preparing for a Post-AGI World in Your Next 18 Months</h5>           <p>A practical 18-month playbook for individuals and organisations to get ready before superintelligence arrives.</p>           <span class="talk-go">Watch / listen →</span>         </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=p22wV3MiHtM" target="_blank" rel="noopener">           <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>           <h5>AGI for Everyone: Empowering Individuals with AI</h5>           <p>How accessible AGI can empower individuals — not just institutions — to think, create and solve at scale.</p>           <span class="talk-go">Watch / listen →</span>         </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=K2e_ywxwqKM" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
+          <h5>AI Will Run Entire Companies Autonomously</h5>
+          <p>On OpenAI's &quot;Level 5&quot; — Peter maps the scenarios where AI runs entire companies autonomously.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=oBJ38mxmnko" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
+          <h5>Prepare for AGI</h5>
+          <p>A Microsoft Data &amp; AI specialist's case for planning now — hope for the best, prepare for the worst.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=P91DZjE5nw0" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
+          <h5>OpenClaw and the Rise of AI Agents</h5>
+          <p>With Mic Mann on why AI agents are the next execution layer — software that doesn't just assist but plans, decides and acts.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=6YbEO5Lqm_c" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
+          <h5>AI Agents Will Run Your Workday by 2027</h5>
+          <p>How autonomous AI agents reshape every workflow — and how to stay augmented, not automated.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=ex92otN02eA" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>
+          <h5>Preparing for a Post-AGI World in Your Next 18 Months</h5>
+          <p>A practical 18-month playbook for individuals and organisations to get ready before superintelligence arrives.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
+        <a class="card author-talk" href="https://www.youtube.com/watch?v=p22wV3MiHtM" target="_blank" rel="noopener">
+          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>
+          <h5>AGI for Everyone: Empowering Individuals with AI</h5>
+          <p>How accessible AGI can empower individuals — not just institutions — to think, create and solve at scale.</p>
+          <span class="talk-go">Watch / listen →</span>
+        </a>
       </div>
     </div>
   </div>
@@ -1273,6 +1339,159 @@ let timelineData = [
     { t: "Human–AI merger moves from fringe to policy", d: D.I, high: false },
   ]},
 ];
+let horizonData = {
+  title: "Post-superintelligence horizon",
+  summary: "Undated, dependency-gated possibilities rather than calendar forecasts. conditionalProb is conditional on aligned superintelligence and every listed prerequisite, not a probability by 2040; mutually exclusive outward-expansion and inward-transcension branches can coexist here without being forced into the dated timeline.",
+  items: [
+    {
+      id: "implantable-neural-symbiosis",
+      t: "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
+      d: "technology",
+      epistemic: "conditional",
+      conditionalProb: 72,
+      dependencies: [
+        "Long-term biocompatible intracortical or cortical-surface hardware with stable signals",
+        "Reproducible high-bandwidth decoding and safe, precise stimulation across multi-patient trials",
+        "Regulatory approval for chronic home use with cybersecurity, consent and explantability safeguards",
+        "Aligned superintelligence accelerates materials, decoding and stimulation without bypassing clinical validation"
+      ],
+      indicators: [
+        "Peer-reviewed multi-patient communication or robotic-control outcomes with preregistered endpoints",
+        "Stable bidirectional home use measured over years rather than supervised demonstrations",
+        "Reproduced sensory-restoration outcomes without unacceptable device or procedure adverse events",
+        "Pivotal trials and approvals beyond early-feasibility cohorts"
+      ],
+      caveat: "Current implanted studies are small and safety-first; company announcements alone do not establish efficacy, bandwidth or durable home use, and surgery plus chronic hardware carry material risks.",
+      match: { search: "from:peterxing Neuralink BCI neural implant" }
+    },
+    {
+      id: "non-invasive-neural-symbiosis",
+      t: "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
+      d: "technology",
+      epistemic: "speculative",
+      conditionalProb: 40,
+      dependencies: [
+        "External EEG, MEG, fNIRS, ultrasound or optical sensing reaches clinically useful signal quality",
+        "Communication decoding and safe stimulation reproduce across patients and independent laboratories",
+        "Portable systems remain robust outside controlled laboratories without implanted components",
+        "Aligned superintelligence accelerates sensing and decoding while preserving consent and safety"
+      ],
+      indicators: [
+        "Registered clinical communication or control trials using only external sensing or stimulation",
+        "Peer-reviewed patient outcomes that reproduce useful bandwidth outside the laboratory",
+        "Independent comparisons against implanted systems on accuracy, latency and long-term reliability",
+        "Portable non-invasive systems demonstrate safe home use"
+      ],
+      caveat: "Current genuinely non-invasive systems do not match implanted bandwidth. Endovascular BCIs are minimally invasive, not non-invasive, and wrist sEMG or other peripheral muscle and nerve interfaces are not BCIs.",
+      match: { search: "from:peterxing non-invasive BCI EEG MEG ultrasound" }
+    },
+    {
+      id: "whole-brain-emulation-and-uploading",
+      t: "Whole-brain emulation could enable digital minds, but mind uploading and digital immortality would still leave identity continuity unresolved",
+      d: "individual",
+      epistemic: "speculative",
+      conditionalProb: 25,
+      dependencies: [
+        "Whole-brain scanning and preservation capture synaptic, cellular and molecular structure at validated fidelity",
+        "Dynamic biochemical state, plasticity and neuromodulation are captured rather than inferred from wiring alone",
+        "Functional emulations reproduce novel behavior and internal causal dynamics across independent tests",
+        "Consent, personhood, security and continuity frameworks exist for instantiated digital minds"
+      ],
+      indicators: [
+        "Peer-reviewed whole-vertebrate and then whole-mammal connectomes with quantified error rates",
+        "Connectome-constrained models predict previously unrecorded whole-organism behavior",
+        "Independent preservation studies recover validated structural and dynamic information",
+        "A mammalian functional emulation reproduces novel behavior rather than replaying training data"
+      ],
+      caveat: "A connectome is a wiring diagram, not a functional emulation; a chatbot or digital replica trained on a person's data is not an upload, and whether any copy preserves subjective identity continuity may remain untestable.",
+      match: { search: "from:peterxing whole brain emulation mind uploading connectome" }
+    },
+    {
+      id: "orbital-compute-to-proto-dyson",
+      t: "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
+      d: "technology",
+      epistemic: "speculative",
+      conditionalProb: 45,
+      dependencies: [
+        "Utility-scale orbital compute proves power, cooling, radiation tolerance, launch economics and customer demand",
+        "Autonomous off-world mining, refining and manufacturing use extraterrestrial feedstock",
+        "Self-repair and bounded self-expansion operate under credible replication and debris governance",
+        "Solar collection and power transmission scale without destabilizing orbital environments"
+      ],
+      indicators: [
+        "Sustained megawatt-class orbital compute publishes power, radiator and workload telemetry",
+        "Robotic factories manufacture useful structures in space from off-world material",
+        "Solar collectors and compute nodes expand using a measured share of extraterrestrial feedstock",
+        "Audited captured power rises by successive orders of magnitude rather than by filings or announcements"
+      ],
+      caveat: "A storage payload, edge-inference satellite, proposed constellation or regulatory filing is not a hyperscale space data centre. Small orbital clusters are not a Dyson swarm, and this trajectory does not imply a complete stellar enclosure.",
+      match: { search: "from:peterxing orbital compute space solar Dyson" }
+    },
+    {
+      id: "kardashev-energy-scaling",
+      t: "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
+      d: "technology",
+      epistemic: "speculative",
+      conditionalProb: 35,
+      dependencies: [
+        "Energy generation, transmission and storage scale safely across successive orders of magnitude",
+        "Planetary and off-world infrastructure convert available energy into useful work",
+        "Growth avoids ecological collapse, conflict and irreversible concentration of control",
+        "Aligned superintelligence directs greater energy capture toward broadly beneficial outcomes"
+      ],
+      indicators: [
+        "Audited global energy capture and use rises in watts across sustained orders of magnitude",
+        "Off-world power contributes a measurable share of total civilizational energy",
+        "Transmission, storage and heat rejection scale with generation rather than becoming binding bottlenecks",
+        "Energy growth is accompanied by measured welfare and resilience rather than labels alone"
+      ],
+      caveat: "The Kardashev scale is an energy-use classification, not evidence that civilizations inevitably progress through it. Type I and Type II remain long-horizon reference points, not near-term achievements.",
+      match: { search: "from:peterxing Kardashev energy scale Type I Type II" }
+    },
+    {
+      id: "transcension-hypothesis",
+      t: "An inward transcension branch could favor extreme STEM compression, miniaturization and computational density over outward expansion",
+      d: "technology",
+      epistemic: "speculative",
+      conditionalProb: 15,
+      dependencies: [
+        "Physics permits orders-of-magnitude gains in computation and energy efficiency at smaller scales",
+        "Advanced intelligence can migrate safely to dense engineered substrates",
+        "The hypothesis yields discriminating astrobiological observations rather than post-hoc interpretation",
+        "Aligned superintelligence chooses inward densification over outward infrastructure growth"
+      ],
+      indicators: [
+        "Capability rises while the energy, mass and spatial footprint of computation sharply contracts",
+        "Peer-reviewed models produce testable SETI signatures unique to inward development",
+        "Independent critiques, replications or falsifications engage the hypothesis",
+        "Engineered systems demonstrate sustained computation near proposed density and efficiency limits"
+      ],
+      caveat: "John Smart presents the Transcension Hypothesis as a speculative futures and astrobiology hypothesis resting on unvalidated assumptions; it has no empirical confirmation and may conflict with the outward proto-Dyson branch.",
+      match: { search: "from:peterxing Transcension Hypothesis inner space density" }
+    },
+    {
+      id: "ruliad-testable-physics",
+      t: "Ruliad research could become forecast-relevant only if it yields discriminating, testable physical predictions or engineering consequences",
+      d: "technology",
+      epistemic: "speculative",
+      conditionalProb: 10,
+      dependencies: [
+        "The ruliad receives a precise, tractable formalism with clearly stated physical commitments",
+        "It produces predictions that differ from established theories and cannot be tuned after observation",
+        "Independent researchers reproduce the mathematics, simulations and experimental implications",
+        "At least one validated prediction enables a distinct engineering consequence"
+      ],
+      indicators: [
+        "Peer-reviewed papers derive quantitative, falsifiable predictions unique to the framework",
+        "Independent teams reproduce a discriminating result",
+        "Experiments compare ruliad-derived predictions against established physical theories",
+        "A validated result changes the design or performance of a real engineered system"
+      ],
+      caveat: "The ruliad is a computational-metaphysics and foundational-physics research construct with unfinished formalism, not an established physical theory, a destination, a simulation to enter or a proven roadmap for superintelligence.",
+      match: { search: "from:peterxing Wolfram ruliad testable physics" }
+    }
+  ]
+};
 const domainNames = { individual:'Individual', social:'Social', technology:'Technology', economic:'Economic', geopolitical:'Geopolitical', governance:'Governance' };
 let activeDomain = 'all';
 let overlayOn = true;
@@ -1340,8 +1559,12 @@ function signalCard(sig){
     </div>`;
 }
 function searchChip(kw){
-  const q = encodeURIComponent('(from:peterxing) ' + kw);
-  return `<a class="tl-signal-search" href="https://x.com/search?q=${q}&f=live" target="_blank" rel="noopener"><span class="tl-x">${X_SVG}</span> @peterxing&#39;s latest on &ldquo;${kw}&rdquo; &rarr;</a>`;
+  const raw = String(kw || '').trim();
+  const hasAuthor = /\bfrom:peterxing\b/i.test(raw);
+  const query = hasAuthor ? raw : '(from:peterxing) ' + raw;
+  const label = raw.replace(/\(?from:peterxing\)?/ig, '').trim() || 'this prediction';
+  const q = encodeURIComponent(query);
+  return `<a class="tl-signal-search" href="https://x.com/search?q=${q}&f=live" target="_blank" rel="noopener"><span class="tl-x">${X_SVG}</span> @peterxing&#39;s latest on &ldquo;${label}&rdquo; &rarr;</a>`;
 }
 
 function renderTimeline(){
@@ -1388,7 +1611,59 @@ function renderTimeline(){
       </div>`;
   }).join('');
 }
+function validHorizon(h){
+  if (!h || typeof h !== 'object' || typeof h.title !== 'string' || typeof h.summary !== 'string' || !Array.isArray(h.items) || !h.items.length) return false;
+  const summary = h.summary.toLowerCase();
+  if (!summary.includes('aligned superintelligence') || !summary.includes('not a probability by 2040') || !summary.includes('mutually exclusive')) return false;
+  const validLists = item => ['dependencies','indicators'].every(k =>
+    Array.isArray(item[k]) && item[k].length >= 2 && item[k].length <= 4 && item[k].every(v => typeof v === 'string' && v.trim()));
+  if (!h.items.every(item => item && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id)
+      && typeof item.t === 'string' && domainNames[item.d]
+      && ['conditional','speculative'].includes(item.epistemic)
+      && typeof item.conditionalProb === 'number' && item.conditionalProb >= 0 && item.conditionalProb <= 100
+      && validLists(item) && typeof item.caveat === 'string' && item.caveat.trim()
+      && item.match && /\bfrom:peterxing\b/i.test(item.match.search || ''))) return false;
+  const text = h.items.map(item => `${item.t} ${item.caveat} ${item.dependencies.join(' ')} ${item.indicators.join(' ')}`).join(' ').toLowerCase();
+  return text.includes('endovascular bcis are minimally invasive, not non-invasive')
+    && text.includes('chatbot or digital replica')
+    && text.includes('small orbital clusters are not a dyson swarm')
+    && text.includes('energy-use classification')
+    && text.includes('no empirical confirmation')
+    && text.includes('not an established physical theory');
+}
+function horizonList(items){
+  return `<ul class="horizon-list">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+}
+function renderHorizon(){
+  const title = document.getElementById('horizonTitle');
+  const summary = document.getElementById('horizonSummary');
+  const body = document.getElementById('horizonBody');
+  if (!body) return;
+  if (title) title.textContent = horizonData.title;
+  if (summary) summary.textContent = horizonData.summary;
+  body.innerHTML = horizonData.items.map(item => {
+    const key = 'horizon-' + item.id;
+    const sig = xSignals[key];
+    const fallback = (item.match && item.match.search) || deriveSearch(item.t);
+    const sigHtml = sig ? signalCard(sig) : searchChip(xSearch[key] || fallback);
+    return `<article class="horizon-item" data-horizon-id="${item.id}">
+      <div class="horizon-item-head">
+        <span class="horizon-epistemic" data-label="${item.epistemic}">${item.epistemic}</span>
+        <span class="horizon-prob">${item.conditionalProb}% conditional plausibility</span>
+        <span class="horizon-domain">${domainNames[item.d]}</span>
+      </div>
+      <h3>${item.t}</h3>
+      <div class="horizon-columns">
+        <div class="horizon-block"><h4>Dependencies</h4>${horizonList(item.dependencies)}</div>
+        <div class="horizon-block"><h4>Observable indicators</h4>${horizonList(item.indicators)}</div>
+      </div>
+      <p class="horizon-caveat"><strong>Caveat:</strong> ${item.caveat}</p>
+      <div class="horizon-signal">${sigHtml}</div>
+    </article>`;
+  }).join('');
+}
 renderTimeline();
+renderHorizon();
 
 /* Daily-revised predictions: a sidecar predictions.json (years / summary / events) revised daily from
    the latest news online and @peterxing's X posts/reposts (add / update / remove) overrides the inline
@@ -1403,7 +1678,13 @@ renderTimeline();
       if (!clean.length) return;
       clean.sort((a, b) => a.year - b.year);
       timelineData = clean;
+      if (validHorizon(d.postSuperintelligence)) {
+        horizonData = d.postSuperintelligence;
+      } else {
+        console.error('Invalid or misleading postSuperintelligence data; using the inline dependency-gated fallback.');
+      }
       renderTimeline();
+      renderHorizon();
       const stamp = document.getElementById('predStamp');
       if (stamp && d.updated){
         const dt = new Date(d.updated);
@@ -1469,6 +1750,7 @@ renderTimeline();
       if (d.search && typeof d.search === 'object') xSearch = d.search;
       if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
       renderTimeline();
+      renderHorizon();
       const stamp = document.getElementById('sigStamp');
       if (stamp && d.updated){
         const dt = new Date(d.updated);
@@ -1501,7 +1783,7 @@ function loadTwitter(){
   });
   return twPromise;
 }
-document.getElementById('timelineBody').addEventListener('click', async (e) => {
+document.addEventListener('click', async (e) => {
   const btn = e.target.closest('.tl-signal-load');
   if (!btn) return;
   const id = btn.dataset.tweet;

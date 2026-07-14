@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-12T01:08:42.753Z",
-  "basis": "Structural coherence audit requested by Peter on 12 Jul 2026, retaining the 10 Jul AI 2040 evidence base and its distinction between a policy recommendation/conditional Plan A branch and a literal base-case forecast. Six redundant or premise-conflicting events were removed: the 2027 $1T valuation repeated 2026's trillion-scale valuation milestone; the 2030 career-half-life/reskilling claim conflicted with the same timeline's economy-wide disruption and full AI-R&D automation; the 2030 AI-dividend adoption repeated the cleaner 2029 policy -> 2033 launch -> 2035 permanent-institution progression; the 2034 10x science claim repeated the stronger 2037 milestone; 2040 full AI-R&D automation repeated the 2030 unpaused-branch endpoint; and generic 2040 wildly superhuman AI repeated Peter's 2028-2030 ungoverned call plus the managed 2040 handoff. Related milestones were rewritten so the sequence advances monotonically across AGI/disruption, cognitive and physical automation, economic output, R&D acceleration, and managed-vs-ungoverned branches. Peter's anchor remains human-level AGI by end-2026, disruption across every industry through 2027, and first superintelligent systems in 2028-2030.",
+  "updated": "2026-07-14T02:04:14.733Z",
+  "basis": "One-time technology-watchlist and post-superintelligence-horizon audit on 14 Jul 2026, preserving Peter's end-2026 AGI, 2027 every-industry disruption and 2028-2030 ungoverned-superintelligence anchors, Chapter 07's three-clocks thesis, and AI 2040's explicitly conditional managed branch (https://ai-2040.com/; https://ai-2040.com/supplements/plan-a-assumptions, rechecked 14 Jul 2026). Three non-duplicative dated precursors were added: Neuralink's multinational PRIME-family studies remain implanted early-feasibility trials with 12-month safety rather than efficacy primary endpoints (PRIME NCT06429735, last update posted 9 Jan 2026, https://clinicaltrials.gov/study/NCT06429735; CAN-PRIME NCT06700304, last update posted 31 May 2025, https://clinicaltrials.gov/study/NCT06700304; GB-PRIME NCT07127172, first posted 17 Aug 2025, https://clinicaltrials.gov/study/NCT07127172); orbital compute remains demonstrator-scale after Starcloud-1 ran named NanoGPT and Gemma workloads on an H100 in orbit on 10 Dec 2025 while disclosing no utility-scale power/cooling system (https://www.cnbc.com/2025/12/10/nvidia-backed-starcloud-trains-first-ai-model-in-space-orbital-data-centers.html; NVIDIA's original program description: https://blogs.nvidia.com/blog/starcloud/); and a 10 Jun 2025 whole-larval-zebrafish connectome preprint supports a falsifiable 2028 peer-review milestone without implying functional emulation (https://www.biorxiv.org/content/10.1101/2025.06.10.658982v1). The vague 2039 space-infrastructure event was sharpened to a disclosed 1 MW/90-day orbital-compute threshold; human uploading/digital immortality and self-replicating off-world industry were removed from 2040 and placed in a seven-item undated horizon with explicit dependencies, indicators and caveats. No dated non-invasive clinical BCI, whole-brain emulation, Dyson swarm, Kardashev Type I/II, Transcension or ruliad milestone was added because current evidence does not justify calendar timing; current non-invasive systems do not match implants, connectomes are not uploads, small orbital demonstrations are not data centres or Dyson swarms, Kardashev is an energy-use classification, John Smart calls Transcension speculative and unvalidated (https://accelerating.org/articles/transcensionhypothesis), and Wolfram describes the ruliad's formalism as unfinished (https://writings.stephenwolfram.com/2021/11/the-concept-of-the-ruliad/).",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -56,6 +56,18 @@
           "high": true,
           "signal": true,
           "prob": 70
+        },
+        {
+          "t": "Neuralink's multinational PRIME-family trials remain early-feasibility implants with 12-month safety—not efficacy—as their primary endpoints",
+          "d": "technology",
+          "high": false,
+          "prob": 90
+        },
+        {
+          "t": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
+          "d": "technology",
+          "high": false,
+          "prob": 92
         }
       ],
       "match": {
@@ -197,6 +209,12 @@
           "d": "geopolitical",
           "high": true,
           "prob": 48
+        },
+        {
+          "t": "Peer review confirms a synapse-resolution whole-brain connectome for a vertebrate larva, without demonstrating functional emulation",
+          "d": "technology",
+          "high": false,
+          "prob": 65
         }
       ],
       "match": {
@@ -944,7 +962,7 @@
           "prob": 25
         },
         {
-          "t": "Robot industry and compute infrastructure begin shifting materially into space",
+          "t": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
           "d": "technology",
           "high": false,
           "prob": 20
@@ -1003,18 +1021,6 @@
           "d": "governance",
           "high": true,
           "prob": 40
-        },
-        {
-          "t": "Digital-mind rights, radical longevity, human uploading and post-work identity become mainstream policy questions",
-          "d": "individual",
-          "high": true,
-          "prob": 55
-        },
-        {
-          "t": "Space resources and off-world self-replicating industry become central to post-ASI governance",
-          "d": "geopolitical",
-          "high": false,
-          "prob": 25
         }
       ],
       "match": {
@@ -1043,5 +1049,307 @@
         ]
       }
     }
-  ]
+  ],
+  "postSuperintelligence": {
+    "title": "Post-superintelligence horizon",
+    "summary": "Undated, dependency-gated possibilities rather than calendar forecasts. conditionalProb is conditional on aligned superintelligence and every listed prerequisite, not a probability by 2040; mutually exclusive outward-expansion and inward-transcension branches can coexist here without being forced into the dated timeline.",
+    "items": [
+      {
+        "id": "implantable-neural-symbiosis",
+        "t": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
+        "d": "technology",
+        "epistemic": "conditional",
+        "conditionalProb": 72,
+        "dependencies": [
+          "Long-term biocompatible intracortical or cortical-surface hardware with stable signals",
+          "Reproducible high-bandwidth decoding and safe, precise stimulation across multi-patient trials",
+          "Regulatory approval for chronic home use with cybersecurity, consent and explantability safeguards",
+          "Aligned superintelligence accelerates materials, decoding and stimulation without bypassing clinical validation"
+        ],
+        "indicators": [
+          "Peer-reviewed multi-patient communication or robotic-control outcomes with preregistered endpoints",
+          "Stable bidirectional home use measured over years rather than supervised demonstrations",
+          "Reproduced sensory-restoration outcomes without unacceptable device or procedure adverse events",
+          "Pivotal trials and approvals beyond early-feasibility cohorts"
+        ],
+        "caveat": "Current implanted studies are small and safety-first; company announcements alone do not establish efficacy, bandwidth or durable home use, and surgery plus chronic hardware carry material risks.",
+        "match": {
+          "headline": "Implantable bidirectional BCI and neural symbiosis",
+          "search": "from:peterxing Neuralink BCI neural implant",
+          "phrases": [
+            "brain computer interface",
+            "neural implant",
+            "bidirectional bci",
+            "sensory restoration",
+            "neuralink"
+          ],
+          "strong": [
+            "bci",
+            "neuralink",
+            "intracortical",
+            "implant",
+            "stimulation"
+          ],
+          "weak": [
+            "brain",
+            "neural",
+            "prosthetic"
+          ]
+        }
+      },
+      {
+        "id": "non-invasive-neural-symbiosis",
+        "t": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
+        "d": "technology",
+        "epistemic": "speculative",
+        "conditionalProb": 40,
+        "dependencies": [
+          "External EEG, MEG, fNIRS, ultrasound or optical sensing reaches clinically useful signal quality",
+          "Communication decoding and safe stimulation reproduce across patients and independent laboratories",
+          "Portable systems remain robust outside controlled laboratories without implanted components",
+          "Aligned superintelligence accelerates sensing and decoding while preserving consent and safety"
+        ],
+        "indicators": [
+          "Registered clinical communication or control trials using only external sensing or stimulation",
+          "Peer-reviewed patient outcomes that reproduce useful bandwidth outside the laboratory",
+          "Independent comparisons against implanted systems on accuracy, latency and long-term reliability",
+          "Portable non-invasive systems demonstrate safe home use"
+        ],
+        "caveat": "Current genuinely non-invasive systems do not match implanted bandwidth. Endovascular BCIs are minimally invasive, not non-invasive, and wrist sEMG or other peripheral muscle and nerve interfaces are not BCIs.",
+        "match": {
+          "headline": "Genuinely non-invasive BCI pathway",
+          "search": "from:peterxing non-invasive BCI EEG MEG ultrasound",
+          "phrases": [
+            "non invasive bci",
+            "eeg brain computer",
+            "meg brain interface",
+            "fnirs brain interface",
+            "transcranial ultrasound"
+          ],
+          "strong": [
+            "eeg",
+            "meg",
+            "fnirs",
+            "ultrasound",
+            "optical"
+          ],
+          "weak": [
+            "brain",
+            "neural",
+            "interface"
+          ]
+        }
+      },
+      {
+        "id": "whole-brain-emulation-and-uploading",
+        "t": "Whole-brain emulation could enable digital minds, but mind uploading and digital immortality would still leave identity continuity unresolved",
+        "d": "individual",
+        "epistemic": "speculative",
+        "conditionalProb": 25,
+        "dependencies": [
+          "Whole-brain scanning and preservation capture synaptic, cellular and molecular structure at validated fidelity",
+          "Dynamic biochemical state, plasticity and neuromodulation are captured rather than inferred from wiring alone",
+          "Functional emulations reproduce novel behavior and internal causal dynamics across independent tests",
+          "Consent, personhood, security and continuity frameworks exist for instantiated digital minds"
+        ],
+        "indicators": [
+          "Peer-reviewed whole-vertebrate and then whole-mammal connectomes with quantified error rates",
+          "Connectome-constrained models predict previously unrecorded whole-organism behavior",
+          "Independent preservation studies recover validated structural and dynamic information",
+          "A mammalian functional emulation reproduces novel behavior rather than replaying training data"
+        ],
+        "caveat": "A connectome is a wiring diagram, not a functional emulation; a chatbot or digital replica trained on a person's data is not an upload, and whether any copy preserves subjective identity continuity may remain untestable.",
+        "match": {
+          "headline": "Whole-brain emulation, uploading and identity continuity",
+          "search": "from:peterxing whole brain emulation mind uploading connectome",
+          "phrases": [
+            "whole brain emulation",
+            "mind uploading",
+            "digital immortality",
+            "functional emulation",
+            "identity continuity"
+          ],
+          "strong": [
+            "connectome",
+            "uploading",
+            "emulation",
+            "preservation",
+            "digital minds"
+          ],
+          "weak": [
+            "brain",
+            "simulation",
+            "identity"
+          ]
+        }
+      },
+      {
+        "id": "orbital-compute-to-proto-dyson",
+        "t": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
+        "d": "technology",
+        "epistemic": "speculative",
+        "conditionalProb": 45,
+        "dependencies": [
+          "Utility-scale orbital compute proves power, cooling, radiation tolerance, launch economics and customer demand",
+          "Autonomous off-world mining, refining and manufacturing use extraterrestrial feedstock",
+          "Self-repair and bounded self-expansion operate under credible replication and debris governance",
+          "Solar collection and power transmission scale without destabilizing orbital environments"
+        ],
+        "indicators": [
+          "Sustained megawatt-class orbital compute publishes power, radiator and workload telemetry",
+          "Robotic factories manufacture useful structures in space from off-world material",
+          "Solar collectors and compute nodes expand using a measured share of extraterrestrial feedstock",
+          "Audited captured power rises by successive orders of magnitude rather than by filings or announcements"
+        ],
+        "caveat": "A storage payload, edge-inference satellite, proposed constellation or regulatory filing is not a hyperscale space data centre. Small orbital clusters are not a Dyson swarm, and this trajectory does not imply a complete stellar enclosure.",
+        "match": {
+          "headline": "Orbital compute and proto-Dyson infrastructure",
+          "search": "from:peterxing orbital compute space solar Dyson",
+          "phrases": [
+            "orbital data center",
+            "space data centre",
+            "orbital compute",
+            "space solar power",
+            "dyson swarm"
+          ],
+          "strong": [
+            "orbital",
+            "starcloud",
+            "suncatcher",
+            "dyson",
+            "off-world"
+          ],
+          "weak": [
+            "space",
+            "solar",
+            "compute"
+          ]
+        }
+      },
+      {
+        "id": "kardashev-energy-scaling",
+        "t": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
+        "d": "technology",
+        "epistemic": "speculative",
+        "conditionalProb": 35,
+        "dependencies": [
+          "Energy generation, transmission and storage scale safely across successive orders of magnitude",
+          "Planetary and off-world infrastructure convert available energy into useful work",
+          "Growth avoids ecological collapse, conflict and irreversible concentration of control",
+          "Aligned superintelligence directs greater energy capture toward broadly beneficial outcomes"
+        ],
+        "indicators": [
+          "Audited global energy capture and use rises in watts across sustained orders of magnitude",
+          "Off-world power contributes a measurable share of total civilizational energy",
+          "Transmission, storage and heat rejection scale with generation rather than becoming binding bottlenecks",
+          "Energy growth is accompanied by measured welfare and resilience rather than labels alone"
+        ],
+        "caveat": "The Kardashev scale is an energy-use classification, not evidence that civilizations inevitably progress through it. Type I and Type II remain long-horizon reference points, not near-term achievements.",
+        "match": {
+          "headline": "Measurable Kardashev energy scaling",
+          "search": "from:peterxing Kardashev energy scale Type I Type II",
+          "phrases": [
+            "kardashev scale",
+            "type i civilization",
+            "type ii civilization",
+            "civilization energy use",
+            "orders of magnitude energy"
+          ],
+          "strong": [
+            "kardashev",
+            "exawatt",
+            "stellar energy",
+            "planetary energy"
+          ],
+          "weak": [
+            "energy",
+            "power",
+            "civilization"
+          ]
+        }
+      },
+      {
+        "id": "transcension-hypothesis",
+        "t": "An inward transcension branch could favor extreme STEM compression, miniaturization and computational density over outward expansion",
+        "d": "technology",
+        "epistemic": "speculative",
+        "conditionalProb": 15,
+        "dependencies": [
+          "Physics permits orders-of-magnitude gains in computation and energy efficiency at smaller scales",
+          "Advanced intelligence can migrate safely to dense engineered substrates",
+          "The hypothesis yields discriminating astrobiological observations rather than post-hoc interpretation",
+          "Aligned superintelligence chooses inward densification over outward infrastructure growth"
+        ],
+        "indicators": [
+          "Capability rises while the energy, mass and spatial footprint of computation sharply contracts",
+          "Peer-reviewed models produce testable SETI signatures unique to inward development",
+          "Independent critiques, replications or falsifications engage the hypothesis",
+          "Engineered systems demonstrate sustained computation near proposed density and efficiency limits"
+        ],
+        "caveat": "John Smart presents the Transcension Hypothesis as a speculative futures and astrobiology hypothesis resting on unvalidated assumptions; it has no empirical confirmation and may conflict with the outward proto-Dyson branch.",
+        "match": {
+          "headline": "John Smart Transcension Hypothesis",
+          "search": "from:peterxing Transcension Hypothesis inner space density",
+          "phrases": [
+            "transcension hypothesis",
+            "inner space",
+            "computational density",
+            "stem compression",
+            "inward expansion"
+          ],
+          "strong": [
+            "transcension",
+            "miniaturization",
+            "densification"
+          ],
+          "weak": [
+            "density",
+            "compression",
+            "inward"
+          ]
+        }
+      },
+      {
+        "id": "ruliad-testable-physics",
+        "t": "Ruliad research could become forecast-relevant only if it yields discriminating, testable physical predictions or engineering consequences",
+        "d": "technology",
+        "epistemic": "speculative",
+        "conditionalProb": 10,
+        "dependencies": [
+          "The ruliad receives a precise, tractable formalism with clearly stated physical commitments",
+          "It produces predictions that differ from established theories and cannot be tuned after observation",
+          "Independent researchers reproduce the mathematics, simulations and experimental implications",
+          "At least one validated prediction enables a distinct engineering consequence"
+        ],
+        "indicators": [
+          "Peer-reviewed papers derive quantitative, falsifiable predictions unique to the framework",
+          "Independent teams reproduce a discriminating result",
+          "Experiments compare ruliad-derived predictions against established physical theories",
+          "A validated result changes the design or performance of a real engineered system"
+        ],
+        "caveat": "The ruliad is a computational-metaphysics and foundational-physics research construct with unfinished formalism, not an established physical theory, a destination, a simulation to enter or a proven roadmap for superintelligence.",
+        "match": {
+          "headline": "Ruliad testable physics branch",
+          "search": "from:peterxing Wolfram ruliad testable physics",
+          "phrases": [
+            "the ruliad",
+            "rulial space",
+            "wolfram physics",
+            "computational metaphysics",
+            "testable prediction"
+          ],
+          "strong": [
+            "ruliad",
+            "rulial",
+            "wolfram"
+          ],
+          "weak": [
+            "physics",
+            "computation",
+            "formalism"
+          ]
+        }
+      }
+    ]
+  }
 }

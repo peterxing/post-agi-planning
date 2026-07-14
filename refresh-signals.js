@@ -207,8 +207,14 @@ const MATCH_CONCEPTS = [
   { name: 'alignment', weight: 2, solo: true, rx: /\b(?:alignment|deception|sabotage|interpretability|honesty|obedience|misalignment|control problem)\b/ },
   { name: 'interpretability', weight: 2, solo: true, rx: /\b(?:mechanistic|interpretab\w*|internal representations?|latent activations?|reasoning trace|global workspace)\b/ },
   { name: 'persuasion', weight: 2, solo: true, rx: /\b(?:persuasion|manipulation|deepfake|truth seeking|targeted influence)\b/ },
-  { name: 'rights', weight: 2, solo: true, rx: /\b(?:rights?|welfare|legal status|moral agents?|consciousness|self awareness|sentien\w*)\b/ },
-  { name: 'augmentation', weight: 2, solo: true, rx: /\b(?:neuralink|brain computer|bci|neural implant|brain implant|human uploading|digital minds?)\b/ },
+  { name: 'rights', weight: 2, solo: true, rx: /\b(?:rights|legal right|welfare|legal status|moral agents?|consciousness|self awareness|sentien\w*)\b/ },
+  { name: 'bci', weight: 2, solo: true, rx: /\b(?:neuralink|brain computer|bci|neural implant|brain implant|intracortical|ecog|stentrode|endovascular bci)\b/ },
+  { name: 'connectomics', weight: 2, solo: true, rx: /\b(?:connectom\w*|whole brain emulation|functional emulation|brain preservation|mind upload\w*|digital immortal\w*)\b/ },
+  { name: 'orbitalcompute', weight: 2, solo: true, rx: /\b(?:orbital compute|orbital data cent(?:er|re)|space data cent(?:er|re)|starcloud|project suncatcher)\b/ },
+  { name: 'civilizationalenergy', weight: 2, solo: true, rx: /\b(?:kardashev|type i civilization|type ii civilization|dyson swarm|stellar energy)\b/ },
+  { name: 'transcension', weight: 2, solo: true, rx: /\b(?:transcension hypothesis|computational densification|inner space)\b/ },
+  { name: 'ruliad', weight: 2, solo: true, rx: /\b(?:ruliad|rulial|wolfram physics)\b/ },
+  { name: 'augmentation', weight: 2, solo: true, rx: /\b(?:neural symbiosis|sensory restoration|human augmentation|bidirectional neural)\b/ },
   { name: 'institutions', weight: 1, solo: false, rx: /\b(?:corporations?|courts?|public services?|military|business|politics|election|government)\b/ },
   { name: 'education', weight: 2, solo: true, rx: /\b(?:education|students?|teach|teaching|learning|school|university|critical thinking)\b/ },
   { name: 'space', weight: 2, solo: true, rx: /\b(?:space|orbital|orbit|starlink|moon|lunar|mars|off world|spacex)\b/ },
@@ -241,7 +247,7 @@ function detectConcepts(text){
     out.delete('energy');
   }
   // Mathematical/representation "spaces" are not off-world activity.
-  if (out.has('space') && /\b(?:latent|embedding|activation|coordinate|j) space\b/.test(norm)
+  if (out.has('space') && /\b(?:latent|embedding|activation|coordinate|j|rulial) space\b/.test(norm)
       && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(norm)) {
     out.delete('space');
   }
@@ -274,9 +280,13 @@ function themeScore(text, kws){
 }
 function buildPredictions(){
   let years = null;
+  let horizonItems = [];
   try {
     const d = JSON.parse(fs.readFileSync(PRED, 'utf8').replace(/^\uFEFF/, ''));
     if (d && Array.isArray(d.years) && d.years.length) years = d.years;
+    if (d && d.postSuperintelligence && Array.isArray(d.postSuperintelligence.items)) {
+      horizonItems = d.postSuperintelligence.items;
+    }
   } catch(e){}
   const out = [];
   if (years) {
@@ -301,6 +311,30 @@ function buildPredictions(){
         out.push(slot);
       });
     }
+  }
+  for (let i = 0; i < horizonItems.length; i++) {
+    const item = horizonItems[i];
+    if (!item || !item.id || !item.t) continue;
+    const m = item.match || {};
+    const ev = deriveEventTerms(item.t);
+    const phrases = Array.isArray(m.phrases) ? m.phrases : [];
+    const strong = Array.isArray(m.strong) ? m.strong : [];
+    const weak = Array.isArray(m.weak) ? m.weak : [];
+    const conceptText = [item.t, m.headline, ...phrases, ...strong].filter(Boolean).join(' ');
+    out.push({
+      id: 'horizon-' + item.id,
+      scope: 'horizon',
+      year: 2041,
+      evIndex: i,
+      domain: item.d || '',
+      maps: item.t,
+      search: m.search || ev.search,
+      phrases: [...new Set([...phrases, ...ev.phrases])],
+      strong: strong.slice(),
+      sw: ev.sw.slice(),
+      weak: weak.slice(),
+      concepts: detectConcepts(conceptText),
+    });
   }
   if (out.length) return out;
   // Offline fallback: inline defaults, one matcher per year (id = YEAR-0).
@@ -472,6 +506,85 @@ function scorePost(text, p){
 // Conservative facet checks keep broad keyword overlap from implying support for a more specific claim.
 // A failed guard uses the live-search fallback instead, which is safer than a misleading real-item card.
 const FACET_GUARDS = [
+  {
+    title: /\bneuralink s multinational prime family trials remain early feasibility implants\b/,
+    all: [
+      /\bneuralink\b/,
+      /\b(?:prime|clinical trial|early feasibility|implant)\b/,
+      /\b(?:safety|adverse events?|primary endpoints?|efficacy)\b/,
+    ],
+  },
+  {
+    title: /\borbital compute remains demonstrator scale through 2026\b/,
+    all: [
+      /\b(?:orbital|orbit|outer space|in space)\b/,
+      /\b(?:compute|gpu|gpus|h100|ai workload|ai workloads|nanogpt|gemma)\b/,
+      /\b(?:launched|launch|in orbit|ran|run|running|trained|inference|workload|workloads)\b/,
+    ],
+  },
+  {
+    title: /\bpeer review confirms a synapse resolution whole brain connectome for a vertebrate larva\b/,
+    all: [
+      /\b(?:connectome|connectomic|synapse resolution|synaptic wiring)\b/,
+      /\b(?:vertebrate|zebrafish|fish larva|larval fish)\b/,
+      /\b(?:peer review|peer reviewed|journal|published|publication|accepted)\b/,
+    ],
+  },
+  {
+    title: /\borbital compute platform sustains 1 mw\b/,
+    all: [
+      /\b(?:orbital compute|orbital data cent(?:er|re)|space data cent(?:er|re)|compute in orbit)\b/,
+      /\b(?:1 mw|one megawatt|megawatt class|megawatt scale)\b/,
+      /\b(?:radiator|radiators|cooling|heat rejection)\b/,
+      /\b(?:named customer|external workload|commercial workload|90 days|ninety days|sustained)\b/,
+    ],
+  },
+  {
+    title: /\bimplantable neural interfaces could support high bandwidth bidirectional\b/,
+    all: [
+      /\b(?:brain computer|bci|neuralink|neural implant|brain implant|intracortical|ecog|stentrode|endovascular)\b/,
+      /\b(?:communication|control|decode|decoding|stimulation|sensory|bidirectional|bandwidth|prosthe\w*)\b/,
+    ],
+  },
+  {
+    title: /\bgenuinely non invasive neural interfaces could become a separate\b/,
+    all: [
+      /\b(?:scalp eeg|eeg|meg|fnirs|transcranial ultrasound|optical brain|external brain)\b/,
+      /\b(?:brain|neural|bci|communication|decode|decoding|stimulation)\b/,
+    ],
+  },
+  {
+    title: /\bwhole brain emulation could enable digital minds\b/,
+    all: [
+      /\b(?:whole brain emulation|functional emulation|mind upload|mind uploading|connectome|brain preservation|digital immortal\w*)\b/,
+      /\b(?:functional emulation|simulation|dynamic|biochemical|identity continuity|digital minds?|preservation)\b/,
+    ],
+  },
+  {
+    title: /\borbital data centres could expand into self growing solar powered compute networks\b/,
+    all: [
+      /\b(?:orbital|orbit|outer space|off world|space solar|dyson)\b/,
+      /\b(?:compute|data cent(?:er|re)|solar|mining|manufactur\w*|self growing|self expand\w*|energy)\b/,
+    ],
+  },
+  {
+    title: /\bcivilizational energy use could climb by measurable orders of magnitude toward kardashev\b/,
+    all: [
+      /\b(?:kardashev|type i civilization|type ii civilization|civilizational energy)\b/,
+      /\b(?:energy|power|watts?|orders of magnitude|capture|use|consumption)\b/,
+    ],
+  },
+  {
+    title: /\binward transcension branch could favor extreme stem compression\b/,
+    text: /\b(?:transcension hypothesis|john smart|universal transcension)\b/,
+  },
+  {
+    title: /\bruliad research could become forecast relevant\b/,
+    all: [
+      /\b(?:ruliad|rulial|wolfram physics)\b/,
+      /\b(?:physics|formalism|prediction|predictions|testable|falsifiable|engineering|computational)\b/,
+    ],
+  },
   {
     title: /\b(?:genuine human level agi ships by end of 2026|my call.*human level agi)\b/,
     text: /\b(?:agi|human level|superintelligen\w*|artificial general intelligence|clear way to agi)\b/,
@@ -673,7 +786,7 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:coding|software|research|r d|scientific)\b/,
-    text: /\b(?:code|coding|software|programming|programmer|developer|engineering|research|researcher|r d|algorithm|training|scientific|science|experiment|discovery|design|manufacturing|tapeout|lab|labs|compute)\b/,
+    text: /\b(?:code|coding|software|programming|programmer|developer|engineering|research|researcher|r d|algorithm|training|scientific|science|physics|experiment|discovery|design|manufacturing|tapeout|lab|labs|compute)\b/,
   },
   {
     title: /\b(?:paid|revenue|income|tax|taxes|gdp|output|dollar|dollars)\b/,
@@ -746,7 +859,7 @@ const FACET_GUARDS = [
   },
   {
     title: /\b(?:digital mind rights|ai welfare|moral agent|legal status|consciousness|self awareness|sentience)\b/,
-    text: /\b(?:rights?|welfare|moral agents?|legal status|consciousness|self awareness|sentien\w*|digital minds?)\b/,
+    text: /\b(?:rights|legal right|welfare|moral agents?|legal status|consciousness|self awareness|sentien\w*|digital minds?)\b/,
   },
   {
     title: /\b(?:human uploading|brain computer|neural implant|augmentation)\b/,
@@ -799,20 +912,6 @@ const FACET_GUARDS = [
   {
     title: /\b(?:voting civic participation and ownership|main leverage)\b/,
     text: /\b(?:voting|vote|civic|citizen|participation|ownership|equity|political power|economic leverage)\b/,
-  },
-  {
-    title: /\b(?:robot industry and compute infrastructure.*space|shifting materially into space)\b/,
-    all: [
-      /\b(?:space|orbital|orbit|moon|lunar|mars|off world)\b/,
-      /\b(?:robot|robots|robotics|compute|datacenter|data center|chip|chips|manufacturing|factory|factories|industry)\b/,
-    ],
-  },
-  {
-    title: /\b(?:space resources and off world self replicating industry|post asi governance)\b/,
-    all: [
-      /\b(?:space resources|space solar|solar power in space|space energy|asteroid|mining|off world|orbital industry|moon|lunar|mars)\b/,
-      /\b(?:self replicating|replication|industry|manufacturing|resources|energy|solar|governance|law|rights|treaty)\b/,
-    ],
   },
   {
     title: /\b(?:space|off world|orbital|lunar|moon|mars)\b/,
@@ -1110,6 +1209,94 @@ function hasBoundComputeScale(normText){
 function passesFacetGuards(text, p){
   const normText = normalizeGuardText(text);
   const normTitle = String(p.maps || '').toLowerCase().replace(/%/g, ' percent ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (/\bmost production software is written end to end by ai\b/.test(normTitle)) {
+    return laborClauses(normText).some(clause =>
+      /\b(?:ai|model|models|agent|agents|coding agent|software agent|codex)\b/.test(clause)
+      && /\b(?:code|coding|software|application|applications|production system|production systems)\b/.test(clause)
+      && /\b(?:most|majority|end to end|fully|entirely|without human coding|writes? the code|written by ai|autonomous software development)\b/.test(clause)
+      && /\b(?:production software|software industry|software ecosystem|industry wide|across companies|most companies|most codebases)\b/.test(clause));
+  }
+  if (/\bdatacenter power water and grid capacity become top tier infrastructure and political constraints\b/.test(normTitle)) {
+    return /\b(?:datacenter|data center|compute campus|ai infrastructure)\b/.test(normText)
+      && /\b(?:power|electricity|water|grid)\b/.test(normText)
+      && /\b(?:capacity|constraint|bottleneck|shortage|moratorium|permit|politic\w*|opposition|interconnection)\b/.test(normText);
+  }
+  if (/\bmost white collar professions in leading economies revolve around supervising and coordinating ai agents\b/.test(normTitle)) {
+    return /\b(?:white collar|knowledge work|professional|professionals|profession|professions|office work)\b/.test(normText)
+      && /\b(?:ai agents?|agentic|artificial intelligence)\b/.test(normText)
+      && /\b(?:supervis\w*|coordinat\w*|restructur\w*|reorganiz\w*|redesign\w*|most professions|majority of professions|work revolves around)\b/.test(normText);
+  }
+  if (/\bsuperintelligence emerges and recursive self improvement begins on my ungoverned 2028 2030 branch\b/.test(normTitle)) {
+    return /\b(?:superintelligence|asi|intelligence explosion)\b/.test(normText)
+      && /\b(?:recursive self improvement|self improving|improves? itself|intelligence explosion|automated successor|recursive takeoff)\b/.test(normText);
+  }
+  if (/\bmanaged branch frontier r d resumes under total research transparency and cross border verification\b/.test(normTitle)) {
+    return /\b(?:resume|resumes|resumed|restart|restarts|restarted|reopen|reopens|reopened)\b/.test(normText)
+      && /\b(?:ai r d|ai research|frontier research|model research)\b/.test(normText)
+      && /\b(?:transparency|transparent|verification|verified|audit|inspection)\b/.test(normText)
+      && /\b(?:cross border|international|us and china|u s and china|bilateral|agreement|deal)\b/.test(normText);
+  }
+  if (/\bphysical production energy and robotics not ideas become the main bottlenecks to ai driven growth\b/.test(normTitle)) {
+    return /\b(?:manufacturing|physical production|factory|factories|robot|robots|robotics|energy|electricity|grid|materials|supply chain)\b/.test(normText)
+      && /\b(?:bottleneck|bottlenecks|constraint|constraints|shortage|shortages|scarce|scarcities|binding|limits? growth|holds? back)\b/.test(normText);
+  }
+  if (/\bon the unpaused branch fully automated ai r d delivers roughly a 10x research speedup\b/.test(normTitle)) {
+    return /\b(?:ai r d|ai research|research automation|automated research|ai scientist|ai scientists|autonomous research)\b/.test(normText)
+      && /\b(?:10x|tenfold|research speedup|accelerat\w* research|faster research|months of research in|years of research in)\b/.test(normText);
+  }
+  if (/\bcapital floods into mines motors actuators fabs and factories\b/.test(normTitle)) {
+    return /\b(?:mine|mines|mining|motor|motors|actuator|actuators|fab|fabs|foundry|foundries|factory|factories|robotics)\b/.test(normText)
+      && /\b(?:capital|investment|investments|investing|capex|financing|funding|funded|spending|dollars|billion|trillion)\b/.test(normText);
+  }
+  if (/\bai automates a majority of cognitive work in semiconductor r d and production engineering\b/.test(normTitle)) {
+    return /\b(?:semiconductor|chip|chips|foundry|fab|fabs)\b/.test(normText)
+      && /\b(?:ai|agent|agents|artificial intelligence|model|models)\b/.test(normText)
+      && /\b(?:r d|research|design|engineering|verification|eda|process development|production engineering)\b/.test(normText)
+      && /\b(?:automates?|automated|automation|majority|most of|ai designed|designed by ai|without human engineers?)\b/.test(normText);
+  }
+  if (/\bai welfare compensation and legal status enter mainstream law and corporate governance\b/.test(normTitle)) {
+    return /\b(?:ai|model|models|digital minds?|artificial intelligence)\b/.test(normText)
+      && /\b(?:rights|legal right|welfare|compensation|legal status|moral agents?|consciousness|self awareness|sentien\w*)\b/.test(normText)
+      && /\b(?:law|legal|governance|policy|regulation|regulator|compensation|corporate)\b/.test(normText);
+  }
+  if (/\beducation and social institutions recenter on meaning community relationships and stewardship rather than employability\b/.test(normTitle)) {
+    return /\b(?:education|school|schools|university|universities|social institutions?)\b/.test(normText)
+      && /\b(?:meaning|community|relationships?|stewardship|post work|life after work|rather than employability|beyond employability)\b/.test(normText);
+  }
+  if (/\bai advisors become load bearing across business politics courts and parts of the military\b/.test(normTitle)) {
+    return /\b(?:assistant|assistants|advisor|advisors|copilot|copilots|personal ai)\b/.test(normText)
+      && /\b(?:load bearing|critical decisions?|decision authority|final authority|delegat\w*|relied on|institutional dependence|core operations?)\b/.test(normText)
+      && /\b(?:politics|government|court|courts|legal system|military|defense|defence)\b/.test(normText);
+  }
+  if (/\bai driven research delivers major disease cures and abundant low cost clean energy\b/.test(normTitle)) {
+    return /\b(?:ai|artificial intelligence|ai research|ai driven research)\b/.test(normText)
+      && /\b(?:cure|cures|cured|eradicated|approved treatment|clinical breakthrough)\b/.test(normText)
+      && /\b(?:low cost clean energy|cheap clean energy|abundant clean energy|commercial fusion|fusion power|energy cost fell|energy costs fell)\b/.test(normText);
+  }
+  if (/\bgenuinely non invasive neural interfaces could become a separate\b/.test(normTitle)) {
+    if (/\b(?:wrist|forearm|peripheral).{0,36}\b(?:semg|emg|muscle|motor nerve)\b|\b(?:semg|emg).{0,36}\b(?:wrist|forearm|peripheral|muscle)\b/.test(normText)) return false;
+    if (/\b(?:endovascular|stentrode|intravascular|inside a blood vessel)\b/.test(normText)
+        && !/\b(?:scalp eeg|eeg|meg|fnirs|transcranial ultrasound|optical brain|external brain)\b/.test(normText)) return false;
+  }
+  if (/\bwhole brain emulation could enable digital minds\b/.test(normTitle)
+      && /\b(?:chatbot|griefbot|deadbot|digital replica|avatar)\b/.test(normText)
+      && !/\b(?:whole brain emulation|mind upload|connectome|brain preservation|functional emulation)\b/.test(normText)) return false;
+  if (/\borbital compute remains demonstrator scale through 2026\b/.test(normTitle)
+      && /\b(?:proposal|proposed|filing|filed|plans?|roadmap|target|announc\w*)\b/.test(normText)
+      && !/\b(?:launched|in orbit|on orbit|operating in orbit|ran|running|trained|queried)\b/.test(normText)) return false;
+  if (/\borbital compute platform sustains 1 mw\b/.test(normTitle)
+      && !/\b(?:operating|operational|sustained|ran|running|continuous|continuously|for 90 days|for ninety days)\b/.test(normText)) return false;
+  if (/\borbital data centres could expand into self growing solar powered compute networks\b/.test(normTitle)
+      && /\b(?:storage|backup|edge inference)\b/.test(normText)
+      && !/\b(?:gpu|compute workload|ai workload|solar power|space solar|mining|manufactur\w*)\b/.test(normText)) return false;
+  if (/\borbital data centres could expand into self growing solar powered compute networks\b/.test(normTitle)
+      && /\b(?:solar satellite|solar power satellite|solar constellation)\b/.test(normText)
+      && !/\b(?:dyson|self grow\w*|self expand\w*|mining|manufactur\w*|orbital compute|space data cent(?:er|re))\b/.test(normText)) return false;
+  if (/\bcivilizational energy use could climb by measurable orders of magnitude toward kardashev\b/.test(normTitle)
+      && !/\b(?:orders of magnitude|increas\w*|grow\w*|rising|rose|capture\w*|consume\w*|use[sd]? \d|\d+(?:\.\d+)?\s*(?:terawatts?|petawatts?|exawatts?|watts?))\b/.test(normText)) return false;
+  if (/\bruliad research could become forecast relevant\b/.test(normTitle)
+      && /\b(?:enter the ruliad|travel to the ruliad|ruliad is a destination|ruliad is a simulation|proven asi roadmap)\b/.test(normText)
+      && !/\b(?:not|isn t|is not|no evidence)\b/.test(normText)) return false;
   if (SIMULATED_SCALE_CONTEXT.test(normText)
       && /\b(?:factory lines|paid digital labor|global ai compute|economically valuable physical tasks|cognitive labor|economically valuable labor|cognitive and physical tasks|employment falls|global economy runs|virtual workforce)\b/.test(normTitle)) return false;
   if (/\bhumanoid robots move onto live factory lines in the thousands\b/.test(normTitle)) {
@@ -1150,7 +1337,7 @@ function passesFacetGuards(text, p){
   if (/\badvanced robots can perform roughly one third of economically valuable physical tasks\b/.test(normTitle)) {
     return !hasExplicitPhysicalLimitation(normText)
       && /\b(?:robot|robots|robotic|robotics|humanoid)\b/.test(normText)
-      && /\b(?:one third|third|33 percent|degrees? of freedom|dof|dexter\w*|human level|human input|intervention free|equivalent to .* humans?|human workers?)\b/.test(normText);
+      && /\b(?:one third|third of (?:physical )?(?:tasks|work)|3[0-9] percent of (?:physical )?(?:tasks|work)|roughly 3[0-9] percent of (?:physical )?(?:tasks|work))\b/.test(normText);
   }
   if (/\btax systems begin shifting materially from human income toward compute robot and automated capital rents\b/.test(normTitle)) {
     return laborClauses(normText).some(clause =>
@@ -1158,20 +1345,18 @@ function passesFacetGuards(text, p){
       && /\b(?:tax|taxes|taxation|levy|levies|rent|rents|dividend|dividends|income|revenue|fiscal|payroll)\b/.test(clause)
       && /\b(?:human income|labor tax|labour tax|payroll tax|wage tax|tax base|compute (?:tax|levy|rent)|gpu (?:tax|levy|rent)|robot (?:tax|levy|rent)|automation (?:tax|levy|rent)|automated capital|ai (?:tax|levy|rent|dividend)|shift|replace|instead|toward)\b/.test(clause));
   }
-  if (/\berosion of labor tax revenue makes ai dividends sovereign ai stakes and compute rents mainstream policy\b/.test(normTitle)
-      || /\ba recurring citizen s dividend funded by ai compute or robot rents launches\b/.test(normTitle)) {
-    return /\b(?:dividend|ubi|uhi|universal basic income|universal high income|sovereign ai stake|public ai fund|compute rent|robot rent|automated capital rent)\b/.test(normText);
+  if (/\berosion of labor tax revenue makes ai dividends sovereign ai stakes and compute rents mainstream policy\b/.test(normTitle)) {
+    return /\b(?:dividend|ubi|uhi|universal basic income|universal high income|sovereign ai stake|public ai fund|compute rent|robot rent|automated capital rent)\b/.test(normText)
+      && /\b(?:policy|government|law|legislation|tax|taxation|levy|proposal|debate|parliament|congress|senate|sovereign fund|public fund)\b/.test(normText);
   }
-  if (/\bai automates a majority of cognitive work in semiconductor r d and production engineering\b/.test(normTitle)) {
-    return /\b(?:ai5|al5|ai chip|ai chips|semiconductor|foundry|chip|chips)\b/.test(normText)
-      && /\b(?:tape out|manufactur\w*|production|fab|fabs|foundry|process node|2nm)\b/.test(normText);
+  if (/\ba recurring citizen s dividend funded by ai compute or robot rents launches\b/.test(normTitle)) {
+    return /\b(?:dividend|ubi|uhi|universal basic income|universal high income|sovereign ai stake|public ai fund|compute rent|robot rent|automated capital rent)\b/.test(normText)
+      && /\b(?:launch|launched|enact|enacted|implemented|began paying|begins paying|rolled out|signed into law|first payments?)\b/.test(normText);
   }
-  if (/\bdigital mind rights radical longevity human uploading and post work identity\b/.test(normTitle)) {
-    return /\b(?:rights?|welfare|legal status|moral agents?|consciousness|sentien\w*|longevity|biotech|germline|gene editing|anti aging|neuralink|brain computer|neural implant|human uploading|digital minds?|post work)\b/.test(normText);
-  }
-  if (/\bspace resources and off world self replicating industry become central to post asi governance\b/.test(normTitle)) {
-    return /\b(?:space resources|space solar|solar power in space|space energy|asteroid|mining|off world|orbital industry)\b/.test(normText)
-      && /\b(?:self replicating|replication|industry|manufacturing|resources|energy|solar|governance|law|rights|treaty)\b/.test(normText);
+  if (/\buniversal high income or an ai dividend becomes a permanent institution in multiple major economies\b/.test(normTitle)) {
+    return /\b(?:dividend|ubi|uhi|universal basic income|universal high income)\b/.test(normText)
+      && /\b(?:permanent|permanently|entrenched|statutory|institution|institutionalized|institutionalised|guaranteed by law)\b/.test(normText)
+      && /\b(?:multiple economies|multiple countries|several countries|major economies|g7|g20|international)\b/.test(normText);
   }
   if (/\bone quarter of cognitive labor\b/.test(normTitle)
       && !/\b(?:one quarter|quarter|25 percent|twenty five percent|at least 20 percent|at least 25 percent)\b/.test(normText)) return false;
@@ -1204,7 +1389,7 @@ function passesFacetGuards(text, p){
       && hasBoundQuantity(clause, '(?:ai workforce|(?:frontier )?ai workers?|ai agents?|agent copies|copies of ai agents?|virtual workforce|virtual workers?)', 1e8, true));
   }
   if (/\b(?:space|off world|orbital|lunar|moon|mars)\b/.test(normTitle)
-      && /\b(?:latent|embedding|activation|coordinate|j) space\b/.test(normText)
+      && /\b(?:latent|embedding|activation|coordinate|j|rulial) space\b/.test(normText)
       && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(normText)) {
     return false;
   }
@@ -1293,8 +1478,10 @@ async function main(){
 
   // Load the live (daily-revised) prediction set, expanded to ONE matcher per event.
   const PREDICTIONS = buildPredictions();
-  const predYears = new Set(PREDICTIONS.map(p => p.year)).size;
-  console.error(`[refresh] Matching against ${PREDICTIONS.length} predictions across ${predYears} years.`);
+  const datedPredictionCount = PREDICTIONS.filter(p => p.scope !== 'horizon').length;
+  const horizonPredictionCount = PREDICTIONS.length - datedPredictionCount;
+  const predYears = new Set(PREDICTIONS.filter(p => p.scope !== 'horizon').map(p => p.year)).size;
+  console.error(`[refresh] Matching against ${datedPredictionCount} dated predictions across ${predYears} years plus ${horizonPredictionCount} horizon items.`);
 
   // Source order: authenticated X API -> live public RSS -> live legacy syndication / fresh caches.
   // A cache beyond SOURCE_CACHE_MAX_HOURS is never accepted as "latest".
@@ -1519,8 +1706,16 @@ async function main(){
   // consuming a post that is the only valid option for a more constrained prediction.
   const picks = {};
   const postOwner = new Map();
-  const allocationOrder = PREDICTIONS.slice().sort((a, b) =>
-    candidateLists[a.id].length - candidateLists[b.id].length || a.year - b.year || a.evIndex - b.evIndex);
+  const allocationOrder = PREDICTIONS.slice().sort((a, b) => {
+    const ac = candidateLists[a.id][0] || {};
+    const bc = candidateLists[b.id][0] || {};
+    return candidateLists[a.id].length - candidateLists[b.id].length
+      || (bc.coverage || 0) - (ac.coverage || 0)
+      || (bc.conceptScore || 0) - (ac.conceptScore || 0)
+      || (bc.score || 0) - (ac.score || 0)
+      || a.year - b.year
+      || a.evIndex - b.evIndex;
+  });
   function assignUnique(predId, seenPosts, seenPreds){
     if (seenPreds.has(predId)) return false;
     seenPreds.add(predId);
@@ -1707,6 +1902,8 @@ async function main(){
     apiCaps,
     counts,
     predictions: PREDICTIONS.length,
+    datedPredictions: datedPredictionCount,
+    horizonItems: horizonPredictionCount,
     matched: Object.keys(embeds).length,
     freshMatches: sourceFresh ? Object.keys(embeds).length : 0,
     searches: Object.keys(search).length,

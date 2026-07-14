@@ -1,7 +1,8 @@
 # REVISE-PREDICTIONS.md — daily evolution of the REHOBOAM timeline
 
 `predictions.json` (in `C:\Users\peterxing\pap-deploy`, mirrored to `pap-site` and the session
-`files/`) is the **single source of truth** for the timeline shown on the Post-AGI Planning site.
+`files/`) is the **single source of truth** for the dated timeline and undated
+post-superintelligence horizon shown on the Post-AGI Planning site.
 Both `index.html` (display) and `refresh-signals.js` (post matching) read it at runtime. The daily
 job REVISES it — **adds new predictions, updates existing ones, and removes outdated ones** — from
 the latest information online and from @peterxing's X posts/reposts. Editing this file changes the
@@ -36,14 +37,106 @@ hours update signals only and leave the forecast unchanged.
         "weak":     ["single", "words", "weighted 1"]
       }
     }
-    // ... one object per year (currently 2026-2040)
-  ]
+    // ... one object per year (exactly 2026-2040)
+  ],
+  "postSuperintelligence": {
+    "title": "Post-superintelligence horizon",
+    "summary": "Undated, dependency-gated possibilities rather than calendar forecasts.",
+    "items": [{
+      "id": "stable-kebab-case-id",
+      "t": "Concise conditional scenario",
+      "d": "technology",
+      "epistemic": "conditional",
+      "conditionalProb": 50,
+      "dependencies": ["2-4 explicit prerequisites"],
+      "indicators": ["2-4 observable precursor signals"],
+      "caveat": "What remains unknown or unvalidated",
+      "match": {
+        "headline": "Short topic label",
+        "search": "from:peterxing exact live-search terms",
+        "phrases": [], "strong": [], "weak": []
+      }
+    }]
+  }
 }
 ```
 
 If a newly-added year/prediction has no curated `match` terms, `refresh-signals.js` auto-derives
 weak keywords from its `summary`/`headline`/event titles, so it can still match his posts — but
 **curating `phrases`/`strong`/`weak` gives far better matches**, so add them when you can.
+
+## Undated post-superintelligence horizon
+
+The dated forecast stops at 2040. Developments that require aligned superintelligence plus several
+unvalidated prerequisite technologies belong in `postSuperintelligence`, never in a year beyond
+2040. `conditionalProb` is the item's plausibility **conditional on aligned superintelligence and
+every listed dependency**. It is not a probability by 2040, and the site must say so.
+
+Every item follows an evidence ladder:
+
+1. **Observed precursor** — a real, accurately described result, registration, launch or measurement.
+2. **Demonstrated subsystem** — a reproducible component result with disclosed limitations.
+3. **Scalable system** — validated integration, economics, safety and deployment at useful scale.
+4. **Conditional ASI-enabled outcome** — the undated possibility, reached only if the prior gates hold.
+
+Dependencies and indicators must make those stages auditable. A company announcement can be an
+indicator, but cannot substitute for a clinical result, deployment, measured engineering result or
+theoretical validation. Horizon wording and `conditionalProb` change only when evidence or a
+dependency changes materially; never rewrite them for daily novelty.
+
+Maintain explicit coverage of these families:
+
+- **Neural symbiosis:** implantable and genuinely non-invasive pathways remain separate. Cover
+  bidirectional communication, sensory restoration/augmentation and possible aligned-ASI
+  acceleration of materials, decoding and stimulation. Do not imply current external systems match
+  implants.
+- **Whole-brain emulation, mind uploading and digital immortality:** require validated
+  scanning/preservation fidelity, dynamic biochemical-state capture and functional emulation.
+  Keep digital replicas/chatbots separate, and state that identity continuity is unresolved.
+- **Orbital compute to proto-Dyson infrastructure:** require autonomous off-world mining,
+  manufacturing, solar collection and bounded self-expansion. Small clusters are not a Dyson swarm,
+  and a proto-Dyson trajectory is not a complete stellar enclosure.
+- **Kardashev scaling:** express progress through measured energy capture/use in watts and sustained
+  orders of magnitude. Type I/II are classifications and long-horizon reference points, not
+  evidence of progress or near-term achievements.
+- **Transcension Hypothesis:** an inward STEM-compression/densification alternative to outward
+  expansion. Label it a speculative futures/astrobiology hypothesis with no empirical confirmation.
+- **Ruliad:** a computational-metaphysics/foundational-physics research branch that becomes
+  forecast-relevant only after discriminating, testable predictions or engineering consequences.
+  It is not established physical theory, a destination, a simulation to enter or a proven ASI
+  roadmap.
+
+Outward proto-Dyson expansion and inward Transcension may be mutually exclusive. The horizon is
+allowed to retain both branches because it is a dependency map, not a single linear prediction.
+
+## Technology watchlist and strict terminology
+
+On every warranted forecast reassessment, check primary sources first and record exact evidence dates
+and links in `basis`:
+
+- **BCI:** Neuralink Updates and PRIME-family registrations; Synchron, Precision Neuroscience,
+  BrainGate/Blackrock and Paradromics papers/registrations; and genuine EEG, MEG, fNIRS, ultrasound
+  or optical systems. Intracortical and cortical-surface devices are invasive; endovascular devices
+  are minimally invasive; only external sensing/stimulation is non-invasive. Patient count, safety,
+  bandwidth, home use, functional outcomes, regulatory status and independent reproducibility matter.
+  Wrist sEMG and other peripheral muscle/nerve interfaces are not BCIs.
+- **Orbital compute:** Starcloud/NVIDIA, Axiom/Kepler, Google Project Suncatcher, SpaceX/FCC,
+  Lonestar and comparable primary/technical sources. Separate launched hardware and named workloads
+  from ground tests, launch targets, filings and aspirational constellations. Track deployed power,
+  compute class, optical throughput, radiation tolerance, radiator/cooling mass, launch cost, debris,
+  licensing and named customers. Lunar storage and single-satellite edge inference are not
+  hyperscale orbital compute; a filing is not deployed capacity.
+- **Connectomics/WBE:** peer-reviewed whole-organism connectomes, MICrONS-scale mammalian
+  structure/function datasets, functional models, scanning, preservation, simulation cost and
+  behavioral validation. A wiring diagram is not a running emulation; a person's chatbot is not an
+  upload.
+- **Dyson/Kardashev:** date only measurable off-world mining, autonomous manufacturing, power
+  collection/transmission, orbital compute or bounded replication demonstrations. Never date a
+  Dyson swarm or Type I/II transition through 2040 without extraordinary direct evidence.
+
+The matcher guards embody these distinctions. Add a positive and negative fixture for each new
+claim class or newly discovered false positive; never weaken a guard, freshness limit or reuse cap
+to raise coverage.
 
 ## Daily revision rules
 
@@ -111,12 +204,17 @@ weak keywords from its `summary`/`headline`/event titles, so it can still match 
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
    weaken freshness or facet guards to increase the count; unsupported claims keep the live
    `from:peterxing` search fallback.
+12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
+   item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
+   indicators, a caveat and a curated `from:peterxing` match/search definition. Run the same
+   unique-post-first allocation across dated and horizon items; horizon keys are
+   `horizon-STABLE-ID`.
 
 ## Procedure
 
 ```powershell
 cd C:\Users\peterxing\pap-deploy
-# 1. Edit predictions.json (add/update/remove years & events; set updated + basis).
+# 1. Edit predictions.json only for a material dated or horizon change; then set updated + basis.
 # 2. Validate it:
 node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
@@ -127,17 +225,18 @@ Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 # (index.html + signals.json are copied in the workflow's PUBLISH step too)
 ```
 
-`validate-predictions.js` checks: valid JSON, required top-level keys, every year has a numeric
-unique `year`, a string `summary`, an array of events each with a non-empty `t` and a `d` that
-exists in `domains`, and any `prob` in 0-100. If it FAILs, fix the JSON before publishing — a broken
-`predictions.json` makes `index.html` fall back to its inline baseline (the site won't show your
-revision).
+`validate-predictions.js` checks: valid JSON, required top-level keys, the strict 2026-2040 year
+range, unique years, event schema/probabilities, portfolio duplicates/chronology, and the complete
+horizon schema, labels, dependency counts, caveats and terminology. If it FAILs, fix the source
+rather than weakening the validator. A broken `predictions.json` makes `index.html` retain its
+inline dated and horizon baselines.
 
 ## Failure-safety
 
-- `index.html` validates `predictions.json` at runtime and **falls back to its inline baseline** if
-  the fetch fails or the data is malformed — so a bad file degrades gracefully (old timeline) rather
-  than blanking the site. Still, always run `validate-predictions.js` before publishing.
+- `index.html` validates `predictions.json` at runtime and **falls back to its inline baselines** if
+  the fetch fails. Malformed or misleading horizon data emits a console error, retains the honest
+  dependency-gated fallback and fails browser verification rather than blanking or silently
+  overstating the section.
 - `refresh-signals.js` falls back to its built-in `DEFAULT_PREDICTIONS` if `predictions.json` can't
   be read — matching keeps working even if the file is temporarily missing.
 - A 404 on `predictions.json` logs a browser console error that fails `verify-site.js`, so always

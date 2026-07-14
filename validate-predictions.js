@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const FILE = process.argv[2] || path.join(__dirname, 'predictions.json');
 const DOMAINS = ['individual', 'social', 'technology', 'economic', 'geopolitical', 'governance'];
+const EPISTEMIC_LABELS = new Set(['conditional', 'speculative']);
 
 const problems = [];
 const eventRows = [];
@@ -14,13 +15,14 @@ catch (e) { console.log('FAIL: not valid JSON — ' + e.message); process.exit(1
 
 if (!d || !Array.isArray(d.years) || !d.years.length) { console.log('FAIL: missing non-empty "years" array'); process.exit(1); }
 if (!d.updated || isNaN(Date.parse(d.updated))) problems.push('"updated" missing or not an ISO date');
+if (typeof d.basis !== 'string' || !d.basis.trim()) problems.push('"basis" missing or empty');
 
 const seen = new Set();
 let events = 0;
 for (const y of d.years) {
   const tag = 'year ' + (y && y.year);
   if (!y || typeof y.year !== 'number') { problems.push(tag + ': year is not a number'); continue; }
-  if (y.year < 2025 || y.year > 2100) problems.push(tag + ': year out of plausible range');
+  if (y.year < 2026 || y.year > 2040) problems.push(tag + ': dated timeline must stay within 2026–2040');
   if (seen.has(y.year)) problems.push(tag + ': duplicate year'); seen.add(y.year);
   if (typeof y.summary !== 'string' || !y.summary.trim()) problems.push(tag + ': summary missing/empty');
   if (!Array.isArray(y.events) || !y.events.length) { problems.push(tag + ': events missing/empty'); continue; }
@@ -37,6 +39,129 @@ for (const y of d.years) {
     for (const k of ['phrases', 'strong', 'weak']) if (m[k] != null && !Array.isArray(m[k])) problems.push(tag + ': match.' + k + ' must be an array');
     if (m.search != null && typeof m.search !== 'string') problems.push(tag + ': match.search must be a string');
     if (m.headline != null && typeof m.headline !== 'string') problems.push(tag + ': match.headline must be a string');
+  }
+}
+
+function nonEmptyString(v) {
+  return typeof v === 'string' && !!v.trim();
+}
+function validateStringList(value, tag, field) {
+  if (!Array.isArray(value) || value.length < 2 || value.length > 4) {
+    problems.push(`${tag}: ${field} must contain 2–4 items`);
+    return;
+  }
+  if (value.some(v => !nonEmptyString(v))) problems.push(`${tag}: ${field} contains an empty/non-string item`);
+  if (new Set(value.map(v => String(v).trim().toLowerCase())).size !== value.length) problems.push(`${tag}: ${field} contains duplicates`);
+}
+function horizonItemText(item) {
+  return [item.t, item.caveat, ...(item.dependencies || []), ...(item.indicators || [])].join(' ').toLowerCase();
+}
+
+const horizon = d.postSuperintelligence;
+if (!horizon || typeof horizon !== 'object' || Array.isArray(horizon)) {
+  problems.push('missing "postSuperintelligence" object');
+} else {
+  if (!nonEmptyString(horizon.title)) problems.push('postSuperintelligence.title missing/empty');
+  if (!nonEmptyString(horizon.summary)) problems.push('postSuperintelligence.summary missing/empty');
+  const summary = String(horizon.summary || '').toLowerCase();
+  if (!/\bundated\b/.test(summary)
+      || !/\bconditionalprob\b/.test(summary)
+      || !/\baligned superintelligence\b/.test(summary)
+      || !/\bnot a probability by 2040\b/.test(summary)
+      || !/\bmutually exclusive\b/.test(summary)) {
+    problems.push('postSuperintelligence.summary must explain the undated conditionalProb meaning and mutually exclusive branches');
+  }
+  if (!Array.isArray(horizon.items) || !horizon.items.length) {
+    problems.push('postSuperintelligence.items missing/empty');
+  } else {
+    const horizonIds = new Set();
+    for (let i = 0; i < horizon.items.length; i++) {
+      const item = horizon.items[i];
+      const tag = `horizon item ${i}`;
+      if (!item || typeof item !== 'object' || Array.isArray(item)) {
+        problems.push(`${tag}: must be an object`);
+        continue;
+      }
+      if (!nonEmptyString(item.id) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id)) problems.push(`${tag}: id must be stable kebab-case`);
+      else if (horizonIds.has(item.id)) problems.push(`${tag}: duplicate id "${item.id}"`);
+      else horizonIds.add(item.id);
+      if (!nonEmptyString(item.t)) problems.push(`${tag}: t missing/empty`);
+      if (/\b20(?:2[6-9]|3\d|40)\b/.test(String(item.t || ''))) problems.push(`${tag}: t must remain undated`);
+      if (!DOMAINS.includes(item.d)) problems.push(`${tag}: invalid domain d=${item.d}`);
+      if (!EPISTEMIC_LABELS.has(item.epistemic)) problems.push(`${tag}: epistemic must be conditional or speculative`);
+      if (typeof item.conditionalProb !== 'number' || item.conditionalProb < 0 || item.conditionalProb > 100) {
+        problems.push(`${tag}: conditionalProb out of 0–100`);
+      }
+      validateStringList(item.dependencies, tag, 'dependencies');
+      validateStringList(item.indicators, tag, 'indicators');
+      if (!nonEmptyString(item.caveat)) problems.push(`${tag}: caveat missing/empty`);
+      const match = item.match;
+      if (!match || typeof match !== 'object' || Array.isArray(match)) {
+        problems.push(`${tag}: match object missing`);
+      } else {
+        if (!nonEmptyString(match.headline)) problems.push(`${tag}: match.headline missing/empty`);
+        if (!nonEmptyString(match.search) || !/\bfrom:peterxing\b/i.test(match.search)) {
+          problems.push(`${tag}: match.search must be an honest from:peterxing query`);
+        }
+        for (const field of ['phrases', 'strong', 'weak']) {
+          if (!Array.isArray(match[field]) || match[field].some(v => !nonEmptyString(v))) {
+            problems.push(`${tag}: match.${field} must be an array of non-empty strings`);
+          }
+        }
+      }
+    }
+
+    const findItem = rx => horizon.items.find(item => rx.test(String(item && item.id || '')) || rx.test(String(item && item.t || '')));
+    const implant = findItem(/implantable-neural-symbiosis|implantable neural/i);
+    const nonInvasive = findItem(/non-invasive-neural-symbiosis|non-invasive neural/i);
+    const uploading = findItem(/whole-brain-emulation|mind uploading/i);
+    const dyson = findItem(/proto-dyson|dyson trajectory/i);
+    const kardashev = findItem(/kardashev/i);
+    const transcension = findItem(/transcension/i);
+    const ruliad = findItem(/ruliad/i);
+    if (!implant || !/\bbidirectional\b/.test(horizonItemText(implant)) || !/\bsensory restoration\b/.test(horizonItemText(implant))) {
+      problems.push('horizon missing distinct implantable bidirectional/sensory neural-symbiosis coverage');
+    }
+    if (!nonInvasive
+        || !/\b(?:eeg|meg|fnirs)\b/.test(horizonItemText(nonInvasive))
+        || !/\bendovascular bcis are minimally invasive, not non-invasive\b/.test(horizonItemText(nonInvasive))
+        || !/\b(?:semg|muscle).*not bcis\b/.test(horizonItemText(nonInvasive))) {
+      problems.push('horizon missing strict genuinely non-invasive neural-interface distinctions');
+    }
+    if (!uploading
+        || !/\bscanning\b/.test(horizonItemText(uploading))
+        || !/\bbiochemical\b/.test(horizonItemText(uploading))
+        || !/\bfunctional emulation\b/.test(horizonItemText(uploading))
+        || !/\bidentity continuity\b/.test(horizonItemText(uploading))
+        || !/\bchatbot or digital replica\b/.test(horizonItemText(uploading))) {
+      problems.push('horizon missing whole-brain-emulation dependencies and upload/replica/identity distinctions');
+    }
+    if (!dyson
+        || !/\bmining\b/.test(horizonItemText(dyson))
+        || !/\bmanufactur/.test(horizonItemText(dyson))
+        || !/\bsolar\b/.test(horizonItemText(dyson))
+        || !/\bsmall orbital clusters are not a dyson swarm\b/.test(horizonItemText(dyson))) {
+      problems.push('horizon missing the gated orbital-compute-to-proto-Dyson trajectory');
+    }
+    if (!kardashev
+        || !/\borders of magnitude\b/.test(horizonItemText(kardashev))
+        || !/\benergy-use classification\b/.test(horizonItemText(kardashev))
+        || !/\btype i and type ii remain long-horizon\b/.test(horizonItemText(kardashev))) {
+      problems.push('horizon missing measurable, non-achievement Kardashev framing');
+    }
+    if (!transcension
+        || !/\binward\b/.test(horizonItemText(transcension))
+        || !/\bspeculative\b/.test(horizonItemText(transcension))
+        || !/\bno empirical confirmation\b/.test(horizonItemText(transcension))) {
+      problems.push('horizon missing speculative, unconfirmed Transcension framing');
+    }
+    if (!ruliad
+        || !/\btestable\b/.test(horizonItemText(ruliad))
+        || !/\b(?:computational-metaphysics|foundational-physics)\b/.test(horizonItemText(ruliad))
+        || !/\bnot an established physical theory\b/.test(horizonItemText(ruliad))
+        || !/\bnot .*simulation to enter\b/.test(horizonItemText(ruliad))) {
+      problems.push('horizon missing cautious, testability-gated ruliad framing');
+    }
   }
 }
 
@@ -147,6 +272,7 @@ if (ungovernedAsi) {
   }
 }
 
-console.log(`predictions.json: ${d.years.length} years, ${events} events, updated ${d.updated}`);
+const horizonCount = Array.isArray(horizon && horizon.items) ? horizon.items.length : 0;
+console.log(`predictions.json: ${d.years.length} years, ${events} events, ${horizonCount} horizon items, updated ${d.updated}`);
 if (problems.length) { console.log('FAIL (' + problems.length + ' problem(s)):'); problems.forEach(p => console.log('  - ' + p)); process.exit(1); }
 console.log('RESULT: PASS — predictions.json is well-formed, non-duplicative, and chronologically coherent.');
