@@ -115,7 +115,8 @@ allowed to retain both branches because it is a dependency map, not a single lin
 On every warranted forecast reassessment, check primary sources first and record exact evidence dates
 and links in `basis`:
 
-- **BCI:** Neuralink Updates and PRIME-family registrations; Synchron, Precision Neuroscience,
+- **BCI:** Neuralink Updates and PRIME, CONVOY, GB-PRIME, CAN-PRIME and related registrations;
+  Synchron, Precision Neuroscience,
   BrainGate/Blackrock and Paradromics papers/registrations; and genuine EEG, MEG, fNIRS, ultrasound
   or optical systems. Intracortical and cortical-surface devices are invasive; endovascular devices
   are minimally invasive; only external sensing/stimulation is non-invasive. Patient count, safety,
@@ -199,7 +200,9 @@ to raise coverage.
    36-hour limit and reject the legacy syndication feed when its newest item is stale. Literal title
    terms may be supplemented by the controlled concept ontology, but one distinctive shared concept
    or two substantive corroborating concepts are required, semantic-only matches are limited to
-   recent activity, and every applicable claim-facet guard remains mandatory. Allocate valid matches
+   recent activity, and every applicable claim-facet guard remains mandatory. Generic capability,
+   computation, energy, space, economy, infrastructure, institutions, governance, scaling and AI
+   overlap supports a match but never qualifies by itself. Allocate valid matches
    unique-post-first, then reuse a post for no more than three closely related predictions. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never

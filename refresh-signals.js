@@ -190,15 +190,16 @@ function termMatchesTopic(term, topic){
 // (for example, "tape-out" -> semiconductors, "physicians" -> health, or "FSD" -> physical robotics).
 // `solo` concepts are specific enough to qualify on their own; broad concepts require corroboration.
 const MATCH_CONCEPTS = [
-  { name: 'capability', weight: 2, solo: true, rx: /\b(?:agi|asi|superintelligen\w*|human level|human expert|top expert|reasoning|benchmark|intelligence|sota|arc agi|outperform\w*|beats? experts?|human performance|physician written|fewer flaws)\b/ },
+  { name: 'agi', weight: 2, solo: true, rx: /\b(?:agi|asi|superintelligen\w*|human level|human expert|top expert|arc agi)\b/ },
+  { name: 'capability', weight: 2, solo: false, rx: /\b(?:reasoning|benchmark|intelligence|sota|outperform\w*|beats? experts?|human performance|physician written|fewer flaws)\b/ },
   { name: 'agents', weight: 2, solo: true, rx: /\b(?:agent|agents|agentic|autonomous|subagents?|copilot|tool use|long horizon|ai advisors?|delegate to ai)\b/ },
   { name: 'coding', weight: 2, solo: true, rx: /\b(?:code|coding|software|developer|programming|programmer|swe|algorithm|atcoder|codex|cursor)\b/ },
   { name: 'research', weight: 2, solo: true, rx: /\b(?:research|science|scientist|proof|theorem|conjecture|math|physics|discovery|r d)\b/ },
   { name: 'labor', weight: 2, solo: true, rx: /\b(?:job|jobs|employment|workforce|labor|labour|workers?|white collar|unemployment|knowledge work|freelance|human work)\b/ },
   { name: 'robotics', weight: 2, solo: true, rx: /\b(?:robot|robots|robotic|robotics|robotaxi|humanoid|optimus|neo|physical ai|self driving|fsd)\b/ },
   { name: 'production', weight: 1.5, solo: false, rx: /\b(?:manufactur\w*|factor(?:y|ies)|production|tape out|actuator|motor|assembly line)\b/ },
-  { name: 'compute', weight: 2, solo: true, rx: /\b(?:compute|gpu|gpus|chip|chips|semiconductor|datacenter|data center|parameters?|tokens per second|tps|inference|2nm|h100)\b/ },
-  { name: 'energy', weight: 2, solo: true, rx: /\b(?:energy|grid|solar|storage|battery|nuclear|fusion|electricity|gwh|gigawatt|terawatt)\b/ },
+  { name: 'compute', weight: 2, solo: false, rx: /\b(?:compute|gpu|gpus|chip|chips|semiconductor|datacenter|data center|parameters?|tokens per second|tps|inference|2nm|h100)\b/ },
+  { name: 'energy', weight: 2, solo: false, rx: /\b(?:energy|grid|solar|storage|battery|nuclear|fusion|electricity|gwh|gigawatt|terawatt)\b/ },
   { name: 'health', weight: 2, solo: true, rx: /\b(?:health|medical|medicine|physician|drug|disease|cancer|vaccine|biotech|longevity|gene|genome|embryo|crispr|patient)\b/ },
   { name: 'governance', weight: 1.5, solo: false, rx: /\b(?:policy|law|regulat\w*|government|treaty|permit|safety|evaluation|evals?|audit|verification|transparen\w*|pause|slowdown|slow|slowed|agreement|deal)\b/ },
   { name: 'geopolitics', weight: 1.5, solo: false, rx: /\b(?:china|chinese|united states|u s|america|international|national|eu|europe|bilateral)\b/ },
@@ -217,7 +218,7 @@ const MATCH_CONCEPTS = [
   { name: 'augmentation', weight: 2, solo: true, rx: /\b(?:neural symbiosis|sensory restoration|human augmentation|bidirectional neural)\b/ },
   { name: 'institutions', weight: 1, solo: false, rx: /\b(?:corporations?|courts?|public services?|military|business|politics|election|government)\b/ },
   { name: 'education', weight: 2, solo: true, rx: /\b(?:education|students?|teach|teaching|learning|school|university|critical thinking)\b/ },
-  { name: 'space', weight: 2, solo: true, rx: /\b(?:space|orbital|orbit|starlink|moon|lunar|mars|off world|spacex)\b/ },
+  { name: 'space', weight: 2, solo: false, rx: /\b(?:space|orbital|orbit|starlink|moon|lunar|mars|off world|spacex)\b/ },
   { name: 'scenario2040', weight: 2, solo: true, rx: /\b(?:ai 2040|plan a|ai 2027)\b/ },
   { name: 'openmodels', weight: 2, solo: true, rx: /\b(?:open source|open weight|local model|localllama|laptop runnable)\b/ },
   { name: 'privacy', weight: 2, solo: true, rx: /\b(?:privacy|private data|confidential|zero knowledge)\b/ },
@@ -616,6 +617,7 @@ const FACET_GUARDS = [
     all: [
       /\b(?:ai|model|models|gpt|claude|llm|llms|agi)\b/,
       /\b(?:top expert|human expert|human level|expert level|physician|scientist|researcher|benchmark|benchmarks|sota)\b/,
+      /\b(?:every cognitive field|all cognitive fields|across (?:essentially )?(?:every|all|multiple|many) (?:cognitive )?(?:fields?|domains?|disciplines?)|cross domain|multi domain)\b/,
     ],
   },
   {
@@ -683,6 +685,7 @@ const FACET_GUARDS = [
     all: [
       /\b(?:datacenter|data center|compute infrastructure|ai infrastructure|gpu|gpus)\b/,
       /\b(?:construction|buildout|build out|capex|capital expenditure|commitment|commitments|investment|budget|spending|financing|billion|trillion)\b/,
+      /\b(?:defense|defence) budget\b|\b(?:annual|yearly|per year)\b.{0,80}\b(?:trillion|9\d{2}\s*billion)\b|\b(?:trillion|9\d{2}\s*billion)\b.{0,80}\b(?:annual|yearly|per year)\b/,
     ],
   },
   {
@@ -906,7 +909,7 @@ const FACET_GUARDS = [
     title: /\b(?:land energy raw materials|dominant scarcities|positional goods)\b/,
     all: [
       /\b(?:land|energy|electricity|grid|solar|raw materials|materials|minerals|resources|housing|property|positional goods)\b/,
-      /\b(?:scarcity|scarce|constraint|constraints|bottleneck|bottlenecks|shortage|shortages|dominant|value)\b/,
+      /\b(?:scarcity|scarce|constraint|constraints|bottleneck|bottlenecks|shortage|shortages|dominant)\b/,
     ],
   },
   {

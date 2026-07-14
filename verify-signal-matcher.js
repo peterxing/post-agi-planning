@@ -61,6 +61,20 @@ const fixtures = [
     text: 'AI datacenter interconnection is blocked by grid-capacity and water constraints, triggering political opposition.',
   },
   {
+    name: 'single 35 billion datacenter is below defense-budget commitment threshold',
+    expect: false,
+    domain: 'economic',
+    title: 'Annual datacenter construction commitments exceed the US defense budget',
+    text: 'It costs $35 billion to build a gigawatt data center on the ground.',
+  },
+  {
+    name: 'trillion-dollar annual datacenter commitments exceed defense budget',
+    expect: true,
+    domain: 'economic',
+    title: 'Annual datacenter construction commitments exceed the US defense budget',
+    text: 'Annual data center construction commitments reached $1 trillion, exceeding the US defense budget.',
+  },
+  {
     name: 'agent benchmark is not white-collar professional restructuring',
     expect: false,
     domain: 'economic',
@@ -181,10 +195,30 @@ const fixtures = [
     text: 'AI-driven research delivered a clinical cure and commercial fusion now provides abundant low-cost clean energy.',
   },
   {
-    name: 'physician comparison supports top-expert capability',
-    expect: true,
+    name: 'single-domain physician comparison is not every-field top-expert capability',
+    expect: false,
     title: 'Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field',
     text: 'Physicians found fewer flaws in GPT-5.6 responses than physician-written responses.',
+  },
+  {
+    name: 'explicit every-field top-expert capability is accepted',
+    expect: true,
+    title: 'Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field',
+    text: 'The strongest AI now performs at top-human-expert level across all cognitive fields.',
+  },
+  {
+    name: 'valuable space solar power is not a dominant scarcity transition',
+    expect: false,
+    domain: 'economic',
+    title: "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
+    text: "Solar power in space could create value far exceeding Earth's economy.",
+  },
+  {
+    name: 'explicit resource scarcity transition is accepted',
+    expect: true,
+    domain: 'economic',
+    title: "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
+    text: 'As labor becomes abundant, land, energy and raw materials become the dominant economic scarcities.',
   },
   {
     name: 'robot dexterity spec is not an economy-wide task share',
