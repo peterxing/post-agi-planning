@@ -569,7 +569,13 @@ button { color: inherit; }
 .nav-inner { height: 68px; max-width: 1240px; padding-inline: 28px; }
 .brand { gap: 12px; }
 .brand-mark { width: 32px; height: 32px; }
-.brand-text { letter-spacing: .08em; }
+.brand-text {
+  max-width: 320px;
+  font-size: .86rem;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+}
+.brand-text small { margin-top: 3px; letter-spacing: .1em; }
 .nav-links a {
   border-radius: 0;
   border-bottom: 2px solid var(--cp-bg-elevated);
@@ -749,43 +755,63 @@ button { color: inherit; }
   stroke-width: 2;
 }
 .sim-label,
-.sim-year,
-.sim-probability {
+.sim-year {
   font-family: Consolas, "Courier New", Courier, monospace;
 }
 .sim-label { fill: var(--cp-text); font-size: 12px; font-weight: 700; }
 .sim-sublabel { fill: var(--cp-text-muted); font-size: 9px; }
 .sim-year { fill: var(--cp-text-muted); font-size: 9px; }
-.sim-probability { fill: var(--cp-accent); font-size: 15px; font-weight: 800; }
-.simulator-probability-grid {
+.simulator-outcome-list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1px;
+  gap: 6px;
   margin: -5px 0 12px;
+}
+.simulator-outcome {
+  display: grid;
+  grid-template-columns: minmax(170px, 1.25fr) minmax(90px, 1fr) 58px;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px 9px;
   border: 1px solid var(--cp-border);
   border-radius: 0.625rem;
-  overflow: hidden;
-  background: var(--cp-border);
-}
-.simulator-probability {
-  min-width: 0;
-  padding: 8px;
   background: var(--cp-surface);
 }
-.simulator-probability span,
-.simulator-probability strong { display: block; }
-.simulator-probability span {
-  min-height: 2.5em;
+.simulator-outcome-copy { min-width: 0; }
+.simulator-outcome-copy strong,
+.simulator-outcome-copy span { display: block; }
+.simulator-outcome-copy strong {
+  color: var(--cp-text);
+  font-size: .67rem;
+  line-height: 1.25;
+}
+.simulator-outcome-copy span {
+  margin-top: 2px;
   color: var(--cp-text-muted);
   font-size: .53rem;
   line-height: 1.25;
   text-transform: uppercase;
 }
-.simulator-probability strong {
-  margin-top: 4px;
-  color: var(--cp-accent);
+.simulator-outcome-rail {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--cp-surface-soft);
+}
+.simulator-outcome-rail i {
+  display: block;
+  width: var(--prob);
+  height: 100%;
+  background: var(--cp-accent);
+  transition: width .28s ease;
+}
+.simulator-outcome-stat {
+  width: 58px;
+  text-align: right;
+  color: var(--cp-text-muted);
   font-family: Consolas, "Courier New", Courier, monospace;
-  font-size: 1rem;
+  font-size: .76rem;
+  font-weight: 700;
 }
 .simulator-controls {
   display: grid;
@@ -864,6 +890,223 @@ button { color: inherit; }
   font-size: .56rem;
   line-height: 1.45;
 }
+
+/* Content-specific editorial figures */
+.editorial-figure {
+  min-width: 0;
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--cp-surface);
+  box-shadow: 0 1px 0 var(--cp-border);
+}
+.editorial-figure:focus-visible { outline: 3px solid var(--cp-accent); outline-offset: 3px; }
+.editorial-svg { display: block; width: 100%; height: auto; }
+.editorial-art {
+  border-block: 1px solid var(--cp-border);
+  background: var(--cp-bg-elevated);
+}
+.figure-copy { padding: 22px 22px 18px; }
+.figure-copy h3 { margin: 8px 0 9px; font-size: 1.18rem; }
+.figure-copy p { color: var(--cp-text-muted); font-size: .82rem; line-height: 1.55; }
+.figure-semantic {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 18px 22px;
+  list-style: none;
+}
+.figure-semantic li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--cp-text-muted);
+  font-size: .73rem;
+  line-height: 1.45;
+}
+.figure-semantic li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--cp-accent);
+}
+.figure-semantic strong { color: var(--cp-text); }
+.editorial-figure figcaption {
+  padding: 13px 22px 16px;
+  border-top: 1px solid var(--cp-border);
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .6rem;
+  line-height: 1.5;
+}
+.figure-draw,
+.figure-outline,
+.figure-detail,
+.figure-orbit,
+.figure-signal,
+.outward-branch,
+.inward-branch,
+.ruliad-branch {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.figure-draw,
+.figure-signal,
+.outward-branch,
+.inward-branch,
+.ruliad-branch { stroke: var(--cp-accent); stroke-width: 2; }
+.figure-outline { stroke: var(--cp-text-muted); stroke-width: 2; }
+.figure-detail { stroke: var(--cp-text-muted); stroke-width: 1.5; }
+.figure-orbit { stroke: var(--cp-border-strong); stroke-width: 1.5; }
+.figure-node,
+.figure-gate {
+  fill: var(--cp-surface);
+  stroke: var(--cp-accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.figure-node-core { fill: var(--cp-accent); }
+.figure-label,
+.figure-small {
+  font-family: Consolas, "Courier New", Courier, monospace;
+  pointer-events: none;
+}
+.figure-label { fill: var(--cp-text); font-size: 11px; font-weight: 700; }
+.figure-small { fill: var(--cp-text-muted); font-size: 8.5px; }
+.editorial-figure:hover .figure-node,
+.editorial-figure:focus .figure-node,
+.editorial-figure:hover .figure-gate,
+.editorial-figure:focus .figure-gate { stroke-width: 3; }
+
+.turning-points { margin-bottom: 22px; }
+.turning-points-head {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(260px, 1.1fr);
+  gap: 32px;
+  align-items: end;
+  padding: 20px 22px 18px;
+}
+.turning-points-head h3 { margin-top: 7px; font-size: 1.35rem; }
+.turning-points-head p { color: var(--cp-text-muted); font-size: .82rem; line-height: 1.5; }
+.turning-route-svg { border-block: 1px solid var(--cp-border); background: var(--cp-bg-elevated); }
+.route-spine { stroke-width: 2.5; }
+.turning-points-links {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--cp-border);
+}
+.turning-points-loading {
+  grid-column: 1 / -1;
+  padding: 16px;
+  background: var(--cp-surface);
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .65rem;
+  text-transform: uppercase;
+}
+.turning-point-link {
+  display: flex;
+  min-width: 0;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 12px 10px;
+  background: var(--cp-surface);
+  color: var(--cp-text);
+  text-decoration: none;
+}
+.turning-point-link:hover,
+.turning-point-link:focus-visible { background: var(--cp-bg-elevated); text-decoration: none; }
+.turning-point-step {
+  flex: 0 0 auto;
+  color: var(--cp-accent);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .58rem;
+  font-weight: 700;
+}
+.turning-point-copy { min-width: 0; }
+.turning-point-copy strong,
+.turning-point-copy small { display: block; }
+.turning-point-copy strong { font-size: .65rem; line-height: 1.3; }
+.turning-point-copy small {
+  margin-top: 3px;
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .54rem;
+  text-transform: uppercase;
+}
+
+.horizon-figure-intro {
+  max-width: 760px;
+  margin: 72px 0 28px;
+}
+.horizon-figure-intro h3 { margin: 8px 0 10px; font-size: clamp(1.45rem, 3vw, 2.25rem); }
+.horizon-figure-intro p { color: var(--cp-text-muted); font-size: .94rem; line-height: 1.6; }
+.editorial-figure-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.figure-motion-ready .editorial-figure .figure-draw:not(.ruliad-branch) {
+    stroke-dasharray: 2000;
+  }
+  html.figure-motion-ready .editorial-figure:not(.is-visible) .figure-draw:not(.ruliad-branch) {
+    stroke-dashoffset: 2000;
+  }
+  html.figure-motion-ready .editorial-figure:not(.is-visible) .ruliad-branch { opacity: 0; }
+  html.figure-motion-ready .editorial-figure:not(.is-visible) .figure-reveal {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .editorial-figure.is-visible .figure-draw:not(.ruliad-branch) {
+    animation: editorial-path-draw 1.35s ease forwards;
+  }
+  .editorial-figure.is-visible .ruliad-branch {
+    animation: ruliad-path-reveal .9s .65s ease both;
+  }
+  .editorial-figure.is-visible .figure-reveal {
+    animation: editorial-stage-reveal .5s ease both;
+  }
+  .editorial-figure.is-visible .figure-stage-1 { animation-delay: .12s; }
+  .editorial-figure.is-visible .figure-stage-2 { animation-delay: .35s; }
+  .editorial-figure.is-visible .figure-stage-3 { animation-delay: .62s; }
+  .editorial-figure.is-visible .figure-stage-4 { animation-delay: .9s; }
+  .editorial-figure.is-visible .figure-stage-5 { animation-delay: 1.12s; }
+  .editorial-figure.is-visible .figure-stage-6 { animation-delay: 1.34s; }
+  .editorial-figure.is-visible .neural-signal-1 { animation-delay: .42s; }
+  .editorial-figure.is-visible .neural-signal-2 { animation-delay: .65s; }
+  .editorial-figure.is-visible .orbital-signal { animation-delay: .9s; }
+  @keyframes editorial-path-draw {
+    from { stroke-dashoffset: 2000; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes ruliad-path-reveal {
+    from { opacity: 0; stroke-dashoffset: 42; }
+    to { opacity: 1; stroke-dashoffset: 0; }
+  }
+  @keyframes editorial-stage-reveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-figure .figure-draw:not(.ruliad-branch) {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .editorial-figure .ruliad-branch {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .editorial-figure .figure-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .sim-branch { transition: stroke-width .28s ease, opacity .28s ease; }
   .simulator-map.simulator-ready .sim-branch,
@@ -913,69 +1156,6 @@ button { color: inherit; }
 .forecast-section { overflow: clip; }
 .forecast-stamps { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; margin-top: 18px; }
 .sig-stamp { margin: 0; border-radius: 0.625rem; }
-.timeline-overview-shell {
-  position: sticky;
-  top: 68px;
-  z-index: 30;
-  margin-bottom: 14px;
-  padding: 15px 18px 17px;
-  border: 1px solid var(--cp-border);
-  border-radius: 16px;
-  background: var(--cp-bg-elevated);
-  box-shadow: 0 1px 0 var(--cp-border);
-}
-.timeline-overview-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 12px;
-  color: var(--cp-text-muted);
-  font-size: .67rem;
-}
-.timeline-overview {
-  display: grid;
-  grid-template-columns: repeat(15, minmax(44px, 1fr));
-  gap: 5px;
-}
-.overview-year {
-  position: relative;
-  min-width: 0;
-  height: 58px;
-  padding: 0;
-  border: 1px solid var(--cp-border);
-  border-radius: 0.625rem;
-  background: var(--cp-surface);
-  color: var(--cp-text-muted);
-  cursor: pointer;
-  overflow: hidden;
-}
-.overview-year:hover,
-.overview-year.active { border-color: var(--cp-accent); color: var(--cp-text); }
-.overview-year.active { box-shadow: inset 0 -3px 0 var(--cp-accent); }
-.overview-year .overview-density {
-  position: absolute;
-  inset: auto 5px 5px;
-  height: 34px;
-  display: flex;
-  align-items: flex-end;
-}
-.overview-year .overview-density i {
-  display: block;
-  width: 100%;
-  height: var(--density);
-  min-height: 3px;
-  border-radius: 4px;
-  background: var(--cp-accent-soft);
-  border-top: 2px solid var(--cp-accent);
-}
-.overview-year b {
-  position: relative;
-  z-index: 1;
-  display: block;
-  padding-top: 6px;
-  font-family: Consolas, "Courier New", Courier, monospace;
-  font-size: .62rem;
-}
 .timeline-toolbar {
   display: flex;
   align-items: center;
@@ -1015,7 +1195,7 @@ button { color: inherit; }
 .timeline { margin-top: 0; }
 .tl-spine { left: 120px; top: 20px; bottom: 20px; background: var(--cp-border); }
 .year-block {
-  scroll-margin-top: 230px;
+  scroll-margin-top: 96px;
   margin-bottom: 76px;
   opacity: .76;
   transition: opacity .3s ease;
@@ -1032,7 +1212,7 @@ button { color: inherit; }
   transition: background .2s ease, transform .2s ease;
 }
 .year-block.is-active .year-dot { background: var(--cp-accent); transform: scale(1.2); }
-.year-tag { top: 222px; }
+.year-tag { top: 92px; }
 .year-num { font-size: 2rem; }
 .year-meta { margin-top: 4px; line-height: 1.5; }
 .year-toggle {
@@ -1424,6 +1604,24 @@ button { color: inherit; }
   .hero-readout:nth-child(4) { border-top: 1px solid var(--cp-border); }
   .events { grid-template-columns: 1fr; }
   .horizon-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .turning-points-links { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1120px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 1px solid var(--cp-border);
+    background: var(--cp-bg-elevated);
+    gap: 2px;
+  }
+  .nav-links.open a { width: 100%; padding: 12px; border-bottom: 1px solid var(--cp-border); }
+  .nav-toggle-btn { display: inline-flex; align-items: center; justify-content: center; }
 }
 @media (max-width: 880px) {
   .wrap { padding-inline: 20px; }
@@ -1438,7 +1636,6 @@ button { color: inherit; }
   }
   .nav-links.open a { width: 100%; padding: 12px; border-bottom: 1px solid var(--cp-border); }
   .hero-dateline { flex-wrap: wrap; justify-content: flex-start; }
-  .timeline-overview { overflow-x: auto; grid-template-columns: repeat(15, 52px); padding-bottom: 4px; }
   .timeline-toolbar { align-items: flex-start; flex-direction: column; }
   .overlay-toggle { align-self: flex-end; }
   .horizon-item { grid-template-columns: 1fr; }
@@ -1447,6 +1644,8 @@ button { color: inherit; }
   .horizon-caveat,
   .horizon-signal { grid-column: 1; }
   .book-hero { grid-template-columns: 1fr; gap: 34px; }
+  .turning-points-head { grid-template-columns: 1fr; gap: 10px; }
+  .editorial-figure-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   .hero { padding-top: 92px; }
@@ -1463,14 +1662,16 @@ button { color: inherit; }
   .forecast-live { margin-top: 10px; }
   .forecast-lens-plot { min-height: 240px; }
   .simulator-map { min-height: 0; }
-  .simulator-probability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .simulator-probability:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .simulator-outcome { grid-template-columns: minmax(0, 1fr) 58px; }
+  .simulator-outcome-rail { grid-column: 1 / -1; grid-row: 2; }
   .simulator-controls { grid-template-columns: 1fr; }
   .simulator-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .simulator-presets button { width: 100%; }
-  .timeline-overview-shell { top: 68px; margin-inline: -8px; padding-inline: 12px; }
-  .timeline-overview-head { display: block; }
-  #activeYearLabel { display: block; margin-top: 5px; }
+  .turning-points-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .turning-point-link:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .figure-copy { padding: 18px 18px 16px; }
+  .figure-semantic { padding: 16px 18px; }
+  .editorial-figure figcaption { padding-inline: 18px; }
   .tl-spine { left: 8px; }
   .year-block { margin-bottom: 56px; opacity: 1; }
   .year-row { grid-template-columns: 1fr; gap: 10px; padding-left: 28px; }
@@ -1503,8 +1704,10 @@ button { color: inherit; }
 }
 @media (max-width: 440px) {
   .wrap { padding-inline: 16px; }
-  .brand-text { font-size: .8rem; }
-  .brand-text small { font-size: .52rem; letter-spacing: .12em; }
+  .brand { min-width: 0; flex: 1; gap: 8px; }
+  .brand-mark { width: 28px; height: 28px; flex-basis: 28px; }
+  .brand-text { min-width: 0; max-width: 190px; font-size: .68rem; line-height: 1.08; }
+  .brand-text small { display: none; }
   .hero-dateline span { width: 100%; }
   .forecast-lens { margin-inline: -4px; }
   .timeline-controls { max-width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; }
@@ -1522,7 +1725,6 @@ button { color: inherit; }
   }
 }
 @media (forced-colors: active) {
-  .overview-year.active,
   .horizon-node.active,
   .horizon-item.is-selected { outline: 2px solid currentColor; }
 }
@@ -1541,7 +1743,7 @@ button { color: inherit; }
         <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
         <path d="M16 2 L16 11 M16 21 L16 30 M2 16 L11 16 M21 16 L30 16" stroke="var(--cp-accent)" stroke-width="1.2" opacity="0.6"/>
       </svg>
-      <span class="brand-text">POST-AGI ATLAS<small>FORECAST OBSERVATORY · PETER XING</small></span>
+      <span class="brand-text">The Hitchhiker's Guide to the Singularity<small>Peter Xing · Post-AGI planning</small></span>
     </a>
     <div class="nav-links" id="navLinks">
       <a href="#timeline">Forecast</a>
@@ -1597,7 +1799,7 @@ button { color: inherit; }
         <div id="probabilitySimulatorMap" class="simulator-map">
           <div class="simulator-loading">Loading forecast anchors…</div>
         </div>
-        <div id="simulatorProbabilityGrid" class="simulator-probability-grid" aria-label="Simulated probabilities"></div>
+        <div id="simulatorProbabilityGrid" class="simulator-outcome-list" aria-label="Simulated conditional likelihoods"></div>
         <div class="simulator-controls" role="group" aria-label="Scenario assumptions" aria-describedby="simulatorDisclaimer">
           <label class="simulator-control" for="simCapability">
             <span><strong>Capability pace</strong><span class="simulator-output" id="simCapabilityOutput">Baseline</span></span>
@@ -1667,13 +1869,60 @@ button { color: inherit; }
       </div>
     </div>
 
-    <div class="timeline-overview-shell">
-      <div class="timeline-overview-head">
-        <span class="instrument-label">Temporal index / event density</span>
-        <span class="mono" id="activeYearLabel" aria-live="polite">2026 · present coordinate</span>
+    <figure class="turning-points editorial-figure" data-editorial-figure="agi-route" tabindex="0" aria-labelledby="turningPointsTitle">
+      <div class="turning-points-head">
+        <div>
+          <span class="instrument-label">Key turning points / forecast route</span>
+          <h3 id="turningPointsTitle">What changes next?</h3>
+        </div>
+        <p>Follow the transitions that change the planning problem—not every year on the calendar.</p>
       </div>
-      <div class="timeline-overview" id="timelineOverview" aria-label="Jump to forecast year"></div>
-    </div>
+      <svg class="editorial-svg turning-route-svg" viewBox="0 0 1160 260" role="img" aria-labelledby="turningRouteSvgTitle turningRouteSvgDesc">
+        <title id="turningRouteSvgTitle">Route from human-level AGI to the undated post-superintelligence horizon</title>
+        <desc id="turningRouteSvgDesc">A one-way route begins with human-level AGI in 2026, spreads across industries in 2027, branches toward superintelligence in 2028 to 2030, crosses cognitive and physical automation thresholds, reaches the 2040 endpoint, then opens into an undated horizon.</desc>
+        <path class="figure-draw route-spine" d="M54 126 C140 126 174 126 240 126 S350 126 418 126 C468 126 482 82 536 82 M418 126 C468 126 482 170 536 170 M548 82 C622 82 648 126 716 126 S844 126 910 126 S1026 126 1090 126"/>
+        <g class="figure-reveal figure-stage-1">
+          <circle class="figure-node" cx="54" cy="126" r="20"/>
+          <circle class="figure-node-core" cx="54" cy="126" r="7"/>
+          <path class="figure-detail" d="M43 116h22M43 126h22M43 136h22M44 115v22M54 115v22M64 115v22"/>
+          <text class="figure-label" x="54" y="82" text-anchor="middle">2026 · AGI</text>
+          <text class="figure-small" x="54" y="166" text-anchor="middle">human-level capability</text>
+        </g>
+        <g class="figure-reveal figure-stage-2">
+          <rect class="figure-node" x="218" y="104" width="44" height="44" rx="8"/>
+          <path class="figure-detail" d="M226 113h10v10h-10zM243 113h10v10h-10zM226 130h10v10h-10zM243 130h10v10h-10z"/>
+          <text class="figure-label" x="240" y="82" text-anchor="middle">2027 · disruption</text>
+          <text class="figure-small" x="240" y="166" text-anchor="middle">every major industry</text>
+        </g>
+        <g class="figure-reveal figure-stage-3">
+          <rect class="figure-gate" x="404" y="112" width="28" height="28" rx="5" transform="rotate(45 418 126)"/>
+          <text class="figure-label" x="418" y="82" text-anchor="middle">2028–30 · branch</text>
+          <text class="figure-small" x="418" y="166" text-anchor="middle">managed / default / ungoverned</text>
+          <circle class="figure-node" cx="542" cy="82" r="14"/>
+          <circle class="figure-node" cx="542" cy="170" r="14"/>
+        </g>
+        <g class="figure-reveal figure-stage-4">
+          <rect class="figure-node" x="692" y="102" width="48" height="48" rx="10"/>
+          <path class="figure-detail" d="M702 137v-18M714 137v-29M726 137v-38"/>
+          <text class="figure-label" x="716" y="82" text-anchor="middle">automation</text>
+          <text class="figure-small" x="716" y="166" text-anchor="middle">cognitive + physical thresholds</text>
+        </g>
+        <g class="figure-reveal figure-stage-5">
+          <path class="figure-gate" d="M892 148v-44h36v44M902 148v-28h16v28"/>
+          <text class="figure-label" x="910" y="82" text-anchor="middle">2040 · endpoint</text>
+          <text class="figure-small" x="910" y="166" text-anchor="middle">automation + handoff fork</text>
+        </g>
+        <g class="figure-reveal figure-stage-6">
+          <circle class="figure-orbit" cx="1090" cy="126" r="34"/>
+          <circle class="figure-orbit" cx="1090" cy="126" r="19"/>
+          <circle class="figure-node-core" cx="1090" cy="126" r="5"/>
+          <text class="figure-label" x="1090" y="74" text-anchor="middle">undated horizon</text>
+          <text class="figure-small" x="1090" y="178" text-anchor="middle">dependency-gated possibilities</text>
+        </g>
+      </svg>
+      <nav class="turning-points-links" id="turningPointsRoute" aria-label="Key forecast turning points"></nav>
+      <figcaption>Select a turning point to jump directly to the prediction or horizon evidence that supports it.</figcaption>
+    </figure>
 
     <div class="timeline-toolbar" aria-label="Forecast controls">
       <div class="timeline-controls" role="group" aria-label="Filter predictions by domain">
@@ -1726,6 +1975,211 @@ button { color: inherit; }
         <p>No node below receives a calendar date. Select a possibility to inspect its complete evidence ladder.</p>
       </div>
       <div class="horizon-map" id="horizonMap"></div>
+    </div>
+    <div class="horizon-figure-intro">
+      <span class="instrument-label">Illustrated horizon / what each claim would require</span>
+      <h3>Four fields beyond the calendar forecast</h3>
+      <p>These figures separate plausible mechanisms from familiar science-fiction shorthand. Each path remains conditional on the gates shown below.</p>
+    </div>
+    <div class="editorial-figure-grid" id="horizonFigures">
+      <figure class="editorial-figure figure-neural" data-editorial-figure="neural-interfaces" tabindex="0" aria-labelledby="neuralFigureHeading">
+        <div class="figure-copy">
+          <span class="instrument-label">Neural symbiosis / two distinct routes</span>
+          <h3 id="neuralFigureHeading">Implanted bandwidth versus genuinely non-invasive access</h3>
+          <p>Both paths aim at communication and augmentation, but they carry different signal, safety and evidence burdens.</p>
+        </div>
+        <div class="editorial-art">
+          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="neuralSvgTitle neuralSvgDesc">
+            <title id="neuralSvgTitle">Implantable and non-invasive neural-interface pathways</title>
+            <desc id="neuralSvgDesc">An implanted electrode array sends a high-bandwidth signal to an AI decoding core. A separate external sensing array sends a lower-bandwidth signal to the same core. Both pass through a clinical evidence gate.</desc>
+            <path class="figure-draw figure-outline" d="M72 230c-28-24-38-62-27-99 12-43 53-73 98-70 48 3 86 42 89 90 2 34-14 64-39 84"/>
+            <path class="figure-draw figure-outline" d="M370 230c-25-23-39-57-34-91 7-48 47-84 95-83 49 1 89 39 94 88 3 35-11 66-37 89"/>
+            <g class="figure-reveal figure-stage-1">
+              <rect class="figure-gate" x="116" y="103" width="54" height="42" rx="8"/>
+              <path class="figure-detail" d="M124 111h38M124 121h38M124 131h38M132 105v38M144 105v38M156 105v38"/>
+              <text class="figure-label" x="143" y="88" text-anchor="middle">IMPLANTED ARRAY</text>
+              <text class="figure-small" x="143" y="165" text-anchor="middle">surgery · chronic hardware</text>
+            </g>
+            <g class="figure-reveal figure-stage-2">
+              <path class="figure-orbit" d="M376 116c16-38 82-52 123-10"/>
+              <path class="figure-orbit" d="M383 127c22-26 72-33 106-7"/>
+              <circle class="figure-node" cx="395" cy="112" r="6"/>
+              <circle class="figure-node" cx="480" cy="105" r="6"/>
+              <text class="figure-label" x="438" y="82" text-anchor="middle">EXTERNAL SENSING</text>
+              <text class="figure-small" x="438" y="165" text-anchor="middle">EEG · MEG · optical · ultrasound</text>
+            </g>
+            <path class="figure-draw figure-signal neural-signal-1" d="M171 124 C220 124 224 150 258 150"/>
+            <path class="figure-draw figure-signal neural-signal-2" d="M394 124 C345 124 336 150 302 150"/>
+            <g class="figure-reveal figure-stage-3">
+              <path class="figure-gate" d="M280 116l36 21v42l-36 21-36-21v-42z"/>
+              <circle class="figure-node-core" cx="280" cy="158" r="8"/>
+              <text class="figure-label" x="280" y="224" text-anchor="middle">AI DECODING CORE</text>
+            </g>
+            <path class="figure-draw" d="M280 200v24c0 20 0 26 0 39"/>
+            <g class="figure-reveal figure-stage-4">
+              <rect class="figure-gate" x="216" y="260" width="128" height="28" rx="8"/>
+              <text class="figure-small" x="280" y="278" text-anchor="middle">CLINICAL EVIDENCE GATE</text>
+            </g>
+          </svg>
+        </div>
+        <ul class="figure-semantic">
+          <li><strong>Implantable:</strong> higher bandwidth potential; surgery, durability and cybersecurity risks.</li>
+          <li><strong>Non-invasive:</strong> lower procedural risk; current systems do not match implanted bandwidth.</li>
+          <li><strong>Shared gate:</strong> reproducible patient outcomes, consent, safety and home use.</li>
+        </ul>
+        <figcaption>Endovascular systems are minimally invasive—not non-invasive—and peripheral muscle interfaces are not BCIs.</figcaption>
+      </figure>
+
+      <figure class="editorial-figure figure-orbital" data-editorial-figure="orbital-compute" tabindex="0" aria-labelledby="orbitalFigureHeading">
+        <div class="figure-copy">
+          <span class="instrument-label">Orbital compute / outward infrastructure</span>
+          <h3 id="orbitalFigureHeading">From a sustained orbital workload to a proto-Dyson trajectory</h3>
+          <p>The sequence only advances when each stage proves power, cooling, manufacturing and controlled expansion.</p>
+        </div>
+        <div class="editorial-art">
+          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="orbitalSvgTitle orbitalSvgDesc">
+            <title id="orbitalSvgTitle">Orbital data centres growing into autonomous solar-compute infrastructure</title>
+            <desc id="orbitalSvgDesc">A launch from Earth reaches an orbital compute module, then off-world manufacturing, then autonomous solar collectors. The final arc is labelled proto-Dyson trajectory, not a completed Dyson swarm.</desc>
+            <circle class="figure-outline" cx="55" cy="290" r="92"/>
+            <path class="figure-draw figure-orbit" d="M34 244 C118 126 254 72 492 56"/>
+            <g class="figure-reveal figure-stage-1">
+              <path class="figure-detail" d="M72 220l18-28 18 28-18 12zM90 192v-28"/>
+              <text class="figure-label" x="90" y="250" text-anchor="middle">LAUNCH</text>
+            </g>
+            <g class="figure-reveal figure-stage-2">
+              <rect class="figure-gate" x="164" y="128" width="72" height="48" rx="8"/>
+              <path class="figure-detail" d="M175 139h50M175 151h50M175 163h50"/>
+              <path class="figure-detail" d="M164 152h-28M236 152h28M136 140v24M264 140v24"/>
+              <text class="figure-label" x="200" y="113" text-anchor="middle">ORBITAL COMPUTE</text>
+              <text class="figure-small" x="200" y="194" text-anchor="middle">sustained MW-class telemetry</text>
+            </g>
+            <g class="figure-reveal figure-stage-3">
+              <path class="figure-gate" d="M310 112h72v54h-72zM322 112V94h48v18M324 129h14v25h-14zM354 129h14v25h-14z"/>
+              <text class="figure-label" x="346" y="80" text-anchor="middle">OFF-WORLD FACTORY</text>
+              <text class="figure-small" x="346" y="184" text-anchor="middle">mining · refining · self-repair</text>
+            </g>
+            <g class="figure-reveal figure-stage-4">
+              <circle class="figure-node-core" cx="486" cy="74" r="13"/>
+              <path class="figure-detail" d="M463 74h-33M509 74h33M486 51V24M486 97v28"/>
+              <rect class="figure-gate" x="420" y="46" width="38" height="56" rx="4"/>
+              <rect class="figure-gate" x="514" y="46" width="38" height="56" rx="4"/>
+              <text class="figure-label" x="486" y="148" text-anchor="middle">AUTONOMOUS COLLECTORS</text>
+              <text class="figure-small" x="486" y="164" text-anchor="middle">measured power · bounded growth</text>
+            </g>
+            <path class="figure-draw figure-signal orbital-signal" d="M399 200 C452 214 500 215 536 194"/>
+            <text class="figure-label" x="468" y="226" text-anchor="middle">PROTO-DYSON TRAJECTORY</text>
+            <text class="figure-small" x="468" y="242" text-anchor="middle">not a completed swarm</text>
+          </svg>
+        </div>
+        <ul class="figure-semantic">
+          <li><strong>Stage 1:</strong> sustained orbital compute publishes power, radiator and workload telemetry.</li>
+          <li><strong>Stage 2:</strong> robotic factories build useful structures from off-world material.</li>
+          <li><strong>Stage 3:</strong> audited solar capture expands by measured orders of magnitude.</li>
+        </ul>
+        <figcaption>A payload, edge satellite, filing or small cluster is not a hyperscale data centre or Dyson swarm.</figcaption>
+      </figure>
+
+      <figure class="editorial-figure figure-connectome" data-editorial-figure="connectome-emulation" tabindex="0" aria-labelledby="connectomeFigureHeading">
+        <div class="figure-copy">
+          <span class="instrument-label">Whole-brain emulation / identity fork</span>
+          <h3 id="connectomeFigureHeading">A connectome is the first layer—not a person</h3>
+          <p>Structural mapping must acquire dynamics, reproduce novel behavior and still confront the continuity problem.</p>
+        </div>
+        <div class="editorial-art">
+          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="connectomeSvgTitle connectomeSvgDesc">
+            <title id="connectomeSvgTitle">Connectome-to-emulation pipeline ending in an identity-continuity fork</title>
+            <desc id="connectomeSvgDesc">A neural network map feeds layered dynamic-state models and a validated behavioral emulation. The output then branches between continuity of the original person and a separate digital copy, showing the unresolved identity question.</desc>
+            <g class="connectome-network">
+              <path class="figure-draw connectome-edge" d="M54 88L112 58L154 105L122 160L63 154L54 88M112 58L122 160M54 88L154 105M63 154L154 105"/>
+              <circle class="figure-reveal figure-node" cx="54" cy="88" r="8"/>
+              <circle class="figure-reveal figure-node" cx="112" cy="58" r="8"/>
+              <circle class="figure-reveal figure-node" cx="154" cy="105" r="8"/>
+              <circle class="figure-reveal figure-node" cx="122" cy="160" r="8"/>
+              <circle class="figure-reveal figure-node" cx="63" cy="154" r="8"/>
+              <text class="figure-label" x="104" y="204" text-anchor="middle">CONNECTOME</text>
+              <text class="figure-small" x="104" y="220" text-anchor="middle">structure + measured error</text>
+            </g>
+            <path class="figure-draw" d="M168 112H218"/>
+            <g class="figure-reveal figure-stage-2">
+              <rect class="figure-gate" x="220" y="62" width="112" height="34" rx="7"/>
+              <rect class="figure-gate" x="228" y="105" width="112" height="34" rx="7"/>
+              <rect class="figure-gate" x="236" y="148" width="112" height="34" rx="7"/>
+              <text class="figure-small" x="276" y="83" text-anchor="middle">biochemistry</text>
+              <text class="figure-small" x="284" y="126" text-anchor="middle">plasticity + dynamics</text>
+              <text class="figure-small" x="292" y="169" text-anchor="middle">novel behavior tests</text>
+              <text class="figure-label" x="284" y="220" text-anchor="middle">FUNCTIONAL EMULATION</text>
+            </g>
+            <path class="figure-draw" d="M350 122 C390 122 394 78 426 78 M350 122 C390 122 394 174 426 174"/>
+            <g class="figure-reveal figure-stage-3">
+              <circle class="figure-orbit" cx="462" cy="78" r="34"/>
+              <circle class="figure-node-core" cx="462" cy="78" r="6"/>
+              <text class="figure-label" x="462" y="132" text-anchor="middle">CONTINUITY?</text>
+              <circle class="figure-orbit" cx="462" cy="174" r="34"/>
+              <circle class="figure-node-core" cx="448" cy="174" r="5"/>
+              <circle class="figure-node-core" cx="476" cy="174" r="5"/>
+              <text class="figure-label" x="462" y="228" text-anchor="middle">COPY?</text>
+            </g>
+            <rect class="figure-gate figure-reveal figure-stage-4" x="402" y="252" width="120" height="28" rx="8"/>
+            <text class="figure-small" x="462" y="270" text-anchor="middle">IDENTITY UNRESOLVED</text>
+          </svg>
+        </div>
+        <ul class="figure-semantic">
+          <li><strong>Map:</strong> whole-brain structure with quantified error is necessary but insufficient.</li>
+          <li><strong>Emulate:</strong> dynamic state must predict previously unrecorded behavior.</li>
+          <li><strong>Fork:</strong> a functional copy does not establish subjective identity continuity.</li>
+        </ul>
+        <figcaption>A chatbot or digital replica trained on personal data is not a whole-brain upload.</figcaption>
+      </figure>
+
+      <figure class="editorial-figure figure-civilization" data-editorial-figure="outward-inward" tabindex="0" aria-labelledby="civilizationFigureHeading">
+        <div class="figure-copy">
+          <span class="instrument-label">Civilizational direction / mutually exclusive candidates</span>
+          <h3 id="civilizationFigureHeading">Outward energy scaling versus inward compression</h3>
+          <p>Kardashev growth and Transcension are different hypotheses. Ruliad research remains a separate testability question.</p>
+        </div>
+        <div class="editorial-art">
+          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="civilizationSvgTitle civilizationSvgDesc">
+            <title id="civilizationSvgTitle">Kardashev outward scaling contrasted with Transcension and a separate ruliad branch</title>
+            <desc id="civilizationSvgDesc">Aligned superintelligence sits at a central gate. One branch expands outward through larger energy-capture rings. A mutually exclusive branch compresses inward through denser computational rings. A separate dashed branch points toward ruliad-derived testable physics.</desc>
+            <g class="figure-reveal figure-stage-1">
+              <path class="figure-gate" d="M280 112l38 22v44l-38 22-38-22v-44z"/>
+              <circle class="figure-node-core" cx="280" cy="156" r="7"/>
+              <text class="figure-label" x="280" y="224" text-anchor="middle">ALIGNED SI GATE</text>
+            </g>
+            <path class="figure-draw outward-branch" d="M310 136 C362 100 386 70 438 66"/>
+            <g class="figure-reveal figure-stage-2">
+              <circle class="figure-orbit outward-ring-1" cx="466" cy="66" r="20"/>
+              <circle class="figure-orbit outward-ring-2" cx="466" cy="66" r="38"/>
+              <circle class="figure-orbit outward-ring-3" cx="466" cy="66" r="57"/>
+              <circle class="figure-node-core" cx="466" cy="66" r="6"/>
+              <text class="figure-label" x="466" y="142" text-anchor="middle">KARDASHEV / OUTWARD</text>
+              <text class="figure-small" x="466" y="157" text-anchor="middle">audited energy capture</text>
+            </g>
+            <path class="figure-draw inward-branch" d="M310 176 C360 212 392 238 438 240"/>
+            <g class="figure-reveal figure-stage-3">
+              <circle class="figure-orbit inward-ring-1" cx="466" cy="240" r="54"/>
+              <circle class="figure-orbit inward-ring-2" cx="466" cy="240" r="34"/>
+              <circle class="figure-orbit inward-ring-3" cx="466" cy="240" r="16"/>
+              <circle class="figure-node-core" cx="466" cy="240" r="5"/>
+              <text class="figure-label" x="466" y="178" text-anchor="middle">TRANSCENSION / INWARD</text>
+              <text class="figure-small" x="466" y="193" text-anchor="middle">speculative density + miniaturization</text>
+            </g>
+            <path class="figure-draw ruliad-branch" d="M248 156 C202 156 174 156 126 156" stroke-dasharray="7 6"/>
+            <g class="figure-reveal figure-stage-4">
+              <path class="figure-gate" d="M78 110h70v92H78zM94 126h38M94 142h38M94 158h38"/>
+              <circle class="figure-node-core" cx="113" cy="182" r="5"/>
+              <text class="figure-label" x="113" y="88" text-anchor="middle">RULIAD</text>
+              <text class="figure-small" x="113" y="220" text-anchor="middle">separate branch · testable predictions only</text>
+            </g>
+          </svg>
+        </div>
+        <ul class="figure-semantic">
+          <li><strong>Outward:</strong> classify measured energy capture; do not assume inevitable Type I or II progress.</li>
+          <li><strong>Inward:</strong> Transcension proposes extreme compression but has no empirical confirmation.</li>
+          <li><strong>Separate:</strong> ruliad work matters only if it yields discriminating, reproducible physical tests.</li>
+        </ul>
+        <figcaption>Outward expansion and inward Transcension may be mutually exclusive; neither is a dated forecast.</figcaption>
+      </figure>
     </div>
     <div class="horizon-grid" id="horizonBody"></div>
   </div>
@@ -1944,7 +2398,7 @@ button { color: inherit; }
   <div class="reader-topbar">
     <div class="reader-brand">
       <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/></svg>
-      <span>Hitchhiker's Guide to the Singularity</span>
+      <span>The Hitchhiker's Guide to the Singularity</span>
     </div>
     <div class="reader-progress" id="rdProgress">CH 1 / 13</div>
     <button class="reader-close" id="rdClose" aria-label="Close reader">
@@ -2288,7 +2742,7 @@ button { color: inherit; }
             <circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/>
             <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
           </svg>
-          <span class="brand-text">POST-AGI ATLAS<small>FORECAST OBSERVATORY · PETER XING</small></span>
+          <span class="brand-text">The Hitchhiker's Guide to the Singularity<small>Peter Xing · Post-AGI planning</small></span>
         </a>
         <p style="color:var(--cp-text-muted);font-size:0.9rem;max-width:340px;margin-top:8px">A living book and realtime planning model for the arrival of superintelligence. Build toward abundance instead of panic.</p>
       </div>
@@ -2409,6 +2863,13 @@ const simulatorPresets = {
   managed:{ capability:4, coordination:18, deployment:0 },
   bottleneck:{ capability:8, coordination:4, deployment:18 },
 };
+const simulatorOutcomeLabels = {
+  agi:{ title:'Human-level AGI', meta:'End of 2026' },
+  managed:{ title:'Managed pause', meta:'Frontier training · 2029' },
+  default:{ title:'Default path', meta:'Top-expert / ASI · 2030' },
+  ungoverned:{ title:'Ungoverned takeoff', meta:'2028–2030 window' },
+  handoff:{ title:'Managed handoff', meta:'Controlled scaling · 2040' },
+};
 const probabilitySimulatorState = {
   anchors:null,
   values:null,
@@ -2494,8 +2955,10 @@ function updateProbabilitySimulator(animate = true){
   document.getElementById('simCoordination').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.coordination));
   document.getElementById('simDeployment').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.deployment));
   Object.entries(values).forEach(([key, value]) => {
-    animateSimulatorValue(document.getElementById('sim-svg-' + key), value, animate);
     animateSimulatorValue(document.getElementById('sim-card-' + key), value, animate);
+    document.getElementById('sim-rail-' + key)?.style.setProperty('--prob', value + '%');
+    const row = document.querySelector(`[data-simulator-outcome="${key}"]`);
+    if (row) row.setAttribute('aria-label', `${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${value} percent.`);
   });
   setSimulatorBranch('sim-path-managed', values.managed);
   setSimulatorBranch('sim-path-handoff', values.handoff);
@@ -2584,66 +3047,74 @@ function renderProbabilitySimulator(years, branchRange){
       </g>
       <g class="sim-node">
         <circle class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
-        <text class="sim-label" x="155" y="122" text-anchor="middle">HUMAN-LEVEL AGI</text>
-        <text class="sim-sublabel" x="155" y="136" text-anchor="middle">END OF 2026</text>
-        <text id="sim-svg-agi" class="sim-probability" x="155" y="157" text-anchor="middle">${initial.agi}%</text>
+        <text class="sim-label" x="155" y="132" text-anchor="middle">HUMAN-LEVEL AGI</text>
+        <text class="sim-sublabel" x="155" y="147" text-anchor="middle">END OF 2026</text>
       </g>
       <rect class="sim-gate" x="264" y="162" width="16" height="16" rx="3" transform="rotate(45 272 170)"/>
       <text class="sim-sublabel" x="272" y="198" text-anchor="middle">BRANCH POINT</text>
       <g class="sim-node">
         <rect class="sim-gate" x="412" y="67" width="16" height="16" rx="3"/>
-        <text class="sim-label" x="420" y="30" text-anchor="middle">MANAGED PAUSE</text>
-        <text class="sim-sublabel" x="420" y="43" text-anchor="middle">FRONTIER TRAINING · 2029</text>
-        <text id="sim-svg-managed" class="sim-probability" x="420" y="61" text-anchor="middle">${initial.managed}%</text>
+        <text class="sim-label" x="420" y="36" text-anchor="middle">MANAGED PAUSE</text>
+        <text class="sim-sublabel" x="420" y="52" text-anchor="middle">FRONTIER TRAINING · 2029</text>
       </g>
       <g class="sim-node">
         <circle class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
-        <text class="sim-label" x="650" y="30" text-anchor="middle">MANAGED HANDOFF</text>
-        <text id="sim-svg-handoff" class="sim-probability" x="650" y="51" text-anchor="middle">${initial.handoff}%</text>
+        <text class="sim-label" x="650" y="36" text-anchor="middle">MANAGED HANDOFF</text>
+        <text class="sim-sublabel" x="650" y="52" text-anchor="middle">2040</text>
       </g>
       <g class="sim-node">
         <circle class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
-        <text class="sim-label" x="420" y="132" text-anchor="middle">DEFAULT PATH</text>
-        <text class="sim-sublabel" x="420" y="145" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
-        <text id="sim-svg-default" class="sim-probability" x="420" y="164" text-anchor="middle">${initial.default}%</text>
+        <text class="sim-label" x="420" y="140" text-anchor="middle">DEFAULT PATH</text>
+        <text class="sim-sublabel" x="420" y="156" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
       </g>
       <g class="sim-node">
         <circle class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
-        <text class="sim-label" x="420" y="232" text-anchor="middle">UNGOVERNED TAKEOFF</text>
-        <text class="sim-sublabel" x="420" y="245" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
-        <text id="sim-svg-ungoverned" class="sim-probability" x="420" y="264" text-anchor="middle">${initial.ungoverned}%</text>
+        <text class="sim-label" x="420" y="240" text-anchor="middle">UNGOVERNED TAKEOFF</text>
+        <text class="sim-sublabel" x="420" y="256" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
       </g>
     </svg>`;
-  const labels = {
-    agi:'AGI by end-2026',
-    managed:'Managed pause 2029',
-    default:'Default path 2030',
-    ungoverned:'Ungoverned takeoff',
-    handoff:'Managed handoff 2040',
-  };
-  grid.innerHTML = Object.keys(labels).map(key => `
-    <div class="simulator-probability"><span>${labels[key]}</span><strong id="sim-card-${key}">${initial[key]}%</strong></div>
+  grid.innerHTML = Object.keys(simulatorOutcomeLabels).map(key => `
+    <div class="simulator-outcome" data-simulator-outcome="${key}" aria-label="${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${initial[key]} percent.">
+      <div class="simulator-outcome-copy"><strong>${simulatorOutcomeLabels[key].title}</strong><span>${simulatorOutcomeLabels[key].meta}</span></div>
+      <span class="simulator-outcome-rail" id="sim-rail-${key}" style="--prob:${initial[key]}%" aria-hidden="true"><i></i></span>
+      <strong class="simulator-outcome-stat" id="sim-card-${key}">${initial[key]}%</strong>
+    </div>
   `).join('');
   updateProbabilitySimulator(false);
 }
-function renderTimelineOverview(years){
-  const host = document.getElementById('timelineOverview');
+function renderTurningPoints(years){
+  const host = document.getElementById('turningPointsRoute');
   if (!host || !years.length) return;
-  const maxEvents = Math.max(...years.map(year => year.events.length), 1);
-  host.innerHTML = years.map(year => {
-    const average = statedAverage(year);
-    const density = Math.max(8, Math.round(year.events.length / maxEvents * 100));
-    const label = `${year.year}: ${year.events.length} events${average == null ? '' : `, ${average}% average stated probability`}`;
-    return `<button type="button" class="overview-year" data-year="${year.year}" aria-label="${label}" style="--density:${density}%">
-      <b>${String(year.year).slice(2)}</b><span class="overview-density" aria-hidden="true"><i></i></span>
-    </button>`;
+  const events = years.flatMap(year => year.events.map((event, index) => ({ ...event, year:year.year, index })));
+  const find = predicate => events.find(predicate);
+  const points = [
+    { label:'Human-level AGI', item:find(event => event.simAnchor === 'agi') },
+    { label:'Every-industry disruption', item:find(event => event.year === 2027 && /every major industry/i.test(event.t)) },
+    { label:'Superintelligence branch', item:find(event => event.simAnchor === 'ungoverned') },
+    { label:'Cognitive majority', item:find(event => /produce more cognitive labor than humans/i.test(event.t)) },
+    { label:'Physical automation', item:find(event => /one third of economically valuable physical tasks/i.test(event.t)) },
+    { label:'Near-total labor automation', item:find(event => event.year === 2040 && /essentially all economically relevant human labor/i.test(event.t)) },
+    { label:'Undated horizon', horizon:true },
+  ].filter(point => point.horizon || point.item);
+  if (points.length < 7 && predictionModelState === 'loading') {
+    host.innerHTML = '<span class="turning-points-loading">Loading forecast route…</span>';
+    return;
+  }
+  host.innerHTML = points.map((point, index) => {
+    const href = point.horizon ? '#post-superintelligence' : `#event-${point.item.year}-${point.item.index}`;
+    const time = point.horizon ? 'Beyond 2040' : String(point.item.year);
+    const detail = point.horizon
+      ? 'Dependency-gated possibilities'
+      : point.item.t;
+    return `<a class="turning-point-link" href="${href}" aria-label="${htmlText(point.label)}: ${htmlText(detail)}">
+      <span class="turning-point-step">${String(index + 1).padStart(2, '0')}</span>
+      <span class="turning-point-copy"><strong>${htmlText(point.label)}</strong><small>${htmlText(time)}</small></span>
+    </a>`;
   }).join('');
-  host.querySelectorAll('.overview-year').forEach(button => button.addEventListener('click', () => {
-    const target = document.getElementById('year-' + button.dataset.year);
-    if (target) {
-      setYearDisclosure(target, false);
-      target.scrollIntoView({ behavior: motionQuery.matches ? 'auto' : 'smooth', block: 'start' });
-    }
+  host.querySelectorAll('a[href^="#event-"]').forEach(link => link.addEventListener('click', () => {
+    const target = document.querySelector(link.getAttribute('href'));
+    const yearBlock = target?.closest('.year-block');
+    if (yearBlock) setYearDisclosure(yearBlock, false);
   }));
 }
 function renderObservatory(){
@@ -2665,7 +3136,7 @@ function renderObservatory(){
   setText('heroBranchWindow', fasterBranch ? fasterBranch.label : 'Undated');
   if (agiAnchor && Number.isFinite(agiAnchor.prob)) animateMetric('heroAgiProbability', agiAnchor.prob, '%');
   renderProbabilitySimulator(years, fasterBranch);
-  renderTimelineOverview(years);
+  renderTurningPoints(years);
 }
 
 /* ---------- Forecast Atlas timeline data ---------- */
@@ -3043,14 +3514,6 @@ let yearObserver = null;
 function setActiveYear(year){
   document.querySelectorAll('.year-block').forEach(block =>
     block.classList.toggle('is-active', block.dataset.year === String(year)));
-  document.querySelectorAll('.overview-year').forEach(button =>
-    button.classList.toggle('active', button.dataset.year === String(year)));
-  const data = timelineData.find(item => item.year === Number(year));
-  const label = document.getElementById('activeYearLabel');
-  if (label && data) {
-    const average = statedAverage(data);
-    label.textContent = `${year} · ${data.events.length} events${average == null ? '' : ` · ${average}% average`}`;
-  }
 }
 function observeTimelineYears(){
   if (yearObserver) yearObserver.disconnect();
@@ -4002,6 +4465,31 @@ setText('realityMeta', 'Offline baseline · live observation metadata loads with
     if(!btn) return;
     e.stopPropagation();
     window.openReader(parseInt(btn.dataset.open, 10));
+  });
+})();
+
+/* ---------- One-shot editorial figure motion ---------- */
+(function(){
+  const figures = [...document.querySelectorAll('[data-editorial-figure]')];
+  if (!figures.length) return;
+  if (motionQuery.matches || !('IntersectionObserver' in window)) {
+    figures.forEach(figure => figure.classList.add('is-visible'));
+    return;
+  }
+  root.classList.add('figure-motion-ready');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin:'0px 0px -10% 0px', threshold:.12 });
+  figures.forEach(figure => {
+    figure.addEventListener('focusin', () => {
+      figure.classList.add('is-visible');
+      observer.unobserve(figure);
+    }, { once:true });
+    observer.observe(figure);
   });
 })();
 

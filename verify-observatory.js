@@ -16,6 +16,7 @@ const profiles = [
   { name:'desktop-light', theme:'light', width:1440, height:1000, collapsedYears:10 },
   { name:'tablet-dark', theme:'dark', width:820, height:1180, collapsedYears:10, touch:true },
   { name:'mobile-light', theme:'light', width:390, height:844, collapsedYears:12, mobile:true, touch:true },
+  { name:'narrow-320', theme:'dark', width:320, height:800, collapsedYears:12, mobile:true, touch:true },
   { name:'high-zoom-layout', theme:'light', width:640, height:900, collapsedYears:12, compactNav:true },
   { name:'reduced-motion', theme:'dark', width:1280, height:900, collapsedYears:10, reduced:true },
 ];
@@ -77,12 +78,25 @@ function requestStatus(pathname) {
     const state = await page.evaluate(() => {
       const ids = [...document.querySelectorAll('[id]')].map(element => element.id);
       const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
+      const outcomeRows = [...document.querySelectorAll('.simulator-outcome')];
+      const outcomesDoNotOverlap = outcomeRows.every(row => {
+        const copy = row.querySelector('.simulator-outcome-copy').getBoundingClientRect();
+        const stat = row.querySelector('.simulator-outcome-stat').getBoundingClientRect();
+        return copy.right <= stat.left || copy.bottom <= stat.top || stat.bottom <= copy.top;
+      });
+      const figures = [...document.querySelectorAll('[data-editorial-figure]')];
+      const visibleBrandTitles = [...document.querySelectorAll('.brand-text')]
+        .map(element => element.childNodes[0]?.textContent.trim());
       return {
         theme:document.documentElement.dataset.theme,
         bodyWidth:document.body.scrollWidth,
         viewportWidth:document.documentElement.clientWidth,
         events:document.querySelectorAll('#timelineBody .event').length,
-        years:document.querySelectorAll('#timelineOverview .overview-year').length,
+        years:document.querySelectorAll('.year-block').length,
+        turningPoints:[...document.querySelectorAll('#turningPointsRoute .turning-point-link')].map(link => link.getAttribute('href')),
+        oldDensityAbsent:!document.getElementById('timelineOverview') && !document.body.textContent.includes('Temporal index / event density'),
+        brandTitles:visibleBrandTitles,
+        readerBrand:document.querySelector('.reader-brand > span')?.textContent.trim(),
         collapsedYears:document.querySelectorAll('.year-block.is-collapsed').length,
         horizonNodes:document.querySelectorAll('#horizonMap .horizon-node').length,
         horizonCards:document.querySelectorAll('#horizonBody .horizon-item').length,
@@ -93,13 +107,21 @@ function requestStatus(pathname) {
           map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
           controls:[...document.querySelectorAll('.simulator-control input')].length,
           enabled:[...document.querySelectorAll('.simulator-control input')].every(input => !input.disabled),
-          probabilities:[...document.querySelectorAll('.simulator-probability strong')].map(element => element.textContent.trim()),
+          probabilities:[...document.querySelectorAll('.simulator-outcome-stat')].map(element => element.textContent.trim()),
           disclaimer:document.getElementById('simulatorDisclaimer')?.textContent || '',
+          labels:outcomeRows.map(row => row.getAttribute('aria-label')),
+          noOverlap:outcomesDoNotOverlap,
+          svgPercentText:[...document.querySelectorAll('#probabilitySimulatorMap text')].every(element => !element.textContent.includes('%')),
+        },
+        figures:{
+          count:figures.length,
+          semantic:figures.every(figure => figure.querySelectorAll('.figure-semantic li, .turning-point-link').length >= 3),
+          described:figures.every(figure => figure.querySelector('svg title')?.textContent.trim() && figure.querySelector('svg desc')?.textContent.trim()),
+          motionReady:document.documentElement.classList.contains('figure-motion-ready'),
         },
         heroCount:document.getElementById('heroEventCount')?.textContent.trim(),
         coordinate:document.getElementById('heroCoordinate')?.textContent.trim(),
         freshness:document.getElementById('heroSignalFreshness')?.textContent.trim(),
-        sticky:getComputedStyle(document.querySelector('.timeline-overview-shell')).position,
         reducedDuration:getComputedStyle(document.querySelector('.hero-copy h1')).animationDuration,
         escapedText:(() => {
           const probe = document.createElement('div');
@@ -114,7 +136,18 @@ function requestStatus(pathname) {
     check(results, 'theme applied', state.theme === profile.theme, state.theme);
     check(results, 'no horizontal overflow', state.bodyWidth <= state.viewportWidth + 1, `${state.bodyWidth}/${state.viewportWidth}`);
     check(results, 'all forecast events render', state.events === expectedEvents, `${state.events}/${expectedEvents}`);
-    check(results, 'all forecast years index', state.years === expectedYears, `${state.years}/${expectedYears}`);
+    check(results, 'all forecast years render', state.years === expectedYears, `${state.years}/${expectedYears}`);
+    check(results, 'density minimap is fully removed', state.oldDensityAbsent);
+    check(results, 'seven key turning points navigate to content',
+      state.turningPoints.length === 7
+      && state.turningPoints.filter(href => /^#event-/.test(href)).length === 6
+      && state.turningPoints.includes('#post-superintelligence'),
+      JSON.stringify(state.turningPoints));
+    check(results, 'visible brand title is exact',
+      state.brandTitles.length === 2
+      && state.brandTitles.every(title => title === "The Hitchhiker's Guide to the Singularity")
+      && state.readerBrand === "The Hitchhiker's Guide to the Singularity",
+      JSON.stringify({ brands:state.brandTitles, reader:state.readerBrand }));
     check(results, 'later years compact by default', state.collapsedYears === profile.collapsedYears, `${state.collapsedYears}/${profile.collapsedYears}`);
     check(results, 'horizon map and cards align', state.horizonNodes === expectedHorizon && state.horizonCards === expectedHorizon);
     check(results, 'six reality observations render', state.reality === 6, String(state.reality));
@@ -126,12 +159,17 @@ function requestStatus(pathname) {
       && state.simulator.controls === 3
       && state.simulator.enabled
       && JSON.stringify(state.simulator.probabilities) === JSON.stringify(['70%','18%','45%','42%','28%'])
+      && state.simulator.labels.every(label => /^.+Conditional likelihood: \d+ percent\.$/i.test(label))
+      && state.simulator.noOverlap
+      && state.simulator.svgPercentText
       && /Simulation only/i.test(state.simulator.disclaimer),
       JSON.stringify(state.simulator.probabilities));
+    check(results, 'five editorial figures have useful semantic equivalents',
+      state.figures.count === 5 && state.figures.semantic && state.figures.described,
+      JSON.stringify(state.figures));
     check(results, 'hero uses fetched event count', state.heroCount === String(expectedEvents), state.heroCount);
     check(results, 'current coordinate is numeric', /^\d{4}\.\d{2}$/.test(state.coordinate || ''), state.coordinate);
     check(results, 'live freshness is exposed', /Evidence ·/.test(state.freshness || ''), state.freshness);
-    check(results, 'timeline minimap is sticky', state.sticky === 'sticky', state.sticky);
     check(results, 'ids are unique', state.duplicateIds.length === 0, state.duplicateIds.join(', '));
     check(results, 'console is clean', consoleErrors.length === 0, consoleErrors.join(' | '));
 
@@ -139,9 +177,9 @@ function requestStatus(pathname) {
     check(results, 'skip link is first keyboard target',
       await page.evaluate(() => document.activeElement?.classList.contains('skip-link')));
 
-    const targetYear = page.locator('.overview-year[data-year="2040"]');
+    const targetYear = page.locator('.turning-point-link[href^="#event-2040-"]').first();
     await targetYear.click();
-    check(results, 'year rail expands selected year',
+    check(results, 'turning-point route expands selected year',
       await page.locator('#year-2040').evaluate(element => !element.classList.contains('is-collapsed')));
 
     const evidenceToggle = page.locator('#overlayToggle');
@@ -165,7 +203,7 @@ function requestStatus(pathname) {
     await page.locator('[data-sim-preset="fast"]').click();
     await page.waitForTimeout(profile.reduced ? 20 : 320);
     const simulatedFast = await page.evaluate(() => ({
-      cards:[...document.querySelectorAll('.simulator-probability strong')].map(element => Number.parseInt(element.textContent, 10)),
+      cards:[...document.querySelectorAll('.simulator-outcome-stat')].map(element => Number.parseInt(element.textContent, 10)),
       hero:Number.parseInt(document.getElementById('heroAgiProbability').textContent, 10),
       interpretation:document.getElementById('simulatorInterpretation').textContent,
     }));
@@ -197,6 +235,46 @@ function requestStatus(pathname) {
       await selectedHorizon.evaluate(element =>
         element.classList.contains('is-selected') && !element.classList.contains('is-collapsed')));
 
+    const figureLocator = page.locator('[data-editorial-figure]');
+    for (let index = 0; index < await figureLocator.count(); index++) {
+      const figure = figureLocator.nth(index);
+      await figure.scrollIntoViewIfNeeded();
+      await page.waitForFunction(
+        element => element.classList.contains('is-visible'),
+        await figure.elementHandle(),
+        { timeout:2000 }
+      );
+    }
+    const figureMotion = await page.evaluate(() => ({
+      motionReady:document.documentElement.classList.contains('figure-motion-ready'),
+      figures:[...document.querySelectorAll('[data-editorial-figure]')].map(figure => {
+        const draw = figure.querySelector('.figure-draw:not(.ruliad-branch)');
+        const reveal = figure.querySelector('.figure-reveal');
+        const drawStyle = getComputedStyle(draw);
+        return {
+          visible:figure.classList.contains('is-visible'),
+          animationName:drawStyle.animationName,
+          animationDuration:drawStyle.animationDuration,
+          dashOffset:drawStyle.strokeDashoffset,
+          revealOpacity:getComputedStyle(reveal).opacity,
+        };
+      }),
+    }));
+    if (profile.reduced) {
+      check(results, 'reduced motion renders static editorial figures',
+        !figureMotion.motionReady
+        && figureMotion.figures.every(figure => figure.visible && figure.animationName === 'none' && Number(figure.revealOpacity) === 1),
+        JSON.stringify(figureMotion));
+    } else {
+      check(results, 'normal motion visibly activates every editorial figure',
+        figureMotion.motionReady
+        && figureMotion.figures.every(figure =>
+          figure.visible
+          && figure.animationName.includes('editorial-path-draw')
+          && !['0s','0.00001s','1e-05s'].includes(figure.animationDuration)),
+        JSON.stringify(figureMotion));
+    }
+
     if (profile.mobile || profile.compactNav) {
       const menu = page.locator('#navToggle');
       await menu.click();
@@ -207,7 +285,10 @@ function requestStatus(pathname) {
     const firstPlannerOption = page.locator('#plannerBody .opt').first();
     await firstPlannerOption.focus();
     await page.keyboard.press('Enter');
-    await page.waitForTimeout(30);
+    await page.waitForFunction(() =>
+      document.querySelector('#plannerBody .opt')?.getAttribute('aria-checked') === 'true'
+      && document.activeElement?.classList.contains('opt'),
+    null, { timeout:1000 });
     check(results, 'planner options are keyboard-operable radios',
       await page.locator('#plannerBody .opt').first().getAttribute('aria-checked') === 'true'
       && await page.evaluate(() => document.activeElement?.classList.contains('opt')));
