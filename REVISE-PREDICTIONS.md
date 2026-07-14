@@ -28,6 +28,7 @@ hours update signals only and leave the forecast unchanged.
         // t = text (required); d = domain key (required, must exist in domains);
         // high = bool high-impact (optional); prob = 0-100 likelihood (optional);
         // signal = true marks the year's live-signal anchor row (optional)
+        // simAnchor is reserved for the five stable probability-simulator anchors below
       ],
       "match": {                             // how refresh-signals.js maps his posts to THIS year
         "headline": "short topic label used in the from:peterxing search chip",
@@ -209,6 +210,11 @@ to raise coverage.
    indicators, a caveat and a curated `from:peterxing` match/search definition. Run the same
    unique-post-first allocation across dated and horizon items; horizon keys are
    `horizon-STABLE-ID`.
+13. **Preserve the five probability-simulator anchors.** Exactly one dated event must retain each
+   stable `simAnchor`: `agi` in 2026, `ungoverned` in 2028, `managed` in 2029, `default` in 2030,
+   and `handoff` in 2040. Their wording and probabilities may evolve, but do not rename, duplicate,
+   remove or move these machine keys. `validate-predictions.js` fails publication if the contract
+   breaks.
 
 ## Procedure
 
@@ -226,10 +232,10 @@ Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 ```
 
 `validate-predictions.js` checks: valid JSON, required top-level keys, the strict 2026-2040 year
-range, unique years, event schema/probabilities, portfolio duplicates/chronology, and the complete
-horizon schema, labels, dependency counts, caveats and terminology. If it FAILs, fix the source
-rather than weakening the validator. A broken `predictions.json` makes `index.html` retain its
-inline dated and horizon baselines.
+range, unique years, event schema/probabilities, the five stable simulator anchors, portfolio
+duplicates/chronology, and the complete horizon schema, labels, dependency counts, caveats and
+terminology. If it FAILs, fix the source rather than weakening the validator. A broken
+`predictions.json` makes `index.html` retain its inline dated and horizon baselines.
 
 ## Failure-safety
 

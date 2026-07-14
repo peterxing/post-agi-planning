@@ -6,6 +6,13 @@ const path = require('path');
 const FILE = process.argv[2] || path.join(__dirname, 'predictions.json');
 const DOMAINS = ['individual', 'social', 'technology', 'economic', 'geopolitical', 'governance'];
 const EPISTEMIC_LABELS = new Set(['conditional', 'speculative']);
+const SIMULATOR_ANCHORS = new Map([
+  ['agi', 2026],
+  ['ungoverned', 2028],
+  ['managed', 2029],
+  ['default', 2030],
+  ['handoff', 2040],
+]);
 
 const problems = [];
 const eventRows = [];
@@ -18,6 +25,7 @@ if (!d.updated || isNaN(Date.parse(d.updated))) problems.push('"updated" missing
 if (typeof d.basis !== 'string' || !d.basis.trim()) problems.push('"basis" missing or empty');
 
 const seen = new Set();
+const seenSimulatorAnchors = new Map();
 let events = 0;
 for (const y of d.years) {
   const tag = 'year ' + (y && y.year);
@@ -32,6 +40,19 @@ for (const y of d.years) {
     if (!e || typeof e.t !== 'string' || !e.t.trim()) problems.push(tag + ': an event has no title (t)');
     if (!e || !DOMAINS.includes(e.d)) problems.push(tag + ': event "' + (e && e.t) + '" has invalid domain d=' + (e && e.d));
     if (e && e.prob != null && (typeof e.prob !== 'number' || e.prob < 0 || e.prob > 100)) problems.push(tag + ': event "' + e.t + '" prob out of 0–100');
+    if (e && e.simAnchor != null) {
+      if (!SIMULATOR_ANCHORS.has(e.simAnchor)) {
+        problems.push(tag + ': event "' + e.t + '" has unknown simAnchor=' + e.simAnchor);
+      } else if (seenSimulatorAnchors.has(e.simAnchor)) {
+        problems.push(tag + ': duplicate simAnchor "' + e.simAnchor + '"');
+      } else {
+        seenSimulatorAnchors.set(e.simAnchor, y.year);
+        if (SIMULATOR_ANCHORS.get(e.simAnchor) !== y.year) {
+          problems.push(tag + ': simAnchor "' + e.simAnchor + '" must remain in ' + SIMULATOR_ANCHORS.get(e.simAnchor));
+        }
+        if (!Number.isFinite(e.prob)) problems.push(tag + ': simAnchor "' + e.simAnchor + '" requires a numeric prob');
+      }
+    }
     if (e && typeof e.t === 'string' && e.t.trim()) eventRows.push({ id: `${y.year}-${i}`, year: y.year, text: e.t.trim() });
   }
   if (y.match) {
@@ -40,6 +61,9 @@ for (const y of d.years) {
     if (m.search != null && typeof m.search !== 'string') problems.push(tag + ': match.search must be a string');
     if (m.headline != null && typeof m.headline !== 'string') problems.push(tag + ': match.headline must be a string');
   }
+}
+for (const anchor of SIMULATOR_ANCHORS.keys()) {
+  if (!seenSimulatorAnchors.has(anchor)) problems.push('missing required probability-simulator simAnchor "' + anchor + '"');
 }
 
 function nonEmptyString(v) {

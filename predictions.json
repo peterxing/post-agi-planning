@@ -52,6 +52,7 @@
         },
         {
           "t": "Signal: my call — genuine human-level AGI ships by end of 2026",
+          "simAnchor": "agi",
           "d": "technology",
           "high": true,
           "signal": true,
@@ -200,6 +201,7 @@
         },
         {
           "t": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
+          "simAnchor": "ungoverned",
           "d": "technology",
           "high": true,
           "prob": 42
@@ -261,6 +263,7 @@
         },
         {
           "t": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
+          "simAnchor": "managed",
           "d": "governance",
           "high": true,
           "prob": 18
@@ -328,6 +331,7 @@
         },
         {
           "t": "AI 2040 default branch: top-expert or superintelligent AI follows automated coding within roughly one year",
+          "simAnchor": "default",
           "d": "technology",
           "high": true,
           "prob": 45
@@ -1012,6 +1016,7 @@
         },
         {
           "t": "Managed branch: regulators lift the top-expert pause and transparently scale to wildly superhuman AI",
+          "simAnchor": "handoff",
           "d": "governance",
           "high": true,
           "prob": 28

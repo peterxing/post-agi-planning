@@ -696,6 +696,199 @@ button { color: inherit; }
   font-size: .74rem;
   line-height: 1.5;
 }
+.probability-simulator { padding-bottom: 20px; }
+.simulator-intro {
+  max-width: 610px;
+  padding: 15px 0 4px;
+  color: var(--cp-text-muted);
+  font-size: .78rem;
+  line-height: 1.5;
+}
+.simulator-map {
+  min-height: 292px;
+  margin: 8px 0 16px;
+  border-block: 1px solid var(--cp-border);
+  overflow: hidden;
+}
+.simulator-loading {
+  display: grid;
+  min-height: 292px;
+  place-items: center;
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .7rem;
+  text-transform: uppercase;
+}
+.simulator-map svg { display: block; width: 100%; height: auto; }
+.sim-grid-line { stroke: var(--cp-border); stroke-width: 1; }
+.sim-trunk {
+  fill: none;
+  stroke: var(--cp-text-muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.sim-branch {
+  fill: none;
+  stroke: var(--cp-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--branch-width);
+  opacity: var(--branch-opacity);
+}
+.sim-branch.default { stroke-dasharray: 1 0; }
+.sim-branch.ungoverned { stroke-dasharray: 7 6; }
+.sim-node-ring {
+  fill: var(--cp-surface);
+  stroke: var(--cp-accent);
+  stroke-width: 2;
+}
+.sim-node-core { fill: var(--cp-accent); }
+.sim-gate {
+  fill: var(--cp-bg-elevated);
+  stroke: var(--cp-accent);
+  stroke-width: 2;
+}
+.sim-label,
+.sim-year,
+.sim-probability {
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+.sim-label { fill: var(--cp-text); font-size: 12px; font-weight: 700; }
+.sim-sublabel { fill: var(--cp-text-muted); font-size: 9px; }
+.sim-year { fill: var(--cp-text-muted); font-size: 9px; }
+.sim-probability { fill: var(--cp-accent); font-size: 15px; font-weight: 800; }
+.simulator-probability-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  margin: -5px 0 12px;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  background: var(--cp-border);
+}
+.simulator-probability {
+  min-width: 0;
+  padding: 8px;
+  background: var(--cp-surface);
+}
+.simulator-probability span,
+.simulator-probability strong { display: block; }
+.simulator-probability span {
+  min-height: 2.5em;
+  color: var(--cp-text-muted);
+  font-size: .53rem;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.simulator-probability strong {
+  margin-top: 4px;
+  color: var(--cp-accent);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: 1rem;
+}
+.simulator-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.simulator-control {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-bg-elevated);
+}
+.simulator-control > span,
+.simulator-control small {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.simulator-control strong {
+  color: var(--cp-text);
+  font-size: .7rem;
+}
+.simulator-control .simulator-output {
+  color: var(--cp-accent);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .62rem;
+}
+.simulator-control input {
+  width: 100%;
+  margin: 10px 0 6px;
+  accent-color: var(--cp-accent);
+  cursor: pointer;
+}
+.simulator-control input:disabled { cursor: wait; opacity: .5; }
+.simulator-control small {
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .52rem;
+  text-transform: uppercase;
+}
+.simulator-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.simulator-presets button {
+  padding: 6px 9px;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.625rem;
+  background: var(--cp-surface);
+  color: var(--cp-text-muted);
+  cursor: pointer;
+  font-size: .62rem;
+}
+.simulator-presets button:hover,
+.simulator-presets button.active {
+  border-color: var(--cp-accent);
+  color: var(--cp-text);
+}
+.simulator-presets button.active { background: var(--cp-accent-soft); }
+.simulator-interpretation {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--cp-accent);
+  background: var(--cp-bg-elevated);
+  color: var(--cp-text);
+  font-size: .72rem;
+  line-height: 1.5;
+}
+.simulator-disclaimer {
+  margin-top: 9px;
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .56rem;
+  line-height: 1.45;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sim-branch { transition: stroke-width .28s ease, opacity .28s ease; }
+  .simulator-map.simulator-ready .sim-branch,
+  .simulator-map.simulator-ready .sim-trunk {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: sim-path-draw .8s ease forwards;
+  }
+  .simulator-map.simulator-ready .sim-branch.ungoverned {
+    stroke-dasharray: 7 6;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .simulator-map.is-updating .sim-node-ring,
+  .simulator-map.is-updating .sim-gate {
+    animation: sim-node-response .34s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @keyframes sim-path-draw { to { stroke-dashoffset: 0; } }
+  @keyframes sim-node-response {
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+}
 .hero-readouts {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1269,6 +1462,12 @@ button { color: inherit; }
   .forecast-lens-head { display: block; }
   .forecast-live { margin-top: 10px; }
   .forecast-lens-plot { min-height: 240px; }
+  .simulator-map { min-height: 0; }
+  .simulator-probability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .simulator-probability:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .simulator-controls { grid-template-columns: 1fr; }
+  .simulator-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .simulator-presets button { width: 100%; }
   .timeline-overview-shell { top: 68px; margin-inline: -8px; padding-inline: 12px; }
   .timeline-overview-head { display: block; }
   #activeYearLabel { display: block; margin-top: 5px; }
@@ -1386,17 +1585,45 @@ button { color: inherit; }
           <a href="#post-superintelligence" class="btn btn-ghost">Inspect the undated horizon</a>
         </div>
       </div>
-      <figure class="forecast-lens" aria-labelledby="forecastLensTitle">
+      <aside class="forecast-lens probability-simulator" aria-labelledby="probabilitySimulatorTitle">
         <div class="forecast-lens-head">
           <div>
-            <span class="instrument-label">Forecast lens / density × probability</span>
-            <h2 id="forecastLensTitle">The shape of the next fifteen years</h2>
+            <span class="instrument-label">Probability simulator / local scenario lab</span>
+            <h2 id="probabilitySimulatorTitle">Push on the branch</h2>
           </div>
-          <span class="forecast-live"><i aria-hidden="true"></i> data-derived</span>
+          <span class="forecast-live"><i aria-hidden="true"></i> interactive</span>
         </div>
-        <div id="forecastLens" class="forecast-lens-plot" aria-live="polite"></div>
-        <figcaption>Columns encode event density; the line encodes each year’s average stated probability. The rose window marks the faster superintelligence branch.</figcaption>
-      </figure>
+        <p class="simulator-intro">Stress-test the published probabilities. Change three assumptions and watch the managed, default and ungoverned paths respond.</p>
+        <div id="probabilitySimulatorMap" class="simulator-map">
+          <div class="simulator-loading">Loading forecast anchors…</div>
+        </div>
+        <div id="simulatorProbabilityGrid" class="simulator-probability-grid" aria-label="Simulated probabilities"></div>
+        <div class="simulator-controls" role="group" aria-label="Scenario assumptions" aria-describedby="simulatorDisclaimer">
+          <label class="simulator-control" for="simCapability">
+            <span><strong>Capability pace</strong><span class="simulator-output" id="simCapabilityOutput">Baseline</span></span>
+            <input id="simCapability" type="range" min="-20" max="20" step="1" value="0" disabled />
+            <small><span>slower</span><span>faster</span></small>
+          </label>
+          <label class="simulator-control" for="simCoordination">
+            <span><strong>Coordination</strong><span class="simulator-output" id="simCoordinationOutput">Baseline</span></span>
+            <input id="simCoordination" type="range" min="-20" max="20" step="1" value="0" disabled />
+            <small><span>fragmented</span><span>coordinated</span></small>
+          </label>
+          <label class="simulator-control" for="simDeployment">
+            <span><strong>Deployment drag</strong><span class="simulator-output" id="simDeploymentOutput">Baseline</span></span>
+            <input id="simDeployment" type="range" min="-20" max="20" step="1" value="0" disabled />
+            <small><span>lighter</span><span>heavier</span></small>
+          </label>
+        </div>
+        <div class="simulator-presets" aria-label="Scenario presets">
+          <button type="button" data-sim-preset="baseline" class="active">Published baseline</button>
+          <button type="button" data-sim-preset="fast">Faster takeoff</button>
+          <button type="button" data-sim-preset="managed">Coordinated pause</button>
+          <button type="button" data-sim-preset="bottleneck">Physical bottlenecks</button>
+        </div>
+        <p class="simulator-interpretation" id="simulatorInterpretation" aria-live="polite">The simulator will activate when the forecast model loads.</p>
+        <p class="simulator-disclaimer" id="simulatorDisclaimer">Simulation only: adjustments are transparent local heuristics, do not update the published forecast, and are not saved.</p>
+      </aside>
     </div>
     <div class="hero-readouts" aria-label="Core forecast anchors">
       <article class="hero-readout">
@@ -2166,72 +2393,238 @@ function forecastCoordinate(date){
   return year + (date - start) / (end - start);
 }
 function fasterBranchRange(years){
+  const anchored = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
+  const ungoverned = anchored.find(event => event.simAnchor === 'ungoverned');
+  const defaultPath = anchored.find(event => event.simAnchor === 'default');
+  if (ungoverned && defaultPath) {
+    return { start:ungoverned.year, end:defaultPath.year, label:`${ungoverned.year}–${defaultPath.year}` };
+  }
   const match = years.map(year => year.summary).join(' ').match(/\b(20\d{2})\s*[–-]\s*(20\d{2})\b/);
   if (!match) return null;
   return { start:Number(match[1]), end:Number(match[2]), label:`${match[1]}–${match[2]}` };
 }
-function renderForecastLens(years, coordinate, branchRange){
-  const host = document.getElementById('forecastLens');
-  if (!host || !years.length) return;
-  const width = 720;
-  const height = 320;
-  const left = 42;
-  const right = 18;
-  const top = 24;
-  const bottom = 42;
-  const plotWidth = width - left - right;
-  const plotHeight = height - top - bottom;
-  const baseline = top + plotHeight;
-  const maxEvents = Math.max(...years.map(year => year.events.length), 1);
-  const step = plotWidth / years.length;
-  const center = index => left + step * index + step / 2;
-  const probabilityY = value => top + ((100 - value) / 100) * plotHeight;
-  const averages = years.map(statedAverage);
-  let drawing = false;
-  const path = averages.map((value, index) => {
-    if (value == null) {
-      drawing = false;
-      return '';
-    }
-    const command = drawing ? 'L' : 'M';
-    drawing = true;
-    return `${command} ${center(index).toFixed(1)} ${probabilityY(value).toFixed(1)}`;
-  }).filter(Boolean).join(' ');
-  const firstYear = years[0].year;
-  const lastYear = years[years.length - 1].year;
-  const currentX = left + clampNumber((coordinate - firstYear) / Math.max(1, lastYear - firstYear), 0, 1) * plotWidth;
-  const branchStart = branchRange ? years.findIndex(year => year.year === branchRange.start) : -1;
-  const branchEnd = branchRange ? years.findIndex(year => year.year === branchRange.end) : -1;
-  const branchX = branchStart >= 0 ? left + step * branchStart : left;
-  const branchWidth = branchStart >= 0 && branchEnd >= branchStart ? step * (branchEnd - branchStart + 1) : 0;
-  const grids = [25, 50, 75].map(value =>
-    `<line class="lens-grid" x1="${left}" y1="${probabilityY(value)}" x2="${width - right}" y2="${probabilityY(value)}" stroke-width="1"/>`
-  ).join('');
-  const bars = years.map((year, index) => {
-    const barHeight = Math.max(5, year.events.length / maxEvents * plotHeight * .46);
-    const highShare = year.events.filter(event => event.high).length / Math.max(1, year.events.length);
-    const showLabel = index === 0 || index === years.length - 1 || year.year % 2 === 0;
-    return `
-      <rect class="lens-density ${highShare >= .75 ? 'is-high' : ''}" x="${(left + step * index + 3).toFixed(1)}" y="${(baseline - barHeight).toFixed(1)}" width="${Math.max(4, step - 6).toFixed(1)}" height="${barHeight.toFixed(1)}" rx="4"/>
-      ${showLabel ? `<text class="lens-label" x="${center(index).toFixed(1)}" y="${height - 15}" text-anchor="middle">${year.year}</text>` : ''}`;
-  }).join('');
-  const points = averages.map((value, index) => value == null ? '' :
-    `<circle class="lens-point" cx="${center(index).toFixed(1)}" cy="${probabilityY(value).toFixed(1)}" r="3.5"><title>${years[index].year}: ${years[index].events.length} events, ${value}% average stated probability</title></circle>`
-  ).join('');
+const simulatorPresets = {
+  baseline:{ capability:0, coordination:0, deployment:0 },
+  fast:{ capability:18, coordination:-8, deployment:-4 },
+  managed:{ capability:4, coordination:18, deployment:0 },
+  bottleneck:{ capability:8, coordination:4, deployment:18 },
+};
+const probabilitySimulatorState = {
+  anchors:null,
+  values:null,
+  controlsBound:false,
+  updateTimer:0,
+};
+let predictionModelState = location.protocol === 'file:' ? 'offline' : 'loading';
+function simulatorAnchors(years){
+  const events = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
+  const anchors = {
+    agi:events.find(event => event.simAnchor === 'agi' && Number.isFinite(event.prob)),
+    managed:events.find(event => event.simAnchor === 'managed' && Number.isFinite(event.prob)),
+    default:events.find(event => event.simAnchor === 'default' && Number.isFinite(event.prob)),
+    ungoverned:events.find(event => event.simAnchor === 'ungoverned' && Number.isFinite(event.prob)),
+    handoff:events.find(event => event.simAnchor === 'handoff' && Number.isFinite(event.prob)),
+  };
+  return Object.values(anchors).every(Boolean) ? anchors : null;
+}
+function simulatedProbabilities(anchors, assumptions){
+  const { capability, coordination, deployment } = assumptions;
+  const round = value => Math.round(clampNumber(value, 5, 95));
+  return {
+    agi:round(anchors.agi.prob + capability * .55),
+    managed:round(anchors.managed.prob - capability * .15 + coordination * .65),
+    default:round(anchors.default.prob + capability * .45 - coordination * .35 - deployment * .08),
+    ungoverned:round(anchors.ungoverned.prob + capability * .5 - coordination * .55),
+    handoff:round(anchors.handoff.prob + coordination * .35 - deployment * .45),
+  };
+}
+function simulatorAssumptions(){
+  return {
+    capability:Number(document.getElementById('simCapability').value),
+    coordination:Number(document.getElementById('simCoordination').value),
+    deployment:Number(document.getElementById('simDeployment').value),
+  };
+}
+function formatSimulatorAssumption(value){
+  if (value === 0) return 'Baseline';
+  return (value > 0 ? '+' : '−') + Math.abs(value);
+}
+function simulatorBranchStyle(value){
+  return {
+    width:(2 + value / 16).toFixed(2),
+    opacity:(.34 + value / 150).toFixed(2),
+  };
+}
+function animateSimulatorValue(element, next, animate){
+  if (!element) return;
+  const previous = Number.parseInt(element.textContent, 10);
+  if (!animate || motionQuery.matches || !Number.isFinite(previous)) {
+    element.textContent = next + '%';
+    return;
+  }
+  const token = String((Number(element.dataset.animationToken) || 0) + 1);
+  element.dataset.animationToken = token;
+  const started = performance.now();
+  const duration = 260;
+  function frame(now){
+    if (element.dataset.animationToken !== token) return;
+    const progress = clampNumber((now - started) / duration, 0, 1);
+    const value = Math.round(previous + (next - previous) * (1 - Math.pow(1 - progress, 3)));
+    element.textContent = value + '%';
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+function setSimulatorBranch(id, value){
+  const path = document.getElementById(id);
+  if (!path) return;
+  const style = simulatorBranchStyle(value);
+  path.style.setProperty('--branch-width', style.width);
+  path.style.setProperty('--branch-opacity', style.opacity);
+}
+function updateProbabilitySimulator(animate = true){
+  if (!probabilitySimulatorState.anchors) return;
+  const assumptions = simulatorAssumptions();
+  const values = simulatedProbabilities(probabilitySimulatorState.anchors, assumptions);
+  probabilitySimulatorState.values = values;
+  document.getElementById('simCapabilityOutput').textContent = formatSimulatorAssumption(assumptions.capability);
+  document.getElementById('simCoordinationOutput').textContent = formatSimulatorAssumption(assumptions.coordination);
+  document.getElementById('simDeploymentOutput').textContent = formatSimulatorAssumption(assumptions.deployment);
+  document.getElementById('simCapability').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.capability));
+  document.getElementById('simCoordination').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.coordination));
+  document.getElementById('simDeployment').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.deployment));
+  Object.entries(values).forEach(([key, value]) => {
+    animateSimulatorValue(document.getElementById('sim-svg-' + key), value, animate);
+    animateSimulatorValue(document.getElementById('sim-card-' + key), value, animate);
+  });
+  setSimulatorBranch('sim-path-managed', values.managed);
+  setSimulatorBranch('sim-path-handoff', values.handoff);
+  setSimulatorBranch('sim-path-default', values.default);
+  setSimulatorBranch('sim-path-ungoverned', values.ungoverned);
+  const branches = [
+    ['Managed pause', values.managed],
+    ['Default-path superintelligence', values.default],
+    ['Ungoverned takeoff', values.ungoverned],
+  ].sort((a, b) => b[1] - a[1]);
+  const isBaseline = Object.values(assumptions).every(value => value === 0);
+  document.getElementById('simulatorInterpretation').textContent = isBaseline
+    ? `Published baseline: AGI ${values.agi}%, managed pause ${values.managed}%, default path ${values.default}%, ungoverned takeoff ${values.ungoverned}%, managed handoff ${values.handoff}%.`
+    : `Under these assumptions, ${branches[0][0].toLowerCase()} carries the strongest simulated pressure at ${branches[0][1]}%, while the end-2026 AGI anchor moves to ${values.agi}%.`;
+  const description = document.getElementById('simulatorSvgDesc');
+  if (description) description.textContent =
+    `A branch map from the ${values.agi}% end-2026 AGI anchor to a ${values.managed}% managed pause, ${values.default}% default path, ${values.ungoverned}% ungoverned takeoff and ${values.handoff}% managed handoff.`;
+  document.querySelectorAll('[data-sim-preset]').forEach(button => {
+    const preset = simulatorPresets[button.dataset.simPreset];
+    const active = preset && Object.keys(preset).every(key => preset[key] === assumptions[key]);
+    button.classList.toggle('active', active);
+  });
+  const map = document.getElementById('probabilitySimulatorMap');
+  if (animate && !motionQuery.matches) {
+    map.classList.remove('is-updating');
+    void map.offsetWidth;
+    map.classList.add('is-updating');
+    clearTimeout(probabilitySimulatorState.updateTimer);
+    probabilitySimulatorState.updateTimer = setTimeout(() => map.classList.remove('is-updating'), 380);
+  }
+}
+function bindProbabilitySimulatorControls(){
+  if (probabilitySimulatorState.controlsBound) return;
+  probabilitySimulatorState.controlsBound = true;
+  ['simCapability','simCoordination','simDeployment'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => updateProbabilitySimulator(true));
+  });
+  document.querySelectorAll('[data-sim-preset]').forEach(button => button.addEventListener('click', () => {
+    const preset = simulatorPresets[button.dataset.simPreset];
+    if (!preset) return;
+    document.getElementById('simCapability').value = preset.capability;
+    document.getElementById('simCoordination').value = preset.coordination;
+    document.getElementById('simDeployment').value = preset.deployment;
+    updateProbabilitySimulator(true);
+  }));
+}
+function renderProbabilitySimulator(years, branchRange){
+  const host = document.getElementById('probabilitySimulatorMap');
+  const grid = document.getElementById('simulatorProbabilityGrid');
+  if (!host || !grid) return;
+  const anchors = simulatorAnchors(years);
+  probabilitySimulatorState.anchors = anchors;
+  bindProbabilitySimulatorControls();
+  const controls = ['simCapability','simCoordination','simDeployment'].map(id => document.getElementById(id));
+  controls.forEach(control => { control.disabled = !anchors; });
+  if (!anchors) {
+    host.className = 'simulator-map';
+    const message = predictionModelState === 'loading'
+      ? 'Loading forecast anchors…'
+      : predictionModelState === 'offline'
+        ? 'The simulator needs predictions.json when this file is opened offline.'
+        : 'Published simulator anchors are unavailable.';
+    host.innerHTML = `<div class="simulator-loading">${message}</div>`;
+    grid.innerHTML = '';
+    document.getElementById('simulatorInterpretation').textContent = message;
+    return;
+  }
+  const initial = simulatedProbabilities(anchors, simulatorAssumptions());
+  host.className = 'simulator-map simulator-ready';
   host.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="lensSvgTitle lensSvgDesc">
-      <title id="lensSvgTitle">Forecast event density and average stated probability from ${firstYear} to ${lastYear}</title>
-      <desc id="lensSvgDesc">Bars show the number of forecast events in each year. A rose line shows each year's average stated probability. ${branchRange ? `A dashed window marks the ${branchRange.start} to ${branchRange.end} faster superintelligence branch.` : ''} A vertical line marks today's position.</desc>
-      ${grids}
-      ${branchWidth ? `<rect class="lens-branch" x="${branchX.toFixed(1)}" y="${top}" width="${branchWidth.toFixed(1)}" height="${plotHeight}" rx="8"><title>Faster superintelligence branch: ${branchRange.start} to ${branchRange.end}</title></rect>` : ''}
-      ${bars}
-      <path class="lens-probability" d="${path}"/>
-      ${points}
-      <line class="lens-current" x1="${currentX.toFixed(1)}" y1="${top}" x2="${currentX.toFixed(1)}" y2="${baseline}"/>
-      <text class="lens-value" x="${Math.min(width - 56, currentX + 5).toFixed(1)}" y="${top + 11}">NOW</text>
+    <svg viewBox="0 0 720 330" role="img" aria-labelledby="simulatorSvgTitle simulatorSvgDesc">
+      <title id="simulatorSvgTitle">Interactive probability branch map from 2026 to 2040</title>
+      <desc id="simulatorSvgDesc">A branch map using published forecast anchors.</desc>
+      <line class="sim-grid-line" x1="34" y1="306" x2="690" y2="306"/>
+      <text class="sim-year" x="42" y="322" text-anchor="middle">2026</text>
+      <text class="sim-year" x="420" y="322" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'}</text>
+      <text class="sim-year" x="650" y="322" text-anchor="middle">2040</text>
+      <path class="sim-trunk" d="M52 170 C92 170 116 170 146 170 M164 170 C205 170 232 170 266 170"/>
+      <path id="sim-path-managed" class="sim-branch managed" d="M274 168 C322 128 352 78 412 76"/>
+      <path id="sim-path-handoff" class="sim-branch managed" d="M428 75 C500 72 558 66 642 65"/>
+      <path id="sim-path-default" class="sim-branch default" d="M274 170 C330 170 362 170 412 170 C500 170 558 170 650 170"/>
+      <path id="sim-path-ungoverned" class="sim-branch ungoverned" d="M274 172 C324 214 356 266 412 270 C500 276 560 280 650 282"/>
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="43" cy="170" r="9"/><circle class="sim-node-core" cx="43" cy="170" r="3"/>
+        <text class="sim-sublabel" x="43" y="194" text-anchor="middle">NOW</text>
+      </g>
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
+        <text class="sim-label" x="155" y="122" text-anchor="middle">HUMAN-LEVEL AGI</text>
+        <text class="sim-sublabel" x="155" y="136" text-anchor="middle">END OF 2026</text>
+        <text id="sim-svg-agi" class="sim-probability" x="155" y="157" text-anchor="middle">${initial.agi}%</text>
+      </g>
+      <rect class="sim-gate" x="264" y="162" width="16" height="16" rx="3" transform="rotate(45 272 170)"/>
+      <text class="sim-sublabel" x="272" y="198" text-anchor="middle">BRANCH POINT</text>
+      <g class="sim-node">
+        <rect class="sim-gate" x="412" y="67" width="16" height="16" rx="3"/>
+        <text class="sim-label" x="420" y="30" text-anchor="middle">MANAGED PAUSE</text>
+        <text class="sim-sublabel" x="420" y="43" text-anchor="middle">FRONTIER TRAINING · 2029</text>
+        <text id="sim-svg-managed" class="sim-probability" x="420" y="61" text-anchor="middle">${initial.managed}%</text>
+      </g>
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
+        <text class="sim-label" x="650" y="30" text-anchor="middle">MANAGED HANDOFF</text>
+        <text id="sim-svg-handoff" class="sim-probability" x="650" y="51" text-anchor="middle">${initial.handoff}%</text>
+      </g>
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
+        <text class="sim-label" x="420" y="132" text-anchor="middle">DEFAULT PATH</text>
+        <text class="sim-sublabel" x="420" y="145" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
+        <text id="sim-svg-default" class="sim-probability" x="420" y="164" text-anchor="middle">${initial.default}%</text>
+      </g>
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
+        <text class="sim-label" x="420" y="232" text-anchor="middle">UNGOVERNED TAKEOFF</text>
+        <text class="sim-sublabel" x="420" y="245" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
+        <text id="sim-svg-ungoverned" class="sim-probability" x="420" y="264" text-anchor="middle">${initial.ungoverned}%</text>
+      </g>
     </svg>`;
-  const caption = host.closest('.forecast-lens')?.querySelector('figcaption');
-  if (caption) caption.textContent = `Columns encode event density; the line encodes each year’s average stated probability.${branchRange ? ` The rose window marks the faster ${branchRange.label} superintelligence branch.` : ''}`;
+  const labels = {
+    agi:'AGI by end-2026',
+    managed:'Managed pause 2029',
+    default:'Default path 2030',
+    ungoverned:'Ungoverned takeoff',
+    handoff:'Managed handoff 2040',
+  };
+  grid.innerHTML = Object.keys(labels).map(key => `
+    <div class="simulator-probability"><span>${labels[key]}</span><strong id="sim-card-${key}">${initial[key]}%</strong></div>
+  `).join('');
+  updateProbabilitySimulator(false);
 }
 function renderTimelineOverview(years){
   const host = document.getElementById('timelineOverview');
@@ -2261,7 +2654,7 @@ function renderObservatory(){
   const coordinate = forecastCoordinate(today);
   const boundedCoordinate = clampNumber(coordinate, years[0].year, years[years.length - 1].year);
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-  const agiAnchor = events.find(event => /genuine human-level AGI ships by end of 2026/i.test(event.t));
+  const agiAnchor = events.find(event => event.simAnchor === 'agi');
   const fasterBranch = fasterBranchRange(years);
   setText('heroCoordinate', boundedCoordinate.toFixed(2));
   setText('heroCurrentPosition', boundedCoordinate.toFixed(2));
@@ -2271,7 +2664,7 @@ function renderObservatory(){
   setText('heroHorizonCount', horizonData && Array.isArray(horizonData.items) ? horizonData.items.length : '—');
   setText('heroBranchWindow', fasterBranch ? fasterBranch.label : 'Undated');
   if (agiAnchor && Number.isFinite(agiAnchor.prob)) animateMetric('heroAgiProbability', agiAnchor.prob, '%');
-  renderForecastLens(years, boundedCoordinate, fasterBranch);
+  renderProbabilitySimulator(years, fasterBranch);
   renderTimelineOverview(years);
 }
 
@@ -2905,11 +3298,20 @@ setText('heroPredFreshness', 'Forecast source · verified inline baseline');
   fetch('predictions.json?_=' + Date.now())
     .then(r => r.ok ? r.json() : null)
     .then(d => {
-      if (!d || !Array.isArray(d.years) || !d.years.length) return;
+      if (!d || !Array.isArray(d.years) || !d.years.length) {
+        predictionModelState = 'unavailable';
+        renderProbabilitySimulator(timelineData, null);
+        return;
+      }
       const clean = d.years.filter(y => y && typeof y.year === 'number' && Array.isArray(y.events) && typeof y.summary === 'string');
-      if (!clean.length) return;
+      if (!clean.length) {
+        predictionModelState = 'unavailable';
+        renderProbabilitySimulator(timelineData, null);
+        return;
+      }
       clean.sort((a, b) => a.year - b.year);
       timelineData = clean;
+      predictionModelState = 'loaded';
       if (validHorizon(d.postSuperintelligence)) {
         horizonData = d.postSuperintelligence;
       } else {
@@ -2930,7 +3332,10 @@ setText('heroPredFreshness', 'Forecast source · verified inline baseline');
         }
       }
     })
-    .catch(()=>{});
+    .catch(() => {
+      predictionModelState = 'unavailable';
+      renderProbabilitySimulator(timelineData, null);
+    });
 })();
 
 /* Hourly-refreshed signals: a sidecar signals.json (regenerated from verified @peterxing activity

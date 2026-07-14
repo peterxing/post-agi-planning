@@ -89,6 +89,13 @@ function requestStatus(pathname) {
         reality:document.querySelectorAll('#signalsGrid .observation-card').length,
         chapters:document.querySelectorAll('#chapters .chapter').length,
         collapsedChapters:[...document.querySelectorAll('#chapters .ch-body')].every(element => element.hidden),
+        simulator:{
+          map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
+          controls:[...document.querySelectorAll('.simulator-control input')].length,
+          enabled:[...document.querySelectorAll('.simulator-control input')].every(input => !input.disabled),
+          probabilities:[...document.querySelectorAll('.simulator-probability strong')].map(element => element.textContent.trim()),
+          disclaimer:document.getElementById('simulatorDisclaimer')?.textContent || '',
+        },
         heroCount:document.getElementById('heroEventCount')?.textContent.trim(),
         coordinate:document.getElementById('heroCoordinate')?.textContent.trim(),
         freshness:document.getElementById('heroSignalFreshness')?.textContent.trim(),
@@ -114,6 +121,13 @@ function requestStatus(pathname) {
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
     check(results, 'collapsed chapters leave the accessibility tree', state.collapsedChapters);
     check(results, 'JSON-derived text is escaped at render time', state.escapedText);
+    check(results, 'probability simulator loads published anchors',
+      state.simulator.map
+      && state.simulator.controls === 3
+      && state.simulator.enabled
+      && JSON.stringify(state.simulator.probabilities) === JSON.stringify(['70%','18%','45%','42%','28%'])
+      && /Simulation only/i.test(state.simulator.disclaimer),
+      JSON.stringify(state.simulator.probabilities));
     check(results, 'hero uses fetched event count', state.heroCount === String(expectedEvents), state.heroCount);
     check(results, 'current coordinate is numeric', /^\d{4}\.\d{2}$/.test(state.coordinate || ''), state.coordinate);
     check(results, 'live freshness is exposed', /Evidence ·/.test(state.freshness || ''), state.freshness);
@@ -147,6 +161,22 @@ function requestStatus(pathname) {
       visibleTechnology === expectedTechnology,
       `${visibleTechnology}/${expectedTechnology}`);
     await page.locator('.chip[data-domain="all"]').click();
+
+    await page.locator('[data-sim-preset="fast"]').click();
+    await page.waitForTimeout(profile.reduced ? 20 : 320);
+    const simulatedFast = await page.evaluate(() => ({
+      cards:[...document.querySelectorAll('.simulator-probability strong')].map(element => Number.parseInt(element.textContent, 10)),
+      hero:Number.parseInt(document.getElementById('heroAgiProbability').textContent, 10),
+      interpretation:document.getElementById('simulatorInterpretation').textContent,
+    }));
+    check(results, 'simulator changes branch pressure without mutating forecast',
+      simulatedFast.cards[0] > 70
+      && simulatedFast.cards[2] > 45
+      && simulatedFast.cards[3] > 42
+      && simulatedFast.hero === 70
+      && /strongest simulated pressure/i.test(simulatedFast.interpretation),
+      JSON.stringify(simulatedFast));
+    await page.locator('[data-sim-preset="baseline"]').click();
 
     const firstChapter = page.locator('#chapters .chapter').first();
     const firstChapterToggle = firstChapter.locator('.ch-head');
