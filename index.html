@@ -169,7 +169,7 @@ a.signal-src-link { display: inline-flex; align-items: center; gap: 6px; text-de
 a.signal-src-link:hover { color: var(--cp-accent); }
 .signal-src-link .sig-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cp-accent); display: inline-block; }
 .signal-src-link[data-recency="recent"] .sig-dot { background: var(--cp-text-muted); }
-/* TIMELINE / REHOBOAM */
+/* TIMELINE / FORECAST ATLAS */
 .timeline-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
 .filter-label { font-family: Consolas, monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cp-text-muted); margin-right: 6px; }
 .chip {
@@ -1607,7 +1607,7 @@ button { color: inherit; }
     <div class="section-head">
       <div class="eyebrow">Chapter 08 · Your 1000-Day Moonshot Plan</div>
       <h2>Find your starting vector</h2>
-      <p>Answer six questions and Rehoboam maps you onto the four phases of a 1000-day plan — from your first 30-day move to becoming a node in the better future. No accounts, nothing stored; it runs entirely in your browser.</p>
+      <p>Answer six questions and the Atlas maps you onto the four phases of a 1000-day plan — from your first 30-day move to becoming a node in the better future. No accounts, nothing stored; it runs entirely in your browser.</p>
     </div>
 
     <div class="planner" id="planner">
@@ -1756,7 +1756,7 @@ button { color: inherit; }
 </ul>
 <p>You don't have to pick one. Most people switch routes halfway through, which is the entire point of a map: you can see where the roads connect.</p>
 <h2>This is a living document</h2>
-<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits Rehoboam — a timeline engine running from 2025 to 2036 — and over the base predictions we layer <strong>live probability pressure</strong> ingested from prediction markets and the public conversation. That means a number you read today may have moved by the time you finish the chapter. Good. A forecast that never updates isn't a forecast; it's a fossil. When you see a percentage, read it as a weather report, not a prophecy.</p>
+<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits the Post-AGI Atlas — a timeline engine running from 2026 to 2040 — and alongside each prediction we layer <strong>fresh observational evidence</strong> matched from verified @peterxing activity. The percentages are maintained planning estimates, not live market prices or promises. A forecast that never updates isn't a forecast; it's a fossil. Read each percentage as a weather report, not a prophecy.</p>
 <div class="pullbox">
 <h4>If you only have ten minutes</h4>
 <p>Read the Opening, skim the Five Futures, and do the six-question planner at the end. That's enough to stop the free-floating dread and convert it into a first move. Everything else is depth you can add later.</p>
@@ -2275,7 +2275,7 @@ function renderObservatory(){
   renderTimelineOverview(years);
 }
 
-/* ---------- REHOBOAM timeline data ---------- */
+/* ---------- Forecast Atlas timeline data ---------- */
 const D = { I:'individual', S:'social', T:'technology', E:'economic', G:'geopolitical', V:'governance' };
 /* Inline baseline (offline fallback). The live site overrides this from predictions.json — a sidecar
    revised daily from the latest news online and @peterxing's X posts/reposts (add / update / remove). */
