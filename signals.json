@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-14T02:27:34.413Z",
+  "updated": "2026-07-14T03:33:57.841Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Controlled semantic concepts supplement literal matching, but claim-specific facet guards remain mandatory and semantic-only matches are limited to 30 days. Assignment maximizes unique relevant posts before bounded reuse of at most 3; unsupported predictions receive an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
   "source": "x-api",
-  "sourceFetchedAt": "2026-07-14T02:27:32.250Z",
+  "sourceFetchedAt": "2026-07-14T03:33:50.790Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-14T00:01:35.000Z",
   "embeds": {
@@ -31,28 +31,16 @@
       "rts": 22
     },
     "2026-6": {
-      "id": "2076141273967423643",
+      "id": "2076744558969270324",
       "kind": "repost",
-      "author": "davidpattersonx",
+      "author": "Dr_Singularity",
       "recency": "week",
       "matchMethod": "hybrid",
-      "date": "12 Jul 2026",
+      "date": "13 Jul 2026",
       "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
-      "text": "This is normal and expected. AI is now like a tractor or a typewriter - it increases the output of work but needs a human operator. Once AI becomes AGI and A…",
-      "likes": 175,
-      "rts": 19
-    },
-    "2027-1": {
-      "id": "2069857412660801738",
-      "kind": "repost",
-      "author": "PatrickToulme",
-      "recency": "recent",
-      "matchMethod": "semantic",
-      "date": "24 Jun 2026",
-      "maps": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
-      "text": "A few thoughts on OpenAI's Jalapeño chip announcement today: 1. This chip is most likely the first one virtually entirely developed by Codex/GPT. Codex with …",
-      "likes": 2268,
-      "rts": 199
+      "text": "Fascinating times. AGI. ASI. Aging reversal. Cities on Moon and Mars. The Singularity. Post scarcity. Full-dive VR. It's all just around the corner. It will …",
+      "likes": 542,
+      "rts": 76
     },
     "2027-2": {
       "id": "2075268970492657905",
@@ -67,16 +55,16 @@
       "rts": 226
     },
     "2027-3": {
-      "id": "2075747220385632312",
+      "id": "2076141273967423643",
       "kind": "repost",
-      "author": "scaling01",
+      "author": "davidpattersonx",
       "recency": "week",
       "matchMethod": "semantic",
-      "date": "11 Jul 2026",
+      "date": "12 Jul 2026",
       "maps": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
-      "text": "\"why AI won't cause mass unemployment\" &gt; continues to only talk about 4 billion robots that are equivalent to 4 billion humans &gt; meanwhile a robot work…",
-      "likes": 203,
-      "rts": 9
+      "text": "This is normal and expected. AI is now like a tractor or a typewriter - it increases the output of work but needs a human operator. Once AI becomes AGI and A…",
+      "likes": 176,
+      "rts": 19
     },
     "2028-4": {
       "id": "2070930161361432856",
@@ -89,18 +77,6 @@
       "text": "Gavin Baker just did the math that explains why Elon Musk is building a chip factory and putting data centers in space. The numbers make terrestrial compute …",
       "likes": 53,
       "rts": 12
-    },
-    "2028-5": {
-      "id": "2076744558969270324",
-      "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "week",
-      "matchMethod": "semantic",
-      "date": "13 Jul 2026",
-      "maps": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
-      "text": "Fascinating times. AGI. ASI. Aging reversal. Cities on Moon and Mars. The Singularity. Post scarcity. Full-dive VR. It's all just around the corner. It will …",
-      "likes": 517,
-      "rts": 69
     },
     "2029-1": {
       "id": "2075260651287805963",
@@ -126,18 +102,6 @@
       "likes": 504,
       "rts": 53
     },
-    "2030-2": {
-      "id": "2075260651287805963",
-      "kind": "repost",
-      "author": "ChrissGPT",
-      "recency": "week",
-      "matchMethod": "semantic",
-      "date": "09 Jul 2026",
-      "maps": "Managed branch: frontier R&D resumes under total research transparency and cross-border verification",
-      "text": "The creators of AI 2027 just dropped AI 2040! under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&amp;D is slowed and made more…",
-      "likes": 504,
-      "rts": 53
-    },
     "2030-4": {
       "id": "2072022961339437154",
       "kind": "repost",
@@ -149,18 +113,6 @@
       "text": "NEW: Anthropic announces it is developing its own preclinical drug programs No specifics provided beyond a focus on neglected diseases \"To build the right mo…",
       "likes": 823,
       "rts": 79
-    },
-    "2030-5": {
-      "id": "2075653285227462795",
-      "kind": "repost",
-      "author": "Tesla_Megapack",
-      "recency": "week",
-      "matchMethod": "semantic",
-      "date": "10 Jul 2026",
-      "maps": "Physical production, energy and robotics—not ideas—become the main bottlenecks to AI-driven growth",
-      "text": "10 GWh of our industrial energy storage products are now operating across Australia! That's equivalent to 160,000 Model Ys. And we're just getting started",
-      "likes": 4633,
-      "rts": 1079
     },
     "2031-2": {
       "id": "2075584874396651995",
@@ -174,30 +126,6 @@
       "likes": 1081,
       "rts": 103
     },
-    "2032-0": {
-      "id": "2073466999842415056",
-      "kind": "repost",
-      "author": "ihtesham2005",
-      "recency": "recent",
-      "matchMethod": "semantic",
-      "date": "04 Jul 2026",
-      "maps": "AI systems produce more cognitive labor than humans in at least one leading economy",
-      "text": "Naval Ravikant said that if the AI labs are right about where this is going, there will be exactly two jobs left in the world. Anthropic employee, and sex wo…",
-      "likes": 1622,
-      "rts": 145
-    },
-    "2032-1": {
-      "id": "2075269385384566877",
-      "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "week",
-      "matchMethod": "hybrid",
-      "date": "09 Jul 2026",
-      "maps": "Advanced robots can perform roughly one third of economically valuable physical tasks",
-      "text": "U.S. based humanoid robotics company @1x_tech has just unveiled their new tendon-driven robot hands with 25 degrees of freedom (DOF). • Made in USA • Tendon …",
-      "likes": 7138,
-      "rts": 747
-    },
     "2032-3": {
       "id": "2075584874396651995",
       "kind": "repost",
@@ -209,30 +137,6 @@
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
       "likes": 1081,
       "rts": 103
-    },
-    "2033-0": {
-      "id": "2075584874396651995",
-      "kind": "repost",
-      "author": "CernBasher",
-      "recency": "week",
-      "matchMethod": "hybrid",
-      "date": "10 Jul 2026",
-      "maps": "AI-and-robot labor contributes at least half of economic output in a leading economy",
-      "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1081,
-      "rts": 103
-    },
-    "2033-1": {
-      "id": "2072700088481182100",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "recent",
-      "matchMethod": "hybrid",
-      "date": "02 Jul 2026",
-      "maps": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
-      "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17342,
-      "rts": 2044
     },
     "2034-1": {
       "id": "2069096592729047485",
@@ -255,44 +159,8 @@
       "date": "11 Jul 2026",
       "maps": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
       "text": "\"physicians found fewer flaws in GPT-5.6 responses than physician-written responses.\"",
-      "likes": 6849,
-      "rts": 421
-    },
-    "2035-2": {
-      "id": "2073466999842415056",
-      "kind": "repost",
-      "author": "ihtesham2005",
-      "recency": "recent",
-      "matchMethod": "semantic",
-      "date": "04 Jul 2026",
-      "maps": "AI and robots perform 85% or more of economically valuable labor in at least one leading economy",
-      "text": "Naval Ravikant said that if the AI labs are right about where this is going, there will be exactly two jobs left in the world. Anthropic employee, and sex wo…",
-      "likes": 1622,
-      "rts": 145
-    },
-    "2035-3": {
-      "id": "2072700088481182100",
-      "kind": "repost",
-      "author": "elonmusk",
-      "recency": "recent",
-      "matchMethod": "hybrid",
-      "date": "02 Jul 2026",
-      "maps": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
-      "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17342,
-      "rts": 2044
-    },
-    "2035-5": {
-      "id": "2076008533691138439",
-      "kind": "repost",
-      "author": "kimmonismus",
-      "recency": "week",
-      "matchMethod": "semantic",
-      "date": "11 Jul 2026",
-      "maps": "AI welfare, compensation and legal status enter mainstream law and corporate governance",
-      "text": "Holy moly: Zhipu AI founder (GLM-5.2) Tang Jie says we are on our clear way to AGI and \"AI will begin to learn what the \"self\" is and what self-awareness mea…",
-      "likes": 1358,
-      "rts": 182
+      "likes": 6850,
+      "rts": 422
     },
     "2035-6": {
       "id": "2074195084577579503",
@@ -306,6 +174,18 @@
       "likes": 1207,
       "rts": 70
     },
+    "2036-1": {
+      "id": "2072700088481182100",
+      "kind": "repost",
+      "author": "elonmusk",
+      "recency": "recent",
+      "matchMethod": "hybrid",
+      "date": "02 Jul 2026",
+      "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
+      "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
+      "likes": 17342,
+      "rts": 2044
+    },
     "2036-4": {
       "id": "2075753054280831365",
       "kind": "repost",
@@ -315,8 +195,8 @@
       "date": "11 Jul 2026",
       "maps": "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
       "text": "If solar power in space is harnessed for useful work at scale, the value of that will far exceed the Earth economy, because all of Earth civilization uses mu…",
-      "likes": 16461,
-      "rts": 3021
+      "likes": 16465,
+      "rts": 3027
     },
     "2037-0": {
       "id": "2076363358866223314",
@@ -327,20 +207,8 @@
       "date": "12 Jul 2026",
       "maps": "AI accelerates scientific progress by 10x to 1000x depending on the field",
       "text": "We are entering a completely new era of science Here is Yuji Tachikawa from Japan (Mathematical Physics, String Theory, QFT) on recent progress in his own wo…",
-      "likes": 6377,
-      "rts": 729
-    },
-    "2037-1": {
-      "id": "2075523172020232692",
-      "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "week",
-      "matchMethod": "semantic",
-      "date": "10 Jul 2026",
-      "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
-      "text": "This is not normal progress anymore. AI is not just another technology. It is a force multiplier for every technology. Science, robotics, medicine, energy, s…",
-      "likes": 803,
-      "rts": 99
+      "likes": 6400,
+      "rts": 734
     },
     "2038-1": {
       "id": "2074185348142280912",
@@ -351,8 +219,8 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28397,
-      "rts": 3941
+      "likes": 28391,
+      "rts": 3942
     },
     "2040-0": {
       "id": "2072700088481182100",
@@ -375,12 +243,14 @@
     "2026-7": "neuralink multinational prime",
     "2026-8": "orbital compute remains",
     "2027-0": "AI agents work software jobs",
+    "2027-1": "production software written",
     "2027-4": "advances omnibus transparency",
     "2027-5": "datacenter power water",
     "2028-0": "largest issue national",
     "2028-1": "AI election white collar superintelligence",
     "2028-2": "frontier labs industrialize",
     "2028-3": "control frontier concentrates",
+    "2028-5": "superintelligence recursive self",
     "2028-6": "international negotiations slowing",
     "2028-7": "peer review confirms",
     "2029-0": "systems perform quarter",
@@ -390,15 +260,21 @@
     "2029-6": "policy shocks cause",
     "2030-0": "automated AI research intelligence explosion",
     "2030-1": "2040 default branch",
+    "2030-2": "managed branch frontier",
     "2030-3": "managed branch algorithms",
+    "2030-5": "physical production energy",
     "2031-0": "unpaused branch fully",
     "2031-1": "performs third cognitive",
     "2031-3": "AI safety case model deception labor",
     "2031-4": "documented deception sabotage",
     "2031-5": "continual learning architectures",
+    "2032-0": "AI labor robots GDP compute tax",
+    "2032-1": "advanced robots perform",
     "2032-2": "driven real growth",
     "2032-4": "jurisdiction caps auctions",
     "2032-5": "systems shifting materially",
+    "2033-0": "robot labor contributes",
+    "2033-1": "AI dividend persuasion truth seeking AI",
     "2033-2": "cross border distribution",
     "2033-3": "cheap persuasion triggers",
     "2033-4": "personal truth seeking",
@@ -410,13 +286,16 @@
     "2034-4": "datacenters expand neutral",
     "2034-5": "treaties constrain frontier",
     "2035-1": "top expert AI alignment control pause",
+    "2035-2": "robots perform economically",
+    "2035-3": "universal high income",
     "2035-4": "persuasion exceeds best",
+    "2035-5": "welfare compensation legal",
     "2036-0": "life after work AI robots universal income",
-    "2036-1": "robots perform cognitive",
     "2036-2": "employment falls half",
     "2036-3": "driven annual growth",
     "2036-5": "voting civic participation",
     "2036-6": "education social institutions",
+    "2037-1": "driven research delivers",
     "2037-2": "privacy preserving audits",
     "2037-3": "assisted detection credible",
     "2037-4": "rapid scientific paradigm",
@@ -451,8 +330,8 @@
       "author": "SpaceXAI",
       "recency": "week",
       "date": "08 Jul 2026",
-      "likes": 27715,
-      "rts": 4094
+      "likes": 27722,
+      "rts": 4096
     },
     {
       "tag": "ROBOTS",
@@ -506,7 +385,7 @@
       "author": "MTSlive",
       "recency": "week",
       "date": "13 Jul 2026",
-      "likes": 291,
+      "likes": 298,
       "rts": 28
     }
   ]

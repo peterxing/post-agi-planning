@@ -1011,7 +1011,7 @@ function laborClauses(normText){
   return normText.split(/\b(?:but|however|whereas|although|while)\b|[;!?]|(?:(?<!\d)\.|\.(?!\d))/).map(s => s.trim()).filter(Boolean);
 }
 const LABOR_ACTOR_SOURCE = '(?:ai(?!\\s+(?:users?|(?:assisted|enabled|augmented|supported|powered|equipped|using)(?:\\s+[a-z]+){0,4}\\s+(?:humans?|people|workers?|employees?|consultants?|contractors?|staff|users?|operators?|professionals?|developers?|analysts?|doctors?|lawyers?|teachers?)))(?: systems?| workers?)?(?: and robots?)?|robots?(?: and ai(?: systems?)?)?|models?|agents?|automation)';
-const LABOR_ACTION_SOURCE = '(?:perform(?:s|ed)?|produc(?:e|es|ed)|provid(?:e|es|ed)|do|does|did|complet(?:e|es|ed)|automat(?:e|es|ed)|handl(?:e|es|ed)|account(?:s|ed)? for|make(?:s)? up)';
+const LABOR_ACTION_SOURCE = '(?:perform(?:s|ed)?|produc(?:e|es|ed)|provid(?:e|es|ed)|contribut(?:e|es|ed)|do|does|did|complet(?:e|es|ed)|automat(?:e|es|ed)|handl(?:e|es|ed)|account(?:s|ed)? for|make(?:s)? up)';
 const LABOR_ACTOR = new RegExp(`\\b${LABOR_ACTOR_SOURCE}\\b`, 'g');
 const LABOR_ACTION = new RegExp(`\\b${LABOR_ACTION_SOURCE}\\b`);
 const LABOR_NEGATION = /\b(?:no|not|never|no longer|cannot|can not|could not|should not|does not|do not|did not|is not|are not|was not|were not|will not|would not|has not|have not|had not|fail(?:s|ed)?|unable|incapable|lack(?:s|ed)?|below|under|less than|at most|only)\b/;
@@ -1071,6 +1071,7 @@ function hasTwoJobsLeft(normText){
     const claim = clause.match(/\b(?:exactly )?two jobs left\b/);
     if (!claim) continue;
     const prefix = clause.slice(0, claim.index);
+    if (/\b(?:if|assuming|suppose|supposing|hypothetically)\b/.test(prefix)) continue;
     const actors = [...prefix.matchAll(LABOR_ACTOR)];
     const actor = actors[actors.length - 1];
     if (actor && !LABOR_NEGATION.test(prefix.slice(Math.max(0, actor.index - 12)))) return true;
@@ -1248,6 +1249,15 @@ function passesFacetGuards(text, p){
     return /\b(?:mine|mines|mining|motor|motors|actuator|actuators|fab|fabs|foundry|foundries|factory|factories|robotics)\b/.test(normText)
       && /\b(?:capital|investment|investments|investing|capex|financing|funding|funded|spending|dollars|billion|trillion)\b/.test(normText);
   }
+  if (/\bai and robot labor contributes at least half of economic output in a leading economy\b/.test(normTitle)) {
+    const hasBothActors = /\bai\b.{0,50}\brobots?\b|\brobots?\b.{0,50}\bai\b/.test(normText);
+    const percent = hasBoundLaborPercent(normText, 50, /\b(?:economic output|gdp|gross domestic product)\b/);
+    const half = laborClauses(normText).some(clause => {
+      const share = clause.match(/\b(?:at least )?(?:half|a majority|the majority) of (?:economic output|gdp|gross domestic product)\b/);
+      return !!share && positiveActorActionBefore(clause.slice(0, share.index));
+    });
+    return hasBothActors && (percent || half);
+  }
   if (/\bai automates a majority of cognitive work in semiconductor r d and production engineering\b/.test(normTitle)) {
     return /\b(?:semiconductor|chip|chips|foundry|fab|fabs)\b/.test(normText)
       && /\b(?:ai|agent|agents|artificial intelligence|model|models)\b/.test(normText)
@@ -1337,7 +1347,7 @@ function passesFacetGuards(text, p){
   if (/\badvanced robots can perform roughly one third of economically valuable physical tasks\b/.test(normTitle)) {
     return !hasExplicitPhysicalLimitation(normText)
       && /\b(?:robot|robots|robotic|robotics|humanoid)\b/.test(normText)
-      && /\b(?:one third|third of (?:physical )?(?:tasks|work)|3[0-9] percent of (?:physical )?(?:tasks|work)|roughly 3[0-9] percent of (?:physical )?(?:tasks|work))\b/.test(normText);
+      && /\b(?:one third|third of (?:economically valuable )?(?:physical )?(?:tasks|work)|3[0-9] percent of (?:economically valuable )?(?:physical )?(?:tasks|work)|roughly 3[0-9] percent of (?:economically valuable )?(?:physical )?(?:tasks|work))\b/.test(normText);
   }
   if (/\btax systems begin shifting materially from human income toward compute robot and automated capital rents\b/.test(normTitle)) {
     return laborClauses(normText).some(clause =>
@@ -1368,7 +1378,8 @@ function passesFacetGuards(text, p){
   if (/\bmore cognitive labor than humans\b/.test(normTitle) && !hasCognitiveLaborMajority(normText)) return false;
   if (/\b85 percent or more\b/.test(normTitle)
       && !hasBoundLaborPercent(normText, 85, /\b(?:economically valuable )?(?:labor|labour|work|tasks|jobs)\b/)
-      && !hasNearTotalEconomicLabor(normText)) return false;
+      && !(/\b(?:robot|robots|robotic|robotics|physical labor|physical work|physical tasks)\b/.test(normText)
+        && hasNearTotalEconomicLabor(normText))) return false;
   if (/\b95 percent of cognitive and physical tasks\b/.test(normTitle)) {
     const hasThreshold = hasBoundLaborPercent(normText, 95, /\b(?:cognitive|physical|labor|labour|work|tasks)\b/)
       || hasNearTotalCognitivePhysicalTasks(normText);

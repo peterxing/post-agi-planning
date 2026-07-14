@@ -66,6 +66,7 @@ npm run verify
 npm run verify:predictions
 npm run verify:reality
 npm run verify:author
+npm run verify:ui
 ```
 
 `X_SKIP_API=1 node refresh-signals.js` exercises the live public-feed fallback.

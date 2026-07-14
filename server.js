@@ -13,7 +13,12 @@ const ALLOW_FILES = new Set(['index.html', 'signals.json', 'predictions.json', '
 const ALLOW_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.css', '.woff', '.woff2']);
 
 http.createServer((req, res) => {
-  let url = decodeURIComponent(req.url.split('?')[0]);
+  let url;
+  try {
+    url = decodeURIComponent(req.url.split('?')[0]);
+  } catch {
+    res.writeHead(400); res.end('Bad request'); return;
+  }
   url = url.replace(/\/{2,}/g, '/');
   if (url === '/' || url === '') url = '/index.html';
   const rel = path.normalize(url).replace(/^(\.\.[\/\\])+/, '');
