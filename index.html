@@ -241,15 +241,10 @@ a.signal-src-link:hover { color: var(--cp-accent); }
 .tl-signal-link:hover, .tl-signal-load:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
 .tl-signal-load[disabled] { opacity: .55; cursor: default; }
 .tl-embed:not(:empty) { margin-top: 12px; }
-.tl-signal-search { margin-top: 9px; display: inline-flex; align-items: center; gap: 8px; font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; color: var(--cp-text-muted); text-decoration: none; }
-.tl-signal-search:hover { color: var(--cp-accent); }
-.tl-signal-search .tl-x { width: 18px; height: 18px; border-radius: 5px; flex-basis: 18px; }
-.tl-signal-search .tl-x svg { width: 9px; height: 9px; }
 /* Compact variant: a signal card sits directly under each individual prediction (per-event mapping). */
 .event-body .tl-signal { margin-top: 8px; padding: 9px 11px; }
 .event-body .tl-signal-head { margin-bottom: 6px; }
 .event-body .tl-signal-text { font-size: 0.82rem; line-height: 1.45; margin-bottom: 7px; }
-.event-body .tl-signal-search { margin-top: 7px; font-size: 0.62rem; }
 .sig-stamp { margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border: 1px solid var(--cp-border); border-radius: 999px; background: var(--cp-accent-soft); color: var(--cp-text-muted); font-family: Consolas, monospace; font-size: 0.66rem; letter-spacing: 0.03em; }
 
 /* Undated, dependency-gated post-superintelligence horizon */
@@ -1337,14 +1332,18 @@ button { color: inherit; }
 .event-body .tl-signal { margin-top: 12px; padding: 0; }
 .event-body .tl-signal-text { font-size: .82rem; }
 .timeline.evidence-off .tl-signal,
-.timeline.evidence-off .tl-signal-search { display: none; }
-.tl-signal-search {
+.timeline.evidence-off .tl-signal-unavailable { display: none; }
+.tl-signal-unavailable {
   width: 100%;
   margin-top: 12px;
   padding: 9px 10px;
   border: 1px solid var(--cp-border);
   border-radius: 0.625rem;
   background: var(--cp-bg-elevated);
+  color: var(--cp-text-muted);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .62rem;
+  line-height: 1.45;
 }
 
 /* Undated horizon */
@@ -1861,7 +1860,7 @@ button { color: inherit; }
         <h2 id="timelineHeading">The forecast has a spine—and branches</h2>
       </div>
       <div class="section-prose">
-        <p>The dated predictions are organized by year, domain, impact, probability, and branch. Every event is checked hourly against the newest relevant verified <strong>@peterxing</strong> activity; stale caches are rejected, and unmatched events open an honest live search.</p>
+        <p>The dated predictions are organized by year, domain, impact, probability, and branch. Every event has reviewed direct X evidence: relevant <strong>@peterxing</strong> posts and reposts are prioritized, then clearly labeled authoritative external sources provide scenario or leading-indicator evidence. Search-only fallbacks are prohibited.</p>
         <div class="forecast-stamps">
           <div class="sig-stamp" id="predStamp" hidden></div>
           <div class="sig-stamp" id="sigStamp" hidden></div>
@@ -2437,7 +2436,7 @@ button { color: inherit; }
 </ul>
 <p>You don't have to pick one. Most people switch routes halfway through, which is the entire point of a map: you can see where the roads connect.</p>
 <h2>This is a living document</h2>
-<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits the Post-AGI Atlas — a timeline engine running from 2026 to 2040 — and alongside each prediction we layer <strong>fresh observational evidence</strong> matched from verified @peterxing activity. The percentages are maintained planning estimates, not live market prices or promises. A forecast that never updates isn't a forecast; it's a fossil. Read each percentage as a weather report, not a prophecy.</p>
+<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits the Post-AGI Atlas — a timeline engine running from 2026 to 2040 — and alongside each prediction we layer <strong>reviewed direct X evidence</strong>: Peter's own activity first, then authoritative external scenario or leading-indicator sources. The percentages are maintained planning estimates, not live market prices or promises. A forecast that never updates isn't a forecast; it's a fossil. Read each percentage as a weather report, not a prophecy.</p>
 <div class="pullbox">
 <h4>If you only have ten minutes</h4>
 <p>Read the Opening, skim the Five Futures, and do the six-question planner at the end. That's enough to stop the free-floating dread and convert it into a first move. Everything else is depth you can add later.</p>
@@ -2769,7 +2768,7 @@ button { color: inherit; }
       </div>
     </div>
     <div class="footer-note">
-      Forecast probabilities and branch assumptions are maintained in the public prediction model; the observational layer is matched hourly against fresh, verified <strong style="color:var(--cp-text)">@peterxing</strong> activity. Written and maintained by <strong style="color:var(--cp-text)">Peter Xing</strong>.
+      Forecast probabilities and branch assumptions are maintained in the public prediction model; every prediction links to reviewed direct X evidence with explicit Peter or external provenance. Written and maintained by <strong style="color:var(--cp-text)">Peter Xing</strong>.
       <div class="disclaimer">// Probabilities are planning estimates, not promises. Observations are evidence to inspect, not proof that a prediction is true. Nothing here is financial, medical or safety advice. The future remains a branch you help choose.</div>
     </div>
   </div>
@@ -3385,9 +3384,7 @@ const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25
    inline, so if signals.json is ever unavailable every branch shows a live from:peterxing search
    instead of a stale post. */
 let xSignals = {};
-/* Per-event search fallback is derived from each prediction's own title (see deriveSearch), so every
-   prediction shows at least a live from:peterxing chip even offline / if signals.json is unavailable. */
-let xSearch = {};
+let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
   return String(value == null ? '' : value)
@@ -3428,15 +3425,21 @@ function safeTweetId(value){
 const SIG_KIND = {
   post:     { noun:'post',     icon:'',         verb:'' },
   repost:   { noun:'repost',   icon:'\u21bb',   verb:'reposted' },
+  external: { noun:'evidence', icon:'',         verb:'' },
   like:     { noun:'like',     icon:'\u2665',   verb:'liked' },
   bookmark: { noun:'bookmark', icon:'\uD83D\uDD16', verb:'bookmarked' },
   quote:    { noun:'quote',    icon:'\u201c',   verb:'quoted' },
 };
 /* Badge text reflects BOTH kind and recency: a past-week item is labelled "Past-week …", otherwise
    it is his "Most recent …" post/repost on that topic (honestly dated below). */
-function sigBadge(kind, recency){
+function sigBadge(kind, recency, evidenceType){
+  if (kind === 'external') {
+    if (evidenceType === 'scenario') return 'Scenario source';
+    if (evidenceType === 'leading-indicator') return 'Leading indicator';
+    return 'External evidence';
+  }
   const noun = (SIG_KIND[kind] || SIG_KIND.post).noun;
-  const when = recency === 'week' ? 'Past-week' : 'Most recent';
+  const when = recency === 'week' ? 'Past-week' : recency === 'historical' ? 'Historical' : 'Most recent';
   return when + ' ' + noun;
 }
 
@@ -3452,46 +3455,54 @@ function signalCard(sig){
   const author = safeXHandle(sig.author);
   const tweetId = safeTweetId(sig.id);
   const K = SIG_KIND[kind] || SIG_KIND.post;
+  const externalEvidence = sig.evidenceOwner === 'external' || kind === 'external';
   const isPost = kind === 'post';
-  const dispName = isPost ? 'Peter Xing' : ('@' + author);
-  const actionLine = isPost ? '@peterxing' : `${K.icon} @peterxing ${K.verb} &middot; @${author}`;
+  const dispName = externalEvidence
+    ? htmlText(sig.displayName || ('@' + author))
+    : isPost ? 'Peter Xing' : ('@' + author);
+  const actionLine = externalEvidence
+    ? `External evidence &middot; @${author}`
+    : isPost ? '@peterxing authored' : `${K.icon} @peterxing ${K.verb} &middot; @${author}`;
   const method = htmlText(sig.matchMethod || 'verified');
   const date = htmlText(sig.date);
+  const directUrl = safeHttpUrl(sig.url) || `https://x.com/${author}/status/${tweetId}`;
   const likes = Number.isFinite(Number(sig.likes)) ? Number(sig.likes) : 0;
   const reposts = Number.isFinite(Number(sig.rts)) ? Number(sig.rts) : 0;
   const maps = sig.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(sig.maps)}</div>` : '';
+  const rationale = externalEvidence && sig.mappingRationale
+    ? `<div class="tl-signal-maps"><b>${sig.evidenceType === 'scenario' ? 'Scenario relevance' : 'Evidence relevance'}:</b> ${htmlText(sig.mappingRationale)}</div>`
+    : '';
+  const metrics = likes || reposts
+    ? `<span class="tl-signal-metrics"><span>&#9829; ${likes}</span><span>&#8635; ${reposts}</span></span>`
+    : '';
   return `
     <details class="tl-signal" data-kind="${kind}">
       <summary>
         <span class="tl-x">${X_SVG}</span>
         <span class="tl-signal-summary-text">
-          <strong>${htmlText(sigBadge(kind, sig.recency))} · ${htmlText(dispName)}</strong>
+          <strong>${htmlText(sigBadge(kind, sig.recency, sig.evidenceType))} · ${dispName}</strong>
           ${date} · ${actionLine}
         </span>
         <span class="tl-signal-method">${method}</span>
       </summary>
       <div class="tl-signal-detail">
         ${maps}
+        ${rationale}
         <div class="tl-signal-text">${htmlText(sig.text)}</div>
         <div class="tl-signal-foot">
           <span class="tl-signal-date">${date}</span>
-          <span class="tl-signal-metrics"><span>&#9829; ${likes}</span><span>&#8635; ${reposts}</span></span>
+          ${metrics}
           <span class="tl-signal-actions">
             <button class="tl-signal-load" data-tweet="${tweetId}">Load live post &#8635;</button>
-            <a class="tl-signal-link" href="https://x.com/${author}/status/${tweetId}" target="_blank" rel="noopener">View on X &rarr;</a>
+            <a class="tl-signal-link" href="${htmlText(directUrl)}" target="_blank" rel="noopener">View direct post on X &rarr;</a>
           </span>
         </div>
         <div class="tl-embed"></div>
       </div>
     </details>`;
 }
-function searchChip(kw){
-  const raw = String(kw || '').trim();
-  const hasAuthor = /\bfrom:peterxing\b/i.test(raw);
-  const query = hasAuthor ? raw : '(from:peterxing) ' + raw;
-  const label = raw.replace(/\(?from:peterxing\)?/ig, '').trim() || 'this prediction';
-  const q = encodeURIComponent(query);
-  return `<a class="tl-signal-search" href="https://x.com/search?q=${q}&f=live" target="_blank" rel="noopener"><span class="tl-x">${X_SVG}</span> @peterxing&#39;s latest on &ldquo;${htmlText(label)}&rdquo; &rarr;</a>`;
+function evidenceUnavailable(){
+  return '<div class="tl-signal-unavailable" role="status">Direct @peterxing evidence is temporarily unavailable. This forecast will not substitute a search or an unverified match.</div>';
 }
 
 function branchForEvent(title){
@@ -3563,8 +3574,8 @@ function renderTimeline(){
     const average = statedAverage(yr);
     const rows = yr.events.map((e, idx) => {
       const id = yr.year + '-' + idx;                      // 1:1 with signals.json
-      const sig = xSignals[id];
-      const sigHtml = sig ? signalCard(sig) : searchChip(xSearch[id] || deriveSearch(e.t));
+      const sig = signalCoverageReady ? xSignals[id] : null;
+      const sigHtml = sig ? signalCard(sig) : evidenceUnavailable();
       const branch = branchForEvent(e.t);
       const probability = Number.isFinite(e.prob) ? `
         <div class="event-probability" aria-label="${e.prob} percent stated probability">
@@ -3709,9 +3720,8 @@ function renderHorizon(){
   const compactHorizon = window.matchMedia('(max-width: 720px)').matches;
   body.innerHTML = horizonData.items.map(item => {
     const key = 'horizon-' + item.id;
-    const sig = xSignals[key];
-    const fallback = (item.match && item.match.search) || deriveSearch(item.t);
-    const sigHtml = sig ? signalCard(sig) : searchChip(xSearch[key] || fallback);
+    const sig = signalCoverageReady ? xSignals[key] : null;
+    const sigHtml = sig ? signalCard(sig) : evidenceUnavailable();
     const branch = horizonBranchFor(item.id);
     const collapsed = previousDisclosure.has(item.id) ? previousDisclosure.get(item.id) : compactHorizon;
     return `<article class="horizon-item ${collapsed ? 'is-collapsed' : ''} ${selectedId === item.id ? 'is-selected' : ''}" id="horizon-${item.id}" data-horizon-id="${item.id}" data-branch="${branch.key}" tabindex="-1">
@@ -3756,21 +3766,21 @@ setText('heroPredFreshness', 'Forecast source · verified inline baseline');
 /* Daily-revised predictions: a sidecar predictions.json (years / summary / events) revised daily from
    the latest news online and @peterxing's X posts/reposts (add / update / remove) overrides the inline
    baseline. Falls back silently to the baseline if it is unavailable or malformed. */
-(function loadPredictions(){
-  if (location.protocol === 'file:') return; // offline file:// — keep inline baseline
-  fetch('predictions.json?_=' + Date.now())
+const predictionsReady = (function loadPredictions(){
+  if (location.protocol === 'file:') return Promise.resolve(false); // offline file:// — keep inline baseline
+  return fetch('predictions.json?_=' + Date.now())
     .then(r => r.ok ? r.json() : null)
     .then(d => {
       if (!d || !Array.isArray(d.years) || !d.years.length) {
         predictionModelState = 'unavailable';
         renderProbabilitySimulator(timelineData, null);
-        return;
+        return false;
       }
       const clean = d.years.filter(y => y && typeof y.year === 'number' && Array.isArray(y.events) && typeof y.summary === 'string');
       if (!clean.length) {
         predictionModelState = 'unavailable';
         renderProbabilitySimulator(timelineData, null);
-        return;
+        return false;
       }
       clean.sort((a, b) => a.year - b.year);
       timelineData = clean;
@@ -3794,15 +3804,17 @@ setText('heroPredFreshness', 'Forecast source · verified inline baseline');
           stamp.hidden = false;
         }
       }
+      return true;
     })
     .catch(() => {
       predictionModelState = 'unavailable';
       renderProbabilitySimulator(timelineData, null);
+      return false;
     });
 })();
 
-/* Hourly-refreshed signals: a sidecar signals.json (regenerated from verified @peterxing activity
-   and matched newest-valid-first to each prediction) overrides the inline fallback. */
+/* Hourly-refreshed signals: a complete direct-X bundle prioritizes reviewed @peterxing activity,
+   then retains reviewed authoritative external scenario/leading-indicator evidence. */
 const SIGNAL_SOURCE_LABELS = {
   'x-api': 'X API realtime',
   'public-rss': 'live public X profile feed',
@@ -3824,6 +3836,46 @@ function renderSignalMetadata(data){
   const freshness = data.sourceFresh === true ? 'fresh source' : 'source freshness unverified';
   setText('heroSignalFreshness', `Evidence · ${sourceLabel} · ${updatedLabel}`);
   setText('realityMeta', `${freshness} · ${sourceLabel} · newest observed item ${newestLabel} · six signals refreshed hourly`);
+}
+function expectedDirectSignalIds(){
+  return [
+    ...timelineData.flatMap(year => year.events.map((_, index) => `${year.year}-${index}`)),
+    ...horizonData.items.map(item => `horizon-${item.id}`),
+  ];
+}
+function hasCompleteDirectSignalCoverage(data){
+  if (!data || data.sourceFresh !== true || !data.embeds || typeof data.embeds !== 'object') return false;
+  if (data.search && Object.keys(data.search).length) return false;
+  const expected = expectedDirectSignalIds();
+  const actual = Object.keys(data.embeds);
+  if (expected.length !== actual.length || expected.some(id => !data.embeds[id])) return false;
+  return actual.every(id => {
+    const signal = data.embeds[id];
+    const provenance = signal && signal.provenance || {};
+    const common = /^\d{15,}$/.test(String(signal && signal.id || ''))
+      && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal && signal.url || ''))
+      && signal.reviewed === true
+      && !!signal.evidenceFamily
+      && !!signal.mappingRationale;
+    if (!common) return false;
+    if (signal.evidenceOwner === 'peterxing') {
+      return ['post', 'repost'].includes(signal.kind)
+        && provenance.evidenceOwner === 'peterxing'
+        && provenance.account === 'peterxing'
+        && ['authored', 'reposted'].includes(provenance.relationship)
+        && /^\d{15,}$/.test(String(provenance.activityId || ''))
+        && !!provenance.observedIn;
+    }
+    return signal.evidenceOwner === 'external'
+      && signal.kind === 'external'
+      && provenance.evidenceOwner === 'external'
+      && provenance.activityKind === 'external'
+      && provenance.account === signal.author
+      && !!provenance.displayName
+      && !!provenance.sourceQuality
+      && !!provenance.retrievedAt
+      && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType);
+  });
 }
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
@@ -3871,28 +3923,43 @@ function renderSignalMetadata(data){
 
 (function loadSignals(){
   if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
-  fetch('signals.json?_=' + Date.now())
-    .then(r => r.ok ? r.json() : null)
-    .then(d => {
+  Promise.all([
+    predictionsReady,
+    fetch('signals.json?_=' + Date.now()).then(r => r.ok ? r.json() : null),
+  ])
+    .then(([, d]) => {
       if (!d) return;
-      if (d.embeds && typeof d.embeds === 'object') xSignals = d.embeds;
-      if (d.search && typeof d.search === 'object') xSearch = d.search;
       if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
+      renderSignalMetadata(d);
+      signalCoverageReady = hasCompleteDirectSignalCoverage(d);
+      xSignals = signalCoverageReady ? d.embeds : {};
       renderTimeline();
       renderHorizon();
-      renderSignalMetadata(d);
       const stamp = document.getElementById('sigStamp');
-      if (stamp && d.updated){
+      if (!signalCoverageReady) {
+        setText('heroSignalFreshness', 'Direct evidence · temporarily unavailable');
+        if (stamp) {
+          stamp.textContent = 'Direct evidence unavailable · publication requires complete reviewed X coverage';
+          stamp.hidden = false;
+        }
+      } else if (stamp && d.updated){
         const dt = new Date(d.updated);
         if (!isNaN(dt.getTime())){
          const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'verified X activity';
-         stamp.textContent = '\u21bb @peterxing activity \u00b7 ' + sourceLabel + ' \u00b7 matched hourly \u00b7 last update '
+         const owners = d.coverage && d.coverage.byEvidenceOwner || {};
+         stamp.textContent = `Direct X evidence · ${d.coverage.direct}/${d.coverage.total} · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · ${sourceLabel} checked `
            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
          stamp.hidden = false;
        }
       }
     })
-    .catch(()=>{});
+    .catch(() => {
+      signalCoverageReady = false;
+      xSignals = {};
+      renderTimeline();
+      renderHorizon();
+      setText('heroSignalFreshness', 'Direct evidence · temporarily unavailable');
+    });
 })();
 let twPromise = null;
 function loadTwitter(){

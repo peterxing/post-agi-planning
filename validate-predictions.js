@@ -3,6 +3,7 @@
 //   node validate-predictions.js [path]
 const fs = require('fs');
 const path = require('path');
+const { validateFamilyCoverage } = require('./evidence-families');
 const FILE = process.argv[2] || path.join(__dirname, 'predictions.json');
 const DOMAINS = ['individual', 'social', 'technology', 'economic', 'geopolitical', 'governance'];
 const EPISTEMIC_LABELS = new Set(['conditional', 'speculative']);
@@ -187,6 +188,19 @@ if (!horizon || typeof horizon !== 'object' || Array.isArray(horizon)) {
       problems.push('horizon missing cautious, testability-gated ruliad framing');
     }
   }
+}
+
+const expectedEvidenceIds = [
+  ...d.years.flatMap(year => Array.isArray(year.events)
+    ? year.events.map((_, index) => `${year.year}-${index}`)
+    : []),
+  ...(horizon && Array.isArray(horizon.items)
+    ? horizon.items.filter(item => item && item.id).map(item => `horizon-${item.id}`)
+    : []),
+];
+const familyCoverage = validateFamilyCoverage(expectedEvidenceIds);
+if (familyCoverage.missing.length || familyCoverage.extra.length) {
+  problems.push(`evidence-family coverage mismatch (missing: ${familyCoverage.missing.join(', ') || 'none'}; extra: ${familyCoverage.extra.join(', ') || 'none'})`);
 }
 
 const STOP = new Set(('the a an and or of to in on for with by from at as is are be becomes become into '

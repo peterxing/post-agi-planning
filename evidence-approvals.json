@@ -1,0 +1,87 @@
+{
+  "2026-3": {
+    "postId": "2072329696667471937",
+    "reviewedAt": "2026-07-20",
+    "basis": "Humanoid mass deployment directly supports the live-factory-line series."
+  },
+  "2026-8": {
+    "postId": "2064108916611420273",
+    "reviewedAt": "2026-07-20",
+    "basis": "SpaceX AI-satellite compute-power specifications directly support orbital-compute demonstration."
+  },
+  "2028-1": {
+    "postId": "2055978848764784662",
+    "reviewedAt": "2026-07-20",
+    "basis": "AI agents performing PhD-level finance work directly supports white-collar agent supervision."
+  },
+  "2028-5": {
+    "postId": "2065577387870310736",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post explicitly discusses superintelligence and recursive self-improvement."
+  },
+  "2029-2": {
+    "postId": "2075260651287805963",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post explicitly describes a 2029 US-China deal slowing AI R&D."
+  },
+  "2030-0": {
+    "postId": "2064039540256338326",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post directly discusses timelines to full automation of AI R&D."
+  },
+  "2031-0": {
+    "postId": "2064039540256338326",
+    "reviewedAt": "2026-07-20",
+    "basis": "Reviewed reuse within the AI-R&D automation threshold series."
+  },
+  "2033-6": {
+    "postId": "2062353245797048792",
+    "reviewedAt": "2026-07-20",
+    "basis": "Synthetic-nucleic-acid screening directly supports AI-era biodefense preparedness."
+  },
+  "2034-1": {
+    "postId": "2069096592729047485",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post explicitly discusses a continuously scaling AI workforce reaching billions."
+  },
+  "2035-0": {
+    "postId": "2078562951762681866",
+    "reviewedAt": "2026-07-20",
+    "basis": "Expert-level capability across every subject directly supports the managed top-expert milestone."
+  },
+  "2035-3": {
+    "postId": "2072700088481182100",
+    "reviewedAt": "2026-07-20",
+    "basis": "Universal high income is the direct phenomenon in the permanent-distribution milestone."
+  },
+  "2036-2": {
+    "postId": "2075747220385632312",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post directly addresses AI, robot workforces and mass unemployment."
+  },
+  "2038-1": {
+    "postId": "2074185348142280912",
+    "reviewedAt": "2026-07-20",
+    "basis": "Published model-internal-state research directly supports human-understandable interpretability."
+  },
+  "2039-4": {
+    "postId": "2077626509615829213",
+    "reviewedAt": "2026-07-20",
+    "basis": "SpaceX AI-satellite GPU inference and power requirements support the orbital-compute power series."
+  },
+  "horizon-non-invasive-neural-symbiosis": {
+    "postId": "2078891199067529508",
+    "reviewedAt": "2026-07-20",
+    "basis": "The full observed post describes an external non-invasive thought-control BCI demonstration."
+  },
+  "horizon-orbital-compute-to-proto-dyson": {
+    "postId": "2069570317798785480",
+    "reviewedAt": "2026-07-20",
+    "basis": "An AI-satellite constellation directly supports the orbital compute-network trajectory."
+  },
+  "horizon-kardashev-energy-scaling": {
+    "postId": "2068821432843554930",
+    "reviewedAt": "2026-07-20",
+    "basis": "The post explicitly discusses climbing the Kardashev scale."
+  }
+}

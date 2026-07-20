@@ -13,6 +13,17 @@ $ErrorActionPreference = 'Stop'
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Set-Location $dir
 
+$coverageVerifier = 'C:\Users\peterxing\pap-deploy\verify-direct-coverage.js'
+if (-not (Test-Path $coverageVerifier)) {
+  Write-Error 'Direct-coverage verifier is missing; deployment aborted.'
+  exit 6
+}
+& node $coverageVerifier
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'Direct @peterxing coverage is incomplete; deployment aborted.'
+  exit 6
+}
+
 $token = $env:VERCEL_TOKEN
 $vercel = (Get-Command vercel -ErrorAction SilentlyContinue).Source
 if (-not $vercel) { $vercel = (Get-Command vercel.cmd -ErrorAction SilentlyContinue).Source }

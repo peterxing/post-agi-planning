@@ -20,30 +20,40 @@
 //   The prediction set is loaded from predictions.json (revised DAILY from the latest news + his posts —
 //   predictions are added / updated / removed there, not here). Every post is scored against every
 //   prediction: phrase(3) + strong-word(2) + weak-word(1). After relevance, solidity, and facet guards,
-//   candidates rank by recency tier and timestamp before relevance tie-breakers. A signal can support a
-//   small bounded number of related predictions (MAX_POST_REUSE) to improve coverage without repetition.
+//   candidates rank by specificity before recency. A signal can support multiple predictions only when
+//   every reuse belongs to the same explicitly declared compatible evidence family.
 //   Predictions with no valid signal fall back to an honest live from:peterxing search.
 //
 //   node refresh-signals.js                 # harvest + match + write signals.json (+ optional reposts.json)
-//   MAX_AGE_DAYS=365 SOURCE_CACHE_MAX_HOURS=36 MAX_POST_REUSE=3 node refresh-signals.js
+//   MAX_AGE_DAYS=5000 SOURCE_CACHE_MAX_HOURS=36 X_HISTORY_BACKFILL=1 node refresh-signals.js
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const childProcess = require('child_process');
+const {
+  FAMILY_DEFINITIONS,
+  familyForPrediction,
+  validateFamilyCoverage,
+} = require('./evidence-families');
+const {
+  EXTERNAL_MAPPINGS,
+  EXTERNAL_SOURCES,
+} = require('./external-evidence');
 
 const DIR = __dirname;
 const RAW = path.join(DIR, 'timeline-raw.json');
 const OUT = path.join(DIR, 'signals.json');
 const DBG = path.join(DIR, 'signals-debug.json');
 const PRED = path.join(DIR, 'predictions.json'); // daily-revised prediction set (source of truth)
+const APPROVALS = path.join(DIR, 'evidence-approvals.json'); // reviewed prediction/post pairs
 const RECENT_DAYS = Number(process.env.RECENT_DAYS || 7); // kept for back-compat (unused directly)
 // MIN_SCORE and the facet guards gate weak/spurious matches before recency is considered.
 const PAST_WEEK_DAYS = Number(process.env.PAST_WEEK_DAYS || 7);
-const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 800);
+const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 5000);
 const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
-const MAX_POST_REUSE = Math.max(1, Number(process.env.MAX_POST_REUSE) || 3);
 const SKIP_LIVE = process.env.X_SKIP_LIVE === '1';
 const SKIP_API = process.env.X_SKIP_API === '1';
 const SYND_URL = 'https://syndication.twitter.com/srv/timeline-profile/screen-name/peterxing?showReplies=false&lang=en&dnt=true';
@@ -51,13 +61,46 @@ const RSS_URL = 'https://nitter.net/peterxing/rss';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
 const SECRET_DIR = 'C:\\Users\\peterxing\\pap-secrets';
 const ACT = path.join(SECRET_DIR, 'x-activity.json'); // non-served raw activity dump
+const HISTORY = path.join(SECRET_DIR, 'x-activity-history.json'); // private deduplicated posts/reposts
 const RSS_CACHE = path.join(SECRET_DIR, 'x-public-rss-cache.json'); // non-served parsed public RSS cache
+const HISTORY_BACKFILL = process.env.X_HISTORY_BACKFILL === '1';
+const API_RECENT_POSTS = Math.max(100, Number(process.env.X_RECENT_POSTS) || 300);
+const API_HISTORY_POSTS = Math.min(3200, Math.max(API_RECENT_POSTS, Number(process.env.X_HISTORY_POSTS) || 3200));
+const API_FULL_ARCHIVE_POSTS = Math.max(API_HISTORY_POSTS, Number(process.env.X_FULL_ARCHIVE_POSTS) || 50000);
+const PUBLIC_GIT_ARCHIVE = process.env.PAP_GITHUB_ARCHIVE || 'C:\\Users\\peterxing\\pap-github';
+const HISTORICAL_SEARCH_QUERIES = [
+  { name: 'agi', query: 'AGI OR ASI OR superintelligence OR "human level AI"' },
+  { name: 'agents-coding', query: 'agent OR agents OR agentic OR coding OR software OR codex' },
+  { name: 'research-science', query: 'research OR science OR theorem OR discovery OR physics' },
+  { name: 'labor-automation', query: 'jobs OR workforce OR labor OR labour OR automation OR "future of work"' },
+  { name: 'robotics-production', query: 'robot OR robots OR robotics OR humanoid OR factory OR manufacturing' },
+  { name: 'compute-infrastructure', query: 'compute OR GPU OR chip OR semiconductor OR datacenter OR "data center"' },
+  { name: 'energy', query: 'energy OR grid OR solar OR nuclear OR fusion OR battery' },
+  { name: 'governance-safety', query: 'governance OR regulation OR policy OR treaty OR safety OR verification OR audit' },
+  { name: 'geopolitics', query: 'China OR Chinese OR US OR international OR geopolitical' },
+  { name: 'economy-distribution', query: 'economy OR GDP OR valuation OR revenue OR UBI OR dividend OR income' },
+  { name: 'alignment-interpretability', query: 'alignment OR interpretability OR deception OR honesty OR "control problem"' },
+  { name: 'persuasion-truth', query: 'persuasion OR manipulation OR deepfake OR "truth seeking"' },
+  { name: 'rights-consciousness', query: 'rights OR consciousness OR sentience OR welfare OR "legal status"' },
+  { name: 'bci-augmentation', query: 'BCI OR Neuralink OR "brain computer" OR "neural implant" OR augmentation' },
+  { name: 'connectomics-uploading', query: 'connectome OR connectomics OR "mind uploading" OR "whole brain emulation" OR "digital immortality"' },
+  { name: 'orbital-compute', query: '"orbital compute" OR "space data center" OR "space data centre" OR Starcloud' },
+  { name: 'kardashev-dyson', query: 'Kardashev OR "Dyson swarm" OR "Type I civilization" OR "Type II civilization"' },
+  { name: 'transcension', query: 'Transcension OR "inner space" OR "computational densification"' },
+  { name: 'ruliad', query: 'ruliad OR "Wolfram Physics" OR "Wolfram physics project"' },
+  { name: 'education-institutions', query: 'education OR university OR school OR courts OR corporations OR institutions' },
+  { name: 'space', query: 'space OR orbital OR moon OR lunar OR Mars OR Starship' },
+  { name: 'privacy', query: 'privacy OR confidential OR "zero knowledge" OR "privacy preserving"' },
+  { name: 'biosecurity-health', query: 'biosecurity OR pathogen OR pandemic OR vaccine OR health OR medical OR drug OR longevity' },
+  { name: 'ai-2040', query: '"AI 2040" OR "AI 2027" OR "Plan A"' },
+  { name: 'open-models', query: '"open source" OR "open weights" OR "local model"' },
+];
 
 // Prediction table fallback. The LIVE matching set is loaded from predictions.json (revised daily);
 // this inline copy is only used if that sidecar is missing/unparsable. Each post is scored against
 // every prediction by weighted term hits:
 //   phrases (normalized, punctuation→space) = 3pts · strong words (prefix match) = 2pts · weak words = 1pt
-// `search` is the live-search fallback when no post scores >= MIN_SCORE for that prediction.
+// `search` is retained only as diagnostic query metadata; production prediction fallbacks are prohibited.
 const DEFAULT_PREDICTIONS = [
   { year: 2026, maps: 'AI agents go mainstream', search: 'AI agents',
     phrases: ['ai agent','ai agents','agentic','autonomous agent','coding agent','claude code','open model','local model','frontier model','open source ai','open weights'],
@@ -131,7 +174,7 @@ function deriveTerms(y){
 const KEEP_SHORT = new Set(['agi','asi','ubi','fda','bci','llm','llms','xr','ev','evs','evtol','gpu','gpus','iot','dna','rna']);
 // Topical vocabulary: matching a post on any of these is meaningful regardless of word length, so they
 // count as a "solid" hit on their own. (Generic English words are NOT here, so a lone generic word can't
-// bind a post to a prediction — it falls back to an honest search chip instead.)
+// bind a post to a prediction — the candidate is rejected.)
 const DOMAIN = new Set(('ai agi asi ubi uhi bci llm llms gpu gpus agent agents agentic robot robots robotic '
   + 'humanoid drone drones autonomous teleoperation automation fusion fission reactor nuclear solar quantum '
   + 'neural neuron genome genomic gene genes crispr dna rna brain biotech bioweapon longevity aging cancer '
@@ -211,7 +254,7 @@ const MATCH_CONCEPTS = [
   { name: 'rights', weight: 2, solo: true, rx: /\b(?:rights|legal right|welfare|legal status|moral agents?|consciousness|self awareness|sentien\w*)\b/ },
   { name: 'bci', weight: 2, solo: true, rx: /\b(?:neuralink|brain computer|bci|neural implant|brain implant|intracortical|ecog|stentrode|endovascular bci)\b/ },
   { name: 'connectomics', weight: 2, solo: true, rx: /\b(?:connectom\w*|whole brain emulation|functional emulation|brain preservation|mind upload\w*|digital immortal\w*)\b/ },
-  { name: 'orbitalcompute', weight: 2, solo: true, rx: /\b(?:orbital compute|orbital data cent(?:er|re)|space data cent(?:er|re)|starcloud|project suncatcher)\b/ },
+  { name: 'orbitalcompute', weight: 2, solo: true, rx: /\b(?:orbital compute|orbital data cent(?:er|re)|space data cent(?:er|re)|data cent(?:er|re)s? in space|space based data cent(?:er|re)|ai sat(?:ellite)?|starcloud|project suncatcher)\b/ },
   { name: 'civilizationalenergy', weight: 2, solo: true, rx: /\b(?:kardashev|type i civilization|type ii civilization|dyson swarm|stellar energy)\b/ },
   { name: 'transcension', weight: 2, solo: true, rx: /\b(?:transcension hypothesis|computational densification|inner space)\b/ },
   { name: 'ruliad', weight: 2, solo: true, rx: /\b(?:ruliad|rulial|wolfram physics)\b/ },
@@ -300,9 +343,11 @@ function buildPredictions(){
       y.events.forEach((e, i) => {
         if (!e || !e.t) return;
         const ev = deriveEventTerms(e.t);
-        const slot = { id: y.year + '-' + i, year: y.year, evIndex: i, domain: e.d || '', maps: e.t,
+        const id = y.year + '-' + i;
+        const slot = { id, year: y.year, evIndex: i, domain: e.d || '', maps: e.t,
           search: (i === hi && m.search) ? m.search : ev.search,
-          phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [], concepts: detectConcepts(e.t) };
+          phrases: ev.phrases.slice(), strong: [], sw: ev.sw.slice(), weak: [], concepts: detectConcepts(e.t),
+          evidenceFamily: familyForPrediction(id) };
         if (i === hi && hasCur) { // headline event keeps the curated high-quality terms
            const topic = topicVariants(`${m.headline || ''} ${e.t}`);
            slot.phrases = [...new Set([...cur.phrases.filter(t => termMatchesTopic(t, topic)), ...slot.phrases])];
@@ -322,8 +367,9 @@ function buildPredictions(){
     const strong = Array.isArray(m.strong) ? m.strong : [];
     const weak = Array.isArray(m.weak) ? m.weak : [];
     const conceptText = [item.t, m.headline, ...phrases, ...strong].filter(Boolean).join(' ');
+    const id = 'horizon-' + item.id;
     out.push({
-      id: 'horizon-' + item.id,
+      id,
       scope: 'horizon',
       year: 2041,
       evIndex: i,
@@ -335,6 +381,7 @@ function buildPredictions(){
       sw: ev.sw.slice(),
       weak: weak.slice(),
       concepts: detectConcepts(conceptText),
+      evidenceFamily: familyForPrediction(id),
     });
   }
   if (out.length) return out;
@@ -449,12 +496,94 @@ async function harvestRss(){
 function mapCachedItems(items){
   return (Array.isArray(items) ? items : [])
     .map(it => ({ id: String(it.id || ''), created: new Date(it.created), text: it.text || '', likes: it.likes || 0,
-      rts: it.rts || 0, author: it.author || 'peterxing', kind: it.kind || 'post' }))
+      rts: it.rts || 0, author: it.author || 'peterxing', kind: it.kind || 'post',
+      activityId: String(it.activityId || it.id || ''),
+      activitySource: it.activitySource || 'private-history',
+      archiveQueries: Array.isArray(it.archiveQueries) ? it.archiveQueries.filter(Boolean) : [] }))
     .filter(it => /^\d{15,}$/.test(it.id) && !isNaN(it.created.getTime()));
+}
+function readPrivateHistory(){
+  try {
+    const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
+    return mapCachedItems(cached && cached.items)
+      .filter(item => item.kind === 'post' || item.kind === 'repost');
+  } catch {
+    return [];
+  }
+}
+function readPrivateHistoryMetadata(){
+  try {
+    const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
+    return {
+      updated: cached.updated || null,
+      source: cached.source || null,
+      count: Number(cached.count) || 0,
+      newestItemAt: cached.newestItemAt || null,
+      oldestItemAt: cached.oldestItemAt || null,
+      timelinePages: cached.timelinePages || null,
+      timelineComplete: cached.timelineComplete === true,
+      backfill: cached.backfill || null,
+    };
+  } catch {
+    return null;
+  }
+}
+function mergeActivityHistory(...lists){
+  const byId = new Map();
+  for (const item of lists.flat()) {
+    if (!item || !/^\d{15,}$/.test(String(item.id || ''))) continue;
+    if (item.kind !== 'post' && item.kind !== 'repost') continue;
+    const created = item.created instanceof Date ? item.created : new Date(item.created);
+    if (isNaN(created.getTime())) continue;
+    const normalized = { ...item, id: String(item.id), created };
+    const prior = byId.get(normalized.id);
+    if (!prior || KIND_RANK[normalized.kind] < KIND_RANK[prior.kind]
+        || cleanText(normalized.text).length > cleanText(prior.text).length) {
+      byId.set(normalized.id, normalized);
+    }
+  }
+  return [...byId.values()].sort((a, b) => b.created - a.created);
+}
+function writePrivateHistory(items, apiCaps){
+  if (!items.length) return;
+  const payload = {
+    updated: new Date().toISOString(),
+    source: 'x-api-user-timeline',
+    count: items.length,
+    newestItemAt: items[0].created.toISOString(),
+    oldestItemAt: items[items.length - 1].created.toISOString(),
+    timelinePages: apiCaps && apiCaps.timelinePages || null,
+    timelineComplete: apiCaps && apiCaps.timelineComplete === true,
+    backfill: apiCaps ? {
+      fullArchive: apiCaps.fullArchive || null,
+      targetedArchive: apiCaps.targetedArchive || null,
+    } : null,
+    items: items.map(item => ({
+      id: item.id,
+      activityId: item.activityId || item.id,
+      activitySource: item.activitySource || 'x-api-user-timeline',
+      archiveQueries: Array.isArray(item.archiveQueries) ? item.archiveQueries : [],
+      created: item.created.toISOString(),
+      text: cleanText(item.text),
+      author: item.author || 'peterxing',
+      likes: item.likes || 0,
+      rts: item.rts || 0,
+      kind: item.kind,
+    })),
+  };
+  fs.writeFileSync(HISTORY, JSON.stringify(payload, null, 2) + '\n');
 }
 function ageHours(when){
   const d = new Date(when);
   return isNaN(d.getTime()) ? Infinity : Math.max(0, (Date.now() - d.getTime()) / 36e5);
+}
+function loadEvidenceApprovals(){
+  try {
+    const value = JSON.parse(fs.readFileSync(APPROVALS, 'utf8').replace(/^\uFEFF/, ''));
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  } catch {
+    return {};
+  }
 }
 function recencyRank(created, now){
   const days = Math.max(0, (now - created.getTime()) / 864e5);
@@ -505,7 +634,7 @@ function scorePost(text, p){
 }
 
 // Conservative facet checks keep broad keyword overlap from implying support for a more specific claim.
-// A failed guard uses the live-search fallback instead, which is safer than a misleading real-item card.
+// A failed guard rejects the candidate; incomplete direct coverage fails publication.
 const FACET_GUARDS = [
   {
     title: /\bpeer reviewed intracortical bci home use surpasses 3 800 hours\b/,
@@ -1444,6 +1573,29 @@ function qualifyPost(text, p, ageDays = 0){
   if (!passesFacetGuards(text, p)) return { ok: false, reason: 'facet', scored, lexicalValid, semanticValid, matchMethod };
   return { ok: true, scored, lexicalValid, semanticValid, matchMethod };
 }
+function qualifyFamilyPost(text, p){
+  const family = FAMILY_DEFINITIONS[p.evidenceFamily];
+  if (!family || !family.match) return { ok: false, reason: 'family-match-not-declared' };
+  const concepts = detectConcepts(text);
+  const all = family.all || [];
+  const any = family.any || [];
+  if (all.some(concept => !concepts.has(concept))) return { ok: false, reason: 'family-required-concept' };
+  if (any.length && !any.some(concept => concepts.has(concept))) return { ok: false, reason: 'family-corroboration' };
+  if (family.text && !family.text.test(normalizeConceptText(text))) return { ok: false, reason: 'family-core-facet' };
+  const conceptHits = [...concepts].filter(concept => all.includes(concept) || any.includes(concept));
+  return {
+    ok: true,
+    matchMethod: 'family',
+    scored: {
+      score: 0,
+      coverage: conceptHits.length,
+      conceptScore: conceptHits.reduce((sum, concept) =>
+        sum + (MATCH_CONCEPT_BY_NAME.get(concept)?.weight || 1), 0),
+      conceptHits,
+      hit: [],
+    },
+  };
+}
 
 // ---- 1. Parse the harvested timeline into posts + reposts -------------------------------------
 function parseTimeline(raw){
@@ -1488,6 +1640,66 @@ function parseTimeline(raw){
   return items;
 }
 
+function readPublicArchiveHistory(){
+  const archived = [];
+  try {
+    if (fs.existsSync(RAW)) {
+      const parsed = parseTimeline(fs.readFileSync(RAW, 'utf8')) || [];
+      for (const item of parsed) {
+        if (item.kind !== 'post' && item.kind !== 'repost') continue;
+        archived.push({
+          ...item,
+          activityId: item.id,
+          activitySource: 'local-public-timeline-archive',
+        });
+      }
+    }
+  } catch (e) {
+    console.error('[refresh] Local public timeline archive could not be read: ' + e.message);
+  }
+  try {
+    if (fs.existsSync(path.join(PUBLIC_GIT_ARCHIVE, '.git'))) {
+      const commits = childProcess.execFileSync(
+        'git',
+        ['rev-list', '--all', '--', 'signals.json'],
+        { cwd: PUBLIC_GIT_ARCHIVE, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }
+      ).trim().split(/\s+/).filter(Boolean);
+      for (const commit of commits) {
+        let signals;
+        try {
+          signals = JSON.parse(childProcess.execFileSync(
+            'git',
+            ['show', `${commit}:signals.json`],
+            { cwd: PUBLIC_GIT_ARCHIVE, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }
+          ));
+        } catch {
+          continue;
+        }
+        for (const entry of Object.values(signals.embeds || {})) {
+          if (!entry || !/^\d{15,}$/.test(String(entry.id || ''))) continue;
+          if (entry.kind !== 'post' && entry.kind !== 'repost') continue;
+          const created = new Date(`${entry.date || ''} UTC`);
+          if (isNaN(created.getTime())) continue;
+          archived.push({
+            id: String(entry.id),
+            activityId: String(entry.activityId || entry.id),
+            activitySource: 'public-signals-git-archive',
+            created,
+            text: cleanText(entry.text),
+            likes: entry.likes || 0,
+            rts: entry.rts || 0,
+            author: entry.author || 'peterxing',
+            kind: entry.kind,
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error('[refresh] Public Git signal archive could not be read: ' + e.message);
+  }
+  return mergeActivityHistory(archived);
+}
+
 // ---- 2. Ingest optional reposts.json / likes.json / bookmarks.json (IDs / URLs) ---------------
 async function ingestList(file, kind){
   const p = path.join(DIR, file);
@@ -1512,9 +1724,41 @@ async function main(){
   let prev = {};
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
   const prevEmbeds = (prev && prev.embeds) || {};
+  let historicalTimeline = readPrivateHistory();
+  const historyCountBefore = historicalTimeline.length;
+  let publicArchiveCount = 0;
+  if (HISTORY_BACKFILL) {
+    const publicArchive = readPublicArchiveHistory();
+    publicArchiveCount = publicArchive.length;
+    historicalTimeline = mergeActivityHistory(historicalTimeline, publicArchive);
+  }
 
   // Load the live (daily-revised) prediction set, expanded to ONE matcher per event.
   const PREDICTIONS = buildPredictions();
+  const evidenceApprovals = loadEvidenceApprovals();
+  const predictionIds = new Set(PREDICTIONS.map(prediction => prediction.id));
+  const unknownApprovalIds = Object.keys(evidenceApprovals).filter(id => !predictionIds.has(id));
+  if (unknownApprovalIds.length) {
+    throw new Error(`evidence approvals reference unknown predictions: ${unknownApprovalIds.join(', ')}`);
+  }
+  const externalIds = Object.keys(EXTERNAL_MAPPINGS);
+  const unknownExternalIds = externalIds.filter(id => !predictionIds.has(id));
+  const mixedOverlap = Object.keys(evidenceApprovals).filter(id => EXTERNAL_MAPPINGS[id]);
+  const mixedMissing = [...predictionIds].filter(id => !evidenceApprovals[id] && !EXTERNAL_MAPPINGS[id]);
+  if (unknownExternalIds.length || mixedOverlap.length || mixedMissing.length) {
+    throw new Error(
+      `mixed evidence ledger mismatch (unknown external: ${unknownExternalIds.join(', ') || 'none'}; `
+      + `overlap: ${mixedOverlap.join(', ') || 'none'}; missing: ${mixedMissing.join(', ') || 'none'})`
+    );
+  }
+  const familyCoverage = validateFamilyCoverage(PREDICTIONS.map(prediction => prediction.id));
+  if (familyCoverage.missing.length || familyCoverage.extra.length
+      || PREDICTIONS.some(prediction => !FAMILY_DEFINITIONS[prediction.evidenceFamily])) {
+    throw new Error(
+      `evidence-family contract is incomplete (missing: ${familyCoverage.missing.join(', ') || 'none'}; `
+      + `extra: ${familyCoverage.extra.join(', ') || 'none'})`
+    );
+  }
   const datedPredictionCount = PREDICTIONS.filter(p => p.scope !== 'horizon').length;
   const horizonPredictionCount = PREDICTIONS.length - datedPredictionCount;
   const predYears = new Set(PREDICTIONS.filter(p => p.scope !== 'horizon').map(p => p.year)).size;
@@ -1525,21 +1769,87 @@ async function main(){
   let timeline = null; let apiCaps = null; let source = 'live-search'; let sourceWhen = null;
   const sourceAttempts = [];
   const staleSourcesRejected = [];
+  if (HISTORY_BACKFILL) {
+    sourceAttempts.push({
+      source: 'public-project-archives',
+      status: 'historical-backfill',
+      count: publicArchiveCount,
+    });
+  }
   if (SKIP_LIVE || SKIP_API) {
     sourceAttempts.push({ source: SKIP_LIVE ? 'live-sources' : 'x-api', status: 'skipped-by-env', count: 0 });
   } else {
     try {
       const xc = require('./x-client.js');
-      const act = await xc.harvestActivity({ maxPosts: 300 });
+      const requestedPosts = HISTORY_BACKFILL ? API_HISTORY_POSTS : API_RECENT_POSTS;
+      const act = await xc.harvestActivity({ maxPosts: requestedPosts, maxLikes: 0, maxBookmarks: 0 });
       if (act && act.items && act.items.length) {
         timeline = mapCachedItems(act.items);
         apiCaps = act.caps;
         source = 'x-api';
         sourceWhen = new Date();
-        // Non-served debug dump (kept OUT of pap-deploy so the raw feed — incl. private bookmarks — is never served).
-        try { fs.writeFileSync(ACT, JSON.stringify({ id: act.id, caps: act.caps, when: sourceWhen.toISOString(), items: act.items.slice(0, 300) }, null, 2)); } catch(e){}
-        sourceAttempts.push({ source: 'x-api', status: 'live', count: timeline.length });
-        console.error(`[refresh] X API harvest: ${timeline.length} items (posts ${act.caps.posts}, reposts ${act.caps.reposts}, likes ${act.caps.likes}, bookmarks ${act.caps.bookmarks}).`);
+        // Non-served current snapshot and durable historical corpus remain under pap-secrets.
+        try {
+          let fullArchive = null;
+          if (HISTORY_BACKFILL && typeof xc.harvestFullArchive === 'function') {
+            fullArchive = await xc.harvestFullArchive({ maxPosts: API_FULL_ARCHIVE_POSTS });
+            if (fullArchive.items && fullArchive.items.length) {
+              historicalTimeline = mergeActivityHistory(historicalTimeline, mapCachedItems(fullArchive.items));
+            }
+            sourceAttempts.push({
+              source: 'x-api-full-archive',
+              status: fullArchive.caps && fullArchive.caps.timelineComplete ? 'complete' : 'partial',
+              count: fullArchive.items ? fullArchive.items.length : 0,
+              timelinePages: fullArchive.caps && fullArchive.caps.timelinePages || 0,
+              httpStatus: fullArchive.status || null,
+              remaining: fullArchive.remaining == null ? null : Number(fullArchive.remaining),
+              resetAt: fullArchive.reset ? new Date(Number(fullArchive.reset) * 1000).toISOString() : null,
+            });
+            apiCaps.fullArchive = fullArchive.caps;
+          }
+          if (HISTORY_BACKFILL && typeof xc.harvestSearchQueries === 'function') {
+            const targetedArchive = await xc.harvestSearchQueries(HISTORICAL_SEARCH_QUERIES);
+            if (targetedArchive.items && targetedArchive.items.length) {
+              historicalTimeline = mergeActivityHistory(historicalTimeline, mapCachedItems(targetedArchive.items));
+            }
+            sourceAttempts.push({
+              source: 'x-api-targeted-full-archive',
+              status: targetedArchive.stats.some(stat => stat.status === 429) ? 'rate-limited-partial' : 'complete',
+              count: targetedArchive.items ? targetedArchive.items.length : 0,
+              queries: targetedArchive.stats,
+            });
+            apiCaps.targetedArchive = {
+              queriesAttempted: targetedArchive.stats.length,
+              items: targetedArchive.items ? targetedArchive.items.length : 0,
+              rateLimited: targetedArchive.stats.some(stat => stat.status === 429),
+              queries: targetedArchive.stats.map(stat => ({
+                name: stat.name,
+                count: stat.count,
+                status: stat.status,
+                complete: stat.complete,
+              })),
+            };
+          }
+          fs.writeFileSync(ACT, JSON.stringify({
+            id: act.id,
+            caps: act.caps,
+            when: sourceWhen.toISOString(),
+            items: act.items,
+          }, null, 2));
+          historicalTimeline = mergeActivityHistory(timeline, historicalTimeline);
+          writePrivateHistory(historicalTimeline, act.caps);
+        } catch (e) {
+          throw new Error('private activity history could not be updated: ' + e.message);
+        }
+        sourceAttempts.push({
+          source: 'x-api',
+          status: 'live',
+          count: timeline.length,
+          requestedPosts,
+          timelinePages: act.caps.timelinePages,
+          timelineComplete: act.caps.timelineComplete,
+        });
+        console.error(`[refresh] X API harvest: ${timeline.length} recent posts/reposts across ${act.caps.timelinePages} page(s); private history ${historyCountBefore} -> ${historicalTimeline.length}.`);
       } else {
         sourceAttempts.push({ source: 'x-api', status: 'unavailable', count: 0 });
         console.error('[refresh] X API harvest returned nothing — trying the live public RSS profile.');
@@ -1645,45 +1955,65 @@ async function main(){
     source = 'live-search';
     sourceWhen = new Date();
     sourceAttempts.push({ source: 'live-search', status: 'fallback', count: 0 });
-    console.error('[refresh] No fresh verified activity source is available — stale embeds are rejected; publishing live-search fallbacks.');
+    console.error('[refresh] No fresh verified activity source is available — direct-only publication will fail.');
   }
 
   const reposts = await ingestList('reposts.json', 'repost');   // only posts + reposts are surfaced
 
-  // Merge + de-dup by id (keep richest kind: post > repost).
+  // Merge fresh source + private evergreen history + any explicitly hydrated reposts.
   const byId = new Map();
-  for (const it of [...timeline, ...reposts]) {
+  for (const it of [...timeline, ...historicalTimeline, ...reposts]) {
     if (!it || isNaN(it.created.getTime())) continue;
     const ex = byId.get(it.id);
-    if (!ex || KIND_RANK[it.kind] < KIND_RANK[ex.kind]) byId.set(it.id, it);
+    const hasRicherRepostProvenance = it.kind === 'repost'
+      && it.activityId && it.activityId !== it.id
+      && (!ex?.activityId || ex.activityId === ex.id);
+    if (!ex || KIND_RANK[it.kind] < KIND_RANK[ex.kind] || hasRicherRepostProvenance) {
+      byId.set(it.id, it);
+    }
   }
   const all = [...byId.values()].sort((a, b) => b.created - a.created);
   const now = Date.now();
   const eligible = all.filter(t => (now - t.created.getTime()) <= MAX_AGE_DAYS * 864e5);
   const pastWeek = all.filter(t => (now - t.created.getTime()) <= PAST_WEEK_DAYS * 864e5);
 
-  const counts = { entries: timeline.length, posts: 0, reposts: 0, likes: 0, bookmarks: 0, uniques: all.length, eligible: eligible.length, pastWeek: pastWeek.length };
+  const counts = {
+    entries: timeline.length,
+    history: historicalTimeline.length,
+    posts: 0,
+    reposts: 0,
+    likes: 0,
+    bookmarks: 0,
+    uniques: all.length,
+    eligible: eligible.length,
+    pastWeek: pastWeek.length,
+  };
   for (const t of timeline) { const key = t.kind + 's'; if (counts[key] != null) counts[key]++; }
   counts.reposts += reposts.length; // owner-provided reposts.json
   const newest = all.length ? fmtDate(all[0].created) : '(none)';
-  console.error(`[refresh] timeline=${counts.entries} (posts ${counts.posts}, reposts ${counts.reposts}); uniques ${counts.uniques}; newest ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
+  const oldest = all.length ? fmtDate(all[all.length - 1].created) : '(none)';
+  console.error(`[refresh] fresh=${counts.entries}; private history=${counts.history}; unique corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
 
-  // An unavailable fresh source is an explicit search-only state; stale cards are never carried forward.
-  if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — using the most recent topical post per prediction (honestly dated), else a live search.');
+  // Source freshness and evidence age are distinct. Historical evidence is allowed only after a fresh source check.
+  if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — reviewed historical evidence remains eligible, but publication still requires complete direct coverage.');
 
   // ---- 3. Guarded lexical + semantic scoring -> maximum-coverage assignment ------------------------
   // Literal hits and the controlled concept ontology both remain subordinate to claim-specific facet
   // guards. Semantic-only matches are limited to recent activity so broad historical backfilling cannot
-  // inflate coverage. Allocation maximizes unique relevant posts first, then bounded reuse.
+  // inflate coverage. Allocation maximizes unique relevant posts first, then declared-family reuse.
   const candidateLists = {};
+  const unapprovedCandidateCounts = {};
   const guardRejections = {};
   for (const p of PREDICTIONS) {
     const cands = [];
     for (const t of eligible) {
       const ageDays = (now - t.created.getTime()) / 864e5;
-      const qualified = qualifyPost(t.text, p, ageDays);
-      const { scored, lexicalValid, semanticValid, matchMethod } = qualified;
-      if (!qualified.ok && qualified.reason === 'relevance') continue;
+      const direct = qualifyPost(t.text, p, ageDays);
+      const family = direct.ok ? null : qualifyFamilyPost(t.text, p);
+      const qualified = direct.ok ? direct : family;
+      const assignmentMode = direct.ok ? 'direct' : 'family-reuse-candidate';
+      const { scored, matchMethod } = qualified;
+      if (!qualified.ok && direct.reason === 'relevance') continue;
       if (!qualified.ok) {
         if (!guardRejections[p.id]) guardRejections[p.id] = { count: 0, samples: [] };
         guardRejections[p.id].count++;
@@ -1692,14 +2022,13 @@ async function main(){
             id: t.id,
             author: t.author,
             date: fmtDate(t.created),
-            method: matchMethod,
-            concepts: scored.conceptHits,
-            text: cleanText(t.text).slice(0, 160),
+            method: direct.matchMethod || null,
+            concepts: direct.scored && direct.scored.conceptHits || [],
           });
         }
         continue;
       }
-      const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : 'recent';
+      const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : ageDays <= 180 ? 'recent' : 'historical';
       cands.push({
         id: p.id,
         year: p.year,
@@ -1713,16 +2042,24 @@ async function main(){
         tier,
         hit: scored.hit,
         matchMethod,
+        assignmentMode,
+        evidenceFamily: p.evidenceFamily,
+        facetBasis: direct.ok ? 'prediction-facets' : 'declared-family',
         created: t.created,
       });
     }
     cands.sort((a, b) =>
-      b.recencyRank - a.recencyRank
-      || b.created - a.created
+      (b.assignmentMode === 'direct') - (a.assignmentMode === 'direct')
+      || b.coverage - a.coverage
       || b.conceptScore - a.conceptScore
       || b.score - a.score
-      || b.coverage - a.coverage);
-    candidateLists[p.id] = cands;
+      || b.recencyRank - a.recencyRank
+      || b.created - a.created);
+    const approval = evidenceApprovals[p.id];
+    candidateLists[p.id] = approval
+      ? cands.filter(candidate => candidate.t.id === String(approval.postId))
+      : [];
+    unapprovedCandidateCounts[p.id] = cands.length - candidateLists[p.id].length;
   }
   const candidateAudit = {};
   for (const p of PREDICTIONS) {
@@ -1732,10 +2069,12 @@ async function main(){
       date: fmtDate(c.t.created),
       tier: c.tier,
       method: c.matchMethod,
+      assignmentMode: c.assignmentMode,
+      evidenceFamily: c.evidenceFamily,
+      facetBasis: c.facetBasis,
       score: c.score,
       conceptScore: c.conceptScore,
       concepts: c.conceptHits,
-      text: cleanText(c.t.text).slice(0, 160),
     }));
   }
 
@@ -1773,9 +2112,10 @@ async function main(){
   }
   const maximumUniqueMatches = Object.keys(picks).length;
 
-  // Phase 2: augment the same graph with up to MAX_POST_REUSE slots per post. This preserves the
-  // maximum unique-post coverage while filling every additional defensible prediction it can.
+  // Phase 2: reuse only inside an explicitly declared compatible evidence family. This preserves
+  // maximum unique-post coverage without an arbitrary quota or cross-topic reuse.
   const postOwners = new Map();
+  const predictionById = new Map(PREDICTIONS.map(prediction => [prediction.id, prediction]));
   for (const [predId, cand] of Object.entries(picks)) {
     if (!postOwners.has(cand.t.id)) postOwners.set(cand.t.id, new Set());
     postOwners.get(cand.t.id).add(predId);
@@ -1794,15 +2134,13 @@ async function main(){
       if (seenPosts.has(cand.t.id)) continue;
       seenPosts.add(cand.t.id);
       const owners = postOwners.get(cand.t.id) || new Set();
-      if (owners.size < MAX_POST_REUSE) {
+      const prediction = predictionById.get(predId);
+      const definition = FAMILY_DEFINITIONS[prediction.evidenceFamily];
+      const sameFamily = owners.size > 0 && [...owners].every(ownerId =>
+        predictionById.get(ownerId).evidenceFamily === prediction.evidenceFamily);
+      if (!owners.size || (definition.reuse && sameFamily)) {
         setAssignment(predId, cand);
         return true;
-      }
-      for (const owner of [...owners]) {
-        if (assignWithCapacity(owner, seenPosts, seenPreds)) {
-          setAssignment(predId, cand);
-          return true;
-        }
       }
     }
     return false;
@@ -1812,32 +2150,110 @@ async function main(){
   }
   const postUses = new Map([...postOwners.entries()].filter(([, owners]) => owners.size).map(([id, owners]) => [id, owners.size]));
   const usedPosts = new Set(postUses.keys());
+  const externalUsesBySource = {};
+  for (const mapping of Object.values(EXTERNAL_MAPPINGS)) {
+    externalUsesBySource[mapping.source] = (externalUsesBySource[mapping.source] || 0) + 1;
+  }
 
-  // Build one embed (or search fallback) per prediction, keyed by "YEAR-INDEX". The X API harvest already
-  // carries fresh metrics/text, so no extra per-pick liveness call is needed (avoids ~57 round-trips).
-  const embeds = {}; const search = {}; const chosen = {};
+  // Build one direct embed per prediction. Any missing direct mapping is a publication failure.
+  const embeds = {}; const chosen = {}; const missingDirect = [];
   for (const p of PREDICTIONS) {
     const c = picks[p.id];
-    if (!c) { search[p.id] = p.search; continue; }
+    if (!c) {
+      const mapping = EXTERNAL_MAPPINGS[p.id];
+      const external = mapping && EXTERNAL_SOURCES[mapping.source];
+      if (!mapping || !external) {
+        missingDirect.push(p.id);
+        continue;
+      }
+      let externalText = cleanText(external.text);
+      if (externalText.length > 160) externalText = externalText.slice(0, 157) + '\u2026';
+      const reuseCount = externalUsesBySource[mapping.source] || 1;
+      embeds[p.id] = {
+        id: external.statusId,
+        kind: 'external',
+        activityKind: 'external',
+        evidenceOwner: 'external',
+        author: external.handle,
+        displayName: external.displayName,
+        url: external.url,
+        provenance: {
+          evidenceOwner: 'external',
+          activityKind: 'external',
+          account: external.handle,
+          displayName: external.displayName,
+          retrievedAt: external.retrievedAt,
+          sourceQuality: external.sourceQuality,
+        },
+        recency: 'external',
+        matchMethod: 'reviewed-external',
+        matchBasis: mapping.evidenceType,
+        assignmentMode: reuseCount > 1 ? 'external-reuse' : 'unique',
+        evidenceFamily: p.evidenceFamily,
+        reuseFamily: mapping.reuseFamily,
+        evidenceType: mapping.evidenceType,
+        mappingRationale: mapping.rationale,
+        sourceQuality: external.sourceQuality,
+        reuseCount,
+        matchedConcepts: [...p.concepts],
+        matchedFacets: [mapping.evidenceType],
+        reviewed: true,
+        reviewedAt: mapping.reviewedAt,
+        date: fmtDate(new Date(external.postedAt)),
+        maps: p.maps,
+        text: externalText,
+        likes: 0,
+        rts: 0,
+      };
+      chosen[p.id] = `external:@${external.handle} [${mapping.evidenceType}/${embeds[p.id].assignmentMode} source=${mapping.source} reuse=${reuseCount}]`;
+      continue;
+    }
     const pick = c.t;
     let { likes: lk, rts, created, author } = pick;
     let text = cleanText(pick.text);
     const prevE = prevEmbeds[p.id];
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
+    const reuseCount = postUses.get(pick.id) || 1;
+    const relationship = pick.kind === 'repost' ? 'reposted' : 'authored';
+    const directUrl = `https://x.com/${author || 'peterxing'}/status/${pick.id}`;
     embeds[p.id] = {
       id: pick.id,
       kind: pick.kind,
+      activityKind: pick.kind,
+      evidenceOwner: 'peterxing',
       author: author || 'peterxing',
+      displayName: pick.kind === 'post' ? 'Peter Xing' : author || 'External author',
+      url: directUrl,
+      provenance: {
+        evidenceOwner: 'peterxing',
+        activityKind: pick.kind,
+        account: 'peterxing',
+        displayName: 'Peter Xing',
+        relationship,
+        activityId: pick.activityId || pick.id,
+        observedIn: pick.activitySource || 'verified-activity-history',
+      },
       recency: c.tier,
       matchMethod: c.matchMethod,
+      matchBasis: c.facetBasis,
+      assignmentMode: reuseCount > 1 ? 'family-reuse' : 'unique',
+      evidenceFamily: p.evidenceFamily,
+      reuseCount,
+      matchedConcepts: c.conceptHits,
+      matchedFacets: [c.facetBasis],
+      evidenceType: 'direct',
+      sourceQuality: 'peterxing-activity',
+      mappingRationale: evidenceApprovals[p.id].basis,
+      reviewed: true,
+      reviewedAt: evidenceApprovals[p.id].reviewedAt,
       date: fmtDate(created),
       maps: p.maps,
       text,
       likes: lk,
       rts: rts || 0,
     };
-    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} ${c.matchMethod} r${c.recencyRank} s${c.score} cs${c.conceptScore} c${c.coverage}] ${(c.conceptHits.length ? c.conceptHits : c.hit).slice(0, 4).join('/')}`;
+    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank} s${c.score} cs${c.conceptScore} c${c.coverage}] ${(c.conceptHits.length ? c.conceptHits : c.hit).slice(0, 4).join('/')}`;
   }
 
   // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
@@ -1885,7 +2301,16 @@ async function main(){
   const newestItemAt = all.length ? all[0].created.toISOString() : null;
   const newestItemAgeHours = all.length ? Math.max(0, (Date.now() - all[0].created.getTime()) / 36e5) : null;
   const sourceFresh = source !== 'live-search' && sourceAgeHours <= SOURCE_CACHE_MAX_HOURS;
-  const reusedPosts = [...postUses.values()].filter(v => v > 1).length;
+  const directUsesByPost = new Map();
+  for (const [predictionId, embed] of Object.entries(embeds)) {
+    if (!directUsesByPost.has(embed.id)) directUsesByPost.set(embed.id, []);
+    directUsesByPost.get(embed.id).push({ predictionId, embed });
+  }
+  const directUseCounts = [...directUsesByPost.values()].map(uses => uses.length);
+  const reusedPosts = directUseCounts.filter(count => count > 1).length;
+  const maxPostReuseObserved = Math.max(0, ...directUseCounts);
+  const reuseDistribution = {};
+  for (const count of directUseCounts) reuseDistribution[count] = (reuseDistribution[count] || 0) + 1;
   const candidatePosts = new Set();
   const pastWeekCandidatePosts = new Set();
   for (const cands of Object.values(candidateLists)) for (const c of cands) {
@@ -1893,8 +2318,10 @@ async function main(){
     if (c.tier === 'week') pastWeekCandidatePosts.add(c.t.id);
   }
   const usedPastWeekPosts = new Set(Object.values(picks).filter(c => c.tier === 'week').map(c => c.t.id));
-  const matchMethodTally = { lexical: 0, semantic: 0, hybrid: 0 };
-  for (const c of Object.values(picks)) matchMethodTally[c.matchMethod]++;
+  const matchMethodTally = {};
+  for (const embed of Object.values(embeds)) {
+    matchMethodTally[embed.matchMethod] = (matchMethodTally[embed.matchMethod] || 0) + 1;
+  }
   const matchablePredictions = PREDICTIONS.filter(p => candidateLists[p.id].length).length;
   const unmatchedWithCandidates = PREDICTIONS.filter(p => candidateLists[p.id].length && !picks[p.id]).map(p => p.id);
   const unusedRelevantPosts = [...candidatePosts].filter(id => !usedPosts.has(id));
@@ -1909,23 +2336,141 @@ async function main(){
   const eligibleById = new Map(eligible.map(t => [t.id, t]));
   const unusedRelevantPostSamples = unusedRelevantPosts.slice(0, 20).map(id => {
     const t = eligibleById.get(id);
-    return t ? { id, author: t.author, date: fmtDate(t.created), text: cleanText(t.text).slice(0, 160) } : { id };
+    return t ? { id, author: t.author, date: fmtDate(t.created), concepts: [...detectConcepts(t.text)] } : { id };
   });
+  const reuseAudit = [];
+  const invalidReuse = [];
+  for (const [postId, uses] of directUsesByPost.entries()) {
+    const predictionIds = uses.map(use => use.predictionId).sort();
+    const owners = [...new Set(uses.map(use => use.embed.evidenceOwner))];
+    const peterFamilies = [...new Set(uses.map(use => use.embed.evidenceFamily))];
+    const externalFamilies = [...new Set(uses.map(use => use.embed.reuseFamily).filter(Boolean))];
+    const family = owners[0] === 'peterxing'
+      ? peterFamilies.length === 1 ? peterFamilies[0] : null
+      : externalFamilies.length === 1 ? externalFamilies[0] : null;
+    const audit = {
+      postId,
+      reuseCount: predictionIds.length,
+      predictionIds,
+      evidenceOwner: owners.length === 1 ? owners[0] : null,
+      reuseFamily: family,
+      mode: predictionIds.length === 1 ? 'unique' : owners[0] === 'external' ? 'external-reuse' : 'family-reuse',
+    };
+    reuseAudit.push(audit);
+    if (predictionIds.length > 1) {
+      if (owners.length !== 1 || !family) {
+        invalidReuse.push(audit);
+      } else if (owners[0] === 'peterxing'
+          && (!FAMILY_DEFINITIONS[family] || !FAMILY_DEFINITIONS[family].reuse)) {
+        invalidReuse.push(audit);
+      } else if (owners[0] === 'external'
+          && uses.some(use => use.embed.reuseFamily !== family
+            || use.embed.assignmentMode !== 'external-reuse')) {
+        invalidReuse.push(audit);
+      }
+    }
+  }
+  reuseAudit.sort((a, b) => b.reuseCount - a.reuseCount || a.postId.localeCompare(b.postId));
+
+  const mappingIntegrityErrors = [];
+  if (!sourceFresh) mappingIntegrityErrors.push('fresh verified activity source unavailable');
+  if (missingDirect.length) mappingIntegrityErrors.push(`missing direct mappings: ${missingDirect.join(', ')}`);
+  if (invalidReuse.length) {
+    mappingIntegrityErrors.push(`invalid cross-family reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
+  }
+  for (const prediction of PREDICTIONS) {
+    const embed = embeds[prediction.id];
+    if (!embed) continue;
+    if (!/^\d{15,}$/.test(String(embed.id || ''))) {
+      mappingIntegrityErrors.push(`${prediction.id}: invalid post ID`);
+    }
+    if (!/^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(embed.url || ''))) {
+      mappingIntegrityErrors.push(`${prediction.id}: invalid direct X URL`);
+    }
+    const provenance = embed.provenance || {};
+    if (embed.evidenceOwner === 'peterxing') {
+      const approval = evidenceApprovals[prediction.id];
+      if (!approval || String(approval.postId) !== String(embed.id)
+          || embed.reviewed !== true || embed.reviewedAt !== approval.reviewedAt) {
+        mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed Peter approval`);
+      }
+      if (!eligibleById.has(String(embed.id))) {
+        mappingIntegrityErrors.push(`${prediction.id}: Peter post ID not present in harvested history`);
+      }
+      if (provenance.evidenceOwner !== 'peterxing'
+          || provenance.account !== 'peterxing'
+          || !['post', 'repost'].includes(provenance.activityKind)
+          || !['authored', 'reposted'].includes(provenance.relationship)
+          || !/^\d{15,}$/.test(String(provenance.activityId || ''))
+          || !provenance.observedIn) {
+        mappingIntegrityErrors.push(`${prediction.id}: incomplete @peterxing activity provenance`);
+      }
+    } else if (embed.evidenceOwner === 'external') {
+      const mapping = EXTERNAL_MAPPINGS[prediction.id];
+      const external = mapping && EXTERNAL_SOURCES[mapping.source];
+      if (!mapping || !external || String(external.statusId) !== String(embed.id)
+          || embed.reviewed !== true || embed.reviewedAt !== mapping.reviewedAt) {
+        mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed external ledger entry`);
+      }
+      if (embed.kind !== 'external' || embed.activityKind !== 'external'
+          || provenance.evidenceOwner !== 'external'
+          || provenance.activityKind !== 'external'
+          || provenance.account !== external?.handle
+          || provenance.sourceQuality !== external?.sourceQuality
+          || !provenance.retrievedAt
+          || !['direct', 'scenario', 'leading-indicator'].includes(embed.evidenceType)
+          || !embed.mappingRationale) {
+        mappingIntegrityErrors.push(`${prediction.id}: incomplete external evidence provenance`);
+      }
+    } else {
+      mappingIntegrityErrors.push(`${prediction.id}: invalid evidence owner`);
+    }
+    if (embed.evidenceFamily !== prediction.evidenceFamily) {
+      mappingIntegrityErrors.push(`${prediction.id}: evidence-family mismatch`);
+    }
+  }
+
+  const historyOldestAt = all.length ? all[all.length - 1].created.toISOString() : null;
+  const coverageComplete = mappingIntegrityErrors.length === 0
+    && Object.keys(embeds).length === PREDICTIONS.length;
+  const ownerTally = {};
+  const sourceQualityTally = {};
+  const evidenceTypeTally = {};
+  for (const embed of Object.values(embeds)) {
+    ownerTally[embed.evidenceOwner] = (ownerTally[embed.evidenceOwner] || 0) + 1;
+    sourceQualityTally[embed.sourceQuality] = (sourceQualityTally[embed.sourceQuality] || 0) + 1;
+    evidenceTypeTally[embed.evidenceType] = (evidenceTypeTally[embed.evidenceType] || 0) + 1;
+  }
   const out = {
     updated: new Date().toISOString(),
-    note: `Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than ${SOURCE_CACHE_MAX_HOURS} hours and stale legacy syndication snapshots are rejected rather than labeled current. Controlled semantic concepts supplement literal matching, but claim-specific facet guards remain mandatory and semantic-only matches are limited to ${SEMANTIC_MAX_AGE_DAYS} days. Assignment maximizes unique relevant posts before bounded reuse of at most ${MAX_POST_REUSE}; unsupported predictions receive an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.`,
+    note: `Every prediction is backed by a reviewed direct X status. Reviewed @peterxing activity is preferred; remaining mappings use authoritative external posts labeled as direct, scenario, or leading-indicator evidence. Source freshness is tracked separately from evergreen evidence age. Reuse is allowed only inside an audited scenario or threshold-series group. Search-only prediction fallbacks are prohibited.`,
     source,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
     newestItemAt,
-    embeds, search, reality,
+    history: {
+      count: all.length,
+      oldestItemAt: historyOldestAt,
+      newestItemAt,
+    },
+    coverage: {
+      direct: Object.keys(embeds).length,
+      total: PREDICTIONS.length,
+      complete: coverageComplete,
+      uniquePosts: directUsesByPost.size,
+      maxReuse: maxPostReuseObserved,
+      reuseDistribution,
+      byEvidenceOwner: ownerTally,
+      bySourceQuality: sourceQualityTally,
+      byEvidenceType: evidenceTypeTally,
+    },
+    embeds,
+    reality,
   };
-  fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
 
   const kindTally = {}; const tierTally = {};
   for (const y in embeds) { const e = embeds[y]; kindTally[e.kind] = (kindTally[e.kind] || 0) + 1; tierTally[e.recency] = (tierTally[e.recency] || 0) + 1; }
-  const sampleBy = (k) => eligible.filter(t => t.kind === k).slice(0, 6).map(t => ({ id: t.id, author: t.author, date: fmtDate(t.created), text: cleanText(t.text).slice(0, 90) }));
-  fs.writeFileSync(DBG, JSON.stringify({
+  const debugPayload = {
     updated: out.updated,
     source,
     sourceFresh,
@@ -1943,13 +2488,23 @@ async function main(){
     horizonItems: horizonPredictionCount,
     matched: Object.keys(embeds).length,
     freshMatches: sourceFresh ? Object.keys(embeds).length : 0,
-    searches: Object.keys(search).length,
-    maxPostReuse: MAX_POST_REUSE,
+    directCoverageComplete: coverageComplete,
+    reviewedApprovals: Object.keys(evidenceApprovals).length,
+    reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
+    evidenceOwners: ownerTally,
+    sourceQuality: sourceQualityTally,
+    evidenceTypes: evidenceTypeTally,
+    unapprovedCandidateCounts,
+    missingDirect,
+    mappingIntegrityErrors,
+    maxPostReuseObserved,
+    reuseDistribution,
+    reuseAudit,
     semanticMaxAgeDays: SEMANTIC_MAX_AGE_DAYS,
     matchablePredictions,
     unmatchedWithCandidates,
     maximumUniqueMatches,
-    uniqueMatchedPosts: usedPosts.size,
+    uniqueMatchedPosts: directUsesByPost.size,
     candidateRelevantPosts: candidatePosts.size,
     unusedRelevantPosts: unusedRelevantPosts.length,
     unusedRelevantPostSamples,
@@ -1964,13 +2519,43 @@ async function main(){
     embedTiers: tierTally,
     reality: reality.map(r => r.kind === 'search' ? `${r.tag}: live search` : `${r.tag}: ${r.kind}:@${r.author} [${r.recency}] ${r.date}`),
     chosen,
-    sampleReposts: sampleBy('repost'),
-    sampleLikes: sampleBy('like'),
-    sampleBookmarks: sampleBy('bookmark'),
-  }, null, 2) + '\n');
+    proposedMappings: Object.fromEntries(Object.entries(embeds).map(([predictionId, signal]) => [
+      predictionId,
+      {
+        postId: signal.id,
+        author: signal.author,
+        kind: signal.kind,
+        date: signal.date,
+        evidenceFamily: signal.evidenceFamily,
+        evidenceOwner: signal.evidenceOwner,
+        evidenceType: signal.evidenceType,
+        sourceQuality: signal.sourceQuality,
+        mappingRationale: signal.mappingRationale,
+        reuseFamily: signal.reuseFamily || signal.evidenceFamily,
+        matchMethod: signal.matchMethod,
+        assignmentMode: signal.assignmentMode,
+        matchedConcepts: signal.matchedConcepts,
+        text: signal.text,
+      },
+    ])),
+  };
+  fs.writeFileSync(DBG, JSON.stringify(debugPayload, null, 2) + '\n');
 
-  console.error(`[refresh] Wrote signals.json from ${source}: ${Object.keys(embeds).length}/${PREDICTIONS.length} predictions embedded using ${usedPosts.size} unique posts (maximum unique ${maximumUniqueMatches}, reuse cap ${MAX_POST_REUSE}) [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(kindTally).map(([k, v]) => v + ' ' + k).join(', ')}] {${Object.entries(tierTally).map(([k, v]) => v + ' ' + k).join(', ')}}, ${Object.keys(search).length} searches, ${reality.length} reality cards.`);
-  console.log(JSON.stringify({ embeds: chosen, search: Object.keys(search), reality: reality.map(r => r.tag) }));
+  console.error(`[refresh] Prepared direct coverage ${Object.keys(embeds).length}/${PREDICTIONS.length} using ${directUsesByPost.size} unique posts (maximum unique Peter matches ${maximumUniqueMatches}, max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
+  if (!coverageComplete) {
+    throw new Error(`direct coverage incomplete (${Object.keys(embeds).length}/${PREDICTIONS.length}): ${mappingIntegrityErrors.join('; ')}`);
+  }
+  fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
+  console.error(`[refresh] Wrote complete direct-only signals.json (${Object.keys(embeds).length}/${PREDICTIONS.length}).`);
+  console.log(JSON.stringify({
+    direct: Object.keys(embeds).length,
+    total: PREDICTIONS.length,
+    uniquePosts: directUsesByPost.size,
+    maxReuse: maxPostReuseObserved,
+    byEvidenceOwner: ownerTally,
+    sourceQuality: sourceQualityTally,
+    reality: reality.map(r => r.tag),
+  }));
 }
 if (require.main === module) {
   main().catch(err => {
@@ -1978,4 +2563,16 @@ if (require.main === module) {
     process.exitCode = 1;
   });
 }
-module.exports = { detectConcepts, deriveEventTerms, hasBoundQuantity, normalizeGuardText, passesFacetGuards, qualifyPost, scorePost };
+module.exports = {
+  buildPredictions,
+  detectConcepts,
+  deriveEventTerms,
+  hasBoundQuantity,
+  normalizeGuardText,
+  passesFacetGuards,
+  qualifyFamilyPost,
+  qualifyPost,
+  readPrivateHistory,
+  readPrivateHistoryMetadata,
+  scorePost,
+};

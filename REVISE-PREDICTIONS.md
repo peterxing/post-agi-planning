@@ -137,7 +137,7 @@ and links in `basis`:
   Dyson swarm or Type I/II transition through 2040 without extraordinary direct evidence.
 
 The matcher guards embody these distinctions. Add a positive and negative fixture for each new
-claim class or newly discovered false positive; never weaken a guard, freshness limit or reuse cap
+claim class or newly discovered false positive; never weaken a guard, freshness limit or declared-family reuse rule
 to raise coverage.
 
 ## Daily revision rules
@@ -206,8 +206,7 @@ to raise coverage.
    unique-post-first, then reuse a post for no more than three closely related predictions. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
-   weaken freshness or facet guards to increase the count; unsupported claims keep the live
-   `from:peterxing` search fallback.
+   weaken freshness or facet guards to increase the count; unsupported claims block publication.
 12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
    item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
    indicators, a caveat and a curated `from:peterxing` match/search definition. Run the same
@@ -218,6 +217,13 @@ to raise coverage.
    and `handoff` in 2040. Their wording and probabilities may evolve, but do not rename, duplicate,
    remove or move these machine keys. `validate-predictions.js` fails publication if the contract
    breaks.
+14. **Preserve the direct-evidence contract.** Every dated event and horizon item must have exactly one
+   entry in `evidence-families.js`. New or revised predictions do not publish until a real post/repost
+   observed in @peterxing's activity passes the claim-specific/family guards and its exact
+   prediction/post pair is added to `evidence-approvals.json` after review. Reuse is permitted only
+   inside the same declared compatible family. Never add a search fallback or weaken a facet guard
+   to restore coverage. `refresh-signals.js` must exit nonzero and leave the last complete
+   `signals.json` untouched whenever direct coverage is below N/N.
 
 ## Procedure
 
@@ -229,13 +235,15 @@ node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
+node verify-direct-coverage.js         # every prediction needs reviewed direct evidence
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 # (index.html + signals.json are copied in the workflow's PUBLISH step too)
 ```
 
 `validate-predictions.js` checks: valid JSON, required top-level keys, the strict 2026-2040 year
-range, unique years, event schema/probabilities, the five stable simulator anchors, portfolio
+range, unique years, event schema/probabilities, the five stable simulator anchors, complete
+evidence-family coverage, portfolio
 duplicates/chronology, and the complete horizon schema, labels, dependency counts, caveats and
 terminology. If it FAILs, fix the source rather than weakening the validator. A broken
 `predictions.json` makes `index.html` retain its inline dated and horizon baselines.

@@ -21,15 +21,15 @@ const SHOT = process.argv[3] || null;
         fetch('predictions.json?verify=' + Date.now()).then(r => r.json()),
       ]);
       const embeds = signals.embeds || {};
-      const searches = signals.search || {};
       const embedValues = Object.values(embeds);
       const methodCounts = {};
       const postUses = {};
       const badMethods = [];
       for (const e of embedValues) {
         methodCounts[e.matchMethod] = (methodCounts[e.matchMethod] || 0) + 1;
-        postUses[e.id] = (postUses[e.id] || 0) + 1;
-        if (!['lexical', 'semantic', 'hybrid'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
+        if (!postUses[e.id]) postUses[e.id] = [];
+        postUses[e.id].push(e);
+        if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
       }
 
       const datedKeys = predictions.years.flatMap(y => y.events.map((_, i) => `${y.year}-${i}`));
@@ -37,7 +37,7 @@ const SHOT = process.argv[3] || null;
       const horizonItems = horizon && Array.isArray(horizon.items) ? horizon.items : [];
       const horizonKeys = horizonItems.map(item => `horizon-${item.id}`);
       const expectedKeys = [...datedKeys, ...horizonKeys];
-      const coveredKeys = new Set([...Object.keys(embeds), ...Object.keys(searches)]);
+      const coveredKeys = new Set(Object.keys(embeds));
       const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key));
       const extraKeys = [...coveredKeys].filter(key => !expectedKeys.includes(key));
 
@@ -69,20 +69,53 @@ const SHOT = process.argv[3] || null;
 
       const eventNodes = Array.from(document.querySelectorAll('#timelineBody .event'));
       const horizonNodes = Array.from(document.querySelectorAll('#horizonBody .horizon-item'));
-      const eventCoverage = eventNodes.every(node => node.querySelector('.event-body > .tl-signal, .event-body > .tl-signal-search'));
+      const eventCoverage = eventNodes.every(node => node.querySelector('.event-body > .tl-signal'));
       const horizonCoverage = horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2
         && node.querySelector('.horizon-caveat')
-        && node.querySelector('.horizon-signal .tl-signal, .horizon-signal .tl-signal-search'));
+        && node.querySelector('.horizon-signal .tl-signal'));
       const searchLinks = Array.from(document.querySelectorAll('.tl-signal-search')).map(a => a.href);
-      const honestSearches = searchLinks.every(href => {
-        try { return /\bfrom:peterxing\b/i.test(new URL(href).searchParams.get('q') || ''); }
-        catch (_) { return false; }
-      });
       const dates = Array.from(document.querySelectorAll('.tl-signal-date')).map(d => d.textContent.trim());
-      const ancient = dates.filter(t => /\b20(1\d|2[0-3])\b/.test(t));
+      const directSchema = expectedKeys.every(key => {
+        const e = embeds[key];
+        const provenance = e && e.provenance || {};
+        const common = e
+          && /^\d{15,}$/.test(String(e.id || ''))
+          && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(e.url || ''))
+          && !!e.evidenceFamily
+          && e.reviewed === true
+          && !!e.mappingRationale;
+        if (!common) return false;
+        if (e.evidenceOwner === 'peterxing') {
+          return ['post', 'repost'].includes(e.kind)
+            && provenance.evidenceOwner === 'peterxing'
+            && provenance.account === 'peterxing'
+            && ['authored', 'reposted'].includes(provenance.relationship)
+            && /^\d{15,}$/.test(String(provenance.activityId || ''))
+            && !!provenance.observedIn
+            && ['unique', 'family-reuse'].includes(e.assignmentMode);
+        }
+        return e.evidenceOwner === 'external'
+          && e.kind === 'external'
+          && provenance.evidenceOwner === 'external'
+          && provenance.activityKind === 'external'
+          && provenance.account === e.author
+          && !!provenance.displayName
+          && !!provenance.sourceQuality
+          && !!provenance.retrievedAt
+          && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
+          && ['unique', 'external-reuse'].includes(e.assignmentMode);
+      });
+      const invalidReuse = Object.entries(postUses).filter(([, uses]) => {
+        if (uses.length <= 1) return false;
+        const owners = new Set(uses.map(use => use.evidenceOwner));
+        const groups = new Set(uses.map(use => use.evidenceOwner === 'external' ? use.reuseFamily : use.evidenceFamily));
+        const expectedMode = uses[0].evidenceOwner === 'external' ? 'external-reuse' : 'family-reuse';
+        return owners.size !== 1 || groups.size !== 1
+          || uses.some(use => use.assignmentMode !== expectedMode);
+      }).map(([id]) => id);
       return {
         eventCount: eventNodes.length,
         expectedEventCount: datedKeys.length,
@@ -90,6 +123,7 @@ const SHOT = process.argv[3] || null;
         expectedHorizonCount: horizonItems.length,
         cards: document.querySelectorAll('#timelineBody .event-body .tl-signal, #horizonBody .horizon-signal .tl-signal').length,
         chips: searchLinks.length,
+        searchFieldAbsent: !Object.prototype.hasOwnProperty.call(signals, 'search'),
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
         source: signals.source || '',
         sourceFresh: signals.sourceFresh === true,
@@ -98,15 +132,16 @@ const SHOT = process.argv[3] || null;
         realityCount: Array.isArray(signals.reality) ? signals.reality.length : 0,
         methodCounts,
         badMethods,
-        maxReuse: Math.max(0, ...Object.values(postUses)),
+        maxReuse: Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
+        invalidReuse,
         missingKeys,
         extraKeys,
         eventCoverage,
         horizonCoverage,
-        honestSearches,
+        directSchema,
         horizonSchema,
         horizonCaveats,
-        ancient,
+        datesMissing: dates.filter(date => !date).length,
       };
     });
 
@@ -118,10 +153,11 @@ const SHOT = process.argv[3] || null;
       renderedCoverage: stats.eventCoverage && stats.horizonCoverage,
       horizonSchema: stats.horizonSchema && stats.horizonCaveats,
       methods: !stats.badMethods.length,
-      reuse: stats.maxReuse <= 3,
-      searches: stats.honestSearches,
+      reuse: !stats.invalidReuse.length,
+      directSchema: stats.directSchema,
+      searches: stats.chips === 0 && stats.searchFieldAbsent,
       reality: stats.realityCount === 6,
-      layout: stats.strayCards === 0 && stats.ancient.length === 0,
+      layout: stats.strayCards === 0 && stats.datesMissing === 0,
       console: errors.length === 0,
     };
     const ok = Object.values(checks).every(Boolean);

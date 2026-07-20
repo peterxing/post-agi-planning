@@ -1,6 +1,6 @@
 'use strict';
 
-const { detectConcepts, deriveEventTerms, qualifyPost } = require('./refresh-signals.js');
+const { detectConcepts, deriveEventTerms, qualifyFamilyPost, qualifyPost } = require('./refresh-signals.js');
 
 function prediction(title, domain = 'technology'){
   const terms = deriveEventTerms(title);
@@ -1608,6 +1608,69 @@ const fixtures = [
   },
 ];
 
+const familyFixtures = [
+  {
+    name: 'computer manipulation is not human persuasion',
+    expect: false,
+    family: 'persuasion',
+    text: 'The AI is superhuman at computer manipulation and can click the wrong browser control.',
+  },
+  {
+    name: 'targeted political persuasion qualifies',
+    expect: true,
+    family: 'persuasion',
+    text: 'AI persuasion now exceeds human persuaders in targeted political influence tests.',
+  },
+  {
+    name: 'model size is not compute infrastructure',
+    expect: false,
+    family: 'compute-infrastructure',
+    text: 'A 2.7 trillion parameter model launched today.',
+  },
+  {
+    name: 'datacenter grid bottleneck qualifies',
+    expect: true,
+    family: 'compute-infrastructure',
+    text: 'AI data center buildout is blocked by grid capacity and power constraints.',
+  },
+  {
+    name: 'agent benchmark is not labor automation',
+    expect: false,
+    family: 'labor-automation',
+    text: 'A new AI agent leads a benchmark of office tasks.',
+  },
+  {
+    name: 'AI workforce displacement qualifies',
+    expect: true,
+    family: 'labor-automation',
+    text: 'AI agents and robots are automating jobs across the workforce and replacing human labor.',
+  },
+  {
+    name: 'space compute contract is not orbital compute',
+    expect: false,
+    family: 'orbital-compute',
+    text: 'SpaceX may provide terrestrial compute power to the Pentagon.',
+  },
+  {
+    name: 'AI satellite inference qualifies as orbital compute',
+    expect: true,
+    family: 'orbital-compute',
+    text: 'The AI satellite runs GPU inference in orbit with disclosed power requirements.',
+  },
+  {
+    name: 'math benchmark is not education recentered on meaning',
+    expect: false,
+    family: 'education',
+    text: 'A model solved an international high school mathematics benchmark.',
+  },
+  {
+    name: 'education purpose shift qualifies',
+    expect: true,
+    family: 'education',
+    text: 'Education should recenter on meaning, community, relationships and stewardship rather than employability.',
+  },
+];
+
 let failed = 0;
 for (const fixture of fixtures) {
   const result = qualifyPost(fixture.text, prediction(fixture.title, fixture.domain), 1);
@@ -1616,9 +1679,16 @@ for (const fixture of fixtures) {
     console.error(`FAIL: ${fixture.name} (expected ${fixture.expect}, got ${result.ok}; reason=${result.reason || 'matched'})`);
   }
 }
+for (const fixture of familyFixtures) {
+  const result = qualifyFamilyPost(fixture.text, { evidenceFamily: fixture.family });
+  if (result.ok !== fixture.expect) {
+    failed++;
+    console.error(`FAIL: ${fixture.name} (expected ${fixture.expect}, got ${result.ok}; reason=${result.reason || 'matched'})`);
+  }
+}
 
 if (failed) {
-  console.error(`RESULT: FAIL (${failed}/${fixtures.length} matcher fixtures)`);
+  console.error(`RESULT: FAIL (${failed}/${fixtures.length + familyFixtures.length} matcher fixtures)`);
   process.exit(1);
 }
-console.log(`RESULT: PASS (${fixtures.length} matcher fixtures)`);
+console.log(`RESULT: PASS (${fixtures.length + familyFixtures.length} matcher fixtures)`);

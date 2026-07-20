@@ -17,7 +17,9 @@
     "verify:predictions": "node verify-perpred.js http://127.0.0.1:8787",
     "verify:reality": "node verify-reality.js http://127.0.0.1:8787",
     "verify:author": "node verify-author.js http://127.0.0.1:8787",
-    "verify:ui": "node verify-observatory.js http://127.0.0.1:8787"
+    "verify:ui": "node verify-observatory.js http://127.0.0.1:8787",
+    "verify:coverage": "node verify-direct-coverage.js",
+    "verify:external": "node verify-external-evidence.js"
   },
   "devDependencies": {
     "playwright": "1.61.1"

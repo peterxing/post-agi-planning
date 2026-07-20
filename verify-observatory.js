@@ -102,6 +102,9 @@ function requestStatus(pathname) {
         horizonCards:document.querySelectorAll('#horizonBody .horizon-item').length,
         reality:document.querySelectorAll('#signalsGrid .observation-card').length,
         chapters:document.querySelectorAll('#chapters .chapter').length,
+        evidenceCards:document.querySelectorAll('#timelineBody .tl-signal, #horizonBody .tl-signal').length,
+        evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
+        predictionSearches:document.querySelectorAll('.tl-signal-search').length,
         collapsedChapters:[...document.querySelectorAll('#chapters .ch-body')].every(element => element.hidden),
         simulator:{
           map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
@@ -153,6 +156,11 @@ function requestStatus(pathname) {
     check(results, 'six reality observations render', state.reality === 6, String(state.reality));
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
     check(results, 'collapsed chapters leave the accessibility tree', state.collapsedChapters);
+    check(results, 'prediction evidence is direct-only or fail-closed',
+      state.predictionSearches === 0
+      && ((state.evidenceCards === expectedEvents + expectedHorizon && state.evidenceUnavailable === 0)
+        || (state.evidenceCards === 0 && state.evidenceUnavailable === expectedEvents + expectedHorizon)),
+      JSON.stringify({ cards:state.evidenceCards, unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
     check(results, 'JSON-derived text is escaped at render time', state.escapedText);
     check(results, 'probability simulator loads published anchors',
       state.simulator.map
@@ -169,7 +177,9 @@ function requestStatus(pathname) {
       JSON.stringify(state.figures));
     check(results, 'hero uses fetched event count', state.heroCount === String(expectedEvents), state.heroCount);
     check(results, 'current coordinate is numeric', /^\d{4}\.\d{2}$/.test(state.coordinate || ''), state.coordinate);
-    check(results, 'live freshness is exposed', /Evidence ·/.test(state.freshness || ''), state.freshness);
+    check(results, 'evidence state is exposed',
+      /Evidence ·|Direct evidence · temporarily unavailable/.test(state.freshness || ''),
+      state.freshness);
     check(results, 'ids are unique', state.duplicateIds.length === 0, state.duplicateIds.join(', '));
     check(results, 'console is clean', consoleErrors.length === 0, consoleErrors.join(' | '));
 
@@ -186,11 +196,12 @@ function requestStatus(pathname) {
     await evidenceToggle.click();
     const evidenceState = await page.evaluate(() => ({
       pressed:document.getElementById('overlayToggle').getAttribute('aria-pressed'),
-      searchDisplay:getComputedStyle(document.querySelector('#timelineAtlas .tl-signal-search')).display,
+      hiddenEvidence:[...document.querySelectorAll('#timelineAtlas .tl-signal, #timelineAtlas .tl-signal-unavailable')]
+        .every(element => getComputedStyle(element).display === 'none'),
       eventCount:document.querySelectorAll('#timelineBody .event').length,
     }));
     check(results, 'evidence toggle hides evidence only',
-      evidenceState.pressed === 'false' && evidenceState.searchDisplay === 'none' && evidenceState.eventCount === expectedEvents);
+      evidenceState.pressed === 'false' && evidenceState.hiddenEvidence && evidenceState.eventCount === expectedEvents);
     await evidenceToggle.click();
 
     await page.locator('.chip[data-domain="technology"]').click();

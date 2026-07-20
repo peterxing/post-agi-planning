@@ -1,6 +1,5 @@
-// verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors
-// and that no embed shows a pre-2024 (stale) dated card. Embeds may be his most-recent topical post
-// (honestly dated), so the strict past-week gate is not enforced here.
+// verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors,
+// no prediction search fallbacks, and honest labeling of any evergreen historical evidence.
 //   npm install, then: node verify-site.js [url]
 const { chromium } = require('playwright');
 
@@ -22,15 +21,20 @@ const { chromium } = require('playwright');
     const searches = await page.$$eval('.tl-signal-search', els => els.length).catch(() => 0);
     const stamp = await page.$eval('#sigStamp', el => (el.hidden ? '' : el.textContent.trim())).catch(() => '');
     const dates = await page.$$eval('.tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
-    const ancient = dates.filter(d => /\b20(1\d|2[0-3])$/.test(d)); // any card dated 2010-2023 (stale)
-    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards} searches=${searches} ancientDated=${JSON.stringify(ancient)}`);
+    const mislabelledHistorical = await page.$$eval('.tl-signal', els => els.filter(card => {
+      const date = card.querySelector('.tl-signal-date')?.textContent.trim() || '';
+      const label = card.querySelector('summary')?.textContent || '';
+      return /\b20(1\d|2[0-3])$/.test(date)
+        && !/\b(?:Historical|Scenario source|Leading indicator|External evidence)\b/i.test(label);
+    }).map(card => card.querySelector('.tl-signal-date')?.textContent.trim() || '')).catch(() => []);
+    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards} searches=${searches} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));
-    issues += errs.length + ancient.length;
+    issues += errs.length + searches + mislabelledHistorical.length;
     await ctx.close();
   }
   await browser.close();
   if (issues > 0) { console.log(`RESULT: FAIL (${issues} issue(s))`); process.exit(1); }
-  console.log('RESULT: PASS — zero console errors, no stale (pre-2024) signals.');
+  console.log('RESULT: PASS — zero console errors/search fallbacks; historical evidence is honestly labeled.');
 })();

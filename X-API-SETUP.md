@@ -1,8 +1,9 @@
 # X API setup — realtime @peterxing signals
 
-The REHOBOAM timeline matches each prediction to a real **@peterxing** signal, pulled **realtime from
-the X API v2** by `refresh-signals.js` (via `x-client.js` → `harvestActivity()`), then written to
-`signals.json` (which the site loads at runtime). This runs every day.
+The forecast matches each prediction to a reviewed **@peterxing** post/repost. `refresh-signals.js`
+confirms a fresh X API v2 source through `harvestActivity()`, then matches against the private
+deduplicated history maintained by `harvestFullArchive()` and `harvestSearchQueries()`. It writes
+`signals.json` only when every prediction has reviewed direct evidence.
 
 All credentials live **only** in `C:\Users\peterxing\pap-secrets\.env` — a directory that is **never
 served or deployed** (the static server blocks dotfiles; `pap-site` / Vercel never see it). Nothing
@@ -21,9 +22,10 @@ With app-only **Bearer** auth (already configured), the daily harvest pulls @pet
 | **Likes**    | ⬜ opt-in      | OAuth 1.0a **or** OAuth 2.0 user context        |
 | **Bookmarks**| ⬜ opt-in      | OAuth 2.0 user context **only** (`bookmark.read`) |
 
-The latest run harvested **~300 realtime items (posts + reposts)**, newest dated **today**, and matched
-real reposts to ~9 of the 11 prediction years. Likes/bookmarks join automatically once a user-context
-token exists (below) — no code change required.
+Routine runs harvest the newest posts/reposts. `X_HISTORY_BACKFILL=1 node refresh-signals.js`
+additionally exhausts the supported user-timeline/full-archive pagination and targeted topic queries,
+then merges public project archives into `pap-secrets\x-activity-history.json`. Raw history never
+enters the served or deployed directories.
 
 `.env` keys (already present, with empty opt-in placeholders):
 
@@ -105,12 +107,12 @@ node C:\Users\peterxing\pap-deploy\x-auth.js --refresh
 - **Bookmarks** — uses OAuth 2.0 user token only.
 - **Posts + reposts** — app-only Bearer (always).
 
-`harvestActivity()` returns a normalized, de-duplicated activity stream (`kind` ∈ post/repost/like/
-bookmark). `refresh-signals.js` scores every item against each prediction and surfaces the single best
-real signal per year (past-week preferred, else most-recent on topic, else a live search). The raw
-activity dump is written to `pap-secrets\x-activity.json` (**not** served); only the curated
-`signals.json` is public — so private bookmarks are never exposed wholesale, just the one matched per
-prediction.
+Prediction evidence uses only posts and reposts. Matching maximizes unique reviewed posts first, then
+permits reuse only within one declared compatible evidence family. The exact prediction/post pair
+must exist in `evidence-approvals.json`; automatic candidates are never self-approved. The current
+snapshot and historical corpus are written under `pap-secrets` (**not** served). If source freshness,
+reviewed direct coverage, provenance, or family compatibility fails, refresh exits nonzero and leaves
+the last complete public file unchanged.
 
 ## Security
 
