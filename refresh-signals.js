@@ -508,11 +508,18 @@ function scorePost(text, p){
 // A failed guard uses the live-search fallback instead, which is safer than a misleading real-item card.
 const FACET_GUARDS = [
   {
-    title: /\bneuralink s multinational prime family trials remain early feasibility implants\b/,
+    title: /\bpeer reviewed intracortical bci home use surpasses 3 800 hours\b/,
     all: [
-      /\bneuralink\b/,
-      /\b(?:prime|clinical trial|early feasibility|implant)\b/,
-      /\b(?:safety|adverse events?|primary endpoints?|efficacy)\b/,
+      /\b(?:intracortical|neuralink|neural implant|brain implant|implant(?:ed|able) (?:brain computer|brain machine|bci|neural interface)|surgically implanted)\b/,
+      /\b(?:home use|at home|independent use|speech|cursor|3 800 hours|3800 hours|prime|clinical trial|early feasibility)\b/,
+      /\b(?:peer review|peer reviewed|published|publication|hours|safety|adverse events?|primary endpoints?|efficacy)\b/,
+    ],
+  },
+  {
+    title: /\bmanaged branch algorithms are broadly auditable while frontier weights remain controlled against misuse\b/,
+    all: [
+      /\b(?:audit|audits|auditing|auditable|transparen\w*|inspect\w*)\b/,
+      /\b(?:weights?|model access|access control|controlled|closed|restricted|misuse|release control)\b/,
     ],
   },
   {
@@ -543,7 +550,7 @@ const FACET_GUARDS = [
   {
     title: /\bimplantable neural interfaces could support high bandwidth bidirectional\b/,
     all: [
-      /\b(?:brain computer|bci|neuralink|neural implant|brain implant|intracortical|ecog|stentrode|endovascular)\b/,
+      /\b(?:neuralink|neural implant|brain implant|intracortical|ecog|stentrode|endovascular|implant(?:ed|able) (?:brain computer|brain machine|bci|neural interface)|invasive bci|surgically implanted)\b/,
       /\b(?:communication|control|decode|decoding|stimulation|sensory|bidirectional|bandwidth|prosthe\w*)\b/,
     ],
   },

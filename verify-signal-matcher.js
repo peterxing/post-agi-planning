@@ -357,16 +357,36 @@ const fixtures = [
     text: 'The model forms a latent J-space whose internal coordinates encode abstract concepts.',
   },
   {
+    name: 'peer-reviewed long-term intracortical home use is accepted',
+    expect: true,
+    title: 'Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first',
+    text: 'A peer-reviewed report documents one participant independently using an intracortical BCI at home for more than 3,800 hours of speech and cursor control.',
+  },
+  {
     name: 'Neuralink safety-first early-feasibility trial is accepted',
     expect: true,
-    title: 'Neuralink’s multinational PRIME-family trials remain early-feasibility implants with 12-month safety—not efficacy—as their primary endpoints',
+    title: 'Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first',
     text: 'Neuralink PRIME is an early-feasibility implanted BCI trial whose primary endpoint is device and procedure safety over 12 months.',
   },
   {
     name: 'Neuralink product demo without trial safety is rejected',
     expect: false,
-    title: 'Neuralink’s multinational PRIME-family trials remain early-feasibility implants with 12-month safety—not efficacy—as their primary endpoints',
+    title: 'Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first',
     text: 'Neuralink showed a new consumer app controlled by a brain implant.',
+  },
+  {
+    name: 'open-weight jailbreak is not an auditable-algorithms controlled-weights regime',
+    expect: false,
+    domain: 'governance',
+    title: 'Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse',
+    text: 'A new frontier open-weight model was jailbroken and liberated.',
+  },
+  {
+    name: 'algorithm audits plus controlled weights support the managed transparency regime',
+    expect: true,
+    domain: 'governance',
+    title: 'Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse',
+    text: 'A managed transparency regime makes frontier algorithms auditable while model weights stay access-controlled against misuse.',
   },
   {
     name: 'launched orbital H100 workload is accepted',
@@ -397,6 +417,18 @@ const fixtures = [
     expect: true,
     title: 'Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation',
     text: 'A non-invasive scalp EEG brain-computer interface decoded communication commands without implanted hardware.',
+  },
+  {
+    name: 'implanted intracortical control supports the implantable path',
+    expect: true,
+    title: 'Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration',
+    text: 'An AI-assisted implanted intracortical BCI decoded cursor control and supported bidirectional sensory stimulation.',
+  },
+  {
+    name: 'non-invasive BCI control is not evidence for the implantable path',
+    expect: false,
+    title: 'Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration',
+    text: 'A non-invasive scalp EEG BCI decoded computer control without implanted hardware.',
   },
   {
     name: 'wrist sEMG is not a non-invasive BCI',

@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-19T23:51:45.123Z",
+  "updated": "2026-07-20T00:18:00.471Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Controlled semantic concepts supplement literal matching, but claim-specific facet guards remain mandatory and semantic-only matches are limited to 30 days. Assignment maximizes unique relevant posts before bounded reuse of at most 3; unsupported predictions receive an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
   "source": "x-api",
-  "sourceFetchedAt": "2026-07-19T23:51:42.032Z",
+  "sourceFetchedAt": "2026-07-20T00:17:58.686Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "embeds": {
@@ -90,18 +90,6 @@
       "likes": 504,
       "rts": 53
     },
-    "2030-3": {
-      "id": "2078155279817167135",
-      "kind": "repost",
-      "author": "elder_plinius",
-      "recency": "week",
-      "matchMethod": "lexical",
-      "date": "17 Jul 2026",
-      "maps": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
-      "text": "🌕 JAILBREAK ALERT 🌕 MOONSHOT: PWNED 😘 KIMI-K3: LIBERATED 🙌 There's a new frontier champion of open-weight AI, and this one's a HEAVYWEIGHT!! K3 is even s…",
-      "likes": 5053,
-      "rts": 419
-    },
     "2031-2": {
       "id": "2075584874396651995",
       "kind": "repost",
@@ -159,7 +147,7 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28602,
+      "likes": 28601,
       "rts": 3981
     },
     "2040-0": {
@@ -174,18 +162,6 @@
       "likes": 17316,
       "rts": 2027
     },
-    "horizon-implantable-neural-symbiosis": {
-      "id": "2077781349952606216",
-      "kind": "repost",
-      "author": "CyberRobooo",
-      "recency": "week",
-      "matchMethod": "hybrid",
-      "date": "16 Jul 2026",
-      "maps": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
-      "text": "This is truly life-changing news for people with limited mobility. Hangzhou BrainCo has integrated non-invasive brain-computer interfaces (BCI), humanoid rob…",
-      "likes": 111,
-      "rts": 27
-    },
     "horizon-non-invasive-neural-symbiosis": {
       "id": "2078891199067529508",
       "kind": "repost",
@@ -195,8 +171,8 @@
       "date": "19 Jul 2026",
       "maps": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
       "text": "holy sht.. you can now control computers with your thoughts someone at WAIC 2026 is playing Black Myth: Wukong using only a brain-computer interface the syst…",
-      "likes": 171,
-      "rts": 34
+      "likes": 197,
+      "rts": 39
     }
   },
   "search": {
@@ -204,7 +180,7 @@
     "2026-2": "frontier labs infrastructure",
     "2026-4": "frontier model release",
     "2026-5": "compute tracking inference",
-    "2026-7": "neuralink multinational prime",
+    "2026-7": "peer reviewed intracortical",
     "2026-8": "orbital compute remains",
     "2027-0": "AI agents work software jobs",
     "2027-1": "production software written",
@@ -226,6 +202,7 @@
     "2030-0": "automated AI research intelligence explosion",
     "2030-1": "2040 default branch",
     "2030-2": "managed branch frontier",
+    "2030-3": "managed branch algorithms",
     "2030-4": "drugs substantially designed",
     "2030-5": "physical production energy",
     "2031-0": "unpaused branch fully",
@@ -282,6 +259,7 @@
     "2039-5": "international negotiations loosen",
     "2040-1": "managed branch regulators",
     "2040-2": "society longer unilaterally",
+    "horizon-implantable-neural-symbiosis": "from:peterxing Neuralink BCI neural implant",
     "horizon-whole-brain-emulation-and-uploading": "from:peterxing whole brain emulation mind uploading connectome",
     "horizon-orbital-compute-to-proto-dyson": "from:peterxing orbital compute space solar Dyson",
     "horizon-kardashev-energy-scaling": "from:peterxing Kardashev energy scale Type I Type II",
@@ -319,7 +297,7 @@
       "author": "__tinygrad__",
       "recency": "week",
       "date": "17 Jul 2026",
-      "likes": 898,
+      "likes": 897,
       "rts": 43
     },
     {
