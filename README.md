@@ -4,12 +4,12 @@ A living, data-driven civilization forecast and long-form guide to the post-AGI 
 REHOBOAM timeline spans **2026–2040** across six domains and is published at
 [peterxing.com](https://peterxing.com).
 
-Every individual prediction must have a reviewed, direct post/repost observed in
-[@peterxing](https://x.com/peterxing)'s activity. The matching engine confirms a fresh authenticated
-or public source, then searches a private deduplicated history built from supported X API pagination
-and the project's public archives. Source freshness is tracked separately from the age of evergreen
-evidence. `refresh-signals.js` exits nonzero and leaves `signals.json` unchanged unless direct
-coverage is complete; prediction search fallbacks are prohibited.
+Every individual prediction must have reviewed direct X evidence. The matcher prefers a defensible
+post/repost observed in [@peterxing](https://x.com/peterxing)'s activity, then retains a reviewed
+authoritative external post labeled as direct, scenario, or leading-indicator evidence. Source
+freshness is tracked separately from evergreen evidence age. `refresh-signals.js` exits nonzero and
+leaves `signals.json` unchanged unless coverage is complete; prediction search fallbacks are
+prohibited.
 
 ## How it works
 
@@ -34,7 +34,10 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
 - **`evidence-families.js`** declares the only families within which threshold-series reuse is
   compatible. Cross-family reuse fails publication.
 - **`evidence-approvals.json`** is the public-safe reviewed prediction/post-pair ledger. New automatic
-  candidates cannot publish until their specific pair is manually approved.
+  candidates from Peter's activity cannot publish until their specific pair is manually approved.
+- **`external-evidence.js`** is the reviewed authoritative-source ledger. It stores only public-safe
+  status metadata, source-quality classification, scenario/leading-indicator labels, rationale, and
+  compatible reuse groups.
 - **`verify-signal-matcher.js`** runs positive and negative regression fixtures for the concept
   matcher, including J-space vs off-world space, building permits vs compute permits, market cap vs
   compute caps, political vs electrical power, and quantitative labor thresholds.
@@ -76,6 +79,7 @@ npm run verify:reality
 npm run verify:author
 npm run verify:ui
 npm run verify:coverage
+npm run verify:external
 ```
 
 `X_SKIP_API=1 node refresh-signals.js` exercises the live public-feed fallback.

@@ -218,12 +218,14 @@ to raise coverage.
    remove or move these machine keys. `validate-predictions.js` fails publication if the contract
    breaks.
 14. **Preserve the direct-evidence contract.** Every dated event and horizon item must have exactly one
-   entry in `evidence-families.js`. New or revised predictions do not publish until a real post/repost
-   observed in @peterxing's activity passes the claim-specific/family guards and its exact
-   prediction/post pair is added to `evidence-approvals.json` after review. Reuse is permitted only
-   inside the same declared compatible family. Never add a search fallback or weaken a facet guard
-   to restore coverage. `refresh-signals.js` must exit nonzero and leave the last complete
-   `signals.json` untouched whenever direct coverage is below N/N.
+   entry in `evidence-families.js`. Prefer a real post/repost observed in @peterxing's activity whose
+   exact prediction/post pair is reviewed in `evidence-approvals.json`. Otherwise use a reviewed
+   authoritative direct status from `external-evidence.js`, explicitly labeled `direct`, `scenario`,
+   or `leading-indicator` with source quality and rationale. New external posts never self-approve.
+   Reuse is permitted only inside one reviewed scenario or threshold-series group. Never add a
+   search fallback or weaken a facet guard to restore coverage. `refresh-signals.js` must exit
+   nonzero and leave the last complete `signals.json` untouched whenever direct coverage is below
+   N/N.
 
 ## Procedure
 
@@ -236,6 +238,7 @@ node validate-predictions.js          # must print "RESULT: PASS"
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
 node verify-direct-coverage.js         # every prediction needs reviewed direct evidence
+node verify-external-evidence.js       # external statuses resolve and retain reviewed provenance
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 # (index.html + signals.json are copied in the workflow's PUBLISH step too)

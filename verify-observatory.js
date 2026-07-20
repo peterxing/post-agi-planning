@@ -105,6 +105,10 @@ function requestStatus(pathname) {
         evidenceCards:document.querySelectorAll('#timelineBody .tl-signal, #horizonBody .tl-signal').length,
         evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
         predictionSearches:document.querySelectorAll('.tl-signal-search').length,
+        peterEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter Xing|@peterxing/.test(summary.textContent)).length,
+        externalEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
+        scenarioEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
+        leadingEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
         collapsedChapters:[...document.querySelectorAll('#chapters .ch-body')].every(element => element.hidden),
         simulator:{
           map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
@@ -161,6 +165,19 @@ function requestStatus(pathname) {
       && ((state.evidenceCards === expectedEvents + expectedHorizon && state.evidenceUnavailable === 0)
         || (state.evidenceCards === 0 && state.evidenceUnavailable === expectedEvents + expectedHorizon)),
       JSON.stringify({ cards:state.evidenceCards, unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
+    if (state.evidenceCards === expectedEvents + expectedHorizon) {
+      check(results, 'mixed provenance labels are explicit',
+        state.peterEvidence === 17
+        && state.externalEvidence === 86
+        && state.scenarioEvidence > 0
+        && state.leadingEvidence > 0,
+        JSON.stringify({
+          peter:state.peterEvidence,
+          external:state.externalEvidence,
+          scenario:state.scenarioEvidence,
+          leading:state.leadingEvidence,
+        }));
+    }
     check(results, 'JSON-derived text is escaped at render time', state.escapedText);
     check(results, 'probability simulator loads published anchors',
       state.simulator.map

@@ -1,9 +1,9 @@
 # X API setup — realtime @peterxing signals
 
-The forecast matches each prediction to a reviewed **@peterxing** post/repost. `refresh-signals.js`
-confirms a fresh X API v2 source through `harvestActivity()`, then matches against the private
-deduplicated history maintained by `harvestFullArchive()` and `harvestSearchQueries()`. It writes
-`signals.json` only when every prediction has reviewed direct evidence.
+The forecast gives priority to a reviewed **@peterxing** post/repost. `refresh-signals.js` confirms a
+fresh X source through `harvestActivity()`, then matches against the private deduplicated history.
+Predictions without reviewed Peter evidence retain reviewed authoritative external direct statuses
+from `external-evidence.js`. It writes `signals.json` only when every prediction has direct evidence.
 
 All credentials live **only** in `C:\Users\peterxing\pap-secrets\.env` — a directory that is **never
 served or deployed** (the static server blocks dotfiles; `pap-site` / Vercel never see it). Nothing
@@ -107,12 +107,12 @@ node C:\Users\peterxing\pap-deploy\x-auth.js --refresh
 - **Bookmarks** — uses OAuth 2.0 user token only.
 - **Posts + reposts** — app-only Bearer (always).
 
-Prediction evidence uses only posts and reposts. Matching maximizes unique reviewed posts first, then
-permits reuse only within one declared compatible evidence family. The exact prediction/post pair
-must exist in `evidence-approvals.json`; automatic candidates are never self-approved. The current
-snapshot and historical corpus are written under `pap-secrets` (**not** served). If source freshness,
-reviewed direct coverage, provenance, or family compatibility fails, refresh exits nonzero and leaves
-the last complete public file unchanged.
+Peter-owned evidence uses only posts and reposts. Matching maximizes unique reviewed posts first,
+then permits reuse only within one declared compatible evidence family. External evidence must be in
+the reviewed public-safe ledger, resolve to X, identify its authoritative account/source quality, and
+stay within one reviewed scenario or threshold-series reuse group. The private history remains under
+`pap-secrets` (**not** served). If source freshness, reviewed direct coverage, provenance, or reuse
+compatibility fails, refresh exits nonzero and leaves the last complete public file unchanged.
 
 ## Security
 

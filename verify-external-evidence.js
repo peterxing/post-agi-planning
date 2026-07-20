@@ -19,6 +19,7 @@ const qualityClasses = new Set([
   'government',
   'intergovernmental-organization',
   'academic-researcher',
+  'academic-research-institution',
   'privacy-research-organization',
   'original-scenario-author',
   'original-framework-author',
