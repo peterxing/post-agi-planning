@@ -1,22 +1,22 @@
 {
-  "updated": "2026-07-14T22:07:59.250Z",
+  "updated": "2026-07-19T23:51:45.123Z",
   "note": "Per-prediction @peterxing signals are refreshed hourly from the authenticated X API first, then a live read-only public RSS profile. Caches older than 36 hours and stale legacy syndication snapshots are rejected rather than labeled current. Controlled semantic concepts supplement literal matching, but claim-specific facet guards remain mandatory and semantic-only matches are limited to 30 days. Assignment maximizes unique relevant posts before bounded reuse of at most 3; unsupported predictions receive an honest live from:peterxing search. The Reality Signals grid follows the same fresh source.",
   "source": "x-api",
-  "sourceFetchedAt": "2026-07-14T22:07:57.197Z",
+  "sourceFetchedAt": "2026-07-19T23:51:42.032Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-07-14T16:11:38.000Z",
+  "newestItemAt": "2026-07-19T20:27:25.000Z",
   "embeds": {
     "2026-0": {
-      "id": "2075639143372325205",
+      "id": "2077254470639947962",
       "kind": "repost",
-      "author": "ArtificialAnlys",
+      "author": "ChrisGPT",
       "recency": "week",
       "matchMethod": "hybrid",
-      "date": "10 Jul 2026",
+      "date": "15 Jul 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review",
-      "text": "GPT-5.6 Sol (max) has the highest Presentation Elo of any model in AA-Briefcase AA-Briefcase is our new agentic knowledge work benchmark for testing models o…",
-      "likes": 684,
-      "rts": 51
+      "text": "🚨 Another real experimental evidence of recursive self-improvement may have just arrived. Researchers ran AIDE² autonomously for eight days with two loops: …",
+      "likes": 217,
+      "rts": 15
     },
     "2026-3": {
       "id": "2072329696667471937",
@@ -31,58 +31,58 @@
       "rts": 22
     },
     "2026-6": {
-      "id": "2077012664321245387",
-      "kind": "post",
-      "author": "peterxing",
+      "id": "2078562951762681866",
+      "kind": "repost",
+      "author": "haider1",
       "recency": "week",
       "matchMethod": "hybrid",
-      "date": "14 Jul 2026",
+      "date": "18 Jul 2026",
       "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
-      "text": "“a few short years” = 2 to 5 years max. time to start post-AGI planning:",
-      "likes": 6,
-      "rts": 2
+      "text": "Ray Kurzweil says: \"AGI means a computer can be equivalent to a person who really knows a subject, for every subject. and there are hundreds of thousands of …",
+      "likes": 352,
+      "rts": 53
     },
     "2027-2": {
       "id": "2075268970492657905",
       "kind": "repost",
       "author": "ArtificialAnlys",
-      "recency": "week",
+      "recency": "recent",
       "matchMethod": "hybrid",
       "date": "09 Jul 2026",
       "maps": "Full automation of AI R&D remains incomplete, but coding agents materially accelerate model research",
       "text": "GPT-5.6 Sol comes close second to Claude Fable 5 in the Artificial Analysis Intelligence Index at one third of the cost, and leads the Artificial Analysis Co…",
-      "likes": 2053,
-      "rts": 226
+      "likes": 2051,
+      "rts": 229
     },
     "2027-3": {
-      "id": "2076866811698856051",
+      "id": "2077470507579195791",
       "kind": "repost",
-      "author": "rationalaussie",
+      "author": "rohanpaul_ai",
       "recency": "week",
       "matchMethod": "semantic",
-      "date": "14 Jul 2026",
+      "date": "15 Jul 2026",
       "maps": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
-      "text": "Normies don't understand what AGI will actually be. They think their little digital marketing jobs where they crop Canva pictures and post on LinkedIn will a…",
-      "likes": 1037,
-      "rts": 72
+      "text": "Why “technology always creates new jobs” will not work this time. - From ex-OpenAI researcher Daniel Kokotajlo, and the founder of the AI Futures Project. Pr…",
+      "likes": 92,
+      "rts": 24
     },
     "2029-1": {
-      "id": "2075260651287805963",
+      "id": "2078194907664073036",
       "kind": "repost",
-      "author": "ChrissGPT",
+      "author": "KobeissiLetter",
       "recency": "week",
       "matchMethod": "lexical",
-      "date": "09 Jul 2026",
+      "date": "17 Jul 2026",
       "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
-      "text": "The creators of AI 2027 just dropped AI 2040! under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&amp;D is slowed and made more…",
-      "likes": 504,
-      "rts": 53
+      "text": "BREAKING: SpaceX, $SPCX, is in talks to provide compute power to the US Pentagon, per WSJ. The two sides are reportedly discussing an agreement which would c…",
+      "likes": 6379,
+      "rts": 483
     },
     "2029-2": {
       "id": "2075260651287805963",
       "kind": "repost",
-      "author": "ChrissGPT",
-      "recency": "week",
+      "author": "ChrisGPT",
+      "recency": "recent",
       "matchMethod": "semantic",
       "date": "09 Jul 2026",
       "maps": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
@@ -90,41 +90,41 @@
       "likes": 504,
       "rts": 53
     },
+    "2030-3": {
+      "id": "2078155279817167135",
+      "kind": "repost",
+      "author": "elder_plinius",
+      "recency": "week",
+      "matchMethod": "lexical",
+      "date": "17 Jul 2026",
+      "maps": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
+      "text": "🌕 JAILBREAK ALERT 🌕 MOONSHOT: PWNED 😘 KIMI-K3: LIBERATED 🙌 There's a new frontier champion of open-weight AI, and this one's a HEAVYWEIGHT!! K3 is even s…",
+      "likes": 5053,
+      "rts": 419
+    },
     "2031-2": {
       "id": "2075584874396651995",
       "kind": "repost",
       "author": "CernBasher",
-      "recency": "week",
+      "recency": "recent",
       "matchMethod": "lexical",
       "date": "10 Jul 2026",
       "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1081,
-      "rts": 104
+      "likes": 1080,
+      "rts": 103
     },
     "2032-3": {
       "id": "2075584874396651995",
       "kind": "repost",
       "author": "CernBasher",
-      "recency": "week",
+      "recency": "recent",
       "matchMethod": "semantic",
       "date": "10 Jul 2026",
       "maps": "Capital floods into mines, motors, actuators, fabs and factories as robotics becomes the binding bottleneck",
       "text": "I wonder whether these workers understand the economic impact of what they are building. 10 million robots made per year x $8,333/mth in leasing revenue = $1…",
-      "likes": 1081,
-      "rts": 104
-    },
-    "2034-1": {
-      "id": "2069096592729047485",
-      "kind": "repost",
-      "author": "Dr_Singularity",
-      "recency": "recent",
-      "matchMethod": "semantic",
-      "date": "22 Jun 2026",
-      "maps": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
-      "text": "Like I've said many times before, a huge AI workforce is coming, we can say it's basically already here. We just need to scale it. We will start with billion…",
-      "likes": 190,
-      "rts": 28
+      "likes": 1080,
+      "rts": 103
     },
     "2035-6": {
       "id": "2074195084577579503",
@@ -135,8 +135,8 @@
       "date": "06 Jul 2026",
       "maps": "Mechanistic interpretability becomes a practical tool for detecting deception and tracing model decisions",
       "text": "tl;dr LLMs are already neurosymbolic in its latent space this is the mechanistic explanation for the intuitively obvious \"feel\" that the stochastic parrot cr…",
-      "likes": 1207,
-      "rts": 70
+      "likes": 1206,
+      "rts": 69
     },
     "2036-1": {
       "id": "2072700088481182100",
@@ -147,8 +147,8 @@
       "date": "02 Jul 2026",
       "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
       "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17334,
-      "rts": 2042
+      "likes": 17316,
+      "rts": 2027
     },
     "2038-1": {
       "id": "2074185348142280912",
@@ -159,8 +159,8 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28461,
-      "rts": 3955
+      "likes": 28602,
+      "rts": 3981
     },
     "2040-0": {
       "id": "2072700088481182100",
@@ -171,8 +171,32 @@
       "date": "02 Jul 2026",
       "maps": "AI and robots can automate essentially all economically relevant human labor",
       "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17334,
-      "rts": 2042
+      "likes": 17316,
+      "rts": 2027
+    },
+    "horizon-implantable-neural-symbiosis": {
+      "id": "2077781349952606216",
+      "kind": "repost",
+      "author": "CyberRobooo",
+      "recency": "week",
+      "matchMethod": "hybrid",
+      "date": "16 Jul 2026",
+      "maps": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
+      "text": "This is truly life-changing news for people with limited mobility. Hangzhou BrainCo has integrated non-invasive brain-computer interfaces (BCI), humanoid rob…",
+      "likes": 111,
+      "rts": 27
+    },
+    "horizon-non-invasive-neural-symbiosis": {
+      "id": "2078891199067529508",
+      "kind": "repost",
+      "author": "EHuanglu",
+      "recency": "week",
+      "matchMethod": "hybrid",
+      "date": "19 Jul 2026",
+      "maps": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
+      "text": "holy sht.. you can now control computers with your thoughts someone at WAIC 2026 is playing Black Myth: Wukong using only a brain-computer interface the syst…",
+      "likes": 171,
+      "rts": 34
     }
   },
   "search": {
@@ -202,7 +226,6 @@
     "2030-0": "automated AI research intelligence explosion",
     "2030-1": "2040 default branch",
     "2030-2": "managed branch frontier",
-    "2030-3": "managed branch algorithms",
     "2030-4": "drugs substantially designed",
     "2030-5": "physical production energy",
     "2031-0": "unpaused branch fully",
@@ -223,6 +246,7 @@
     "2033-5": "unregulated robot economies",
     "2033-6": "governments fund universal",
     "2034-0": "automates majority cognitive",
+    "2034-1": "continuously agents form",
     "2034-2": "AI compute semiconductor data center treaty",
     "2034-3": "managed branch powers",
     "2034-4": "datacenters expand neutral",
@@ -258,8 +282,6 @@
     "2039-5": "international negotiations loosen",
     "2040-1": "managed branch regulators",
     "2040-2": "society longer unilaterally",
-    "horizon-implantable-neural-symbiosis": "from:peterxing Neuralink BCI neural implant",
-    "horizon-non-invasive-neural-symbiosis": "from:peterxing non-invasive BCI EEG MEG ultrasound",
     "horizon-whole-brain-emulation-and-uploading": "from:peterxing whole brain emulation mind uploading connectome",
     "horizon-orbital-compute-to-proto-dyson": "from:peterxing orbital compute space solar Dyson",
     "horizon-kardashev-energy-scaling": "from:peterxing Kardashev energy scale Type I Type II",
@@ -268,70 +290,70 @@
   },
   "reality": [
     {
-      "tag": "CODE",
-      "t": "Announcing Grok 4.5, our first model trained specifically for coding and agents. It was trained with Cursor and offers frontier intelligence at lea…",
-      "id": "2074915721684086811",
-      "kind": "repost",
-      "author": "SpaceXAI",
-      "recency": "week",
-      "date": "08 Jul 2026",
-      "likes": 27754,
-      "rts": 4104
-    },
-    {
-      "tag": "MARKETS",
-      "t": "If solar power in space is harnessed for useful work at scale, the value of that will far exceed the Earth economy, because all of Earth civilizati…",
-      "id": "2075753054280831365",
+      "tag": "ABUNDANCE",
+      "t": "GPU average power consumption if it’s doing inference over the course of 24 hours is ~2/3 of its peak power, even if you’re super efficient. SpaceX…",
+      "id": "2077626509615829213",
       "kind": "repost",
       "author": "elonmusk",
       "recency": "week",
-      "date": "11 Jul 2026",
-      "likes": 16509,
-      "rts": 3073
-    },
-    {
-      "tag": "ABUNDANCE",
-      "t": "Personal update: I'm taking a leave of absence from YC to join Anthropic. I'll be working with @NotTomBrown on the compute team. Powerful AI has th…",
-      "id": "2076580921398931788",
-      "kind": "repost",
-      "author": "t_blom",
-      "recency": "week",
-      "date": "13 Jul 2026",
-      "likes": 7475,
-      "rts": 195
-    },
-    {
-      "tag": "ROBOTS",
-      "t": "This should put fear into all the other humanoid robot companies. Getting ready for Optimus.",
-      "id": "2075647857705804137",
-      "kind": "repost",
-      "author": "Scobleizer",
-      "recency": "week",
-      "date": "10 Jul 2026",
-      "likes": 3155,
-      "rts": 166
+      "date": "16 Jul 2026",
+      "likes": 4961,
+      "rts": 375
     },
     {
       "tag": "CAPABILITY",
-      "t": "GPT-5.6 Sol (max) is the new leader in CritPt, a benchmark of unpublished research-level physics problems CritPt, developed by Argonne and UIUC, te…",
-      "id": "2075423964378366427",
+      "t": "Four frontier AI models released in seven days. Fable Five, Grok 4.5, GPT 5.6, and Muse Spark. Not long ago, we got one model every six months. We'…",
+      "id": "2077333212984983589",
       "kind": "repost",
-      "author": "ArtificialAnlys",
+      "author": "PeterDiamandis",
       "recency": "week",
-      "date": "10 Jul 2026",
-      "likes": 869,
-      "rts": 59
+      "date": "15 Jul 2026",
+      "likes": 1316,
+      "rts": 103
     },
     {
-      "tag": "GOVERNANCE",
-      "t": "SITUATION DETECTED: More than 200 economists and AI researchers, including 16 Nobel laureates, have signed a statement urging governments and insti…",
-      "id": "2076671018673070163",
+      "tag": "MARKETS",
+      "t": "The time is long past to drop all export controls on NVIDIA. Some Americans are foolish enough to think they can win an AI race against China. That…",
+      "id": "2078140088861790430",
       "kind": "repost",
-      "author": "MTSlive",
+      "author": "__tinygrad__",
       "recency": "week",
-      "date": "13 Jul 2026",
-      "likes": 373,
-      "rts": 35
+      "date": "17 Jul 2026",
+      "likes": 898,
+      "rts": 43
+    },
+    {
+      "tag": "LABOUR",
+      "t": "Two questions: 1. Why is Tesla hiring a Space Radiation Engineer? 2. Did you say... TPUs?",
+      "id": "2078145439644430843",
+      "kind": "repost",
+      "author": "teslayoda",
+      "recency": "week",
+      "date": "17 Jul 2026",
+      "likes": 428,
+      "rts": 36
+    },
+    {
+      "tag": "CODE",
+      "t": "AI agents are already being used to improve the capabilities of our next-generation models. We believe with GPT-Red that we have started to unlock …",
+      "id": "2077446723992228167",
+      "kind": "repost",
+      "author": "OpenAI",
+      "recency": "week",
+      "date": "15 Jul 2026",
+      "likes": 385,
+      "rts": 11
+    },
+    {
+      "tag": "LONGEVITY",
+      "t": "We will conquer sleep just as we will conquer aging and disease",
+      "id": "2078137205466231179",
+      "kind": "repost",
+      "author": "EMostaque",
+      "recency": "week",
+      "date": "17 Jul 2026",
+      "likes": 225,
+      "rts": 8
     }
   ]
 }
