@@ -4,10 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const approvals = require('./evidence-approvals.json');
 const {
-  EXTERNAL_DIRECT_IDS,
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
-  MAX_POST_REUSE,
 } = require('./external-evidence');
 
 const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8').replace(/^\uFEFF/, ''));
@@ -35,9 +33,11 @@ const mappingIds = Object.keys(EXTERNAL_MAPPINGS);
 const overlap = Object.keys(approvals).filter(id => EXTERNAL_MAPPINGS[id]);
 const missing = expectedIds.filter(id => !approvals[id] && !EXTERNAL_MAPPINGS[id]);
 const extra = mappingIds.filter(id => !expected.has(id));
-const missingWithoutSearch = missing.filter(id => !signals.search?.[id]);
-if (overlap.length || missingWithoutSearch.length || extra.length) {
-  problems.push(`ledger coverage mismatch (overlap ${overlap.join(', ') || 'none'}; missing without search ${missingWithoutSearch.join(', ') || 'none'}; extra ${extra.join(', ') || 'none'})`);
+if (overlap.length || missing.length || extra.length) {
+  problems.push(`ledger coverage mismatch (overlap ${overlap.join(', ') || 'none'}; missing ${missing.join(', ') || 'none'}; extra ${extra.join(', ') || 'none'})`);
+}
+if (Object.keys(signals.search || {}).length) {
+  problems.push('signals.search must be empty');
 }
 
 const sourceUses = new Map();
@@ -55,6 +55,14 @@ for (const [predictionId, mapping] of Object.entries(EXTERNAL_MAPPINGS)) {
   if (!mapping.rationale || !mapping.reviewedAt || !mapping.reuseFamily) {
     problems.push(`${predictionId}: incomplete reviewed mapping metadata`);
   }
+  const signal = signals.embeds && signals.embeds[predictionId];
+  if (!signal || signal.evidenceOwner !== 'external'
+      || String(signal.id || '') !== String(source.statusId)
+      || signal.mappingRationale !== mapping.rationale
+      || signal.reuseFamily !== mapping.reuseFamily
+      || signal.evidenceType !== mapping.evidenceType) {
+    problems.push(`${predictionId}: published embed differs from the reviewed external mapping`);
+  }
 }
 for (const [sourceKey, source] of Object.entries(EXTERNAL_SOURCES)) {
   if (!sourceUses.has(sourceKey)) problems.push(`${sourceKey}: unused external source`);
@@ -69,14 +77,6 @@ for (const [sourceKey, source] of Object.entries(EXTERNAL_SOURCES)) {
   const uses = sourceUses.get(sourceKey) || [];
   if (uses.length > 1 && new Set(uses.map(use => use.mapping.reuseFamily)).size !== 1) {
     problems.push(`${sourceKey}: reuse crosses reviewed compatibility groups`);
-  }
-  if (uses.length > MAX_POST_REUSE) {
-    const selected = EXTERNAL_DIRECT_IDS[sourceKey] || [];
-    if (selected.length !== MAX_POST_REUSE
-        || new Set(selected).size !== selected.length
-        || selected.some(predictionId => !uses.some(use => use.predictionId === predictionId))) {
-      problems.push(`${sourceKey}: over-cap ledger source lacks a valid ${MAX_POST_REUSE}-item direct selection`);
-    }
   }
 }
 
@@ -110,7 +110,7 @@ async function verifyOembed(sourceKey, source) {
     problems.forEach(problem => console.log(`  - ${problem}`));
     process.exit(1);
   }
-  console.log('RESULT: PASS — external candidates are reviewed, authoritative, capped for direct use, and resolve through X.');
+  console.log('RESULT: PASS — every external mapping is reviewed, authoritative, compatibility-grouped, published directly, and resolves through X.');
 })().catch(error => {
   console.error(error);
   process.exit(1);

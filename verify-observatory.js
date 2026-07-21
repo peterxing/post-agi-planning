@@ -1,5 +1,6 @@
 const { chromium } = require('playwright');
 const http = require('http');
+const https = require('https');
 const predictions = require('./predictions.json');
 
 const URL = process.argv[2] || 'http://127.0.0.1:8787/';
@@ -27,9 +28,10 @@ function check(results, label, condition, detail = '') {
 function requestStatus(pathname) {
   const target = new globalThis.URL(URL);
   return new Promise((resolve, reject) => {
-    const request = http.request({
+    const transport = target.protocol === 'https:' ? https : http;
+    const request = transport.request({
       hostname:target.hostname,
-      port:target.port || 80,
+      port:target.port || (target.protocol === 'https:' ? 443 : 80),
       path:pathname,
       method:'GET',
     }, response => {
@@ -166,8 +168,9 @@ function requestStatus(pathname) {
     check(results, 'six reality observations render', state.reality === 6, String(state.reality));
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
     check(results, 'collapsed chapters leave the accessibility tree', state.collapsedChapters);
-    check(results, 'prediction evidence is reviewed direct or honest live search',
-      state.evidenceCards + state.predictionSearches === expectedEvents + expectedHorizon
+    check(results, 'prediction evidence is complete and direct-only',
+      state.evidenceCards === expectedEvents + expectedHorizon
+      && state.predictionSearches === 0
       && state.evidenceUnavailable === 0
       && state.invalidPredictionSearches === 0,
       JSON.stringify({ cards:state.evidenceCards, unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
@@ -200,7 +203,7 @@ function requestStatus(pathname) {
     check(results, 'hero uses fetched event count', state.heroCount === String(expectedEvents), state.heroCount);
     check(results, 'current coordinate is numeric', /^\d{4}\.\d{2}$/.test(state.coordinate || ''), state.coordinate);
     check(results, 'evidence state is exposed',
-      /Evidence ·|Prediction evidence · live search fallback/.test(state.freshness || ''),
+      /Evidence ·|Prediction evidence unavailable/.test(state.freshness || ''),
       state.freshness);
     check(results, 'ids are unique', state.duplicateIds.length === 0, state.duplicateIds.join(', '));
     check(results, 'console is clean', consoleErrors.length === 0, consoleErrors.join(' | '));

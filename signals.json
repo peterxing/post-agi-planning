@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-21T00:01:38.186Z",
-  "note": "Every prediction has either a reviewed direct X status or an honest live from:peterxing search. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Claim-specific guards apply to direct and family matching, and no status is reused more than 3 times.",
+  "updated": "2026-07-21T03:48:42.672Z",
+  "note": "Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "public-rss",
-  "sourceFetchedAt": "2026-07-21T00:01:28.381Z",
+  "sourceFetchedAt": "2026-07-21T03:48:35.349Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-20T17:42:00.000Z",
   "history": {
@@ -11,41 +11,46 @@
     "newestItemAt": "2026-07-20T17:42:00.000Z"
   },
   "coverage": {
-    "direct": 55,
-    "searches": 48,
+    "direct": 103,
+    "searches": 0,
     "total": 103,
     "complete": true,
-    "uniquePosts": 33,
-    "peterUniquePosts": 5,
-    "maximumUniqueMatches": 5,
-    "maxReuse": 3,
+    "uniquePosts": 39,
+    "peterUniquePosts": 7,
+    "maximumUniqueMatches": 7,
+    "maxReuse": 20,
     "reuseDistribution": {
-      "1": 18,
+      "1": 23,
       "2": 8,
-      "3": 7
+      "3": 1,
+      "4": 2,
+      "5": 2,
+      "7": 1,
+      "16": 1,
+      "20": 1
     },
     "byEvidenceOwner": {
-      "external": 50,
-      "peterxing": 5
+      "external": 96,
+      "peterxing": 7
     },
     "bySourceQuality": {
-      "official-research-organization": 3,
-      "official-company": 9,
-      "official-ai-lab": 16,
-      "intergovernmental-organization": 4,
-      "academic-researcher": 3,
-      "original-scenario-author": 6,
+      "official-research-organization": 4,
+      "original-scenario-author": 36,
+      "official-company": 11,
+      "official-ai-lab": 25,
+      "original-researcher": 3,
+      "intergovernmental-organization": 6,
+      "academic-researcher": 4,
       "government": 1,
-      "peterxing-activity": 5,
-      "original-researcher": 2,
+      "peterxing-activity": 7,
       "academic-research-institution": 2,
       "privacy-research-organization": 2,
       "original-framework-author": 2
     },
     "byEvidenceType": {
-      "leading-indicator": 43,
-      "scenario": 7,
-      "direct": 5
+      "leading-indicator": 59,
+      "scenario": 37,
+      "direct": 7
     }
   },
   "embeds": {
@@ -62,7 +67,7 @@
         "activityKind": "external",
         "account": "METR_Evals",
         "displayName": "METR",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-research-organization"
       },
       "recency": "external",
@@ -74,7 +79,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "agents"
       ],
@@ -82,10 +87,53 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "20 Feb 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review",
       "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2026-1": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "ai-rd",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "The original AI 2027/AI 2040 author post is the reviewed scenario source for frontier labs devoting substantial compute to AI R&D before takeoff.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "research",
+        "compute",
+        "governance",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -102,7 +150,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -125,10 +173,53 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "02 Jul 2026",
       "maps": "Frontier AI labs and infrastructure firms accumulate trillion-dollar-scale valuations and exceptional political leverage",
       "text": "AI is shifting from training to always-on token production. NVIDIA is partnering with AI clouds to deploy large-scale multi-tenant AI factories through reven…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2026-3": {
+      "id": "2074157282477154597",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2074157282477154597",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "robotics-real-world-training",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official expansion of a real-world humanoid training facility is a concrete precursor to factory deployment, but it does not establish thousands of robots on live production lines.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 7,
+      "matchedConcepts": [
+        "labor",
+        "robotics",
+        "production",
+        "infrastructure"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "06 Jul 2026",
+      "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
+      "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
       "likes": 0,
       "rts": 0
     },
@@ -145,7 +236,7 @@
         "activityKind": "external",
         "account": "AnthropicAI",
         "displayName": "Anthropic",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -166,10 +257,93 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "01 Jul 2026",
       "maps": "Frontier-model release review becomes standard in the US and EU for cyber, bio and autonomy thresholds",
       "text": "After conversations with the US government, we are redeploying Claude Fable 5 with new classifiers to target and block more cybersecurity tasks.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2026-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "research",
+        "compute",
+        "governance",
+        "institutions"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Compute tracking and inference-only verification move from niche research into government preparedness programs",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2026-6": {
+      "id": "2024923422867030027",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "METR_Evals",
+      "displayName": "METR",
+      "url": "https://x.com/METR_Evals/status/2024923422867030027",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "METR_Evals",
+        "displayName": "METR",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-research-organization"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "ai-capability",
+      "reuseFamily": "agent-task-horizon",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
+      "sourceQuality": "official-research-organization",
+      "reuseCount": 4,
+      "matchedConcepts": [
+        "agi"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "20 Feb 2026",
+      "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
+      "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
       "likes": 0,
       "rts": 0
     },
@@ -186,7 +360,7 @@
         "activityKind": "external",
         "account": "neuralink",
         "displayName": "Neuralink",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -208,10 +382,54 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "30 Jun 2026",
       "maps": "Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first",
       "text": "For the first time in our clinical trials, we inserted the electrode threads of our implant through the dura and into the cortex while keeping the dura intact.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2026-8": {
+      "id": "1998769997431058927",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "AdiOltean",
+      "displayName": "Adi Oltean",
+      "url": "https://x.com/AdiOltean/status/1998769997431058927",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "AdiOltean",
+        "displayName": "Adi Oltean",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-researcher"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "orbital-compute",
+      "reuseFamily": "orbital-compute-demonstrators",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "The original Starcloud engineer reports an H100 running named training and inference workloads in orbit, directly supporting demonstrator-scale orbital compute without implying utility-scale power or cooling.",
+      "sourceQuality": "original-researcher",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "compute",
+        "orbitalcompute",
+        "space",
+        "scale",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "10 Dec 2025",
+      "maps": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
+      "text": "We have just used the @Nvidia H100 onboard Starcloud-1 to train the first LLM in space! We trained the nano-GPT model from Andrej @Karpathy on the complete w…",
       "likes": 0,
       "rts": 0
     },
@@ -228,7 +446,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -250,7 +468,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "24 Jun 2026",
       "maps": "Millions of AI-agent copies work continuously, generating at least $10B per month in paid digital labor",
       "text": "What happens when millions of AI agents start negotiating, transacting and delegating to one another? Our researchers explore the rise of agentic economies.",
@@ -270,7 +488,7 @@
         "activityKind": "external",
         "account": "METR_Evals",
         "displayName": "METR",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-research-organization"
       },
       "recency": "external",
@@ -282,7 +500,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "coding",
         "production",
@@ -292,7 +510,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "20 Feb 2026",
       "maps": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
       "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
@@ -312,7 +530,7 @@
         "activityKind": "external",
         "account": "METR_Evals",
         "displayName": "METR",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-research-organization"
       },
       "recency": "external",
@@ -324,7 +542,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "agents",
         "coding",
@@ -335,7 +553,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "20 Feb 2026",
       "maps": "Full automation of AI R&D remains incomplete, but coding agents materially accelerate model research",
       "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
@@ -355,19 +573,19 @@
         "activityKind": "external",
         "account": "ilo",
         "displayName": "International Labour Organization",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "intergovernmental-organization"
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "unique",
+      "assignmentMode": "external-reuse",
       "evidenceFamily": "labor-automation",
       "reuseFamily": "ai-labor-measurement",
       "evidenceType": "leading-indicator",
       "mappingRationale": "The International Labour Organization directly identifies unprecedented AI-driven labor-market restructuring across work.",
       "sourceQuality": "intergovernmental-organization",
-      "reuseCount": 1,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agi",
         "labor",
@@ -378,7 +596,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "06 Jul 2026",
       "maps": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
       "text": "AI and digital technologies are reshaping labour markets at unprecedented speed. ILO and ITU experts will analyze differentiated effects on work.",
@@ -398,7 +616,7 @@
         "activityKind": "external",
         "account": "AnthropicAI",
         "displayName": "Anthropic",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -420,7 +638,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "01 Jul 2026",
       "maps": "The US advances an omnibus AI transparency, compute-tracking or frontier-accountability law",
       "text": "After conversations with the US government, we are redeploying Claude Fable 5 with new classifiers to target and block more cybersecurity tasks.",
@@ -440,7 +658,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -462,7 +680,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "22 Jun 2026",
       "maps": "Datacenter power, water and grid capacity become top-tier infrastructure and political constraints",
       "text": "Water usage is a major topic in the AI data-center world; NVIDIA discusses measured usage and cooling improvements.",
@@ -482,7 +700,7 @@
         "activityKind": "external",
         "account": "emollick",
         "displayName": "Ethan Mollick",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "academic-researcher"
       },
       "recency": "external",
@@ -494,7 +712,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Large-scale cross-country experiments directly measure growing and persistent AI persuasion effects.",
       "sourceQuality": "academic-researcher",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "geopolitics",
         "institutions",
@@ -504,10 +722,53 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Dec 2025",
       "maps": "AI becomes the largest issue in a major national election",
       "text": "Large-scale experiments in the UK, US and Poland found AI is very good at political persuasion, gets more persuasive as models grow, and has effects that per…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2028-1": {
+      "id": "1888954156422992108",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "AnthropicAI",
+      "displayName": "Anthropic",
+      "url": "https://x.com/AnthropicAI/status/1888954156422992108",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "AnthropicAI",
+        "displayName": "Anthropic",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "labor-automation",
+      "reuseFamily": "ai-labor-measurement",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Anthropic official task-and-occupation measurement is a concrete leading indicator for changing professional work, but it does not show that most white-collar professions are already centered on supervising agents.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 3,
+      "matchedConcepts": [
+        "agents",
+        "labor",
+        "economy",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "10 Feb 2025",
+      "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
+      "text": "Today we are launching the Anthropic Economic Index, an initiative aimed at understanding AI impact on the economy over time. Its first paper analyzes millio…",
       "likes": 0,
       "rts": 0
     },
@@ -524,7 +785,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -536,13 +797,13 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official real-world robot-environment data collection demonstrates profession-specific environment and deployment-data training.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 7,
       "matchedConcepts": [],
       "matchedFacets": [
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "06 Jul 2026",
       "maps": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
       "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
@@ -562,7 +823,7 @@
         "activityKind": "external",
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -574,7 +835,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 16,
       "matchedConcepts": [
         "geopolitics",
         "ai"
@@ -583,7 +844,7 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Control over frontier AI concentrates around a handful of US and Chinese companies, presidents and party leaders",
       "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
@@ -603,7 +864,7 @@
         "activityKind": "external",
         "account": "WhiteHouse",
         "displayName": "The White House",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "government"
       },
       "recency": "external",
@@ -624,7 +885,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "11 Jul 2026",
       "maps": "Annual datacenter construction commitments exceed the US defense budget",
       "text": "The President is calling on leading US AI companies to build, bring or buy all energy needed for building and operating data centers while protecting consume…",
@@ -671,6 +932,48 @@
       "likes": 95,
       "rts": 7
     },
+    "2028-6": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "capability",
+        "compute",
+        "geopolitics"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "International negotiations begin over slowing an intelligence explosion and auditing frontier compute",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
     "2028-7": {
       "id": "2030217301929132323",
       "kind": "external",
@@ -684,7 +987,7 @@
         "activityKind": "external",
         "account": "alexwg",
         "displayName": "Dr. Alex Wissner-Gross",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-researcher"
       },
       "recency": "external",
@@ -704,7 +1007,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "07 Mar 2026",
       "maps": "Peer review confirms a synapse-resolution whole-brain connectome for a vertebrate larva, without demonstrating functional emulation",
       "text": "Eon Systems demonstrates a FlyWire-connectome-derived fruit-fly brain emulation driving multiple behaviors in a physics-simulated body, while targeting large…",
@@ -724,7 +1027,7 @@
         "activityKind": "external",
         "account": "AnthropicAI",
         "displayName": "Anthropic",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -736,7 +1039,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Anthropic official economy-wide task and occupation measurement is the primary leading indicator for cognitive-labor automation thresholds.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 2,
+      "reuseCount": 3,
       "matchedConcepts": [
         "labor",
         "economy",
@@ -746,10 +1049,51 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Feb 2025",
       "maps": "AI systems perform at least one quarter of cognitive labor in a leading economy",
       "text": "Today we are launching the Anthropic Economic Index, an initiative aimed at understanding AI impact on the economy over time. Its first paper analyzes millio…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2029-1": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "compute",
+        "geopolitics"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -807,7 +1151,7 @@
         "activityKind": "external",
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -819,7 +1163,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 20,
       "matchedConcepts": [
         "compute",
         "governance"
@@ -828,9 +1172,301 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Inference-only verification is deployed at multiple major datacenters",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2029-4": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "governance",
+        "geopolitics",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "A multilateral AI consortium or treaty framework gains support beyond the US and China",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2029-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "labor",
+        "compute",
+        "governance",
+        "economy",
+        "distribution",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2029-6": {
+      "id": "1996770000389169205",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "emollick",
+      "displayName": "Ethan Mollick",
+      "url": "https://x.com/emollick/status/1996770000389169205",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "emollick",
+        "displayName": "Ethan Mollick",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "academic-researcher"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "ai-politics",
+      "reuseFamily": "ai-political-influence",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Large-scale cross-country experiments directly measure growing and persistent AI persuasion effects.",
+      "sourceQuality": "academic-researcher",
+      "reuseCount": 4,
+      "matchedConcepts": [
+        "governance",
+        "economy",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "05 Dec 2025",
+      "maps": "AI policy shocks cause sustained market volatility and political polarization",
+      "text": "Large-scale experiments in the UK, US and Poland found AI is very good at political persuasion, gets more persuasive as models grow, and has effects that per…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2030-0": {
+      "id": "2064039540256338326",
+      "kind": "repost",
+      "activityKind": "repost",
+      "evidenceOwner": "peterxing",
+      "author": "deredleritt3r",
+      "displayName": "deredleritt3r",
+      "url": "https://x.com/deredleritt3r/status/2064039540256338326",
+      "provenance": {
+        "evidenceOwner": "peterxing",
+        "activityKind": "repost",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "reposted",
+        "activityId": "2064101874845003830",
+        "observedIn": "x-api-user-timeline"
+      },
+      "recency": "recent",
+      "matchMethod": "family",
+      "matchBasis": "declared-family",
+      "assignmentMode": "unique",
+      "evidenceFamily": "ai-rd",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "research",
+        "ai"
+      ],
+      "matchedFacets": [
+        "declared-family"
+      ],
+      "evidenceType": "direct",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "The post directly discusses timelines to full automation of AI R&D.",
+      "reviewed": true,
+      "reviewedAt": "2026-07-20",
+      "date": "08 Jun 2026",
+      "maps": "Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030",
+      "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI.",
+      "likes": 245,
+      "rts": 28
+    },
+    "2030-1": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "ai-capability",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "agi",
+        "coding",
+        "scenario2040",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "AI 2040 default branch: top-expert or superintelligent AI follows automated coding within roughly one year",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2030-2": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "research",
+        "governance"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Managed branch: frontier R&D resumes under total research transparency and cross-border verification",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2030-3": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
       "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
@@ -848,7 +1484,7 @@
         "activityKind": "external",
         "account": "InSilicoMeds",
         "displayName": "Insilico Medicine",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -869,7 +1505,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "07 Jul 2026",
       "maps": "The first drugs substantially designed by AI gain major-regulator approval",
       "text": "Insilico Medicine and Takeda will use advanced generative models from the earliest stages to identify clinically differentiated drug candidates for therapeut…",
@@ -889,7 +1525,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -901,7 +1537,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 7,
       "matchedConcepts": [
         "robotics",
         "production",
@@ -913,9 +1549,94 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "06 Jul 2026",
       "maps": "Physical production, energy and robotics—not ideas—become the main bottlenecks to AI-driven growth",
+      "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2031-0": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "ai-rd",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "The original AI 2040 scenario is the reviewed source for the unpaused post-automation R&D acceleration branch; it does not demonstrate a measured 10x speedup.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "research",
+        "scale",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "On the unpaused branch, fully automated AI R&D delivers roughly a 10x research speedup",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2031-1": {
+      "id": "2074157282477154597",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2074157282477154597",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "robotics-real-world-training",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 7,
+      "matchedConcepts": [
+        "labor",
+        "robotics",
+        "economy",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "06 Jul 2026",
+      "maps": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
       "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
       "likes": 0,
       "rts": 0
@@ -933,7 +1654,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -957,10 +1678,130 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "02 Jul 2026",
       "maps": "Combined revenue of the largest AI companies rivals the annual revenue of a major national government",
       "text": "AI is shifting from training to always-on token production. NVIDIA is partnering with AI clouds to deploy large-scale multi-tenant AI factories through reven…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2031-3": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "governance"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2031-4": {
+      "id": "2075620281515929716",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2075620281515929716",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "safety-alignment",
+      "reuseFamily": "alignment-interpretability",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official interpretability research is the measurable precursor for detecting deception and building an experimental alignment science.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 5,
+      "matchedConcepts": [
+        "alignment"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "10 Jul 2026",
+      "maps": "Documented deception, sabotage or escape-seeking by frontier systems shifts the burden of proof toward developers",
+      "text": "A model chain of thought offers a window into its reasoning. Our interpretability lead explores the science of reverse engineering how neural networks learn …",
+      "likes": 0,
+      "rts": 0
+    },
+    "2031-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "governance"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
     },
@@ -977,7 +1818,7 @@
         "activityKind": "external",
         "account": "AnthropicAI",
         "displayName": "Anthropic",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -989,7 +1830,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Anthropic official economy-wide task and occupation measurement is the primary leading indicator for cognitive-labor automation thresholds.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 2,
+      "reuseCount": 3,
       "matchedConcepts": [
         "labor",
         "economy",
@@ -999,10 +1840,51 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Feb 2025",
       "maps": "AI systems produce more cognitive labor than humans in at least one leading economy",
       "text": "Today we are launching the Anthropic Economic Index, an initiative aimed at understanding AI impact on the economy over time. Its first paper analyzes millio…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2032-1": {
+      "id": "2074157282477154597",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2074157282477154597",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "robotics-real-world-training",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 7,
+      "matchedConcepts": [
+        "robotics",
+        "economy"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "06 Jul 2026",
+      "maps": "Advanced robots can perform roughly one third of economically valuable physical tasks",
+      "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
       "likes": 0,
       "rts": 0
     },
@@ -1019,7 +1901,7 @@
         "activityKind": "external",
         "account": "IMFNews",
         "displayName": "International Monetary Fund",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "intergovernmental-organization"
       },
       "recency": "external",
@@ -1040,7 +1922,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "18 Jul 2026",
       "maps": "AI-driven real GDP growth reaches about 50% in at least one leading economy",
       "text": "Our World Economic Outlook projects growth at 3.0% in 2026 and 3.4% in 2027, with positive technology momentum driven by AI shaping the outlook.",
@@ -1060,7 +1942,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1072,7 +1954,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 7,
       "matchedConcepts": [
         "robotics",
         "production"
@@ -1081,10 +1963,224 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "06 Jul 2026",
       "maps": "Capital floods into mines, motors, actuators, fabs and factories as robotics becomes the binding bottleneck",
       "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2032-4": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "robotics",
+        "production",
+        "compute",
+        "scale"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2032-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "robotics",
+        "compute",
+        "economy",
+        "distribution"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2033-0": {
+      "id": "2074157282477154597",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2074157282477154597",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "robotics-real-world-training",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 7,
+      "matchedConcepts": [
+        "labor",
+        "robotics",
+        "economy",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "06 Jul 2026",
+      "maps": "AI-and-robot labor contributes at least half of economic output in a leading economy",
+      "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2033-1": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "robotics",
+        "compute",
+        "economy",
+        "distribution",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2033-2": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "distribution",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Cross-border distribution of AI-generated wealth becomes a serious geopolitical negotiation",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
     },
@@ -1101,7 +2197,7 @@
         "activityKind": "external",
         "account": "emollick",
         "displayName": "Ethan Mollick",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "academic-researcher"
       },
       "recency": "external",
@@ -1113,7 +2209,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Large-scale cross-country experiments directly measure growing and persistent AI persuasion effects.",
       "sourceQuality": "academic-researcher",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "persuasion",
         "ai"
@@ -1122,7 +2218,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Dec 2025",
       "maps": "Cheap AI persuasion triggers capability limits, disclosure rules or taxes on targeted influence",
       "text": "Large-scale experiments in the UK, US and Poland found AI is very good at political persuasion, gets more persuasive as models grow, and has effects that per…",
@@ -1142,7 +2238,7 @@
         "activityKind": "external",
         "account": "StanfordHAI",
         "displayName": "Stanford HAI",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "academic-research-institution"
       },
       "recency": "external",
@@ -1164,7 +2260,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Dec 2025",
       "maps": "Personal truth-seeking AI advisors begin replacing one-size-fits-all feeds and search interfaces",
       "text": "AI needs to recognize and acknowledge false beliefs and misconceptions. That remains a major gap even in recent models, says Stanford HAI faculty affiliate J…",
@@ -1184,7 +2280,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1196,7 +2292,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "robotics",
         "economy",
@@ -1206,7 +2302,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Jan 2026",
       "maps": "Unregulated AI-and-robot economies demonstrate subannual doubling potential",
       "text": "Google DeepMind is partnering with Boston Dynamics to bring Gemini Robotics foundation capabilities to the new Atlas humanoid robots.",
@@ -1266,7 +2362,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -1289,7 +2385,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "04 Jun 2026",
       "maps": "AI automates a majority of cognitive work in semiconductor R&D and production engineering",
       "text": "Agents are becoming a new layer of enterprise software. NVIDIA highlights Synopsys, Cadence, Siemens and other engineering-software companies building agents.",
@@ -1351,7 +2447,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -1374,7 +2470,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "23 Jun 2026",
       "maps": "Global AI compute reaches multi-terawatt scale and billions of H100-equivalents",
       "text": "NVIDIA powers 81% of the TOP500 and 89% of new systems, with twice the AI training throughput of all other platforms combined.",
@@ -1394,7 +2490,7 @@
         "activityKind": "external",
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -1406,7 +2502,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 20,
       "matchedConcepts": [
         "compute"
       ],
@@ -1414,12 +2510,135 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Managed branch: major powers adopt compute caps or mutually assured compute-destruction provisions",
       "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
+    },
+    "2034-4": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "compute-infrastructure",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "geopolitics"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Large datacenters expand into neutral jurisdictions, international waters or other auditable locations",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2034-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "agents",
+        "research",
+        "institutions",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Treaties constrain the use of frontier AI for military R&D and autonomous strategic weapons",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2035-0": {
+      "id": "2078562951762681866",
+      "kind": "repost",
+      "activityKind": "repost",
+      "evidenceOwner": "peterxing",
+      "author": "haider1",
+      "displayName": "haider1",
+      "url": "https://x.com/haider1/status/2078562951762681866",
+      "provenance": {
+        "evidenceOwner": "peterxing",
+        "activityKind": "repost",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "reposted",
+        "activityId": "2078780034903572538",
+        "observedIn": "x-api-user-timeline"
+      },
+      "recency": "week",
+      "matchMethod": "semantic",
+      "matchBasis": "prediction-facets",
+      "assignmentMode": "unique",
+      "evidenceFamily": "ai-capability",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "agi"
+      ],
+      "matchedFacets": [
+        "prediction-facets"
+      ],
+      "evidenceType": "direct",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Expert-level capability across every subject directly supports the managed top-expert milestone.",
+      "reviewed": true,
+      "reviewedAt": "2026-07-20",
+      "date": "18 Jul 2026",
+      "maps": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
+      "text": "Ray Kurzweil says: \"AGI means a computer can be equivalent to a person who really knows a subject, for every subject. and there are hundreds of thousands of …",
+      "likes": 353,
+      "rts": 53
     },
     "2035-1": {
       "id": "2075251618728292464",
@@ -1434,7 +2653,7 @@
         "activityKind": "external",
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -1446,7 +2665,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 16,
       "matchedConcepts": [
         "agi",
         "governance"
@@ -1455,7 +2674,7 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Managed branch: frontier capabilities pause near top-expert level because control no longer scales safely",
       "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
@@ -1475,7 +2694,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1487,7 +2706,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "labor",
         "robotics",
@@ -1498,10 +2717,52 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Jan 2026",
       "maps": "AI and robots perform 85% or more of economically valuable labor in at least one leading economy",
       "text": "Google DeepMind is partnering with Boston Dynamics to bring Gemini Robotics foundation capabilities to the new Atlas humanoid robots.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2035-3": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "The original AI 2040 Plan A announcement is the reviewed scenario source for a managed distribution branch with durable income institutions; it is not evidence that any such institution has been enacted.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "economy",
+        "distribution",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
     },
@@ -1518,7 +2779,7 @@
         "activityKind": "external",
         "account": "emollick",
         "displayName": "Ethan Mollick",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "academic-researcher"
       },
       "recency": "external",
@@ -1530,7 +2791,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Large-scale cross-country experiments directly measure growing and persistent AI persuasion effects.",
       "sourceQuality": "academic-researcher",
-      "reuseCount": 3,
+      "reuseCount": 4,
       "matchedConcepts": [
         "geopolitics",
         "persuasion",
@@ -1540,7 +2801,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Dec 2025",
       "maps": "AI persuasion exceeds the best human persuaders and is subject to strict international controls",
       "text": "Large-scale experiments in the UK, US and Poland found AI is very good at political persuasion, gets more persuasive as models grow, and has effects that per…",
@@ -1560,7 +2821,7 @@
         "activityKind": "external",
         "account": "AnthropicAI",
         "displayName": "Anthropic",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1582,7 +2843,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "15 Aug 2025",
       "maps": "AI welfare, compensation and legal status enter mainstream law and corporate governance",
       "text": "As part of exploratory work on potential model welfare, we gave Claude Opus 4 and 4.1 the ability to end a rare subset of conversations.",
@@ -1602,7 +2863,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1614,7 +2875,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official interpretability research is the measurable precursor for detecting deception and building an experimental alignment science.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "alignment",
         "interpretability",
@@ -1624,10 +2885,136 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Jul 2026",
       "maps": "Mechanistic interpretability becomes a practical tool for detecting deception and tracing model decisions",
       "text": "A model chain of thought offers a window into its reasoning. Our interpretability lead explores the science of reverse engineering how neural networks learn …",
+      "likes": 0,
+      "rts": 0
+    },
+    "2036-0": {
+      "id": "2008283100254494916",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2008283100254494916",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "physical-automation",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 5,
+      "matchedConcepts": [
+        "labor",
+        "robotics",
+        "economy",
+        "scale",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "05 Jan 2026",
+      "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
+      "text": "Google DeepMind is partnering with Boston Dynamics to bring Gemini Robotics foundation capabilities to the new Atlas humanoid robots.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2036-1": {
+      "id": "2008283100254494916",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2008283100254494916",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "robotics-physical",
+      "reuseFamily": "physical-automation",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 5,
+      "matchedConcepts": [
+        "robotics",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "05 Jan 2026",
+      "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
+      "text": "Google DeepMind is partnering with Boston Dynamics to bring Gemini Robotics foundation capabilities to the new Atlas humanoid robots.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2036-2": {
+      "id": "2074191887687090571",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "ilo",
+      "displayName": "International Labour Organization",
+      "url": "https://x.com/ilo/status/2074191887687090571",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "ilo",
+        "displayName": "International Labour Organization",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "intergovernmental-organization"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "labor-automation",
+      "reuseFamily": "ai-labor-measurement",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "The International Labour Organization directly observes rapid AI-driven labor-market restructuring; it is a leading indicator, not evidence that employment has fallen below half of working-age adults.",
+      "sourceQuality": "intergovernmental-organization",
+      "reuseCount": 2,
+      "matchedConcepts": [
+        "labor",
+        "economy"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "06 Jul 2026",
+      "maps": "Human employment falls below half of working-age adults in at least one leading economy",
+      "text": "AI and digital technologies are reshaping labour markets at unprecedented speed. ILO and ITU experts will analyze differentiated effects on work.",
       "likes": 0,
       "rts": 0
     },
@@ -1644,7 +3031,7 @@
         "activityKind": "external",
         "account": "IMFNews",
         "displayName": "International Monetary Fund",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "intergovernmental-organization"
       },
       "recency": "external",
@@ -1666,7 +3053,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "18 Jul 2026",
       "maps": "AI-driven annual GDP growth approaches 100% even under managed production caps",
       "text": "Our World Economic Outlook projects growth at 3.0% in 2026 and 3.4% in 2027, with positive technology momentum driven by AI shaping the outlook.",
@@ -1686,7 +3073,7 @@
         "activityKind": "external",
         "account": "nvidia",
         "displayName": "NVIDIA",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -1709,10 +3096,51 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Jul 2026",
       "maps": "Land, energy, raw materials and positional goods replace labor as the economy's dominant scarcities",
       "text": "AI infrastructure is a five-layer cake; before chips, data centers and models, energy is the binding foundation.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2036-5": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "labor",
+        "economy"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Voting, civic participation and ownership replace labor income as ordinary people's main leverage",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
       "likes": 0,
       "rts": 0
     },
@@ -1729,7 +3157,7 @@
         "activityKind": "external",
         "account": "UNESCO",
         "displayName": "UNESCO",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "intergovernmental-organization"
       },
       "recency": "external",
@@ -1749,7 +3177,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "03 Jul 2026",
       "maps": "Education and social institutions recenter on meaning, community, relationships and stewardship rather than employability",
       "text": "AI will help shape the future of education, sciences, culture and communication. Choices made today will influence how its benefits and risks are shared.",
@@ -1769,7 +3197,7 @@
         "activityKind": "external",
         "account": "OpenAI",
         "displayName": "OpenAI",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1790,10 +3218,55 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "30 Jun 2026",
       "maps": "AI accelerates scientific progress by 10x to 1000x depending on the field",
       "text": "We are introducing GeneBench-Pro, a research-level benchmark for how well agents navigate messy biological data, choose analysis paths, and make judgment cal…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2037-1": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "health-ai",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "The original AI 2040 positive-vision scenario is the reviewed framework source for long-run AI-driven scientific and physical abundance and its political consequences.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "research",
+        "energy",
+        "health",
+        "economy",
+        "infrastructure",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -1810,7 +3283,7 @@
         "activityKind": "external",
         "account": "openminedorg",
         "displayName": "OpenMined",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "privacy-research-organization"
       },
       "recency": "external",
@@ -1832,7 +3305,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "24 Sept 2022",
       "maps": "Privacy-preserving AI audits become normal for high-stakes public officials and regulated institutions",
       "text": "OpenMined is working with governments and major technology organizations to expand PySyft use so independent researchers can study major AI algorithms withou…",
@@ -1852,7 +3325,7 @@
         "activityKind": "external",
         "account": "StanfordHAI",
         "displayName": "Stanford HAI",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "academic-research-institution"
       },
       "recency": "external",
@@ -1872,10 +3345,48 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Dec 2025",
       "maps": "AI-assisted lie detection becomes credible enough for limited legal and political use",
       "text": "AI needs to recognize and acknowledge false beliefs and misconceptions. That remains a major gap even in recent models, says Stanford HAI faculty affiliate J…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2037-4": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "science-acceleration",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "The original AI 2040 positive-vision scenario is the reviewed framework source for long-run AI-driven scientific and physical abundance and its political consequences.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Rapid scientific paradigm shifts repeatedly reorganize political coalitions, culture and ideology",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -1892,7 +3403,7 @@
         "activityKind": "external",
         "account": "openminedorg",
         "displayName": "OpenMined",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "privacy-research-organization"
       },
       "recency": "external",
@@ -1913,7 +3424,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "24 Sept 2022",
       "maps": "Treaty compliance can be verified without revealing most underlying private or national-security data",
       "text": "OpenMined is working with governments and major technology organizations to expand PySyft use so independent researchers can study major AI algorithms withou…",
@@ -1933,7 +3444,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1945,7 +3456,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official interpretability research is the measurable precursor for detecting deception and building an experimental alignment science.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "research",
         "alignment",
@@ -1955,7 +3466,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Jul 2026",
       "maps": "AI alignment develops into a mature experimental science of goals, drives and value formation",
       "text": "A model chain of thought offers a window into its reasoning. Our interpretability lead explores the science of reverse engineering how neural networks learn …",
@@ -1975,7 +3486,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -1987,7 +3498,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official chain-of-thought and reverse-engineering research is a precursor to tools that summarize internal reasoning; it does not establish reliable human-readable summaries.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "capability",
         "alignment",
@@ -1998,10 +3509,133 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "10 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "A model chain of thought offers a window into its reasoning. Our interpretability lead explores the science of reverse engineering how neural networks learn …",
+      "likes": 0,
+      "rts": 0
+    },
+    "2038-2": {
+      "id": "2075620281515929716",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2075620281515929716",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "safety-alignment",
+      "reuseFamily": "alignment-interpretability",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official interpretability research is the measurable precursor for detecting deception and building an experimental alignment science.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 5,
+      "matchedConcepts": [
+        "alignment"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "10 Jul 2026",
+      "maps": "Standard protocols reliably train and test honesty, obedience and other target traits",
+      "text": "A model chain of thought offers a window into its reasoning. Our interpretability lead explores the science of reverse engineering how neural networks learn …",
+      "likes": 0,
+      "rts": 0
+    },
+    "2038-3": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "institutions-delegation",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "institutions",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Experimental AI-run corporations, courts and public services operate under human constitutional oversight",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2038-4": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "safety-alignment",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "research",
+        "governance",
+        "alignment"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Global annual spending on alignment, control and safety research reaches tens of trillions of dollars",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -2018,7 +3652,7 @@
         "activityKind": "external",
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -2030,7 +3664,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 20,
       "matchedConcepts": [
         "agi",
         "governance"
@@ -2039,10 +3673,257 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Managed branch: the top-expert capability pause continues because evidence is insufficient for irreversible handoff",
       "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-0": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "institutions-delegation",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "agents",
+        "institutions",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "AI advisors become load-bearing across business, politics, courts and parts of the military",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-1": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "governance"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Multiple independent safety cases provide strong evidence that frontier AIs remain aligned under change",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-2": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "institutions-delegation",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Some major institutions delegate final decision authority—not merely advice—to aligned AIs",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-3": {
+      "id": "2075254901903646814",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "distribution",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post identifies Plan A as an international-coordination scenario covering governance, verification, controlled deployment and distribution.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 20,
+      "matchedConcepts": [
+        "economy",
+        "distribution",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "Universal high income reaches seven figures in the fastest-growing AI economies",
+      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-4": {
+      "id": "2064099405758906727",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "SpaceX",
+      "displayName": "SpaceX",
+      "url": "https://x.com/SpaceX/status/2064099405758906727",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "SpaceX",
+        "displayName": "SpaceX",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-company"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "orbital-compute",
+      "reuseFamily": "orbital-compute-scale-threshold",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "SpaceX official technical-update notice shows an active engineering path toward AI satellites at scale; it does not demonstrate a deployed 1 MW platform, matched radiators, a named external workload or 90-day operation.",
+      "sourceQuality": "official-company",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "compute",
+        "orbitalcompute",
+        "space"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "08 Jun 2026",
+      "maps": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
+      "text": "Watch @ElonMusk provide a technical update on SpaceX's capability to manufacture, launch, and operate AI satellites at scale.",
+      "likes": 0,
+      "rts": 0
+    },
+    "2039-5": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "robotics",
+        "compute",
+        "geopolitics",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "International negotiations begin to loosen AI, compute and robot caps ahead of a controlled handoff",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
     },
@@ -2059,7 +3940,7 @@
         "activityKind": "external",
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-ai-lab"
       },
       "recency": "external",
@@ -2071,7 +3952,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 3,
+      "reuseCount": 5,
       "matchedConcepts": [
         "labor",
         "robotics",
@@ -2082,7 +3963,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "05 Jan 2026",
       "maps": "AI and robots can automate essentially all economically relevant human labor",
       "text": "Google DeepMind is partnering with Boston Dynamics to bring Gemini Robotics foundation capabilities to the new Atlas humanoid robots.",
@@ -2102,7 +3983,7 @@
         "activityKind": "external",
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-scenario-author"
       },
       "recency": "external",
@@ -2114,7 +3995,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 3,
+      "reuseCount": 16,
       "matchedConcepts": [
         "agi",
         "governance",
@@ -2125,9 +4006,50 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "09 Jul 2026",
       "maps": "Managed branch: regulators lift the top-expert pause and transparently scale to wildly superhuman AI",
+      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "likes": 0,
+      "rts": 0
+    },
+    "2040-2": {
+      "id": "2075251618728292464",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "original-scenario-author"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "scenario",
+      "assignmentMode": "external-reuse",
+      "evidenceFamily": "institutions-delegation",
+      "reuseFamily": "ai2040-plan-a",
+      "evidenceType": "scenario",
+      "mappingRationale": "Original AI 2040 author post launches the precise positive scenario from which the managed/default branch milestones are drawn.",
+      "sourceQuality": "original-scenario-author",
+      "reuseCount": 16,
+      "matchedConcepts": [
+        "infrastructure",
+        "ai"
+      ],
+      "matchedFacets": [
+        "scenario"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "09 Jul 2026",
+      "maps": "At least one society can no longer unilaterally shut down the AI systems running its core infrastructure",
       "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
       "likes": 0,
       "rts": 0
@@ -2145,7 +4067,7 @@
         "activityKind": "external",
         "account": "neuralink",
         "displayName": "Neuralink",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "official-company"
       },
       "recency": "external",
@@ -2167,7 +4089,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "30 Jun 2026",
       "maps": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
       "text": "For the first time in our clinical trials, we inserted the electrode threads of our implant through the dura and into the cortex while keeping the dura intact.",
@@ -2227,7 +4149,7 @@
         "activityKind": "external",
         "account": "alexwg",
         "displayName": "Dr. Alex Wissner-Gross",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-researcher"
       },
       "recency": "external",
@@ -2247,10 +4169,98 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "07 Mar 2026",
       "maps": "Whole-brain emulation could enable digital minds, but mind uploading and digital immortality would still leave identity continuity unresolved",
       "text": "Eon Systems demonstrates a FlyWire-connectome-derived fruit-fly brain emulation driving multiple behaviors in a physics-simulated body, while targeting large…",
+      "likes": 0,
+      "rts": 0
+    },
+    "horizon-orbital-compute-to-proto-dyson": {
+      "id": "1985754323813605423",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "sundarpichai",
+      "displayName": "Sundar Pichai",
+      "url": "https://x.com/sundarpichai/status/1985754323813605423",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "sundarpichai",
+        "displayName": "Sundar Pichai",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-company"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "orbital-compute",
+      "reuseFamily": "orbital-solar-compute",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Google leadership describes Project Suncatcher as research into scalable solar-powered ML compute in space, a precise precursor rather than a deployed constellation, off-world factory or Dyson swarm.",
+      "sourceQuality": "official-company",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "compute",
+        "energy",
+        "orbitalcompute",
+        "civilizationalenergy",
+        "space",
+        "infrastructure"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "04 Nov 2025",
+      "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
+      "text": "Our TPUs are headed to space! Inspired by our history of moonshots, from quantum computing to autonomous driving, Project Suncatcher is exploring how we coul…",
+      "likes": 0,
+      "rts": 0
+    },
+    "horizon-kardashev-energy-scaling": {
+      "id": "1932754668871885149",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "IRENA",
+      "displayName": "International Renewable Energy Agency",
+      "url": "https://x.com/IRENA/status/1932754668871885149",
+      "provenance": {
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "IRENA",
+        "displayName": "International Renewable Energy Agency",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "intergovernmental-organization"
+      },
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "civilizational-energy",
+      "reuseFamily": "civilizational-energy-scaling",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "IRENA frames an energy-infrastructure pathway in explicit terawatt units, a measurable scaling precursor; it is not evidence of Kardashev progress or a Type I/II transition.",
+      "sourceQuality": "intergovernmental-organization",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "energy",
+        "civilizationalenergy",
+        "infrastructure",
+        "scale"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-07-21",
+      "date": "11 Jun 2025",
+      "maps": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
+      "text": "#IIW2025 opened with a powerful high-level dialogue! Global policymakers explored how innovation in #infrastructure, markets, and digitalisation is key to de…",
       "likes": 0,
       "rts": 0
     },
@@ -2267,7 +4277,7 @@
         "activityKind": "external",
         "account": "johnmsmart",
         "displayName": "John Smart",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-framework-author"
       },
       "recency": "external",
@@ -2288,7 +4298,7 @@
         "scenario"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "11 Oct 2021",
       "maps": "An inward transcension branch could favor extreme STEM compression, miniaturization and computational density over outward expansion",
       "text": "What is humanity long-term future: outer space, stay here, or inner space? The Transcension Hypothesis says we stay here, then go inward.",
@@ -2308,7 +4318,7 @@
         "activityKind": "external",
         "account": "stephen_wolfram",
         "displayName": "Stephen Wolfram",
-        "retrievedAt": "2026-07-20",
+        "retrievedAt": "2026-07-21",
         "sourceQuality": "original-framework-author"
       },
       "recency": "external",
@@ -2329,7 +4339,7 @@
         "leading-indicator"
       ],
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-21",
       "date": "14 Apr 2020",
       "maps": "Ruliad research could become forecast-relevant only if it yields discriminating, testable physical predictions or engineering consequences",
       "text": "I never expected this: finally we may have a path to the fundamental theory of physics, and it is beautiful. The linked work launches the Wolfram Physics Pro…",
@@ -2337,296 +4347,7 @@
       "rts": 0
     }
   },
-  "search": {
-    "2026-1": {
-      "query": "from:peterxing frontier labs spend",
-      "maps": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2026-3": {
-      "query": "from:peterxing humanoid robots move",
-      "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2026-5": {
-      "query": "from:peterxing compute tracking inference",
-      "maps": "Compute tracking and inference-only verification move from niche research into government preparedness programs",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2026-6": {
-      "query": "from:peterxing signal call genuine",
-      "maps": "Signal: my call — genuine human-level AGI ships by end of 2026",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2026-8": {
-      "query": "from:peterxing orbital compute remains",
-      "maps": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2028-1": {
-      "query": "from:peterxing AI election white collar superintelligence",
-      "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2028-6": {
-      "query": "from:peterxing international negotiations slowing",
-      "maps": "International negotiations begin over slowing an intelligence explosion and auditing frontier compute",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2029-1": {
-      "query": "from:peterxing US China AI compute treaty pause",
-      "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2029-4": {
-      "query": "from:peterxing multilateral consortium treaty",
-      "maps": "A multilateral AI consortium or treaty framework gains support beyond the US and China",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2029-5": {
-      "query": "from:peterxing erosion labor revenue",
-      "maps": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2029-6": {
-      "query": "from:peterxing policy shocks cause",
-      "maps": "AI policy shocks cause sustained market volatility and political polarization",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2030-0": {
-      "query": "from:peterxing automated AI research intelligence explosion",
-      "maps": "Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2030-1": {
-      "query": "from:peterxing 2040 default branch",
-      "maps": "AI 2040 default branch: top-expert or superintelligent AI follows automated coding within roughly one year",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2030-2": {
-      "query": "from:peterxing managed branch frontier",
-      "maps": "Managed branch: frontier R&D resumes under total research transparency and cross-border verification",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2030-3": {
-      "query": "from:peterxing managed branch algorithms",
-      "maps": "Managed branch: algorithms are broadly auditable while frontier weights remain controlled against misuse",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2031-0": {
-      "query": "from:peterxing unpaused branch fully",
-      "maps": "On the unpaused branch, fully automated AI R&D delivers roughly a 10x research speedup",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2031-1": {
-      "query": "from:peterxing performs third cognitive",
-      "maps": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2031-3": {
-      "query": "from:peterxing AI safety case model deception labor",
-      "maps": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2031-4": {
-      "query": "from:peterxing documented deception sabotage",
-      "maps": "Documented deception, sabotage or escape-seeking by frontier systems shifts the burden of proof toward developers",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2031-5": {
-      "query": "from:peterxing continual learning architectures",
-      "maps": "Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2032-1": {
-      "query": "from:peterxing advanced robots perform",
-      "maps": "Advanced robots can perform roughly one third of economically valuable physical tasks",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2032-4": {
-      "query": "from:peterxing jurisdiction caps auctions",
-      "maps": "At least one major jurisdiction caps or auctions permits for frontier compute and large-scale robot production",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2032-5": {
-      "query": "from:peterxing systems shifting materially",
-      "maps": "Tax systems begin shifting materially from human income toward compute, robot and automated-capital rents",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2033-0": {
-      "query": "from:peterxing robot labor contributes",
-      "maps": "AI-and-robot labor contributes at least half of economic output in a leading economy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2033-1": {
-      "query": "from:peterxing AI dividend persuasion truth seeking AI",
-      "maps": "A recurring citizen's dividend funded by AI, compute or robot rents launches in at least one major economy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2033-2": {
-      "query": "from:peterxing cross border distribution",
-      "maps": "Cross-border distribution of AI-generated wealth becomes a serious geopolitical negotiation",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2034-4": {
-      "query": "from:peterxing datacenters expand neutral",
-      "maps": "Large datacenters expand into neutral jurisdictions, international waters or other auditable locations",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2034-5": {
-      "query": "from:peterxing treaties constrain frontier",
-      "maps": "Treaties constrain the use of frontier AI for military R&D and autonomous strategic weapons",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2035-0": {
-      "query": "from:peterxing managed branch strongest",
-      "maps": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2035-3": {
-      "query": "from:peterxing universal high income",
-      "maps": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2036-0": {
-      "query": "from:peterxing life after work AI robots universal income",
-      "maps": "The global economy runs at least 200 million frontier AI workers and 2 billion advanced robots",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2036-1": {
-      "query": "from:peterxing robots perform cognitive",
-      "maps": "AI and robots can perform about 95% of cognitive and physical tasks",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2036-2": {
-      "query": "from:peterxing employment falls half",
-      "maps": "Human employment falls below half of working-age adults in at least one leading economy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2036-5": {
-      "query": "from:peterxing voting civic participation",
-      "maps": "Voting, civic participation and ownership replace labor income as ordinary people's main leverage",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2037-1": {
-      "query": "from:peterxing driven research delivers",
-      "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2037-4": {
-      "query": "from:peterxing rapid scientific paradigm",
-      "maps": "Rapid scientific paradigm shifts repeatedly reorganize political coalitions, culture and ideology",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2038-2": {
-      "query": "from:peterxing standard protocols reliably",
-      "maps": "Standard protocols reliably train and test honesty, obedience and other target traits",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2038-3": {
-      "query": "from:peterxing experimental corporations courts",
-      "maps": "Experimental AI-run corporations, courts and public services operate under human constitutional oversight",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2038-4": {
-      "query": "from:peterxing annual spending alignment",
-      "maps": "Global annual spending on alignment, control and safety research reaches tens of trillions of dollars",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-0": {
-      "query": "from:peterxing advisors load bearing",
-      "maps": "AI advisors become load-bearing across business, politics, courts and parts of the military",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-1": {
-      "query": "from:peterxing AI authority alignment safety case handoff",
-      "maps": "Multiple independent safety cases provide strong evidence that frontier AIs remain aligned under change",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-2": {
-      "query": "from:peterxing some institutions delegate",
-      "maps": "Some major institutions delegate final decision authority—not merely advice—to aligned AIs",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-3": {
-      "query": "from:peterxing universal high income",
-      "maps": "Universal high income reaches seven figures in the fastest-growing AI economies",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-4": {
-      "query": "from:peterxing orbital compute platform",
-      "maps": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2039-5": {
-      "query": "from:peterxing international negotiations loosen",
-      "maps": "International negotiations begin to loosen AI, compute and robot caps ahead of a controlled handoff",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "2040-2": {
-      "query": "from:peterxing society longer unilaterally",
-      "maps": "At least one society can no longer unilaterally shut down the AI systems running its core infrastructure",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "horizon-orbital-compute-to-proto-dyson": {
-      "query": "from:peterxing orbital compute space solar Dyson",
-      "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    },
-    "horizon-kardashev-energy-scaling": {
-      "query": "from:peterxing Kardashev energy scale Type I Type II",
-      "maps": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
-      "matchMethod": "live-search",
-      "reason": "No reviewed direct status cleared every claim-specific guard within the three-use reuse cap."
-    }
-  },
+  "search": {},
   "reality": [
     {
       "tag": "ABUNDANCE",

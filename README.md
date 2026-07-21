@@ -4,12 +4,12 @@ A living, data-driven civilization forecast and long-form guide to the post-AGI 
 REHOBOAM timeline spans **2026–2040** across six domains and is published at
 [peterxing.com](https://peterxing.com).
 
-Every individual prediction must have either reviewed direct X evidence or an honest live
-`from:peterxing` search. The matcher prefers a defensible post/repost observed in
+Every individual prediction must have exactly one reviewed direct X evidence card. The matcher
+prefers a defensible post/repost observed in
 [@peterxing](https://x.com/peterxing)'s activity, then retains a reviewed authoritative external post
 labeled as direct, scenario, or leading-indicator evidence. Source freshness is tracked separately
 from evergreen evidence age. `refresh-signals.js` exits nonzero and leaves `signals.json` unchanged
-unless that direct-or-search coverage is complete.
+unless direct coverage is complete and `signals.search` is empty.
 
 ## How it works
 
@@ -31,7 +31,7 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
   tape-out/semiconductors, physicians/health, FSD/robotics, and UHI/dividends). Claim-specific facet
   guards remain mandatory for literal, semantic, hybrid, and family matches. Assignment maximizes
   unique reviewed posts first, then permits reuse only inside a declared compatible evidence family
-  and never more than three times.
+  or reviewed threshold/scenario series. There is no generic reuse cap.
 - **`evidence-families.js`** declares the only families within which threshold-series reuse is
   compatible. Cross-family reuse fails publication.
 - **`evidence-approvals.json`** is the public-safe reviewed prediction/post-pair ledger. New automatic
@@ -42,9 +42,9 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
 - **`verify-signal-matcher.js`** runs positive and negative regression fixtures for the concept
   matcher, including J-space vs off-world space, building permits vs compute permits, market cap vs
   compute caps, political vs electrical power, and quantitative labor thresholds.
-- **`signals.json`** is written only at complete direct-or-search coverage. `signals-debug.json`
+- **`signals.json`** is written only at complete direct-only coverage. `signals-debug.json`
   remains local and records source freshness, historical span, missing direct IDs, reviewed mappings,
-  search fallbacks, and reuse audits without storing the raw activity corpus.
+  guard rejections, and reuse audits without storing the raw activity corpus.
 - **`author.json`** drives the daily-refreshed About the Author section.
 
 ## Data-source safety

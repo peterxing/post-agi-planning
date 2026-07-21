@@ -1,7 +1,6 @@
 'use strict';
 
-const RETRIEVED_AT = '2026-07-20';
-const MAX_POST_REUSE = 3;
+const RETRIEVED_AT = '2026-07-21';
 
 const EXTERNAL_SOURCES = {
   'metr-task-horizon': {
@@ -285,6 +284,46 @@ const EXTERNAL_SOURCES = {
     sourceQuality: 'official-company',
     text: 'Insilico Medicine and Takeda will use advanced generative models from the earliest stages to identify clinically differentiated drug candidates for therapeutic targets.',
   },
+  'starcloud-orbital-llm': {
+    statusId: '1998769997431058927',
+    handle: 'AdiOltean',
+    displayName: 'Adi Oltean',
+    url: 'https://x.com/AdiOltean/status/1998769997431058927',
+    postedAt: '2025-12-10T15:01:17.395Z',
+    retrievedAt: RETRIEVED_AT,
+    sourceQuality: 'original-researcher',
+    text: 'We have just used the @Nvidia H100 onboard Starcloud-1 to train the first LLM in space! We trained the nano-GPT model from Andrej @Karpathy on the complete works of Shakespeare and successfully ran inference on it. We have also run inference on a preloaded Gemma model.',
+  },
+  'spacex-ai-satellites': {
+    statusId: '2064099405758906727',
+    handle: 'SpaceX',
+    displayName: 'SpaceX',
+    url: 'https://x.com/SpaceX/status/2064099405758906727',
+    postedAt: '2026-06-08T21:37:02.102Z',
+    retrievedAt: RETRIEVED_AT,
+    sourceQuality: 'official-company',
+    text: "Watch @ElonMusk provide a technical update on SpaceX's capability to manufacture, launch, and operate AI satellites at scale.",
+  },
+  'google-project-suncatcher': {
+    statusId: '1985754323813605423',
+    handle: 'sundarpichai',
+    displayName: 'Sundar Pichai',
+    url: 'https://x.com/sundarpichai/status/1985754323813605423',
+    postedAt: '2025-11-04T17:01:38.985Z',
+    retrievedAt: RETRIEVED_AT,
+    sourceQuality: 'official-company',
+    text: "Our TPUs are headed to space! Inspired by our history of moonshots, from quantum computing to autonomous driving, Project Suncatcher is exploring how we could one day build scalable ML compute systems in space, harnessing more of the sun's power.",
+  },
+  'irena-11-tw-path': {
+    statusId: '1932754668871885149',
+    handle: 'IRENA',
+    displayName: 'International Renewable Energy Agency',
+    url: 'https://x.com/IRENA/status/1932754668871885149',
+    postedAt: '2025-06-11T10:59:56.561Z',
+    retrievedAt: RETRIEVED_AT,
+    sourceQuality: 'intergovernmental-organization',
+    text: '#IIW2025 opened with a powerful high-level dialogue! Global policymakers explored how innovation in #infrastructure, markets, and digitalisation is key to delivering on the #COP28 pledge \u2014 while ensuring energy remains reliable, affordable, and equitable. The path to 11.2 TW of\u2026',
+  },
 };
 
 const EXTERNAL_GROUPS = [
@@ -315,6 +354,13 @@ const EXTERNAL_GROUPS = [
     evidenceType: 'leading-indicator',
     rationale: 'Official real-world robot-environment data collection demonstrates profession-specific environment and deployment-data training.',
     ids: ['2028-2'],
+  },
+  {
+    source: 'deepmind-robot-park',
+    reuseFamily: 'robotics-real-world-training',
+    evidenceType: 'leading-indicator',
+    rationale: 'Official expansion of a real-world humanoid training facility is a concrete precursor to factory deployment, but it does not establish thousands of robots on live production lines.',
+    ids: ['2026-3'],
   },
   {
     source: 'nvidia-enterprise-agents',
@@ -349,6 +395,13 @@ const EXTERNAL_GROUPS = [
     ],
   },
   {
+    source: 'ai2040-eli',
+    reuseFamily: 'ai2040-plan-a',
+    evidenceType: 'scenario',
+    rationale: 'The original AI 2040 Plan A announcement is the reviewed scenario source for a managed distribution branch with durable income institutions; it is not evidence that any such institution has been enacted.',
+    ids: ['2035-3'],
+  },
+  {
     source: 'ai2040-daniel',
     reuseFamily: 'ai2040-plan-a',
     evidenceType: 'scenario',
@@ -373,6 +426,13 @@ const EXTERNAL_GROUPS = [
     ids: ['2037-1', '2037-4'],
   },
   {
+    source: 'ai2040-daniel',
+    reuseFamily: 'ai2040-plan-a',
+    evidenceType: 'scenario',
+    rationale: 'The original AI 2040 scenario is the reviewed source for the unpaused post-automation R&D acceleration branch; it does not demonstrate a measured 10x speedup.',
+    ids: ['2031-0'],
+  },
+  {
     source: 'neuralink-trial',
     reuseFamily: 'implantable-bci',
     evidenceType: 'leading-indicator',
@@ -387,11 +447,25 @@ const EXTERNAL_GROUPS = [
     ids: ['2029-0', '2032-0'],
   },
   {
+    source: 'anthropic-economic-index',
+    reuseFamily: 'ai-labor-measurement',
+    evidenceType: 'leading-indicator',
+    rationale: 'Anthropic official task-and-occupation measurement is a concrete leading indicator for changing professional work, but it does not show that most white-collar professions are already centered on supervising agents.',
+    ids: ['2028-1'],
+  },
+  {
     source: 'ilo-labor',
     reuseFamily: 'ai-labor-measurement',
     evidenceType: 'leading-indicator',
     rationale: 'The International Labour Organization directly identifies unprecedented AI-driven labor-market restructuring across work.',
     ids: ['2027-3'],
+  },
+  {
+    source: 'ilo-labor',
+    reuseFamily: 'ai-labor-measurement',
+    evidenceType: 'leading-indicator',
+    rationale: 'The International Labour Organization directly observes rapid AI-driven labor-market restructuring; it is a leading indicator, not evidence that employment has fallen below half of working-age adults.',
+    ids: ['2036-2'],
   },
   {
     source: 'nvidia-water',
@@ -519,6 +593,34 @@ const EXTERNAL_GROUPS = [
     rationale: 'Stephen Wolfram official launch of the Physics Project is the original research program underlying later ruliad formalism; it is evidence of the framework, not validation.',
     ids: ['horizon-ruliad-testable-physics'],
   },
+  {
+    source: 'starcloud-orbital-llm',
+    reuseFamily: 'orbital-compute-demonstrators',
+    evidenceType: 'leading-indicator',
+    rationale: 'The original Starcloud engineer reports an H100 running named training and inference workloads in orbit, directly supporting demonstrator-scale orbital compute without implying utility-scale power or cooling.',
+    ids: ['2026-8'],
+  },
+  {
+    source: 'spacex-ai-satellites',
+    reuseFamily: 'orbital-compute-scale-threshold',
+    evidenceType: 'leading-indicator',
+    rationale: 'SpaceX official technical-update notice shows an active engineering path toward AI satellites at scale; it does not demonstrate a deployed 1 MW platform, matched radiators, a named external workload or 90-day operation.',
+    ids: ['2039-4'],
+  },
+  {
+    source: 'google-project-suncatcher',
+    reuseFamily: 'orbital-solar-compute',
+    evidenceType: 'leading-indicator',
+    rationale: 'Google leadership describes Project Suncatcher as research into scalable solar-powered ML compute in space, a precise precursor rather than a deployed constellation, off-world factory or Dyson swarm.',
+    ids: ['horizon-orbital-compute-to-proto-dyson'],
+  },
+  {
+    source: 'irena-11-tw-path',
+    reuseFamily: 'civilizational-energy-scaling',
+    evidenceType: 'leading-indicator',
+    rationale: 'IRENA frames an energy-infrastructure pathway in explicit terawatt units, a measurable scaling precursor; it is not evidence of Kardashev progress or a Type I/II transition.',
+    ids: ['horizon-kardashev-energy-scaling'],
+  },
 ];
 
 const EXTERNAL_MAPPINGS = {};
@@ -536,23 +638,8 @@ for (const group of EXTERNAL_GROUPS) {
   }
 }
 
-// Sources with more than MAX_POST_REUSE reviewed candidate mappings publish only the
-// three closest claim-specific uses. The remaining predictions receive honest live
-// @peterxing searches rather than over-reusing a broad scenario or leading indicator.
-const EXTERNAL_DIRECT_IDS = {
-  'metr-task-horizon': ['2026-0', '2027-1', '2027-2'],
-  'ai2040-eli': ['2029-3', '2034-3', '2038-5'],
-  'ai2040-daniel': ['2028-3', '2035-1', '2040-1'],
-  'deepmind-robot-park': ['2028-2', '2030-5', '2032-3'],
-  'deepmind-atlas': ['2033-5', '2035-2', '2040-0'],
-  'deepmind-interpretability': ['2035-6', '2038-0', '2038-1'],
-  'mollick-persuasion': ['2028-0', '2033-3', '2035-4'],
-};
-
 module.exports = {
-  EXTERNAL_DIRECT_IDS,
   EXTERNAL_GROUPS,
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
-  MAX_POST_REUSE,
 };

@@ -3394,11 +3394,9 @@ let overlayOn = true;
 /* ---------- @peterxing X signals mapped to predictions ---------- */
 const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
 /* Inline fallback. The live site overrides this from signals.json (regenerated hourly from verified
-   X activity and matched to each prediction). We keep NO embedded posts
-   inline, so if signals.json is ever unavailable every branch shows a live from:peterxing search
-   instead of a stale post. */
+   X activity and matched to each prediction). We keep NO embedded posts inline, so if signals.json
+   is unavailable the UI reports unavailable evidence rather than fabricating or searching. */
 let xSignals = {};
-let xSearches = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -3460,11 +3458,6 @@ function sigBadge(kind, recency, evidenceType){
 
 /* A prediction is identified by "YEAR-INDEX" (index = its position in that year's events array). The same
    id is computed by refresh-signals.js, so each prediction's signals.json embed lines up 1:1 here. */
-function deriveSearch(title){
-  const stop = new Set(['the','a','an','and','or','of','to','in','on','for','with','by','from','at','as','is','are','be','into','signal','live','most','first','new','their','our','its','over','under','toward']);
-  const ws = String(title).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !stop.has(w));
-  return ws.slice(0, 3).join(' ') || String(title).slice(0, 24);
-}
 function signalCard(sig){
   const kind = SIG_KIND[sig.kind] ? sig.kind : 'post';
   const author = safeXHandle(sig.author);
@@ -3516,25 +3509,10 @@ function signalCard(sig){
       </div>
     </details>`;
 }
-function signalSearch(search, match, title){
-  const supplied = String(search && search.query || match && match.search || '');
-  const query = /\bfrom:peterxing\b/i.test(supplied)
-    ? supplied.replace(/\s+/g, ' ').trim()
-    : `from:peterxing ${supplied || deriveSearch(title)}`.replace(/\s+/g, ' ').trim();
-  const maps = String(search && search.maps || title || '');
-  const href = `https://x.com/search?q=${encodeURIComponent(query)}&src=typed_query&f=live`;
-  return `<a class="tl-signal-search" href="${htmlText(href)}" target="_blank" rel="noopener">
-    <strong>Live @peterxing search</strong>
-    ${maps ? `No reviewed direct status clears every claim-specific guard for: ${htmlText(maps)}.` : 'No reviewed direct status clears every claim-specific guard.'}
-    <span>Open live results on X &rarr;</span>
-  </a>`;
-}
 function predictionEvidence(key, match, title){
-  if (signalCoverageReady) {
-    if (xSignals[key]) return signalCard(xSignals[key]);
-    if (xSearches[key]) return signalSearch(xSearches[key], match, title);
-  }
-  return signalSearch(null, match, title);
+  return signalCoverageReady && xSignals[key]
+    ? signalCard(xSignals[key])
+    : evidenceUnavailable();
 }
 function evidenceUnavailable(){
   return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
@@ -3846,15 +3824,14 @@ const predictionsReady = (function loadPredictions(){
     });
 })();
 
-/* Hourly-refreshed signals prioritize reviewed @peterxing activity, retain reviewed authoritative
-   external scenario/leading-indicator evidence, and use an honest live search when no direct status clears. */
+/* Hourly-refreshed signals prioritize reviewed @peterxing activity and retain reviewed authoritative
+   external direct, scenario, or leading-indicator evidence. */
 const SIGNAL_SOURCE_LABELS = {
   'x-api': 'X API realtime',
   'public-rss': 'live public X profile feed',
   'public-rss-cache': 'recent public X profile snapshot',
   'x-api-cache': 'recent X API snapshot',
-  'syndication': 'live X public syndication',
-  'live-search': 'live X searches (activity feed unavailable)'
+  'syndication': 'live X public syndication'
 };
 function renderSignalMetadata(data){
   const sourceLabel = SIGNAL_SOURCE_LABELS[data.source] || 'verified X activity';
@@ -3878,20 +3855,31 @@ function expectedSignalIds(){
 }
 function hasCompleteSignalCoverage(data){
   if (!data || data.sourceFresh !== true || !data.embeds || typeof data.embeds !== 'object') return false;
-  if (!data.search || typeof data.search !== 'object') return false;
   const expected = expectedSignalIds();
   const directIds = Object.keys(data.embeds);
-  const searchIds = Object.keys(data.search);
-  const actual = [...directIds, ...searchIds];
-  if (expected.length !== actual.length
-      || expected.some(id => Boolean(data.embeds[id]) === Boolean(data.search[id]))
-      || actual.some(id => !expected.includes(id))) return false;
-  const useCounts = directIds.reduce((counts, id) => {
+  const searchIds = data.search && typeof data.search === 'object' ? Object.keys(data.search) : [];
+  if (searchIds.length
+      || expected.length !== directIds.length
+      || expected.some(id => !data.embeds[id])
+      || directIds.some(id => !expected.includes(id))) return false;
+  const usesByPost = directIds.reduce((uses, id) => {
     const postId = String(data.embeds[id] && data.embeds[id].id || '');
-    counts[postId] = (counts[postId] || 0) + 1;
-    return counts;
+    if (!uses[postId]) uses[postId] = [];
+    uses[postId].push(data.embeds[id]);
+    return uses;
   }, {});
-  if (Math.max(0, ...Object.values(useCounts)) > 3) return false;
+  const reuseValid = Object.values(usesByPost).every(uses => {
+    const expectedMode = uses[0].evidenceOwner === 'external' ? 'external-reuse' : 'family-reuse';
+    const groups = new Set(uses.map(signal =>
+      signal.evidenceOwner === 'external' ? signal.reuseFamily : signal.evidenceFamily));
+    const owners = new Set(uses.map(signal => signal.evidenceOwner));
+    return uses.length === 1
+      ? uses[0].assignmentMode === 'unique' && Number(uses[0].reuseCount) === 1
+      : owners.size === 1 && groups.size === 1
+        && uses.every(signal => signal.assignmentMode === expectedMode
+          && Number(signal.reuseCount) === uses.length);
+  });
+  if (!reuseValid) return false;
   const directValid = directIds.every(id => {
     const signal = data.embeds[id];
     const provenance = signal && signal.provenance || {};
@@ -3907,7 +3895,8 @@ function hasCompleteSignalCoverage(data){
         && provenance.account === 'peterxing'
         && ['authored', 'reposted'].includes(provenance.relationship)
         && /^\d{15,}$/.test(String(provenance.activityId || ''))
-        && !!provenance.observedIn;
+        && !!provenance.observedIn
+        && ['unique', 'family-reuse'].includes(signal.assignmentMode);
     }
     return signal.evidenceOwner === 'external'
       && signal.kind === 'external'
@@ -3917,20 +3906,17 @@ function hasCompleteSignalCoverage(data){
       && !!provenance.displayName
       && !!provenance.sourceQuality
       && !!provenance.retrievedAt
-      && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType);
+      && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)
+      && ['unique', 'external-reuse'].includes(signal.assignmentMode)
+      && !!signal.reuseFamily;
   });
-  const searchesValid = searchIds.every(id => {
-    const search = data.search[id];
-    return search && search.matchMethod === 'live-search'
-      && /^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
-      && !!search.maps && !!search.reason;
-  });
-  return directValid && searchesValid
+  const maxReuse = Math.max(0, ...Object.values(usesByPost).map(uses => uses.length));
+  return directValid
     && data.coverage && data.coverage.complete === true
     && data.coverage.direct === directIds.length
-    && data.coverage.searches === searchIds.length
+    && data.coverage.searches === 0
     && data.coverage.total === expected.length
-    && data.coverage.maxReuse <= 3;
+    && data.coverage.maxReuse === maxReuse;
 }
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
@@ -3988,14 +3974,13 @@ function hasCompleteSignalCoverage(data){
       renderSignalMetadata(d);
       signalCoverageReady = hasCompleteSignalCoverage(d);
       xSignals = signalCoverageReady ? d.embeds : {};
-      xSearches = signalCoverageReady ? d.search : {};
       renderTimeline();
       renderHorizon();
       const stamp = document.getElementById('sigStamp');
       if (!signalCoverageReady) {
-        setText('heroSignalFreshness', 'Prediction evidence · live search fallback');
+        setText('heroSignalFreshness', 'Prediction evidence unavailable');
         if (stamp) {
-          stamp.textContent = 'Evidence bundle unavailable · showing honest live @peterxing searches';
+          stamp.textContent = 'Evidence bundle unavailable · direct evidence hidden';
           stamp.hidden = false;
         }
       } else if (stamp && d.updated){
@@ -4003,7 +3988,7 @@ function hasCompleteSignalCoverage(data){
         if (!isNaN(dt.getTime())){
          const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'verified X activity';
          const owners = d.coverage && d.coverage.byEvidenceOwner || {};
-         stamp.textContent = `Prediction evidence · ${d.coverage.direct} direct · ${d.coverage.searches} searches · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · ${sourceLabel} checked `
+         stamp.textContent = `Prediction evidence · ${d.coverage.direct}/${d.coverage.total} direct · zero searches · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · ${sourceLabel} checked `
            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
          stamp.hidden = false;
        }
@@ -4012,10 +3997,9 @@ function hasCompleteSignalCoverage(data){
     .catch(() => {
       signalCoverageReady = false;
       xSignals = {};
-      xSearches = {};
       renderTimeline();
       renderHorizon();
-      setText('heroSignalFreshness', 'Prediction evidence · live search fallback');
+      setText('heroSignalFreshness', 'Prediction evidence unavailable');
     });
 })();
 let twPromise = null;

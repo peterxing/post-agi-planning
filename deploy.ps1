@@ -11,13 +11,19 @@ $dir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Set-Location $dir
 
 $coverageVerifier = 'C:\Users\peterxing\pap-deploy\verify-direct-coverage.js'
-if (-not (Test-Path $coverageVerifier)) {
-  Write-Error 'Evidence-coverage verifier is missing; deployment aborted.'
+$externalVerifier = 'C:\Users\peterxing\pap-deploy\verify-external-evidence.js'
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $externalVerifier)) {
+  Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
 }
 & node $coverageVerifier
 if ($LASTEXITCODE -ne 0) {
-  Write-Error 'Direct-or-search @peterxing coverage is incomplete; deployment aborted.'
+  Write-Error 'Direct X evidence coverage is incomplete; deployment aborted.'
+  exit 6
+}
+& node $externalVerifier
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'External X evidence validation failed; deployment aborted.'
   exit 6
 }
 
@@ -26,6 +32,7 @@ if (-not $vercel) { $vercel = (Get-Command vercel.cmd -ErrorAction SilentlyConti
 if (-not $vercel) { Write-Error "Vercel CLI not found. Run: npm i -g vercel"; exit 2 }
 
 $args = @('deploy','--prod','--yes','--cwd', $dir)
+$env:VERCEL_TOKEN = $null
 
 Write-Host "Deploying $dir to Vercel production..."
 & $vercel @args

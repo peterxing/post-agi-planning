@@ -31,8 +31,8 @@ hours update signals only and leave the forecast unchanged.
         // simAnchor is reserved for the five stable probability-simulator anchors below
       ],
       "match": {                             // how refresh-signals.js maps his posts to THIS year
-        "headline": "short topic label used in the from:peterxing search chip",
-        "search":   "the exact from:peterxing search query for the chip",
+        "headline": "short topic label used by matching diagnostics",
+        "search":   "a diagnostic from:peterxing query; never a public fallback",
         "phrases":  ["multi-word phrases", "weighted 3"],
         "strong":   ["strong-prefix terms", "weighted 2"],
         "weak":     ["single", "words", "weighted 1"]
@@ -54,7 +54,7 @@ hours update signals only and leave the forecast unchanged.
       "caveat": "What remains unknown or unvalidated",
       "match": {
         "headline": "Short topic label",
-        "search": "from:peterxing exact live-search terms",
+        "search": "from:peterxing diagnostic matching terms",
         "phrases": [], "strong": [], "weak": []
       }
     }]
@@ -203,14 +203,16 @@ to raise coverage.
    recent activity, and every applicable claim-facet guard remains mandatory. Generic capability,
    computation, energy, space, economy, infrastructure, institutions, governance, scaling and AI
    overlap supports a match but never qualifies by itself. Allocate valid matches
-   unique-post-first, then reuse a post for no more than three closely related predictions. Run
+   unique-post-first, then permit reuse only inside an explicitly reviewed compatible concept family
+   or threshold/scenario series. There is no generic reuse cap; every repeated status must retain its
+   reviewed mapped IDs and rationale in audit output. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
-   weaken freshness or facet guards to increase the count; unsupported claims keep an honest live
-   `from:peterxing` search rather than receiving a weak direct mapping.
+   weaken freshness or facet guards to increase the count. An unsupported claim fails publication
+   until it receives a reviewed defensible Peter mapping or authoritative external direct status.
 12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
    item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
-   indicators, a caveat and a curated `from:peterxing` match/search definition. Run the same
+   indicators, a caveat and a curated diagnostic `from:peterxing` match definition. Run the same
    unique-post-first allocation across dated and horizon items; horizon keys are
    `horizon-STABLE-ID`.
 13. **Preserve the five probability-simulator anchors.** Exactly one dated event must retain each
@@ -218,17 +220,19 @@ to raise coverage.
    and `handoff` in 2040. Their wording and probabilities may evolve, but do not rename, duplicate,
    remove or move these machine keys. `validate-predictions.js` fails publication if the contract
    breaks.
-14. **Preserve the direct-or-search evidence contract.** Every dated event and horizon item must have
-   exactly one entry in `evidence-families.js` and exactly one public evidence surface. Prefer a real
+14. **Preserve the direct-X evidence contract.** Every dated event and horizon item must have
+   exactly one entry in `evidence-families.js` and exactly one public direct-X evidence card. Prefer a real
    post/repost observed in @peterxing's activity whose exact prediction/post pair is reviewed in
    `evidence-approvals.json`. Otherwise use a reviewed authoritative status from
    `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
-   source quality and rationale. New external posts never self-approve. If neither direct route is
-   defensible, retain an explicit live `from:peterxing` search. Family matching must pass the same
-   claim-specific facet guards as literal and semantic matching. Reuse is permitted only inside one
-   reviewed scenario or threshold-series group and is capped at three predictions per status.
+   source quality and rationale. New external posts never self-approve. Search fallbacks are forbidden:
+   `signals.search` must remain absent, null or empty. Family matching must pass the same claim-specific
+   facet guards as literal and semantic matching. Reuse is permitted only inside one explicitly
+   reviewed compatible concept family or threshold/scenario series; large groups remain visible in
+   `signals-debug.json` with all mapped IDs and their reviewed rationales.
    `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
-   whenever the union of reviewed direct mappings and honest live searches is below N/N.
+   whenever reviewed direct coverage is below N/N, freshness is false, provenance is invalid, or
+   reuse crosses a reviewed compatibility group.
 
 ## Procedure
 
@@ -240,7 +244,7 @@ node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
-node verify-direct-coverage.js         # every prediction needs reviewed direct evidence or a live search
+node verify-direct-coverage.js         # every prediction needs exactly one reviewed direct status
 node verify-external-evidence.js       # external statuses resolve and retain reviewed provenance
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
@@ -262,5 +266,7 @@ terminology. If it FAILs, fix the source rather than weakening the validator. A 
   overstating the section.
 - `refresh-signals.js` falls back to its built-in `DEFAULT_PREDICTIONS` if `predictions.json` can't
   be read — matching keeps working even if the file is temporarily missing.
+- If `signals.json` is missing or incomplete, the UI reports prediction evidence as unavailable.
+  It never manufactures a mapping or renders prediction search chips.
 - A 404 on `predictions.json` logs a browser console error that fails `verify-site.js`, so always
   keep the file present in **both** `pap-deploy` and `pap-site`.

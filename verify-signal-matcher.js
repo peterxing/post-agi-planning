@@ -231,6 +231,12 @@ const fixtures = [
     text: 'The strongest AI now performs at top-human-expert level across all cognitive fields.',
   },
   {
+    name: 'every-subject expert capability is accepted',
+    expect: true,
+    title: 'Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field',
+    text: 'AGI can be an expert for every subject, across hundreds of thousands of subjects.',
+  },
+  {
     name: 'valuable space solar power is not a dominant scarcity transition',
     expect: false,
     domain: 'economic',
@@ -274,6 +280,12 @@ const fixtures = [
     expect: true,
     title: 'Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030',
     text: 'AI research is fully automated end to end, with agents training successor models without human researchers.',
+  },
+  {
+    name: 'encoded R&D wording supports full automation',
+    expect: true,
+    title: 'Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030',
+    text: 'AI timelines now point to full automation of AI R&amp;D and recursive self-improvement.',
   },
   {
     name: 'aspirational UHI is not a permanent multi-economy institution',

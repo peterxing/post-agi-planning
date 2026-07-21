@@ -21,7 +21,7 @@ const SHOT = process.argv[3] || null;
         fetch('predictions.json?verify=' + Date.now()).then(r => r.json()),
       ]);
       const embeds = signals.embeds || {};
-      const searches = signals.search || {};
+      const searches = signals.search && typeof signals.search === 'object' ? signals.search : {};
       const embedValues = Object.values(embeds);
       const methodCounts = {};
       const postUses = {};
@@ -32,17 +32,14 @@ const SHOT = process.argv[3] || null;
         postUses[e.id].push(e);
         if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
       }
-      if (Object.keys(searches).length) methodCounts['live-search'] = Object.keys(searches).length;
-
       const datedKeys = predictions.years.flatMap(y => y.events.map((_, i) => `${y.year}-${i}`));
       const horizon = predictions.postSuperintelligence;
       const horizonItems = horizon && Array.isArray(horizon.items) ? horizon.items : [];
       const horizonKeys = horizonItems.map(item => `horizon-${item.id}`);
       const expectedKeys = [...datedKeys, ...horizonKeys];
-      const coveredKeys = new Set([...Object.keys(embeds), ...Object.keys(searches)]);
+      const coveredKeys = new Set(Object.keys(embeds));
       const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key));
       const extraKeys = [...coveredKeys].filter(key => !expectedKeys.includes(key));
-      const overlapKeys = expectedKeys.filter(key => embeds[key] && searches[key]);
 
       const stringList = value => Array.isArray(value) && value.length >= 2 && value.length <= 4
         && value.every(v => typeof v === 'string' && v.trim());
@@ -73,21 +70,14 @@ const SHOT = process.argv[3] || null;
       const eventNodes = Array.from(document.querySelectorAll('#timelineBody .event'));
       const horizonNodes = Array.from(document.querySelectorAll('#horizonBody .horizon-item'));
       const eventCoverage = eventNodes.every(node =>
-        node.querySelector('.event-body > .tl-signal, .event-body > .tl-signal-search'));
+        node.querySelector('.event-body > .tl-signal'));
       const horizonCoverage = horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2
         && node.querySelector('.horizon-caveat')
-        && node.querySelector('.horizon-signal .tl-signal, .horizon-signal .tl-signal-search'));
+        && node.querySelector('.horizon-signal .tl-signal'));
       const searchLinks = Array.from(document.querySelectorAll('.tl-signal-search')).map(a => a.href);
-      const searchLinksHonest = searchLinks.every(href => {
-        const url = new URL(href);
-        return url.hostname === 'x.com'
-          && url.pathname === '/search'
-          && /^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
-          && url.searchParams.get('f') === 'live';
-      });
       const dates = Array.from(document.querySelectorAll('.tl-signal-date')).map(d => d.textContent.trim());
       const directSchema = Object.keys(embeds).every(key => {
         const e = embeds[key];
@@ -119,13 +109,8 @@ const SHOT = process.argv[3] || null;
           && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
           && ['unique', 'external-reuse'].includes(e.assignmentMode);
       });
-      const searchSchema = Object.entries(searches).every(([key, search]) =>
-        expectedKeys.includes(key)
-        && search && search.matchMethod === 'live-search'
-        && /^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
-        && !!search.maps && !!search.reason);
+      const searchSchema = Object.keys(searches).length === 0;
       const invalidReuse = Object.entries(postUses).filter(([, uses]) => {
-        if (uses.length > 3) return true;
         if (uses.length <= 1) return false;
         const owners = new Set(uses.map(use => use.evidenceOwner));
         const groups = new Set(uses.map(use => use.evidenceOwner === 'external' ? use.reuseFamily : use.evidenceFamily));
@@ -139,10 +124,9 @@ const SHOT = process.argv[3] || null;
         horizonCount: horizonNodes.length,
         expectedHorizonCount: horizonItems.length,
         cards: document.querySelectorAll('#timelineBody .event-body .tl-signal, #horizonBody .horizon-signal .tl-signal').length,
-        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal, #timelineBody .event-body > .tl-signal-search, #horizonBody .horizon-signal > .tl-signal, #horizonBody .horizon-signal > .tl-signal-search').length,
+        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal, #horizonBody .horizon-signal > .tl-signal').length,
         chips: searchLinks.length,
-        expectedSearches: Object.keys(searches).length,
-        searchLinksHonest,
+        expectedSearches: 0,
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
         source: signals.source || '',
         sourceFresh: signals.sourceFresh === true,
@@ -155,16 +139,15 @@ const SHOT = process.argv[3] || null;
         invalidReuse,
         missingKeys,
         extraKeys,
-        overlapKeys,
         eventCoverage,
         horizonCoverage,
         directSchema,
         searchSchema,
         coverageMetadata: signals.coverage && signals.coverage.complete === true
           && signals.coverage.direct === Object.keys(embeds).length
-          && signals.coverage.searches === Object.keys(searches).length
+          && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
-          && signals.coverage.maxReuse <= 3,
+          && signals.coverage.maxReuse === Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
         horizonSchema,
         horizonCaveats,
         datesMissing: dates.filter(date => !date).length,
@@ -172,17 +155,17 @@ const SHOT = process.argv[3] || null;
     });
 
     const checks = {
-      source: stats.sourceFresh && stats.source !== 'live-search' && !!stats.sourceFetchedAt && !!stats.newestItemAt,
+      source: stats.sourceFresh && stats.source !== 'unavailable' && !!stats.sourceFetchedAt && !!stats.newestItemAt,
       eventCount: stats.eventCount === stats.expectedEventCount,
       horizonCount: stats.horizonCount === stats.expectedHorizonCount && stats.expectedHorizonCount >= 7,
-      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length && !stats.overlapKeys.length,
+      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length,
       renderedCoverage: stats.eventCoverage && stats.horizonCoverage,
       horizonSchema: stats.horizonSchema && stats.horizonCaveats,
       methods: !stats.badMethods.length,
-      reuse: !stats.invalidReuse.length && stats.maxReuse <= 3,
+      reuse: !stats.invalidReuse.length,
       directSchema: stats.directSchema,
       searchSchema: stats.searchSchema,
-      searches: stats.chips === stats.expectedSearches && stats.searchLinksHonest,
+      searches: stats.chips === 0 && stats.expectedSearches === 0,
       coverageMetadata: stats.coverageMetadata,
       reality: stats.realityCount === 6,
       layout: stats.strayCards === 0 && stats.datesMissing === 0,
@@ -233,9 +216,9 @@ const SHOT = process.argv[3] || null;
     };
   });
   const offlineOk = offline.expected >= 103
-    && offline.searches === offline.expected
+    && offline.searches === 0
     && offline.direct === 0
-    && offline.unavailable === 0
+    && offline.unavailable === offline.expected
     && offline.honest
     && offlineErrors.length === 0;
   console.log(`[signals-fetch-failure] searches=${offline.searches}/${offline.expected} direct=${offline.direct} unavailable=${offline.unavailable} errs=${offlineErrors.length} -> ${offlineOk ? 'OK' : 'FAIL'}`);

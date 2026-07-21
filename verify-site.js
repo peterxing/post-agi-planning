@@ -1,5 +1,5 @@
 // verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors,
-// honest prediction search fallbacks, and honest labeling of any evergreen historical evidence.
+// complete direct prediction evidence, and honest labeling of evergreen historical evidence.
 //   npm install, then: node verify-site.js [url]
 const { chromium } = require('playwright');
 
@@ -19,13 +19,8 @@ const { chromium } = require('playwright');
     await page.waitForTimeout(2800);
     const cards = await page.$$eval('.tl-signal', els => els.length).catch(() => 0);
     const searches = await page.$$eval('.tl-signal-search', els => els.length).catch(() => 0);
-    const invalidSearches = await page.$$eval('.tl-signal-search', els => els.filter(link => {
-      const url = new URL(link.href);
-      return url.hostname !== 'x.com'
-        || url.pathname !== '/search'
-        || !/^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
-        || url.searchParams.get('f') !== 'live';
-    }).map(link => link.href)).catch(() => []);
+    const unavailable = await page.$$eval('.tl-signal-unavailable', els => els.length).catch(() => 0);
+    const expected = await page.$$eval('#timelineBody .event, #horizonBody .horizon-item', els => els.length).catch(() => 0);
     const stamp = await page.$eval('#sigStamp', el => (el.hidden ? '' : el.textContent.trim())).catch(() => '');
     const dates = await page.$$eval('.tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
     const mislabelledHistorical = await page.$$eval('.tl-signal', els => els.filter(card => {
@@ -34,14 +29,14 @@ const { chromium } = require('playwright');
       return /\b20(1\d|2[0-3])$/.test(date)
         && !/\b(?:Historical|Scenario source|Leading indicator|External evidence)\b/i.test(label);
     }).map(card => card.querySelector('.tl-signal-date')?.textContent.trim() || '')).catch(() => []);
-    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards} searches=${searches} invalidSearches=${invalidSearches.length} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} searches=${searches} unavailable=${unavailable} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));
-    issues += errs.length + invalidSearches.length + mislabelledHistorical.length;
+    issues += errs.length + searches + unavailable + Math.abs(cards - expected) + mislabelledHistorical.length;
     await ctx.close();
   }
   await browser.close();
   if (issues > 0) { console.log(`RESULT: FAIL (${issues} issue(s))`); process.exit(1); }
-  console.log('RESULT: PASS — zero console errors; live searches and historical evidence are honestly labeled.');
+  console.log('RESULT: PASS — zero console errors, complete direct evidence, zero searches, and honest historical labels.');
 })();
