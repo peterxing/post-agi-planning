@@ -36,8 +36,10 @@ const {
   validateFamilyCoverage,
 } = require('./evidence-families');
 const {
+  EXTERNAL_DIRECT_IDS,
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
+  MAX_POST_REUSE,
 } = require('./external-evidence');
 
 const DIR = __dirname;
@@ -100,7 +102,8 @@ const HISTORICAL_SEARCH_QUERIES = [
 // this inline copy is only used if that sidecar is missing/unparsable. Each post is scored against
 // every prediction by weighted term hits:
 //   phrases (normalized, punctuation→space) = 3pts · strong words (prefix match) = 2pts · weak words = 1pt
-// `search` is retained only as diagnostic query metadata; production prediction fallbacks are prohibited.
+// `search` is retained as diagnostic query metadata and as the honest public fallback when no reviewed
+// direct status clears every claim guard and the strict three-use reuse cap.
 const DEFAULT_PREDICTIONS = [
   { year: 2026, maps: 'AI agents go mainstream', search: 'AI agents',
     phrases: ['ai agent','ai agents','agentic','autonomous agent','coding agent','claude code','open model','local model','frontier model','open source ai','open weights'],
@@ -634,7 +637,7 @@ function scorePost(text, p){
 }
 
 // Conservative facet checks keep broad keyword overlap from implying support for a more specific claim.
-// A failed guard rejects the candidate; incomplete direct coverage fails publication.
+// A failed guard rejects the direct candidate; incomplete direct-or-search coverage fails publication.
 const FACET_GUARDS = [
   {
     title: /\bpeer reviewed intracortical bci home use surpasses 3 800 hours\b/,
@@ -1443,6 +1446,11 @@ function passesFacetGuards(text, p){
     if (/\b(?:endovascular|stentrode|intravascular|inside a blood vessel)\b/.test(normText)
         && !/\b(?:scalp eeg|eeg|meg|fnirs|transcranial ultrasound|optical brain|external brain)\b/.test(normText)) return false;
   }
+  if (/\binterpretability tools translate internal model reasoning into reliable human understandable summaries\b/.test(normTitle)) {
+    return /\b(?:internal model reasoning|reasoning trace|chain of thought|internal representation|latent activation|model internals?)\b/.test(normText)
+      && /\b(?:translate|translated|translation|summary|summaries|human understandable|plain language|explanation)\b/.test(normText)
+      && /\b(?:reliable|faithful|validated|validation|causal|accuracy|accurate|robust|reproducible)\b/.test(normText);
+  }
   if (/\bwhole brain emulation could enable digital minds\b/.test(normTitle)
       && /\b(?:chatbot|griefbot|deadbot|digital replica|avatar)\b/.test(normText)
       && !/\b(?:whole brain emulation|mind upload|connectome|brain preservation|functional emulation)\b/.test(normText)) return false;
@@ -1468,8 +1476,7 @@ function passesFacetGuards(text, p){
     return laborClauses(normText).some(clause => !SIMULATED_SCALE_CONTEXT.test(clause)
       && /\b(?:humanoid|robot|robots|robotic|robotics|optimus)\b/.test(clause)
       && /\b(?:factory|factories|production line|assembly line|deployment|deployments|deployed)\b/.test(clause)
-      && (/\bmass deployment|deployments? in the thousands\b/.test(clause)
-        || hasBoundQuantity(clause, '(?:humanoid )?(?:robots|optimus units)', 1000)));
+      && hasBoundQuantity(clause, '(?:humanoid )?(?:robots|optimus units)', 1000));
   }
   if (/\bmillions of ai agent copies work continuously generating at least 10b per month in paid digital labor\b/.test(normTitle)) {
     if (disattributesAgentRevenue(normText)) return false;
@@ -1582,6 +1589,7 @@ function qualifyFamilyPost(text, p){
   if (all.some(concept => !concepts.has(concept))) return { ok: false, reason: 'family-required-concept' };
   if (any.length && !any.some(concept => concepts.has(concept))) return { ok: false, reason: 'family-corroboration' };
   if (family.text && !family.text.test(normalizeConceptText(text))) return { ok: false, reason: 'family-core-facet' };
+  if (!passesFacetGuards(text, p)) return { ok: false, reason: 'facet' };
   const conceptHits = [...concepts].filter(concept => all.includes(concept) || any.includes(concept));
   return {
     ok: true,
@@ -1724,6 +1732,7 @@ async function main(){
   let prev = {};
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
   const prevEmbeds = (prev && prev.embeds) || {};
+  const prevSearches = (prev && prev.search) || {};
   let historicalTimeline = readPrivateHistory();
   const historyCountBefore = historicalTimeline.length;
   let publicArchiveCount = 0;
@@ -1744,11 +1753,10 @@ async function main(){
   const externalIds = Object.keys(EXTERNAL_MAPPINGS);
   const unknownExternalIds = externalIds.filter(id => !predictionIds.has(id));
   const mixedOverlap = Object.keys(evidenceApprovals).filter(id => EXTERNAL_MAPPINGS[id]);
-  const mixedMissing = [...predictionIds].filter(id => !evidenceApprovals[id] && !EXTERNAL_MAPPINGS[id]);
-  if (unknownExternalIds.length || mixedOverlap.length || mixedMissing.length) {
+  if (unknownExternalIds.length || mixedOverlap.length) {
     throw new Error(
       `mixed evidence ledger mismatch (unknown external: ${unknownExternalIds.join(', ') || 'none'}; `
-      + `overlap: ${mixedOverlap.join(', ') || 'none'}; missing: ${mixedMissing.join(', ') || 'none'})`
+      + `overlap: ${mixedOverlap.join(', ') || 'none'})`
     );
   }
   const familyCoverage = validateFamilyCoverage(PREDICTIONS.map(prediction => prediction.id));
@@ -1955,7 +1963,7 @@ async function main(){
     source = 'live-search';
     sourceWhen = new Date();
     sourceAttempts.push({ source: 'live-search', status: 'fallback', count: 0 });
-    console.error('[refresh] No fresh verified activity source is available — direct-only publication will fail.');
+    console.error('[refresh] No fresh verified activity source is available — publication will fail.');
   }
 
   const reposts = await ingestList('reposts.json', 'repost');   // only posts + reposts are surfaced
@@ -1995,13 +2003,14 @@ async function main(){
   console.error(`[refresh] fresh=${counts.entries}; private history=${counts.history}; unique corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
 
   // Source freshness and evidence age are distinct. Historical evidence is allowed only after a fresh source check.
-  if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — reviewed historical evidence remains eligible, but publication still requires complete direct coverage.');
+  if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — reviewed historical evidence remains eligible, but publication still requires complete direct-or-search coverage.');
 
   // ---- 3. Guarded lexical + semantic scoring -> maximum-coverage assignment ------------------------
   // Literal hits and the controlled concept ontology both remain subordinate to claim-specific facet
   // guards. Semantic-only matches are limited to recent activity so broad historical backfilling cannot
   // inflate coverage. Allocation maximizes unique relevant posts first, then declared-family reuse.
   const candidateLists = {};
+  const rawCandidateLists = {};
   const unapprovedCandidateCounts = {};
   const guardRejections = {};
   for (const p of PREDICTIONS) {
@@ -2056,6 +2065,7 @@ async function main(){
       || b.recencyRank - a.recencyRank
       || b.created - a.created);
     const approval = evidenceApprovals[p.id];
+    rawCandidateLists[p.id] = cands;
     candidateLists[p.id] = approval
       ? cands.filter(candidate => candidate.t.id === String(approval.postId))
       : [];
@@ -2063,7 +2073,7 @@ async function main(){
   }
   const candidateAudit = {};
   for (const p of PREDICTIONS) {
-    candidateAudit[p.id] = candidateLists[p.id].slice(0, 3).map(c => ({
+    candidateAudit[p.id] = rawCandidateLists[p.id].slice(0, 3).map(c => ({
       id: c.t.id,
       author: c.t.author,
       date: fmtDate(c.t.created),
@@ -2075,6 +2085,7 @@ async function main(){
       score: c.score,
       conceptScore: c.conceptScore,
       concepts: c.conceptHits,
+      approved: candidateLists[p.id].some(candidate => candidate.t.id === c.t.id),
     }));
   }
 
@@ -2138,7 +2149,7 @@ async function main(){
       const definition = FAMILY_DEFINITIONS[prediction.evidenceFamily];
       const sameFamily = owners.size > 0 && [...owners].every(ownerId =>
         predictionById.get(ownerId).evidenceFamily === prediction.evidenceFamily);
-      if (!owners.size || (definition.reuse && sameFamily)) {
+      if (!owners.size || (owners.size < MAX_POST_REUSE && definition.reuse && sameFamily)) {
         setAssignment(predId, cand);
         return true;
       }
@@ -2151,19 +2162,42 @@ async function main(){
   const postUses = new Map([...postOwners.entries()].filter(([, owners]) => owners.size).map(([id, owners]) => [id, owners.size]));
   const usedPosts = new Set(postUses.keys());
   const externalUsesBySource = {};
-  for (const mapping of Object.values(EXTERNAL_MAPPINGS)) {
+  const externalCandidatesBySource = {};
+  for (const [predictionId, mapping] of Object.entries(EXTERNAL_MAPPINGS)) {
+    if (!externalCandidatesBySource[mapping.source]) externalCandidatesBySource[mapping.source] = [];
+    externalCandidatesBySource[mapping.source].push(predictionId);
+  }
+  function externalDirectEligible(predictionId, mapping) {
+    const candidates = externalCandidatesBySource[mapping.source] || [];
+    if (candidates.length <= MAX_POST_REUSE) return true;
+    return (EXTERNAL_DIRECT_IDS[mapping.source] || []).includes(predictionId);
+  }
+  for (const [predictionId, mapping] of Object.entries(EXTERNAL_MAPPINGS)) {
+    if (!externalDirectEligible(predictionId, mapping)) continue;
     externalUsesBySource[mapping.source] = (externalUsesBySource[mapping.source] || 0) + 1;
   }
 
-  // Build one direct embed per prediction. Any missing direct mapping is a publication failure.
-  const embeds = {}; const chosen = {}; const missingDirect = [];
+  function liveSearchFor(prediction) {
+    const raw = String(prediction.search || '').replace(/\bfrom:peterxing\b/ig, '').trim()
+      || deriveEventTerms(prediction.maps).search;
+    return {
+      query: `from:peterxing ${raw}`.replace(/\s+/g, ' ').trim(),
+      maps: prediction.maps,
+      matchMethod: 'live-search',
+      reason: 'No reviewed direct status cleared every claim-specific guard within the three-use reuse cap.',
+    };
+  }
+
+  // Build exactly one reviewed direct embed or honest live @peterxing search per prediction.
+  const embeds = {}; const searches = {}; const chosen = {};
   for (const p of PREDICTIONS) {
     const c = picks[p.id];
     if (!c) {
       const mapping = EXTERNAL_MAPPINGS[p.id];
       const external = mapping && EXTERNAL_SOURCES[mapping.source];
-      if (!mapping || !external) {
-        missingDirect.push(p.id);
+      if (!mapping || !external || !externalDirectEligible(p.id, mapping)) {
+        searches[p.id] = liveSearchFor(p);
+        chosen[p.id] = `live-search [guarded fallback${mapping && external ? '/reuse-cap' : ''}]`;
         continue;
       }
       let externalText = cleanText(external.text);
@@ -2322,16 +2356,21 @@ async function main(){
   for (const embed of Object.values(embeds)) {
     matchMethodTally[embed.matchMethod] = (matchMethodTally[embed.matchMethod] || 0) + 1;
   }
+  if (Object.keys(searches).length) matchMethodTally['live-search'] = Object.keys(searches).length;
   const matchablePredictions = PREDICTIONS.filter(p => candidateLists[p.id].length).length;
   const unmatchedWithCandidates = PREDICTIONS.filter(p => candidateLists[p.id].length && !picks[p.id]).map(p => p.id);
   const unusedRelevantPosts = [...candidatePosts].filter(id => !usedPosts.has(id));
-  const previousMatchedIds = new Set(Object.keys(prevEmbeds));
-  const currentMatchedIds = new Set(Object.keys(embeds));
+  const previousCoveredIds = new Set([...Object.keys(prevEmbeds), ...Object.keys(prevSearches)]);
+  const currentCoveredIds = new Set([...Object.keys(embeds), ...Object.keys(searches)]);
+  const previousDirectIds = new Set(Object.keys(prevEmbeds));
+  const currentDirectIds = new Set(Object.keys(embeds));
   const coverageChange = {
-    previousMatched: previousMatchedIds.size,
-    currentMatched: currentMatchedIds.size,
-    gained: [...currentMatchedIds].filter(id => !previousMatchedIds.has(id)),
-    lost: [...previousMatchedIds].filter(id => !currentMatchedIds.has(id)),
+    previousMatched: previousCoveredIds.size,
+    currentMatched: currentCoveredIds.size,
+    gained: [...currentCoveredIds].filter(id => !previousCoveredIds.has(id)),
+    lost: [...previousCoveredIds].filter(id => !currentCoveredIds.has(id)),
+    directGained: [...currentDirectIds].filter(id => !previousDirectIds.has(id)),
+    directLost: [...previousDirectIds].filter(id => !currentDirectIds.has(id)),
   };
   const eligibleById = new Map(eligible.map(t => [t.id, t]));
   const unusedRelevantPostSamples = unusedRelevantPosts.slice(0, 20).map(id => {
@@ -2357,7 +2396,9 @@ async function main(){
       mode: predictionIds.length === 1 ? 'unique' : owners[0] === 'external' ? 'external-reuse' : 'family-reuse',
     };
     reuseAudit.push(audit);
-    if (predictionIds.length > 1) {
+    if (predictionIds.length > MAX_POST_REUSE) {
+      invalidReuse.push(audit);
+    } else if (predictionIds.length > 1) {
       if (owners.length !== 1 || !family) {
         invalidReuse.push(audit);
       } else if (owners[0] === 'peterxing'
@@ -2374,10 +2415,16 @@ async function main(){
 
   const mappingIntegrityErrors = [];
   if (!sourceFresh) mappingIntegrityErrors.push('fresh verified activity source unavailable');
-  if (missingDirect.length) mappingIntegrityErrors.push(`missing direct mappings: ${missingDirect.join(', ')}`);
   if (invalidReuse.length) {
-    mappingIntegrityErrors.push(`invalid cross-family reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
+    mappingIntegrityErrors.push(`invalid or over-cap reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
   }
+  const expectedIds = PREDICTIONS.map(prediction => prediction.id);
+  const missingCoverage = expectedIds.filter(id => !embeds[id] && !searches[id]);
+  const overlappingCoverage = expectedIds.filter(id => embeds[id] && searches[id]);
+  const extraCoverage = [...currentCoveredIds].filter(id => !predictionIds.has(id));
+  if (missingCoverage.length) mappingIntegrityErrors.push(`missing direct-or-search coverage: ${missingCoverage.join(', ')}`);
+  if (overlappingCoverage.length) mappingIntegrityErrors.push(`duplicate direct-and-search coverage: ${overlappingCoverage.join(', ')}`);
+  if (extraCoverage.length) mappingIntegrityErrors.push(`coverage references unknown predictions: ${extraCoverage.join(', ')}`);
   for (const prediction of PREDICTIONS) {
     const embed = embeds[prediction.id];
     if (!embed) continue;
@@ -2409,6 +2456,7 @@ async function main(){
       const mapping = EXTERNAL_MAPPINGS[prediction.id];
       const external = mapping && EXTERNAL_SOURCES[mapping.source];
       if (!mapping || !external || String(external.statusId) !== String(embed.id)
+          || !externalDirectEligible(prediction.id, mapping)
           || embed.reviewed !== true || embed.reviewedAt !== mapping.reviewedAt) {
         mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed external ledger entry`);
       }
@@ -2429,10 +2477,20 @@ async function main(){
       mappingIntegrityErrors.push(`${prediction.id}: evidence-family mismatch`);
     }
   }
+  for (const prediction of PREDICTIONS) {
+    const search = searches[prediction.id];
+    if (!search) continue;
+    if (search.matchMethod !== 'live-search'
+        || !/^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
+        || search.maps !== prediction.maps
+        || !search.reason) {
+      mappingIntegrityErrors.push(`${prediction.id}: malformed live @peterxing search fallback`);
+    }
+  }
 
   const historyOldestAt = all.length ? all[all.length - 1].created.toISOString() : null;
   const coverageComplete = mappingIntegrityErrors.length === 0
-    && Object.keys(embeds).length === PREDICTIONS.length;
+    && currentCoveredIds.size === PREDICTIONS.length;
   const ownerTally = {};
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
@@ -2443,7 +2501,7 @@ async function main(){
   }
   const out = {
     updated: new Date().toISOString(),
-    note: `Every prediction is backed by a reviewed direct X status. Reviewed @peterxing activity is preferred; remaining mappings use authoritative external posts labeled as direct, scenario, or leading-indicator evidence. Source freshness is tracked separately from evergreen evidence age. Reuse is allowed only inside an audited scenario or threshold-series group. Search-only prediction fallbacks are prohibited.`,
+    note: `Every prediction has either a reviewed direct X status or an honest live from:peterxing search. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Claim-specific guards apply to direct and family matching, and no status is reused more than ${MAX_POST_REUSE} times.`,
     source,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
@@ -2455,9 +2513,12 @@ async function main(){
     },
     coverage: {
       direct: Object.keys(embeds).length,
+      searches: Object.keys(searches).length,
       total: PREDICTIONS.length,
       complete: coverageComplete,
       uniquePosts: directUsesByPost.size,
+      peterUniquePosts: usedPosts.size,
+      maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
       byEvidenceOwner: ownerTally,
@@ -2465,6 +2526,7 @@ async function main(){
       byEvidenceType: evidenceTypeTally,
     },
     embeds,
+    search: searches,
     reality,
   };
 
@@ -2488,14 +2550,18 @@ async function main(){
     horizonItems: horizonPredictionCount,
     matched: Object.keys(embeds).length,
     freshMatches: sourceFresh ? Object.keys(embeds).length : 0,
-    directCoverageComplete: coverageComplete,
+    coveredPredictions: currentCoveredIds.size,
+    searchFallbacks: Object.keys(searches).length,
+    coverageComplete,
+    directCoverageComplete: Object.keys(embeds).length === PREDICTIONS.length,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
     sourceQuality: sourceQualityTally,
     evidenceTypes: evidenceTypeTally,
     unapprovedCandidateCounts,
-    missingDirect,
+    missingDirect: Object.keys(searches),
+    missingCoverage,
     mappingIntegrityErrors,
     maxPostReuseObserved,
     reuseDistribution,
@@ -2504,7 +2570,8 @@ async function main(){
     matchablePredictions,
     unmatchedWithCandidates,
     maximumUniqueMatches,
-    uniqueMatchedPosts: directUsesByPost.size,
+    uniqueMatchedPosts: usedPosts.size,
+    directUniquePosts: directUsesByPost.size,
     candidateRelevantPosts: candidatePosts.size,
     unusedRelevantPosts: unusedRelevantPosts.length,
     unusedRelevantPostSamples,
@@ -2538,19 +2605,23 @@ async function main(){
         text: signal.text,
       },
     ])),
+    proposedSearches: searches,
   };
   fs.writeFileSync(DBG, JSON.stringify(debugPayload, null, 2) + '\n');
 
-  console.error(`[refresh] Prepared direct coverage ${Object.keys(embeds).length}/${PREDICTIONS.length} using ${directUsesByPost.size} unique posts (maximum unique Peter matches ${maximumUniqueMatches}, max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
+  console.error(`[refresh] Prepared coverage ${currentCoveredIds.size}/${PREDICTIONS.length}: ${Object.keys(embeds).length} direct and ${Object.keys(searches).length} live searches, using ${directUsesByPost.size} unique direct posts (maximum unique Peter matches ${maximumUniqueMatches}, actual ${usedPosts.size}, max reuse ${maxPostReuseObserved}/${MAX_POST_REUSE}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
   if (!coverageComplete) {
-    throw new Error(`direct coverage incomplete (${Object.keys(embeds).length}/${PREDICTIONS.length}): ${mappingIntegrityErrors.join('; ')}`);
+    throw new Error(`direct-or-search coverage incomplete (${currentCoveredIds.size}/${PREDICTIONS.length}): ${mappingIntegrityErrors.join('; ')}`);
   }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
-  console.error(`[refresh] Wrote complete direct-only signals.json (${Object.keys(embeds).length}/${PREDICTIONS.length}).`);
+  console.error(`[refresh] Wrote complete direct-or-search signals.json (${currentCoveredIds.size}/${PREDICTIONS.length}).`);
   console.log(JSON.stringify({
     direct: Object.keys(embeds).length,
+    searches: Object.keys(searches).length,
     total: PREDICTIONS.length,
     uniquePosts: directUsesByPost.size,
+    peterUniquePosts: usedPosts.size,
+    maximumUniqueMatches,
     maxReuse: maxPostReuseObserved,
     byEvidenceOwner: ownerTally,
     sourceQuality: sourceQualityTally,

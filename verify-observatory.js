@@ -105,6 +105,12 @@ function requestStatus(pathname) {
         evidenceCards:document.querySelectorAll('#timelineBody .tl-signal, #horizonBody .tl-signal').length,
         evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
         predictionSearches:document.querySelectorAll('.tl-signal-search').length,
+        invalidPredictionSearches:[...document.querySelectorAll('.tl-signal-search')].filter(link => {
+          const url = new URL(link.href);
+          return url.hostname !== 'x.com' || url.pathname !== '/search'
+            || !/^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
+            || url.searchParams.get('f') !== 'live';
+        }).length,
         peterEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter Xing|@peterxing/.test(summary.textContent)).length,
         externalEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
         scenarioEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
@@ -160,15 +166,14 @@ function requestStatus(pathname) {
     check(results, 'six reality observations render', state.reality === 6, String(state.reality));
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
     check(results, 'collapsed chapters leave the accessibility tree', state.collapsedChapters);
-    check(results, 'prediction evidence is direct-only or fail-closed',
-      state.predictionSearches === 0
-      && ((state.evidenceCards === expectedEvents + expectedHorizon && state.evidenceUnavailable === 0)
-        || (state.evidenceCards === 0 && state.evidenceUnavailable === expectedEvents + expectedHorizon)),
+    check(results, 'prediction evidence is reviewed direct or honest live search',
+      state.evidenceCards + state.predictionSearches === expectedEvents + expectedHorizon
+      && state.evidenceUnavailable === 0
+      && state.invalidPredictionSearches === 0,
       JSON.stringify({ cards:state.evidenceCards, unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
-    if (state.evidenceCards === expectedEvents + expectedHorizon) {
+    if (state.evidenceCards > 0) {
       check(results, 'mixed provenance labels are explicit',
-        state.peterEvidence === 17
-        && state.externalEvidence === 86
+        state.peterEvidence + state.externalEvidence === state.evidenceCards
         && state.scenarioEvidence > 0
         && state.leadingEvidence > 0,
         JSON.stringify({
@@ -195,7 +200,7 @@ function requestStatus(pathname) {
     check(results, 'hero uses fetched event count', state.heroCount === String(expectedEvents), state.heroCount);
     check(results, 'current coordinate is numeric', /^\d{4}\.\d{2}$/.test(state.coordinate || ''), state.coordinate);
     check(results, 'evidence state is exposed',
-      /Evidence ·|Direct evidence · temporarily unavailable/.test(state.freshness || ''),
+      /Evidence ·|Prediction evidence · live search fallback/.test(state.freshness || ''),
       state.freshness);
     check(results, 'ids are unique', state.duplicateIds.length === 0, state.duplicateIds.join(', '));
     check(results, 'console is clean', consoleErrors.length === 0, consoleErrors.join(' | '));

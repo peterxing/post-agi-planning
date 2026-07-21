@@ -1,6 +1,7 @@
 'use strict';
 
 const RETRIEVED_AT = '2026-07-20';
+const MAX_POST_REUSE = 3;
 
 const EXTERNAL_SOURCES = {
   'metr-task-horizon': {
@@ -456,6 +457,13 @@ const EXTERNAL_GROUPS = [
     ids: ['2031-4', '2035-6', '2038-0', '2038-2'],
   },
   {
+    source: 'deepmind-interpretability',
+    reuseFamily: 'alignment-interpretability',
+    evidenceType: 'leading-indicator',
+    rationale: 'Official chain-of-thought and reverse-engineering research is a precursor to tools that summarize internal reasoning; it does not establish reliable human-readable summaries.',
+    ids: ['2038-1'],
+  },
+  {
     source: 'imf-ai-growth',
     reuseFamily: 'ai-economic-growth',
     evidenceType: 'leading-indicator',
@@ -528,8 +536,23 @@ for (const group of EXTERNAL_GROUPS) {
   }
 }
 
+// Sources with more than MAX_POST_REUSE reviewed candidate mappings publish only the
+// three closest claim-specific uses. The remaining predictions receive honest live
+// @peterxing searches rather than over-reusing a broad scenario or leading indicator.
+const EXTERNAL_DIRECT_IDS = {
+  'metr-task-horizon': ['2026-0', '2027-1', '2027-2'],
+  'ai2040-eli': ['2029-3', '2034-3', '2038-5'],
+  'ai2040-daniel': ['2028-3', '2035-1', '2040-1'],
+  'deepmind-robot-park': ['2028-2', '2030-5', '2032-3'],
+  'deepmind-atlas': ['2033-5', '2035-2', '2040-0'],
+  'deepmind-interpretability': ['2035-6', '2038-0', '2038-1'],
+  'mollick-persuasion': ['2028-0', '2033-3', '2035-4'],
+};
+
 module.exports = {
+  EXTERNAL_DIRECT_IDS,
   EXTERNAL_GROUPS,
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
+  MAX_POST_REUSE,
 };

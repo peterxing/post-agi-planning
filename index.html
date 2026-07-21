@@ -1332,7 +1332,9 @@ button { color: inherit; }
 .event-body .tl-signal { margin-top: 12px; padding: 0; }
 .event-body .tl-signal-text { font-size: .82rem; }
 .timeline.evidence-off .tl-signal,
+.timeline.evidence-off .tl-signal-search,
 .timeline.evidence-off .tl-signal-unavailable { display: none; }
+.tl-signal-search,
 .tl-signal-unavailable {
   width: 100%;
   margin-top: 12px;
@@ -1345,6 +1347,18 @@ button { color: inherit; }
   font-size: .62rem;
   line-height: 1.45;
 }
+.tl-signal-search {
+  display: block;
+  text-decoration: none;
+}
+.tl-signal-search strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--cp-text);
+  font-size: .68rem;
+}
+.tl-signal-search span { color: var(--cp-accent); }
+.tl-signal-search:hover { border-color: var(--cp-accent); }
 
 /* Undated horizon */
 #post-superintelligence { background: var(--cp-bg-elevated); }
@@ -3384,6 +3398,7 @@ const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25
    inline, so if signals.json is ever unavailable every branch shows a live from:peterxing search
    instead of a stale post. */
 let xSignals = {};
+let xSearches = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -3501,8 +3516,28 @@ function signalCard(sig){
       </div>
     </details>`;
 }
+function signalSearch(search, match, title){
+  const supplied = String(search && search.query || match && match.search || '');
+  const query = /\bfrom:peterxing\b/i.test(supplied)
+    ? supplied.replace(/\s+/g, ' ').trim()
+    : `from:peterxing ${supplied || deriveSearch(title)}`.replace(/\s+/g, ' ').trim();
+  const maps = String(search && search.maps || title || '');
+  const href = `https://x.com/search?q=${encodeURIComponent(query)}&src=typed_query&f=live`;
+  return `<a class="tl-signal-search" href="${htmlText(href)}" target="_blank" rel="noopener">
+    <strong>Live @peterxing search</strong>
+    ${maps ? `No reviewed direct status clears every claim-specific guard for: ${htmlText(maps)}.` : 'No reviewed direct status clears every claim-specific guard.'}
+    <span>Open live results on X &rarr;</span>
+  </a>`;
+}
+function predictionEvidence(key, match, title){
+  if (signalCoverageReady) {
+    if (xSignals[key]) return signalCard(xSignals[key]);
+    if (xSearches[key]) return signalSearch(xSearches[key], match, title);
+  }
+  return signalSearch(null, match, title);
+}
 function evidenceUnavailable(){
-  return '<div class="tl-signal-unavailable" role="status">Direct @peterxing evidence is temporarily unavailable. This forecast will not substitute a search or an unverified match.</div>';
+  return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
 }
 
 function branchForEvent(title){
@@ -3574,8 +3609,7 @@ function renderTimeline(){
     const average = statedAverage(yr);
     const rows = yr.events.map((e, idx) => {
       const id = yr.year + '-' + idx;                      // 1:1 with signals.json
-      const sig = signalCoverageReady ? xSignals[id] : null;
-      const sigHtml = sig ? signalCard(sig) : evidenceUnavailable();
+      const sigHtml = predictionEvidence(id, e.match, e.t);
       const branch = branchForEvent(e.t);
       const probability = Number.isFinite(e.prob) ? `
         <div class="event-probability" aria-label="${e.prob} percent stated probability">
@@ -3720,8 +3754,7 @@ function renderHorizon(){
   const compactHorizon = window.matchMedia('(max-width: 720px)').matches;
   body.innerHTML = horizonData.items.map(item => {
     const key = 'horizon-' + item.id;
-    const sig = signalCoverageReady ? xSignals[key] : null;
-    const sigHtml = sig ? signalCard(sig) : evidenceUnavailable();
+    const sigHtml = predictionEvidence(key, item.match, item.t);
     const branch = horizonBranchFor(item.id);
     const collapsed = previousDisclosure.has(item.id) ? previousDisclosure.get(item.id) : compactHorizon;
     return `<article class="horizon-item ${collapsed ? 'is-collapsed' : ''} ${selectedId === item.id ? 'is-selected' : ''}" id="horizon-${item.id}" data-horizon-id="${item.id}" data-branch="${branch.key}" tabindex="-1">
@@ -3813,8 +3846,8 @@ const predictionsReady = (function loadPredictions(){
     });
 })();
 
-/* Hourly-refreshed signals: a complete direct-X bundle prioritizes reviewed @peterxing activity,
-   then retains reviewed authoritative external scenario/leading-indicator evidence. */
+/* Hourly-refreshed signals prioritize reviewed @peterxing activity, retain reviewed authoritative
+   external scenario/leading-indicator evidence, and use an honest live search when no direct status clears. */
 const SIGNAL_SOURCE_LABELS = {
   'x-api': 'X API realtime',
   'public-rss': 'live public X profile feed',
@@ -3837,19 +3870,29 @@ function renderSignalMetadata(data){
   setText('heroSignalFreshness', `Evidence · ${sourceLabel} · ${updatedLabel}`);
   setText('realityMeta', `${freshness} · ${sourceLabel} · newest observed item ${newestLabel} · six signals refreshed hourly`);
 }
-function expectedDirectSignalIds(){
+function expectedSignalIds(){
   return [
     ...timelineData.flatMap(year => year.events.map((_, index) => `${year.year}-${index}`)),
     ...horizonData.items.map(item => `horizon-${item.id}`),
   ];
 }
-function hasCompleteDirectSignalCoverage(data){
+function hasCompleteSignalCoverage(data){
   if (!data || data.sourceFresh !== true || !data.embeds || typeof data.embeds !== 'object') return false;
-  if (data.search && Object.keys(data.search).length) return false;
-  const expected = expectedDirectSignalIds();
-  const actual = Object.keys(data.embeds);
-  if (expected.length !== actual.length || expected.some(id => !data.embeds[id])) return false;
-  return actual.every(id => {
+  if (!data.search || typeof data.search !== 'object') return false;
+  const expected = expectedSignalIds();
+  const directIds = Object.keys(data.embeds);
+  const searchIds = Object.keys(data.search);
+  const actual = [...directIds, ...searchIds];
+  if (expected.length !== actual.length
+      || expected.some(id => Boolean(data.embeds[id]) === Boolean(data.search[id]))
+      || actual.some(id => !expected.includes(id))) return false;
+  const useCounts = directIds.reduce((counts, id) => {
+    const postId = String(data.embeds[id] && data.embeds[id].id || '');
+    counts[postId] = (counts[postId] || 0) + 1;
+    return counts;
+  }, {});
+  if (Math.max(0, ...Object.values(useCounts)) > 3) return false;
+  const directValid = directIds.every(id => {
     const signal = data.embeds[id];
     const provenance = signal && signal.provenance || {};
     const common = /^\d{15,}$/.test(String(signal && signal.id || ''))
@@ -3876,6 +3919,18 @@ function hasCompleteDirectSignalCoverage(data){
       && !!provenance.retrievedAt
       && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType);
   });
+  const searchesValid = searchIds.every(id => {
+    const search = data.search[id];
+    return search && search.matchMethod === 'live-search'
+      && /^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
+      && !!search.maps && !!search.reason;
+  });
+  return directValid && searchesValid
+    && data.coverage && data.coverage.complete === true
+    && data.coverage.direct === directIds.length
+    && data.coverage.searches === searchIds.length
+    && data.coverage.total === expected.length
+    && data.coverage.maxReuse <= 3;
 }
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
@@ -3931,15 +3986,16 @@ function hasCompleteDirectSignalCoverage(data){
       if (!d) return;
       if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
       renderSignalMetadata(d);
-      signalCoverageReady = hasCompleteDirectSignalCoverage(d);
+      signalCoverageReady = hasCompleteSignalCoverage(d);
       xSignals = signalCoverageReady ? d.embeds : {};
+      xSearches = signalCoverageReady ? d.search : {};
       renderTimeline();
       renderHorizon();
       const stamp = document.getElementById('sigStamp');
       if (!signalCoverageReady) {
-        setText('heroSignalFreshness', 'Direct evidence · temporarily unavailable');
+        setText('heroSignalFreshness', 'Prediction evidence · live search fallback');
         if (stamp) {
-          stamp.textContent = 'Direct evidence unavailable · publication requires complete reviewed X coverage';
+          stamp.textContent = 'Evidence bundle unavailable · showing honest live @peterxing searches';
           stamp.hidden = false;
         }
       } else if (stamp && d.updated){
@@ -3947,7 +4003,7 @@ function hasCompleteDirectSignalCoverage(data){
         if (!isNaN(dt.getTime())){
          const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'verified X activity';
          const owners = d.coverage && d.coverage.byEvidenceOwner || {};
-         stamp.textContent = `Direct X evidence · ${d.coverage.direct}/${d.coverage.total} · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · ${sourceLabel} checked `
+         stamp.textContent = `Prediction evidence · ${d.coverage.direct} direct · ${d.coverage.searches} searches · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · ${sourceLabel} checked `
            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
          stamp.hidden = false;
        }
@@ -3956,9 +4012,10 @@ function hasCompleteDirectSignalCoverage(data){
     .catch(() => {
       signalCoverageReady = false;
       xSignals = {};
+      xSearches = {};
       renderTimeline();
       renderHorizon();
-      setText('heroSignalFreshness', 'Direct evidence · temporarily unavailable');
+      setText('heroSignalFreshness', 'Prediction evidence · live search fallback');
     });
 })();
 let twPromise = null;

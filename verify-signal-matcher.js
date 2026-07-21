@@ -1606,6 +1606,18 @@ const fixtures = [
     title: 'Millions of AI-agent copies work continuously, generating at least $10B per month in paid digital labor',
     text: 'Two million AI agents work continuously, generating $10 billion per month at most, with no less than two million workers.',
   },
+  {
+    name: 'mass deployment wording is not a humanoid count',
+    expect: false,
+    title: 'Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor',
+    text: 'Humanoid robots are entering mass deployments on live factory production lines.',
+  },
+  {
+    name: 'global workspace result is not a reliable reasoning translation',
+    expect: false,
+    title: 'Interpretability tools translate internal model reasoning into reliable human-understandable summaries',
+    text: 'A global workspace in language models suggests a functional analog of access consciousness.',
+  },
 ];
 
 const familyFixtures = [
@@ -1669,6 +1681,13 @@ const familyFixtures = [
     family: 'education',
     text: 'Education should recenter on meaning, community, relationships and stewardship rather than employability.',
   },
+  {
+    name: 'family matching cannot bypass humanoid quantity guard',
+    expect: false,
+    family: 'robotics-physical',
+    title: 'Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor',
+    text: 'Humanoid robots are entering mass deployments on live factory production lines.',
+  },
 ];
 
 let failed = 0;
@@ -1680,7 +1699,10 @@ for (const fixture of fixtures) {
   }
 }
 for (const fixture of familyFixtures) {
-  const result = qualifyFamilyPost(fixture.text, { evidenceFamily: fixture.family });
+  const result = qualifyFamilyPost(fixture.text, {
+    ...prediction(fixture.title || ''),
+    evidenceFamily: fixture.family,
+  });
   if (result.ok !== fixture.expect) {
     failed++;
     console.error(`FAIL: ${fixture.name} (expected ${fixture.expect}, got ${result.ok}; reason=${result.reason || 'matched'})`);

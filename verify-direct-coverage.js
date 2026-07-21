@@ -8,7 +8,12 @@ const {
   validateFamilyCoverage,
 } = require('./evidence-families');
 const { readPrivateHistory } = require('./refresh-signals');
-const { EXTERNAL_MAPPINGS, EXTERNAL_SOURCES } = require('./external-evidence');
+const {
+  EXTERNAL_DIRECT_IDS,
+  EXTERNAL_MAPPINGS,
+  EXTERNAL_SOURCES,
+  MAX_POST_REUSE,
+} = require('./external-evidence');
 
 const DIR = __dirname;
 const predictions = JSON.parse(fs.readFileSync(path.join(DIR, 'predictions.json'), 'utf8').replace(/^\uFEFF/, ''));
@@ -20,25 +25,31 @@ const expectedIds = [
 ];
 const expected = new Set(expectedIds);
 const embeds = signals.embeds || {};
+const searches = signals.search || {};
 const actualIds = Object.keys(embeds);
-const actual = new Set(actualIds);
+const searchIds = Object.keys(searches);
+const actual = new Set([...actualIds, ...searchIds]);
 const history = readPrivateHistory();
 const historyById = new Map(history.map(item => [String(item.id), item]));
 const problems = [];
-const directSchemaPresent = !Object.prototype.hasOwnProperty.call(signals, 'search')
-  && !!signals.coverage;
+const directSchemaPresent = !!signals.coverage
+  && signals.search && typeof signals.search === 'object';
 
 const familyCoverage = validateFamilyCoverage(expectedIds);
 if (familyCoverage.missing.length || familyCoverage.extra.length) {
   problems.push(`evidence-family coverage mismatch (missing ${familyCoverage.missing.join(', ') || 'none'}; extra ${familyCoverage.extra.join(', ') || 'none'})`);
 }
 if (signals.sourceFresh !== true) problems.push('signals.sourceFresh must be true');
-if (!directSchemaPresent) problems.push('signals.json is still the legacy partial/search schema');
+if (!directSchemaPresent) problems.push('signals.json lacks the current direct-or-search schema');
 
 const missing = expectedIds.filter(id => !actual.has(id));
 const extra = actualIds.filter(id => !expected.has(id));
-if (missing.length) problems.push(`missing direct mappings: ${missing.join(', ')}`);
+const extraSearches = searchIds.filter(id => !expected.has(id));
+const overlaps = expectedIds.filter(id => embeds[id] && searches[id]);
+if (missing.length) problems.push(`missing direct-or-search mappings: ${missing.join(', ')}`);
 if (extra.length) problems.push(`extra mappings: ${extra.join(', ')}`);
+if (extraSearches.length) problems.push(`extra searches: ${extraSearches.join(', ')}`);
+if (overlaps.length) problems.push(`direct/search overlap: ${overlaps.join(', ')}`);
 
 const usesByPost = new Map();
 for (const predictionId of directSchemaPresent ? actualIds : []) {
@@ -77,9 +88,19 @@ for (const predictionId of directSchemaPresent ? actualIds : []) {
   } else if (signal.evidenceOwner === 'external') {
     const mapping = EXTERNAL_MAPPINGS[predictionId];
     const source = mapping && EXTERNAL_SOURCES[mapping.source];
-    if (!mapping || !source || String(source.statusId) !== postId
+    const directSelection = EXTERNAL_DIRECT_IDS[mapping?.source];
+    const selected = !directSelection || directSelection.includes(predictionId);
+    if (!mapping || !source || !selected || String(source.statusId) !== postId
         || signal.reviewed !== true || signal.reviewedAt !== mapping.reviewedAt) {
       problems.push(`${predictionId}: mapping is not backed by the reviewed external ledger`);
+    }
+    for (const predictionId of directSchemaPresent ? searchIds : []) {
+      const search = searches[predictionId];
+      if (!search || search.matchMethod !== 'live-search'
+          || !/^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
+          || !search.maps || !search.reason) {
+        problems.push(`${predictionId}: malformed live @peterxing search`);
+      }
     }
     if (signal.kind !== 'external'
         || provenance.evidenceOwner !== 'external'
@@ -108,6 +129,9 @@ for (const [postId, uses] of usesByPost) {
   reuseDistribution[uses.length] = (reuseDistribution[uses.length] || 0) + 1;
   const owners = new Set(uses.map(use => use.signal.evidenceOwner));
   const families = new Set(uses.map(use => use.signal.evidenceOwner === 'external' ? use.reuseFamily : use.family));
+  if (uses.length > MAX_POST_REUSE) {
+    problems.push(`post ${postId}: reuse ${uses.length} exceeds cap ${MAX_POST_REUSE}`);
+  }
   if (uses.length > 1) {
     const family = [...families][0];
     if (owners.size !== 1 || families.size !== 1
@@ -129,9 +153,10 @@ for (const [postId, uses] of usesByPost) {
 }
 
 if (directSchemaPresent && (!signals.coverage || signals.coverage.complete !== true
-    || signals.coverage.direct !== expectedIds.length
+    || signals.coverage.direct !== actualIds.length
+    || signals.coverage.searches !== searchIds.length
     || signals.coverage.total !== expectedIds.length)) {
-  problems.push('signals.coverage must declare complete N/N direct coverage');
+  problems.push('signals.coverage must declare complete N/N direct-or-search coverage');
 }
 const approvalIds = Object.keys(approvals);
 const unknownApprovals = approvalIds.filter(id => !expected.has(id));
@@ -139,15 +164,14 @@ if (unknownApprovals.length) problems.push(`approvals reference unknown predicti
 const externalIds = Object.keys(EXTERNAL_MAPPINGS);
 const unknownExternal = externalIds.filter(id => !expected.has(id));
 const overlap = approvalIds.filter(id => EXTERNAL_MAPPINGS[id]);
-const ledgerMissing = expectedIds.filter(id => !approvals[id] && !EXTERNAL_MAPPINGS[id]);
-if (unknownExternal.length || overlap.length || ledgerMissing.length) {
-  problems.push(`mixed ledger mismatch (unknown ${unknownExternal.join(', ') || 'none'}; overlap ${overlap.join(', ') || 'none'}; missing ${ledgerMissing.join(', ') || 'none'})`);
+if (unknownExternal.length || overlap.length) {
+  problems.push(`mixed ledger mismatch (unknown ${unknownExternal.join(', ') || 'none'}; overlap ${overlap.join(', ') || 'none'})`);
 }
 
 const dates = history.map(item => item.created).filter(date => date instanceof Date && !isNaN(date));
 const oldest = dates.length ? new Date(Math.min(...dates)).toISOString() : null;
 const newest = dates.length ? new Date(Math.max(...dates)).toISOString() : null;
-console.log(`Direct coverage: ${actualIds.filter(id => expected.has(id)).length}/${expectedIds.length}`);
+console.log(`Coverage: ${actual.size}/${expectedIds.length} (${actualIds.length} direct, ${searchIds.length} live searches)`);
 const observedUses = directSchemaPresent
   ? [...usesByPost.values()].map(uses => uses.length)
   : Object.values(actualIds.reduce((counts, id) => {
@@ -171,4 +195,4 @@ for (const embed of Object.values(embeds)) {
   qualityCounts[embed.sourceQuality] = (qualityCounts[embed.sourceQuality] || 0) + 1;
 }
 console.log(`Evidence owners: ${JSON.stringify(ownerCounts)}; source quality: ${JSON.stringify(qualityCounts)}`);
-console.log('RESULT: PASS — every prediction has reviewed, direct, provenance-complete X evidence.');
+console.log('RESULT: PASS — every prediction has reviewed direct X evidence or an honest live @peterxing search.');

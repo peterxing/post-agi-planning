@@ -206,7 +206,8 @@ to raise coverage.
    unique-post-first, then reuse a post for no more than three closely related predictions. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
-   weaken freshness or facet guards to increase the count; unsupported claims block publication.
+   weaken freshness or facet guards to increase the count; unsupported claims keep an honest live
+   `from:peterxing` search rather than receiving a weak direct mapping.
 12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
    item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
    indicators, a caveat and a curated `from:peterxing` match/search definition. Run the same
@@ -217,15 +218,17 @@ to raise coverage.
    and `handoff` in 2040. Their wording and probabilities may evolve, but do not rename, duplicate,
    remove or move these machine keys. `validate-predictions.js` fails publication if the contract
    breaks.
-14. **Preserve the direct-evidence contract.** Every dated event and horizon item must have exactly one
-   entry in `evidence-families.js`. Prefer a real post/repost observed in @peterxing's activity whose
-   exact prediction/post pair is reviewed in `evidence-approvals.json`. Otherwise use a reviewed
-   authoritative direct status from `external-evidence.js`, explicitly labeled `direct`, `scenario`,
-   or `leading-indicator` with source quality and rationale. New external posts never self-approve.
-   Reuse is permitted only inside one reviewed scenario or threshold-series group. Never add a
-   search fallback or weaken a facet guard to restore coverage. `refresh-signals.js` must exit
-   nonzero and leave the last complete `signals.json` untouched whenever direct coverage is below
-   N/N.
+14. **Preserve the direct-or-search evidence contract.** Every dated event and horizon item must have
+   exactly one entry in `evidence-families.js` and exactly one public evidence surface. Prefer a real
+   post/repost observed in @peterxing's activity whose exact prediction/post pair is reviewed in
+   `evidence-approvals.json`. Otherwise use a reviewed authoritative status from
+   `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
+   source quality and rationale. New external posts never self-approve. If neither direct route is
+   defensible, retain an explicit live `from:peterxing` search. Family matching must pass the same
+   claim-specific facet guards as literal and semantic matching. Reuse is permitted only inside one
+   reviewed scenario or threshold-series group and is capped at three predictions per status.
+   `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
+   whenever the union of reviewed direct mappings and honest live searches is below N/N.
 
 ## Procedure
 
@@ -237,7 +240,7 @@ node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
-node verify-direct-coverage.js         # every prediction needs reviewed direct evidence
+node verify-direct-coverage.js         # every prediction needs reviewed direct evidence or a live search
 node verify-external-evidence.js       # external statuses resolve and retain reviewed provenance
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force

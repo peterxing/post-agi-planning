@@ -21,6 +21,7 @@ const SHOT = process.argv[3] || null;
         fetch('predictions.json?verify=' + Date.now()).then(r => r.json()),
       ]);
       const embeds = signals.embeds || {};
+      const searches = signals.search || {};
       const embedValues = Object.values(embeds);
       const methodCounts = {};
       const postUses = {};
@@ -31,15 +32,17 @@ const SHOT = process.argv[3] || null;
         postUses[e.id].push(e);
         if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
       }
+      if (Object.keys(searches).length) methodCounts['live-search'] = Object.keys(searches).length;
 
       const datedKeys = predictions.years.flatMap(y => y.events.map((_, i) => `${y.year}-${i}`));
       const horizon = predictions.postSuperintelligence;
       const horizonItems = horizon && Array.isArray(horizon.items) ? horizon.items : [];
       const horizonKeys = horizonItems.map(item => `horizon-${item.id}`);
       const expectedKeys = [...datedKeys, ...horizonKeys];
-      const coveredKeys = new Set(Object.keys(embeds));
+      const coveredKeys = new Set([...Object.keys(embeds), ...Object.keys(searches)]);
       const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key));
       const extraKeys = [...coveredKeys].filter(key => !expectedKeys.includes(key));
+      const overlapKeys = expectedKeys.filter(key => embeds[key] && searches[key]);
 
       const stringList = value => Array.isArray(value) && value.length >= 2 && value.length <= 4
         && value.every(v => typeof v === 'string' && v.trim());
@@ -69,16 +72,24 @@ const SHOT = process.argv[3] || null;
 
       const eventNodes = Array.from(document.querySelectorAll('#timelineBody .event'));
       const horizonNodes = Array.from(document.querySelectorAll('#horizonBody .horizon-item'));
-      const eventCoverage = eventNodes.every(node => node.querySelector('.event-body > .tl-signal'));
+      const eventCoverage = eventNodes.every(node =>
+        node.querySelector('.event-body > .tl-signal, .event-body > .tl-signal-search'));
       const horizonCoverage = horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2
         && node.querySelector('.horizon-caveat')
-        && node.querySelector('.horizon-signal .tl-signal'));
+        && node.querySelector('.horizon-signal .tl-signal, .horizon-signal .tl-signal-search'));
       const searchLinks = Array.from(document.querySelectorAll('.tl-signal-search')).map(a => a.href);
+      const searchLinksHonest = searchLinks.every(href => {
+        const url = new URL(href);
+        return url.hostname === 'x.com'
+          && url.pathname === '/search'
+          && /^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
+          && url.searchParams.get('f') === 'live';
+      });
       const dates = Array.from(document.querySelectorAll('.tl-signal-date')).map(d => d.textContent.trim());
-      const directSchema = expectedKeys.every(key => {
+      const directSchema = Object.keys(embeds).every(key => {
         const e = embeds[key];
         const provenance = e && e.provenance || {};
         const common = e
@@ -108,7 +119,13 @@ const SHOT = process.argv[3] || null;
           && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
           && ['unique', 'external-reuse'].includes(e.assignmentMode);
       });
+      const searchSchema = Object.entries(searches).every(([key, search]) =>
+        expectedKeys.includes(key)
+        && search && search.matchMethod === 'live-search'
+        && /^from:peterxing(?:\s|$)/i.test(String(search.query || ''))
+        && !!search.maps && !!search.reason);
       const invalidReuse = Object.entries(postUses).filter(([, uses]) => {
+        if (uses.length > 3) return true;
         if (uses.length <= 1) return false;
         const owners = new Set(uses.map(use => use.evidenceOwner));
         const groups = new Set(uses.map(use => use.evidenceOwner === 'external' ? use.reuseFamily : use.evidenceFamily));
@@ -122,8 +139,10 @@ const SHOT = process.argv[3] || null;
         horizonCount: horizonNodes.length,
         expectedHorizonCount: horizonItems.length,
         cards: document.querySelectorAll('#timelineBody .event-body .tl-signal, #horizonBody .horizon-signal .tl-signal').length,
+        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal, #timelineBody .event-body > .tl-signal-search, #horizonBody .horizon-signal > .tl-signal, #horizonBody .horizon-signal > .tl-signal-search').length,
         chips: searchLinks.length,
-        searchFieldAbsent: !Object.prototype.hasOwnProperty.call(signals, 'search'),
+        expectedSearches: Object.keys(searches).length,
+        searchLinksHonest,
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
         source: signals.source || '',
         sourceFresh: signals.sourceFresh === true,
@@ -136,9 +155,16 @@ const SHOT = process.argv[3] || null;
         invalidReuse,
         missingKeys,
         extraKeys,
+        overlapKeys,
         eventCoverage,
         horizonCoverage,
         directSchema,
+        searchSchema,
+        coverageMetadata: signals.coverage && signals.coverage.complete === true
+          && signals.coverage.direct === Object.keys(embeds).length
+          && signals.coverage.searches === Object.keys(searches).length
+          && signals.coverage.total === expectedKeys.length
+          && signals.coverage.maxReuse <= 3,
         horizonSchema,
         horizonCaveats,
         datesMissing: dates.filter(date => !date).length,
@@ -149,19 +175,21 @@ const SHOT = process.argv[3] || null;
       source: stats.sourceFresh && stats.source !== 'live-search' && !!stats.sourceFetchedAt && !!stats.newestItemAt,
       eventCount: stats.eventCount === stats.expectedEventCount,
       horizonCount: stats.horizonCount === stats.expectedHorizonCount && stats.expectedHorizonCount >= 7,
-      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length,
+      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length && !stats.overlapKeys.length,
       renderedCoverage: stats.eventCoverage && stats.horizonCoverage,
       horizonSchema: stats.horizonSchema && stats.horizonCaveats,
       methods: !stats.badMethods.length,
-      reuse: !stats.invalidReuse.length,
+      reuse: !stats.invalidReuse.length && stats.maxReuse <= 3,
       directSchema: stats.directSchema,
-      searches: stats.chips === 0 && stats.searchFieldAbsent,
+      searchSchema: stats.searchSchema,
+      searches: stats.chips === stats.expectedSearches && stats.searchLinksHonest,
+      coverageMetadata: stats.coverageMetadata,
       reality: stats.realityCount === 6,
       layout: stats.strayCards === 0 && stats.datesMissing === 0,
       console: errors.length === 0,
     };
     const ok = Object.values(checks).every(Boolean);
-    console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} cards=${stats.cards} chips=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
+    console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} evidence=${stats.evidenceItems} direct=${stats.cards} searches=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
     if (!ok) console.log('   CHECKS:', JSON.stringify(checks));
     if (errors.length) console.log('   ERRORS:', errors.slice(0, 4).join(' | '));
     if (stats.missingKeys.length) console.log('   MISSING:', stats.missingKeys.slice(0, 12).join(', '));
@@ -171,6 +199,49 @@ const SHOT = process.argv[3] || null;
     if (!ok) pass = false;
     await ctx.close();
   }
+  const offlineContext = await browser.newContext();
+  const offlinePage = await offlineContext.newPage();
+  const offlineErrors = [];
+  offlinePage.on('console', message => {
+    if (message.type() === 'error') offlineErrors.push(message.text());
+  });
+  offlinePage.on('pageerror', error => offlineErrors.push(error.message));
+  await offlinePage.route('**/signals.json*', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: '',
+  }));
+  await offlinePage.goto(URL + (URL.includes('?') ? '&' : '?') + 'scoutTheme=dark&verifyOffline=1', {
+    waitUntil: 'networkidle',
+    timeout: 30000,
+  });
+  const offline = await offlinePage.evaluate(() => {
+    const expected = document.querySelectorAll('#timelineBody .event').length
+      + document.querySelectorAll('#horizonBody .horizon-item').length;
+    const links = [...document.querySelectorAll('.tl-signal-search')];
+    return {
+      expected,
+      direct: document.querySelectorAll('.tl-signal').length,
+      unavailable: document.querySelectorAll('.tl-signal-unavailable').length,
+      searches: links.length,
+      honest: links.every(link => {
+        const url = new URL(link.href);
+        return url.hostname === 'x.com' && url.pathname === '/search'
+          && /^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
+          && url.searchParams.get('f') === 'live';
+      }),
+    };
+  });
+  const offlineOk = offline.expected >= 103
+    && offline.searches === offline.expected
+    && offline.direct === 0
+    && offline.unavailable === 0
+    && offline.honest
+    && offlineErrors.length === 0;
+  console.log(`[signals-fetch-failure] searches=${offline.searches}/${offline.expected} direct=${offline.direct} unavailable=${offline.unavailable} errs=${offlineErrors.length} -> ${offlineOk ? 'OK' : 'FAIL'}`);
+  if (offlineErrors.length) console.log('   ERRORS:', offlineErrors.slice(0, 4).join(' | '));
+  if (!offlineOk) pass = false;
+  await offlineContext.close();
   await browser.close();
   console.log('RESULT: ' + (pass ? 'PASS' : 'FAIL'));
   process.exit(pass ? 0 : 1);
