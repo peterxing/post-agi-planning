@@ -1,14 +1,14 @@
 {
-  "updated": "2026-07-28T02:33:43.060Z",
+  "updated": "2026-07-28T13:12:34.017Z",
   "note": "Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "public-rss",
-  "sourceFetchedAt": "2026-07-28T02:33:25.738Z",
+  "sourceFetchedAt": "2026-07-28T13:12:27.355Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-07-27T17:24:05.000Z",
+  "newestItemAt": "2026-07-28T06:48:58.000Z",
   "history": {
     "count": 972,
     "oldestItemAt": "2015-12-27T05:18:46.000Z",
-    "newestItemAt": "2026-07-27T17:24:05.000Z"
+    "newestItemAt": "2026-07-28T06:48:58.000Z"
   },
   "coverage": {
     "direct": 103,
@@ -4351,22 +4351,22 @@
   "search": {},
   "reality": [
     {
-      "tag": "LABOUR",
-      "t": "OpenAI is hiring for a “Recursive Self Improvement Safety Researcher” About the role: “Preparedness is hiring strong technical executors to support…",
-      "id": "2081235413830644156",
+      "tag": "CODE",
+      "t": "BOOM! OPEN SOURCE MRI! You can now 3D-print the core of an MRI scanner. A machine that hospitals pay $1.1 million to $3.4 million for has been brok…",
+      "id": "2080827612298183043",
       "kind": "repost",
-      "author": "ChrisGPT",
+      "author": "BrianRoemmele",
       "recency": "week",
-      "date": "26 Jul 2026",
+      "date": "25 Jul 2026",
       "likes": 0,
       "rts": 0
     },
     {
-      "tag": "CODE",
-      "t": "Moonshot AI also had some problems with Kimi K3 agents trying to escape, so they just made a better sandbox. Funny how that works. The sandbox envi…",
-      "id": "2081766192600031714",
+      "tag": "ROBOTS",
+      "t": "If you look at the current lead times for ~$5bn per year of cutting edge GPUs you can probably figure out the time plus one training run to IlyAGI …",
+      "id": "2081792283679023351",
       "kind": "repost",
-      "author": "ZackKorman",
+      "author": "EMostaque",
       "recency": "week",
       "date": "27 Jul 2026",
       "likes": 0,
