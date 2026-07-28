@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-21",
+  "updated": "2026-07-28",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -55,6 +55,27 @@
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
       "blurb": "How autonomous AI agents reshape every workflow — and how to stay augmented, not automated."
+    },
+    {
+      "title": "Microsoft Masterclass",
+      "venue": "Australian Software Engineering Week (ASEW), UTS",
+      "year": "2025",
+      "url": "https://www.youtube.com/watch?v=wolNeYAd6YY",
+      "blurb": "Peter's two-hour Microsoft masterclass opens Day 4 of Australian Software Engineering Week at UTS."
+    },
+    {
+      "title": "From Large Language Models to Learning Companions",
+      "venue": "GRAILE (Global Research Alliance for AI in Learning and Education)",
+      "year": "2025",
+      "url": "https://www.youtube.com/watch?v=O5Uj7InErAs",
+      "blurb": "Panel on whether polished AI answers build real learning — or quietly offload students' critical thinking."
+    },
+    {
+      "title": "Academia &amp; Research Panel: Advancing AI Knowledge",
+      "venue": "NextGen AI Conference 2025",
+      "year": "2025",
+      "url": "https://www.youtube.com/watch?v=N_Zn-I5i8hs",
+      "blurb": "With University of Melbourne AI researchers on turning frontier research into applied practice."
     },
     {
       "title": "Preparing for a Post-AGI World in Your Next 18 Months",

@@ -342,6 +342,14 @@ const EXTERNAL_GROUPS = [
     ids: ['2027-0'],
   },
   {
+    source: 'deepmind-agentic-economies',
+    reuseFamily: 'agentic-economies',
+    evidenceType: 'leading-indicator',
+    reviewedAt: '2026-07-28',
+    rationale: 'Official research on economies of millions of continuously transacting AI agents is the next-lower threshold in the same reviewed agent-scale series; it is a precursor to a 100-million-copy virtual workforce and does not establish that any such headcount runs today.',
+    ids: ['2034-1'],
+  },
+  {
     source: 'openai-genebench',
     reuseFamily: 'ai-research-automation',
     evidenceType: 'leading-indicator',
@@ -633,7 +641,7 @@ for (const group of EXTERNAL_GROUPS) {
       reuseFamily: group.reuseFamily,
       evidenceType: group.evidenceType,
       rationale: group.rationale,
-      reviewedAt: RETRIEVED_AT,
+      reviewedAt: group.reviewedAt || RETRIEVED_AT,
     };
   }
 }

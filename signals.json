@@ -1,27 +1,27 @@
 {
-  "updated": "2026-07-21T03:48:42.672Z",
+  "updated": "2026-07-28T02:33:43.060Z",
   "note": "Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "public-rss",
-  "sourceFetchedAt": "2026-07-21T03:48:35.349Z",
+  "sourceFetchedAt": "2026-07-28T02:33:25.738Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-07-20T17:42:00.000Z",
+  "newestItemAt": "2026-07-27T17:24:05.000Z",
   "history": {
-    "count": 961,
+    "count": 972,
     "oldestItemAt": "2015-12-27T05:18:46.000Z",
-    "newestItemAt": "2026-07-20T17:42:00.000Z"
+    "newestItemAt": "2026-07-27T17:24:05.000Z"
   },
   "coverage": {
     "direct": 103,
     "searches": 0,
     "total": 103,
     "complete": true,
-    "uniquePosts": 39,
-    "peterUniquePosts": 7,
-    "maximumUniqueMatches": 7,
+    "uniquePosts": 38,
+    "peterUniquePosts": 6,
+    "maximumUniqueMatches": 6,
     "maxReuse": 20,
     "reuseDistribution": {
-      "1": 23,
-      "2": 8,
+      "1": 21,
+      "2": 9,
       "3": 1,
       "4": 2,
       "5": 2,
@@ -30,27 +30,27 @@
       "20": 1
     },
     "byEvidenceOwner": {
-      "external": 96,
-      "peterxing": 7
+      "external": 97,
+      "peterxing": 6
     },
     "bySourceQuality": {
       "official-research-organization": 4,
       "original-scenario-author": 36,
       "official-company": 11,
-      "official-ai-lab": 25,
+      "official-ai-lab": 26,
       "original-researcher": 3,
       "intergovernmental-organization": 6,
       "academic-researcher": 4,
       "government": 1,
-      "peterxing-activity": 7,
+      "peterxing-activity": 6,
       "academic-research-institution": 2,
       "privacy-research-organization": 2,
       "original-framework-author": 2
     },
     "byEvidenceType": {
-      "leading-indicator": 59,
+      "leading-indicator": 60,
       "scenario": 37,
-      "direct": 7
+      "direct": 6
     }
   },
   "embeds": {
@@ -452,13 +452,13 @@
       "recency": "external",
       "matchMethod": "reviewed-external",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "unique",
+      "assignmentMode": "external-reuse",
       "evidenceFamily": "agents-workflows",
       "reuseFamily": "agentic-economies",
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official discussion of millions of transacting and delegating agents is the direct leading indicator for a paid digital-agent economy.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 1,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agents",
         "labor",
@@ -2393,46 +2393,47 @@
       "rts": 0
     },
     "2034-1": {
-      "id": "2069096592729047485",
-      "kind": "repost",
-      "activityKind": "repost",
-      "evidenceOwner": "peterxing",
-      "author": "Dr_Singularity",
-      "displayName": "Dr_Singularity",
-      "url": "https://x.com/Dr_Singularity/status/2069096592729047485",
+      "id": "2069785314663497966",
+      "kind": "external",
+      "activityKind": "external",
+      "evidenceOwner": "external",
+      "author": "GoogleDeepMind",
+      "displayName": "Google DeepMind",
+      "url": "https://x.com/GoogleDeepMind/status/2069785314663497966",
       "provenance": {
-        "evidenceOwner": "peterxing",
-        "activityKind": "repost",
-        "account": "peterxing",
-        "displayName": "Peter Xing",
-        "relationship": "reposted",
-        "activityId": "2069105568066003163",
-        "observedIn": "x-api-user-timeline"
+        "evidenceOwner": "external",
+        "activityKind": "external",
+        "account": "GoogleDeepMind",
+        "displayName": "Google DeepMind",
+        "retrievedAt": "2026-07-21",
+        "sourceQuality": "official-ai-lab"
       },
-      "recency": "recent",
-      "matchMethod": "semantic",
-      "matchBasis": "prediction-facets",
-      "assignmentMode": "unique",
+      "recency": "external",
+      "matchMethod": "reviewed-external",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "external-reuse",
       "evidenceFamily": "agents-workflows",
-      "reuseCount": 1,
+      "reuseFamily": "agentic-economies",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Official research on economies of millions of continuously transacting AI agents is the next-lower threshold in the same reviewed agent-scale series; it is a precursor to a 100-million-copy virtual workforce and does not establish that any such headcount runs today.",
+      "sourceQuality": "official-ai-lab",
+      "reuseCount": 2,
       "matchedConcepts": [
+        "agents",
         "labor",
         "scale",
         "ai"
       ],
       "matchedFacets": [
-        "prediction-facets"
+        "leading-indicator"
       ],
-      "evidenceType": "direct",
-      "sourceQuality": "peterxing-activity",
-      "mappingRationale": "The post explicitly discusses a continuously scaling AI workforce reaching billions.",
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
-      "date": "22 Jun 2026",
+      "reviewedAt": "2026-07-28",
+      "date": "24 Jun 2026",
       "maps": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
-      "text": "Like I've said many times before, a huge AI workforce is coming, we can say it's basically already here. We just need to scale it. We will start with billion…",
-      "likes": 191,
-      "rts": 29
+      "text": "What happens when millions of AI agents start negotiating, transacting and delegating to one another? Our researchers explore the rise of agentic economies.",
+      "likes": 0,
+      "rts": 0
     },
     "2034-2": {
       "id": "2069480608749817922",
@@ -2617,7 +2618,7 @@
         "activityId": "2078780034903572538",
         "observedIn": "x-api-user-timeline"
       },
-      "recency": "week",
+      "recency": "recent",
       "matchMethod": "semantic",
       "matchBasis": "prediction-facets",
       "assignmentMode": "unique",
@@ -4113,7 +4114,7 @@
         "activityId": "2078954038679531557",
         "observedIn": "x-api-user-timeline"
       },
-      "recency": "week",
+      "recency": "recent",
       "matchMethod": "hybrid",
       "matchBasis": "prediction-facets",
       "assignmentMode": "unique",
@@ -4350,70 +4351,70 @@
   "search": {},
   "reality": [
     {
-      "tag": "ABUNDANCE",
-      "t": "BREAKING: SpaceX, $SPCX, is in talks to provide compute power to the US Pentagon, per WSJ. The two sides are reportedly discussing an agreement whi…",
-      "id": "2078194907664073036",
-      "kind": "repost",
-      "author": "KobeissiLetter",
-      "recency": "week",
-      "date": "17 Jul 2026",
-      "likes": 6380,
-      "rts": 483
-    },
-    {
-      "tag": "CAPABILITY",
-      "t": "Four frontier AI models released in seven days. Fable Five, Grok 4.5, GPT 5.6, and Muse Spark. Not long ago, we got one model every six months. We'…",
-      "id": "2077333212984983589",
-      "kind": "repost",
-      "author": "PeterDiamandis",
-      "recency": "week",
-      "date": "15 Jul 2026",
-      "likes": 1316,
-      "rts": 103
-    },
-    {
-      "tag": "MARKETS",
-      "t": "The time is long past to drop all export controls on NVIDIA. Some Americans are foolish enough to think they can win an AI race against China. That…",
-      "id": "2078140088861790430",
-      "kind": "repost",
-      "author": "__tinygrad__",
-      "recency": "week",
-      "date": "17 Jul 2026",
-      "likes": 897,
-      "rts": 43
-    },
-    {
       "tag": "LABOUR",
-      "t": "Two questions: 1. Why is Tesla hiring a Space Radiation Engineer? 2. Did you say... TPUs?",
-      "id": "2078145439644430843",
+      "t": "OpenAI is hiring for a “Recursive Self Improvement Safety Researcher” About the role: “Preparedness is hiring strong technical executors to support…",
+      "id": "2081235413830644156",
       "kind": "repost",
-      "author": "teslayoda",
+      "author": "ChrisGPT",
       "recency": "week",
-      "date": "17 Jul 2026",
-      "likes": 428,
-      "rts": 36
+      "date": "26 Jul 2026",
+      "likes": 0,
+      "rts": 0
     },
     {
       "tag": "CODE",
-      "t": "AI agents are already being used to improve the capabilities of our next-generation models. We believe with GPT-Red that we have started to unlock …",
-      "id": "2077446723992228167",
+      "t": "Moonshot AI also had some problems with Kimi K3 agents trying to escape, so they just made a better sandbox. Funny how that works. The sandbox envi…",
+      "id": "2081766192600031714",
       "kind": "repost",
-      "author": "OpenAI",
+      "author": "ZackKorman",
       "recency": "week",
-      "date": "15 Jul 2026",
-      "likes": 385,
-      "rts": 11
+      "date": "27 Jul 2026",
+      "likes": 0,
+      "rts": 0
     },
     {
-      "tag": "ROBOTS",
-      "t": "China's XPeng is preparing to enter mass production of humanoid robots. The EV maker plans to produce over 1,000 Iron humanoid robots per month by …",
-      "id": "2078408955974541404",
+      "tag": "CAPABILITY",
+      "t": "Weighing the evidence I've seen, I don't believe ARC-AGI-3 was directly targeted by Opus 5 eg synthetic RL envs or anything like that. Instead what…",
+      "id": "2081792754309587333",
       "kind": "repost",
-      "author": "Eng_china5",
+      "author": "mikeknoop",
       "recency": "week",
-      "date": "18 Jul 2026",
-      "likes": 137,
-      "rts": 39
+      "date": "27 Jul 2026",
+      "likes": 0,
+      "rts": 0
+    },
+    {
+      "tag": "MARKETS",
+      "t": "Nvidia is reportedly in talks to provide a roughly $250 billion backstop for OpenAI as part of a massive data center project - WSJ The guarantees f…",
+      "id": "2081522101433897210",
+      "kind": "repost",
+      "author": "SawyerMerritt",
+      "recency": "week",
+      "date": "26 Jul 2026",
+      "likes": 0,
+      "rts": 0
+    },
+    {
+      "tag": "ABUNDANCE",
+      "t": "Releasing the model weights and technical report of Kimi K3. Kimi K3 is our most capable model: a 2.8T MoE model with native visual understanding a…",
+      "id": "2081760186235289764",
+      "kind": "repost",
+      "author": "Kimi_Moonshot",
+      "recency": "week",
+      "date": "27 Jul 2026",
+      "likes": 0,
+      "rts": 0
+    },
+    {
+      "tag": "GOVERNANCE",
+      "t": "i think we finally have enough clues to reverse-engineer ilya sutskever’s secret SSI research. my highest-probability guess: SSI has found a brain-…",
+      "id": "2081749227730809127",
+      "kind": "repost",
+      "author": "imjustnewatai",
+      "recency": "week",
+      "date": "27 Jul 2026",
+      "likes": 0,
+      "rts": 0
     }
   ]
 }
