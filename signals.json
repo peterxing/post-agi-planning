@@ -1,14 +1,14 @@
 {
-  "updated": "2026-07-28T13:12:34.017Z",
+  "updated": "2026-07-28T13:43:49.652Z",
   "note": "Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "public-rss",
-  "sourceFetchedAt": "2026-07-28T13:12:27.355Z",
+  "sourceFetchedAt": "2026-07-28T13:43:43.443Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-07-28T06:48:58.000Z",
+  "newestItemAt": "2026-07-28T10:50:57.000Z",
   "history": {
     "count": 972,
     "oldestItemAt": "2015-12-27T05:18:46.000Z",
-    "newestItemAt": "2026-07-28T06:48:58.000Z"
+    "newestItemAt": "2026-07-28T10:50:57.000Z"
   },
   "coverage": {
     "direct": 103,
