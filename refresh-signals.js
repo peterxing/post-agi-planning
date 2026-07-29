@@ -47,15 +47,48 @@ const OUT = path.join(DIR, 'signals.json');
 const DBG = path.join(DIR, 'signals-debug.json');
 const PRED = path.join(DIR, 'predictions.json'); // daily-revised prediction set (source of truth)
 const APPROVALS = path.join(DIR, 'evidence-approvals.json'); // reviewed prediction/post pairs
+const FLOORS = path.join(DIR, 'evidence-floors.json'); // monotonic evidence-quality ratchet
 // MIN_SCORE and the facet guards gate weak/spurious matches before recency is considered.
 const PAST_WEEK_DAYS = Number(process.env.PAST_WEEK_DAYS || 7);
 const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 5000);
 const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
-const MIN_STICKY_PETER_MAPPINGS = Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 24;
-const MIN_AUTHORED_PETER_MAPPINGS = Number(process.env.MIN_AUTHORED_PETER_MAPPINGS) || 10;
-const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || 10;
+// Evidence quality only ever ratchets in the safe direction. The baselines below are absolute
+// minimums; evidence-floors.json records the best result any published run has actually achieved and
+// raises the effective gate to that level, so a later regression fails closed instead of silently
+// re-publishing weaker evidence. Environment overrides may tighten a gate but can never loosen one.
+const BASE_MIN_STICKY_PETER_MAPPINGS = 24;
+const BASE_MIN_AUTHORED_PETER_MAPPINGS = 10;
+const BASE_MAX_REVIEWED_REUSE = 10;
+function readEvidenceFloors() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(FLOORS, 'utf8'));
+    return {
+      peterTotal: Number(raw.peterTotal) || 0,
+      peterAuthored: Number(raw.peterAuthored) || 0,
+      maxReuse: Number.isFinite(Number(raw.maxReuse)) ? Number(raw.maxReuse) : Infinity,
+    };
+  } catch {
+    return { peterTotal: 0, peterAuthored: 0, maxReuse: Infinity };
+  }
+}
+const EVIDENCE_RATCHET = readEvidenceFloors();
+const MIN_STICKY_PETER_MAPPINGS = Math.max(
+  BASE_MIN_STICKY_PETER_MAPPINGS,
+  EVIDENCE_RATCHET.peterTotal,
+  Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 0
+);
+const MIN_AUTHORED_PETER_MAPPINGS = Math.max(
+  BASE_MIN_AUTHORED_PETER_MAPPINGS,
+  EVIDENCE_RATCHET.peterAuthored,
+  Number(process.env.MIN_AUTHORED_PETER_MAPPINGS) || 0
+);
+const MAX_REVIEWED_REUSE = Math.min(
+  BASE_MAX_REVIEWED_REUSE,
+  EVIDENCE_RATCHET.maxReuse,
+  Number(process.env.MAX_REVIEWED_REUSE) || Infinity
+);
 const PETER_VERIFICATION_MAX_AGE_DAYS = Number(process.env.PETER_VERIFICATION_MAX_AGE_DAYS) || 30;
 const SKIP_API = process.env.X_SKIP_API === '1';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
@@ -2413,6 +2446,24 @@ async function main(){
   }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
   console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${PREDICTIONS.length}).`);
+  const ratchet = {
+    peterTotal: Math.max(EVIDENCE_RATCHET.peterTotal, peterMappingCount),
+    peterAuthored: Math.max(EVIDENCE_RATCHET.peterAuthored, peterAuthoredCount),
+    maxReuse: Math.min(
+      Number.isFinite(EVIDENCE_RATCHET.maxReuse) ? EVIDENCE_RATCHET.maxReuse : BASE_MAX_REVIEWED_REUSE,
+      maxPostReuseObserved
+    ),
+  };
+  if (ratchet.peterTotal !== EVIDENCE_RATCHET.peterTotal
+    || ratchet.peterAuthored !== EVIDENCE_RATCHET.peterAuthored
+    || ratchet.maxReuse !== EVIDENCE_RATCHET.maxReuse) {
+    fs.writeFileSync(FLOORS, JSON.stringify({
+      updated: new Date().toISOString().slice(0, 10),
+      note: 'Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.',
+      ...ratchet,
+    }, null, 2) + '\n');
+    console.error(`[refresh] Ratcheted evidence floors to Peter ${ratchet.peterTotal} (authored ${ratchet.peterAuthored}), reuse ceiling ${ratchet.maxReuse}.`);
+  }
   console.log(JSON.stringify({
     direct: Object.keys(embeds).length,
     searches: Object.keys(searches).length,

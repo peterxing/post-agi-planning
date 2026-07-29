@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-29T03:54:55.940Z",
+  "updated": "2026-07-29T04:55:12.913Z",
   "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "archive-verified",
   "sourceStatus": {
@@ -73,14 +73,14 @@
       "count": 24
     }
   ],
-  "sourceFetchedAt": "2026-07-29T03:54:46.089Z",
+  "sourceFetchedAt": "2026-07-29T04:55:00.779Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
-    "count": 2127,
-    "verifiedCount": 1370,
+    "count": 2144,
+    "verifiedCount": 1407,
     "kinds": {
-      "authored": 1279,
+      "authored": 1296,
       "quote": 24,
       "reply": 15,
       "repost": 809
@@ -574,7 +574,7 @@
       "date": "08 Jun 2026",
       "maps": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
       "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: 150 kW peak compute payload; 120 kW average...",
-      "likes": 14810,
+      "likes": 14811,
       "rts": 1807
     },
     "2027-0": {
@@ -964,7 +964,7 @@
       "date": "17 May 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Ken Griffin went home on a Friday \"fairly depressed\" after watching AI agents at Citadel do work that used to take teams of PhDs in finance months to complet…",
-      "likes": 12339,
+      "likes": 12341,
       "rts": 1788
     },
     "2028-2": {
@@ -4131,7 +4131,7 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28647,
+      "likes": 28648,
       "rts": 3981
     },
     "2038-2": {
@@ -4848,7 +4848,7 @@
       "date": "19 Jul 2026",
       "maps": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
       "text": "You can now control computers with your thoughts. Someone at WAIC 2026 is playing Black Myth: Wukong using only a brain-computer interface...",
-      "likes": 2090,
+      "likes": 2089,
       "rts": 57
     },
     "horizon-whole-brain-emulation-and-uploading": {
@@ -4944,7 +4944,7 @@
       "date": "23 Jun 2026",
       "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
       "text": "Elon confirms \"Starmind\" will be the official name of SpaceX's AI satellite constellation. SpaceX filed a request with the FCC to launch...",
-      "likes": 7384,
+      "likes": 7383,
       "rts": 1268
     },
     "horizon-kardashev-energy-scaling": {
@@ -5106,17 +5106,6 @@
       "rts": 0
     },
     {
-      "tag": "MARKETS",
-      "t": "Friedberg: New study shows enzyme reverses skin age from 70+ years to 31 Chamath: That’s a $2T market. Did Scientists Just Discover How to Reverse …",
-      "id": "2078334237481046412",
-      "kind": "repost",
-      "author": "theallinpod",
-      "recency": "recent",
-      "date": "18 Jul 2026",
-      "likes": 6815,
-      "rts": 0
-    },
-    {
       "tag": "ABUNDANCE",
       "t": "BREAKING: SpaceX, $SPCX, is in talks to provide compute power to the US Pentagon, per WSJ. The two sides are reportedly discussing an agreement whi…",
       "id": "2078194907664073036",
@@ -5125,6 +5114,17 @@
       "recency": "recent",
       "date": "17 Jul 2026",
       "likes": 6380,
+      "rts": 0
+    },
+    {
+      "tag": "MARKETS",
+      "t": "The time is long past to drop all export controls on NVIDIA. Some Americans are foolish enough to think they can win an AI race against China. That…",
+      "id": "2078140088861790430",
+      "kind": "repost",
+      "author": "__tinygrad__",
+      "recency": "recent",
+      "date": "17 Jul 2026",
+      "likes": 903,
       "rts": 0
     },
     {

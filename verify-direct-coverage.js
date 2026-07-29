@@ -25,9 +25,18 @@ const predictionTextById = new Map([
   ...predictions.years.flatMap(year => year.events.map((event, index) => [`${year.year}-${index}`, event.t])),
   ...predictions.postSuperintelligence.items.map(item => [`horizon-${item.id}`, item.t]),
 ]);
-const MIN_STICKY_PETER_MAPPINGS = 24;
-const MIN_AUTHORED_PETER_MAPPINGS = 10;
-const MAX_REVIEWED_REUSE = 10;
+// Gates ratchet in the safe direction only: evidence-floors.json records the strongest composition a
+// published run has achieved, so a later regression fails here instead of shipping weaker evidence.
+const ratchet = (() => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8'));
+  } catch {
+    return {};
+  }
+})();
+const MIN_STICKY_PETER_MAPPINGS = Math.max(24, Number(ratchet.peterTotal) || 0);
+const MIN_AUTHORED_PETER_MAPPINGS = Math.max(10, Number(ratchet.peterAuthored) || 0);
+const MAX_REVIEWED_REUSE = Math.min(10, Number.isFinite(Number(ratchet.maxReuse)) ? Number(ratchet.maxReuse) : 10);
 const PETER_VERIFICATION_MAX_AGE_DAYS = 30;
 const expected = new Set(expectedIds);
 const embeds = signals.embeds && typeof signals.embeds === 'object' ? signals.embeds : {};
