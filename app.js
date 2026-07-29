@@ -517,13 +517,13 @@ function signalCard(sig){
   const tweetId = safeTweetId(sig.id);
   const K = SIG_KIND[kind] || SIG_KIND.post;
   const externalEvidence = sig.evidenceOwner === 'external' || kind === 'external';
-  const isPost = kind === 'post';
+  const peterAuthored = !externalEvidence && (sig.authorship === 'authored' || kind === 'post');
   const dispName = externalEvidence
     ? htmlText(sig.displayName || ('@' + author))
-    : isPost ? 'Peter Xing' : ('@' + author);
+    : peterAuthored ? 'Peter Xing' : ('@' + author);
   const actionLine = externalEvidence
     ? `External evidence &middot; @${author}`
-    : isPost ? '@peterxing authored' : `${K.icon} @peterxing ${K.verb} &middot; @${author}`;
+    : peterAuthored ? 'Peter wrote this' : `${K.icon} Peter reposted this &middot; @${author}`;
   const method = htmlText(sig.matchMethod || 'verified');
   const date = htmlText(sig.date);
   const directUrl = safeHttpUrl(sig.url) || `https://x.com/${author}/status/${tweetId}`;
@@ -535,7 +535,7 @@ function signalCard(sig){
     : '';
   const evidenceLabel = externalEvidence
     ? sig.evidenceType === 'scenario' ? 'scenario source' : sig.evidenceType === 'leading-indicator' ? 'leading indicator' : 'direct evidence'
-    : 'reviewed Peter activity';
+    : `${peterAuthored ? 'reviewed Peter-authored' : 'reviewed Peter-reposted'} ${sig.evidenceType === 'leading-indicator' ? 'leading indicator' : sig.evidenceType === 'scenario' ? 'scenario source' : 'direct evidence'}`;
   const reviewDate = sig.lastVerifiedAt || sig.reviewedAt || '';
   const reuse = Number(sig.reuseCount) > 1 ? ` · reviewed reuse across ${Number(sig.reuseCount)} related predictions` : ' · unique mapping';
   const provenanceLine = `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(evidenceLabel)}${reviewDate ? ` · verified ${htmlText(reviewDate)}` : ''}${reuse}</div>`;
@@ -1109,6 +1109,7 @@ const predictionsReady = (function loadPredictions(){
    external direct, scenario, or leading-indicator evidence. */
 const SIGNAL_SOURCE_LABELS = {
   'x-api': 'X API realtime',
+  'archive-verified': 'archive-verified X statuses',
   'public-rss': 'live public X profile feed',
   'public-rss-cache': 'recent public X profile snapshot',
   'x-api-cache': 'recent X API snapshot',
@@ -1126,9 +1127,12 @@ function renderSignalMetadata(data){
     ? 'newest-item time unavailable'
     : newest.toLocaleString('en-US', { day:'numeric', month:'short', hour:'numeric', minute:'2-digit' });
   const freshness = data.sourceFresh === true ? 'fresh source' : 'source freshness unverified';
-  const degraded = sourceStatus.mode === 'degraded';
-  setText('heroSignalFreshness', `Evidence · ${sourceLabel}${degraded ? ' · X API degraded' : ''} · ${updatedLabel}`);
-  setText('realityMeta', `${freshness} · ${sourceLabel}${degraded ? ` · ${sourceStatus.reason || 'primary source degraded'}` : ''} · newest observed item ${newestLabel} · six signals refreshed hourly`);
+  const archiveVerified = sourceStatus.mode === 'archive-verified';
+  const sourceQualifier = archiveVerified
+    ? ` · ${sourceStatus.reason || 'direct status verification'}`
+    : sourceStatus.mode === 'degraded' ? ' · source degraded' : '';
+  setText('heroSignalFreshness', `Evidence · ${sourceLabel}${sourceQualifier} · ${updatedLabel}`);
+  setText('realityMeta', `${freshness} · ${sourceLabel}${sourceQualifier} · newest known activity ${newestLabel} · six verified observations`);
   renderEvidenceDashboard(data, sourceLabel, freshness);
 }
 function renderEvidenceDashboard(data, sourceLabel, freshness){
@@ -1136,24 +1140,32 @@ function renderEvidenceDashboard(data, sourceLabel, freshness){
   const owners = coverage.byEvidenceOwner || {};
   const types = coverage.byEvidenceType || {};
   const total = Number(coverage.total) || 0;
-  const peter = Number(owners.peterxing) || 0;
   const external = Number(owners.external) || 0;
+  const peterAuthorship = coverage.byPeterAuthorship || {};
+  const authored = Number(peterAuthorship.authored) || 0;
+  const reposted = Number(peterAuthorship.reposted) || 0;
   const embeds = Object.values(data.embeds || {});
   const peterStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)).size;
   const externalStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'external').map(embed => embed.id)).size;
-  const percentage = value => total ? Math.round(value / total * 100) : 0;
+  const percentage = value => total ? (value / total * 100).toFixed(1) : '0.0';
   setText('evidenceDirectStat', `${coverage.direct || 0}/${total}`);
-  setText('evidencePeterStat', String(peter));
+  setText('evidenceAuthoredStat', String(authored));
+  setText('evidenceRepostedStat', String(reposted));
   setText('evidenceExternalStat', String(external));
   setText('evidenceReuseStat', String(coverage.uniquePosts || 0));
-  setText('evidencePeterShare', `${percentage(peter)}%`);
+  setText('evidenceMaxReuseStat', `${coverage.maxReuse || 0}×`);
+  setText('evidenceAuthoredShare', `${percentage(authored)}%`);
+  setText('evidenceRepostedShare', `${percentage(reposted)}%`);
   setText('evidenceExternalShare', `${percentage(external)}%`);
-  document.getElementById('evidencePeterBar')?.style.setProperty('--share', `${percentage(peter)}%`);
+  document.getElementById('evidenceAuthoredBar')?.style.setProperty('--share', `${percentage(authored)}%`);
+  document.getElementById('evidenceRepostedBar')?.style.setProperty('--share', `${percentage(reposted)}%`);
   document.getElementById('evidenceExternalBar')?.style.setProperty('--share', `${percentage(external)}%`);
   const typeMix = document.getElementById('evidenceTypeMix');
   if (typeMix) {
     typeMix.innerHTML = [
-      ['Direct Peter evidence', types.direct || 0],
+      ['Peter mappings', authored + reposted],
+      ['Peter wrote', authored],
+      ['Peter reposted', reposted],
       ['Leading indicators', types['leading-indicator'] || 0],
       ['Scenario sources', types.scenario || 0],
       ['Peter unique statuses', peterStatuses],
@@ -1164,12 +1176,17 @@ function renderEvidenceDashboard(data, sourceLabel, freshness){
   const health = document.getElementById('evidenceSourceHealth');
   if (health) {
     const status = data.sourceStatus || {};
-    const degraded = status.mode === 'degraded';
+    const archiveVerified = status.mode === 'archive-verified';
+    const degraded = status.mode === 'degraded' || status.mode === 'unavailable';
     health.classList.toggle('is-degraded', degraded);
-    const title = degraded ? `Degraded source · ${sourceLabel}` : `Primary source · ${sourceLabel}`;
-    const detail = degraded
-      ? `${status.message || 'The authenticated X API is unavailable.'} ${status.actionRequired ? `Action: ${status.actionRequired}` : ''}`
-      : `${freshness}. Reviewed evidence age is tracked separately from source freshness.`;
+    const title = archiveVerified
+      ? `Archive-verified source chain · ${sourceLabel}`
+      : degraded ? `Degraded source · ${sourceLabel}` : `Primary source · ${sourceLabel}`;
+    const detail = archiveVerified
+      ? `${status.message || 'Status IDs are hydrated and cross-checked directly.'} ${status.actionRequired ? `API note: ${status.actionRequired}` : ''}`
+      : degraded
+        ? `${status.message || 'The evidence source is unavailable.'} ${status.actionRequired ? `Action: ${status.actionRequired}` : ''}`
+        : `${freshness}. Reviewed evidence age is tracked separately from source freshness.`;
     health.innerHTML = `<strong>${htmlText(title)}</strong><span>${htmlText(detail)}</span>`;
   }
 }
@@ -1223,6 +1240,10 @@ function hasCompleteSignalCoverage(data){
         && /^\d{15,}$/.test(String(provenance.activityId || ''))
         && !!provenance.observedIn
         && !!provenance.lastVerifiedAt
+        && provenance.verifiedThrough === 'archive-verified'
+        && Array.isArray(provenance.sourceChain)
+        && provenance.sourceChain.includes('tweet-result')
+        && signal.authorship === (provenance.relationship === 'authored' ? 'authored' : 'reposted')
         && signal.matchMethod === 'reviewed-sticky'
         && ['unique', 'family-reuse'].includes(signal.assignmentMode);
     }
@@ -1234,6 +1255,9 @@ function hasCompleteSignalCoverage(data){
       && !!provenance.displayName
       && !!provenance.sourceQuality
       && !!provenance.retrievedAt
+      && provenance.verifiedThrough === 'first-party-status+oembed'
+      && Array.isArray(provenance.sourceChain)
+      && provenance.sourceChain.includes('tweet-result')
       && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)
       && ['unique', 'external-reuse'].includes(signal.assignmentMode)
       && !!signal.reuseFamily;
@@ -1245,14 +1269,22 @@ function hasCompleteSignalCoverage(data){
     && data.coverage.searches === 0
     && data.coverage.total === expected.length
     && data.coverage.maxReuse === maxReuse
-    && data.coverage.stickyPeterFloor === 17
-    && data.coverage.reuseCeiling === 12
+    && data.coverage.stickyPeterFloor >= 24
+    && Number(data.coverage.byEvidenceOwner?.peterxing || 0) >= data.coverage.stickyPeterFloor
+    && data.coverage.reuseCeiling === 10
     && maxReuse <= data.coverage.reuseCeiling
     && data.sourceStatus
     && data.sourceStatus.activeSource === data.source
-    && (data.source === 'x-api'
-      ? data.sourceStatus.mode === 'primary'
-      : data.sourceStatus.mode === 'degraded' && !!data.sourceStatus.reason);
+    && data.source === 'archive-verified'
+    && data.sourceStatus.mode === 'archive-verified'
+    && data.sourceStatus.primarySource === 'first-party-status'
+    && Number(data.sourceStatus.hydratedThisRun) > 0
+    && Array.isArray(data.sourceAttempts)
+    && ['wayback-cdx','tweet-result','x-oembed'].every(source =>
+      data.sourceAttempts.some(attempt => attempt.source === source))
+    && Number(data.coverage.byPeterAuthorship?.authored || 0)
+      + Number(data.coverage.byPeterAuthorship?.reposted || 0)
+      === Number(data.coverage.byEvidenceOwner?.peterxing || 0);
 }
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
@@ -1330,10 +1362,11 @@ function hasCompleteSignalCoverage(data){
         if (!isNaN(dt.getTime())){
          const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'verified X activity';
          const owners = d.coverage && d.coverage.byEvidenceOwner || {};
-         const degraded = d.sourceStatus && d.sourceStatus.mode === 'degraded'
-           ? ` · X API ${d.sourceStatus.reason || 'degraded'}`
-           : '';
-         stamp.textContent = `Prediction evidence · ${d.coverage.direct}/${d.coverage.total} direct · zero searches · ${owners.peterxing || 0} Peter · ${owners.external || 0} external · max reuse ${d.coverage.maxReuse} · ${sourceLabel}${degraded} · checked `
+         const authorship = d.coverage && d.coverage.byPeterAuthorship || {};
+         const sourceState = d.sourceStatus && d.sourceStatus.mode === 'archive-verified'
+           ? ' · first-party hydrated + oEmbed cross-check'
+           : d.sourceStatus && d.sourceStatus.reason ? ` · ${d.sourceStatus.reason}` : '';
+         stamp.textContent = `Prediction evidence · ${d.coverage.direct}/${d.coverage.total} direct · zero searches · ${authorship.authored || 0} Peter wrote · ${authorship.reposted || 0} Peter reposted · ${owners.external || 0} external · max reuse ${d.coverage.maxReuse} · ${sourceLabel}${sourceState} · checked `
            + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
          stamp.hidden = false;
        }
@@ -1815,7 +1848,7 @@ const realitySignals = [
 ];
 function realityCard(s, index){
   const tag = htmlText(s.tag || 'SIGNAL');
-  const recency = ['week','recent','search'].includes(s.recency) ? s.recency : 'observed';
+  const recency = ['week','recent','historical','search'].includes(s.recency) ? s.recency : 'observed';
   let srcHtml;
   if (s.kind === 'search' && s.search){
     const q = encodeURIComponent('from:peterxing ' + s.search);

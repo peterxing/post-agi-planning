@@ -229,20 +229,27 @@ html[data-theme="dark"] {
             <span class="instrument-label">Evidence ledger / publication strength</span>
             <h3 id="evidenceDashboardTitle">See what the forecast rests on</h3>
           </div>
-          <p>Every prediction has one reviewed direct X source. Peter’s own posts and reposts remain sticky after review; external cards are labeled as scenario or leading-indicator evidence.</p>
+          <p>Every prediction has one reviewed direct X source. Peter-written and Peter-reposted evidence are counted separately; external cards are labeled as scenario or leading-indicator evidence.</p>
         </div>
         <div class="evidence-stat-grid" aria-label="Evidence coverage summary">
           <div class="evidence-stat"><span>Direct coverage</span><strong id="evidenceDirectStat">—</strong></div>
-          <div class="evidence-stat"><span>Peter mappings</span><strong id="evidencePeterStat">—</strong></div>
+          <div class="evidence-stat"><span>Peter wrote</span><strong id="evidenceAuthoredStat">—</strong></div>
+          <div class="evidence-stat"><span>Peter reposted</span><strong id="evidenceRepostedStat">—</strong></div>
           <div class="evidence-stat"><span>External mappings</span><strong id="evidenceExternalStat">—</strong></div>
           <div class="evidence-stat"><span>Unique statuses</span><strong id="evidenceReuseStat">—</strong></div>
+          <div class="evidence-stat"><span>Maximum reuse</span><strong id="evidenceMaxReuseStat">—</strong></div>
         </div>
       </div>
       <div class="evidence-composition">
         <div class="composition-row">
-          <span>Peter mappings</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidencePeterBar"></i></span>
-          <strong id="evidencePeterShare">—</strong>
+          <span>Peter wrote this</span>
+          <span class="composition-track" aria-hidden="true"><i id="evidenceAuthoredBar"></i></span>
+          <strong id="evidenceAuthoredShare">—</strong>
+        </div>
+        <div class="composition-row">
+          <span>Peter reposted this</span>
+          <span class="composition-track" aria-hidden="true"><i id="evidenceRepostedBar"></i></span>
+          <strong id="evidenceRepostedShare">—</strong>
         </div>
         <div class="composition-row external">
           <span>External mappings</span>

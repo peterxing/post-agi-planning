@@ -12,15 +12,21 @@ $source = 'C:\Users\peterxing\pap-deploy'
 Set-Location $dir
 
 $coverageVerifier = Join-Path $source 'verify-direct-coverage.js'
+$archiveVerifier = Join-Path $source 'verify-archive-corpus.js'
 $peterVerifier = Join-Path $source 'verify-peter-evidence.js'
 $externalVerifier = Join-Path $source 'verify-external-evidence.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier)) {
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier)) {
   Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
 }
 & node $coverageVerifier
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'Direct X evidence coverage is incomplete; deployment aborted.'
+  exit 6
+}
+& node $archiveVerifier
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'Archive discovery and first-party verification validation failed; deployment aborted.'
   exit 6
 }
 & node $peterVerifier

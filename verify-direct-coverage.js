@@ -25,8 +25,8 @@ const predictionTextById = new Map([
   ...predictions.years.flatMap(year => year.events.map((event, index) => [`${year.year}-${index}`, event.t])),
   ...predictions.postSuperintelligence.items.map(item => [`horizon-${item.id}`, item.t]),
 ]);
-const MIN_STICKY_PETER_MAPPINGS = 17;
-const MAX_REVIEWED_REUSE = 12;
+const MIN_STICKY_PETER_MAPPINGS = 24;
+const MAX_REVIEWED_REUSE = 10;
 const PETER_VERIFICATION_MAX_AGE_DAYS = 30;
 const expected = new Set(expectedIds);
 const embeds = signals.embeds && typeof signals.embeds === 'object' ? signals.embeds : {};
@@ -36,6 +36,7 @@ const searches = signals.search == null
 const actualIds = Object.keys(embeds);
 const history = readPrivateHistory();
 const historyById = new Map(history.map(item => [String(item.id), item]));
+const historyByActivity = new Map(history.map(item => [String(item.activityId), item]));
 const problems = [];
 
 const familyCoverage = validateFamilyCoverage(expectedIds);
@@ -46,12 +47,15 @@ if (signals.sourceFresh !== true) problems.push('signals.sourceFresh must be tru
 if (!signals.sourceFetchedAt || !signals.newestItemAt) problems.push('signals source timestamps are incomplete');
 const sourceStatus = signals.sourceStatus || {};
 if (sourceStatus.activeSource !== signals.source
-    || sourceStatus.primarySource !== 'x-api'
-    || !['primary', 'degraded'].includes(sourceStatus.mode)
-    || (signals.source === 'x-api' && (sourceStatus.mode !== 'primary' || sourceStatus.reason))
-    || (signals.source !== 'x-api' && (sourceStatus.mode !== 'degraded'
-      || !sourceStatus.reason || !sourceStatus.message || !sourceStatus.actionRequired))) {
-  problems.push('signals.sourceStatus must honestly describe primary or degraded source operation');
+    || signals.source !== 'archive-verified'
+    || sourceStatus.primarySource !== 'first-party-status'
+    || sourceStatus.mode !== 'archive-verified'
+    || !sourceStatus.reason || !sourceStatus.message
+    || Number(sourceStatus.hydratedThisRun) <= 0
+    || !Array.isArray(signals.sourceAttempts)
+    || !['wayback-cdx','tweet-result','x-oembed'].every(source =>
+      signals.sourceAttempts.some(attempt => attempt.source === source))) {
+  problems.push('signals source metadata must describe the archive-discovered, first-party hydrated and oEmbed-cross-checked chain');
 }
 if (!signals.coverage || !signals.embeds || typeof signals.embeds !== 'object') {
   problems.push('signals.json lacks the direct-evidence schema');
@@ -89,6 +93,8 @@ for (const [predictionId, approval] of Object.entries(approvals)) {
       || !approval.author
       || approval.publicUrl !== `https://x.com/${approval.author}/status/${approval.postId}`
       || !approval.publicText || !approval.basis
+      || (approval.evidenceType != null
+        && !['direct','scenario','leading-indicator'].includes(approval.evidenceType))
       || !approval.reviewedAt || !approval.lastVerifiedAt
       || (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 > PETER_VERIFICATION_MAX_AGE_DAYS
       || (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 < -1) {
@@ -121,7 +127,7 @@ for (const predictionId of expectedIds) {
         || signal.reviewedAt !== approval.reviewedAt
         || signal.lastVerifiedAt !== approval.lastVerifiedAt
         || signal.mappingRationale !== approval.basis
-        || signal.evidenceType !== 'direct'
+        || signal.evidenceType !== (approval.evidenceType || 'direct')
         || signal.matchMethod !== 'reviewed-sticky') {
       problems.push(`${predictionId}: mapping is not backed by its reviewed Peter approval`);
     }
@@ -140,13 +146,18 @@ for (const predictionId of expectedIds) {
         || provenance.relationship !== approval?.relationship
         || String(provenance.activityId || '') !== String(approval?.activityId || '')
         || provenance.observedIn !== approval?.observedIn
+        || provenance.verifiedThrough !== 'archive-verified'
+        || !Array.isArray(provenance.sourceChain)
+        || !provenance.sourceChain.includes('tweet-result')
+        || signal.authorship !== (approval?.activityKind === 'post' ? 'authored' : 'reposted')
         || provenance.lastVerifiedAt !== approval?.lastVerifiedAt) {
       problems.push(`${predictionId}: incomplete @peterxing provenance`);
     }
-    const harvested = historyById.get(postId);
+    const harvested = historyByActivity.get(String(approval?.activityId || ''));
     if (!harvested) {
       problems.push(`${predictionId}: Peter post was not found in the harvested activity corpus`);
-    } else if (harvested.kind !== signal.kind
+    } else if (String(harvested.id) !== postId
+        || harvested.kind !== signal.kind
         || String(harvested.activityId || harvested.id) !== String(approval?.activityId || '')) {
       problems.push(`${predictionId}: activity kind differs from harvested history`);
     }
@@ -170,6 +181,10 @@ for (const predictionId of expectedIds) {
         || provenance.displayName !== source?.displayName
         || provenance.sourceQuality !== source?.sourceQuality
         || provenance.retrievedAt !== source?.retrievedAt
+        || provenance.verifiedThrough !== 'first-party-status+oembed'
+        || !Array.isArray(provenance.sourceChain)
+        || !provenance.sourceChain.includes('tweet-result')
+        || signal.authorship !== 'external'
         || !['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)) {
       problems.push(`${predictionId}: incomplete external provenance or rationale`);
     }
@@ -233,21 +248,29 @@ const oldest = dates.length ? new Date(Math.min(...dates)).toISOString() : null;
 const newest = dates.length ? new Date(Math.max(...dates)).toISOString() : null;
 const ownerCounts = {};
 const qualityCounts = {};
+const peterAuthorshipCounts = { authored:0, reposted:0 };
 for (const embed of Object.values(embeds)) {
   ownerCounts[embed.evidenceOwner] = (ownerCounts[embed.evidenceOwner] || 0) + 1;
   qualityCounts[embed.sourceQuality] = (qualityCounts[embed.sourceQuality] || 0) + 1;
+  if (embed.evidenceOwner === 'peterxing' && peterAuthorshipCounts[embed.authorship] != null) {
+    peterAuthorshipCounts[embed.authorship]++;
+  }
 }
 if ((ownerCounts.peterxing || 0) < MIN_STICKY_PETER_MAPPINGS) {
   problems.push(`published Peter evidence fell below the sticky floor: ${ownerCounts.peterxing || 0}`);
 }
+if (JSON.stringify(coverage.byPeterAuthorship || {}) !== JSON.stringify(peterAuthorshipCounts)
+    || peterAuthorshipCounts.authored + peterAuthorshipCounts.reposted !== (ownerCounts.peterxing || 0)) {
+  problems.push('published Peter authored/reposted split is missing or inaccurate');
+}
 
 console.log(`Coverage: ${actualIds.length}/${expectedIds.length} direct; searches: ${searches ? Object.keys(searches).length : 0}`);
 console.log(`Unique statuses: ${usesByPost.size}; maximum reviewed reuse: ${maxReuse}; distribution: ${JSON.stringify(reuseDistribution)}`);
-console.log(`Harvested history: ${history.length} posts/reposts; span: ${oldest || 'unknown'} to ${newest || 'unknown'}`);
+console.log(`Archive-verified corpus: ${history.length} authored/reposted statuses; span: ${oldest || 'unknown'} to ${newest || 'unknown'}`);
 if (problems.length) {
   console.log(`RESULT: FAIL (${problems.length} problem(s))`);
   problems.forEach(problem => console.log(`  - ${problem}`));
   process.exit(1);
 }
-console.log(`Evidence owners: ${JSON.stringify(ownerCounts)}; source quality: ${JSON.stringify(qualityCounts)}`);
+console.log(`Evidence owners: ${JSON.stringify(ownerCounts)}; Peter authorship: ${JSON.stringify(peterAuthorshipCounts)}; source quality: ${JSON.stringify(qualityCounts)}`);
 console.log('RESULT: PASS — every prediction has exactly one reviewed direct X status with valid provenance and compatible reuse.');

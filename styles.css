@@ -1672,7 +1672,7 @@ button { color: inherit; }
 .evidence-dashboard-head > div { min-width: 180px; }
 .evidence-dashboard-head h3 { margin: 4px 0 0; font-size: 1.35rem; }
 .evidence-dashboard-head p { max-width: 520px; margin: 0; color: var(--cp-text-muted); line-height: 1.55; }
-.evidence-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--cp-border); background: var(--cp-border); border-radius: 10px; overflow: hidden; }
+.evidence-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--cp-border); background: var(--cp-border); border-radius: 10px; overflow: hidden; }
 .evidence-stat { min-width: 0; padding: 14px; background: var(--cp-surface); }
 .evidence-stat span { display: block; color: var(--cp-text-muted); font-size: .72rem; }
 .evidence-stat strong { display: block; margin-top: 6px; font-size: 1.35rem; font-variant-numeric: tabular-nums; }

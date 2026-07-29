@@ -2,6 +2,8 @@
 // complete direct prediction evidence, and honest labeling of evergreen historical evidence.
 //   npm install, then: node verify-site.js [url]
 const { chromium } = require('playwright');
+const signals = require('./signals.json');
+const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, reposted:0 };
 
 (async () => {
   const url = process.argv[2] || 'http://127.0.0.1:8787/';
@@ -34,12 +36,14 @@ const { chromium } = require('playwright');
       return /\b20(1\d|2[0-3])$/.test(date)
         && !/\b(?:Historical|Scenario source|Leading indicator|External evidence)\b/i.test(label);
     }).map(card => card.querySelector('.tl-signal-date')?.textContent.trim() || '')).catch(() => []);
-    const sourceHonest = /17 Peter/.test(stamp)
-      && /86 external/.test(stamp)
-      && /max reuse 12/.test(stamp)
-      && /X API credits-depleted/.test(stamp)
-      && /credits are depleted/i.test(dashboard)
-      && /Add X API credits/i.test(dashboard);
+    const sourceHonest = stamp.includes(`${expectedAuthorship.authored} Peter wrote`)
+      && stamp.includes(`${expectedAuthorship.reposted} Peter reposted`)
+      && stamp.includes(`${signals.coverage.byEvidenceOwner.external} external`)
+      && stamp.includes(`max reuse ${signals.coverage.maxReuse}`)
+      && /archive-verified/i.test(stamp)
+      && /first-party hydrated/i.test(stamp)
+      && /Archive-verified source chain/i.test(dashboard)
+      && /first-party status JSON/i.test(dashboard);
     const assetsValid = splitAssets.app && splitAssets.styles;
     console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);

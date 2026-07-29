@@ -195,22 +195,28 @@ to raise coverage.
    Peter-ungoverned branches explicitly so a later top-expert milestone does not appear to follow an
    earlier unqualified superintelligence milestone in the same world. Run `validate-predictions.js`;
    its duplicate-family, near-overlap, post-automation-career, and branch-order checks must pass.
-11. **Keep X matching fresh, broad, and conservative.** `refresh-signals.js` must try the authenticated
-   X API, then the live public profile feed, before caches. Reject caches older than the configured
-   36-hour limit and reject the legacy syndication feed when its newest item is stale. Literal title
-   terms may be supplemented by the controlled concept ontology, but one distinctive shared concept
+11. **Keep X matching verified, broad, and conservative.** Bulk profile feeds are unavailable and
+   must not be treated as a publication source. Use `x-archive.js` to fully paginate Wayback CDX across
+   `twitter.com`/`x.com` and `peterxing`/`PeterXing`, merge private API-era history and public historical
+   signal bundles, sort IDs numerically, and hydrate a time-stratified batch through X first-party
+   `tweet-result` at least 600 ms apart. Independently cross-check the original author and Peter
+   activity URL through X oEmbed. Cache the private corpus under `pap-secrets`; never serve, deploy,
+   print or commit it. The authenticated API is an optional diagnostic/seed, not a hard dependency.
+   Literal title terms may be supplemented by the controlled concept ontology, but one distinctive shared concept
    or two substantive corroborating concepts are required, semantic-only matches are limited to
    recent activity, and every applicable claim-facet guard remains mandatory. Generic capability,
    computation, energy, space, economy, infrastructure, institutions, governance, scaling and AI
    overlap supports a match but never qualifies by itself. Allocate valid matches
    unique-post-first, then permit reuse only inside an explicitly reviewed compatible concept family
-   or threshold/scenario series. A single status may support at most 12 predictions; every repeated
+   or threshold/scenario series. A single status may support at most 10 predictions; every repeated
    status must retain its
    reviewed mapped IDs and rationale in audit output. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
    weaken freshness or facet guards to increase the count. An unsupported claim fails publication
    until it receives a reviewed defensible Peter mapping or authoritative external direct status.
+   Candidate and assignment priority is Peter-authored/quoted/replied, then Peter-reposted, then
+   authoritative external; that priority never weakens relevance or facet guards.
 12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
    item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
    indicators, a caveat and a curated diagnostic `from:peterxing` match definition. Run the same
@@ -223,11 +229,12 @@ to raise coverage.
    breaks.
 14. **Preserve the direct-X evidence contract.** Every dated event and horizon item must have
    exactly one entry in `evidence-families.js` and exactly one public direct-X evidence card. Prefer a real
-   post/repost observed in @peterxing's activity whose exact prediction/post pair is active and sticky
+   post/quote/reply written by Peter, then a repost observed in @peterxing's activity, whose exact
+   prediction/post pair is active and sticky
    in `evidence-approvals.json`. Each sticky approval binds its status/activity IDs, relationship,
    public excerpt, exact prediction text, review date, last verification date and rationale. Resolve
-   it against the private historical corpus even when it is absent from today's feed window; evidence
-   age is not source-fetch freshness. Publication must retain at least the existing 17 reviewed Peter
+   it against the private archive-verified corpus even when it is absent from a recent window; evidence
+   age is not verification freshness. Publication must retain at least the existing 24 reviewed Peter
    mappings. Otherwise use a reviewed authoritative status from
    `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
    source quality and rationale. New external posts never self-approve. Search fallbacks are forbidden:
@@ -236,12 +243,13 @@ to raise coverage.
    reviewed compatible concept family or threshold/scenario series; large groups remain visible in
    `signals-debug.json` with all mapped IDs and their reviewed rationales.
    `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
-   whenever reviewed direct coverage is below N/N, the Peter floor falls below 17, freshness is
-   false, provenance is invalid, one status exceeds 12 uses, or reuse crosses a reviewed
+   whenever reviewed direct coverage is below N/N, the Peter floor falls below 24, freshness is
+   false, provenance is invalid, one status exceeds 10 uses, or reuse crosses a reviewed
    compatibility group. Record a safe `sourceStatus` reason (`authentication-expired`,
    `credits-depleted`, `access-or-plan-restricted`, `rate-limited`, `service-error`, or
-   `network-error`) whenever the authenticated API degrades; never expose credentials or raw API
-   response bodies.
+   `network-error`) whenever the optional authenticated API degrades. `sourceAttempts` must also show
+   Wayback discovery, first-party hydration and oEmbed cross-check counts. Never expose credentials,
+   raw API response bodies or private corpus records.
 
 ## Procedure
 
@@ -251,15 +259,16 @@ cd C:\Users\peterxing\pap-deploy
 # 2. Validate it:
 node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
+node x-archive.js --hydrate=120        # advance private archive verification
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
 node verify-direct-coverage.js         # every prediction needs exactly one reviewed direct status
+node verify-archive-corpus.js          # discovery, corpus isolation, pace and source-chain contract
 node verify-peter-evidence.js --update # live-check original + Peter activity status, then date the audit
-node verify-external-evidence.js       # external statuses resolve and retain reviewed provenance
+node verify-external-evidence.js       # external statuses hydrate + cross-check and retain provenance
 node verify-performance.js             # split-asset, transfer, DOM and render budgets
-# 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
-Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
-# (index.html + signals.json are copied in the workflow's PUBLISH step too)
+# 4. Hash-sync and deploy only through the guarded helper:
+C:\Users\peterxing\pap-site\deploy.ps1
 ```
 
 `validate-predictions.js` checks: valid JSON, required top-level keys, the strict 2026-2040 year

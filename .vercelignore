@@ -7,6 +7,8 @@
 verify-*.js
 validate-*.js
 refresh-signals.js
+x-archive.js
+review-*.js
 external-evidence.js
 evidence-approvals.json
 evidence-families.js

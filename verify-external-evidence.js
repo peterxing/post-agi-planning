@@ -7,6 +7,10 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
+const {
+  hydrateTweetResult,
+  resolveOembed,
+} = require('./x-archive');
 
 const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8').replace(/^\uFEFF/, ''));
 const signals = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8').replace(/^\uFEFF/, ''));
@@ -16,7 +20,7 @@ const expectedIds = [
 ];
 const expected = new Set(expectedIds);
 const problems = [];
-const MAX_REVIEWED_REUSE = 12;
+const MAX_REVIEWED_REUSE = 10;
 const qualityClasses = new Set([
   'official-research-organization',
   'official-ai-lab',
@@ -88,15 +92,19 @@ for (const [sourceKey, source] of Object.entries(EXTERNAL_SOURCES)) {
   }
 }
 
-async function verifyOembed(sourceKey, source) {
-  const url = `https://publish.x.com/oembed?url=${encodeURIComponent(source.url)}&omit_script=true`;
-  const response = await fetch(url, { headers: { 'User-Agent': 'pap-evidence-verifier/1.0' } });
-  if (!response.ok) return `${sourceKey}: X oEmbed returned HTTP ${response.status}`;
-  const data = await response.json();
-  const returnedId = String(data.url || '').match(/status\/(\d{15,})/)?.[1];
-  const returnedHandle = String(data.author_url || '').match(/x\.com\/([A-Za-z0-9_]+)/)?.[1];
-  if (returnedId !== source.statusId) return `${sourceKey}: X oEmbed returned a different status ID`;
-  if (!returnedHandle || returnedHandle.toLowerCase() !== source.handle.toLowerCase()) {
+async function verifySource(sourceKey, source) {
+  const hydrated = await hydrateTweetResult(source.statusId);
+  if (!hydrated.ok) return `${sourceKey}: X first-party hydration returned ${hydrated.status || hydrated.reason}`;
+  const hydratedId = String(hydrated.data.id_str || '');
+  const hydratedHandle = String(hydrated.data.user?.screen_name || '');
+  if (hydratedId !== source.statusId) return `${sourceKey}: X first-party hydration returned a different status ID`;
+  if (hydratedHandle.toLowerCase() !== source.handle.toLowerCase()) {
+    return `${sourceKey}: X first-party hydration returned a different author`;
+  }
+  const crossCheck = await resolveOembed(source.url);
+  if (!crossCheck.ok) return `${sourceKey}: X oEmbed returned HTTP ${crossCheck.status || crossCheck.reason}`;
+  if (crossCheck.id !== source.statusId) return `${sourceKey}: X oEmbed returned a different status ID`;
+  if (crossCheck.handle.toLowerCase() !== source.handle.toLowerCase()) {
     return `${sourceKey}: X oEmbed returned a different author`;
   }
   return null;
@@ -104,10 +112,9 @@ async function verifyOembed(sourceKey, source) {
 
 (async () => {
   const entries = Object.entries(EXTERNAL_SOURCES);
-  for (let index = 0; index < entries.length; index += 6) {
-    const batch = entries.slice(index, index + 6);
-    const results = await Promise.all(batch.map(([key, source]) => verifyOembed(key, source).catch(error => `${key}: ${error.message}`)));
-    problems.push(...results.filter(Boolean));
+  for (const [key, source] of entries) {
+    const result = await verifySource(key, source).catch(error => `${key}: ${error.message}`);
+    if (result) problems.push(result);
   }
   const useCounts = [...sourceUses.values()].map(uses => uses.length);
   const distribution = {};
@@ -118,7 +125,7 @@ async function verifyOembed(sourceKey, source) {
     problems.forEach(problem => console.log(`  - ${problem}`));
     process.exit(1);
   }
-  console.log('RESULT: PASS — every external mapping is reviewed, authoritative, compatibility-grouped, published directly, and resolves through X.');
+  console.log('RESULT: PASS — every external mapping is reviewed, authoritative, compatibility-grouped, first-party hydrated, and independently cross-checked through X oEmbed.');
 })().catch(error => {
   console.error(error);
   process.exit(1);

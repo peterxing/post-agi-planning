@@ -1,9 +1,11 @@
-# X API setup — realtime @peterxing signals
+# X evidence retrieval — archive verification plus optional API
 
-The forecast gives priority to a reviewed **@peterxing** post/repost. `refresh-signals.js` confirms a
-fresh X source through `harvestActivity()`, then matches against the private deduplicated history.
-Predictions without reviewed Peter evidence retain reviewed authoritative external direct statuses
-from `external-evidence.js`. It writes `signals.json` only when every prediction has direct evidence.
+The forecast gives priority to reviewed activity actually written by **@peterxing**, then reviewed
+reposts, then reviewed authoritative external evidence. Publication does not depend on a bulk profile
+timeline or authenticated X API. `x-archive.js` discovers public activity IDs through Wayback CDX,
+hydrates each through X first-party status JSON, cross-checks authorship through X oEmbed, and stores
+the deduplicated corpus only under `pap-secrets`. `refresh-signals.js` writes `signals.json` only at
+complete, reviewed direct coverage.
 
 All credentials live **only** in `C:\Users\peterxing\pap-secrets\.env` — a directory that is **never
 served or deployed** (the static server blocks dotfiles; `pap-site` / Vercel never see it). Nothing
@@ -18,12 +20,13 @@ This is a plan/quota condition, not an expired credential. Add X API credits or 
 then run `node x-client.js --probe` until `user_lookup` returns HTTP 200. Do not rotate credentials
 unless the probe instead classifies the failure as `authentication-expired`.
 
-While credits are depleted, refresh uses a live public RSS read or a public RSS snapshot no older than
-36 hours. `signals.sourceStatus` and the site evidence panel label this as degraded. Publication still
-requires a fresh source; it never relabels a stale cache as current. The table below describes
-configured capability once API credits are available, not today's endpoint reachability.
+The API is now a non-blocking diagnostic and optional discovery seed. Credits can be restored for
+real-time discovery, but Wayback discovery plus first-party per-status verification remains the
+publication source. `signals.sourceStatus` and the site evidence panel report both facts.
 
-With app-only **Bearer** auth (already configured), the daily harvest pulls @peterxing's realtime:
+The former nitter/RSS, legacy profile syndication, RSSHub and mirror timeline endpoints are unavailable
+and are deliberately not called. The table below describes configured API capability once credits are
+available, not a publication dependency:
 
 | Signal       | Status        | Auth required                                   |
 |--------------|---------------|-------------------------------------------------|
@@ -32,10 +35,23 @@ With app-only **Bearer** auth (already configured), the daily harvest pulls @pet
 | **Likes**    | ⬜ opt-in      | OAuth 1.0a **or** OAuth 2.0 user context        |
 | **Bookmarks**| ⬜ opt-in      | OAuth 2.0 user context **only** (`bookmark.read`) |
 
-Routine runs harvest the newest posts/reposts. `X_HISTORY_BACKFILL=1 node refresh-signals.js`
-additionally exhausts the supported user-timeline/full-archive pagination and targeted topic queries,
-then merges public project archives into `pap-secrets\x-activity-history.json`. Raw history never
-enters the served or deployed directories.
+Routine runs re-verify every published mapping and advance a cache-aware archive batch. Use:
+
+```powershell
+npm run refresh:archive
+$env:X_ARCHIVE_BACKFILL='1'
+$env:X_ARCHIVE_HYDRATE_LIMIT='400'
+node refresh-signals.js
+```
+
+Set `X_ARCHIVE_DISCOVERY_FORCE=1` for a fresh, fully paginated CDX sweep. IDs are sorted numerically
+with `BigInt` and sampled across the whole time range, never lexicographically.
+Use `node x-archive.js --account=HANDLE --hydrate=120` when curating authoritative external accounts;
+the per-account cache also stays under `pap-secrets` and never self-approves a mapping.
+
+`api.fxtwitter.com` and `api.vxtwitter.com` are permitted only as manual last-resort cross-checks when
+both first-party hydration and oEmbed are inconclusive. Send only a public numeric status ID—never
+credentials, private corpus content, request headers or user-context data. They are not provenance.
 
 `.env` keys (already present, with empty opt-in placeholders):
 
@@ -109,34 +125,34 @@ node C:\Users\peterxing\pap-deploy\x-auth.js --refresh
 
 ---
 
-## How the daily harvest uses these
+## How the daily workflow uses these
 
-`x-client.js` picks the richest auth it has, per call:
+`x-client.js` probes optional API capability:
 
 - **Likes** — uses OAuth 2.0 user token if present, else OAuth 1.0a user context.
 - **Bookmarks** — uses OAuth 2.0 user token only.
 - **Posts + reposts** — app-only Bearer (always).
 
-Peter-owned evidence uses only posts and reposts. The 17 active reviewed mappings in
-`evidence-approvals.json` are sticky: they retain public-safe status/activity IDs, relationship,
-review date, verification date, prediction text and rationale, and resolve against the private
-historical corpus rather than being re-derived from today's feed window. A fresh source check remains
-mandatory, but an evergreen reviewed post does not expire because it is absent from recent RSS.
-Run `node verify-peter-evidence.js --update` before refresh: it checks both the original status and
-Peter's post/repost activity status through X oEmbed, verifies their IDs and authors, and only then
-updates `lastVerifiedAt`. The release gates reject verification dates older than 30 days.
+Peter evidence includes authored posts, quotes/replies with Peter's own words, and reposts. Active
+approvals retain public-safe status/activity IDs, authorship relationship, review date, verification
+date, exact prediction text and rationale. Run `node verify-peter-evidence.js --update` before refresh:
+it first hydrates every original status through X first-party JSON, then uses oEmbed to independently
+cross-check the original author and Peter activity URL. Only then does it update `lastVerifiedAt`.
+Deleted, protected or author-mismatched records fail closed.
 
 Matching maximizes unique reviewed posts first, then permits reuse only within one declared compatible
 evidence family. External evidence must be in
-the reviewed public-safe ledger, resolve to X, identify its authoritative account/source quality, and
+the reviewed public-safe ledger, first-party hydrate, identify its authoritative account/source
+quality, independently cross-check through oEmbed, and
 stay within one reviewed scenario or threshold-series reuse group. The private history remains under
-`pap-secrets` (**not** served). If source freshness, the 17-mapping sticky Peter floor, 103/103 direct
-coverage, provenance, the 12-use ceiling, or reuse compatibility fails, refresh exits nonzero and
+`pap-secrets` (**not** served). If source freshness, the 24-mapping sticky Peter floor, 103/103 direct
+coverage, provenance, the 10-use ceiling, or reuse compatibility fails, refresh exits nonzero and
 leaves the last complete public file unchanged.
 
 ## Security
 
 - Secrets live **only** in `pap-secrets\.env`; the static server returns 403 for any dotfile or path
   escaping the web root, and `pap-site`/Vercel never contain the file.
-- `x-activity.json` (full activity, may include private bookmarks once active) stays in `pap-secrets`.
+- `x-activity.json`, `x-activity-history.json`, `x-wayback-status-ids.json` and
+  `x-status-corpus.json` stay in `pap-secrets`.
 - Never commit, print, serve, or deploy any value from `.env`.

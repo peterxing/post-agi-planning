@@ -96,7 +96,11 @@ const SHOT = process.argv[3] || null;
             && ['authored', 'reposted'].includes(provenance.relationship)
             && /^\d{15,}$/.test(String(provenance.activityId || ''))
             && !!provenance.observedIn
+            && provenance.verifiedThrough === 'archive-verified'
+            && Array.isArray(provenance.sourceChain)
+            && provenance.sourceChain.includes('tweet-result')
             && !!provenance.lastVerifiedAt
+            && e.authorship === (provenance.relationship === 'authored' ? 'authored' : 'reposted')
             && e.matchMethod === 'reviewed-sticky'
             && ['unique', 'family-reuse'].includes(e.assignmentMode);
         }
@@ -108,6 +112,10 @@ const SHOT = process.argv[3] || null;
           && !!provenance.displayName
           && !!provenance.sourceQuality
           && !!provenance.retrievedAt
+          && provenance.verifiedThrough === 'first-party-status+oembed'
+          && Array.isArray(provenance.sourceChain)
+          && provenance.sourceChain.includes('tweet-result')
+          && e.authorship === 'external'
           && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
           && ['unique', 'external-reuse'].includes(e.assignmentMode);
       });
@@ -132,6 +140,7 @@ const SHOT = process.argv[3] || null;
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
         source: signals.source || '',
         sourceStatus: signals.sourceStatus || null,
+        sourceAttempts: signals.sourceAttempts || null,
         sourceFresh: signals.sourceFresh === true,
         sourceFetchedAt: signals.sourceFetchedAt || null,
         newestItemAt: signals.newestItemAt || null,
@@ -150,9 +159,13 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.direct === Object.keys(embeds).length
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
-          && signals.coverage.stickyPeterFloor === 17
-          && signals.coverage.reuseCeiling === 12
+          && signals.coverage.stickyPeterFloor >= 24
+          && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) >= signals.coverage.stickyPeterFloor
+          && signals.coverage.reuseCeiling === 10
           && signals.coverage.maxReuse <= signals.coverage.reuseCeiling
+          && Number(signals.coverage.byPeterAuthorship?.authored || 0)
+            + Number(signals.coverage.byPeterAuthorship?.reposted || 0)
+            === Number(signals.coverage.byEvidenceOwner?.peterxing || 0)
           && signals.coverage.maxReuse === Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
         horizonSchema,
         horizonCaveats,
@@ -161,11 +174,14 @@ const SHOT = process.argv[3] || null;
     });
 
     const checks = {
-      source: stats.sourceFresh && stats.source !== 'unavailable' && !!stats.sourceFetchedAt && !!stats.newestItemAt
+      source: stats.sourceFresh && stats.source === 'archive-verified' && !!stats.sourceFetchedAt && !!stats.newestItemAt
         && stats.sourceStatus && stats.sourceStatus.activeSource === stats.source
-        && (stats.source === 'x-api'
-          ? stats.sourceStatus.mode === 'primary'
-          : stats.sourceStatus.mode === 'degraded' && !!stats.sourceStatus.reason),
+        && stats.sourceStatus.mode === 'archive-verified'
+        && stats.sourceStatus.primarySource === 'first-party-status'
+        && Number(stats.sourceStatus.hydratedThisRun) > 0
+        && Array.isArray(stats.sourceAttempts)
+        && ['wayback-cdx','tweet-result','x-oembed'].every(source =>
+          stats.sourceAttempts.some(attempt => attempt.source === source)),
       eventCount: stats.eventCount === stats.expectedEventCount,
       horizonCount: stats.horizonCount === stats.expectedHorizonCount && stats.expectedHorizonCount >= 7,
       exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length,

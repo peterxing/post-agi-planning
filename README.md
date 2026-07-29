@@ -19,7 +19,10 @@ index.html ──loads──> styles.css + app.js
            └─fetch──> signals.json       (generated X matches + Reality Signals)
                               ^
                               |
-                  refresh-signals.js ──> x-client.js / live public RSS
+                  refresh-signals.js ──> x-archive.js
+                                           ├─ Wayback CDX ID discovery
+                                           ├─ X first-party tweet-result hydration
+                                           └─ X oEmbed authorship cross-check
 ```
 
 - **`predictions.json`** contains the probabilistic 2026–2040 forecast.
@@ -32,14 +35,19 @@ index.html ──loads──> styles.css + app.js
   tape-out/semiconductors, physicians/health, FSD/robotics, and UHI/dividends). Claim-specific facet
   guards remain mandatory for literal, semantic, hybrid, and family matches. Assignment maximizes
   unique reviewed posts first, then permits reuse only inside a declared compatible evidence family
-  or reviewed threshold/scenario series. Publication fails when one status supports more than 12
+  or reviewed threshold/scenario series. Publication fails when one status supports more than 10
   predictions.
+- **`x-archive.js`** discovers Peter activity IDs through fully paginated Wayback CDX queries for
+  both `twitter.com`/`x.com` and both handle case variants. It merges API-era private history and
+  public historical signal bundles, numerically stratifies IDs across 2015–2026, hydrates through X's
+  first-party per-status endpoint at least 600 ms apart, cross-checks through X oEmbed, and stores the
+  deduplicated authored/quote/reply/repost corpus only under `pap-secrets`.
 - **`evidence-families.js`** declares the only families within which threshold-series reuse is
   compatible. Cross-family reuse fails publication.
 - **`evidence-approvals.json`** is the public-safe, sticky reviewed prediction/post-pair ledger. Each
   approval is bound to the exact prediction text and retains public provenance plus review and
   verification dates. New automatic candidates cannot self-approve, and publication fails below the
-  reviewed 17-mapping Peter floor.
+  reviewed 24-mapping Peter floor.
 - **`external-evidence.js`** is the reviewed authoritative-source ledger. It stores only public-safe
   status metadata, source-quality classification, scenario/leading-indicator labels, rationale, and
   compatible reuse groups.
@@ -55,18 +63,19 @@ index.html ──loads──> styles.css + app.js
 
 ## Data-source safety
 
-The source order is:
+Bulk profile retrieval is not a publication dependency: the former nitter/RSS and legacy syndication
+paths are unavailable, and X API quota/auth/plan failures are diagnostic only. The durable chain is:
 
-1. Authenticated X API v2.
-2. Live read-only public RSS profile.
-3. Live legacy syndication, only when its newest item is no more than 30 days old.
-4. A fresh local API/RSS snapshot no older than 36 hours.
+1. Wayback CDX activity-ID discovery, fully paginated across both hosts and handle case variants.
+2. Existing private API-era history and public historical `signals.json` IDs.
+3. X first-party `tweet-result` hydration for public status IDs, paced at least 600 ms.
+4. X oEmbed cross-check of original authorship and Peter's activity relationship.
+5. Manual prediction/status approval with strict concept and facet guards.
 
-Historical matching additionally uses private X API full-archive/topic-query results and previously
-observed public project archives. A fresh source is still mandatory before publication.
-Reviewed evergreen Peter mappings remain active from that private history even when a fresh RSS
-window contains only recent items. `signals.sourceStatus` separates source-fetch degradation from
-evidence age.
+Reviewed evergreen evidence age is separate from the current verification sweep. Every publish
+re-hydrates all selected original statuses and cross-checks their authors; deleted/protected records
+fail closed. `signals.sourceStatus`, `signals.sourceAttempts`, and the UI expose the archive-verified
+chain and any X API diagnostic failure.
 
 Raw activity and credentials stay outside the repository.
 
@@ -90,14 +99,20 @@ npm run verify:author
 npm run verify:ui
 npm run verify:performance
 npm run verify:coverage
+npm run verify:archive
 npm run verify:peter
 npm run verify:external
 ```
 
-`X_SKIP_API=1 node refresh-signals.js` exercises the live public-feed fallback.
-`X_SKIP_LIVE=1 node refresh-signals.js` performs deterministic matching from fresh local caches.
-`X_HISTORY_BACKFILL=1 node refresh-signals.js` exhausts supported full-archive pagination and merges
-public project archives into the private history. It still publishes only at reviewed N/N coverage.
+`npm run refresh:archive` advances a cache-aware 120-status verification batch.
+`X_ARCHIVE_BACKFILL=1 X_ARCHIVE_HYDRATE_LIMIT=400 node refresh-signals.js` imports historical public
+signal versions and advances a larger, numerically stratified batch. `X_ARCHIVE_DISCOVERY_FORCE=1`
+refreshes every Wayback page. `X_SKIP_API=1` proves publication does not depend on authenticated X.
+For reviewed external-source research, `node x-archive.js --account=HANDLE --hydrate=120` uses the
+same private Wayback/first-party/oEmbed chain without adding anything to the public ledger.
+`npm run review:candidates` emits ID-only, strict-guard candidate diagnostics; inspect an individual
+public post with `node review-evidence-candidates.js --show-public=STATUS_ID` before editing an
+approval. Candidate generation never edits either evidence ledger.
 
 ## Deploy
 

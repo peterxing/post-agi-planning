@@ -1,67 +1,141 @@
 {
-  "updated": "2026-07-29T02:14:45.867Z",
-  "note": "Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
-  "source": "public-rss-cache",
+  "updated": "2026-07-29T03:32:48.206Z",
+  "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
+  "source": "archive-verified",
   "sourceStatus": {
-    "mode": "degraded",
-    "primarySource": "x-api",
-    "activeSource": "public-rss-cache",
+    "mode": "archive-verified",
+    "primarySource": "first-party-status",
+    "activeSource": "archive-verified",
     "reason": "credits-depleted",
-    "message": "Authenticated X API credits are depleted; a recent public profile snapshot is supplying freshness.",
+    "message": "Authenticated X API credits are depleted; status IDs are archive-discovered, hydrated through X first-party status JSON, and independently cross-checked through X oEmbed.",
     "actionRequired": "Add X API credits or upgrade the X API plan.",
-    "httpStatus": 402
+    "httpStatus": 402,
+    "discoveryPatterns": 4,
+    "hydratedThisRun": 24,
+    "verificationPaceMs": 600
   },
-  "sourceFetchedAt": "2026-07-28T13:43:43.443Z",
+  "sourceAttempts": [
+    {
+      "source": "bulk-profile-feeds",
+      "status": "disabled-unavailable",
+      "count": 0,
+      "reason": "no-working-bulk-profile-endpoint"
+    },
+    {
+      "source": "x-api",
+      "status": "degraded",
+      "reason": "credits-depleted",
+      "httpStatus": 402,
+      "detail": "The X API account has no remaining request credits.",
+      "count": 0
+    },
+    {
+      "source": "wayback-cdx",
+      "pattern": "twitter.com/peterxing/status*",
+      "status": "cached",
+      "pages": 6,
+      "count": 9497
+    },
+    {
+      "source": "wayback-cdx",
+      "pattern": "twitter.com/PeterXing/status*",
+      "status": "cached",
+      "pages": 6,
+      "count": 9497
+    },
+    {
+      "source": "wayback-cdx",
+      "pattern": "x.com/peterxing/status*",
+      "status": "cached",
+      "pages": 1,
+      "count": 8
+    },
+    {
+      "source": "wayback-cdx",
+      "pattern": "x.com/PeterXing/status*",
+      "status": "cached",
+      "pages": 1,
+      "count": 8
+    },
+    {
+      "source": "tweet-result",
+      "status": "verified",
+      "attempted": 32,
+      "hydrated": 24,
+      "authored": 11,
+      "reposted": 13,
+      "failures": 8,
+      "paceMs": 600
+    },
+    {
+      "source": "x-oembed",
+      "status": "cross-checked",
+      "count": 24
+    }
+  ],
+  "sourceFetchedAt": "2026-07-29T03:32:42.057Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-07-28T10:50:57.000Z",
+  "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
-    "count": 972,
-    "oldestItemAt": "2015-12-27T05:18:46.000Z",
-    "newestItemAt": "2026-07-28T10:50:57.000Z"
+    "count": 2127,
+    "verifiedCount": 1370,
+    "kinds": {
+      "authored": 1279,
+      "quote": 24,
+      "reply": 15,
+      "repost": 809
+    },
+    "oldestItemAt": "2014-12-31T01:51:50.000Z",
+    "newestItemAt": "2026-07-28T10:50:57.000Z",
+    "discoveryIds": 9501
   },
   "coverage": {
     "direct": 103,
     "searches": 0,
     "total": 103,
     "complete": true,
-    "uniquePosts": 46,
-    "peterUniquePosts": 16,
-    "maximumUniqueMatches": 16,
-    "maxReuse": 12,
+    "uniquePosts": 55,
+    "peterUniquePosts": 23,
+    "maximumUniqueMatches": 23,
+    "maxReuse": 10,
     "reuseDistribution": {
-      "1": 29,
+      "1": 38,
       "2": 9,
-      "3": 1,
-      "4": 2,
-      "5": 1,
-      "6": 1,
-      "11": 2,
-      "12": 1
+      "3": 2,
+      "4": 1,
+      "5": 2,
+      "8": 1,
+      "9": 1,
+      "10": 1
     },
-    "stickyPeterFloor": 17,
-    "reuseCeiling": 12,
+    "stickyPeterFloor": 24,
+    "reuseCeiling": 10,
     "byEvidenceOwner": {
-      "external": 86,
-      "peterxing": 17
+      "external": 79,
+      "peterxing": 24
+    },
+    "byPeterAuthorship": {
+      "authored": 10,
+      "reposted": 14
     },
     "bySourceQuality": {
-      "official-research-organization": 4,
-      "original-scenario-author": 34,
-      "official-company": 9,
-      "peterxing-activity": 17,
-      "official-ai-lab": 22,
-      "intergovernmental-organization": 4,
+      "official-research-organization": 3,
+      "original-scenario-author": 33,
+      "official-company": 6,
+      "peterxing-activity": 24,
+      "official-ai-lab": 21,
       "academic-researcher": 4,
       "government": 1,
       "original-researcher": 2,
+      "intergovernmental-organization": 3,
       "academic-research-institution": 2,
       "privacy-research-organization": 2,
       "original-framework-author": 2
     },
     "byEvidenceType": {
-      "leading-indicator": 51,
-      "scenario": 35,
-      "direct": 17
+      "leading-indicator": 58,
+      "direct": 14,
+      "scenario": 31
     }
   },
   "embeds": {
@@ -69,6 +143,7 @@
       "id": "2024923422867030027",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "METR_Evals",
       "displayName": "METR",
@@ -79,7 +154,12 @@
         "account": "METR_Evals",
         "displayName": "METR",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-research-organization"
+        "sourceQuality": "official-research-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -90,7 +170,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 4,
+      "reuseCount": 3,
       "matchedConcepts": [
         "agents",
         "research"
@@ -107,31 +187,37 @@
       "rts": 0
     },
     "2026-1": {
-      "id": "2075251618728292464",
+      "id": "1791502232208466331",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
-      "author": "DKokotajlo",
-      "displayName": "Daniel Kokotajlo",
-      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/1791502232208466331",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
-        "account": "DKokotajlo",
-        "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-29",
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
-      "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
       "evidenceFamily": "ai-rd",
-      "reuseFamily": "ai2040-plan-a",
-      "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
+      "reuseFamily": "ai-safety-compute-pressure",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Original AI 2040 author Eli Lifland directly links scarce safety compute and racing dynamics to pressure to cut safety corners, a specific precursor to AI-R&D compute becoming an internal deployment bottleneck.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 1,
       "matchedConcepts": [
         "research",
         "compute",
@@ -139,13 +225,13 @@
         "ai"
       ],
       "matchedFacets": [
-        "scenario"
+        "leading-indicator"
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "17 May 2024",
       "maps": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
-      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "text": "If Superalignment is struggling for compute now, that does not bode well as racing dynamics intensify closer to AGI and pressure grows to cut corners on safety.",
       "likes": 0,
       "rts": 0
     },
@@ -153,6 +239,7 @@
       "id": "2072545807505527251",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "nvidia",
       "displayName": "NVIDIA",
@@ -163,7 +250,12 @@
         "account": "nvidia",
         "displayName": "NVIDIA",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -196,6 +288,7 @@
       "id": "2072329696667471937",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "davidpattersonx",
       "displayName": "davidpattersonx",
@@ -208,7 +301,13 @@
         "relationship": "reposted",
         "activityId": "2072444295219667011",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -231,13 +330,14 @@
       "date": "01 Jul 2026",
       "maps": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
       "text": "We are halfway through the first year of the singularity. In the second half, we will see the first mass deployments of humanoid robots and autonomous taxis...",
-      "likes": 255,
+      "likes": 254,
       "rts": 22
     },
     "2026-4": {
       "id": "2079658951264920020",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "OpenAI",
       "displayName": "OpenAI",
@@ -248,7 +348,12 @@
         "account": "OpenAI",
         "displayName": "OpenAI",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -279,6 +384,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -289,7 +395,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -300,7 +411,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "research",
         "compute",
@@ -322,6 +433,7 @@
       "id": "2024923422867030027",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "METR_Evals",
       "displayName": "METR",
@@ -332,7 +444,12 @@
         "account": "METR_Evals",
         "displayName": "METR",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-research-organization"
+        "sourceQuality": "official-research-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -343,7 +460,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 4,
+      "reuseCount": 3,
       "matchedConcepts": [
         "agi"
       ],
@@ -359,51 +476,59 @@
       "rts": 0
     },
     "2026-7": {
-      "id": "2072026718467166512",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "neuralink",
-      "displayName": "Neuralink",
-      "url": "https://x.com/neuralink/status/2072026718467166512",
+      "id": "2055417652504567998",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/2055417652504567998",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "neuralink",
-        "displayName": "Neuralink",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "2055417652504567998",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "recent",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "bci-implantable",
-      "reuseFamily": "implantable-bci",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official Neuralink clinical-trial implant evidence is the direct technical precursor for durable implantable neural interfaces.",
-      "sourceQuality": "official-company",
-      "reuseCount": 2,
+      "reuseCount": 1,
       "matchedConcepts": [
-        "coding",
-        "governance",
         "bci"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored link to a Neuralink participant creating art through the implant is a concrete functional BCI leading indicator; it does not establish the separate 3,800-hour BrainGate result or pivotal efficacy.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "30 Jun 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "15 May 2026",
       "maps": "Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first",
-      "text": "For the first time in our clinical trials, we inserted the electrode threads of our implant through the dura and into the cortex while keeping the dura intact.",
-      "likes": 0,
+      "text": "Creating Art With The Mind | Neuralink https://youtu.be/5hYg3rUfLiQ via @neuralink",
+      "likes": 1,
       "rts": 0
     },
     "2026-8": {
       "id": "2064108916611420273",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "SawyerMerritt",
       "displayName": "SawyerMerritt",
@@ -416,7 +541,13 @@
         "relationship": "reposted",
         "activityId": "2064290825849524369",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -442,13 +573,14 @@
       "date": "08 Jun 2026",
       "maps": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
       "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: 150 kW peak compute payload; 120 kW average...",
-      "likes": 14843,
+      "likes": 14811,
       "rts": 1807
     },
     "2027-0": {
       "id": "2069785314663497966",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -459,7 +591,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -488,44 +625,51 @@
       "rts": 0
     },
     "2027-1": {
-      "id": "2024923422867030027",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "METR_Evals",
-      "displayName": "METR",
-      "url": "https://x.com/METR_Evals/status/2024923422867030027",
+      "id": "1316343587039145985",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1316343587039145985",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "METR_Evals",
-        "displayName": "METR",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-research-organization"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1316343587039145985",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "software-automation",
-      "reuseFamily": "agent-task-horizon",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
-      "sourceQuality": "official-research-organization",
-      "reuseCount": 4,
+      "reuseCount": 1,
       "matchedConcepts": [
-        "coding",
-        "production",
-        "ai"
+        "coding"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post explicitly identifies AI code generation as a leading indicator for end-to-end software production; it does not claim the forecast threshold has already been reached.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "20 Feb 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "14 Oct 2020",
       "maps": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
-      "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
+      "text": "From Essays to Coding, This New A.I. Can Write Anything",
       "likes": 0,
       "rts": 0
     },
@@ -533,6 +677,7 @@
       "id": "2024923422867030027",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "METR_Evals",
       "displayName": "METR",
@@ -543,7 +688,12 @@
         "account": "METR_Evals",
         "displayName": "METR",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-research-organization"
+        "sourceQuality": "official-research-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -554,7 +704,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 4,
+      "reuseCount": 3,
       "matchedConcepts": [
         "agents",
         "coding",
@@ -573,52 +723,60 @@
       "rts": 0
     },
     "2027-3": {
-      "id": "2074191887687090571",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "ilo",
-      "displayName": "International Labour Organization",
-      "url": "https://x.com/ilo/status/2074191887687090571",
+      "id": "1321387229969674240",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1321387229969674240",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "ilo",
-        "displayName": "International Labour Organization",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "intergovernmental-organization"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1321387229969674240",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
       "assignmentMode": "unique",
       "evidenceFamily": "labor-automation",
-      "reuseFamily": "ai-labor-measurement",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "The International Labour Organization directly identifies unprecedented AI-driven labor-market restructuring across work.",
-      "sourceQuality": "intergovernmental-organization",
       "reuseCount": 1,
       "matchedConcepts": [
-        "agi",
         "labor",
-        "institutions",
         "ai"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post directly links AI to accelerating human-labor decline, a defensible leading indicator for cross-industry workforce redesign rather than proof of economy-wide disruption.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "06 Jul 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "28 Oct 2020",
       "maps": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
-      "text": "AI and digital technologies are reshaping labour markets at unprecedented speed. ILO and ITU experts will analyze differentiated effects on work.",
-      "likes": 0,
+      "text": "How AI And Covid-19 Have Accelerated The Decline Of Human Labor",
+      "likes": 5,
       "rts": 0
     },
     "2027-4": {
       "id": "2072163884430229756",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "AnthropicAI",
       "displayName": "Anthropic",
@@ -629,7 +787,12 @@
         "account": "AnthropicAI",
         "displayName": "Anthropic",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -661,6 +824,7 @@
       "id": "2069147938098483586",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "nvidia",
       "displayName": "NVIDIA",
@@ -671,7 +835,12 @@
         "account": "nvidia",
         "displayName": "NVIDIA",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -703,6 +872,7 @@
       "id": "1996770000389169205",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "emollick",
       "displayName": "Ethan Mollick",
@@ -713,7 +883,12 @@
         "account": "emollick",
         "displayName": "Ethan Mollick",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-researcher"
+        "sourceQuality": "academic-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -745,6 +920,7 @@
       "id": "2055978848764784662",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "TFTC21",
       "displayName": "TFTC21",
@@ -757,7 +933,13 @@
         "relationship": "reposted",
         "activityId": "2056128041286619259",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -781,13 +963,14 @@
       "date": "17 May 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Ken Griffin went home on a Friday \"fairly depressed\" after watching AI agents at Citadel do work that used to take teams of PhDs in finance months to complet…",
-      "likes": 12388,
+      "likes": 12340,
       "rts": 1788
     },
     "2028-2": {
       "id": "2074157282477154597",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -798,7 +981,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -809,7 +997,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official real-world robot-environment data collection demonstrates profession-specific environment and deployment-data training.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 5,
       "matchedConcepts": [],
       "matchedFacets": [
         "leading-indicator"
@@ -826,6 +1014,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -836,7 +1025,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -847,7 +1041,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "geopolitics",
         "ai"
@@ -867,6 +1061,7 @@
       "id": "2076013785807040529",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "WhiteHouse",
       "displayName": "The White House",
@@ -877,7 +1072,12 @@
         "account": "WhiteHouse",
         "displayName": "The White House",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "government"
+        "sourceQuality": "government",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -908,6 +1108,7 @@
       "id": "2065577387870310736",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "haider1",
       "displayName": "haider1",
@@ -920,7 +1121,13 @@
         "relationship": "reposted",
         "activityId": "2065708929854927156",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -943,13 +1150,14 @@
       "date": "12 Jun 2026",
       "maps": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
       "text": "Anthropic, OpenAI, and Google keep saying they are working toward superintelligence and recursive self-improvement is also within the pipeline...",
-      "likes": 95,
+      "likes": 94,
       "rts": 7
     },
     "2028-6": {
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -960,7 +1168,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -971,7 +1184,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "capability",
         "compute",
@@ -992,6 +1205,7 @@
       "id": "2030217301929132323",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "alexwg",
       "displayName": "Dr. Alex Wissner-Gross",
@@ -1002,7 +1216,12 @@
         "account": "alexwg",
         "displayName": "Dr. Alex Wissner-Gross",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-researcher"
+        "sourceQuality": "original-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1032,6 +1251,7 @@
       "id": "1888954156422992108",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "AnthropicAI",
       "displayName": "Anthropic",
@@ -1042,7 +1262,12 @@
         "account": "AnthropicAI",
         "displayName": "Anthropic",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1074,6 +1299,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -1084,7 +1310,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1095,7 +1326,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "compute",
         "geopolitics"
@@ -1115,6 +1346,7 @@
       "id": "2075260651287805963",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "ChrisGPT",
       "displayName": "ChrisGPT",
@@ -1127,7 +1359,13 @@
         "relationship": "reposted",
         "activityId": "2075377985990045719",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -1151,13 +1389,14 @@
       "date": "09 Jul 2026",
       "maps": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
       "text": "The creators of AI 2027 just dropped AI 2040. Under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&D is slowed and made more...",
-      "likes": 504,
+      "likes": 503,
       "rts": 53
     },
     "2029-3": {
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -1168,7 +1407,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1179,7 +1423,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "compute",
         "governance"
@@ -1199,6 +1443,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -1209,7 +1454,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1220,7 +1470,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "governance",
         "geopolitics",
@@ -1241,6 +1491,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -1251,7 +1502,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1262,7 +1518,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "labor",
         "compute",
@@ -1286,6 +1542,7 @@
       "id": "1996770000389169205",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "emollick",
       "displayName": "Ethan Mollick",
@@ -1296,7 +1553,12 @@
         "account": "emollick",
         "displayName": "Ethan Mollick",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-researcher"
+        "sourceQuality": "academic-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1328,6 +1590,7 @@
       "id": "2064039540256338326",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "deredleritt3r",
       "displayName": "deredleritt3r",
@@ -1340,7 +1603,13 @@
         "relationship": "reposted",
         "activityId": "2064101874845003830",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -1364,35 +1633,41 @@
       "date": "08 Jun 2026",
       "maps": "Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030",
       "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI.",
-      "likes": 245,
+      "likes": 244,
       "rts": 28
     },
     "2030-1": {
-      "id": "2075251618728292464",
+      "id": "2006186170577817612",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
-      "author": "DKokotajlo",
-      "displayName": "Daniel Kokotajlo",
-      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "author": "eli_lifland",
+      "displayName": "Eli Lifland",
+      "url": "https://x.com/eli_lifland/status/2006186170577817612",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
-        "account": "DKokotajlo",
-        "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "account": "eli_lifland",
+        "displayName": "Eli Lifland",
+        "retrievedAt": "2026-07-29",
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
       "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "ai-capability",
-      "reuseFamily": "ai2040-plan-a",
+      "reuseFamily": "ai2040-takeoff-model",
       "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
+      "mappingRationale": "Original AI 2040 author Eli Lifland gives a quantitative median for coding automation and a stated probability of sub-year takeoff, directly grounding this default-branch timing without presenting it as certainty.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 1,
       "matchedConcepts": [
         "agi",
         "coding",
@@ -1404,9 +1679,9 @@
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "31 Dec 2025",
       "maps": "AI 2040 default branch: top-expert or superintelligent AI follows automated coding within roughly one year",
-      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
+      "text": "The AI Futures Model predicts a median of 2030 for full coding automation and about a 25% chance of less than one-year takeoff to superintelligence under Eli…",
       "likes": 0,
       "rts": 0
     },
@@ -1414,6 +1689,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -1424,7 +1700,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1435,7 +1716,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "research",
         "governance"
@@ -1455,6 +1736,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -1465,7 +1747,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1476,7 +1763,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [],
       "matchedFacets": [
         "scenario"
@@ -1490,50 +1777,59 @@
       "rts": 0
     },
     "2030-4": {
-      "id": "2074575357932392761",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "InSilicoMeds",
-      "displayName": "Insilico Medicine",
-      "url": "https://x.com/InSilicoMeds/status/2074575357932392761",
+      "id": "1286413368975228929",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1286413368975228929",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "InSilicoMeds",
-        "displayName": "Insilico Medicine",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1286413368975228929",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
       "assignmentMode": "unique",
       "evidenceFamily": "health-ai",
-      "reuseFamily": "ai-drug-development",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official generative-model drug discovery and clinical-candidate development is the direct precursor to AI-designed drug approvals and cures.",
-      "sourceQuality": "official-company",
       "reuseCount": 1,
       "matchedConcepts": [
-        "governance",
         "ai"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post describes AI generating and accelerating drug candidates, an exact technical leading indicator; it does not imply that a major regulator has approved one.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "07 Jul 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "23 Jul 2020",
       "maps": "The first drugs substantially designed by AI gain major-regulator approval",
-      "text": "Insilico Medicine and Takeda will use advanced generative models from the earliest stages to identify clinically differentiated drug candidates for therapeut…",
-      "likes": 0,
+      "text": "How AI Will Make Drug Discovery Low-Cost, Ultra-Fast, and Personalized",
+      "likes": 5,
       "rts": 0
     },
     "2030-5": {
       "id": "2074157282477154597",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -1544,7 +1840,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1555,7 +1856,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 5,
       "matchedConcepts": [
         "robotics",
         "production",
@@ -1578,6 +1879,7 @@
       "id": "2064039540256338326",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "deredleritt3r",
       "displayName": "deredleritt3r",
@@ -1590,7 +1892,13 @@
         "relationship": "reposted",
         "activityId": "2064101874845003830",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -1614,49 +1922,56 @@
       "date": "08 Jun 2026",
       "maps": "On the unpaused branch, fully automated AI R&D delivers roughly a 10x research speedup",
       "text": "Public statements on timelines to full automation of AI R&D, which could also be viewed as the start of RSI.",
-      "likes": 245,
+      "likes": 244,
       "rts": 28
     },
     "2031-1": {
-      "id": "2074157282477154597",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "GoogleDeepMind",
-      "displayName": "Google DeepMind",
-      "url": "https://x.com/GoogleDeepMind/status/2074157282477154597",
+      "id": "1193440765369708545",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1193440765369708545",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "GoogleDeepMind",
-        "displayName": "Google DeepMind",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1193440765369708545",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "robotics-physical",
-      "reuseFamily": "robotics-real-world-training",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
-      "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 1,
       "matchedConcepts": [
         "labor",
-        "robotics",
-        "economy",
-        "ai"
+        "robotics"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post describes real port automation and worker response, a concrete physical-labor leading indicator rather than evidence that the forecast's quantitative share has been reached.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "06 Jul 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "10 Nov 2019",
       "maps": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
-      "text": "As Apptronik expands its Robot Park facility, real-world data from the Apollo 2 humanoid platform will help train and advance Gemini Robotics.",
+      "text": "As L.A. ports automate, some workers are cheering on the robots",
       "likes": 0,
       "rts": 0
     },
@@ -1664,6 +1979,7 @@
       "id": "2072545807505527251",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "nvidia",
       "displayName": "NVIDIA",
@@ -1674,7 +1990,12 @@
         "account": "nvidia",
         "displayName": "NVIDIA",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1705,42 +2026,48 @@
       "rts": 0
     },
     "2031-3": {
-      "id": "2075252396616474882",
+      "id": "1942634796280086826",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
-      "url": "https://x.com/thlarsen/status/2075252396616474882",
+      "url": "https://x.com/thlarsen/status/1942634796280086826",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
-      "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
       "evidenceFamily": "frontier-governance",
-      "reuseFamily": "ai2040-plan-a",
-      "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
+      "reuseFamily": "frontier-control-cases",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Original AI 2040 lead author Thomas Larsen identifies a concrete human-feedback failure mode, supporting the need for externally reviewed safety cases without claiming such review is already mandatory.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 1,
       "matchedConcepts": [
         "governance"
       ],
       "matchedFacets": [
-        "scenario"
+        "leading-indicator"
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "08 Jul 2025",
       "maps": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
-      "text": "Today we are releasing AI 2040: Plan A, our positive vision for AI. In it, humanity still builds AGI, but in a safe, slow, and transparent way.",
+      "text": "The main sycophancy threat model is that imperfect human raters train AIs to produce outputs that look good rather than actually being good.",
       "likes": 0,
       "rts": 0
     },
@@ -1748,6 +2075,7 @@
       "id": "2079658951264920020",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "OpenAI",
       "displayName": "OpenAI",
@@ -1758,7 +2086,12 @@
         "account": "OpenAI",
         "displayName": "OpenAI",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1789,6 +2122,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -1799,7 +2133,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1810,7 +2149,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "governance"
       ],
@@ -1829,6 +2168,7 @@
       "id": "1888954156422992108",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "AnthropicAI",
       "displayName": "Anthropic",
@@ -1839,7 +2179,12 @@
         "account": "AnthropicAI",
         "displayName": "Anthropic",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1871,6 +2216,7 @@
       "id": "2074157282477154597",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -1881,7 +2227,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1892,7 +2243,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 5,
       "matchedConcepts": [
         "robotics",
         "economy"
@@ -1912,6 +2263,7 @@
       "id": "2078396884088246756",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "IMFNews",
       "displayName": "International Monetary Fund",
@@ -1922,7 +2274,12 @@
         "account": "IMFNews",
         "displayName": "International Monetary Fund",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "intergovernmental-organization"
+        "sourceQuality": "intergovernmental-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1953,6 +2310,7 @@
       "id": "2074157282477154597",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -1963,7 +2321,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -1974,7 +2337,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 5,
       "matchedConcepts": [
         "robotics",
         "production"
@@ -1994,6 +2357,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -2004,7 +2368,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2015,7 +2384,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "robotics",
         "production",
@@ -2037,6 +2406,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -2047,7 +2417,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2058,7 +2433,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "robotics",
         "compute",
@@ -2080,6 +2455,7 @@
       "id": "2074157282477154597",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2090,7 +2466,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2101,7 +2482,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official humanoid deployment and real-world training infrastructure is a concrete leading indicator for physical-task automation.",
       "sourceQuality": "official-ai-lab",
-      "reuseCount": 6,
+      "reuseCount": 5,
       "matchedConcepts": [
         "labor",
         "robotics",
@@ -2123,6 +2504,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -2133,7 +2515,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2144,7 +2531,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "robotics",
         "compute",
@@ -2167,6 +2554,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -2177,7 +2565,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2188,7 +2581,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "distribution",
         "ai"
@@ -2208,6 +2601,7 @@
       "id": "1996770000389169205",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "emollick",
       "displayName": "Ethan Mollick",
@@ -2218,7 +2612,12 @@
         "account": "emollick",
         "displayName": "Ethan Mollick",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-researcher"
+        "sourceQuality": "academic-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2249,6 +2648,7 @@
       "id": "1996989206833303561",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "StanfordHAI",
       "displayName": "Stanford HAI",
@@ -2259,7 +2659,12 @@
         "account": "StanfordHAI",
         "displayName": "Stanford HAI",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-research-institution"
+        "sourceQuality": "academic-research-institution",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2291,6 +2696,7 @@
       "id": "2008283100254494916",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2301,7 +2707,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2330,26 +2741,33 @@
       "rts": 0
     },
     "2033-6": {
-      "id": "2062353245797048792",
-      "kind": "repost",
-      "activityKind": "repost",
+      "id": "1245835121040568331",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
       "evidenceOwner": "peterxing",
-      "author": "MTSlive",
-      "displayName": "MTSlive",
-      "url": "https://x.com/MTSlive/status/2062353245797048792",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1245835121040568331",
       "provenance": {
         "evidenceOwner": "peterxing",
-        "activityKind": "repost",
+        "activityKind": "post",
         "account": "peterxing",
         "displayName": "Peter Xing",
-        "relationship": "reposted",
-        "activityId": "2062529771045884207",
-        "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "relationship": "authored",
+        "activityId": "1245835121040568331",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "recent",
+      "recency": "historical",
       "matchMethod": "reviewed-sticky",
-      "matchBasis": "reviewed-prediction-bound",
+      "matchBasis": "leading-indicator",
       "assignmentMode": "unique",
       "evidenceFamily": "biosecurity",
       "reuseCount": 1,
@@ -2357,22 +2775,23 @@
       "matchedFacets": [
         "reviewed-prediction-bound"
       ],
-      "evidenceType": "direct",
+      "evidenceType": "leading-indicator",
       "sourceQuality": "peterxing-activity",
-      "mappingRationale": "Synthetic-nucleic-acid screening directly supports AI-era biodefense preparedness.",
+      "mappingRationale": "Peter's authored post explicitly covers AI prediction and monitoring of infectious-disease outbreaks, a direct technical leading indicator for continuous pathogen monitoring rather than universal-scale government deployment.",
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-29",
       "lastVerifiedAt": "2026-07-29",
-      "date": "04 Jun 2026",
+      "date": "02 Apr 2020",
       "maps": "Governments fund universal-scale biodefense, rapid vaccines and continuous pathogen monitoring",
-      "text": "Sam Altman, Dario Amodei, and Demis Hassabis have signed a joint open letter calling on Congress to mandate screening of synthetic nucleic acids...",
-      "likes": 3341,
-      "rts": 205
+      "text": "How AI Is Predicting And Tracking Infectious Disease Outbreaks",
+      "likes": 2,
+      "rts": 0
     },
     "2034-0": {
       "id": "2081728070978019775",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "Synopsys",
       "displayName": "Synopsys",
@@ -2383,7 +2802,12 @@
         "account": "Synopsys",
         "displayName": "Synopsys",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2416,6 +2840,7 @@
       "id": "2069096592729047485",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "Dr_Singularity",
       "displayName": "Dr_Singularity",
@@ -2428,7 +2853,13 @@
         "relationship": "reposted",
         "activityId": "2069105568066003163",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -2453,13 +2884,14 @@
       "date": "22 Jun 2026",
       "maps": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
       "text": "A huge AI workforce is coming; we can say it is basically already here. We just need to scale it. We will start with billions...",
-      "likes": 191,
+      "likes": 190,
       "rts": 29
     },
     "2034-2": {
       "id": "2069480608749817922",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "nvidia",
       "displayName": "NVIDIA",
@@ -2470,7 +2902,12 @@
         "account": "nvidia",
         "displayName": "NVIDIA",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2503,6 +2940,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -2513,7 +2951,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2524,7 +2967,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "compute"
       ],
@@ -2540,42 +2983,48 @@
       "rts": 0
     },
     "2034-4": {
-      "id": "2075254901903646814",
+      "id": "2001118106941640887",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
-      "author": "eli_lifland",
-      "displayName": "Eli Lifland",
-      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "author": "DKokotajlo",
+      "displayName": "Daniel Kokotajlo",
+      "url": "https://x.com/DKokotajlo/status/2001118106941640887",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
-        "account": "eli_lifland",
-        "displayName": "Eli Lifland",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "account": "DKokotajlo",
+        "displayName": "Daniel Kokotajlo",
+        "retrievedAt": "2026-07-29",
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
-      "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
       "evidenceFamily": "compute-infrastructure",
-      "reuseFamily": "ai2040-plan-a",
-      "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
+      "reuseFamily": "datacenter-regulatory-migration",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "Original AI 2040 author Daniel Kokotajlo directly notes that local datacenter restrictions push companies to build elsewhere, a precise precursor to jurisdictional migration rather than evidence of neutral-site deployment.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 1,
       "matchedConcepts": [
         "geopolitics"
       ],
       "matchedFacets": [
-        "scenario"
+        "leading-indicator"
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "17 Dec 2025",
       "maps": "Large datacenters expand into neutral jurisdictions, international waters or other auditable locations",
-      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
+      "text": "We need actual AI regulation, not NIMBYism about datacenters. The companies will just build them elsewhere.",
       "likes": 0,
       "rts": 0
     },
@@ -2583,6 +3032,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -2593,7 +3043,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2604,7 +3059,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "agents",
         "research",
@@ -2626,6 +3081,7 @@
       "id": "2078562951762681866",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "haider1",
       "displayName": "haider1",
@@ -2638,7 +3094,13 @@
         "relationship": "reposted",
         "activityId": "2078780034903572538",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -2661,35 +3123,41 @@
       "date": "18 Jul 2026",
       "maps": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
       "text": "Ray Kurzweil says: \"AGI means a computer can be equivalent to a person who really knows a subject, for every subject.\"",
-      "likes": 353,
+      "likes": 366,
       "rts": 53
     },
     "2035-1": {
-      "id": "2075252396616474882",
+      "id": "1935764615469875419",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
-      "url": "https://x.com/thlarsen/status/2075252396616474882",
+      "url": "https://x.com/thlarsen/status/1935764615469875419",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
       "matchBasis": "scenario",
       "assignmentMode": "external-reuse",
       "evidenceFamily": "frontier-governance",
-      "reuseFamily": "ai2040-plan-a",
+      "reuseFamily": "managed-alignment-pause",
       "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
+      "mappingRationale": "Original AI 2040 lead author Thomas Larsen publicly frames superintelligence alignment failure as potentially existential, grounding the managed pause branch while not proving where the safe capability boundary lies.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agi",
         "governance"
@@ -2699,9 +3167,9 @@
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "19 Jun 2025",
       "maps": "Managed branch: frontier capabilities pause near top-expert level because control no longer scales safely",
-      "text": "Today we are releasing AI 2040: Plan A, our positive vision for AI. In it, humanity still builds AGI, but in a safe, slow, and transparent way.",
+      "text": "Many people in AI and AI policy think aligning superintelligence is the most important issue of our time and failure could lead to extinction.",
       "likes": 0,
       "rts": 0
     },
@@ -2709,6 +3177,7 @@
       "id": "2008283100254494916",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2719,7 +3188,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2749,26 +3223,33 @@
       "rts": 0
     },
     "2035-3": {
-      "id": "2072700088481182100",
-      "kind": "repost",
-      "activityKind": "repost",
+      "id": "1704678918337540135",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
       "evidenceOwner": "peterxing",
-      "author": "elonmusk",
-      "displayName": "elonmusk",
-      "url": "https://x.com/elonmusk/status/2072700088481182100",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1704678918337540135",
       "provenance": {
         "evidenceOwner": "peterxing",
-        "activityKind": "repost",
+        "activityKind": "post",
         "account": "peterxing",
         "displayName": "Peter Xing",
-        "relationship": "reposted",
-        "activityId": "2072785088308564324",
-        "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "relationship": "authored",
+        "activityId": "1704678918337540135",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "recent",
+      "recency": "historical",
       "matchMethod": "reviewed-sticky",
-      "matchBasis": "reviewed-prediction-bound",
+      "matchBasis": "leading-indicator",
       "assignmentMode": "unique",
       "evidenceFamily": "distribution",
       "reuseCount": 1,
@@ -2780,22 +3261,23 @@
       "matchedFacets": [
         "reviewed-prediction-bound"
       ],
-      "evidenceType": "direct",
+      "evidenceType": "leading-indicator",
       "sourceQuality": "peterxing-activity",
-      "mappingRationale": "Universal high income is the direct phenomenon in the permanent-distribution milestone.",
+      "mappingRationale": "Peter's authored post explicitly connects AI abundance to universal high income, a precise scenario leading indicator rather than evidence that a permanent institution already exists.",
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-29",
       "lastVerifiedAt": "2026-07-29",
-      "date": "02 Jul 2026",
+      "date": "21 Sep 2023",
       "maps": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
-      "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17316,
-      "rts": 2026
+      "text": "Glad to hear @elonmusk opening up on the choice for healthspan extension thanks to @gdb's prompt in the era of abundance from AI, coining a \"universal high i…",
+      "likes": 21,
+      "rts": 0
     },
     "2035-4": {
       "id": "1996770000389169205",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "emollick",
       "displayName": "Ethan Mollick",
@@ -2806,7 +3288,12 @@
         "account": "emollick",
         "displayName": "Ethan Mollick",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-researcher"
+        "sourceQuality": "academic-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2838,6 +3325,7 @@
       "id": "1956441209964310583",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "AnthropicAI",
       "displayName": "Anthropic",
@@ -2848,7 +3336,12 @@
         "account": "AnthropicAI",
         "displayName": "Anthropic",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2880,6 +3373,7 @@
       "id": "2075620281515929716",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2890,7 +3384,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2922,6 +3421,7 @@
       "id": "2008283100254494916",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2932,7 +3432,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -2966,6 +3471,7 @@
       "id": "2008283100254494916",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -2976,7 +3482,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3004,52 +3515,59 @@
       "rts": 0
     },
     "2036-2": {
-      "id": "2075747220385632312",
-      "kind": "repost",
-      "activityKind": "repost",
+      "id": "857721406485692416",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
       "evidenceOwner": "peterxing",
-      "author": "scaling01",
-      "displayName": "scaling01",
-      "url": "https://x.com/scaling01/status/2075747220385632312",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/857721406485692416",
       "provenance": {
         "evidenceOwner": "peterxing",
-        "activityKind": "repost",
+        "activityKind": "post",
         "account": "peterxing",
         "displayName": "Peter Xing",
-        "relationship": "reposted",
-        "activityId": "2075881068096610322",
-        "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "relationship": "authored",
+        "activityId": "857721406485692416",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "recent",
+      "recency": "historical",
       "matchMethod": "reviewed-sticky",
-      "matchBasis": "reviewed-prediction-bound",
+      "matchBasis": "leading-indicator",
       "assignmentMode": "unique",
       "evidenceFamily": "labor-automation",
       "reuseCount": 1,
       "matchedConcepts": [
-        "labor",
-        "economy"
+        "labor"
       ],
       "matchedFacets": [
         "reviewed-prediction-bound"
       ],
-      "evidenceType": "direct",
+      "evidenceType": "leading-indicator",
       "sourceQuality": "peterxing-activity",
-      "mappingRationale": "The post directly addresses AI, robot workforces and mass unemployment.",
+      "mappingRationale": "Peter's authored post directly cites a half-of-jobs robot-replacement scenario, a tightly related labor-displacement leading indicator; it does not equate jobs with the working-age employment ratio.",
       "reviewed": true,
-      "reviewedAt": "2026-07-20",
+      "reviewedAt": "2026-07-29",
       "lastVerifiedAt": "2026-07-29",
-      "date": "11 Jul 2026",
+      "date": "27 Apr 2017",
       "maps": "Human employment falls below half of working-age adults in at least one leading economy",
-      "text": "\"Why AI won't cause mass unemployment\" continues to only talk about four billion robots equivalent to four billion humans, while a robot workforce...",
-      "likes": 204,
-      "rts": 9
+      "text": "Kai-Fu Lee: Robots will replace half of all jobs",
+      "likes": 19,
+      "rts": 0
     },
     "2036-3": {
       "id": "2078396884088246756",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "IMFNews",
       "displayName": "International Monetary Fund",
@@ -3060,7 +3578,12 @@
         "account": "IMFNews",
         "displayName": "International Monetary Fund",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "intergovernmental-organization"
+        "sourceQuality": "intergovernmental-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3092,6 +3615,7 @@
       "id": "2075611004508029149",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "nvidia",
       "displayName": "NVIDIA",
@@ -3102,7 +3626,12 @@
         "account": "nvidia",
         "displayName": "NVIDIA",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "sourceQuality": "official-company",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3135,6 +3664,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -3145,7 +3675,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3156,7 +3691,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "labor",
         "economy"
@@ -3176,6 +3711,7 @@
       "id": "2073164886427992130",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "UNESCO",
       "displayName": "UNESCO",
@@ -3186,7 +3722,12 @@
         "account": "UNESCO",
         "displayName": "UNESCO",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "intergovernmental-organization"
+        "sourceQuality": "intergovernmental-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3216,6 +3757,7 @@
       "id": "2072004836674167294",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "OpenAI",
       "displayName": "OpenAI",
@@ -3226,7 +3768,12 @@
         "account": "OpenAI",
         "displayName": "OpenAI",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3254,54 +3801,60 @@
       "rts": 0
     },
     "2037-1": {
-      "id": "2075251618728292464",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "DKokotajlo",
-      "displayName": "Daniel Kokotajlo",
-      "url": "https://x.com/DKokotajlo/status/2075251618728292464",
+      "id": "1880368581227295010",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1880368581227295010",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "DKokotajlo",
-        "displayName": "Daniel Kokotajlo",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1880368581227295010",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
-      "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
       "evidenceFamily": "health-ai",
-      "reuseFamily": "ai2040-plan-a",
-      "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
-      "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 1,
       "matchedConcepts": [
-        "research",
-        "energy",
         "health",
-        "economy",
-        "infrastructure",
         "ai"
       ],
       "matchedFacets": [
-        "scenario"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post covers an OpenAI model developed for longevity biology, a concrete AI-driven research leading indicator for the health half of this milestone; it does not establish a major cure or clean-energy abundance.",
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "17 Jan 2025",
       "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
-      "text": "In AI 2027, we predicted that AI would take over the world or irreversibly concentrate power. In AI 2040: Plan A, we have laid out our positive vision for wh…",
-      "likes": 0,
+      "text": "OpenAI is trying to extend human life, with help from a longevity startup",
+      "likes": 259,
       "rts": 0
     },
     "2037-2": {
       "id": "1573519112348770304",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "openminedorg",
       "displayName": "OpenMined",
@@ -3312,7 +3865,12 @@
         "account": "openminedorg",
         "displayName": "OpenMined",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "privacy-research-organization"
+        "sourceQuality": "privacy-research-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3344,6 +3902,7 @@
       "id": "1996989206833303561",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "StanfordHAI",
       "displayName": "Stanford HAI",
@@ -3354,7 +3913,12 @@
         "account": "StanfordHAI",
         "displayName": "Stanford HAI",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "academic-research-institution"
+        "sourceQuality": "academic-research-institution",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3384,6 +3948,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -3394,7 +3959,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3405,7 +3975,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [],
       "matchedFacets": [
         "scenario"
@@ -3422,6 +3992,7 @@
       "id": "1573519112348770304",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "openminedorg",
       "displayName": "OpenMined",
@@ -3432,7 +4003,12 @@
         "account": "openminedorg",
         "displayName": "OpenMined",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "privacy-research-organization"
+        "sourceQuality": "privacy-research-organization",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3463,6 +4039,7 @@
       "id": "2075620281515929716",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -3473,7 +4050,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3505,6 +4087,7 @@
       "id": "2074185348142280912",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "AnthropicAI",
       "displayName": "AnthropicAI",
@@ -3517,7 +4100,13 @@
         "relationship": "reposted",
         "activityId": "2074237732302565783",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -3541,13 +4130,14 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28604,
+      "likes": 28648,
       "rts": 3981
     },
     "2038-2": {
       "id": "2075620281515929716",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -3558,7 +4148,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3588,6 +4183,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -3598,7 +4194,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3609,7 +4210,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "institutions",
         "ai"
@@ -3629,6 +4230,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -3639,7 +4241,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3650,7 +4257,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "research",
         "governance",
@@ -3668,31 +4275,37 @@
       "rts": 0
     },
     "2038-5": {
-      "id": "2075252396616474882",
+      "id": "1935764615469875419",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
-      "url": "https://x.com/thlarsen/status/2075252396616474882",
+      "url": "https://x.com/thlarsen/status/1935764615469875419",
       "provenance": {
         "evidenceOwner": "external",
         "activityKind": "external",
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
       "matchBasis": "scenario",
       "assignmentMode": "external-reuse",
       "evidenceFamily": "frontier-governance",
-      "reuseFamily": "ai2040-plan-a",
+      "reuseFamily": "managed-alignment-pause",
       "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
+      "mappingRationale": "Original AI 2040 lead author Thomas Larsen publicly frames superintelligence alignment failure as potentially existential, grounding the managed pause branch while not proving where the safe capability boundary lies.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agi",
         "governance"
@@ -3702,9 +4315,9 @@
       ],
       "reviewed": true,
       "reviewedAt": "2026-07-29",
-      "date": "09 Jul 2026",
+      "date": "19 Jun 2025",
       "maps": "Managed branch: the top-expert capability pause continues because evidence is insufficient for irreversible handoff",
-      "text": "Today we are releasing AI 2040: Plan A, our positive vision for AI. In it, humanity still builds AGI, but in a safe, slow, and transparent way.",
+      "text": "Many people in AI and AI policy think aligning superintelligence is the most important issue of our time and failure could lead to extinction.",
       "likes": 0,
       "rts": 0
     },
@@ -3712,6 +4325,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -3722,7 +4336,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3733,7 +4352,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "agents",
         "institutions",
@@ -3754,6 +4373,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -3764,7 +4384,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3775,7 +4400,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "governance"
       ],
@@ -3794,6 +4419,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -3804,7 +4430,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3815,7 +4446,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [],
       "matchedFacets": [
         "scenario"
@@ -3832,6 +4463,7 @@
       "id": "2075251618728292464",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "DKokotajlo",
       "displayName": "Daniel Kokotajlo",
@@ -3842,7 +4474,12 @@
         "account": "DKokotajlo",
         "displayName": "Daniel Kokotajlo",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3853,7 +4490,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 8,
       "matchedConcepts": [
         "economy",
         "distribution",
@@ -3874,6 +4511,7 @@
       "id": "2077626509615829213",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "elonmusk",
       "displayName": "elonmusk",
@@ -3886,7 +4524,13 @@
         "relationship": "reposted",
         "activityId": "2077635106156785951",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -3911,13 +4555,14 @@
       "date": "16 Jul 2026",
       "maps": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
       "text": "GPU average power consumption if it is doing inference over 24 hours is about two thirds of peak power, even if very efficient. SpaceX AI Sat V1...",
-      "likes": 4961,
+      "likes": 4954,
       "rts": 376
     },
     "2039-5": {
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -3928,7 +4573,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -3939,7 +4589,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "robotics",
         "compute",
@@ -3961,6 +4611,7 @@
       "id": "2008283100254494916",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "GoogleDeepMind",
       "displayName": "Google DeepMind",
@@ -3971,7 +4622,12 @@
         "account": "GoogleDeepMind",
         "displayName": "Google DeepMind",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-ai-lab"
+        "sourceQuality": "official-ai-lab",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4004,6 +4660,7 @@
       "id": "2075252396616474882",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "thlarsen",
       "displayName": "Thomas Larsen",
@@ -4014,7 +4671,12 @@
         "account": "thlarsen",
         "displayName": "Thomas Larsen",
         "retrievedAt": "2026-07-29",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4025,7 +4687,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Thomas Larsen frames Plan A as a safe, slow and transparent AGI path; these are scenario milestones within that managed-control branch, not observed outcomes.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 12,
+      "reuseCount": 9,
       "matchedConcepts": [
         "agi",
         "governance",
@@ -4047,6 +4709,7 @@
       "id": "2075254901903646814",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "eli_lifland",
       "displayName": "Eli Lifland",
@@ -4057,7 +4720,12 @@
         "account": "eli_lifland",
         "displayName": "Eli Lifland",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author"
+        "sourceQuality": "original-scenario-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4068,7 +4736,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 11,
+      "reuseCount": 10,
       "matchedConcepts": [
         "infrastructure",
         "ai"
@@ -4085,51 +4753,59 @@
       "rts": 0
     },
     "horizon-implantable-neural-symbiosis": {
-      "id": "2072026718467166512",
-      "kind": "external",
-      "activityKind": "external",
-      "evidenceOwner": "external",
-      "author": "neuralink",
-      "displayName": "Neuralink",
-      "url": "https://x.com/neuralink/status/2072026718467166512",
+      "id": "1481151444149751808",
+      "kind": "post",
+      "activityKind": "post",
+      "authorship": "authored",
+      "evidenceOwner": "peterxing",
+      "author": "peterxing",
+      "displayName": "Peter Xing",
+      "url": "https://x.com/peterxing/status/1481151444149751808",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "neuralink",
-        "displayName": "Neuralink",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-company"
+        "evidenceOwner": "peterxing",
+        "activityKind": "post",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "authored",
+        "activityId": "1481151444149751808",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "historical",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "bci-implantable",
-      "reuseFamily": "implantable-bci",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official Neuralink clinical-trial implant evidence is the direct technical precursor for durable implantable neural interfaces.",
-      "sourceQuality": "official-company",
-      "reuseCount": 2,
+      "reuseCount": 1,
       "matchedConcepts": [
-        "bci",
-        "augmentation",
-        "ai"
+        "bci"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter's authored post explicitly connects an implanted Neuralink interface to disability support and robot control, a functional implantable-BCI leading indicator; it does not demonstrate bidirectional sensory restoration or neural symbiosis.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "30 Jun 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "12 Jan 2022",
       "maps": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
-      "text": "For the first time in our clinical trials, we inserted the electrode threads of our implant through the dura and into the cortex while keeping the dura intact.",
-      "likes": 0,
+      "text": "Master plan for @neuralink and @Tesla - @elonmusk will empower people with disabilities to control #teslabot using #neuralink and achieve \"fleet-based\" learn…",
+      "likes": 32,
       "rts": 0
     },
     "horizon-non-invasive-neural-symbiosis": {
       "id": "2078891199067529508",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "EHuanglu",
       "displayName": "EHuanglu",
@@ -4142,7 +4818,13 @@
         "relationship": "reposted",
         "activityId": "2078954038679531557",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -4165,13 +4847,14 @@
       "date": "19 Jul 2026",
       "maps": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
       "text": "You can now control computers with your thoughts. Someone at WAIC 2026 is playing Black Myth: Wukong using only a brain-computer interface...",
-      "likes": 337,
+      "likes": 2089,
       "rts": 57
     },
     "horizon-whole-brain-emulation-and-uploading": {
       "id": "2030217301929132323",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "alexwg",
       "displayName": "Dr. Alex Wissner-Gross",
@@ -4182,7 +4865,12 @@
         "account": "alexwg",
         "displayName": "Dr. Alex Wissner-Gross",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-researcher"
+        "sourceQuality": "original-researcher",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4212,6 +4900,7 @@
       "id": "2069570317798785480",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "SawyerMerritt",
       "displayName": "SawyerMerritt",
@@ -4224,7 +4913,13 @@
         "relationship": "reposted",
         "activityId": "2069608492848284027",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -4248,13 +4943,14 @@
       "date": "23 Jun 2026",
       "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
       "text": "Elon confirms \"Starmind\" will be the official name of SpaceX's AI satellite constellation. SpaceX filed a request with the FCC to launch...",
-      "likes": 7408,
+      "likes": 7384,
       "rts": 1268
     },
     "horizon-kardashev-energy-scaling": {
       "id": "2068821432843554930",
       "kind": "repost",
       "activityKind": "repost",
+      "authorship": "reposted",
       "evidenceOwner": "peterxing",
       "author": "beffjezos",
       "displayName": "beffjezos",
@@ -4267,7 +4963,13 @@
         "relationship": "reposted",
         "activityId": "2068882651256328656",
         "observedIn": "x-api-user-timeline",
-        "lastVerifiedAt": "2026-07-29"
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
+        "sourceChain": [
+          "wayback-cdx",
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
@@ -4291,13 +4993,14 @@
       "date": "21 Jun 2026",
       "maps": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
       "text": "Civilization is the ultimate compound intelligence we currently have. It is made of humans, memes, technology, and capital. Thinking about climbing the Karda…",
-      "likes": 222,
+      "likes": 220,
       "rts": 21
     },
     "horizon-transcension-hypothesis": {
       "id": "1447559183323340800",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "johnmsmart",
       "displayName": "John Smart",
@@ -4308,7 +5011,12 @@
         "account": "johnmsmart",
         "displayName": "John Smart",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-framework-author"
+        "sourceQuality": "original-framework-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4339,6 +5047,7 @@
       "id": "1250063808309198849",
       "kind": "external",
       "activityKind": "external",
+      "authorship": "external",
       "evidenceOwner": "external",
       "author": "stephen_wolfram",
       "displayName": "Stephen Wolfram",
@@ -4349,7 +5058,12 @@
         "account": "stephen_wolfram",
         "displayName": "Stephen Wolfram",
         "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-framework-author"
+        "sourceQuality": "original-framework-author",
+        "verifiedThrough": "first-party-status+oembed",
+        "sourceChain": [
+          "tweet-result",
+          "x-oembed"
+        ]
       },
       "recency": "external",
       "matchMethod": "reviewed-external",
@@ -4380,69 +5094,69 @@
   "search": {},
   "reality": [
     {
-      "tag": "CODE",
-      "t": "BOOM! OPEN SOURCE MRI! You can now 3D-print the core of an MRI scanner. A machine that hospitals pay $1.1 million to $3.4 million for has been brok…",
-      "id": "2080827612298183043",
-      "kind": "repost",
-      "author": "BrianRoemmele",
-      "recency": "week",
-      "date": "25 Jul 2026",
-      "likes": 0,
-      "rts": 0
-    },
-    {
-      "tag": "ROBOTS",
-      "t": "If you look at the current lead times for ~$5bn per year of cutting edge GPUs you can probably figure out the time plus one training run to IlyAGI …",
-      "id": "2081792283679023351",
-      "kind": "repost",
-      "author": "EMostaque",
-      "recency": "week",
-      "date": "27 Jul 2026",
-      "likes": 0,
-      "rts": 0
-    },
-    {
       "tag": "CAPABILITY",
-      "t": "Weighing the evidence I've seen, I don't believe ARC-AGI-3 was directly targeted by Opus 5 eg synthetic RL envs or anything like that. Instead what…",
-      "id": "2081792754309587333",
+      "t": "Qwen3.8 is launching and going open-weight soon!🌐 With a massive 2.4T parameters, this model is continuously evolving. We believe it’s one of the …",
+      "id": "2078759124914098291",
       "kind": "repost",
-      "author": "mikeknoop",
-      "recency": "week",
-      "date": "27 Jul 2026",
-      "likes": 0,
+      "author": "Alibaba_Qwen",
+      "recency": "recent",
+      "date": "19 Jul 2026",
+      "likes": 24463,
       "rts": 0
     },
     {
       "tag": "MARKETS",
-      "t": "Nvidia is reportedly in talks to provide a roughly $250 billion backstop for OpenAI as part of a massive data center project - WSJ The guarantees f…",
-      "id": "2081522101433897210",
+      "t": "Friedberg: New study shows enzyme reverses skin age from 70+ years to 31 Chamath: That’s a $2T market. Did Scientists Just Discover How to Reverse …",
+      "id": "2078334237481046412",
       "kind": "repost",
-      "author": "SawyerMerritt",
-      "recency": "week",
-      "date": "26 Jul 2026",
-      "likes": 0,
+      "author": "theallinpod",
+      "recency": "recent",
+      "date": "18 Jul 2026",
+      "likes": 6815,
       "rts": 0
     },
     {
       "tag": "ABUNDANCE",
-      "t": "Releasing the model weights and technical report of Kimi K3. Kimi K3 is our most capable model: a 2.8T MoE model with native visual understanding a…",
-      "id": "2081760186235289764",
+      "t": "BREAKING: SpaceX, $SPCX, is in talks to provide compute power to the US Pentagon, per WSJ. The two sides are reportedly discussing an agreement whi…",
+      "id": "2078194907664073036",
       "kind": "repost",
-      "author": "Kimi_Moonshot",
-      "recency": "week",
-      "date": "27 Jul 2026",
-      "likes": 0,
+      "author": "KobeissiLetter",
+      "recency": "recent",
+      "date": "17 Jul 2026",
+      "likes": 6380,
+      "rts": 0
+    },
+    {
+      "tag": "LABOUR",
+      "t": "Two questions: 1. Why is Tesla hiring a Space Radiation Engineer? 2. Did you say... TPUs?",
+      "id": "2078145439644430843",
+      "kind": "repost",
+      "author": "teslayoda",
+      "recency": "recent",
+      "date": "17 Jul 2026",
+      "likes": 427,
+      "rts": 0
+    },
+    {
+      "tag": "ROBOTS",
+      "t": "China's XPeng is preparing to enter mass production of humanoid robots. The EV maker plans to produce over 1,000 Iron humanoid robots per month by …",
+      "id": "2078408955974541404",
+      "kind": "repost",
+      "author": "Eng_china5",
+      "recency": "recent",
+      "date": "18 Jul 2026",
+      "likes": 137,
       "rts": 0
     },
     {
       "tag": "GOVERNANCE",
-      "t": "i think we finally have enough clues to reverse-engineer ilya sutskever’s secret SSI research. my highest-probability guess: SSI has found a brain-…",
-      "id": "2081749227730809127",
+      "t": "Open weights models are inherently accelerationist because the entire Anthropic plan was to get as far ahead as possible and use the extra time for…",
+      "id": "2078728195680108792",
       "kind": "repost",
-      "author": "imjustnewatai",
-      "recency": "week",
-      "date": "27 Jul 2026",
-      "likes": 0,
+      "author": "8teAPi",
+      "recency": "recent",
+      "date": "19 Jul 2026",
+      "likes": 137,
       "rts": 0
     }
   ]

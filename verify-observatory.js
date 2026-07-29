@@ -17,6 +17,7 @@ const expectedChanged = predictions.years.reduce(
   0
 );
 const expectedOwners = signals.coverage.byEvidenceOwner;
+const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, reposted:0 };
 const expectedPeterStatuses = new Set(
   Object.values(signals.embeds).filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)
 ).size;
@@ -134,15 +135,19 @@ function requestStatus(pathname) {
             || !/^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
             || url.searchParams.get('f') !== 'live';
         }).length,
-        peterEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter Xing|@peterxing/.test(summary.textContent)).length,
+        peterEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
+        peterAuthoredEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter wrote this/.test(summary.textContent)).length,
+        peterRepostedEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter reposted this/.test(summary.textContent)).length,
         externalEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
         scenarioEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
         leadingEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
         evidenceDashboard:{
           direct:document.getElementById('evidenceDirectStat')?.textContent.trim(),
-          peter:document.getElementById('evidencePeterStat')?.textContent.trim(),
+          authored:document.getElementById('evidenceAuthoredStat')?.textContent.trim(),
+          reposted:document.getElementById('evidenceRepostedStat')?.textContent.trim(),
           external:document.getElementById('evidenceExternalStat')?.textContent.trim(),
           unique:document.getElementById('evidenceReuseStat')?.textContent.trim(),
+          maxReuse:document.getElementById('evidenceMaxReuseStat')?.textContent.trim(),
           typeMix:document.getElementById('evidenceTypeMix')?.textContent.replace(/\s+/g, ' ').trim(),
           source:document.getElementById('evidenceSourceHealth')?.textContent.replace(/\s+/g, ' ').trim(),
         },
@@ -217,10 +222,14 @@ function requestStatus(pathname) {
     if (state.evidenceCards > 0) {
       check(results, 'mixed provenance labels are explicit',
         state.peterEvidence + state.externalEvidence === state.evidenceCards
+        && state.peterAuthoredEvidence === expectedAuthorship.authored
+        && state.peterRepostedEvidence === expectedAuthorship.reposted
         && state.scenarioEvidence > 0
         && state.leadingEvidence > 0,
         JSON.stringify({
           peter:state.peterEvidence,
+          authored:state.peterAuthoredEvidence,
+          reposted:state.peterRepostedEvidence,
           external:state.externalEvidence,
           scenario:state.scenarioEvidence,
           leading:state.leadingEvidence,
@@ -228,14 +237,19 @@ function requestStatus(pathname) {
     }
     check(results, 'evidence dashboard exposes composition, reuse and degraded source',
       state.evidenceDashboard.direct === `${expectedEvents + expectedHorizon}/${expectedEvents + expectedHorizon}`
-      && state.evidenceDashboard.peter === String(expectedOwners.peterxing)
+      && state.evidenceDashboard.authored === String(expectedAuthorship.authored)
+      && state.evidenceDashboard.reposted === String(expectedAuthorship.reposted)
       && state.evidenceDashboard.external === String(expectedOwners.external)
       && state.evidenceDashboard.unique === String(signals.coverage.uniquePosts)
+      && state.evidenceDashboard.maxReuse === `${signals.coverage.maxReuse}×`
+      && state.evidenceDashboard.typeMix.includes(`Peter wrote · ${expectedAuthorship.authored}`)
+      && state.evidenceDashboard.typeMix.includes(`Peter reposted · ${expectedAuthorship.reposted}`)
       && state.evidenceDashboard.typeMix.includes(`Peter unique statuses · ${expectedPeterStatuses}`)
       && state.evidenceDashboard.typeMix.includes(`External unique statuses · ${expectedExternalStatuses}`)
       && state.evidenceDashboard.typeMix.includes(`Maximum reviewed reuse · ${signals.coverage.maxReuse} of ${signals.coverage.reuseCeiling}`)
-      && /credits are depleted/i.test(state.evidenceDashboard.source)
-      && /Add X API credits/i.test(state.evidenceDashboard.source),
+      && /Archive-verified source chain/i.test(state.evidenceDashboard.source)
+      && /first-party status JSON/i.test(state.evidenceDashboard.source)
+      && /Wayback|archive-discovered/i.test(state.evidenceDashboard.source),
       JSON.stringify(state.evidenceDashboard));
     check(results, 'forecast finder exposes counts, deep links and latest revisions',
       state.finder.changed === expectedChanged

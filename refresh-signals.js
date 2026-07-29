@@ -1,20 +1,18 @@
 // refresh-signals.js — match @peterxing's newest relevant X activity to every REHOBOAM prediction,
 // and write signals.json (loaded by index.html at runtime).
 //
-// HARVEST (X API v2 primary, live public RSS secondary)
-//   PRIMARY: the authenticated X API v2 (x-client.js → harvestActivity()). Using @peterxing's app
-//   credentials (pap-secrets/.env), it pulls his realtime timeline — POSTS + REPOSTS always, plus his
-//   LIKES + BOOKMARKS when a user-context token is configured (see X-API-SETUP.md).
-//   SECONDARY: a fresh read-only RSS snapshot of his public profile. Fresh API/RSS reads always run
-//   before caches; caches older than SOURCE_CACHE_MAX_HOURS are rejected rather than called "latest".
-//   The legacy X syndication feed is last-resort only because it can lag the real profile by months.
+// RETRIEVAL (bulk timeline independent)
+//   DISCOVERY: Wayback CDX status URLs for twitter.com/x.com and peterxing/PeterXing, fully paginated
+//   and merged with private API-era history plus public signals.json history.
+//   VERIFICATION: every activity is hydrated through X's first-party tweet-result endpoint at >=600 ms
+//   spacing, then independently cross-checked through X oEmbed. The persistent corpus-of-record stays
+//   under pap-secrets and is never served, deployed or committed.
+//   OPTIONAL DIAGNOSTIC: the authenticated X API is probed when configured, but quota/auth/plan/network
+//   failures do not block archive discovery or direct-status verification.
 //
-// SOURCES & ACCESS
-//   posts     : original @peterxing tweets + quote-tweets.
-//   reposts   : tweets @peterxing retweeted (native retweets — returned by the API; the syndication
-//               fallback only sees them if a foreign-author entry appears, or via optional reposts.json).
-//   likes     : tweets @peterxing liked — requires an OAuth1/OAuth2 user-context token (X-API-SETUP.md).
-//   bookmarks : tweets @peterxing bookmarked — requires an OAuth2 user-context token (bookmark.read).
+// CORPUS KINDS: authored, quote, reply and repost. Evidence priority is Peter-authored/quoted/replied,
+// then Peter-reposted, then reviewed authoritative external evidence. Automatic candidates never
+// self-approve; prediction/status pairs remain explicit in evidence-approvals.json.
 //
 // MATCHING (newest valid signal first)
 //   The prediction set is loaded from predictions.json (revised DAILY from the latest news + his posts —
@@ -25,11 +23,9 @@
 //   Predictions with no reviewed direct mapping fail publication; search fallbacks are never emitted.
 //
 //   node refresh-signals.js                 # harvest + match + write signals.json (+ optional reposts.json)
-//   MAX_AGE_DAYS=5000 SOURCE_CACHE_MAX_HOURS=36 X_HISTORY_BACKFILL=1 node refresh-signals.js
+//   X_ARCHIVE_BACKFILL=1 X_ARCHIVE_HYDRATE_LIMIT=400 node refresh-signals.js
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
-const childProcess = require('child_process');
 const {
   FAMILY_DEFINITIONS,
   familyForPrediction,
@@ -39,65 +35,39 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
+const {
+  corpusToMatcherItems,
+  hydrateActivity,
+  loadCorpus,
+  refreshArchiveCorpus,
+} = require('./x-archive');
 
 const DIR = __dirname;
-const RAW = path.join(DIR, 'timeline-raw.json');
 const OUT = path.join(DIR, 'signals.json');
 const DBG = path.join(DIR, 'signals-debug.json');
 const PRED = path.join(DIR, 'predictions.json'); // daily-revised prediction set (source of truth)
 const APPROVALS = path.join(DIR, 'evidence-approvals.json'); // reviewed prediction/post pairs
-const RECENT_DAYS = Number(process.env.RECENT_DAYS || 7); // kept for back-compat (unused directly)
 // MIN_SCORE and the facet guards gate weak/spurious matches before recency is considered.
 const PAST_WEEK_DAYS = Number(process.env.PAST_WEEK_DAYS || 7);
 const MAX_AGE_DAYS   = Number(process.env.MAX_AGE_DAYS || 5000);
 const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
-const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
-const MIN_STICKY_PETER_MAPPINGS = Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 17;
-const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || 12;
+const MIN_STICKY_PETER_MAPPINGS = Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 24;
+const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || 10;
 const PETER_VERIFICATION_MAX_AGE_DAYS = Number(process.env.PETER_VERIFICATION_MAX_AGE_DAYS) || 30;
-const SKIP_LIVE = process.env.X_SKIP_LIVE === '1';
 const SKIP_API = process.env.X_SKIP_API === '1';
-const SYND_URL = 'https://syndication.twitter.com/srv/timeline-profile/screen-name/peterxing?showReplies=false&lang=en&dnt=true';
-const RSS_URL = 'https://nitter.net/peterxing/rss';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
 const SECRET_DIR = 'C:\\Users\\peterxing\\pap-secrets';
 const ACT = path.join(SECRET_DIR, 'x-activity.json'); // non-served raw activity dump
 const HISTORY = path.join(SECRET_DIR, 'x-activity-history.json'); // private deduplicated posts/reposts
-const RSS_CACHE = path.join(SECRET_DIR, 'x-public-rss-cache.json'); // non-served parsed public RSS cache
-const HISTORY_BACKFILL = process.env.X_HISTORY_BACKFILL === '1';
 const API_RECENT_POSTS = Math.max(100, Number(process.env.X_RECENT_POSTS) || 300);
-const API_HISTORY_POSTS = Math.min(3200, Math.max(API_RECENT_POSTS, Number(process.env.X_HISTORY_POSTS) || 3200));
-const API_FULL_ARCHIVE_POSTS = Math.max(API_HISTORY_POSTS, Number(process.env.X_FULL_ARCHIVE_POSTS) || 50000);
-const PUBLIC_GIT_ARCHIVE = process.env.PAP_GITHUB_ARCHIVE || 'C:\\Users\\peterxing\\pap-github';
-const HISTORICAL_SEARCH_QUERIES = [
-  { name: 'agi', query: 'AGI OR ASI OR superintelligence OR "human level AI"' },
-  { name: 'agents-coding', query: 'agent OR agents OR agentic OR coding OR software OR codex' },
-  { name: 'research-science', query: 'research OR science OR theorem OR discovery OR physics' },
-  { name: 'labor-automation', query: 'jobs OR workforce OR labor OR labour OR automation OR "future of work"' },
-  { name: 'robotics-production', query: 'robot OR robots OR robotics OR humanoid OR factory OR manufacturing' },
-  { name: 'compute-infrastructure', query: 'compute OR GPU OR chip OR semiconductor OR datacenter OR "data center"' },
-  { name: 'energy', query: 'energy OR grid OR solar OR nuclear OR fusion OR battery' },
-  { name: 'governance-safety', query: 'governance OR regulation OR policy OR treaty OR safety OR verification OR audit' },
-  { name: 'geopolitics', query: 'China OR Chinese OR US OR international OR geopolitical' },
-  { name: 'economy-distribution', query: 'economy OR GDP OR valuation OR revenue OR UBI OR dividend OR income' },
-  { name: 'alignment-interpretability', query: 'alignment OR interpretability OR deception OR honesty OR "control problem"' },
-  { name: 'persuasion-truth', query: 'persuasion OR manipulation OR deepfake OR "truth seeking"' },
-  { name: 'rights-consciousness', query: 'rights OR consciousness OR sentience OR welfare OR "legal status"' },
-  { name: 'bci-augmentation', query: 'BCI OR Neuralink OR "brain computer" OR "neural implant" OR augmentation' },
-  { name: 'connectomics-uploading', query: 'connectome OR connectomics OR "mind uploading" OR "whole brain emulation" OR "digital immortality"' },
-  { name: 'orbital-compute', query: '"orbital compute" OR "space data center" OR "space data centre" OR Starcloud' },
-  { name: 'kardashev-dyson', query: 'Kardashev OR "Dyson swarm" OR "Type I civilization" OR "Type II civilization"' },
-  { name: 'transcension', query: 'Transcension OR "inner space" OR "computational densification"' },
-  { name: 'ruliad', query: 'ruliad OR "Wolfram Physics" OR "Wolfram physics project"' },
-  { name: 'education-institutions', query: 'education OR university OR school OR courts OR corporations OR institutions' },
-  { name: 'space', query: 'space OR orbital OR moon OR lunar OR Mars OR Starship' },
-  { name: 'privacy', query: 'privacy OR confidential OR "zero knowledge" OR "privacy preserving"' },
-  { name: 'biosecurity-health', query: 'biosecurity OR pathogen OR pandemic OR vaccine OR health OR medical OR drug OR longevity' },
-  { name: 'ai-2040', query: '"AI 2040" OR "AI 2027" OR "Plan A"' },
-  { name: 'open-models', query: '"open source" OR "open weights" OR "local model"' },
-];
+const ARCHIVE_BACKFILL = process.env.X_ARCHIVE_BACKFILL === '1';
+const ARCHIVE_FORCE_DISCOVERY = process.env.X_ARCHIVE_DISCOVERY_FORCE === '1';
+const ARCHIVE_HYDRATE_LIMIT = Math.max(
+  MIN_STICKY_PETER_MAPPINGS,
+  Number(process.env.X_ARCHIVE_HYDRATE_LIMIT) || (ARCHIVE_BACKFILL ? 400 : 32)
+);
 
 // Prediction table fallback. The LIVE matching set is loaded from predictions.json (revised daily);
 // this inline copy is only used if that sidecar is missing/unparsable. Each post is scored against
@@ -393,29 +363,6 @@ function buildPredictions(){
 }
 
 
-function token(id){
-  try { return ((Number(id) / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, ''); }
-  catch(e){ return String(Math.floor(Number(id) / 1e15) * Math.PI); }
-}
-function get(url, redirects = 0){
-  return new Promise((res, rej) => {
-    const req = https.get(url, { headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
-      'Accept': 'application/rss+xml,application/xml,text/xml,text/html,application/xhtml+xml,application/json',
-      'Accept-Language': 'en-US,en;q=0.9'
-    } }, r => {
-      if (r.statusCode >= 300 && r.statusCode < 400 && r.headers.location && redirects < 3) {
-        const next = new URL(r.headers.location, url).toString();
-        r.resume();
-        res(get(next, redirects + 1));
-        return;
-      }
-      let d = ''; r.on('data', c => d += c); r.on('end', () => res({ status: r.statusCode, body: d }));
-    });
-    req.on('error', rej);
-    req.setTimeout(20000, () => req.destroy(new Error('timeout')));
-  });
-}
 function cleanText(s){
   return String(s || '')
     .replace(/https?:\/\/t\.co\/\w+/g, ' ')
@@ -425,76 +372,6 @@ function cleanText(s){
 }
 function fmtDate(d){
   return d.toLocaleDateString('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' });
-}
-async function hydrate(id){
-  try {
-    const r = await get(`https://cdn.syndication.twimg.com/tweet-result?id=${id}&lang=en&token=${token(id)}`);
-    if (r.status !== 200) return null;
-    const j = JSON.parse(r.body);
-    if (!j || !j.created_at) return null;
-    return { id: String(id), created: new Date(j.created_at), text: j.text || j.full_text || '', likes: j.favorite_count || 0, rts: 0, author: (j.user && j.user.screen_name) || '' };
-  } catch(e){ return null; }
-}
-
-// Live harvest: fetch the syndication profile timeline directly. Returns the raw HTML body only if it
-// actually contains tweet entries (the showReplies=false variant does; =true returns an empty shell).
-async function harvestLive(){
-  try {
-    const r = await get(SYND_URL);
-    if (!r || r.status !== 200 || !r.body || r.body.length < 5000) return null;
-    const m = r.body.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-    if (!m) return null;
-    const j = JSON.parse(m[1]);
-    const entries = (((j.props || {}).pageProps || {}).timeline || {}).entries || [];
-    return entries.length ? r.body : null;
-  } catch(e){ return null; }
-}
-
-function xmlText(s){
-  return String(s || '')
-    .replace(/^<!\[CDATA\[|\]\]>$/g, '')
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<\/p>|<\/div>|<\/blockquote>|<\/li>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)))
-    .replace(/&quot;/gi, '"').replace(/&apos;/gi, "'")
-    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-function rssField(block, tag){
-  const m = block.match(new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-  return m ? xmlText(m[1]) : '';
-}
-function parseRss(raw){
-  const blocks = String(raw || '').match(/<item(?:\s[^>]*)?>[\s\S]*?<\/item>/gi) || [];
-  const items = [];
-  for (const block of blocks) {
-    const rawTitle = rssField(block, 'title');
-    const creator = rssField(block, 'dc:creator').replace(/^@/, '') || 'peterxing';
-    const link = rssField(block, 'link');
-    const guid = rssField(block, 'guid');
-    const idMatch = `${guid} ${link}`.match(/\b(\d{15,})\b/);
-    const created = new Date(rssField(block, 'pubDate'));
-    if (!idMatch || isNaN(created.getTime()) || !rawTitle) continue;
-    const isRepost = /^RT by @peterxing:\s*/i.test(rawTitle) || creator.toLowerCase() !== 'peterxing';
-    const title = rawTitle.replace(/^RT by @peterxing:\s*/i, '').trim();
-    const description = rssField(block, 'description');
-    const text = (description && !description.startsWith(title) ? `${title} ${description}` : (description || title)).slice(0, 8000);
-    items.push({ id: idMatch[1], created, text, likes: 0, rts: 0, author: creator, kind: isRepost ? 'repost' : 'post' });
-  }
-  const byId = new Map();
-  for (const item of items) if (!byId.has(item.id)) byId.set(item.id, item);
-  return [...byId.values()].sort((a, b) => b.created - a.created);
-}
-async function harvestRss(){
-  try {
-    const r = await get(RSS_URL);
-    if (!r || r.status !== 200 || !r.body || r.body.length < 500) return null;
-    const items = parseRss(r.body);
-    return items.length ? items : null;
-  } catch(e){ return null; }
 }
 function mapCachedItems(items){
   return (Array.isArray(items) ? items : [])
@@ -506,6 +383,9 @@ function mapCachedItems(items){
     .filter(it => /^\d{15,}$/.test(it.id) && !isNaN(it.created.getTime()));
 }
 function readPrivateHistory(){
+  const corpus = loadCorpus();
+  const verified = corpusToMatcherItems(corpus.items);
+  if (verified.length) return verified;
   try {
     const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
     return mapCachedItems(cached && cached.items)
@@ -515,6 +395,21 @@ function readPrivateHistory(){
   }
 }
 function readPrivateHistoryMetadata(){
+  const corpus = loadCorpus();
+  if (corpus.items.length) {
+    const verified = corpus.items.filter(item => item.verifiedAt);
+    const created = corpus.items.map(item => item.createdAt).filter(Boolean).sort();
+    return {
+      updated: corpus.metadata.updated || null,
+      source: 'archive-verified',
+      count: corpus.items.length,
+      verifiedCount: verified.length,
+      newestItemAt: created.at(-1) || null,
+      oldestItemAt: created[0] || null,
+      discovery: corpus.metadata.discovery || null,
+      verification: corpus.metadata.verification || null,
+    };
+  }
   try {
     const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
     return {
@@ -531,51 +426,6 @@ function readPrivateHistoryMetadata(){
     return null;
   }
 }
-function mergeActivityHistory(...lists){
-  const byId = new Map();
-  for (const item of lists.flat()) {
-    if (!item || !/^\d{15,}$/.test(String(item.id || ''))) continue;
-    if (item.kind !== 'post' && item.kind !== 'repost') continue;
-    const created = item.created instanceof Date ? item.created : new Date(item.created);
-    if (isNaN(created.getTime())) continue;
-    const normalized = { ...item, id: String(item.id), created };
-    const prior = byId.get(normalized.id);
-    if (!prior || KIND_RANK[normalized.kind] < KIND_RANK[prior.kind]
-        || cleanText(normalized.text).length > cleanText(prior.text).length) {
-      byId.set(normalized.id, normalized);
-    }
-  }
-  return [...byId.values()].sort((a, b) => b.created - a.created);
-}
-function writePrivateHistory(items, apiCaps){
-  if (!items.length) return;
-  const payload = {
-    updated: new Date().toISOString(),
-    source: 'x-api-user-timeline',
-    count: items.length,
-    newestItemAt: items[0].created.toISOString(),
-    oldestItemAt: items[items.length - 1].created.toISOString(),
-    timelinePages: apiCaps && apiCaps.timelinePages || null,
-    timelineComplete: apiCaps && apiCaps.timelineComplete === true,
-    backfill: apiCaps ? {
-      fullArchive: apiCaps.fullArchive || null,
-      targetedArchive: apiCaps.targetedArchive || null,
-    } : null,
-    items: items.map(item => ({
-      id: item.id,
-      activityId: item.activityId || item.id,
-      activitySource: item.activitySource || 'x-api-user-timeline',
-      archiveQueries: Array.isArray(item.archiveQueries) ? item.archiveQueries : [],
-      created: item.created.toISOString(),
-      text: cleanText(item.text),
-      author: item.author || 'peterxing',
-      likes: item.likes || 0,
-      rts: item.rts || 0,
-      kind: item.kind,
-    })),
-  };
-  fs.writeFileSync(HISTORY, JSON.stringify(payload, null, 2) + '\n');
-}
 function ageHours(when){
   const d = new Date(when);
   return isNaN(d.getTime()) ? Infinity : Math.max(0, (Date.now() - d.getTime()) / 36e5);
@@ -589,8 +439,10 @@ function loadEvidenceApprovals(){
   }
 }
 function sourceStatusFor(source, attempts){
-  const primary = attempts.find(attempt => attempt.source === 'x-api') || null;
-  const reason = source === 'x-api' ? null : primary?.reason || 'primary-source-unavailable';
+  const api = attempts.find(attempt => attempt.source === 'x-api') || null;
+  const discovery = attempts.filter(attempt => attempt.source === 'wayback-cdx');
+  const hydration = attempts.find(attempt => attempt.source === 'tweet-result') || null;
+  const reason = api?.reason || 'bulk-timeline-unavailable';
   const reasons = {
     'authentication-expired': 'Authenticated X API access needs reauthorization',
     'credits-depleted': 'Authenticated X API credits are depleted',
@@ -599,12 +451,7 @@ function sourceStatusFor(source, attempts){
     'service-error': 'The authenticated X API returned a service error',
     'network-error': 'The authenticated X API could not be reached',
     'primary-source-unavailable': 'The authenticated X API is unavailable',
-  };
-  const activeDescriptions = {
-    'public-rss': 'the live public profile feed',
-    'public-rss-cache': 'a recent public profile snapshot',
-    'x-api-cache': 'a recent authenticated API snapshot',
-    syndication: 'the live public syndication feed',
+    'bulk-timeline-unavailable': 'Bulk profile timelines are unavailable',
   };
   const actions = {
     'authentication-expired': 'Reauthorize the X API credentials.',
@@ -614,18 +461,20 @@ function sourceStatusFor(source, attempts){
     'service-error': 'Retry after the X API service recovers.',
     'network-error': 'Restore outbound access to api.twitter.com and retry.',
     'primary-source-unavailable': 'Check X API credentials, plan access, and network connectivity.',
+    'bulk-timeline-unavailable': 'No action is required for verification; restore X API credits only for real-time discovery.',
   };
   return {
-    mode: source === 'x-api' ? 'primary' : 'degraded',
-    primarySource: 'x-api',
+    mode: source === 'archive-verified' ? 'archive-verified' : 'unavailable',
+    primarySource: 'first-party-status',
     activeSource: source,
     reason,
-    message: source === 'x-api'
-      ? 'Authenticated X API activity is the current freshness source.'
-      : `${reasons[reason] || reasons['primary-source-unavailable']}; `
-        + `${activeDescriptions[source] || 'a verified fallback'} is supplying freshness.`,
-    actionRequired: source === 'x-api' ? null : actions[reason] || actions['primary-source-unavailable'],
-    httpStatus: primary?.httpStatus || null,
+    message: `${reasons[reason] || reasons['primary-source-unavailable']}; `
+      + 'status IDs are archive-discovered, hydrated through X first-party status JSON, and independently cross-checked through X oEmbed.',
+    actionRequired: actions[reason] || actions['primary-source-unavailable'],
+    httpStatus: api?.httpStatus || null,
+    discoveryPatterns: discovery.length,
+    hydratedThisRun: hydration?.hydrated || 0,
+    verificationPaceMs: hydration?.paceMs || null,
   };
 }
 function recencyRank(created, now){
@@ -1646,110 +1495,7 @@ function qualifyFamilyPost(text, p){
   };
 }
 
-// ---- 1. Parse the harvested timeline into posts + reposts -------------------------------------
-function parseTimeline(raw){
-  let data = null;
-  const m = raw.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-  if (m) { try { data = JSON.parse(m[1]); } catch(e){} }
-  if (!data) { try { data = JSON.parse(raw); } catch(e){} }
-  if (!data) return null;
-
-  let entries = null;
-  try { entries = data.props.pageProps.timeline.entries; } catch(e){}
-  const items = [];
-
-  if (Array.isArray(entries)) {
-    for (const en of entries) {
-      const t = en && en.content && en.content.tweet;
-      if (!t || !t.id_str || !(t.full_text || t.text) || !t.created_at) continue;
-      const author = (t.user && (t.user.screen_name || t.user.screenName)) || '';
-      const kind = author.toLowerCase() === 'peterxing' ? 'post' : 'repost';
-      items.push({
-        id: t.id_str, created: new Date(t.created_at), text: t.full_text || t.text,
-        likes: t.favorite_count || 0, rts: t.retweet_count || 0, author: author || 'peterxing', kind,
-      });
-    }
-  }
-
-  // Fallback: if the structured path found nothing, recurse for any tweet-like node (treat by author).
-  if (!items.length) {
-    const acc = []; (function walk(n, d){
-      if (!n || typeof n !== 'object' || d > 40) return;
-      if (Array.isArray(n)) { for (const x of n) walk(x, d + 1); return; }
-      const id = n.id_str || n.tweet_id || (typeof n.id === 'string' && /^\d{15,}$/.test(n.id) ? n.id : null);
-      const txt = n.full_text || n.text; const dt = n.created_at;
-      if (id && /^\d{15,}$/.test(String(id)) && txt && dt) {
-        const author = (n.user && n.user.screen_name) || n.screen_name || '';
-        if (author) acc.push({ id: String(id), created: new Date(dt), text: txt, likes: n.favorite_count || 0, rts: n.retweet_count || 0, author, kind: author.toLowerCase() === 'peterxing' ? 'post' : 'repost' });
-      }
-      for (const k in n) if (n[k] && typeof n[k] === 'object') walk(n[k], d + 1);
-    })(data, 0);
-    items.push(...acc);
-  }
-  return items;
-}
-
-function readPublicArchiveHistory(){
-  const archived = [];
-  try {
-    if (fs.existsSync(RAW)) {
-      const parsed = parseTimeline(fs.readFileSync(RAW, 'utf8')) || [];
-      for (const item of parsed) {
-        if (item.kind !== 'post' && item.kind !== 'repost') continue;
-        archived.push({
-          ...item,
-          activityId: item.id,
-          activitySource: 'local-public-timeline-archive',
-        });
-      }
-    }
-  } catch (e) {
-    console.error('[refresh] Local public timeline archive could not be read: ' + e.message);
-  }
-  try {
-    if (fs.existsSync(path.join(PUBLIC_GIT_ARCHIVE, '.git'))) {
-      const commits = childProcess.execFileSync(
-        'git',
-        ['rev-list', '--all', '--', 'signals.json'],
-        { cwd: PUBLIC_GIT_ARCHIVE, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }
-      ).trim().split(/\s+/).filter(Boolean);
-      for (const commit of commits) {
-        let signals;
-        try {
-          signals = JSON.parse(childProcess.execFileSync(
-            'git',
-            ['show', `${commit}:signals.json`],
-            { cwd: PUBLIC_GIT_ARCHIVE, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }
-          ));
-        } catch {
-          continue;
-        }
-        for (const entry of Object.values(signals.embeds || {})) {
-          if (!entry || !/^\d{15,}$/.test(String(entry.id || ''))) continue;
-          if (entry.kind !== 'post' && entry.kind !== 'repost') continue;
-          const created = new Date(`${entry.date || ''} UTC`);
-          if (isNaN(created.getTime())) continue;
-          archived.push({
-            id: String(entry.id),
-            activityId: String(entry.activityId || entry.id),
-            activitySource: 'public-signals-git-archive',
-            created,
-            text: cleanText(entry.text),
-            likes: entry.likes || 0,
-            rts: entry.rts || 0,
-            author: entry.author || 'peterxing',
-            kind: entry.kind,
-          });
-        }
-      }
-    }
-  } catch (e) {
-    console.error('[refresh] Public Git signal archive could not be read: ' + e.message);
-  }
-  return mergeActivityHistory(archived);
-}
-
-// ---- 2. Ingest optional reposts.json / likes.json / bookmarks.json (IDs / URLs) ---------------
+// ---- 1. Ingest optional reviewed activity IDs through the same first-party verification path ----
 async function ingestList(file, kind){
   const p = path.join(DIR, file);
   if (!fs.existsSync(p)) return [];
@@ -1762,8 +1508,10 @@ async function ingestList(file, kind){
     if (typeof it === 'string' || typeof it === 'number') { const mm = String(it).match(/(\d{15,})/); id = mm ? mm[1] : null; }
     else if (it && typeof it === 'object') { id = it.id_str || it.tweet_id || it.id || (it.url && (String(it.url).match(/(\d{15,})/) || [])[1]); }
     if (!id) continue;
-    const h = await hydrate(String(id));
-    if (h) { h.kind = kind; out.push(h); }
+    const verified = await hydrateActivity(String(id));
+    if (!verified.ok) continue;
+    const h = corpusToMatcherItems([verified.item])[0];
+    if (h && (kind !== 'repost' || h.kind === 'repost')) out.push(h);
   }
   console.error(`[refresh] ${file}: hydrated ${out.length} ${kind}(s).`);
   return out;
@@ -1774,14 +1522,7 @@ async function main(){
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
   const prevEmbeds = (prev && prev.embeds) || {};
   const prevSearches = (prev && prev.search) || {};
-  let historicalTimeline = readPrivateHistory();
-  const historyCountBefore = historicalTimeline.length;
-  let publicArchiveCount = 0;
-  if (HISTORY_BACKFILL) {
-    const publicArchive = readPublicArchiveHistory();
-    publicArchiveCount = publicArchive.length;
-    historicalTimeline = mergeActivityHistory(historicalTimeline, publicArchive);
-  }
+  let historicalTimeline = [];
 
   // Load the live (daily-revised) prediction set, expanded to ONE matcher per event.
   const PREDICTIONS = buildPredictions();
@@ -1806,6 +1547,8 @@ async function main(){
       && typeof approval.publicText === 'string' && approval.publicText.trim()
       && typeof approval.reviewedAt === 'string' && !isNaN(Date.parse(approval.reviewedAt))
       && typeof approval.lastVerifiedAt === 'string' && !isNaN(Date.parse(approval.lastVerifiedAt))
+      && (approval.evidenceType == null
+        || ['direct', 'scenario', 'leading-indicator'].includes(approval.evidenceType))
       && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 <= PETER_VERIFICATION_MAX_AGE_DAYS
       && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 >= -1
       && approval.predictionText === prediction?.maps
@@ -1840,92 +1583,39 @@ async function main(){
   const predYears = new Set(PREDICTIONS.filter(p => p.scope !== 'horizon').map(p => p.year)).size;
   console.error(`[refresh] Matching against ${datedPredictionCount} dated predictions across ${predYears} years plus ${horizonPredictionCount} horizon items.`);
 
-  // Source order: authenticated X API -> live public RSS -> live legacy syndication / fresh caches.
-  // A cache beyond SOURCE_CACHE_MAX_HOURS is never accepted as "latest".
-  let timeline = null; let apiCaps = null; let source = 'unavailable'; let sourceWhen = null;
+  // Archive verification is the durable source. The X API is a non-blocking diagnostic/seed only;
+  // dead bulk RSS/syndication endpoints are deliberately not called.
+  let timeline = []; let apiCaps = null; let source = 'unavailable'; let sourceWhen = null;
   const sourceAttempts = [];
   const staleSourcesRejected = [];
-  if (HISTORY_BACKFILL) {
-    sourceAttempts.push({
-      source: 'public-project-archives',
-      status: 'historical-backfill',
-      count: publicArchiveCount,
-    });
-  }
-  if (SKIP_LIVE || SKIP_API) {
-    sourceAttempts.push({ source: SKIP_LIVE ? 'live-sources' : 'x-api', status: 'skipped-by-env', count: 0 });
+  sourceAttempts.push({
+    source: 'bulk-profile-feeds',
+    status: 'disabled-unavailable',
+    count: 0,
+    reason: 'no-working-bulk-profile-endpoint',
+  });
+  if (SKIP_API) {
+    sourceAttempts.push({ source: 'x-api', status: 'skipped-by-env', count: 0 });
   } else {
     try {
       const xc = require('./x-client.js');
-      const requestedPosts = HISTORY_BACKFILL ? API_HISTORY_POSTS : API_RECENT_POSTS;
-      const act = await xc.harvestActivity({ maxPosts: requestedPosts, maxLikes: 0, maxBookmarks: 0 });
+      const act = await xc.harvestActivity({ maxPosts: API_RECENT_POSTS, maxLikes: 0, maxBookmarks: 0 });
       if (act && act.items && act.items.length) {
-        timeline = mapCachedItems(act.items);
         apiCaps = act.caps;
-        source = 'x-api';
-        sourceWhen = new Date();
-        // Non-served current snapshot and durable historical corpus remain under pap-secrets.
-        try {
-          let fullArchive = null;
-          if (HISTORY_BACKFILL && typeof xc.harvestFullArchive === 'function') {
-            fullArchive = await xc.harvestFullArchive({ maxPosts: API_FULL_ARCHIVE_POSTS });
-            if (fullArchive.items && fullArchive.items.length) {
-              historicalTimeline = mergeActivityHistory(historicalTimeline, mapCachedItems(fullArchive.items));
-            }
-            sourceAttempts.push({
-              source: 'x-api-full-archive',
-              status: fullArchive.caps && fullArchive.caps.timelineComplete ? 'complete' : 'partial',
-              count: fullArchive.items ? fullArchive.items.length : 0,
-              timelinePages: fullArchive.caps && fullArchive.caps.timelinePages || 0,
-              httpStatus: fullArchive.status || null,
-              remaining: fullArchive.remaining == null ? null : Number(fullArchive.remaining),
-              resetAt: fullArchive.reset ? new Date(Number(fullArchive.reset) * 1000).toISOString() : null,
-            });
-            apiCaps.fullArchive = fullArchive.caps;
-          }
-          if (HISTORY_BACKFILL && typeof xc.harvestSearchQueries === 'function') {
-            const targetedArchive = await xc.harvestSearchQueries(HISTORICAL_SEARCH_QUERIES);
-            if (targetedArchive.items && targetedArchive.items.length) {
-              historicalTimeline = mergeActivityHistory(historicalTimeline, mapCachedItems(targetedArchive.items));
-            }
-            sourceAttempts.push({
-              source: 'x-api-targeted-full-archive',
-              status: targetedArchive.stats.some(stat => stat.status === 429) ? 'rate-limited-partial' : 'complete',
-              count: targetedArchive.items ? targetedArchive.items.length : 0,
-              queries: targetedArchive.stats,
-            });
-            apiCaps.targetedArchive = {
-              queriesAttempted: targetedArchive.stats.length,
-              items: targetedArchive.items ? targetedArchive.items.length : 0,
-              rateLimited: targetedArchive.stats.some(stat => stat.status === 429),
-              queries: targetedArchive.stats.map(stat => ({
-                name: stat.name,
-                count: stat.count,
-                status: stat.status,
-                complete: stat.complete,
-              })),
-            };
-          }
-          fs.writeFileSync(ACT, JSON.stringify({
-            id: act.id,
-            caps: act.caps,
-            when: sourceWhen.toISOString(),
-            items: act.items,
-          }, null, 2));
-          historicalTimeline = mergeActivityHistory(timeline, historicalTimeline);
-          writePrivateHistory(historicalTimeline, act.caps);
-        } catch (e) {
-          throw new Error('private activity history could not be updated: ' + e.message);
-        }
+        const apiWhen = new Date();
+        fs.writeFileSync(ACT, JSON.stringify({
+          id: act.id,
+          caps: act.caps,
+          when: apiWhen.toISOString(),
+          items: act.items,
+        }, null, 2));
         sourceAttempts.push({
           source: 'x-api',
-          status: 'live',
-          count: timeline.length,
-          requestedPosts,
+          status: 'available-seed',
+          count: act.items.length,
           timelinePages: act.caps.timelinePages,
           timelineComplete: act.caps.timelineComplete,
         });
-        console.error(`[refresh] X API harvest: ${timeline.length} recent posts/reposts across ${act.caps.timelinePages} page(s); private history ${historyCountBefore} -> ${historicalTimeline.length}.`);
       } else {
         const diagnostic = act?.diagnostic || {
           reason: 'primary-source-unavailable',
@@ -1940,10 +1630,8 @@ async function main(){
           detail: diagnostic.summary,
           count: 0,
         });
-        console.error('[refresh] X API harvest returned nothing — trying the live public RSS profile.');
       }
     } catch(e){
-      if (source === 'x-api' && timeline) throw e;
       sourceAttempts.push({
         source: 'x-api',
         status: 'degraded',
@@ -1952,113 +1640,45 @@ async function main(){
         detail: 'The authenticated X API request failed before activity could be read.',
         count: 0,
       });
-      console.error('[refresh] X API harvest error — trying the live public RSS profile.');
     }
   }
 
-  if (!timeline && !SKIP_LIVE) {
-    const rss = await harvestRss();
-    if (rss && rss.length) {
-      timeline = rss;
-      source = 'public-rss';
-      sourceWhen = new Date();
-      sourceAttempts.push({ source: 'public-rss', status: 'live', count: rss.length });
-      try {
-        fs.writeFileSync(RSS_CACHE, JSON.stringify({
-          when: sourceWhen.toISOString(),
-          items: rss.map(it => ({ ...it, created: it.created.toISOString() })),
-        }, null, 2));
-      } catch(e){}
-      console.error(`[refresh] Live public RSS harvest: ${rss.length} items; newest ${fmtDate(rss[0].created)}.`);
-    } else {
-      sourceAttempts.push({ source: 'public-rss', status: 'unavailable', count: 0 });
-      console.error('[refresh] Live public RSS unavailable — checking other live/fresh sources.');
-    }
-  }
-
-  // The legacy syndication endpoint is fetched before caches, but accepted only when it contains a
-  // genuinely recent item; it is known to return a months-old profile slice even on a successful fetch.
-  let syndicationCandidate = null;
-  if (!timeline && !SKIP_LIVE) {
-    let raw = await harvestLive();
-    if (raw) {
-      const parsed = parseTimeline(raw) || [];
-      if (parsed.length) {
-        parsed.sort((a, b) => b.created - a.created);
-        const newestAgeDays = Math.max(0, (Date.now() - parsed[0].created.getTime()) / 864e5);
-        if (newestAgeDays <= SYNDICATION_MAX_ITEM_AGE_DAYS) {
-          syndicationCandidate = { source: 'syndication', when: new Date(), newest: parsed[0].created, items: parsed };
-          sourceAttempts.push({ source: 'syndication', status: 'live', count: parsed.length, newestAgeDays: Number(newestAgeDays.toFixed(1)) });
-        } else {
-          staleSourcesRejected.push({ source: 'syndication', reason: 'newest-item-too-old', newestAgeDays: Number(newestAgeDays.toFixed(1)) });
-          sourceAttempts.push({ source: 'syndication', status: 'stale-feed', count: parsed.length, newestAgeDays: Number(newestAgeDays.toFixed(1)) });
-        }
-        try { fs.writeFileSync(RAW, raw); } catch(e){}
-      }
-    } else {
-      sourceAttempts.push({ source: 'syndication', status: 'unavailable', count: 0 });
-    }
-  }
-
-  // Fresh caches are eligible only inside the explicit age window. Choose the freshest accepted cache;
-  // a stale cache is diagnostic evidence, not a source for public "latest" cards.
-  if (!timeline) {
-    const cacheCandidates = [];
-    try {
-      const cached = JSON.parse(fs.readFileSync(ACT, 'utf8').replace(/^\uFEFF/, ''));
-      const mapped = mapCachedItems(cached && cached.items);
-      const hours = ageHours(cached && cached.when);
-      if (mapped.length) {
-        if (hours <= SOURCE_CACHE_MAX_HOURS) {
-          cacheCandidates.push({ source: 'x-api-cache', when: new Date(cached.when),
-            newest: new Date(Math.max(...mapped.map(it => it.created.getTime()))), items: mapped, caps: cached.caps || null });
-          sourceAttempts.push({ source: 'x-api-cache', status: 'fresh-cache', count: mapped.length, ageHours: Number(hours.toFixed(1)) });
-        } else {
-          staleSourcesRejected.push({ source: 'x-api-cache', reason: 'harvest-too-old', ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
-          sourceAttempts.push({ source: 'x-api-cache', status: 'rejected-stale-cache', count: mapped.length, ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
-        }
-      }
-    } catch(e){}
-    try {
-      const cached = JSON.parse(fs.readFileSync(RSS_CACHE, 'utf8').replace(/^\uFEFF/, ''));
-      const mapped = mapCachedItems(cached && cached.items);
-      const hours = ageHours(cached && cached.when);
-      if (mapped.length) {
-        if (hours <= SOURCE_CACHE_MAX_HOURS) {
-          cacheCandidates.push({ source: 'public-rss-cache', when: new Date(cached.when),
-            newest: new Date(Math.max(...mapped.map(it => it.created.getTime()))), items: mapped });
-          sourceAttempts.push({ source: 'public-rss-cache', status: 'fresh-cache', count: mapped.length, ageHours: Number(hours.toFixed(1)) });
-        } else {
-          staleSourcesRejected.push({ source: 'public-rss-cache', reason: 'harvest-too-old', ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
-          sourceAttempts.push({ source: 'public-rss-cache', status: 'rejected-stale-cache', count: mapped.length, ageHours: Number.isFinite(hours) ? Number(hours.toFixed(1)) : null });
-        }
-      }
-    } catch(e){}
-    if (syndicationCandidate) cacheCandidates.push(syndicationCandidate);
-    cacheCandidates.sort((a, b) => b.newest - a.newest || b.when - a.when);
-    const chosenSource = cacheCandidates[0];
-    if (chosenSource) {
-      timeline = chosenSource.items;
-      source = chosenSource.source;
-      sourceWhen = chosenSource.when;
-      apiCaps = chosenSource.caps || null;
-      console.error(`[refresh] Using ${source}: ${timeline.length} items; source age ${ageHours(sourceWhen).toFixed(1)}h.`);
-    }
-  }
-
-  if (!timeline) {
-    timeline = [];
+  const forceActivityIds = [...new Set(
+    Object.values(evidenceApprovals).map(approval => String(approval.activityId))
+  )];
+  const corpusBefore = loadCorpus();
+  const archive = await refreshArchiveCorpus({
+    forceDiscovery: ARCHIVE_FORCE_DISCOVERY,
+    includeGitArchive: ARCHIVE_BACKFILL || !corpusBefore.items.length,
+    hydrateLimit: ARCHIVE_HYDRATE_LIMIT,
+    forceIds: forceActivityIds,
+  });
+  const verifiedActivityIdsThisRun = new Set(archive.verifiedActivityIds);
+  sourceAttempts.push(...archive.sourceAttempts);
+  timeline = archive.matcherItems;
+  historicalTimeline = timeline;
+  source = timeline.length ? 'archive-verified' : 'unavailable';
+  sourceWhen = new Date(archive.payload.verification.updated);
+  apiCaps = {
+    xApi: apiCaps,
+    archive: {
+      discoveryIds: archive.payload.discovery.count,
+      corpusItems: archive.payload.count,
+      verifiedItems: archive.payload.verifiedCount,
+      verification: archive.payload.verification,
+    },
+  };
+  if (!timeline.length || isNaN(sourceWhen.getTime())) {
     source = 'unavailable';
     sourceWhen = new Date();
-    sourceAttempts.push({ source: 'unavailable', status: 'failed', count: 0 });
-    console.error('[refresh] No fresh verified activity source is available — publication will fail.');
+    sourceAttempts.push({ source: 'archive-verified', status: 'failed', count: 0 });
   }
 
-  const reposts = await ingestList('reposts.json', 'repost');   // only posts + reposts are surfaced
+  const optionalReposts = await ingestList('reposts.json', 'repost');
 
-  // Merge fresh source + private evergreen history + any explicitly hydrated reposts.
+  // Merge the verified corpus by original status ID for matching; activity IDs remain on each record.
   const byId = new Map();
-  for (const it of [...timeline, ...historicalTimeline, ...reposts]) {
+  for (const it of [...timeline, ...optionalReposts]) {
     if (!it || isNaN(it.created.getTime())) continue;
     const ex = byId.get(it.id);
     const hasRicherRepostProvenance = it.kind === 'repost'
@@ -2078,17 +1698,28 @@ async function main(){
     history: historicalTimeline.length,
     posts: 0,
     reposts: 0,
+    authored: 0,
+    quotes: 0,
+    replies: 0,
     likes: 0,
     bookmarks: 0,
     uniques: all.length,
     eligible: eligible.length,
     pastWeek: pastWeek.length,
   };
-  for (const t of timeline) { const key = t.kind + 's'; if (counts[key] != null) counts[key]++; }
-  counts.reposts += reposts.length; // owner-provided reposts.json
+  for (const t of timeline) {
+    const key = t.kind + 's';
+    if (counts[key] != null) counts[key]++;
+    const corpusKey = t.corpusKind === 'quote' ? 'quotes'
+      : t.corpusKind === 'reply' ? 'replies'
+        : t.corpusKind === 'authored' ? 'authored'
+          : null;
+    if (corpusKey) counts[corpusKey]++;
+  }
+  counts.reposts += optionalReposts.length;
   const newest = all.length ? fmtDate(all[0].created) : '(none)';
   const oldest = all.length ? fmtDate(all[all.length - 1].created) : '(none)';
-  console.error(`[refresh] fresh=${counts.entries}; private history=${counts.history}; unique corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
+  console.error(`[refresh] archive-verified=${counts.entries}; authored/quote/reply=${counts.authored}/${counts.quotes}/${counts.replies}; reposts=${counts.reposts}; unique status corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
 
   // Source freshness and evidence age are distinct. Historical evidence is allowed only after a fresh source check.
   if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — reviewed historical evidence remains eligible, but publication still requires complete direct coverage.');
@@ -2098,6 +1729,11 @@ async function main(){
   // guards. Semantic-only matches are limited to recent activity so broad historical backfilling cannot
   // inflate coverage. Allocation maximizes unique relevant posts first, then declared-family reuse.
   const eligibleById = new Map(eligible.map(item => [String(item.id), item]));
+  const eligibleByActivityId = new Map(
+    timeline
+      .filter(item => (now - item.created.getTime()) <= MAX_AGE_DAYS * 864e5)
+      .map(item => [String(item.activityId), item])
+  );
   const candidateLists = {};
   const rawCandidateLists = {};
   const unapprovedCandidateCounts = {};
@@ -2131,6 +1767,7 @@ async function main(){
         continue;
       }
       const tier = ageDays <= PAST_WEEK_DAYS ? 'week' : ageDays <= 180 ? 'recent' : 'historical';
+      const authorshipRank = t.kind === 'post' ? 2 : 1;
       cands.push({
         id: p.id,
         year: p.year,
@@ -2142,6 +1779,8 @@ async function main(){
         conceptScore: scored.conceptScore,
         conceptHits: scored.conceptHits,
         recencyRank: recencyRank(t.created, now),
+        authorshipRank,
+        corpusKind: t.corpusKind || (t.kind === 'repost' ? 'repost' : 'authored'),
         tier,
         hit: scored.hit,
         matchMethod,
@@ -2153,13 +1792,17 @@ async function main(){
     }
     cands.sort((a, b) =>
       (b.assignmentMode === 'direct') - (a.assignmentMode === 'direct')
+      || b.authorshipRank - a.authorshipRank
       || b.coverage - a.coverage
       || b.conceptScore - a.conceptScore
       || b.score - a.score
       || b.recencyRank - a.recencyRank
       || b.created - a.created);
     rawCandidateLists[p.id] = cands;
-    const approvedPost = approval ? eligibleById.get(String(approval.postId)) : null;
+    const approvedActivity = approval ? eligibleByActivityId.get(String(approval.activityId)) : null;
+    const approvedPost = approvedActivity && String(approvedActivity.id) === String(approval.postId)
+      ? approvedActivity
+      : null;
     const reviewedText = approval?.publicText || approvedPost?.text || '';
     const reviewedQualification = approvedPost ? qualifyPost(reviewedText, p, 0) : null;
     candidateLists[p.id] = approvedPost ? [{
@@ -2173,6 +1816,8 @@ async function main(){
       conceptScore: reviewedQualification?.scored?.conceptScore || 0,
       conceptHits: reviewedQualification?.scored?.conceptHits || [],
       recencyRank: recencyRank(approvedPost.created, now),
+      authorshipRank: approvedPost.kind === 'post' ? 2 : 1,
+      corpusKind: approvedPost.corpusKind || (approvedPost.kind === 'repost' ? 'repost' : 'authored'),
       tier: ((now - approvedPost.created.getTime()) / 864e5) <= PAST_WEEK_DAYS ? 'week'
         : ((now - approvedPost.created.getTime()) / 864e5) <= 180 ? 'recent' : 'historical',
       hit: reviewedQualification?.scored?.hit || [],
@@ -2189,6 +1834,9 @@ async function main(){
     candidateAudit[p.id] = rawCandidateLists[p.id].slice(0, 3).map(c => ({
       id: c.t.id,
       author: c.t.author,
+      activityId: c.t.activityId,
+      corpusKind: c.corpusKind,
+      authorship: c.authorshipRank === 2 ? 'authored' : 'reposted',
       date: fmtDate(c.t.created),
       tier: c.tier,
       method: c.matchMethod,
@@ -2296,6 +1944,7 @@ async function main(){
         id: external.statusId,
         kind: 'external',
         activityKind: 'external',
+        authorship: 'external',
         evidenceOwner: 'external',
         author: external.handle,
         displayName: external.displayName,
@@ -2307,6 +1956,8 @@ async function main(){
           displayName: external.displayName,
           retrievedAt: external.retrievedAt,
           sourceQuality: external.sourceQuality,
+          verifiedThrough: 'first-party-status+oembed',
+          sourceChain: ['tweet-result', 'x-oembed'],
         },
         recency: 'external',
         matchMethod: 'reviewed-external',
@@ -2336,6 +1987,7 @@ async function main(){
     let { likes: lk, rts, created } = pick;
     const author = approval.author;
     const activityKind = approval.activityKind;
+    const authorship = activityKind === 'post' ? 'authored' : 'reposted';
     let text = cleanText(approval.publicText);
     const prevE = prevEmbeds[p.id];
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
@@ -2347,6 +1999,7 @@ async function main(){
       id: pick.id,
       kind: activityKind,
       activityKind,
+      authorship,
       evidenceOwner: 'peterxing',
       author,
       displayName: activityKind === 'post' ? 'Peter Xing' : author,
@@ -2359,17 +2012,19 @@ async function main(){
         relationship,
         activityId: approval.activityId,
         observedIn: approval.observedIn,
+        verifiedThrough: 'archive-verified',
         lastVerifiedAt: approval.lastVerifiedAt,
+        sourceChain: ['wayback-cdx', 'tweet-result', 'x-oembed'],
       },
       recency: c.tier,
       matchMethod: c.matchMethod,
-      matchBasis: c.facetBasis,
+      matchBasis: approval.evidenceType || c.facetBasis,
       assignmentMode: reuseCount > 1 ? 'family-reuse' : 'unique',
       evidenceFamily: p.evidenceFamily,
       reuseCount,
       matchedConcepts: c.conceptHits,
       matchedFacets: [c.facetBasis],
-      evidenceType: 'direct',
+      evidenceType: approval.evidenceType || 'direct',
       sourceQuality: 'peterxing-activity',
       mappingRationale: approval.basis,
       reviewed: true,
@@ -2398,15 +2053,16 @@ async function main(){
       if (s < 1) continue;
       const ageDays = (now - t.created.getTime()) / 864e5;
       const week = ageDays <= PAST_WEEK_DAYS;
+      const tier = week ? 'week' : ageDays <= 180 ? 'recent' : 'historical';
       const eng = (t.likes || 0) + (t.rts || 0);
       const rank = (week ? 1000 : 0) + (!usedPosts.has(t.id) ? 200 : 0) + s * 40 + Math.min(eng, 60) + (1 - ageDays / MAX_AGE_DAYS) * 10;
-      if (!best || rank > best.rank) best = { t, s, hit, week, eng, rank };
+      if (!best || rank > best.rank) best = { t, s, hit, week, tier, eng, rank };
     }
     if (!best) continue;
     usedReality.add(best.t.id);
     let rtext = cleanText(best.t.text); if (rtext.length > 150) rtext = rtext.slice(0, 147) + '\u2026';
     realityAll.push({ tag: th.tag, t: rtext, id: best.t.id, kind: best.t.kind, author: best.t.author || 'peterxing',
-      recency: best.week ? 'week' : 'recent', date: fmtDate(best.t.created), likes: best.t.likes || 0, rts: best.t.rts || 0, _eng: best.eng });
+      recency: best.tier, date: fmtDate(best.t.created), likes: best.t.likes || 0, rts: best.t.rts || 0, _eng: best.eng });
   }
   // Keep the 6 strongest: past-week first, then most-engaged. Drop the internal sort key.
   realityAll.sort((a, b) => (b.recency === 'week') - (a.recency === 'week') || b._eng - a._eng);
@@ -2540,12 +2196,16 @@ async function main(){
           || embed.kind !== approval.activityKind) {
         mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed Peter approval`);
       }
-      const harvested = eligibleById.get(String(embed.id));
+      const harvested = eligibleByActivityId.get(String(approval.activityId));
       if (!harvested) {
         mappingIntegrityErrors.push(`${prediction.id}: Peter post ID not present in harvested history`);
-      } else if (harvested.kind !== approval.activityKind
+      } else if (String(harvested.id) !== String(approval.postId)
+          || harvested.kind !== approval.activityKind
           || String(harvested.activityId || harvested.id) !== String(approval.activityId)) {
         mappingIntegrityErrors.push(`${prediction.id}: sticky Peter provenance differs from harvested history`);
+      }
+      if (!verifiedActivityIdsThisRun.has(String(approval.activityId))) {
+        mappingIntegrityErrors.push(`${prediction.id}: Peter activity was not re-verified in the current archive sweep`);
       }
       if (provenance.evidenceOwner !== 'peterxing'
           || provenance.account !== 'peterxing'
@@ -2553,7 +2213,11 @@ async function main(){
           || !['authored', 'reposted'].includes(provenance.relationship)
           || String(provenance.activityId || '') !== String(approval.activityId)
           || provenance.observedIn !== approval.observedIn
-          || provenance.lastVerifiedAt !== approval.lastVerifiedAt) {
+          || provenance.verifiedThrough !== 'archive-verified'
+          || !Array.isArray(provenance.sourceChain)
+          || !provenance.sourceChain.includes('tweet-result')
+          || provenance.lastVerifiedAt !== approval.lastVerifiedAt
+          || embed.authorship !== (approval.activityKind === 'post' ? 'authored' : 'reposted')) {
         mappingIntegrityErrors.push(`${prediction.id}: incomplete @peterxing activity provenance`);
       }
     } else if (embed.evidenceOwner === 'external') {
@@ -2569,6 +2233,9 @@ async function main(){
           || provenance.account !== external?.handle
           || provenance.sourceQuality !== external?.sourceQuality
           || !provenance.retrievedAt
+          || provenance.verifiedThrough !== 'first-party-status+oembed'
+          || !Array.isArray(provenance.sourceChain)
+          || !provenance.sourceChain.includes('tweet-result')
           || !['direct', 'scenario', 'leading-indicator'].includes(embed.evidenceType)
           || !embed.mappingRationale) {
         mappingIntegrityErrors.push(`${prediction.id}: incomplete external evidence provenance`);
@@ -2598,24 +2265,32 @@ async function main(){
   const ownerTally = {};
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
+  const peterAuthorshipTally = { authored: 0, reposted: 0 };
   for (const embed of Object.values(embeds)) {
     ownerTally[embed.evidenceOwner] = (ownerTally[embed.evidenceOwner] || 0) + 1;
     sourceQualityTally[embed.sourceQuality] = (sourceQualityTally[embed.sourceQuality] || 0) + 1;
     evidenceTypeTally[embed.evidenceType] = (evidenceTypeTally[embed.evidenceType] || 0) + 1;
+    if (embed.evidenceOwner === 'peterxing' && peterAuthorshipTally[embed.authorship] != null) {
+      peterAuthorshipTally[embed.authorship]++;
+    }
   }
   const sourceStatus = sourceStatusFor(source, sourceAttempts);
   const out = {
     updated: new Date().toISOString(),
-    note: 'Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.',
+    note: 'Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.',
     source,
     sourceStatus,
+    sourceAttempts,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
     newestItemAt,
     history: {
-      count: all.length,
-      oldestItemAt: historyOldestAt,
-      newestItemAt,
+      count: archive.payload.count,
+      verifiedCount: archive.payload.verifiedCount,
+      kinds: archive.payload.kinds,
+      oldestItemAt: archive.payload.oldestItemAt || historyOldestAt,
+      newestItemAt: archive.payload.newestItemAt || newestItemAt,
+      discoveryIds: archive.payload.discovery.count,
     },
     coverage: {
       direct: Object.keys(embeds).length,
@@ -2630,6 +2305,7 @@ async function main(){
       stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
       reuseCeiling: MAX_REVIEWED_REUSE,
       byEvidenceOwner: ownerTally,
+      byPeterAuthorship: peterAuthorshipTally,
       bySourceQuality: sourceQualityTally,
       byEvidenceType: evidenceTypeTally,
     },
@@ -2668,6 +2344,7 @@ async function main(){
     reuseCeiling: MAX_REVIEWED_REUSE,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
+    peterAuthorship: peterAuthorshipTally,
     sourceQuality: sourceQualityTally,
     evidenceTypes: evidenceTypeTally,
     unapprovedCandidateCounts,
@@ -2735,6 +2412,7 @@ async function main(){
     maximumUniqueMatches,
     maxReuse: maxPostReuseObserved,
     byEvidenceOwner: ownerTally,
+    byPeterAuthorship: peterAuthorshipTally,
     sourceQuality: sourceQualityTally,
     reality: reality.map(r => r.tag),
   }));
