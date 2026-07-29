@@ -12,3 +12,5 @@ review-*.js
 external-evidence.js
 evidence-approvals.json
 evidence-families.js
+evidence-floors.json
+.pipeline.lock

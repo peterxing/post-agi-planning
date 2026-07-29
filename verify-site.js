@@ -1,6 +1,9 @@
 // verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors,
 // complete direct prediction evidence, and honest labeling of evergreen historical evidence.
 //   npm install, then: node verify-site.js [url]
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify');
+
 const { chromium } = require('playwright');
 const signals = require('./signals.json');
 const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, reposted:0 };

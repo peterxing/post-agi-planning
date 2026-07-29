@@ -1,3 +1,6 @@
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify:predictions');
+
 const { chromium } = require('playwright');
 const URL = process.argv[2] || 'http://127.0.0.1:8787';
 const SHOT = process.argv[3] || null;

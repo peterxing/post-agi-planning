@@ -1,6 +1,9 @@
 // verify-id.js — confirm a tweet id is still live and pull current text/date/likes.
 // Uses the public syndication tweet-result endpoint (works without auth/rate-limit locally).
 //   node verify-id.js <tweetId>
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify-id');
+
 const https = require('https');
 
 function token(id){

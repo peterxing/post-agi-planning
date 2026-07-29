@@ -1,5 +1,8 @@
 'use strict';
 
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('review:candidates');
+
 const approvals = require('./evidence-approvals.json');
 const {
   buildPredictions,

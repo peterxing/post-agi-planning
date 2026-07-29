@@ -1,4 +1,7 @@
 // Verifies the "About the Author" section renders + author.json overrides cleanly, 0 console errors.
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify:author');
+
 const { chromium } = require(require('path').join(process.env.TEMP, 'pap-explore', 'node_modules', 'playwright'));
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8787';

@@ -49,6 +49,16 @@ $runtimeFiles = @(
   'signals.json',
   'author.json'
 )
+# The advisory interlock is local coordination state only: never deployed, never served.
+if ($runtimeFiles -contains '.pipeline.lock') {
+  Write-Error 'Deployment aborted: .pipeline.lock is not a runtime file and must never be deployed.'
+  exit 7
+}
+$lockInBundle = Join-Path $dir '.pipeline.lock'
+if (Test-Path $lockInBundle) {
+  Write-Error "Deployment aborted: $lockInBundle must never be staged into the production bundle."
+  exit 7
+}
 foreach ($file in $runtimeFiles) {
   $sourcePath = Join-Path $source $file
   if (-not (Test-Path $sourcePath)) {
@@ -56,8 +66,7 @@ foreach ($file in $runtimeFiles) {
     exit 7
   }
   Copy-Item $sourcePath (Join-Path $dir $file) -Force
-}
-foreach ($file in $runtimeFiles) {
+}foreach ($file in $runtimeFiles) {
   $sourceHash = (Get-FileHash (Join-Path $source $file) -Algorithm SHA256).Hash
   $siteHash = (Get-FileHash (Join-Path $dir $file) -Algorithm SHA256).Hash
   if ($sourceHash -ne $siteHash) {

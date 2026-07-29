@@ -24,6 +24,9 @@
 //
 //   node refresh-signals.js                 # harvest + match + write signals.json (+ optional reposts.json)
 //   X_ARCHIVE_BACKFILL=1 X_ARCHIVE_HYDRATE_LIMIT=400 node refresh-signals.js
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('refresh-signals');
+
 const fs = require('fs');
 const path = require('path');
 const {

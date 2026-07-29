@@ -24,7 +24,8 @@
     "verify:coverage": "node verify-direct-coverage.js",
     "verify:peter": "node verify-peter-evidence.js",
     "verify:archive": "node verify-archive-corpus.js",
-    "verify:external": "node verify-external-evidence.js"
+    "verify:external": "node verify-external-evidence.js",
+    "verify:interlock": "node verify-interlock.js http://127.0.0.1:8787"
   },
   "devDependencies": {
     "playwright": "1.61.1"

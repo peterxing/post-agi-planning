@@ -1,5 +1,8 @@
 'use strict';
 
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify:archive');
+
 const fs = require('fs');
 const path = require('path');
 const {

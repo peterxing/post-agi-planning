@@ -1,3 +1,6 @@
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify:ui');
+
 const { chromium } = require('playwright');
 const http = require('http');
 const https = require('https');

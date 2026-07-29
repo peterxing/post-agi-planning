@@ -1,6 +1,9 @@
 // validate-predictions.js — schema + forecast-coherence checks before predictions.json goes live.
 // The hourly workflow calls this after any edit. Exits 0 if valid, 1 with a list of problems.
 //   node validate-predictions.js [path]
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('validate');
+
 const fs = require('fs');
 const path = require('path');
 const { validateFamilyCoverage } = require('./evidence-families');

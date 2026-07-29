@@ -1,5 +1,8 @@
 'use strict';
 
+// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+if (require.main === module) require('./pipeline-lock').guard('verify:matcher');
+
 const { detectConcepts, deriveEventTerms, qualifyFamilyPost, qualifyPost } = require('./refresh-signals.js');
 
 function prediction(title, domain = 'technology'){
