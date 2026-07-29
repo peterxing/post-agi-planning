@@ -14,7 +14,8 @@ unless direct coverage is complete and `signals.search` is empty.
 ## How it works
 
 ```text
-index.html ──fetch──> predictions.json   (forecast source of truth)
+index.html ──loads──> styles.css + app.js
+           ├─fetch──> predictions.json   (forecast source of truth)
            └─fetch──> signals.json       (generated X matches + Reality Signals)
                               ^
                               |
@@ -31,11 +32,14 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
   tape-out/semiconductors, physicians/health, FSD/robotics, and UHI/dividends). Claim-specific facet
   guards remain mandatory for literal, semantic, hybrid, and family matches. Assignment maximizes
   unique reviewed posts first, then permits reuse only inside a declared compatible evidence family
-  or reviewed threshold/scenario series. There is no generic reuse cap.
+  or reviewed threshold/scenario series. Publication fails when one status supports more than 12
+  predictions.
 - **`evidence-families.js`** declares the only families within which threshold-series reuse is
   compatible. Cross-family reuse fails publication.
-- **`evidence-approvals.json`** is the public-safe reviewed prediction/post-pair ledger. New automatic
-  candidates from Peter's activity cannot publish until their specific pair is manually approved.
+- **`evidence-approvals.json`** is the public-safe, sticky reviewed prediction/post-pair ledger. Each
+  approval is bound to the exact prediction text and retains public provenance plus review and
+  verification dates. New automatic candidates cannot self-approve, and publication fails below the
+  reviewed 17-mapping Peter floor.
 - **`external-evidence.js`** is the reviewed authoritative-source ledger. It stores only public-safe
   status metadata, source-quality classification, scenario/leading-indicator labels, rationale, and
   compatible reuse groups.
@@ -44,7 +48,9 @@ index.html ──fetch──> predictions.json   (forecast source of truth)
   compute caps, political vs electrical power, and quantitative labor thresholds.
 - **`signals.json`** is written only at complete direct-only coverage. `signals-debug.json`
   remains local and records source freshness, historical span, missing direct IDs, reviewed mappings,
-  guard rejections, and reuse audits without storing the raw activity corpus.
+  source-failure class, guard rejections, and reuse audits without storing the raw activity corpus.
+- **`index.html`**, **`styles.css`**, and **`app.js`** form the cacheable static shell. Forecast data is
+  not duplicated inline; a missing sidecar produces an explicit unavailable state.
 - **`author.json`** drives the daily-refreshed About the Author section.
 
 ## Data-source safety
@@ -58,6 +64,9 @@ The source order is:
 
 Historical matching additionally uses private X API full-archive/topic-query results and previously
 observed public project archives. A fresh source is still mandatory before publication.
+Reviewed evergreen Peter mappings remain active from that private history even when a fresh RSS
+window contains only recent items. `signals.sourceStatus` separates source-fetch degradation from
+evidence age.
 
 Raw activity and credentials stay outside the repository.
 
@@ -79,7 +88,9 @@ npm run verify:predictions
 npm run verify:reality
 npm run verify:author
 npm run verify:ui
+npm run verify:performance
 npm run verify:coverage
+npm run verify:peter
 npm run verify:external
 ```
 
@@ -94,7 +105,7 @@ public project archives into the private history. It still publishes only at rev
 powershell -ExecutionPolicy Bypass -File .\deploy.ps1
 ```
 
-There is no build step. Vercel serves `index.html` and the JSON sidecars as static files.
+There is no build step. Vercel serves the split HTML/CSS/JS shell and JSON sidecars as static files.
 
 ## Security
 

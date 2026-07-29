@@ -16,6 +16,7 @@ const expectedIds = [
 ];
 const expected = new Set(expectedIds);
 const problems = [];
+const MAX_REVIEWED_REUSE = 12;
 const qualityClasses = new Set([
   'official-research-organization',
   'official-ai-lab',
@@ -38,6 +39,10 @@ if (overlap.length || missing.length || extra.length) {
 }
 if (Object.keys(signals.search || {}).length) {
   problems.push('signals.search must be empty');
+}
+if (!signals.coverage || signals.coverage.reuseCeiling !== MAX_REVIEWED_REUSE
+    || signals.coverage.maxReuse > MAX_REVIEWED_REUSE) {
+  problems.push(`signals coverage must enforce the reviewed reuse ceiling ${MAX_REVIEWED_REUSE}`);
 }
 
 const sourceUses = new Map();
@@ -75,6 +80,9 @@ for (const [sourceKey, source] of Object.entries(EXTERNAL_SOURCES)) {
   }
   if (!qualityClasses.has(source.sourceQuality)) problems.push(`${sourceKey}: invalid source-quality class`);
   const uses = sourceUses.get(sourceKey) || [];
+  if (uses.length > MAX_REVIEWED_REUSE) {
+    problems.push(`${sourceKey}: reuse ${uses.length} exceeds reviewed ceiling ${MAX_REVIEWED_REUSE}`);
+  }
   if (uses.length > 1 && new Set(uses.map(use => use.mapping.reuseFamily)).size !== 1) {
     problems.push(`${sourceKey}: reuse crosses reviewed compatibility groups`);
   }

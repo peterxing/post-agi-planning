@@ -22,6 +22,11 @@ const { chromium } = require('playwright');
     const unavailable = await page.$$eval('.tl-signal-unavailable', els => els.length).catch(() => 0);
     const expected = await page.$$eval('#timelineBody .event, #horizonBody .horizon-item', els => els.length).catch(() => 0);
     const stamp = await page.$eval('#sigStamp', el => (el.hidden ? '' : el.textContent.trim())).catch(() => '');
+    const dashboard = await page.$eval('#evidenceDashboard', element => element.textContent.replace(/\s+/g, ' ').trim()).catch(() => '');
+    const splitAssets = await page.evaluate(() => ({
+      app:!!document.querySelector('script[src="app.js"]'),
+      styles:!!document.querySelector('link[href="styles.css"]'),
+    })).catch(() => ({ app:false, styles:false }));
     const dates = await page.$$eval('.tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
     const mislabelledHistorical = await page.$$eval('.tl-signal', els => els.filter(card => {
       const date = card.querySelector('.tl-signal-date')?.textContent.trim() || '';
@@ -29,11 +34,19 @@ const { chromium } = require('playwright');
       return /\b20(1\d|2[0-3])$/.test(date)
         && !/\b(?:Historical|Scenario source|Leading indicator|External evidence)\b/i.test(label);
     }).map(card => card.querySelector('.tl-signal-date')?.textContent.trim() || '')).catch(() => []);
-    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} searches=${searches} unavailable=${unavailable} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    const sourceHonest = /17 Peter/.test(stamp)
+      && /86 external/.test(stamp)
+      && /max reuse 12/.test(stamp)
+      && /X API credits-depleted/.test(stamp)
+      && /credits are depleted/i.test(dashboard)
+      && /Add X API credits/i.test(dashboard);
+    const assetsValid = splitAssets.app && splitAssets.styles;
+    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));
-    issues += errs.length + searches + unavailable + Math.abs(cards - expected) + mislabelledHistorical.length;
+    issues += errs.length + searches + unavailable + Math.abs(cards - expected)
+      + mislabelledHistorical.length + Number(!sourceHonest) + Number(!assetsValid);
     await ctx.close();
   }
   await browser.close();

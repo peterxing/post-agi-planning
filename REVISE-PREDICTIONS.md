@@ -204,7 +204,8 @@ to raise coverage.
    computation, energy, space, economy, infrastructure, institutions, governance, scaling and AI
    overlap supports a match but never qualifies by itself. Allocate valid matches
    unique-post-first, then permit reuse only inside an explicitly reviewed compatible concept family
-   or threshold/scenario series. There is no generic reuse cap; every repeated status must retain its
+   or threshold/scenario series. A single status may support at most 12 predictions; every repeated
+   status must retain its
    reviewed mapped IDs and rationale in audit output. Run
    `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
    coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
@@ -222,8 +223,12 @@ to raise coverage.
    breaks.
 14. **Preserve the direct-X evidence contract.** Every dated event and horizon item must have
    exactly one entry in `evidence-families.js` and exactly one public direct-X evidence card. Prefer a real
-   post/repost observed in @peterxing's activity whose exact prediction/post pair is reviewed in
-   `evidence-approvals.json`. Otherwise use a reviewed authoritative status from
+   post/repost observed in @peterxing's activity whose exact prediction/post pair is active and sticky
+   in `evidence-approvals.json`. Each sticky approval binds its status/activity IDs, relationship,
+   public excerpt, exact prediction text, review date, last verification date and rationale. Resolve
+   it against the private historical corpus even when it is absent from today's feed window; evidence
+   age is not source-fetch freshness. Publication must retain at least the existing 17 reviewed Peter
+   mappings. Otherwise use a reviewed authoritative status from
    `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
    source quality and rationale. New external posts never self-approve. Search fallbacks are forbidden:
    `signals.search` must remain absent, null or empty. Family matching must pass the same claim-specific
@@ -231,8 +236,12 @@ to raise coverage.
    reviewed compatible concept family or threshold/scenario series; large groups remain visible in
    `signals-debug.json` with all mapped IDs and their reviewed rationales.
    `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
-   whenever reviewed direct coverage is below N/N, freshness is false, provenance is invalid, or
-   reuse crosses a reviewed compatibility group.
+   whenever reviewed direct coverage is below N/N, the Peter floor falls below 17, freshness is
+   false, provenance is invalid, one status exceeds 12 uses, or reuse crosses a reviewed
+   compatibility group. Record a safe `sourceStatus` reason (`authentication-expired`,
+   `credits-depleted`, `access-or-plan-restricted`, `rate-limited`, `service-error`, or
+   `network-error`) whenever the authenticated API degrades; never expose credentials or raw API
+   response bodies.
 
 ## Procedure
 
@@ -245,7 +254,9 @@ node validate-predictions.js          # must print "RESULT: PASS"
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
 node verify-direct-coverage.js         # every prediction needs exactly one reviewed direct status
+node verify-peter-evidence.js --update # live-check original + Peter activity status, then date the audit
 node verify-external-evidence.js       # external statuses resolve and retain reviewed provenance
+node verify-performance.js             # split-asset, transfer, DOM and render budgets
 # 4. Mirror to the public bundle (so peterxing.com / Vercel serves the same data):
 Copy-Item predictions.json C:\Users\peterxing\pap-site\predictions.json -Force
 # (index.html + signals.json are copied in the workflow's PUBLISH step too)
@@ -256,14 +267,13 @@ range, unique years, event schema/probabilities, the five stable simulator ancho
 evidence-family coverage, portfolio
 duplicates/chronology, and the complete horizon schema, labels, dependency counts, caveats and
 terminology. If it FAILs, fix the source rather than weakening the validator. A broken
-`predictions.json` makes `index.html` retain its inline dated and horizon baselines.
+`predictions.json` makes `index.html` display an explicit unavailable state.
 
 ## Failure-safety
 
-- `index.html` validates `predictions.json` at runtime and **falls back to its inline baselines** if
-  the fetch fails. Malformed or misleading horizon data emits a console error, retains the honest
-  dependency-gated fallback and fails browser verification rather than blanking or silently
-  overstating the section.
+- `index.html` validates `predictions.json` at runtime and displays an explicit unavailable state if
+  the fetch fails. Malformed or misleading horizon data emits a console error and hides stale horizon
+  cards rather than silently overstating the section.
 - `refresh-signals.js` falls back to its built-in `DEFAULT_PREDICTIONS` if `predictions.json` can't
   be read — matching keeps working even if the file is temporarily missing.
 - If `signals.json` is missing or incomplete, the UI reports prediction evidence as unavailable.

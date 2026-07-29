@@ -1,0 +1,12 @@
+.env*
+.gitignore
+.vercel
+*.md
+*.ps1
+*.log
+verify-*.js
+validate-*.js
+refresh-signals.js
+external-evidence.js
+evidence-approvals.json
+evidence-families.js

@@ -41,6 +41,17 @@ for (const y of d.years) {
     if (!e || typeof e.t !== 'string' || !e.t.trim()) problems.push(tag + ': an event has no title (t)');
     if (!e || !DOMAINS.includes(e.d)) problems.push(tag + ': event "' + (e && e.t) + '" has invalid domain d=' + (e && e.d));
     if (e && e.prob != null && (typeof e.prob !== 'number' || e.prob < 0 || e.prob > 100)) problems.push(tag + ': event "' + e.t + '" prob out of 0–100');
+    if (e && (e.revisedAt != null || e.changeNote != null)) {
+      if (typeof e.revisedAt !== 'string' || isNaN(Date.parse(e.revisedAt))) {
+        problems.push(tag + ': event "' + e.t + '" revisedAt must be an ISO date');
+      }
+      if (typeof e.changeNote !== 'string' || !e.changeNote.trim()) {
+        problems.push(tag + ': event "' + e.t + '" changeNote must explain the revision');
+      }
+      if (!isNaN(Date.parse(e.revisedAt)) && Date.parse(e.revisedAt) > Date.parse(d.updated)) {
+        problems.push(tag + ': event "' + e.t + '" revisedAt cannot be newer than predictions.updated');
+      }
+    }
     if (e && e.simAnchor != null) {
       if (!SIMULATOR_ANCHORS.has(e.simAnchor)) {
         problems.push(tag + ': event "' + e.t + '" has unknown simAnchor=' + e.simAnchor);

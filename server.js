@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 
 const DIR = __dirname;
 const PORT = 8787;
@@ -9,8 +10,16 @@ const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.css':'
 // Default-deny: the public site only needs these files + static image/style assets. Everything else
 // (server-side scripts x-*.js / refresh-signals.js / server.js, *.ps1, *.md, debug/raw JSON, etc.) is
 // 404'd so the Cloudflare tunnel never leaks operational code, secrets paths, or the raw harvest.
-const ALLOW_FILES = new Set(['index.html', 'signals.json', 'predictions.json', 'author.json']);
+const ALLOW_FILES = new Set([
+  'index.html',
+  'app.js',
+  'styles.css',
+  'signals.json',
+  'predictions.json',
+  'author.json',
+]);
 const ALLOW_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.css', '.woff', '.woff2']);
+const COMPRESS_EXT = new Set(['.html', '.css', '.js', '.json', '.svg']);
 
 http.createServer((req, res) => {
   let url;
@@ -36,7 +45,25 @@ http.createServer((req, res) => {
   }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); res.end('Not found'); return; }
-    res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
-    res.end(data);
+    const headers = {
+      'Content-Type': types[path.extname(file)] || 'application/octet-stream',
+      'Cache-Control': ext === '.json' ? 'no-cache' : 'public, max-age=0, must-revalidate',
+      'Vary': 'Accept-Encoding',
+    };
+    const acceptsGzip = /\bgzip\b/.test(req.headers['accept-encoding'] || '');
+    if (!acceptsGzip || !COMPRESS_EXT.has(ext) || data.length < 1024) {
+      res.writeHead(200, headers);
+      res.end(data);
+      return;
+    }
+    zlib.gzip(data, { level: 6 }, (gzipError, compressed) => {
+      if (gzipError) {
+        res.writeHead(500);
+        res.end('Compression failed');
+        return;
+      }
+      res.writeHead(200, { ...headers, 'Content-Encoding': 'gzip' });
+      res.end(compressed);
+    });
   });
 }).listen(PORT, '127.0.0.1', () => console.log('Serving ' + DIR + ' on http://127.0.0.1:' + PORT));

@@ -30,7 +30,7 @@ const SHOT = process.argv[3] || null;
         methodCounts[e.matchMethod] = (methodCounts[e.matchMethod] || 0) + 1;
         if (!postUses[e.id]) postUses[e.id] = [];
         postUses[e.id].push(e);
-        if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
+        if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-sticky', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
       }
       const datedKeys = predictions.years.flatMap(y => y.events.map((_, i) => `${y.year}-${i}`));
       const horizon = predictions.postSuperintelligence;
@@ -96,6 +96,8 @@ const SHOT = process.argv[3] || null;
             && ['authored', 'reposted'].includes(provenance.relationship)
             && /^\d{15,}$/.test(String(provenance.activityId || ''))
             && !!provenance.observedIn
+            && !!provenance.lastVerifiedAt
+            && e.matchMethod === 'reviewed-sticky'
             && ['unique', 'family-reuse'].includes(e.assignmentMode);
         }
         return e.evidenceOwner === 'external'
@@ -129,6 +131,7 @@ const SHOT = process.argv[3] || null;
         expectedSearches: 0,
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
         source: signals.source || '',
+        sourceStatus: signals.sourceStatus || null,
         sourceFresh: signals.sourceFresh === true,
         sourceFetchedAt: signals.sourceFetchedAt || null,
         newestItemAt: signals.newestItemAt || null,
@@ -147,6 +150,9 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.direct === Object.keys(embeds).length
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
+          && signals.coverage.stickyPeterFloor === 17
+          && signals.coverage.reuseCeiling === 12
+          && signals.coverage.maxReuse <= signals.coverage.reuseCeiling
           && signals.coverage.maxReuse === Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
         horizonSchema,
         horizonCaveats,
@@ -155,7 +161,11 @@ const SHOT = process.argv[3] || null;
     });
 
     const checks = {
-      source: stats.sourceFresh && stats.source !== 'unavailable' && !!stats.sourceFetchedAt && !!stats.newestItemAt,
+      source: stats.sourceFresh && stats.source !== 'unavailable' && !!stats.sourceFetchedAt && !!stats.newestItemAt
+        && stats.sourceStatus && stats.sourceStatus.activeSource === stats.source
+        && (stats.source === 'x-api'
+          ? stats.sourceStatus.mode === 'primary'
+          : stats.sourceStatus.mode === 'degraded' && !!stats.sourceStatus.reason),
       eventCount: stats.eventCount === stats.expectedEventCount,
       horizonCount: stats.horizonCount === stats.expectedHorizonCount && stats.expectedHorizonCount >= 7,
       exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length,

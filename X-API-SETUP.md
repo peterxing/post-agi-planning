@@ -11,7 +11,17 @@ secret is committed.
 
 ---
 
-## What works right now (no action needed)
+## Current API status (29 Jul 2026)
+
+The configured app-only request currently returns **HTTP 402 — credits depleted** before user lookup.
+This is a plan/quota condition, not an expired credential. Add X API credits or upgrade the app plan,
+then run `node x-client.js --probe` until `user_lookup` returns HTTP 200. Do not rotate credentials
+unless the probe instead classifies the failure as `authentication-expired`.
+
+While credits are depleted, refresh uses a live public RSS read or a public RSS snapshot no older than
+36 hours. `signals.sourceStatus` and the site evidence panel label this as degraded. Publication still
+requires a fresh source; it never relabels a stale cache as current. The table below describes
+configured capability once API credits are available, not today's endpoint reachability.
 
 With app-only **Bearer** auth (already configured), the daily harvest pulls @peterxing's realtime:
 
@@ -107,12 +117,22 @@ node C:\Users\peterxing\pap-deploy\x-auth.js --refresh
 - **Bookmarks** — uses OAuth 2.0 user token only.
 - **Posts + reposts** — app-only Bearer (always).
 
-Peter-owned evidence uses only posts and reposts. Matching maximizes unique reviewed posts first,
-then permits reuse only within one declared compatible evidence family. External evidence must be in
+Peter-owned evidence uses only posts and reposts. The 17 active reviewed mappings in
+`evidence-approvals.json` are sticky: they retain public-safe status/activity IDs, relationship,
+review date, verification date, prediction text and rationale, and resolve against the private
+historical corpus rather than being re-derived from today's feed window. A fresh source check remains
+mandatory, but an evergreen reviewed post does not expire because it is absent from recent RSS.
+Run `node verify-peter-evidence.js --update` before refresh: it checks both the original status and
+Peter's post/repost activity status through X oEmbed, verifies their IDs and authors, and only then
+updates `lastVerifiedAt`. The release gates reject verification dates older than 30 days.
+
+Matching maximizes unique reviewed posts first, then permits reuse only within one declared compatible
+evidence family. External evidence must be in
 the reviewed public-safe ledger, resolve to X, identify its authoritative account/source quality, and
 stay within one reviewed scenario or threshold-series reuse group. The private history remains under
-`pap-secrets` (**not** served). If source freshness, reviewed direct coverage, provenance, or reuse
-compatibility fails, refresh exits nonzero and leaves the last complete public file unchanged.
+`pap-secrets` (**not** served). If source freshness, the 17-mapping sticky Peter floor, 103/103 direct
+coverage, provenance, the 12-use ceiling, or reuse compatibility fails, refresh exits nonzero and
+leaves the last complete public file unchanged.
 
 ## Security
 

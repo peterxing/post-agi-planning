@@ -2,6 +2,7 @@ const { chromium } = require('playwright');
 const http = require('http');
 const https = require('https');
 const predictions = require('./predictions.json');
+const signals = require('./signals.json');
 
 const URL = process.argv[2] || 'http://127.0.0.1:8787/';
 const expectedEvents = predictions.years.reduce((sum, year) => sum + year.events.length, 0);
@@ -11,6 +12,26 @@ const expectedTechnology = predictions.years.reduce(
 );
 const expectedYears = predictions.years.length;
 const expectedHorizon = predictions.postSuperintelligence.items.length;
+const expectedChanged = predictions.years.reduce(
+  (sum, year) => sum + year.events.filter(event => event.revisedAt === predictions.updated.slice(0, 10)).length,
+  0
+);
+const expectedOwners = signals.coverage.byEvidenceOwner;
+const expectedPeterStatuses = new Set(
+  Object.values(signals.embeds).filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)
+).size;
+const expectedExternalStatuses = new Set(
+  Object.values(signals.embeds).filter(embed => embed.evidenceOwner === 'external').map(embed => embed.id)
+).size;
+const expectedManaged = predictions.years.reduce(
+  (sum, year) => sum + year.events.filter(event => /^managed branch:/i.test(event.t)).length,
+  0
+);
+const expectedRestored = predictions.years.reduce(
+  (sum, year) => sum + year.events.filter(event =>
+    event.d === 'governance' && Number.isFinite(event.prob) && event.prob >= 60 && event.prob < 80).length,
+  0
+);
 
 const profiles = [
   { name:'desktop-dark', theme:'dark', width:1440, height:1000, collapsedYears:10 },
@@ -117,6 +138,25 @@ function requestStatus(pathname) {
         externalEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
         scenarioEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
         leadingEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
+        evidenceDashboard:{
+          direct:document.getElementById('evidenceDirectStat')?.textContent.trim(),
+          peter:document.getElementById('evidencePeterStat')?.textContent.trim(),
+          external:document.getElementById('evidenceExternalStat')?.textContent.trim(),
+          unique:document.getElementById('evidenceReuseStat')?.textContent.trim(),
+          typeMix:document.getElementById('evidenceTypeMix')?.textContent.replace(/\s+/g, ' ').trim(),
+          source:document.getElementById('evidenceSourceHealth')?.textContent.replace(/\s+/g, ' ').trim(),
+        },
+        finder:{
+          changed:document.querySelectorAll('#forecastChangeLinks .revision-link').length,
+          deepLinks:document.querySelectorAll('#timelineBody .deep-link, #horizonBody .deep-link').length,
+          allCount:document.querySelector('[data-domain-count="all"]')?.textContent.trim(),
+          branchOptions:[...document.querySelectorAll('#branchFilter option')].map(option => option.textContent.trim()),
+          probabilityOptions:[...document.querySelectorAll('#probabilityFilter option')].map(option => option.textContent.trim()),
+          themeOptions:[...document.querySelectorAll('#themeFilter option')].map(option => option.textContent.trim()),
+          resultCount:document.getElementById('filterResultCount')?.textContent.trim(),
+          searchRegionRole:document.getElementById('atlasSearchResults')?.getAttribute('role'),
+          searchInputRole:document.getElementById('atlasSearch')?.getAttribute('role'),
+        },
         collapsedChapters:[...document.querySelectorAll('#chapters .ch-body')].every(element => element.hidden),
         simulator:{
           map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
@@ -186,6 +226,31 @@ function requestStatus(pathname) {
           leading:state.leadingEvidence,
         }));
     }
+    check(results, 'evidence dashboard exposes composition, reuse and degraded source',
+      state.evidenceDashboard.direct === `${expectedEvents + expectedHorizon}/${expectedEvents + expectedHorizon}`
+      && state.evidenceDashboard.peter === String(expectedOwners.peterxing)
+      && state.evidenceDashboard.external === String(expectedOwners.external)
+      && state.evidenceDashboard.unique === String(signals.coverage.uniquePosts)
+      && state.evidenceDashboard.typeMix.includes(`Peter unique statuses · ${expectedPeterStatuses}`)
+      && state.evidenceDashboard.typeMix.includes(`External unique statuses · ${expectedExternalStatuses}`)
+      && state.evidenceDashboard.typeMix.includes(`Maximum reviewed reuse · ${signals.coverage.maxReuse} of ${signals.coverage.reuseCeiling}`)
+      && /credits are depleted/i.test(state.evidenceDashboard.source)
+      && /Add X API credits/i.test(state.evidenceDashboard.source),
+      JSON.stringify(state.evidenceDashboard));
+    check(results, 'forecast finder exposes counts, deep links and latest revisions',
+      state.finder.changed === expectedChanged
+      && state.finder.deepLinks === expectedEvents + expectedYears + expectedHorizon
+      && state.finder.allCount === String(expectedEvents)
+      && state.finder.branchOptions.length === 5
+      && state.finder.probabilityOptions.length === 6
+      && state.finder.themeOptions.length === 8
+      && state.finder.branchOptions.every(option => /· \d+$/.test(option))
+      && state.finder.probabilityOptions.every(option => /· \d+$/.test(option))
+      && state.finder.themeOptions.every(option => /· \d+$/.test(option)),
+      JSON.stringify(state.finder));
+    check(results, 'search uses a standard live results region rather than a partial combobox',
+      state.finder.searchRegionRole === 'region' && state.finder.searchInputRole === null,
+      JSON.stringify({ region:state.finder.searchRegionRole, input:state.finder.searchInputRole }));
     check(results, 'JSON-derived text is escaped at render time', state.escapedText);
     check(results, 'probability simulator loads published anchors',
       state.simulator.map
@@ -235,6 +300,44 @@ function requestStatus(pathname) {
       visibleTechnology === expectedTechnology,
       `${visibleTechnology}/${expectedTechnology}`);
     await page.locator('.chip[data-domain="all"]').click();
+
+    if (profile.name === 'desktop-light') {
+      await page.locator('#branchFilter').selectOption('managed');
+      const managedState = await page.evaluate(() => ({
+        visible:document.querySelectorAll('#timelineBody .event:not([hidden])').length,
+        query:new URL(location.href).searchParams.get('fb'),
+      }));
+      check(results, 'branch filter is counted and shareable',
+        managedState.visible === expectedManaged && managedState.query === 'managed',
+        JSON.stringify(managedState));
+      await page.locator('#filterReset').click();
+
+      await page.locator('#changesOnlyToggle').click();
+      const changedState = await page.evaluate(() => ({
+        visible:document.querySelectorAll('#timelineBody .event:not([hidden])').length,
+        query:new URL(location.href).searchParams.get('fc'),
+      }));
+      check(results, 'latest-change view isolates revised events',
+        changedState.visible === expectedChanged && changedState.query === '1',
+        JSON.stringify(changedState));
+      await page.locator('#filterReset').click();
+
+      await page.locator('#atlasSearch').fill('orbital compute');
+      const searchState = await page.evaluate(() => ({
+        results:[...document.querySelectorAll('#atlasSearchResults .search-result[href]')].map(link => link.textContent.replace(/\s+/g, ' ').trim()),
+        visible:document.querySelectorAll('#timelineBody .event:not([hidden])').length,
+        query:new URL(location.href).searchParams.get('fq'),
+        resultsVisible:!document.getElementById('atlasSearchResults').hidden,
+      }));
+      check(results, 'atlas search spans dated and horizon content with URL state',
+        searchState.results.some(result => /^Prediction/i.test(result))
+        && searchState.results.some(result => /^Horizon/i.test(result))
+        && searchState.visible > 0
+        && searchState.query === 'orbital compute'
+        && searchState.resultsVisible,
+        JSON.stringify(searchState));
+      await page.locator('#searchClear').click();
+    }
 
     await page.locator('[data-sim-preset="fast"]').click();
     await page.waitForTimeout(profile.reduced ? 20 : 320);
@@ -354,6 +457,46 @@ function requestStatus(pathname) {
     failed.forEach(result => console.log(`  FAIL ${result.label}${result.detail ? ` · ${result.detail}` : ''}`));
     await context.close();
   }
+
+  const restoreContext = await browser.newContext({ viewport:{ width:1280, height:900 } });
+  const restorePage = await restoreContext.newPage();
+  await restorePage.route('**/signals.json', async route => {
+    await new Promise(resolve => setTimeout(resolve, 600));
+    await route.continue();
+  });
+  const restoreSeparator = URL.includes('?') ? '&' : '?';
+  await restorePage.goto(`${URL}${restoreSeparator}scoutTheme=light&fd=governance&fp=high#event-2031-4`, {
+    waitUntil:'networkidle',
+    timeout:45000,
+  });
+  await restorePage.waitForFunction(
+    count => document.querySelectorAll('#timelineBody .event').length === count,
+    expectedEvents,
+    { timeout:5000 }
+  );
+  await restorePage.waitForTimeout(700);
+  const restored = await restorePage.evaluate(() => ({
+    domain:document.querySelector('[data-domain][aria-pressed="true"]')?.dataset.domain,
+    probability:document.getElementById('probabilityFilter')?.value,
+    visible:document.querySelectorAll('#timelineBody .event:not([hidden])').length,
+    targetVisible:!document.getElementById('event-2031-4')?.hidden,
+    yearExpanded:!document.getElementById('year-2031')?.classList.contains('is-collapsed'),
+    activeId:document.activeElement?.id,
+    scrollY:window.scrollY,
+  }));
+  if (restored.domain !== 'governance'
+      || restored.probability !== 'high'
+      || restored.visible !== expectedRestored
+      || !restored.targetVisible
+      || !restored.yearExpanded
+      || restored.activeId !== 'event-2031-4'
+      || restored.scrollY < 500) {
+    failures++;
+    console.log(`  FAIL filter and deep-link state restores on load · ${JSON.stringify(restored)}`);
+  } else {
+    console.log('[restore-state] 1/1 checks passed');
+  }
+  await restoreContext.close();
 
   await browser.close();
   if (failures) {

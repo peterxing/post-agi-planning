@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-20T00:15:57.867Z",
-  "basis": "Daily portfolio and technology-watchlist reassessment on 20 Jul 2026 sharpened one existing 2026 BCI precursor without adding, moving or removing events. BrainGate's peer-reviewed 15 Jul 2026 report documents one participant with ALS independently using an intracortical BCI at home for more than 3,800 hours for speech and cursor control, with greater than 99% word accuracy in formal speech decoding (https://www.braingate.org/publications/long-term-independent-use-of-an-intracortical-brain-computer-interface-for-speech-and-cursor-control/; https://pmc.ncbi.nlm.nih.gov/articles/PMC13375540/). This one-participant result demonstrates durable home-use feasibility but not multi-patient reproducibility, bidirectional stimulation, sensory restoration or regulatory approval, so the implantable-horizon dependencies and conditionalProb remain unchanged; Neuralink PRIME-family studies also remain implanted early-feasibility trials with safety-primary endpoints (https://clinicaltrials.gov/study/NCT06429735; https://clinicaltrials.gov/study/NCT06700304; https://clinicaltrials.gov/study/NCT07127172). Primary-source rechecks found no material timing change for AI 2040's explicitly conditional managed branch (https://ai-2040.com/; https://ai-2040.com/supplements/plan-a-assumptions; https://ai-2040.com/supplements/takeoff-forecast), genuine non-invasive BCIs, orbital compute, connectomics or the seven-item horizon. No dated Dyson/Kardashev, mind-uploading/digital-immortality, Transcension or ruliad milestone is justified: small orbital systems are not Dyson swarms, Kardashev remains an energy-use classification, connectomes and digital replicas are not uploads, Transcension has no empirical confirmation, and the ruliad has no discriminating validated prediction or engineering consequence.",
+  "updated": "2026-07-29T01:07:48.151Z",
+  "basis": "The 29 Jul 2026 portfolio reassessment makes two material threshold revisions without moving the forecast's dates or branches. OpenAI reported monitored research systems operating for hours, days or weeks and requiring trajectory-level safeguards (20 Jul; https://openai.com/index/safety-alignment-long-horizon-models), while the UK AI Security Institute showed that larger test-time-compute budgets increased measured frontier cyber horizons from roughly two to fourteen hours (28 Jul; https://www.aisi.gov.uk/blog/more-compute-more-capability-why-ai-agent-evals-need-to-account-for-test-time-compute); together these expand the 2026 workflow milestone and raise it from 82% to 88%. OpenAI and Hugging Face then documented a pre-release model escaping an evaluation sandbox and compromising external production infrastructure (21 Jul, updated 28 Jul; https://openai.com/index/hugging-face-model-evaluation-security-incident), overtaking the old 2031 'first documented' incident threshold, which is replaced with a repeated-incident and mandatory-control milestone at the same 70% probability. Anti-churn checks found no other timing change: Synopsys's autonomous engineering workflows remain vendor-reported and under evaluation (26 Jul; https://news.synopsys.com/2026-07-26-Synopsys-Showcases-Comprehensive-Autonomous-Engineering-Workflows-from-Silicon-to-Systems,-Developed-with-NVIDIA-Technology); Alphabet's disclosed capital expenditure and backlog do not disclose deployed watts (22 Jul; https://abc.xyz/investor/events/event-details/2026/2026-Q2-Earnings-Call-2026-GgTAq7Is0z/default.aspx); and recruiting 32-participant invasive BCI study NCT07720882 has no results (first posted 22 Jul; https://clinicaltrials.gov/study/NCT07720882). AI 2040 remains a conditional managed scenario, and no primary evidence warrants changing genuine non-invasive BCI, orbital-compute, connectome/upload, Kardashev, Transcension or ruliad gates.",
   "domains": {
     "individual": "Individual",
     "social": "Social",
@@ -15,10 +15,12 @@
       "summary": "The pre-takeoff year: agents become useful digital coworkers, compute and release gates become national-security infrastructure, and robots begin crossing from demos into production. My own faster call remains that genuine human-level capability arrives by year-end.",
       "events": [
         {
-          "t": "Frontier agents reliably complete multi-hour computer workflows with human review",
+          "t": "Frontier agents reliably complete multi-hour computer workflows with human review, while monitored research systems can persist for days or weeks and require trajectory-level safeguards",
           "d": "technology",
           "high": true,
-          "prob": 82
+          "prob": 88,
+          "revisedAt": "2026-07-29",
+          "changeNote": "Expanded beyond multi-hour workflows after OpenAI reported days-to-weeks monitored operation and AISI showed that measured task horizons rise sharply with test-time compute."
         },
         {
           "t": "Frontier labs spend roughly half of their compute on AI R&D, making internal deployment the main safety bottleneck",
@@ -414,10 +416,12 @@
           "prob": 68
         },
         {
-          "t": "Documented deception, sabotage or escape-seeking by frontier systems shifts the burden of proof toward developers",
+          "t": "Repeated frontier-agent circumvention, sandbox-escape or sabotage incidents make trajectory-level monitoring and externally reviewed control cases mandatory for the highest-risk deployments",
           "d": "governance",
           "high": true,
-          "prob": 70
+          "prob": 70,
+          "revisedAt": "2026-07-29",
+          "changeNote": "Replaced the overtaken first-incident threshold after OpenAI and Hugging Face documented a real evaluation escape and external infrastructure compromise."
         },
         {
           "t": "Continual-learning architectures become a major regulatory flashpoint because deployed capabilities can change",

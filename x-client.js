@@ -2,6 +2,8 @@
 // Credentials load from C:\Users\peterxing\pap-secrets\.env (OUTSIDE all served/deployed dirs).
 //
 // Auth model (empirically verified against this app's tier):
+// Live reachability is checked separately; classifyXFailure reports credits, auth, plan, rate-limit,
+// service, and network degradation without exposing credential values.
 //   * App-only Bearer            -> user lookup + user timeline (POSTS + REPOSTS). Works now.
 //   * OAuth 1.0a User Context    -> also unlocks LIKES (needs X_ACCESS_TOKEN + X_ACCESS_SECRET).
 //   * OAuth 2.0 User Context     -> unlocks BOOKMARKS (and likes) (needs X_OAUTH2_TOKEN from x-auth.js).
@@ -37,6 +39,32 @@ const O2 = (ENV.X_OAUTH2_TOKEN || '').trim();
 const API = 'https://api.twitter.com';
 
 function pct(s) { return encodeURIComponent(s).replace(/[!*()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase()); }
+
+function classifyXFailure(response, error = null) {
+  if (error) {
+    return {
+      reason: 'network-error',
+      httpStatus: null,
+      summary: 'The authenticated X API request could not reach the service.',
+    };
+  }
+  const status = Number(response && response.status) || null;
+  const reason = status === 401 ? 'authentication-expired'
+    : status === 402 ? 'credits-depleted'
+      : status === 403 ? 'access-or-plan-restricted'
+        : status === 429 ? 'rate-limited'
+          : status && status >= 500 ? 'service-error'
+            : 'unavailable';
+  const summaries = {
+    'authentication-expired': 'The authenticated X API credentials were rejected or have expired.',
+    'credits-depleted': 'The X API account has no remaining request credits.',
+    'access-or-plan-restricted': 'The X API endpoint is not available to the current app or plan.',
+    'rate-limited': 'The X API request limit is temporarily exhausted.',
+    'service-error': 'The X API service returned a server error.',
+    unavailable: 'The authenticated X API did not return usable activity.',
+  };
+  return { reason, httpStatus: status, summary: summaries[reason] };
+}
 
 // OAuth 1.0a user-context signing (used only when AT/AS present).
 function oauth1Header(method, url, extraParams = {}) {
@@ -127,12 +155,6 @@ function norm(t, author, kind, activityId = null) {
 // Harvest @peterxing's realtime activity. Posts + reposts always; likes when a user token (OAuth1/2)
 // is present; bookmarks when an OAuth2 user token is present. Returns { id, items, caps }.
 async function harvestActivity({ maxPosts = 300, maxLikes = 100, maxBookmarks = 100 } = {}) {
-  const u = await getUserId('peterxing');
-  if (!u.ok || !(u.json && u.json.data)) return null;
-  const id = u.json.data.id;
-  const items = [];
-  const seen = new Set();
-  const add = (it) => { if (!it || !it.id) return; const k = it.id + ':' + it.kind; if (seen.has(k)) return; seen.add(k); items.push(it); };
   const caps = {
     posts: 0,
     reposts: 0,
@@ -141,12 +163,35 @@ async function harvestActivity({ maxPosts = 300, maxLikes = 100, maxBookmarks = 
     timelinePages: 0,
     timelineComplete: false,
   };
+  let u;
+  try {
+    u = await getUserId('peterxing');
+  } catch (error) {
+    return { id: null, items: [], caps, diagnostic: classifyXFailure(null, error) };
+  }
+  if (!u.ok || !(u.json && u.json.data)) {
+    return { id: null, items: [], caps, diagnostic: classifyXFailure(u) };
+  }
+  const id = u.json.data.id;
+  const items = [];
+  const seen = new Set();
+  const add = (it) => { if (!it || !it.id) return; const k = it.id + ':' + it.kind; if (seen.has(k)) return; seen.add(k); items.push(it); };
+  let diagnostic = null;
 
   // POSTS + REPOSTS (+ quotes counted as posts: his own commentary)
   let tok = null;
   for (let page = 0; page < Math.ceil(maxPosts / 100) && (page === 0 || tok); page++) {
-    const r = await getUserTweets(id, 100, tok);
-    if (!r.ok || !(r.json && r.json.data)) break;
+    let r;
+    try {
+      r = await getUserTweets(id, 100, tok);
+    } catch (error) {
+      diagnostic = classifyXFailure(null, error);
+      break;
+    }
+    if (!r.ok || !(r.json && r.json.data)) {
+      diagnostic = classifyXFailure(r);
+      break;
+    }
     caps.timelinePages++;
     const { incT, incU } = indexIncludes(r.json);
     for (const t of r.json.data) {
@@ -187,7 +232,7 @@ async function harvestActivity({ maxPosts = 300, maxLikes = 100, maxBookmarks = 
     } else if (r.status === 403) caps.bookmarks = -1;
   }
 
-  return { id, items, caps };
+  return { id, items, caps, diagnostic };
 }
 
 async function harvestFullArchive({ maxPosts = 20000 } = {}) {
@@ -319,6 +364,7 @@ async function harvestSearchQueries(namedQueries, { maxPerQuery = 5000 } = {}) {
 module.exports = {
   loadEnv, ENV, xGet, getUserId, getUserTweets, getLikedTweets, getBookmarks, searchAllTweets,
   harvestActivity, harvestFullArchive, harvestSearchQueries,
+  classifyXFailure,
   hasUserToken: !!(AT && AS), hasOauth2: !!O2,
 };
 

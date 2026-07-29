@@ -54,6 +54,9 @@ const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 const SYNDICATION_MAX_ITEM_AGE_DAYS = Number(process.env.SYNDICATION_MAX_ITEM_AGE_DAYS) || 30;
+const MIN_STICKY_PETER_MAPPINGS = Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 17;
+const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || 12;
+const PETER_VERIFICATION_MAX_AGE_DAYS = Number(process.env.PETER_VERIFICATION_MAX_AGE_DAYS) || 30;
 const SKIP_LIVE = process.env.X_SKIP_LIVE === '1';
 const SKIP_API = process.env.X_SKIP_API === '1';
 const SYND_URL = 'https://syndication.twitter.com/srv/timeline-profile/screen-name/peterxing?showReplies=false&lang=en&dnt=true';
@@ -584,6 +587,46 @@ function loadEvidenceApprovals(){
   } catch {
     return {};
   }
+}
+function sourceStatusFor(source, attempts){
+  const primary = attempts.find(attempt => attempt.source === 'x-api') || null;
+  const reason = source === 'x-api' ? null : primary?.reason || 'primary-source-unavailable';
+  const reasons = {
+    'authentication-expired': 'Authenticated X API access needs reauthorization',
+    'credits-depleted': 'Authenticated X API credits are depleted',
+    'access-or-plan-restricted': 'The current X API plan does not permit the requested endpoint',
+    'rate-limited': 'The authenticated X API is temporarily rate-limited',
+    'service-error': 'The authenticated X API returned a service error',
+    'network-error': 'The authenticated X API could not be reached',
+    'primary-source-unavailable': 'The authenticated X API is unavailable',
+  };
+  const activeDescriptions = {
+    'public-rss': 'the live public profile feed',
+    'public-rss-cache': 'a recent public profile snapshot',
+    'x-api-cache': 'a recent authenticated API snapshot',
+    syndication: 'the live public syndication feed',
+  };
+  const actions = {
+    'authentication-expired': 'Reauthorize the X API credentials.',
+    'credits-depleted': 'Add X API credits or upgrade the X API plan.',
+    'access-or-plan-restricted': 'Enable the required X API endpoint or upgrade the app plan.',
+    'rate-limited': 'Wait for the X API rate-limit window to reset.',
+    'service-error': 'Retry after the X API service recovers.',
+    'network-error': 'Restore outbound access to api.twitter.com and retry.',
+    'primary-source-unavailable': 'Check X API credentials, plan access, and network connectivity.',
+  };
+  return {
+    mode: source === 'x-api' ? 'primary' : 'degraded',
+    primarySource: 'x-api',
+    activeSource: source,
+    reason,
+    message: source === 'x-api'
+      ? 'Authenticated X API activity is the current freshness source.'
+      : `${reasons[reason] || reasons['primary-source-unavailable']}; `
+        + `${activeDescriptions[source] || 'a verified fallback'} is supplying freshness.`,
+    actionRequired: source === 'x-api' ? null : actions[reason] || actions['primary-source-unavailable'],
+    httpStatus: primary?.httpStatus || null,
+  };
 }
 function recencyRank(created, now){
   const days = Math.max(0, (now - created.getTime()) / 864e5);
@@ -1744,9 +1787,36 @@ async function main(){
   const PREDICTIONS = buildPredictions();
   const evidenceApprovals = loadEvidenceApprovals();
   const predictionIds = new Set(PREDICTIONS.map(prediction => prediction.id));
+  const predictionById = new Map(PREDICTIONS.map(prediction => [prediction.id, prediction]));
   const unknownApprovalIds = Object.keys(evidenceApprovals).filter(id => !predictionIds.has(id));
   if (unknownApprovalIds.length) {
     throw new Error(`evidence approvals reference unknown predictions: ${unknownApprovalIds.join(', ')}`);
+  }
+  const invalidApprovals = Object.entries(evidenceApprovals).flatMap(([id, approval]) => {
+    const prediction = predictionById.get(id);
+    const valid = approval
+      && approval.status === 'active'
+      && approval.sticky === true
+      && /^\d{15,}$/.test(String(approval.postId || ''))
+      && /^\d{15,}$/.test(String(approval.activityId || ''))
+      && ['post', 'repost'].includes(approval.activityKind)
+      && ['authored', 'reposted'].includes(approval.relationship)
+      && typeof approval.author === 'string' && approval.author.trim()
+      && approval.publicUrl === `https://x.com/${approval.author}/status/${approval.postId}`
+      && typeof approval.publicText === 'string' && approval.publicText.trim()
+      && typeof approval.reviewedAt === 'string' && !isNaN(Date.parse(approval.reviewedAt))
+      && typeof approval.lastVerifiedAt === 'string' && !isNaN(Date.parse(approval.lastVerifiedAt))
+      && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 <= PETER_VERIFICATION_MAX_AGE_DAYS
+      && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 >= -1
+      && approval.predictionText === prediction?.maps
+      && typeof approval.basis === 'string' && approval.basis.trim();
+    return valid ? [] : [id];
+  });
+  if (invalidApprovals.length || Object.keys(evidenceApprovals).length < MIN_STICKY_PETER_MAPPINGS) {
+    throw new Error(
+      `sticky Peter evidence contract failed (active ${Object.keys(evidenceApprovals).length}/${MIN_STICKY_PETER_MAPPINGS}; `
+      + `invalid: ${invalidApprovals.join(', ') || 'none'})`
+    );
   }
   const externalIds = Object.keys(EXTERNAL_MAPPINGS);
   const unknownExternalIds = externalIds.filter(id => !predictionIds.has(id));
@@ -1857,12 +1927,32 @@ async function main(){
         });
         console.error(`[refresh] X API harvest: ${timeline.length} recent posts/reposts across ${act.caps.timelinePages} page(s); private history ${historyCountBefore} -> ${historicalTimeline.length}.`);
       } else {
-        sourceAttempts.push({ source: 'x-api', status: 'unavailable', count: 0 });
+        const diagnostic = act?.diagnostic || {
+          reason: 'primary-source-unavailable',
+          httpStatus: null,
+          summary: 'The authenticated X API returned no usable activity.',
+        };
+        sourceAttempts.push({
+          source: 'x-api',
+          status: 'degraded',
+          reason: diagnostic.reason,
+          httpStatus: diagnostic.httpStatus,
+          detail: diagnostic.summary,
+          count: 0,
+        });
         console.error('[refresh] X API harvest returned nothing — trying the live public RSS profile.');
       }
     } catch(e){
-      sourceAttempts.push({ source: 'x-api', status: 'error', detail: e.message });
-      console.error('[refresh] X API harvest error (' + e.message + ') — trying the live public RSS profile.');
+      if (source === 'x-api' && timeline) throw e;
+      sourceAttempts.push({
+        source: 'x-api',
+        status: 'degraded',
+        reason: 'network-error',
+        httpStatus: null,
+        detail: 'The authenticated X API request failed before activity could be read.',
+        count: 0,
+      });
+      console.error('[refresh] X API harvest error — trying the live public RSS profile.');
     }
   }
 
@@ -2007,6 +2097,7 @@ async function main(){
   // Literal hits and the controlled concept ontology both remain subordinate to claim-specific facet
   // guards. Semantic-only matches are limited to recent activity so broad historical backfilling cannot
   // inflate coverage. Allocation maximizes unique relevant posts first, then declared-family reuse.
+  const eligibleById = new Map(eligible.map(item => [String(item.id), item]));
   const candidateLists = {};
   const rawCandidateLists = {};
   const unapprovedCandidateCounts = {};
@@ -2068,10 +2159,30 @@ async function main(){
       || b.recencyRank - a.recencyRank
       || b.created - a.created);
     rawCandidateLists[p.id] = cands;
-    candidateLists[p.id] = approval
-      ? cands.filter(candidate => candidate.t.id === String(approval.postId))
-      : [];
-    unapprovedCandidateCounts[p.id] = cands.length - candidateLists[p.id].length;
+    const approvedPost = approval ? eligibleById.get(String(approval.postId)) : null;
+    const reviewedText = approval?.publicText || approvedPost?.text || '';
+    const reviewedQualification = approvedPost ? qualifyPost(reviewedText, p, 0) : null;
+    candidateLists[p.id] = approvedPost ? [{
+      id: p.id,
+      year: p.year,
+      p,
+      t: approvedPost,
+      reviewedText,
+      score: reviewedQualification?.scored?.score || 0,
+      coverage: reviewedQualification?.scored?.coverage || 0,
+      conceptScore: reviewedQualification?.scored?.conceptScore || 0,
+      conceptHits: reviewedQualification?.scored?.conceptHits || [],
+      recencyRank: recencyRank(approvedPost.created, now),
+      tier: ((now - approvedPost.created.getTime()) / 864e5) <= PAST_WEEK_DAYS ? 'week'
+        : ((now - approvedPost.created.getTime()) / 864e5) <= 180 ? 'recent' : 'historical',
+      hit: reviewedQualification?.scored?.hit || [],
+      matchMethod: 'reviewed-sticky',
+      assignmentMode: 'direct',
+      evidenceFamily: p.evidenceFamily,
+      facetBasis: 'reviewed-prediction-bound',
+      created: approvedPost.created,
+    }] : [];
+    unapprovedCandidateCounts[p.id] = Math.max(0, cands.length - candidateLists[p.id].length);
   }
   const candidateAudit = {};
   for (const p of PREDICTIONS) {
@@ -2128,7 +2239,6 @@ async function main(){
   // Phase 2: reuse only inside an explicitly declared compatible evidence family. This preserves
   // maximum unique-post coverage without an arbitrary quota or cross-topic reuse.
   const postOwners = new Map();
-  const predictionById = new Map(PREDICTIONS.map(prediction => [prediction.id, prediction]));
   for (const [predId, cand] of Object.entries(picks)) {
     if (!postOwners.has(cand.t.id)) postOwners.set(cand.t.id, new Set());
     postOwners.get(cand.t.id).add(predId);
@@ -2222,30 +2332,34 @@ async function main(){
       continue;
     }
     const pick = c.t;
-    let { likes: lk, rts, created, author } = pick;
-    let text = cleanText(c.reviewedText || pick.text);
+    const approval = evidenceApprovals[p.id];
+    let { likes: lk, rts, created } = pick;
+    const author = approval.author;
+    const activityKind = approval.activityKind;
+    let text = cleanText(approval.publicText);
     const prevE = prevEmbeds[p.id];
     if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
     const reuseCount = postUses.get(pick.id) || 1;
-    const relationship = pick.kind === 'repost' ? 'reposted' : 'authored';
-    const directUrl = `https://x.com/${author || 'peterxing'}/status/${pick.id}`;
+    const relationship = approval.relationship;
+    const directUrl = approval.publicUrl;
     embeds[p.id] = {
       id: pick.id,
-      kind: pick.kind,
-      activityKind: pick.kind,
+      kind: activityKind,
+      activityKind,
       evidenceOwner: 'peterxing',
-      author: author || 'peterxing',
-      displayName: pick.kind === 'post' ? 'Peter Xing' : author || 'External author',
+      author,
+      displayName: activityKind === 'post' ? 'Peter Xing' : author,
       url: directUrl,
       provenance: {
         evidenceOwner: 'peterxing',
-        activityKind: pick.kind,
+        activityKind,
         account: 'peterxing',
         displayName: 'Peter Xing',
         relationship,
-        activityId: pick.activityId || pick.id,
-        observedIn: pick.activitySource || 'verified-activity-history',
+        activityId: approval.activityId,
+        observedIn: approval.observedIn,
+        lastVerifiedAt: approval.lastVerifiedAt,
       },
       recency: c.tier,
       matchMethod: c.matchMethod,
@@ -2257,16 +2371,17 @@ async function main(){
       matchedFacets: [c.facetBasis],
       evidenceType: 'direct',
       sourceQuality: 'peterxing-activity',
-      mappingRationale: evidenceApprovals[p.id].basis,
+      mappingRationale: approval.basis,
       reviewed: true,
-      reviewedAt: evidenceApprovals[p.id].reviewedAt,
-      date: fmtDate(created),
+      reviewedAt: approval.reviewedAt,
+      lastVerifiedAt: approval.lastVerifiedAt,
+      date: approval.postDate || fmtDate(created),
       maps: p.maps,
       text,
       likes: lk,
       rts: rts || 0,
     };
-    chosen[p.id] = `${pick.kind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank} s${c.score} cs${c.conceptScore} c${c.coverage}] ${(c.conceptHits.length ? c.conceptHits : c.hit).slice(0, 4).join('/')}`;
+    chosen[p.id] = `${activityKind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank}] sticky-reviewed`;
   }
 
   // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
@@ -2350,7 +2465,6 @@ async function main(){
     directGained: [...currentDirectIds].filter(id => !previousDirectIds.has(id)),
     directLost: [...previousDirectIds].filter(id => !currentDirectIds.has(id)),
   };
-  const eligibleById = new Map(eligible.map(t => [t.id, t]));
   const unusedRelevantPostSamples = unusedRelevantPosts.slice(0, 20).map(id => {
     const t = eligibleById.get(id);
     return t ? { id, author: t.author, date: fmtDate(t.created), concepts: [...detectConcepts(t.text)] } : { id };
@@ -2418,18 +2532,28 @@ async function main(){
     if (embed.evidenceOwner === 'peterxing') {
       const approval = evidenceApprovals[prediction.id];
       if (!approval || String(approval.postId) !== String(embed.id)
-          || embed.reviewed !== true || embed.reviewedAt !== approval.reviewedAt) {
+          || approval.status !== 'active' || approval.sticky !== true
+          || approval.predictionText !== prediction.maps
+          || embed.reviewed !== true || embed.reviewedAt !== approval.reviewedAt
+          || embed.lastVerifiedAt !== approval.lastVerifiedAt
+          || embed.url !== approval.publicUrl
+          || embed.kind !== approval.activityKind) {
         mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed Peter approval`);
       }
-      if (!eligibleById.has(String(embed.id))) {
+      const harvested = eligibleById.get(String(embed.id));
+      if (!harvested) {
         mappingIntegrityErrors.push(`${prediction.id}: Peter post ID not present in harvested history`);
+      } else if (harvested.kind !== approval.activityKind
+          || String(harvested.activityId || harvested.id) !== String(approval.activityId)) {
+        mappingIntegrityErrors.push(`${prediction.id}: sticky Peter provenance differs from harvested history`);
       }
       if (provenance.evidenceOwner !== 'peterxing'
           || provenance.account !== 'peterxing'
           || !['post', 'repost'].includes(provenance.activityKind)
           || !['authored', 'reposted'].includes(provenance.relationship)
-          || !/^\d{15,}$/.test(String(provenance.activityId || ''))
-          || !provenance.observedIn) {
+          || String(provenance.activityId || '') !== String(approval.activityId)
+          || provenance.observedIn !== approval.observedIn
+          || provenance.lastVerifiedAt !== approval.lastVerifiedAt) {
         mappingIntegrityErrors.push(`${prediction.id}: incomplete @peterxing activity provenance`);
       }
     } else if (embed.evidenceOwner === 'external') {
@@ -2457,6 +2581,18 @@ async function main(){
     }
   }
   const historyOldestAt = all.length ? all[all.length - 1].created.toISOString() : null;
+  const peterMappingCount = Object.values(embeds)
+    .filter(embed => embed.evidenceOwner === 'peterxing').length;
+  if (peterMappingCount < MIN_STICKY_PETER_MAPPINGS) {
+    mappingIntegrityErrors.push(
+      `sticky Peter coverage fell below ${MIN_STICKY_PETER_MAPPINGS}: ${peterMappingCount}`
+    );
+  }
+  if (maxPostReuseObserved > MAX_REVIEWED_REUSE) {
+    mappingIntegrityErrors.push(
+      `reviewed reuse ceiling exceeded: ${maxPostReuseObserved}/${MAX_REVIEWED_REUSE}`
+    );
+  }
   const coverageComplete = mappingIntegrityErrors.length === 0
     && currentCoveredIds.size === PREDICTIONS.length;
   const ownerTally = {};
@@ -2467,10 +2603,12 @@ async function main(){
     sourceQualityTally[embed.sourceQuality] = (sourceQualityTally[embed.sourceQuality] || 0) + 1;
     evidenceTypeTally[embed.evidenceType] = (evidenceTypeTally[embed.evidenceType] || 0) + 1;
   }
+  const sourceStatus = sourceStatusFor(source, sourceAttempts);
   const out = {
     updated: new Date().toISOString(),
     note: 'Every prediction has exactly one reviewed direct X status. Reviewed @peterxing activity is preferred; authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.',
     source,
+    sourceStatus,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
     newestItemAt,
@@ -2489,6 +2627,8 @@ async function main(){
       maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
+      stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
+      reuseCeiling: MAX_REVIEWED_REUSE,
       byEvidenceOwner: ownerTally,
       bySourceQuality: sourceQualityTally,
       byEvidenceType: evidenceTypeTally,
@@ -2503,6 +2643,7 @@ async function main(){
   const debugPayload = {
     updated: out.updated,
     source,
+    sourceStatus,
     sourceFresh,
     sourceFetchedAt: out.sourceFetchedAt,
     sourceAgeHours: Number.isFinite(sourceAgeHours) ? Number(sourceAgeHours.toFixed(2)) : null,
@@ -2523,6 +2664,8 @@ async function main(){
     coverageComplete,
     directCoverageComplete: coverageComplete && Object.keys(embeds).length === PREDICTIONS.length,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
+    stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
+    reuseCeiling: MAX_REVIEWED_REUSE,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
     sourceQuality: sourceQualityTally,

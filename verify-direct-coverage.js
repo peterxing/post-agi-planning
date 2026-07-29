@@ -21,6 +21,13 @@ const expectedIds = [
   ...predictions.years.flatMap(year => year.events.map((_, index) => `${year.year}-${index}`)),
   ...predictions.postSuperintelligence.items.map(item => `horizon-${item.id}`),
 ];
+const predictionTextById = new Map([
+  ...predictions.years.flatMap(year => year.events.map((event, index) => [`${year.year}-${index}`, event.t])),
+  ...predictions.postSuperintelligence.items.map(item => [`horizon-${item.id}`, item.t]),
+]);
+const MIN_STICKY_PETER_MAPPINGS = 17;
+const MAX_REVIEWED_REUSE = 12;
+const PETER_VERIFICATION_MAX_AGE_DAYS = 30;
 const expected = new Set(expectedIds);
 const embeds = signals.embeds && typeof signals.embeds === 'object' ? signals.embeds : {};
 const searches = signals.search == null
@@ -37,6 +44,15 @@ if (familyCoverage.missing.length || familyCoverage.extra.length) {
 }
 if (signals.sourceFresh !== true) problems.push('signals.sourceFresh must be true');
 if (!signals.sourceFetchedAt || !signals.newestItemAt) problems.push('signals source timestamps are incomplete');
+const sourceStatus = signals.sourceStatus || {};
+if (sourceStatus.activeSource !== signals.source
+    || sourceStatus.primarySource !== 'x-api'
+    || !['primary', 'degraded'].includes(sourceStatus.mode)
+    || (signals.source === 'x-api' && (sourceStatus.mode !== 'primary' || sourceStatus.reason))
+    || (signals.source !== 'x-api' && (sourceStatus.mode !== 'degraded'
+      || !sourceStatus.reason || !sourceStatus.message || !sourceStatus.actionRequired))) {
+  problems.push('signals.sourceStatus must honestly describe primary or degraded source operation');
+}
 if (!signals.coverage || !signals.embeds || typeof signals.embeds !== 'object') {
   problems.push('signals.json lacks the direct-evidence schema');
 }
@@ -60,6 +76,25 @@ const missingLedger = expectedIds.filter(id => !approvals[id] && !EXTERNAL_MAPPI
 if (unknownApprovals.length || unknownExternal.length || overlap.length || missingLedger.length) {
   problems.push(`evidence-ledger mismatch (unknown Peter ${unknownApprovals.join(', ') || 'none'}; unknown external ${unknownExternal.join(', ') || 'none'}; overlap ${overlap.join(', ') || 'none'}; missing ${missingLedger.join(', ') || 'none'})`);
 }
+if (approvalIds.length < MIN_STICKY_PETER_MAPPINGS) {
+  problems.push(`sticky Peter approval floor fell below ${MIN_STICKY_PETER_MAPPINGS}: ${approvalIds.length}`);
+}
+for (const [predictionId, approval] of Object.entries(approvals)) {
+  if (!approval || approval.status !== 'active' || approval.sticky !== true
+      || approval.predictionText !== predictionTextById.get(predictionId)
+      || !/^\d{15,}$/.test(String(approval.postId || ''))
+      || !/^\d{15,}$/.test(String(approval.activityId || ''))
+      || !['post', 'repost'].includes(approval.activityKind)
+      || !['authored', 'reposted'].includes(approval.relationship)
+      || !approval.author
+      || approval.publicUrl !== `https://x.com/${approval.author}/status/${approval.postId}`
+      || !approval.publicText || !approval.basis
+      || !approval.reviewedAt || !approval.lastVerifiedAt
+      || (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 > PETER_VERIFICATION_MAX_AGE_DAYS
+      || (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 < -1) {
+    problems.push(`${predictionId}: sticky Peter approval metadata is incomplete or stale`);
+  }
+}
 
 const usesByPost = new Map();
 for (const predictionId of expectedIds) {
@@ -80,12 +115,19 @@ for (const predictionId of expectedIds) {
     const approval = approvals[predictionId];
     if (!approval || EXTERNAL_MAPPINGS[predictionId]
         || String(approval.postId) !== postId
+        || approval.status !== 'active'
+        || approval.sticky !== true
+        || approval.predictionText !== predictionTextById.get(predictionId)
         || signal.reviewedAt !== approval.reviewedAt
+        || signal.lastVerifiedAt !== approval.lastVerifiedAt
         || signal.mappingRationale !== approval.basis
-        || signal.evidenceType !== 'direct') {
+        || signal.evidenceType !== 'direct'
+        || signal.matchMethod !== 'reviewed-sticky') {
       problems.push(`${predictionId}: mapping is not backed by its reviewed Peter approval`);
     }
-    if (approval?.publicText && signal.text !== approval.publicText) {
+    const publicText = String(approval?.publicText || '').replace(/\s+/g, ' ').trim();
+    const expectedText = publicText.length > 160 ? publicText.slice(0, 157) + '\u2026' : publicText;
+    if (approval?.publicText && signal.text !== expectedText) {
       problems.push(`${predictionId}: published text differs from its reviewed public excerpt`);
     }
     if (approval?.publicUrl && signal.url !== approval.publicUrl) {
@@ -94,16 +136,18 @@ for (const predictionId of expectedIds) {
     if (!['post', 'repost'].includes(signal.kind)
         || provenance.evidenceOwner !== 'peterxing'
         || provenance.account !== 'peterxing'
-        || !['post', 'repost'].includes(provenance.activityKind)
-        || !['authored', 'reposted'].includes(provenance.relationship)
-        || !/^\d{15,}$/.test(String(provenance.activityId || ''))
-        || !provenance.observedIn) {
+        || provenance.activityKind !== approval?.activityKind
+        || provenance.relationship !== approval?.relationship
+        || String(provenance.activityId || '') !== String(approval?.activityId || '')
+        || provenance.observedIn !== approval?.observedIn
+        || provenance.lastVerifiedAt !== approval?.lastVerifiedAt) {
       problems.push(`${predictionId}: incomplete @peterxing provenance`);
     }
     const harvested = historyById.get(postId);
     if (!harvested) {
       problems.push(`${predictionId}: Peter post was not found in the harvested activity corpus`);
-    } else if (harvested.kind !== signal.kind) {
+    } else if (harvested.kind !== signal.kind
+        || String(harvested.activityId || harvested.id) !== String(approval?.activityId || '')) {
       problems.push(`${predictionId}: activity kind differs from harvested history`);
     }
   } else if (signal.evidenceOwner === 'external') {
@@ -158,6 +202,9 @@ for (const [postId, uses] of usesByPost) {
         || uses.some(use => use.signal.assignmentMode !== expectedMode)) {
       problems.push(`post ${postId}: reuse crosses or violates its reviewed compatibility group`);
     }
+    if (maxReuse > MAX_REVIEWED_REUSE) {
+      problems.push(`maximum reviewed reuse exceeds ${MAX_REVIEWED_REUSE}: ${maxReuse}`);
+    }
   } else if (uses[0].signal.assignmentMode !== 'unique') {
     problems.push(`${uses[0].predictionId}: single-use mapping is not labeled unique`);
   }
@@ -175,6 +222,8 @@ if (coverage.complete !== true
     || coverage.total !== expectedIds.length
     || coverage.uniquePosts !== usesByPost.size
     || coverage.maxReuse !== maxReuse
+    || coverage.stickyPeterFloor !== MIN_STICKY_PETER_MAPPINGS
+    || coverage.reuseCeiling !== MAX_REVIEWED_REUSE
     || JSON.stringify(coverage.reuseDistribution || {}) !== JSON.stringify(reuseDistribution)) {
   problems.push('signals.coverage must declare exact N/N direct-only coverage and reuse metrics');
 }
@@ -187,6 +236,9 @@ const qualityCounts = {};
 for (const embed of Object.values(embeds)) {
   ownerCounts[embed.evidenceOwner] = (ownerCounts[embed.evidenceOwner] || 0) + 1;
   qualityCounts[embed.sourceQuality] = (qualityCounts[embed.sourceQuality] || 0) + 1;
+}
+if ((ownerCounts.peterxing || 0) < MIN_STICKY_PETER_MAPPINGS) {
+  problems.push(`published Peter evidence fell below the sticky floor: ${ownerCounts.peterxing || 0}`);
 }
 
 console.log(`Coverage: ${actualIds.length}/${expectedIds.length} direct; searches: ${searches ? Object.keys(searches).length : 0}`);
