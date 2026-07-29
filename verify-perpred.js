@@ -165,7 +165,7 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.stickyPeterFloor >= 24
           && signals.coverage.stickyPeterAuthoredFloor >= 10
           && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) >= signals.coverage.stickyPeterFloor
-          && signals.coverage.reuseCeiling === 10
+          && signals.coverage.reuseCeiling >= 1 && signals.coverage.reuseCeiling <= 10
           && signals.coverage.maxReuse <= signals.coverage.reuseCeiling
           && Number(signals.coverage.byPeterAuthorship?.authored || 0)
             + Number(signals.coverage.byPeterAuthorship?.reposted || 0)

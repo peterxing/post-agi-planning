@@ -332,7 +332,7 @@ const EXTERNAL_GROUPS = [
     reuseFamily: 'agent-task-horizon',
     evidenceType: 'leading-indicator',
     rationale: 'Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.',
-    ids: ['2026-0', '2026-6', '2027-2'],
+    ids: ['2026-6', '2027-2'],
   },
   {
     source: 'deepmind-agentic-economies',
@@ -403,7 +403,7 @@ const EXTERNAL_GROUPS = [
     reviewedAt: '2026-07-29',
     rationale: 'Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.',
     ids: [
-      '2028-6', '2029-1', '2029-4', '2030-2', '2033-2',
+      '2028-6', '2029-4', '2030-2', '2033-2',
       '2034-5', '2038-3', '2039-0', '2039-2', '2040-2',
     ],
   },

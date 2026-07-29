@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-29T04:55:12.913Z",
+  "updated": "2026-07-29T07:29:40.103Z",
   "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "archive-verified",
   "sourceStatus": {
@@ -11,7 +11,7 @@
     "actionRequired": "Add X API credits or upgrade the X API plan.",
     "httpStatus": 402,
     "discoveryPatterns": 4,
-    "hydratedThisRun": 24,
+    "hydratedThisRun": 25,
     "verificationPaceMs": 600
   },
   "sourceAttempts": [
@@ -61,28 +61,28 @@
       "source": "tweet-result",
       "status": "verified",
       "attempted": 32,
-      "hydrated": 24,
+      "hydrated": 25,
       "authored": 11,
-      "reposted": 13,
-      "failures": 8,
+      "reposted": 14,
+      "failures": 7,
       "paceMs": 600
     },
     {
       "source": "x-oembed",
       "status": "cross-checked",
-      "count": 24
+      "count": 25
     }
   ],
-  "sourceFetchedAt": "2026-07-29T04:55:00.779Z",
+  "sourceFetchedAt": "2026-07-29T07:29:11.363Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
-    "count": 2144,
-    "verifiedCount": 1407,
+    "count": 3489,
+    "verifiedCount": 2832,
     "kinds": {
-      "authored": 1296,
-      "quote": 24,
-      "reply": 15,
+      "authored": 2633,
+      "reply": 19,
+      "quote": 28,
       "repost": 809
     },
     "oldestItemAt": "2014-12-31T01:51:50.000Z",
@@ -94,37 +94,36 @@
     "searches": 0,
     "total": 103,
     "complete": true,
-    "uniquePosts": 55,
-    "peterUniquePosts": 23,
-    "maximumUniqueMatches": 23,
-    "maxReuse": 10,
+    "uniquePosts": 56,
+    "peterUniquePosts": 24,
+    "maximumUniqueMatches": 24,
+    "maxReuse": 9,
     "reuseDistribution": {
       "1": 38,
-      "2": 9,
-      "3": 2,
+      "2": 11,
+      "3": 1,
       "4": 1,
       "5": 2,
       "8": 1,
-      "9": 1,
-      "10": 1
+      "9": 2
     },
-    "stickyPeterFloor": 24,
+    "stickyPeterFloor": 26,
     "stickyPeterAuthoredFloor": 10,
-    "reuseCeiling": 10,
+    "reuseCeiling": 9,
     "byEvidenceOwner": {
-      "external": 79,
-      "peterxing": 24
+      "peterxing": 26,
+      "external": 77
     },
     "byPeterAuthorship": {
       "authored": 10,
-      "reposted": 14
+      "reposted": 16
     },
     "bySourceQuality": {
-      "official-research-organization": 3,
-      "original-scenario-author": 33,
+      "peterxing-activity": 26,
+      "original-scenario-author": 32,
       "official-company": 6,
-      "peterxing-activity": 24,
       "official-ai-lab": 21,
+      "official-research-organization": 2,
       "academic-researcher": 4,
       "government": 1,
       "original-researcher": 2,
@@ -141,50 +140,53 @@
   },
   "embeds": {
     "2026-0": {
-      "id": "2024923422867030027",
-      "kind": "external",
-      "activityKind": "external",
-      "authorship": "external",
-      "evidenceOwner": "external",
-      "author": "METR_Evals",
-      "displayName": "METR",
-      "url": "https://x.com/METR_Evals/status/2024923422867030027",
+      "id": "2077254470639947962",
+      "kind": "repost",
+      "activityKind": "repost",
+      "authorship": "reposted",
+      "evidenceOwner": "peterxing",
+      "author": "ChrisGPT",
+      "displayName": "ChrisGPT",
+      "url": "https://x.com/ChrisGPT/status/2077254470639947962",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "METR_Evals",
-        "displayName": "METR",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "official-research-organization",
-        "verifiedThrough": "first-party-status+oembed",
+        "evidenceOwner": "peterxing",
+        "activityKind": "repost",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "reposted",
+        "activityId": "2077305898222191076",
+        "observedIn": "archive-verified",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
         "sourceChain": [
+          "wayback-cdx",
           "tweet-result",
           "x-oembed"
         ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "recent",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "leading-indicator",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "unique",
       "evidenceFamily": "agents-workflows",
-      "reuseFamily": "agent-task-horizon",
-      "evidenceType": "leading-indicator",
-      "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
-      "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 1,
       "matchedConcepts": [
         "agents",
         "research"
       ],
       "matchedFacets": [
-        "leading-indicator"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "leading-indicator",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter reposted this report of a research agent left running autonomously for eight days with an outer loop rewriting its own harness, a days-scale autonomous-research leading indicator for the persistence clause of this milestone rather than confirmation of the underlying result or of reliable multi-hour workflows at scale.",
       "reviewed": true,
-      "reviewedAt": "2026-07-21",
-      "date": "20 Feb 2026",
+      "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
+      "date": "15 Jul 2026",
       "maps": "Frontier agents reliably complete multi-hour computer workflows with human review, while monitored research systems can persist for days or weeks and require trajectory-level safeguards",
-      "text": "We estimate that Claude Opus 4.6 has a 50%-time-horizon of around 14.5 hours on software tasks. This is the highest point estimate we have reported, though t…",
-      "likes": 0,
+      "text": "Another real experimental evidence of recursive self-improvement may have just arrived. Researchers ran AIDE² autonomously for eight days with two loops: an …",
+      "likes": 217,
       "rts": 0
     },
     "2026-1": {
@@ -461,7 +463,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agi"
       ],
@@ -705,7 +707,7 @@
       "evidenceType": "leading-indicator",
       "mappingRationale": "Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.",
       "sourceQuality": "official-research-organization",
-      "reuseCount": 3,
+      "reuseCount": 2,
       "matchedConcepts": [
         "agents",
         "coding",
@@ -964,7 +966,7 @@
       "date": "17 May 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Ken Griffin went home on a Friday \"fairly depressed\" after watching AI agents at Citadel do work that used to take teams of PhDs in finance months to complet…",
-      "likes": 12341,
+      "likes": 12340,
       "rts": 1788
     },
     "2028-2": {
@@ -1185,7 +1187,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "capability",
         "compute",
@@ -1297,50 +1299,52 @@
       "rts": 0
     },
     "2029-1": {
-      "id": "2075254901903646814",
-      "kind": "external",
-      "activityKind": "external",
-      "authorship": "external",
-      "evidenceOwner": "external",
-      "author": "eli_lifland",
-      "displayName": "Eli Lifland",
-      "url": "https://x.com/eli_lifland/status/2075254901903646814",
+      "id": "2075260651287805963",
+      "kind": "repost",
+      "activityKind": "repost",
+      "authorship": "reposted",
+      "evidenceOwner": "peterxing",
+      "author": "ChrisGPT",
+      "displayName": "ChrisGPT",
+      "url": "https://x.com/ChrisGPT/status/2075260651287805963",
       "provenance": {
-        "evidenceOwner": "external",
-        "activityKind": "external",
-        "account": "eli_lifland",
-        "displayName": "Eli Lifland",
-        "retrievedAt": "2026-07-21",
-        "sourceQuality": "original-scenario-author",
-        "verifiedThrough": "first-party-status+oembed",
+        "evidenceOwner": "peterxing",
+        "activityKind": "repost",
+        "account": "peterxing",
+        "displayName": "Peter Xing",
+        "relationship": "reposted",
+        "activityId": "2075377985990045719",
+        "observedIn": "x-api-user-timeline",
+        "verifiedThrough": "archive-verified",
+        "lastVerifiedAt": "2026-07-29",
         "sourceChain": [
+          "wayback-cdx",
           "tweet-result",
           "x-oembed"
         ]
       },
-      "recency": "external",
-      "matchMethod": "reviewed-external",
+      "recency": "recent",
+      "matchMethod": "reviewed-sticky",
       "matchBasis": "scenario",
-      "assignmentMode": "external-reuse",
+      "assignmentMode": "family-reuse",
       "evidenceFamily": "frontier-governance",
-      "reuseFamily": "ai2040-plan-a",
-      "evidenceType": "scenario",
-      "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
-      "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 2,
       "matchedConcepts": [
-        "compute",
         "geopolitics"
       ],
       "matchedFacets": [
-        "scenario"
+        "reviewed-prediction-bound"
       ],
+      "evidenceType": "scenario",
+      "sourceQuality": "peterxing-activity",
+      "mappingRationale": "Peter reposted this summary of AI 2040's Plan A, in which the US and China strike a 2029 deal to avoid a reckless race and make AI R&D slower and more transparent; it is a precise scenario source for these negotiations, not evidence that such talks have begun.",
       "reviewed": true,
       "reviewedAt": "2026-07-29",
+      "lastVerifiedAt": "2026-07-29",
       "date": "09 Jul 2026",
       "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
-      "text": "Excited to publish AI 2040: Plan A, our plan for international coordination to get to a great AI future and treat superintelligence with the seriousness it d…",
-      "likes": 0,
+      "text": "The creators of AI 2027 just dropped AI 2040. Under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&D is slowed and made more...",
+      "likes": 503,
       "rts": 0
     },
     "2029-2": {
@@ -1371,9 +1375,9 @@
       "recency": "recent",
       "matchMethod": "reviewed-sticky",
       "matchBasis": "reviewed-prediction-bound",
-      "assignmentMode": "unique",
+      "assignmentMode": "family-reuse",
       "evidenceFamily": "frontier-governance",
-      "reuseCount": 1,
+      "reuseCount": 2,
       "matchedConcepts": [
         "governance",
         "geopolitics"
@@ -1471,7 +1475,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "governance",
         "geopolitics",
@@ -1717,7 +1721,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "research",
         "governance"
@@ -2582,7 +2586,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "distribution",
         "ai"
@@ -3060,7 +3064,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "agents",
         "research",
@@ -4131,7 +4135,7 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28648,
+      "likes": 28646,
       "rts": 3981
     },
     "2038-2": {
@@ -4211,7 +4215,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "institutions",
         "ai"
@@ -4353,7 +4357,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "agents",
         "institutions",
@@ -4447,7 +4451,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [],
       "matchedFacets": [
         "scenario"
@@ -4556,7 +4560,7 @@
       "date": "16 Jul 2026",
       "maps": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
       "text": "GPU average power consumption if it is doing inference over 24 hours is about two thirds of peak power, even if very efficient. SpaceX AI Sat V1...",
-      "likes": 4954,
+      "likes": 4953,
       "rts": 376
     },
     "2039-5": {
@@ -4737,7 +4741,7 @@
       "evidenceType": "scenario",
       "mappingRationale": "Original AI 2040 author Eli Lifland identifies Plan A as an international-coordination scenario; these are the plan-derived negotiation, treaty and institution milestones, not base-case predictions.",
       "sourceQuality": "original-scenario-author",
-      "reuseCount": 10,
+      "reuseCount": 9,
       "matchedConcepts": [
         "infrastructure",
         "ai"
@@ -4944,7 +4948,7 @@
       "date": "23 Jun 2026",
       "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
       "text": "Elon confirms \"Starmind\" will be the official name of SpaceX's AI satellite constellation. SpaceX filed a request with the FCC to launch...",
-      "likes": 7383,
+      "likes": 7384,
       "rts": 1268
     },
     "horizon-kardashev-energy-scaling": {
@@ -5095,17 +5099,6 @@
   "search": {},
   "reality": [
     {
-      "tag": "CAPABILITY",
-      "t": "Qwen3.8 is launching and going open-weight soon!🌐 With a massive 2.4T parameters, this model is continuously evolving. We believe it’s one of the …",
-      "id": "2078759124914098291",
-      "kind": "repost",
-      "author": "Alibaba_Qwen",
-      "recency": "recent",
-      "date": "19 Jul 2026",
-      "likes": 24463,
-      "rts": 0
-    },
-    {
       "tag": "ABUNDANCE",
       "t": "BREAKING: SpaceX, $SPCX, is in talks to provide compute power to the US Pentagon, per WSJ. The two sides are reportedly discussing an agreement whi…",
       "id": "2078194907664073036",
@@ -5117,25 +5110,36 @@
       "rts": 0
     },
     {
-      "tag": "MARKETS",
-      "t": "The time is long past to drop all export controls on NVIDIA. Some Americans are foolish enough to think they can win an AI race against China. That…",
-      "id": "2078140088861790430",
+      "tag": "CAPABILITY",
+      "t": "Four frontier AI models released in seven days. Fable Five, Grok 4.5, GPT 5.6, and Muse Spark. Not long ago, we got one model every six months. We'…",
+      "id": "2077333212984983589",
       "kind": "repost",
-      "author": "__tinygrad__",
+      "author": "PeterDiamandis",
       "recency": "recent",
-      "date": "17 Jul 2026",
-      "likes": 903,
+      "date": "15 Jul 2026",
+      "likes": 1312,
+      "rts": 0
+    },
+    {
+      "tag": "CODE",
+      "t": "AI agents are already being used to improve the capabilities of our next-generation models. We believe with GPT-Red that we have started to unlock …",
+      "id": "2077446723992228167",
+      "kind": "repost",
+      "author": "OpenAI",
+      "recency": "recent",
+      "date": "15 Jul 2026",
+      "likes": 388,
       "rts": 0
     },
     {
       "tag": "LABOUR",
-      "t": "Two questions: 1. Why is Tesla hiring a Space Radiation Engineer? 2. Did you say... TPUs?",
-      "id": "2078145439644430843",
+      "t": "This is normal and expected. AI is now like a tractor or a typewriter - it increases the output of work but needs a human operator. Once AI becomes…",
+      "id": "2076141273967423643",
       "kind": "repost",
-      "author": "teslayoda",
+      "author": "davidpattersonx",
       "recency": "recent",
-      "date": "17 Jul 2026",
-      "likes": 427,
+      "date": "12 Jul 2026",
+      "likes": 173,
       "rts": 0
     },
     {

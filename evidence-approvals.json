@@ -1,4 +1,22 @@
 {
+  "2026-0": {
+    "status": "active",
+    "sticky": true,
+    "postId": "2077254470639947962",
+    "activityId": "2077305898222191076",
+    "activityKind": "repost",
+    "relationship": "reposted",
+    "author": "ChrisGPT",
+    "publicUrl": "https://x.com/ChrisGPT/status/2077254470639947962",
+    "publicText": "Another real experimental evidence of recursive self-improvement may have just arrived. Researchers ran AIDE² autonomously for eight days with two loops: an inner agent solved research tasks, while an outer agent repeatedly rewrote the inner agent's own harness...",
+    "postDate": "15 Jul 2026",
+    "observedIn": "archive-verified",
+    "reviewedAt": "2026-07-29",
+    "lastVerifiedAt": "2026-07-29",
+    "evidenceType": "leading-indicator",
+    "predictionText": "Frontier agents reliably complete multi-hour computer workflows with human review, while monitored research systems can persist for days or weeks and require trajectory-level safeguards",
+    "basis": "Peter reposted this report of a research agent left running autonomously for eight days with an outer loop rewriting its own harness, a days-scale autonomous-research leading indicator for the persistence clause of this milestone rather than confirmation of the underlying result or of reliable multi-hour workflows at scale."
+  },
   "2026-3": {
     "status": "active",
     "sticky": true,
@@ -120,6 +138,24 @@
     "lastVerifiedAt": "2026-07-29",
     "predictionText": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
     "basis": "The post explicitly discusses superintelligence and recursive self-improvement."
+  },
+  "2029-1": {
+    "status": "active",
+    "sticky": true,
+    "postId": "2075260651287805963",
+    "activityId": "2075377985990045719",
+    "activityKind": "repost",
+    "relationship": "reposted",
+    "author": "ChrisGPT",
+    "publicUrl": "https://x.com/ChrisGPT/status/2075260651287805963",
+    "publicText": "The creators of AI 2027 just dropped AI 2040. Under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&D is slowed and made more...",
+    "postDate": "09 Jul 2026",
+    "observedIn": "x-api-user-timeline",
+    "reviewedAt": "2026-07-29",
+    "lastVerifiedAt": "2026-07-29",
+    "evidenceType": "scenario",
+    "predictionText": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
+    "basis": "Peter reposted this summary of AI 2040's Plan A, in which the US and China strike a 2029 deal to avoid a reckless race and make AI R&D slower and more transparent; it is a precise scenario source for these negotiations, not evidence that such talks have begun."
   },
   "2029-2": {
     "status": "active",

@@ -1272,7 +1272,7 @@ function hasCompleteSignalCoverage(data){
     && data.coverage.stickyPeterFloor >= 24
     && data.coverage.stickyPeterAuthoredFloor >= 10
     && Number(data.coverage.byEvidenceOwner?.peterxing || 0) >= data.coverage.stickyPeterFloor
-    && data.coverage.reuseCeiling === 10
+    && data.coverage.reuseCeiling >= 1 && data.coverage.reuseCeiling <= 10
     && maxReuse <= data.coverage.reuseCeiling
     && data.sourceStatus
     && data.sourceStatus.activeSource === data.source

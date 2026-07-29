@@ -23,7 +23,15 @@ const expectedIds = [
 ];
 const expected = new Set(expectedIds);
 const problems = [];
-const MAX_REVIEWED_REUSE = 10;
+// Honour the monotonic evidence ratchet: evidence-floors.json can only tighten this ceiling.
+const ratchet = (() => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, ''));
+  } catch {
+    return {};
+  }
+})();
+const MAX_REVIEWED_REUSE = Math.min(10, Number.isFinite(Number(ratchet.maxReuse)) ? Number(ratchet.maxReuse) : 10);
 const qualityClasses = new Set([
   'official-research-organization',
   'official-ai-lab',
