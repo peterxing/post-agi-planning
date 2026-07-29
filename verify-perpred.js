@@ -160,6 +160,7 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
           && signals.coverage.stickyPeterFloor >= 24
+          && signals.coverage.stickyPeterAuthoredFloor >= 10
           && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) >= signals.coverage.stickyPeterFloor
           && signals.coverage.reuseCeiling === 10
           && signals.coverage.maxReuse <= signals.coverage.reuseCeiling

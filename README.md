@@ -47,7 +47,7 @@ index.html ──loads──> styles.css + app.js
 - **`evidence-approvals.json`** is the public-safe, sticky reviewed prediction/post-pair ledger. Each
   approval is bound to the exact prediction text and retains public provenance plus review and
   verification dates. New automatic candidates cannot self-approve, and publication fails below the
-  reviewed 24-mapping Peter floor.
+  reviewed 24-mapping Peter floor and 10-mapping Peter-authored floor.
 - **`external-evidence.js`** is the reviewed authoritative-source ledger. It stores only public-safe
   status metadata, source-quality classification, scenario/leading-indicator labels, rationale, and
   compatible reuse groups.

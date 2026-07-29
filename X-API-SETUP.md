@@ -145,7 +145,8 @@ evidence family. External evidence must be in
 the reviewed public-safe ledger, first-party hydrate, identify its authoritative account/source
 quality, independently cross-check through oEmbed, and
 stay within one reviewed scenario or threshold-series reuse group. The private history remains under
-`pap-secrets` (**not** served). If source freshness, the 24-mapping sticky Peter floor, 103/103 direct
+`pap-secrets` (**not** served). If source freshness, the 24-mapping sticky Peter floor, the
+10-mapping Peter-authored floor, 103/103 direct
 coverage, provenance, the 10-use ceiling, or reuse compatibility fails, refresh exits nonzero and
 leaves the last complete public file unchanged.
 

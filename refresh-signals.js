@@ -54,6 +54,7 @@ const SEMANTIC_MAX_AGE_DAYS = Number(process.env.SEMANTIC_MAX_AGE_DAYS) || 30;
 const MIN_SCORE      = 2;
 const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 const MIN_STICKY_PETER_MAPPINGS = Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 24;
+const MIN_AUTHORED_PETER_MAPPINGS = Number(process.env.MIN_AUTHORED_PETER_MAPPINGS) || 10;
 const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || 10;
 const PETER_VERIFICATION_MAX_AGE_DAYS = Number(process.env.PETER_VERIFICATION_MAX_AGE_DAYS) || 30;
 const SKIP_API = process.env.X_SKIP_API === '1';
@@ -2250,9 +2251,16 @@ async function main(){
   const historyOldestAt = all.length ? all[all.length - 1].created.toISOString() : null;
   const peterMappingCount = Object.values(embeds)
     .filter(embed => embed.evidenceOwner === 'peterxing').length;
+  const peterAuthoredCount = Object.values(embeds)
+    .filter(embed => embed.evidenceOwner === 'peterxing' && embed.authorship === 'authored').length;
   if (peterMappingCount < MIN_STICKY_PETER_MAPPINGS) {
     mappingIntegrityErrors.push(
       `sticky Peter coverage fell below ${MIN_STICKY_PETER_MAPPINGS}: ${peterMappingCount}`
+    );
+  }
+  if (peterAuthoredCount < MIN_AUTHORED_PETER_MAPPINGS) {
+    mappingIntegrityErrors.push(
+      `Peter-authored coverage fell below ${MIN_AUTHORED_PETER_MAPPINGS}: ${peterAuthoredCount}`
     );
   }
   if (maxPostReuseObserved > MAX_REVIEWED_REUSE) {
@@ -2303,6 +2311,7 @@ async function main(){
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
       stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
+      stickyPeterAuthoredFloor: MIN_AUTHORED_PETER_MAPPINGS,
       reuseCeiling: MAX_REVIEWED_REUSE,
       byEvidenceOwner: ownerTally,
       byPeterAuthorship: peterAuthorshipTally,
@@ -2341,6 +2350,7 @@ async function main(){
     directCoverageComplete: coverageComplete && Object.keys(embeds).length === PREDICTIONS.length,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
     stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
+    stickyPeterAuthoredFloor: MIN_AUTHORED_PETER_MAPPINGS,
     reuseCeiling: MAX_REVIEWED_REUSE,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,

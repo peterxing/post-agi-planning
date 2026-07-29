@@ -235,6 +235,7 @@ to raise coverage.
    public excerpt, exact prediction text, review date, last verification date and rationale. Resolve
    it against the private archive-verified corpus even when it is absent from a recent window; evidence
    age is not verification freshness. Publication must retain at least the existing 24 reviewed Peter
+   mappings, including at least 10 Peter-authored mappings,
    mappings. Otherwise use a reviewed authoritative status from
    `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
    source quality and rationale. New external posts never self-approve. Search fallbacks are forbidden:
@@ -243,7 +244,8 @@ to raise coverage.
    reviewed compatible concept family or threshold/scenario series; large groups remain visible in
    `signals-debug.json` with all mapped IDs and their reviewed rationales.
    `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
-   whenever reviewed direct coverage is below N/N, the Peter floor falls below 24, freshness is
+   whenever reviewed direct coverage is below N/N, the Peter floor falls below 24, Peter-authored
+   coverage falls below 10, freshness is
    false, provenance is invalid, one status exceeds 10 uses, or reuse crosses a reviewed
    compatibility group. Record a safe `sourceStatus` reason (`authentication-expired`,
    `credits-depleted`, `access-or-plan-restricted`, `rate-limited`, `service-error`, or

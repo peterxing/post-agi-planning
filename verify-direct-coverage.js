@@ -26,6 +26,7 @@ const predictionTextById = new Map([
   ...predictions.postSuperintelligence.items.map(item => [`horizon-${item.id}`, item.t]),
 ]);
 const MIN_STICKY_PETER_MAPPINGS = 24;
+const MIN_AUTHORED_PETER_MAPPINGS = 10;
 const MAX_REVIEWED_REUSE = 10;
 const PETER_VERIFICATION_MAX_AGE_DAYS = 30;
 const expected = new Set(expectedIds);
@@ -82,6 +83,11 @@ if (unknownApprovals.length || unknownExternal.length || overlap.length || missi
 }
 if (approvalIds.length < MIN_STICKY_PETER_MAPPINGS) {
   problems.push(`sticky Peter approval floor fell below ${MIN_STICKY_PETER_MAPPINGS}: ${approvalIds.length}`);
+}
+const authoredApprovalCount = Object.values(approvals)
+  .filter(approval => approval.relationship === 'authored').length;
+if (authoredApprovalCount < MIN_AUTHORED_PETER_MAPPINGS) {
+  problems.push(`sticky Peter-authored approval floor fell below ${MIN_AUTHORED_PETER_MAPPINGS}: ${authoredApprovalCount}`);
 }
 for (const [predictionId, approval] of Object.entries(approvals)) {
   if (!approval || approval.status !== 'active' || approval.sticky !== true
@@ -238,6 +244,7 @@ if (coverage.complete !== true
     || coverage.uniquePosts !== usesByPost.size
     || coverage.maxReuse !== maxReuse
     || coverage.stickyPeterFloor !== MIN_STICKY_PETER_MAPPINGS
+    || coverage.stickyPeterAuthoredFloor !== MIN_AUTHORED_PETER_MAPPINGS
     || coverage.reuseCeiling !== MAX_REVIEWED_REUSE
     || JSON.stringify(coverage.reuseDistribution || {}) !== JSON.stringify(reuseDistribution)) {
   problems.push('signals.coverage must declare exact N/N direct-only coverage and reuse metrics');
@@ -262,6 +269,9 @@ if ((ownerCounts.peterxing || 0) < MIN_STICKY_PETER_MAPPINGS) {
 if (JSON.stringify(coverage.byPeterAuthorship || {}) !== JSON.stringify(peterAuthorshipCounts)
     || peterAuthorshipCounts.authored + peterAuthorshipCounts.reposted !== (ownerCounts.peterxing || 0)) {
   problems.push('published Peter authored/reposted split is missing or inaccurate');
+}
+if (peterAuthorshipCounts.authored < MIN_AUTHORED_PETER_MAPPINGS) {
+  problems.push(`published Peter-authored evidence fell below the sticky floor: ${peterAuthorshipCounts.authored}`);
 }
 
 console.log(`Coverage: ${actualIds.length}/${expectedIds.length} direct; searches: ${searches ? Object.keys(searches).length : 0}`);
