@@ -46,6 +46,17 @@ const LOCK_FILE = process.env.PAP_LOCK_FILE
   : path.join(__dirname, '.pipeline.lock');
 const LOCK_BASENAME = '.pipeline.lock';
 const STALE_MINUTES = Math.max(5, Number(process.env.PAP_LOCK_STALE_MINUTES) || 90);
+/**
+ * A session lock records the pid of the shell that acquired it. That supervisor is only a hint —
+ * in fresh-shell-per-command environments it exits immediately even though the run continues — so a
+ * dead supervisor alone never reclaims a lock. It reclaims only once the lock has ALSO been idle
+ * this long, which a live run can never be: every guarded tool heartbeats on entry and then again
+ * every HEARTBEAT_MS while it works. Without this rule a run that dies mid-flight (agent crash, app
+ * restart, reboot, cancelled task) wedges the whole tree for the full STALE_MINUTES ceiling, and
+ * every scheduled run in that window burns its --wait and then defers. That is the stall this fixes.
+ */
+const ORPHAN_MINUTES = Math.max(2, Number(process.env.PAP_LOCK_ORPHAN_MINUTES) || 15);
+const HEARTBEAT_MS = Math.max(5000, Number(process.env.PAP_LOCK_HEARTBEAT_MS) || 60000);
 const POLL_MS = Math.max(200, Number(process.env.PAP_LOCK_POLL_MS) || 5000);
 const EXIT_DEFERRED = 75;
 const PURPOSES = new Set(['scheduled-forecast', 'scheduled-author', 'interactive', 'manual']);
@@ -93,6 +104,9 @@ function staleReason(lock) {
   if (age > STALE_MINUTES) return `lock is ${age.toFixed(1)} minutes old, beyond the ${STALE_MINUTES} minute ceiling`;
   if (lock.mode === 'process' && !pidAlive(lock.pid)) return `holder pid ${lock.pid} is not alive`;
   if (lock.mode === 'session' && lock.pid && !pidAlive(lock.pid)) return `supervising pid ${lock.pid} is not alive`;
+  if (lock.mode === 'session' && lock.supervisorPid && !pidAlive(lock.supervisorPid) && age > ORPHAN_MINUTES) {
+    return `acquiring shell pid ${lock.supervisorPid} is gone and the lock has been idle ${age.toFixed(1)} minutes, beyond the ${ORPHAN_MINUTES} minute orphan grace`;
+  }
   return null;
 }
 
@@ -123,9 +137,15 @@ function reclaim(reason) {
 
 function touchHeartbeat(lock) {
   try {
-    fs.writeFileSync(LOCK_FILE, JSON.stringify({ ...lock, heartbeatAt: nowIso() }, null, 2) + '\n');
+    // Re-read before writing: a heartbeat must never resurrect a lock that has already been
+    // released, and must never overwrite a lock that now belongs to somebody else.
+    const current = readLock();
+    if (!current || current.corrupt || current.owner !== lock.owner) return false;
+    fs.writeFileSync(LOCK_FILE, JSON.stringify({ ...current, heartbeatAt: nowIso() }, null, 2) + '\n');
+    return true;
   } catch {
     /* a heartbeat failure must never break the run it is protecting */
+    return false;
   }
 }
 
@@ -136,11 +156,18 @@ function describe(lock) {
 }
 
 function buildPayload({ owner, purpose, mode, pid, activity }) {
+  // The acquiring process itself exits immediately, so its own pid is useless as a liveness token.
+  // Its parent — the shell driving the run — is a useful hint, recorded separately from the
+  // authoritative `pid` field and only ever acted on together with the orphan idle grace.
+  const supervisorPid = mode === 'session' && Number.isInteger(process.ppid) && process.ppid > 1 && pidAlive(process.ppid)
+    ? process.ppid
+    : null;
   return {
     owner,
     purpose,
     mode,
     pid: pid == null ? null : Number(pid),
+    supervisorPid,
     activity: activity || null,
     host: os.hostname(),
     startedAt: nowIso(),
@@ -159,8 +186,13 @@ function acquire({ owner, purpose, mode = 'session', waitSeconds = 0, pid = null
   const deadline = Date.now() + Math.max(0, waitSeconds) * 1000;
   let reclaimed = null;
   let waited = false;
+  // Reclaim/race retries used to `continue` past both the deadline check and the sleep below, so a
+  // lock file that kept reappearing could spin this loop hot forever and never defer. Every
+  // iteration is now bounded: unproductive retries fall through to the same deadline check.
+  let spins = 0;
   for (;;) {
     const existing = readLock();
+    let retryImmediately = false;
     if (existing && !existing.corrupt && existing.owner === owner) {
       touchHeartbeat(existing);
       return { ok: true, state: 'inherited', lock: existing, reclaimed, waited };
@@ -170,13 +202,16 @@ function acquire({ owner, purpose, mode = 'session', waitSeconds = 0, pid = null
       if (stale) {
         reclaimed = `${describe(existing)} — ${stale}`;
         reclaim(reclaimed);
-        continue;
+        retryImmediately = true;
       }
     } else if (writeLockExclusive(buildPayload({ owner, purpose, mode, pid, activity }))) {
       return { ok: true, state: 'acquired', lock: readLock(), reclaimed, waited };
     } else {
-      continue; // lost a creation race; re-inspect
+      retryImmediately = true; // lost a creation race; re-inspect
     }
+    // A handful of immediate retries is normal contention. Beyond that, treat it as a livelock and
+    // fall through to the bounded wait so this can never become an unkillable busy loop.
+    if (retryImmediately && ++spins <= 8) continue;
     if (Date.now() >= deadline) {
       return { ok: false, state: 'deferred', lock: existing, reclaimed, waited };
     }
@@ -238,6 +273,12 @@ function guard(activity, { purpose = null, waitSeconds = null } = {}) {
   if (result.reclaimed) {
     console.error(`[pipeline-lock] Continuing after reclaiming a stale lock: ${result.reclaimed}`);
   }
+  // Keep proving this run is alive while it works. A guarded tool can run for many minutes
+  // (archive hydration, the verifier suite, deploy), and without this the lock would look idle even
+  // though the run is healthy. unref'd so it can never hold the process open — the point of this
+  // change is to remove hangs, not add one.
+  const beat = setInterval(() => touchHeartbeat({ owner }), HEARTBEAT_MS);
+  if (typeof beat.unref === 'function') beat.unref();
   if (result.state === 'acquired' && !sessionOwner) {
     implicitOwner = owner;
     // Children inherit the owner, so nested tools reuse this lock instead of deferring on it.

@@ -88,23 +88,48 @@ function oauth1Header(method, url, extraParams = {}) {
 }
 
 // auth: 'app' (bearer) | 'oauth1' (user ctx, needs AT/AS) | 'oauth2' (user ctx, needs O2)
-async function xGet(pathQuery, { auth = 'app' } = {}) {
+// The X API is an OPTIONAL diagnostic for this pipeline, so it must never be able to stall the run.
+// Node's global fetch has no default timeout: without an AbortController a connection that is
+// accepted but never answered (throttling, captive network, credits-depleted stall) hangs the whole
+// scheduled run forever with no output. The abort timer stays armed across the body read too.
+const X_TIMEOUT_MS = Math.max(5000, Number(process.env.PAP_X_TIMEOUT_MS) || 30000);
+
+async function xGet(pathQuery, { auth = 'app', timeoutMs = X_TIMEOUT_MS } = {}) {
   const url = API + pathQuery;
   const headers = { 'User-Agent': 'pap-refresh/1.0' };
   if (auth === 'oauth1' && AT && AS) headers['Authorization'] = oauth1Header('GET', url);
   else if (auth === 'oauth2' && O2) headers['Authorization'] = 'Bearer ' + O2;
   else headers['Authorization'] = 'Bearer ' + BEARER;
-  const r = await fetch(url, { headers });
-  const text = await r.text();
-  let json = null; try { json = JSON.parse(text); } catch {}
-  return {
-    status: r.status,
-    ok: r.ok,
-    json,
-    text,
-    limit: r.headers.get('x-rate-limit-remaining'),
-    reset: r.headers.get('x-rate-limit-reset'),
-  };
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { headers, signal: controller.signal });
+    const text = await r.text();
+    let json = null; try { json = JSON.parse(text); } catch {}
+    return {
+      status: r.status,
+      ok: r.ok,
+      json,
+      text,
+      limit: r.headers.get('x-rate-limit-remaining'),
+      reset: r.headers.get('x-rate-limit-reset'),
+    };
+  } catch (error) {
+    // A timed-out or failed optional diagnostic degrades the source honestly; it never hangs and
+    // never fabricates a result. Surfaced as a transport status so callers report it truthfully.
+    const timedOut = error && (error.name === 'AbortError' || error.name === 'TimeoutError');
+    return {
+      status: 0,
+      ok: false,
+      json: null,
+      text: '',
+      limit: null,
+      reset: null,
+      transportError: timedOut ? `timed out after ${timeoutMs}ms` : String((error && error.message) || error),
+    };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 const TW_FIELDS = 'tweet.fields=created_at,public_metrics,referenced_tweets,lang&expansions=referenced_tweets.id,referenced_tweets.id.author_id,author_id&user.fields=username,name';

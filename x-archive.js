@@ -77,6 +77,26 @@ function cleanText(value) {
     .trim();
 }
 
+/**
+ * A already-consumed response. fetchResponse reads the body while the abort timer is still armed,
+ * so callers get the same surface they used to get from a live Response without the ability to
+ * stall on an unread body. Node's fetch applies NO timeout of its own, and an AbortController that
+ * is cleared once the headers land leaves the body read unbounded — a server that answers and then
+ * stops sending would hang the whole pipeline forever with no output. Buffering here makes the
+ * timeout cover the entire request, headers and body alike.
+ */
+function bufferedResponse(response, body) {
+  return {
+    ok: response.ok,
+    status: response.status,
+    headers: response.headers,
+    url: response.url,
+    text: async () => body,
+    json: async () => JSON.parse(body),
+    arrayBuffer: async () => Buffer.from(body),
+  };
+}
+
 async function fetchResponse(url, {
   timeoutMs = 120000,
   attempts = 3,
@@ -96,9 +116,11 @@ async function fetchResponse(url, {
         },
         signal: controller.signal,
       });
+      // Read the body BEFORE clearing the timer so a stalled body aborts instead of hanging.
+      const body = await response.text();
       clearTimeout(timeout);
-      if (!retryStatuses.has(response.status) || attempt === attempts - 1) return response;
-      await response.arrayBuffer().catch(() => {});
+      const buffered = bufferedResponse(response, body);
+      if (!retryStatuses.has(response.status) || attempt === attempts - 1) return buffered;
       const retryAfter = Number(response.headers.get('retry-after')) || 0;
       await sleep(Math.max(retryAfter * 1000, Math.min(60000, 1500 * (2 ** attempt))));
     } catch (error) {

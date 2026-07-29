@@ -191,6 +191,36 @@ check(!fs.existsSync(SANDBOX), 'a normal exit must release the implicit lock');
   clearSandbox();
   notes.push('crash release: hard-killed holder reclaimed by the next actor');
 
+  // 7b. A crashed SESSION run must not wedge the tree for the whole stale ceiling.
+  // A scheduled run acquires a session lock and then dies without releasing. Its heartbeat stops,
+  // but nothing can prove the holder is gone, so every later run defers until the 90 minute ceiling
+  // expires. That is the stall this guards against: a dead acquiring shell plus an idle lock must be
+  // reclaimed after the much shorter orphan grace, while a FRESH lock is still strictly respected.
+  const orphanEnv = { PAP_LOCK_ORPHAN_MINUTES: '2' };
+  const sessionOrphan = {
+    owner: 'scheduled-forecast-crashed', purpose: 'scheduled-forecast', mode: 'session',
+    pid: null, supervisorPid: 999996, activity: null, host: os.hostname(),
+    startedAt: new Date(Date.now() - 30 * 60000).toISOString(),
+    heartbeatAt: new Date(Date.now() - 30 * 60000).toISOString(),
+  };
+  fs.writeFileSync(SANDBOX, JSON.stringify(sessionOrphan));
+  result = runLock(['acquire', '--owner=after-session-crash', '--purpose=scheduled-forecast'], orphanEnv);
+  check(result.status === 0, 'a crashed session run must not wedge the tree until the stale ceiling');
+  check(/reclaimed stale lock/i.test(`${result.stdout}${result.stderr}`),
+    'session orphan reclamation must be reported loudly');
+  clearSandbox();
+
+  // The same orphan rule must NOT steal a lock that is still being heartbeated by a live run.
+  fs.writeFileSync(SANDBOX, JSON.stringify({
+    ...sessionOrphan, owner: 'scheduled-forecast-live',
+    startedAt: new Date(Date.now() - 30 * 60000).toISOString(),
+    heartbeatAt: new Date().toISOString(),
+  }));
+  result = runLock(['acquire', '--owner=other-actor', '--purpose=scheduled-forecast'], orphanEnv);
+  check(result.status === 75, 'a heartbeating session holder must still defer other actors, not be reclaimed');
+  clearSandbox();
+  notes.push('session orphan: crashed run reclaimed after the orphan grace, live run still respected');
+
   // 8. The live server must refuse the lock file.
   const base = process.argv[2];
   if (base) {

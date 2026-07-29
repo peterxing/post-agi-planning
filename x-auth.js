@@ -65,11 +65,23 @@ function tokenRequest(params, ENV) {
   if (ENV.X_OAUTH2_CLIENT_SECRET) {
     headers.Authorization = 'Basic ' + Buffer.from(ENV.X_OAUTH2_CLIENT_ID + ':' + ENV.X_OAUTH2_CLIENT_SECRET).toString('base64');
   }
-  return fetch(TOKEN_URL, { method: 'POST', headers, body }).then(async r => {
+  // Node's fetch never times out on its own. An unanswered token request would otherwise block the
+  // scheduled run indefinitely, so bound the whole exchange — headers and body — with an abort timer.
+  const timeoutMs = Math.max(5000, Number(process.env.PAP_X_TIMEOUT_MS) || 30000);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(TOKEN_URL, { method: 'POST', headers, body, signal: controller.signal }).then(async r => {
     const txt = await r.text();
+    clearTimeout(timer);
     let j = {}; try { j = JSON.parse(txt); } catch (e) {}
     if (!r.ok) throw new Error('token endpoint HTTP ' + r.status + ': ' + txt.slice(0, 300));
     return j;
+  }).catch(error => {
+    clearTimeout(timer);
+    if (error && (error.name === 'AbortError' || error.name === 'TimeoutError')) {
+      throw new Error(`token endpoint timed out after ${timeoutMs}ms`);
+    }
+    throw error;
   });
 }
 
