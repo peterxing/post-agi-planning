@@ -506,5 +506,23 @@
     "lastVerifiedAt": "2026-08-03",
     "predictionText": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
     "basis": "The post explicitly discusses climbing the Kardashev scale."
+  },
+  "horizon-ruliad-testable-physics": {
+    "status": "active",
+    "sticky": true,
+    "postId": "1458773445357891587",
+    "activityId": "1458773445357891587",
+    "activityKind": "post",
+    "relationship": "authored",
+    "author": "peterxing",
+    "publicUrl": "https://x.com/peterxing/status/1458773445357891587",
+    "publicText": "Really enjoyed listening to @stephen_wolfram on the @lexfridman podcast for his update on the Wolfram Physics Project, in particular the concept of the ruliad which he has just published more details on here:",
+    "postDate": "11 Nov 2021",
+    "observedIn": "archive-verified",
+    "reviewedAt": "2026-08-03",
+    "lastVerifiedAt": "2026-08-03",
+    "evidenceType": "leading-indicator",
+    "predictionText": "Ruliad research could become forecast-relevant only if it yields discriminating, testable physical predictions or engineering consequences",
+    "basis": "Peter's authored post engages directly with the ruliad by name, citing Wolfram's newly published ruliad write-up from the Wolfram Physics Project and his own explanatory infographic. It is a leading indicator of the framework's development and of Peter's tracking of it, not evidence that the ruliad has yielded discriminating, testable physical predictions or engineering consequences. It supersedes the previously reviewed external Stephen Wolfram 2020 Physics Project launch status on specificity, because that status predates and does not name the ruliad, and because a defensible Peter-authored status outranks external evidence under the reviewed evidence priority."
   }
 }

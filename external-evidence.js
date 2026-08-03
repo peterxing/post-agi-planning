@@ -304,16 +304,6 @@ const EXTERNAL_SOURCES = {
     sourceQuality: 'original-framework-author',
     text: 'What is humanity long-term future: outer space, stay here, or inner space? The Transcension Hypothesis says we stay here, then go inward.',
   },
-  'wolfram-physics-project': {
-    statusId: '1250063808309198849',
-    handle: 'stephen_wolfram',
-    displayName: 'Stephen Wolfram',
-    url: 'https://x.com/stephen_wolfram/status/1250063808309198849',
-    postedAt: '2020-04-14T14:10:11.000Z',
-    retrievedAt: RETRIEVED_AT,
-    sourceQuality: 'original-framework-author',
-    text: 'I never expected this: finally we may have a path to the fundamental theory of physics, and it is beautiful. The linked work launches the Wolfram Physics Project underlying later ruliad research.',
-  },
   'openmined-private-research': {
     statusId: '1573519112348770304',
     handle: 'openminedorg',
@@ -569,13 +559,6 @@ const EXTERNAL_GROUPS = [
     evidenceType: 'scenario',
     rationale: 'The original framework author explicitly describes the Transcension Hypothesis as staying local and going inward.',
     ids: ['horizon-transcension-hypothesis'],
-  },
-  {
-    source: 'wolfram-physics-project',
-    reuseFamily: 'ruliad-framework',
-    evidenceType: 'leading-indicator',
-    rationale: 'Stephen Wolfram official launch of the Physics Project is the original research program underlying later ruliad formalism; it is evidence of the framework, not validation.',
-    ids: ['horizon-ruliad-testable-physics'],
   },
 ];
 

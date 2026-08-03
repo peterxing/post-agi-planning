@@ -2447,6 +2447,14 @@ async function main(){
       `reviewed reuse ceiling exceeded: ${maxPostReuseObserved}/${MAX_REVIEWED_REUSE}`
     );
   }
+  const evidenceRatchet = {
+    peterTotal: Math.max(EVIDENCE_RATCHET.peterTotal, peterMappingCount),
+    peterAuthored: Math.max(EVIDENCE_RATCHET.peterAuthored, peterAuthoredCount),
+    maxReuse: Math.min(
+      Number.isFinite(EVIDENCE_RATCHET.maxReuse) ? EVIDENCE_RATCHET.maxReuse : BASE_MAX_REVIEWED_REUSE,
+      maxPostReuseObserved
+    ),
+  };
   const coverageComplete = mappingIntegrityErrors.length === 0
     && currentCoveredIds.size === PREDICTIONS.length;
   const ownerTally = {};
@@ -2499,9 +2507,9 @@ async function main(){
       maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
-      stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
-      stickyPeterAuthoredFloor: MIN_AUTHORED_PETER_MAPPINGS,
-      reuseCeiling: MAX_REVIEWED_REUSE,
+      stickyPeterFloor: evidenceRatchet.peterTotal,
+      stickyPeterAuthoredFloor: evidenceRatchet.peterAuthored,
+      reuseCeiling: evidenceRatchet.maxReuse,
       byEvidenceOwner: ownerTally,
       byEvidenceMedium: mediumTally,
       byPeterAuthorship: peterAuthorshipTally,
@@ -2539,9 +2547,9 @@ async function main(){
     coverageComplete,
     directCoverageComplete: coverageComplete && Object.keys(embeds).length === PREDICTIONS.length,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
-    stickyPeterFloor: MIN_STICKY_PETER_MAPPINGS,
-    stickyPeterAuthoredFloor: MIN_AUTHORED_PETER_MAPPINGS,
-    reuseCeiling: MAX_REVIEWED_REUSE,
+    stickyPeterFloor: evidenceRatchet.peterTotal,
+    stickyPeterAuthoredFloor: evidenceRatchet.peterAuthored,
+    reuseCeiling: evidenceRatchet.maxReuse,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
     peterAuthorship: peterAuthorshipTally,
@@ -2603,14 +2611,7 @@ async function main(){
   }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
   console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${PREDICTIONS.length}).`);
-  const ratchet = {
-    peterTotal: Math.max(EVIDENCE_RATCHET.peterTotal, peterMappingCount),
-    peterAuthored: Math.max(EVIDENCE_RATCHET.peterAuthored, peterAuthoredCount),
-    maxReuse: Math.min(
-      Number.isFinite(EVIDENCE_RATCHET.maxReuse) ? EVIDENCE_RATCHET.maxReuse : BASE_MAX_REVIEWED_REUSE,
-      maxPostReuseObserved
-    ),
-  };
+  const ratchet = evidenceRatchet;
   if (ratchet.peterTotal !== EVIDENCE_RATCHET.peterTotal
     || ratchet.peterAuthored !== EVIDENCE_RATCHET.peterAuthored
     || ratchet.maxReuse !== EVIDENCE_RATCHET.maxReuse) {

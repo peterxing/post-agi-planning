@@ -1,7 +1,7 @@
 {
-  "updated": "2026-07-30",
+  "updated": "2026-08-03",
   "note": "Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.",
-  "peterTotal": 29,
-  "peterAuthored": 10,
+  "peterTotal": 30,
+  "peterAuthored": 11,
   "maxReuse": 9
 }
