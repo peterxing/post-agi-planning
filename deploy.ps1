@@ -15,7 +15,8 @@ $coverageVerifier = Join-Path $source 'verify-direct-coverage.js'
 $archiveVerifier = Join-Path $source 'verify-archive-corpus.js'
 $peterVerifier = Join-Path $source 'verify-peter-evidence.js'
 $externalVerifier = Join-Path $source 'verify-external-evidence.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier)) {
+$newsVerifier = Join-Path $source 'verify-news-evidence.js'
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier) -or -not (Test-Path $newsVerifier)) {
   Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
 }
@@ -37,6 +38,12 @@ if ($LASTEXITCODE -ne 0) {
 & node $externalVerifier
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'External X evidence validation failed; deployment aborted.'
+  exit 6
+}
+# Tier-3 news mappings must re-resolve and still carry their exact reviewed quote at deploy time.
+& node $newsVerifier
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'Verified news evidence validation failed; deployment aborted.'
   exit 6
 }
 

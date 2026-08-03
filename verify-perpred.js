@@ -85,13 +85,37 @@ const SHOT = process.argv[3] || null;
       const directSchema = Object.keys(embeds).every(key => {
         const e = embeds[key];
         const provenance = e && e.provenance || {};
+        const isNews = e && e.evidenceOwner === 'news';
         const common = e
-          && /^\d{15,}$/.test(String(e.id || ''))
-          && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(e.url || ''))
+          && (isNews
+            ? /^news:[a-z0-9][a-z0-9-]*$/.test(String(e.id || ''))
+              && /^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(e.url || ''))
+            : /^\d{15,}$/.test(String(e.id || ''))
+              && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(e.url || '')))
           && !!e.evidenceFamily
           && e.reviewed === true
           && !!e.mappingRationale;
         if (!common) return false;
+        if (isNews) {
+          return e.kind === 'news'
+            && e.activityKind === 'news'
+            && provenance.evidenceOwner === 'news'
+            && provenance.activityKind === 'news'
+            && !!provenance.publisher
+            && !!provenance.publisherHost
+            && !!provenance.publishedAt
+            && !!provenance.retrievedAt
+            && !!provenance.sourceQuality
+            && !!provenance.textSha256
+            && provenance.verifiedThrough === 'live-fetch+quote-match'
+            && Array.isArray(provenance.sourceChain)
+            && provenance.sourceChain.includes('quote-match')
+            && !!e.headline && !!e.quote && !!e.publisher
+            && e.matchMethod === 'reviewed-news'
+            && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
+            && ['unique', 'news-reuse'].includes(e.assignmentMode)
+            && !!e.reuseFamily;
+        }
         if (e.evidenceOwner === 'peterxing') {
           return ['post', 'repost'].includes(e.kind)
             && provenance.evidenceOwner === 'peterxing'

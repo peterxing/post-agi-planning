@@ -38,6 +38,15 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
+// Tier 3 of the evidence ladder. Consulted per prediction ONLY when neither a reviewed @peterxing
+// activity nor a reviewed authoritative external X status exists for that specific prediction. A
+// degraded or unpaid X API never triggers this path, because archive-verified retrieval does not
+// use the X API. News can never satisfy or bypass the Peter floors or the evidence ratchet.
+const {
+  NEWS_MAPPINGS,
+  NEWS_SOURCES,
+  verifyNewsSource,
+} = require('./news-evidence');
 const {
   corpusToMatcherItems,
   hydrateActivity,
@@ -1963,6 +1972,40 @@ async function main(){
     externalUsesBySource[mapping.source] = (externalUsesBySource[mapping.source] || 0) + 1;
   }
 
+  // TIER 3 — verified news. Eligibility is per prediction and evidence-based, never API-state-based:
+  // a prediction qualifies only when it has neither a reviewed @peterxing activity nor a reviewed
+  // authoritative external X status. News is consulted after the full archive pipeline has run, so a
+  // degraded X API alone can never trigger it. Every mapping is live-fetched and quote-checked here
+  // and again in the publish preflight; any failure blocks the mapping rather than degrading it.
+  const newsEligibleIds = new Set(PREDICTIONS
+    .filter(p => !picks[p.id] && !EXTERNAL_MAPPINGS[p.id])
+    .map(p => p.id));
+  const newsUsesBySource = {};
+  for (const mapping of Object.values(NEWS_MAPPINGS)) {
+    newsUsesBySource[mapping.source] = (newsUsesBySource[mapping.source] || 0) + 1;
+  }
+  const newsVerified = new Map();
+  const newsIntegrityErrors = [];
+  const knownPredictionIds = new Set(PREDICTIONS.map(p => p.id));
+  for (const [predictionId, mapping] of Object.entries(NEWS_MAPPINGS)) {
+    if (!knownPredictionIds.has(predictionId)) {
+      newsIntegrityErrors.push(`news mapping references unknown prediction ${predictionId}`);
+    } else if (!newsEligibleIds.has(predictionId)) {
+      newsIntegrityErrors.push(`news mapping ${predictionId} would displace reviewed X evidence`);
+    }
+  }
+  for (const predictionId of newsEligibleIds) {
+    const mapping = NEWS_MAPPINGS[predictionId];
+    const article = mapping && NEWS_SOURCES[mapping.source];
+    if (!mapping || !article) continue;
+    const check = await verifyNewsSource(mapping.source, article);
+    if (check.problems.length) {
+      newsIntegrityErrors.push(...check.problems);
+      continue;
+    }
+    newsVerified.set(predictionId, { mapping, article });
+  }
+
   // Build exactly one reviewed direct embed per prediction.
   const embeds = {}; const searches = {}; const chosen = {};
   for (const p of PREDICTIONS) {
@@ -1971,6 +2014,64 @@ async function main(){
       const mapping = EXTERNAL_MAPPINGS[p.id];
       const external = mapping && EXTERNAL_SOURCES[mapping.source];
       if (!mapping || !external) {
+        const news = newsVerified.get(p.id);
+        if (news) {
+          const { mapping: newsMapping, article } = news;
+          let newsText = cleanText(article.quote);
+          if (newsText.length > 220) newsText = newsText.slice(0, 217) + '\u2026';
+          const newsReuse = newsUsesBySource[newsMapping.source] || 1;
+          embeds[p.id] = {
+            id: `news:${newsMapping.source}`,
+            kind: 'news',
+            activityKind: 'news',
+            authorship: 'news',
+            evidenceOwner: 'news',
+            evidenceMedium: 'news',
+            publisher: article.publisher,
+            publisherHost: article.publisherHost,
+            byline: article.author || null,
+            headline: article.headline,
+            quote: article.quote,
+            articleDate: article.publishedAt,
+            url: article.resolvedUrl,
+            provenance: {
+              evidenceOwner: 'news',
+              activityKind: 'news',
+              publisher: article.publisher,
+              publisherHost: article.publisherHost,
+              byline: article.author || null,
+              publishedAt: article.publishedAt,
+              retrievedAt: article.retrievedAt,
+              sourceQuality: article.sourceQuality,
+              verifiedThrough: 'live-fetch+quote-match',
+              sourceChain: ['live-fetch', 'metadata-extract', 'quote-match'],
+              lastVerifiedAt: newsMapping.lastVerifiedAt,
+              textSha256: article.textSha256,
+            },
+            recency: 'news',
+            matchMethod: 'reviewed-news',
+            matchBasis: newsMapping.evidenceType,
+            assignmentMode: newsReuse > 1 ? 'news-reuse' : 'unique',
+            evidenceFamily: p.evidenceFamily,
+            reuseFamily: newsMapping.reuseFamily,
+            evidenceType: newsMapping.evidenceType,
+            mappingRationale: newsMapping.rationale,
+            sourceQuality: article.sourceQuality,
+            reuseCount: newsReuse,
+            matchedConcepts: [...p.concepts],
+            matchedFacets: [newsMapping.evidenceType],
+            reviewed: true,
+            reviewedAt: newsMapping.reviewedAt,
+            lastVerifiedAt: newsMapping.lastVerifiedAt,
+            date: fmtDate(new Date(article.publishedAt)),
+            maps: p.maps,
+            text: newsText,
+            likes: 0,
+            rts: 0,
+          };
+          chosen[p.id] = `news:${article.publisherHost} [${newsMapping.evidenceType}/${embeds[p.id].assignmentMode} source=${newsMapping.source} reuse=${newsReuse}]`;
+          continue;
+        }
         chosen[p.id] = 'unresolved [no reviewed direct mapping]';
         continue;
       }
@@ -2178,7 +2279,9 @@ async function main(){
       predictionIds,
       evidenceOwner: owners.length === 1 ? owners[0] : null,
       reuseFamily: family,
-      mode: predictionIds.length === 1 ? 'unique' : owners[0] === 'external' ? 'external-reuse' : 'family-reuse',
+      mode: predictionIds.length === 1 ? 'unique'
+        : owners[0] === 'external' ? 'external-reuse'
+          : owners[0] === 'news' ? 'news-reuse' : 'family-reuse',
       reviewed: uses.every(use => use.embed.reviewed === true),
       mappingRationales: Object.fromEntries(uses.map(use => [
         use.predictionId,
@@ -2195,6 +2298,10 @@ async function main(){
       } else if (owners[0] === 'external'
           && uses.some(use => use.embed.reuseFamily !== family
             || use.embed.assignmentMode !== 'external-reuse')) {
+        invalidReuse.push(audit);
+      } else if (owners[0] === 'news'
+          && uses.some(use => use.embed.reuseFamily !== family
+            || use.embed.assignmentMode !== 'news-reuse')) {
         invalidReuse.push(audit);
       }
     }
@@ -2215,11 +2322,18 @@ async function main(){
   for (const prediction of PREDICTIONS) {
     const embed = embeds[prediction.id];
     if (!embed) continue;
-    if (!/^\d{15,}$/.test(String(embed.id || ''))) {
+    const isNews = embed.evidenceOwner === 'news';
+    if (!isNews && !/^\d{15,}$/.test(String(embed.id || ''))) {
       mappingIntegrityErrors.push(`${prediction.id}: invalid post ID`);
     }
-    if (!/^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(embed.url || ''))) {
+    if (!isNews && !/^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(embed.url || ''))) {
       mappingIntegrityErrors.push(`${prediction.id}: invalid direct X URL`);
+    }
+    if (isNews && !/^news:[a-z0-9][a-z0-9-]*$/.test(String(embed.id || ''))) {
+      mappingIntegrityErrors.push(`${prediction.id}: invalid news evidence key`);
+    }
+    if (isNews && !/^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(embed.url || ''))) {
+      mappingIntegrityErrors.push(`${prediction.id}: invalid resolved article URL`);
     }
     const provenance = embed.provenance || {};
     if (embed.evidenceOwner === 'peterxing') {
@@ -2277,6 +2391,32 @@ async function main(){
           || !embed.mappingRationale) {
         mappingIntegrityErrors.push(`${prediction.id}: incomplete external evidence provenance`);
       }
+    } else if (embed.evidenceOwner === 'news') {
+      const mapping = NEWS_MAPPINGS[prediction.id];
+      const article = mapping && NEWS_SOURCES[mapping.source];
+      if (!mapping || !article || !newsVerified.has(prediction.id)
+          || embed.id !== `news:${mapping.source}`
+          || embed.reviewed !== true || embed.reviewedAt !== mapping.reviewedAt
+          || embed.url !== article.resolvedUrl) {
+        mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching live-verified news ledger entry`);
+      }
+      if (embed.kind !== 'news' || embed.activityKind !== 'news'
+          || provenance.evidenceOwner !== 'news'
+          || provenance.activityKind !== 'news'
+          || provenance.publisher !== article?.publisher
+          || provenance.publisherHost !== article?.publisherHost
+          || provenance.sourceQuality !== article?.sourceQuality
+          || !provenance.publishedAt
+          || !provenance.retrievedAt
+          || !provenance.textSha256
+          || provenance.verifiedThrough !== 'live-fetch+quote-match'
+          || !Array.isArray(provenance.sourceChain)
+          || !provenance.sourceChain.includes('quote-match')
+          || !embed.headline || !embed.quote || !embed.publisher
+          || !['direct', 'scenario', 'leading-indicator'].includes(embed.evidenceType)
+          || !embed.mappingRationale) {
+        mappingIntegrityErrors.push(`${prediction.id}: incomplete news evidence provenance`);
+      }
     } else {
       mappingIntegrityErrors.push(`${prediction.id}: invalid evidence owner`);
     }
@@ -2285,6 +2425,9 @@ async function main(){
     }
   }
   const historyOldestAt = all.length ? all[all.length - 1].created.toISOString() : null;
+  if (newsIntegrityErrors.length) {
+    mappingIntegrityErrors.push(...newsIntegrityErrors);
+  }
   const peterMappingCount = Object.values(embeds)
     .filter(embed => embed.evidenceOwner === 'peterxing').length;
   const peterAuthoredCount = Object.values(embeds)
@@ -2309,19 +2452,29 @@ async function main(){
   const ownerTally = {};
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
+  const mediumTally = { x: 0, news: 0 };
   const peterAuthorshipTally = { authored: 0, reposted: 0 };
   for (const embed of Object.values(embeds)) {
     ownerTally[embed.evidenceOwner] = (ownerTally[embed.evidenceOwner] || 0) + 1;
     sourceQualityTally[embed.sourceQuality] = (sourceQualityTally[embed.sourceQuality] || 0) + 1;
     evidenceTypeTally[embed.evidenceType] = (evidenceTypeTally[embed.evidenceType] || 0) + 1;
+    mediumTally[embed.evidenceOwner === 'news' ? 'news' : 'x']++;
     if (embed.evidenceOwner === 'peterxing' && peterAuthorshipTally[embed.authorship] != null) {
       peterAuthorshipTally[embed.authorship]++;
     }
   }
+  // The Peter floors are satisfied only by @peterxing X activity. News can never contribute to them.
+  if (mediumTally.news && peterMappingCount < MIN_STICKY_PETER_MAPPINGS) {
+    mappingIntegrityErrors.push('news evidence may never substitute for the Peter floors');
+  }
   const sourceStatus = sourceStatusFor(source, sourceAttempts);
+  // The note must stay literally true: it may only claim an all-X corpus while one actually exists.
+  const note = mediumTally.news === 0
+    ? 'Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.'
+    : `Every prediction has exactly one reviewed item of direct evidence: ${mediumTally.x} archive-verified X statuses and ${mediumTally.news} live-verified news articles. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts; verified news is used only where a prediction has no defensible X evidence and is labeled as news, never as an X post. Every item is explicitly labeled direct, scenario, or leading-indicator evidence, and reuse is restricted to reviewed compatible concept families and threshold/scenario series.`;
   const out = {
     updated: new Date().toISOString(),
-    note: 'Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.',
+    note,
     source,
     sourceStatus,
     sourceAttempts,
@@ -2350,6 +2503,7 @@ async function main(){
       stickyPeterAuthoredFloor: MIN_AUTHORED_PETER_MAPPINGS,
       reuseCeiling: MAX_REVIEWED_REUSE,
       byEvidenceOwner: ownerTally,
+      byEvidenceMedium: mediumTally,
       byPeterAuthorship: peterAuthorshipTally,
       bySourceQuality: sourceQualityTally,
       byEvidenceType: evidenceTypeTally,

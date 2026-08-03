@@ -10,6 +10,7 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
+const { NEWS_MAPPINGS } = require('./news-evidence');
 const {
   hydrateTweetResult,
   resolveOembed,
@@ -46,11 +47,15 @@ const qualityClasses = new Set([
   'original-researcher',
 ]);
 const mappingIds = Object.keys(EXTERNAL_MAPPINGS);
-const overlap = Object.keys(approvals).filter(id => EXTERNAL_MAPPINGS[id]);
-const missing = expectedIds.filter(id => !approvals[id] && !EXTERNAL_MAPPINGS[id]);
-const extra = mappingIds.filter(id => !expected.has(id));
+// A prediction may hold at most one ledger entry across all three tiers, and news only where the two
+// X tiers are both empty. Any overlap is a displacement bug, not a fallback.
+const overlap = Object.keys(approvals).filter(id => EXTERNAL_MAPPINGS[id] || NEWS_MAPPINGS[id])
+  .concat(Object.keys(NEWS_MAPPINGS).filter(id => EXTERNAL_MAPPINGS[id]));
+const missing = expectedIds.filter(id => !approvals[id] && !EXTERNAL_MAPPINGS[id] && !NEWS_MAPPINGS[id]);
+const extra = mappingIds.filter(id => !expected.has(id))
+  .concat(Object.keys(NEWS_MAPPINGS).filter(id => !expected.has(id)));
 if (overlap.length || missing.length || extra.length) {
-  problems.push(`ledger coverage mismatch (overlap ${overlap.join(', ') || 'none'}; missing ${missing.join(', ') || 'none'}; extra ${extra.join(', ') || 'none'})`);
+  problems.push(`ledger coverage mismatch (overlap ${[...new Set(overlap)].join(', ') || 'none'}; missing ${missing.join(', ') || 'none'}; extra ${[...new Set(extra)].join(', ') || 'none'})`);
 }
 if (Object.keys(signals.search || {}).length) {
   problems.push('signals.search must be empty');

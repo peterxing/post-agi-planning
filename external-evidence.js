@@ -332,7 +332,7 @@ const EXTERNAL_GROUPS = [
     reuseFamily: 'agent-task-horizon',
     evidenceType: 'leading-indicator',
     rationale: 'Official measured task-horizon evidence is a concrete precursor to longer autonomous workflows.',
-    ids: ['2026-6', '2027-2'],
+    ids: ['2026-6'],
   },
   {
     source: 'deepmind-agentic-economies',
@@ -414,7 +414,7 @@ const EXTERNAL_GROUPS = [
     reviewedAt: '2026-07-29',
     rationale: 'Original AI 2040 author Daniel Kokotajlo contrasts concentrated-power failure with the positive Plan A scenario; these are scenario-derived capability, distribution, abundance and political-consequence milestones, not evidence they have occurred.',
     ids: [
-      '2028-3', '2029-5', '2032-5', '2033-1',
+      '2028-3', '2032-5', '2033-1',
       '2036-5', '2037-4', '2038-4', '2039-3',
     ],
   },
@@ -512,7 +512,7 @@ const EXTERNAL_GROUPS = [
     reuseFamily: 'physical-automation',
     evidenceType: 'leading-indicator',
     rationale: 'Official integration of Gemini Robotics with Boston Dynamics Atlas is a concrete precursor to scalable general physical labor.',
-    ids: ['2033-5', '2035-2', '2036-0', '2036-1', '2040-0'],
+    ids: ['2033-5', '2035-2', '2036-0', '2036-1'],
   },
   {
     source: 'deepmind-interpretability',

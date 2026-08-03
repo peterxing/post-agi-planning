@@ -445,6 +445,7 @@ function probabilityBand(probability){
 }
 
 /* ---------- @peterxing X signals mapped to predictions ---------- */
+const NEWS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H5a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1zm2 3v4h9V7zm0 6v1.5h9V13zm0 3.5V18h9v-1.5zM19 9h1.5a.5.5 0 0 1 .5.5V18a1 1 0 0 1-2 0z"/></svg>';
 const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
 /* Inline fallback. The live site overrides this from signals.json (regenerated hourly from verified
    X activity and matched to each prediction). We keep NO embedded posts inline, so if signals.json
@@ -499,6 +500,11 @@ const SIG_KIND = {
 /* Badge text reflects BOTH kind and recency: a past-week item is labelled "Past-week …", otherwise
    it is his "Most recent …" post/repost on that topic (honestly dated below). */
 function sigBadge(kind, recency, evidenceType){
+  if (kind === 'news') {
+    if (evidenceType === 'scenario') return 'News evidence \u00b7 scenario source';
+    if (evidenceType === 'leading-indicator') return 'News evidence \u00b7 leading indicator';
+    return 'News evidence';
+  }
   if (kind === 'external') {
     if (evidenceType === 'scenario') return 'Scenario source';
     if (evidenceType === 'leading-indicator') return 'Leading indicator';
@@ -512,6 +518,9 @@ function sigBadge(kind, recency, evidenceType){
 /* A prediction is identified by "YEAR-INDEX" (index = its position in that year's events array). The same
    id is computed by refresh-signals.js, so each prediction's signals.json embed lines up 1:1 here. */
 function signalCard(sig){
+  /* Tier-3 verified news evidence renders as news and never borrows any X affordance: no handle,
+     no status ID, no "load live post" embed, and the link goes to the resolved article URL. */
+  if (sig && (sig.evidenceOwner === 'news' || sig.kind === 'news')) return newsSignalCard(sig);
   const kind = SIG_KIND[sig.kind] ? sig.kind : 'post';
   const author = safeXHandle(sig.author);
   const tweetId = safeTweetId(sig.id);
@@ -566,6 +575,52 @@ function signalCard(sig){
           </span>
         </div>
         <div class="tl-embed"></div>
+      </div>
+    </details>`;
+}
+function newsSignalCard(sig){
+  const publisher = htmlText(sig.publisher || sig.publisherHost || 'Publisher');
+  const date = htmlText(sig.date || '');
+  const headline = htmlText(sig.headline || '');
+  const byline = sig.byline ? ` &middot; by ${htmlText(sig.byline)}` : '';
+  const method = htmlText(sig.matchMethod || 'reviewed-news');
+  const articleUrl = safeHttpUrl(sig.url) || '';
+  const maps = sig.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(sig.maps)}</div>` : '';
+  const rationale = sig.mappingRationale
+    ? `<div class="tl-signal-maps"><b>${sig.evidenceType === 'scenario' ? 'Scenario relevance' : 'Evidence relevance'}:</b> ${htmlText(sig.mappingRationale)}</div>`
+    : '';
+  const evidenceLabel = sig.evidenceType === 'scenario' ? 'verified news scenario source'
+    : sig.evidenceType === 'leading-indicator' ? 'verified news leading indicator'
+      : 'verified news direct evidence';
+  const reviewDate = sig.lastVerifiedAt || sig.reviewedAt || '';
+  const reuse = Number(sig.reuseCount) > 1 ? ` · reviewed reuse across ${Number(sig.reuseCount)} related predictions` : ' · unique mapping';
+  const provenanceLine = `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(evidenceLabel)}${reviewDate ? ` · verified ${htmlText(reviewDate)}` : ''}${reuse}</div>`;
+  const quote = sig.quote
+    ? `<blockquote class="tl-signal-quote">${htmlText(sig.quote)}</blockquote>`
+    : `<div class="tl-signal-text">${htmlText(sig.text)}</div>`;
+  const link = articleUrl
+    ? `<a class="tl-signal-link" href="${htmlText(articleUrl)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
+    : '';
+  return `
+    <details class="tl-signal" data-kind="news" data-evidence-medium="news">
+      <summary>
+        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
+        <span class="tl-signal-summary-text">
+          <strong>${htmlText(sigBadge('news', sig.recency, sig.evidenceType))} &mdash; ${publisher}, ${date}</strong>
+          ${headline}${byline}
+        </span>
+        <span class="tl-signal-method">${method}</span>
+      </summary>
+      <div class="tl-signal-detail">
+        ${provenanceLine}
+        ${maps}
+        ${rationale}
+        ${headline ? `<div class="tl-signal-headline">${headline}</div>` : ''}
+        ${quote}
+        <div class="tl-signal-foot">
+          <span class="tl-signal-date">Published ${date}</span>
+          <span class="tl-signal-actions">${link}</span>
+        </div>
       </div>
     </details>`;
 }
@@ -1116,7 +1171,11 @@ const SIGNAL_SOURCE_LABELS = {
   'syndication': 'live X public syndication'
 };
 function renderSignalMetadata(data){
-  const sourceLabel = SIGNAL_SOURCE_LABELS[data.source] || 'verified X activity';
+  const newsMappings = Number(data.coverage?.byEvidenceMedium?.news)
+    || Number(data.coverage?.byEvidenceOwner?.news) || 0;
+  /* The provenance stamp must stay literally true: it may name an all-X corpus only while one exists. */
+  const sourceLabel = (SIGNAL_SOURCE_LABELS[data.source] || 'verified X activity')
+    + (newsMappings ? ` + ${newsMappings} live-verified news article${newsMappings === 1 ? '' : 's'}` : '');
   const sourceStatus = data.sourceStatus || {};
   const updated = new Date(data.updated);
   const newest = new Date(data.newestItemAt);
@@ -1145,8 +1204,12 @@ function renderEvidenceDashboard(data, sourceLabel, freshness){
   const authored = Number(peterAuthorship.authored) || 0;
   const reposted = Number(peterAuthorship.reposted) || 0;
   const embeds = Object.values(data.embeds || {});
+  const media = coverage.byEvidenceMedium || {};
+  const newsCount = Number(media.news) || Number(owners.news) || 0;
+  const xCount = Number(media.x) || (total - newsCount);
   const peterStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)).size;
   const externalStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'external').map(embed => embed.id)).size;
+  const newsArticles = new Set(embeds.filter(embed => embed.evidenceOwner === 'news').map(embed => embed.id)).size;
   const percentage = value => total ? (value / total * 100).toFixed(1) : '0.0';
   setText('evidenceDirectStat', `${coverage.direct || 0}/${total}`);
   setText('evidenceAuthoredStat', String(authored));
@@ -1170,6 +1233,10 @@ function renderEvidenceDashboard(data, sourceLabel, freshness){
       ['Scenario sources', types.scenario || 0],
       ['Peter unique statuses', peterStatuses],
       ['External unique statuses', externalStatuses],
+      ...(newsCount ? [
+        ['X statuses vs verified news', `${xCount} X · ${newsCount} news`],
+        ['News unique articles', newsArticles],
+      ] : []),
       ['Maximum reviewed reuse', `${coverage.maxReuse || 0} of ${coverage.reuseCeiling || 0}`],
     ].map(([label, count]) => `<span>${htmlText(label)} · ${count}</span>`).join('');
   }
@@ -1212,9 +1279,11 @@ function hasCompleteSignalCoverage(data){
     return uses;
   }, {});
   const reuseValid = Object.values(usesByPost).every(uses => {
-    const expectedMode = uses[0].evidenceOwner === 'external' ? 'external-reuse' : 'family-reuse';
+    const owner = uses[0].evidenceOwner;
+    const expectedMode = owner === 'external' ? 'external-reuse'
+      : owner === 'news' ? 'news-reuse' : 'family-reuse';
     const groups = new Set(uses.map(signal =>
-      signal.evidenceOwner === 'external' ? signal.reuseFamily : signal.evidenceFamily));
+      signal.evidenceOwner === 'peterxing' ? signal.evidenceFamily : signal.reuseFamily));
     const owners = new Set(uses.map(signal => signal.evidenceOwner));
     return uses.length === 1
       ? uses[0].assignmentMode === 'unique' && Number(uses[0].reuseCount) === 1
@@ -1226,12 +1295,38 @@ function hasCompleteSignalCoverage(data){
   const directValid = directIds.every(id => {
     const signal = data.embeds[id];
     const provenance = signal && signal.provenance || {};
-    const common = /^\d{15,}$/.test(String(signal && signal.id || ''))
-      && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal && signal.url || ''))
+    const isNews = signal && signal.evidenceOwner === 'news';
+    const common = (isNews
+      ? /^news:[a-z0-9][a-z0-9-]*$/.test(String(signal.id || ''))
+        && /^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(signal.url || ''))
+      : /^\d{15,}$/.test(String(signal && signal.id || ''))
+        && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal && signal.url || '')))
       && signal.reviewed === true
       && !!signal.evidenceFamily
       && !!signal.mappingRationale;
     if (!common) return false;
+    if (isNews) {
+      return signal.kind === 'news'
+        && signal.activityKind === 'news'
+        && provenance.evidenceOwner === 'news'
+        && provenance.activityKind === 'news'
+        && !!provenance.publisher
+        && !!provenance.publisherHost
+        && !!provenance.publishedAt
+        && !!provenance.retrievedAt
+        && !!provenance.sourceQuality
+        && !!provenance.textSha256
+        && provenance.verifiedThrough === 'live-fetch+quote-match'
+        && Array.isArray(provenance.sourceChain)
+        && provenance.sourceChain.includes('quote-match')
+        && !!signal.headline
+        && !!signal.quote
+        && !!signal.publisher
+        && signal.matchMethod === 'reviewed-news'
+        && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)
+        && ['unique', 'news-reuse'].includes(signal.assignmentMode)
+        && !!signal.reuseFamily;
+    }
     if (signal.evidenceOwner === 'peterxing') {
       return ['post', 'repost'].includes(signal.kind)
         && provenance.evidenceOwner === 'peterxing'

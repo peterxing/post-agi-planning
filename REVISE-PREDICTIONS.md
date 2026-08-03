@@ -140,6 +140,25 @@ The matcher guards embody these distinctions. Add a positive and negative fixtur
 claim class or newly discovered false positive; never weaken a guard, freshness limit or declared-family reuse rule
 to raise coverage.
 
+## Latest-news forecast sweep
+
+Every run sweeps recent authoritative reporting across the watchlist above plus frontier capability,
+agents, robotics, compute/energy and labour/economic indicators. This is the reassessment side of the
+news work and is separate from news *evidence*: it can move a forecast, it never assigns an evidence
+card by itself.
+
+Where verified reporting materially moves a forecast, update it under the existing anti-churn rules:
+no daily wording churn, only material verifiable change, preserve monotonicity and portfolio
+coherence, keep Peter's anchor unless he explicitly changes it, and set `revisedAt` + `changeNote`
+citing the specific verified source. Only primary/original reporting, official lab/company/agency/
+regulator announcements, peer-reviewed journals or named expert analysis qualify — the same
+source-quality bar as external X evidence. Aggregators, syndicators, press-release mills and content
+farms are never a basis for a forecast change.
+
+Then re-run `node validate-predictions.js`. **Changing `predictionText` invalidates sticky evidence
+bindings**, so re-run `x-archive.js --hydrate=120`, `verify-peter-evidence.js --update` and
+`refresh-signals.js` afterwards and restore complete N/N direct coverage before publishing.
+
 ## Daily revision rules
 
 1. **Ground every change.** Base edits on (a) the latest news/research you can verify online and
@@ -268,6 +287,7 @@ node verify-direct-coverage.js         # every prediction needs exactly one revi
 node verify-archive-corpus.js          # discovery, corpus isolation, pace and source-chain contract
 node verify-peter-evidence.js --update # live-check original + Peter activity status, then date the audit
 node verify-external-evidence.js       # external statuses hydrate + cross-check and retain provenance
+node verify-news-evidence.js           # tier-3 news mappings re-resolve, quote-match and fail closed
 node verify-performance.js             # split-asset, transfer, DOM and render budgets
 # 4. Hash-sync and deploy only through the guarded helper:
 C:\Users\peterxing\pap-site\deploy.ps1

@@ -150,6 +150,54 @@ stay within one reviewed scenario or threshold-series reuse group. The private h
 coverage, provenance, the 10-use ceiling, or reuse compatibility fails, refresh exits nonzero and
 leaves the last complete public file unchanged.
 
+## Evidence tiers, and why the X API is never the trigger
+
+Retrieval is **archive-backed first and has no X API dependency**. `x-archive.js` paginates Wayback
+CDX across all four host/case variants, orders IDs numerically with BigInt, hydrates through the
+first-party `tweet-result` endpoint and cross-checks authorship through oEmbed. The X API is an
+optional diagnostic/seed only; it currently returns HTTP 402 (credits depleted) and the site keeps
+publishing complete evidence regardless.
+
+Evidence is assigned per prediction in a strict ladder:
+
+1. **Peter authored** — a reviewed @peterxing post, quote or reply from the archive-verified corpus.
+2. **Peter repost** — a reviewed @peterxing repost.
+3. **Authoritative external X status** — a reviewed primary/official account.
+4. **Verified news article** (`news-evidence.js`) — tier 3, the resilience floor.
+
+Tier 4 eligibility is **per prediction and evidence-based, never API-state-based**. A prediction
+becomes eligible only when, *after the full archive pipeline has run*, it has no defensible reviewed
+X status in any of the three tiers above. A degraded or unpaid X API alone never triggers it, because
+archive-backed retrieval does not use the API. Existing reviewed X mappings are never swapped for
+news, news never counts toward the Peter floors or the `evidence-floors.json` ratchet, and news obeys
+the same reuse ceiling.
+
+Because a URL is far easier to hallucinate than a status ID with a hard oEmbed author check, the news
+bar is **higher** than the X bar. `verify-news-evidence.js` (`npm run verify:news`, wired into both
+`deploy.ps1` and `publish-github.ps1` preflights) enforces, for every mapping:
+
+- a live fetch at review time **and again immediately before deploy/publish**, requiring HTTP 200 on
+  the final URL after redirects, with the resolved URL recorded rather than the input;
+- headline, publisher, byline and publication date extracted **from the fetched page** (og:/JSON-LD/
+  rendered date) — never from memory; unextractable means fail closed;
+- an exact verbatim supporting quote plus a SHA-256 of the extracted main text, re-checked at publish
+  time; a missing quote or a changed headline/publisher/date fails closed;
+- rejection of aggregators, syndicated republishers, press-release mills, content farms, shorteners,
+  open publishing platforms, paywalled-unverifiable and 404/410 pages;
+- the same anti-adjacency, terminology and disambiguation guards as X evidence, manual review only,
+  and a sticky ledger entry bound to the exact `predictionText`.
+
+News is rendered and described as news everywhere — `kind: 'news'`, `evidenceOwner: 'news'`, a
+"News evidence — *Publisher*, *date*" label, the article headline and quote, and a link to the
+resolved article. It never borrows an X handle, status ID, embed affordance or x.com link.
+`signals.coverage.byEvidenceMedium` reports the X-vs-news split, and the on-page provenance stamp and
+`signals.note` only claim an all-X corpus while one actually exists.
+
+`NEWS_SOURCES` is deliberately empty today: every prediction still has reviewed X evidence, so no
+prediction is eligible. The machinery is proven live on every run by `verify:news`, which verifies a
+real current authoritative article end to end and demonstrates fail-closed behaviour on fabricated
+URLs, quote drift, headline drift, aggregators and the reuse ceiling.
+
 ## Security
 
 - Secrets live **only** in `pap-secrets\.env`; the static server returns 403 for any dotfile or path

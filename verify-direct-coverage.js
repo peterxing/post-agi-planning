@@ -15,6 +15,10 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
+const {
+  NEWS_MAPPINGS,
+  NEWS_SOURCES,
+} = require('./news-evidence');
 
 const DIR = __dirname;
 const predictions = JSON.parse(fs.readFileSync(path.join(DIR, 'predictions.json'), 'utf8').replace(/^\uFEFF/, ''));
@@ -127,8 +131,11 @@ for (const predictionId of expectedIds) {
   const postId = String(signal.id || '');
   const family = familyForPrediction(predictionId);
   const provenance = signal.provenance || {};
-  const commonValid = /^\d{15,}$/.test(postId)
-    && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal.url || ''))
+  const commonValid = (signal.evidenceOwner === 'news'
+    ? /^news:[a-z0-9][a-z0-9-]*$/.test(postId)
+      && /^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(signal.url || ''))
+    : /^\d{15,}$/.test(postId)
+      && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal.url || '')))
     && signal.evidenceFamily === family
     && FAMILY_DEFINITIONS[family]
     && signal.reviewed === true
@@ -206,6 +213,38 @@ for (const predictionId of expectedIds) {
         || !['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)) {
       problems.push(`${predictionId}: incomplete external provenance or rationale`);
     }
+  } else if (signal.evidenceOwner === 'news') {
+    // News is tier 3: legitimate only where the prediction has no reviewed X evidence at all.
+    const mapping = NEWS_MAPPINGS[predictionId];
+    const article = mapping && NEWS_SOURCES[mapping.source];
+    if (!mapping || !article || approvals[predictionId] || EXTERNAL_MAPPINGS[predictionId]
+        || postId !== `news:${mapping.source}`
+        || article.resolvedUrl !== signal.url
+        || signal.reviewedAt !== mapping.reviewedAt
+        || signal.mappingRationale !== mapping.rationale
+        || signal.reuseFamily !== mapping.reuseFamily
+        || signal.evidenceType !== mapping.evidenceType) {
+      problems.push(`${predictionId}: mapping is not backed by the reviewed news ledger, or displaces X evidence`);
+    }
+    if (signal.kind !== 'news'
+        || signal.activityKind !== 'news'
+        || signal.authorship !== 'news'
+        || signal.matchMethod !== 'reviewed-news'
+        || provenance.evidenceOwner !== 'news'
+        || provenance.activityKind !== 'news'
+        || provenance.publisher !== article?.publisher
+        || provenance.publisherHost !== article?.publisherHost
+        || provenance.sourceQuality !== article?.sourceQuality
+        || provenance.retrievedAt !== article?.retrievedAt
+        || provenance.textSha256 !== article?.textSha256
+        || provenance.verifiedThrough !== 'live-fetch+quote-match'
+        || !Array.isArray(provenance.sourceChain)
+        || !provenance.sourceChain.includes('quote-match')
+        || signal.headline !== article?.headline
+        || signal.quote !== article?.quote
+        || !['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)) {
+      problems.push(`${predictionId}: incomplete news provenance or rationale`);
+    }
   } else {
     problems.push(`${predictionId}: invalid evidence owner`);
   }
@@ -214,7 +253,7 @@ for (const predictionId of expectedIds) {
   usesByPost.get(postId).push({
     predictionId,
     family,
-    reuseFamily: signal.evidenceOwner === 'external' ? signal.reuseFamily : family,
+    reuseFamily: signal.evidenceOwner === 'peterxing' ? family : signal.reuseFamily,
     signal,
   });
 }
@@ -229,7 +268,8 @@ for (const [postId, uses] of usesByPost) {
   if (uses.length > 1) {
     const owner = uses[0].signal.evidenceOwner;
     const group = uses[0].reuseFamily;
-    const expectedMode = owner === 'external' ? 'external-reuse' : 'family-reuse';
+    const expectedMode = owner === 'external' ? 'external-reuse'
+      : owner === 'news' ? 'news-reuse' : 'family-reuse';
     if (owners.size !== 1 || groups.size !== 1
         || (owner === 'peterxing' && !FAMILY_DEFINITIONS[group]?.reuse)
         || uses.some(use => use.signal.assignmentMode !== expectedMode)) {
@@ -267,13 +307,22 @@ const oldest = dates.length ? new Date(Math.min(...dates)).toISOString() : null;
 const newest = dates.length ? new Date(Math.max(...dates)).toISOString() : null;
 const ownerCounts = {};
 const qualityCounts = {};
+const mediumCounts = { x: 0, news: 0 };
 const peterAuthorshipCounts = { authored:0, reposted:0 };
 for (const embed of Object.values(embeds)) {
   ownerCounts[embed.evidenceOwner] = (ownerCounts[embed.evidenceOwner] || 0) + 1;
   qualityCounts[embed.sourceQuality] = (qualityCounts[embed.sourceQuality] || 0) + 1;
+  mediumCounts[embed.evidenceOwner === 'news' ? 'news' : 'x']++;
   if (embed.evidenceOwner === 'peterxing' && peterAuthorshipCounts[embed.authorship] != null) {
     peterAuthorshipCounts[embed.authorship]++;
   }
+}
+if (JSON.stringify(coverage.byEvidenceMedium || {}) !== JSON.stringify(mediumCounts)) {
+  problems.push('signals.coverage.byEvidenceMedium must declare the exact X-vs-news split');
+}
+// News may never be counted toward, or used to rescue, the Peter floors.
+if (mediumCounts.news && (ownerCounts.peterxing || 0) < MIN_STICKY_PETER_MAPPINGS) {
+  problems.push('news evidence may never substitute for the Peter floors');
 }
 if ((ownerCounts.peterxing || 0) < MIN_STICKY_PETER_MAPPINGS) {
   problems.push(`published Peter evidence fell below the sticky floor: ${ownerCounts.peterxing || 0}`);
@@ -295,4 +344,7 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(`Evidence owners: ${JSON.stringify(ownerCounts)}; Peter authorship: ${JSON.stringify(peterAuthorshipCounts)}; source quality: ${JSON.stringify(qualityCounts)}`);
-console.log('RESULT: PASS — every prediction has exactly one reviewed direct X status with valid provenance and compatible reuse.');
+console.log(`Evidence medium: ${mediumCounts.x} X statuses; ${mediumCounts.news} live-verified news articles.`);
+console.log(mediumCounts.news === 0
+  ? 'RESULT: PASS — every prediction has exactly one reviewed direct X status with valid provenance and compatible reuse.'
+  : `RESULT: PASS — every prediction has exactly one reviewed direct source (${mediumCounts.x} X statuses, ${mediumCounts.news} verified news) with valid provenance and compatible reuse.`);
