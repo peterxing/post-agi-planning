@@ -1,0 +1,273 @@
+#!/usr/bin/env node
+'use strict';
+if (require.main === module) require('./pipeline-lock').guard('verify:surface');
+
+/*
+  verify-deploy-surface.js — proves the PUBLIC DEPLOY SURFACE is fail-closed.
+
+  Why this exists
+  ---------------
+  Production is served by the Vercel Git integration from github.com/peterxing/
+  post-agi-planning, so the repository mirror IS the deploy surface. The gate that
+  decides what is published is .vercelignore. It used to be a DENY-list keyed to
+  specific filenames, which meant any file matching no pattern was served BY
+  DEFAULT. That is fail-open, and it was the only fail-open gate in a pipeline
+  where everything else fails closed: news-evidence.js became publicly readable the
+  moment it was created, purely because nobody added a line for it.
+
+  .vercelignore is now an ALLOW-list: "*" excludes everything and each "!" line
+  re-includes exactly one approved public file. This verifier enforces that shape,
+  simulates the ignore rules against the real on-disk inventory so a NEWLY ADDED
+  file is caught automatically rather than remembered, and — with --live — asserts
+  the actual surface on both production domains.
+
+  Usage
+    node verify-deploy-surface.js                     static gate only (fail-closed)
+    node verify-deploy-surface.js --live              static + both production domains
+    node verify-deploy-surface.js --live https://x/   static + explicit base URLs
+
+  Exit 0 pass · 1 fail.
+*/
+
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
+const http = require('http');
+
+const DIR = __dirname;
+const SITE = 'C:\\Users\\peterxing\\pap-site';
+const IGNORE_FILE = path.join(SITE, '.vercelignore');
+
+const PRODUCTION = ['https://peterxing.com', 'https://post-agi-planning.vercel.app'];
+
+// The approved public surface, in the exact order .vercelignore must re-include it.
+const PUBLIC_SURFACE = [
+  'index.html',
+  'app.js',
+  'styles.css',
+  'signals.json',
+  'predictions.json',
+  'author.json',
+  'vercel.json',
+  'LICENSE',
+];
+
+// Uploaded so Vercel can read it as configuration, but consumed rather than
+// served: it must answer 404 in production like any other non-public file.
+const CONFIG_NOT_SERVED = new Set(['vercel.json']);
+
+// Explicit trailing denies are allowed only for these highest-risk names. "*"
+// already excludes them; listing them again is defence in depth and keeps
+// verify-interlock.js's ".vercelignore excludes .pipeline.lock" assertion true.
+const ALLOWED_TRAILING_DENIES = new Set(['.env*', '.vercel', '.pipeline.lock']);
+
+const problems = [];
+const notes = [];
+function check(condition, message) {
+  if (!condition) problems.push(message);
+  return condition;
+}
+
+// ------------------------------------------------------------------- INVENTORY
+
+// Directories whose contents must never be part of the publishable universe.
+const SKIP_DIRS = new Set(['.git', '.vercel', 'node_modules']);
+
+function rootFiles(dir) {
+  let entries = [];
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entries.filter(e => e.isFile()).map(e => e.name);
+}
+
+/*
+  The publishable universe is everything that could plausibly end up in the
+  deployed tree: the working source directory, the Vercel bundle directory, and
+  the file names the GitHub publisher is allowed to mirror. Enumerating from disk
+  is the point — a script added tomorrow appears here without anyone updating a
+  list, so it is checked automatically instead of being remembered.
+*/
+function publisherAllowlist() {
+  const text = safeRead(path.join(DIR, 'publish-github.ps1'));
+  const names = new Set();
+  for (const m of text.matchAll(/'([A-Za-z0-9._-]+\.(?:js|json|md|ps1|html|css)|LICENSE|\.gitignore|\.env\.example|\.vercelignore|_headers)'/g)) {
+    names.add(m[1]);
+  }
+  return [...names];
+}
+
+function safeRead(file) {
+  try {
+    return fs.readFileSync(file, 'utf8');
+  } catch {
+    return '';
+  }
+}
+
+// ------------------------------------------------------------- IGNORE MATCHING
+
+/*
+  A deliberately small .gitignore-subset matcher. The static shape check below
+  guarantees .vercelignore only ever uses this subset (a bare "*", "!name"
+  re-includes, and a fixed set of literal/prefix denies), so the simulation and
+  the real Vercel behaviour cannot drift apart through an exotic pattern.
+*/
+function patternMatches(pattern, name) {
+  if (pattern === '*') return true;
+  if (!pattern.includes('*')) return pattern === name;
+  const rx = new RegExp('^' + pattern.split('*').map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[^/]*') + '$');
+  return rx.test(name);
+}
+
+function parseIgnore(text) {
+  return text
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#'));
+}
+
+function isExcluded(rules, name) {
+  let excluded = false;
+  for (const rule of rules) {
+    const negated = rule.startsWith('!');
+    const pattern = negated ? rule.slice(1) : rule;
+    if (patternMatches(pattern, name)) excluded = !negated;
+  }
+  return excluded;
+}
+
+// ------------------------------------------------------------- STATIC GATE
+
+const ignoreText = safeRead(IGNORE_FILE);
+check(ignoreText.length > 0, `.vercelignore is missing or empty at ${IGNORE_FILE}`);
+const rules = parseIgnore(ignoreText);
+
+check(rules[0] === '*', '.vercelignore must start with a bare "*" so the surface is fail-closed (deny everything, then re-include)');
+
+const reincluded = rules.filter(r => r.startsWith('!')).map(r => r.slice(1));
+check(
+  JSON.stringify(reincluded) === JSON.stringify(PUBLIC_SURFACE),
+  `.vercelignore re-includes ${JSON.stringify(reincluded)} but the approved public surface is ${JSON.stringify(PUBLIC_SURFACE)}`,
+);
+
+const trailing = rules.slice(1).filter(r => !r.startsWith('!'));
+for (const rule of trailing) {
+  check(ALLOWED_TRAILING_DENIES.has(rule), `.vercelignore contains an unapproved extra rule "${rule}"; only ${[...ALLOWED_TRAILING_DENIES].join(', ')} may be repeated as explicit denies`);
+}
+for (const rule of trailing) {
+  check(!PUBLIC_SURFACE.includes(rule), `.vercelignore denies "${rule}" after re-including it; the last matching rule wins and would break the site`);
+}
+
+// The fail-open regression test: an unknown, never-before-seen file must be
+// excluded without anyone adding a rule for it.
+for (const invented of ['zz-new-script.js', 'new-corpus.json', 'notes.txt', 'secrets.env', 'debug.log']) {
+  check(isExcluded(rules, invented), `a newly added file "${invented}" would be PUBLISHED by default — the surface is still fail-open`);
+}
+
+// Every approved public file must survive the rules, or the site breaks.
+for (const name of PUBLIC_SURFACE) {
+  check(!isExcluded(rules, name), `approved public file "${name}" is excluded by .vercelignore and the site would break`);
+}
+
+// Simulate the rules against the real inventory.
+const universe = [...new Set([...rootFiles(DIR), ...rootFiles(SITE), ...publisherAllowlist()])]
+  .filter(n => !SKIP_DIRS.has(n))
+  .sort();
+const wouldPublish = universe.filter(n => !isExcluded(rules, n));
+const unexpectedPublish = wouldPublish.filter(n => !PUBLIC_SURFACE.includes(n));
+check(
+  unexpectedPublish.length === 0,
+  `these files would be published but are not on the approved public surface: ${unexpectedPublish.join(', ')}`,
+);
+notes.push(`Publishable universe scanned: ${universe.length} distinct names across pap-deploy, pap-site and the GitHub publisher allow-list.`);
+notes.push(`Effective published set: ${wouldPublish.join(', ')}`);
+
+// The repository mirror is the real deploy surface, so the copy the publisher
+// ships must be the same file we just validated.
+const publisher = safeRead(path.join(DIR, 'publish-github.ps1'));
+check(/\$fromSite\s*=\s*@\([^)]*'\.vercelignore'/.test(publisher),
+  'publish-github.ps1 must mirror .vercelignore from pap-site — the Git deployment reads the repository copy');
+
+// ------------------------------------------------------------------ LIVE GATE
+
+function head(url) {
+  return new Promise(resolve => {
+    const lib = url.startsWith('https:') ? https : http;
+    const request = lib.request(url, { method: 'GET', headers: { 'user-agent': 'pap-verify-deploy-surface', 'cache-control': 'no-cache' } }, response => {
+      response.resume();
+      resolve(response.statusCode);
+    });
+    request.on('error', () => resolve(0));
+    request.setTimeout(20000, () => { request.destroy(); resolve(0); });
+    request.end();
+  });
+}
+
+async function pool(items, size, worker) {
+  const results = new Array(items.length);
+  let index = 0;
+  await Promise.all(Array.from({ length: Math.min(size, items.length) }, async () => {
+    while (index < items.length) {
+      const i = index++;
+      results[i] = await worker(items[i]);
+    }
+  }));
+  return results;
+}
+
+async function assertLive(base) {
+  const cb = Date.now();
+  // Probe the full inventory, plus paths that must never exist regardless of disk state.
+  const targets = [...new Set([...universe, '.pipeline.lock', '.env', '.vercel/project.json', 'signals-debug.json'])].sort();
+  const statuses = await pool(targets, 6, async name => ({ name, status: await head(`${base}/${name}?cb=${cb}`) }));
+  const served = new Set(PUBLIC_SURFACE.filter(n => !CONFIG_NOT_SERVED.has(n)));
+  const reachable = [];
+  let confirmedServed = 0;
+  for (const { name, status } of statuses) {
+    if (served.has(name)) {
+      // vercel.json sets cleanUrls, so /index.html legitimately redirects to /.
+      const ok = name === 'index.html' ? (status === 200 || status === 301 || status === 308) : status === 200;
+      if (!ok) problems.push(`${base}/${name} must be served but returned ${status || 'no response'}`);
+      else confirmedServed++;
+    } else if (status === 200) {
+      reachable.push(`${name} (${status})`);
+    } else if (status !== 404 && status !== 403 && status !== 0) {
+      problems.push(`${base}/${name} returned an unexpected ${status}; expected 404`);
+    }
+  }
+  const rootStatus = await head(`${base}/?cb=${cb}`);
+  check(rootStatus === 200, `${base}/ must serve the site but returned ${rootStatus || 'no response'}`);
+  check(reachable.length === 0, `${base} exposes non-public paths: ${reachable.join(', ')}`);
+  notes.push(`${base}: ${targets.length} paths probed · document root ${rootStatus} · ${confirmedServed}/${served.size} approved public files served · ${reachable.length} unexpected reachable.`);
+}
+
+// ----------------------------------------------------------------------- MAIN
+
+(async () => {
+  const argv = process.argv.slice(2);
+  const live = argv.includes('--live');
+  const bases = argv.filter(a => /^https?:\/\//i.test(a)).map(a => a.replace(/\/+$/, ''));
+
+  if (live || bases.length) {
+    for (const base of (bases.length ? bases : PRODUCTION)) {
+      // eslint-disable-next-line no-await-in-loop
+      await assertLive(base);
+    }
+  } else {
+    notes.push('Live surface assertion skipped (pass --live or a base URL to run it).');
+  }
+
+  for (const note of notes) console.log(note);
+  if (problems.length) {
+    for (const problem of problems) console.error(`  FAIL ${problem}`);
+    console.error(`RESULT: FAIL — ${problems.length} deploy-surface problem(s).`);
+    process.exit(1);
+  }
+  console.log('RESULT: PASS — the deploy surface is an enforced allow-list; unknown files are excluded by default and no non-public path is reachable.');
+})().catch(error => {
+  console.error(`verify-deploy-surface: ${error && error.message}`);
+  process.exit(1);
+});

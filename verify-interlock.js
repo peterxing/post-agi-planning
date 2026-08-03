@@ -81,6 +81,7 @@ const guarded = [
   'verify-signal-matcher.js', 'verify-perpred.js', 'verify-reality.js', 'verify-author.js',
   'verify-observatory.js', 'verify-performance.js', 'verify-direct-coverage.js',
   'verify-archive-corpus.js', 'verify-external-evidence.js', 'verify-peter-evidence.js',
+  'verify-deploy-surface.js',
   'review-evidence-candidates.js',
 ];
 const PROTECTED = ['predictions.json', 'signals.json', 'evidence-approvals.json', 'evidence-floors.json'];

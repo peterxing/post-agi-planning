@@ -26,6 +26,8 @@
     "verify:archive": "node verify-archive-corpus.js",
     "verify:external": "node verify-external-evidence.js",
     "verify:news": "node verify-news-evidence.js",
+    "verify:surface": "node verify-deploy-surface.js",
+    "verify:surface:live": "node verify-deploy-surface.js --live",
     "verify:interlock": "node verify-interlock.js http://127.0.0.1:8787"
   },
   "devDependencies": {

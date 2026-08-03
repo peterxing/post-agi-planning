@@ -1,16 +1,29 @@
+# FAIL-CLOSED DEPLOY SURFACE — this is an ALLOW-LIST, not a deny-list.
+#
+# The first rule excludes EVERYTHING. Each "!" line then re-includes exactly one
+# approved public file. Anything new — a script, a cache, a corpus, a log — is
+# therefore excluded BY DEFAULT and can never reach the public surface merely
+# because nobody remembered to add a deny pattern. The previous deny-list was
+# fail-open and silently published every unlisted script.
+#
+# vercel.json is uploaded because Vercel reads it as routing/header configuration;
+# Vercel consumes it and never serves it, so it must answer 404 in production.
+#
+# verify-deploy-surface.js (npm run verify:surface) enforces this exact shape,
+# proves a hypothetical new file is excluded, and asserts the live surface on both
+# production domains. Editing this file without updating that verifier fails the run.
+*
+!index.html
+!app.js
+!styles.css
+!signals.json
+!predictions.json
+!author.json
+!vercel.json
+!LICENSE
+
+# Belt-and-braces: the highest-risk names are also denied explicitly and last, so
+# they win over any future re-include. "*" already excludes them.
 .env*
-.gitignore
 .vercel
-*.md
-*.ps1
-*.log
-verify-*.js
-validate-*.js
-refresh-signals.js
-x-archive.js
-review-*.js
-external-evidence.js
-evidence-approvals.json
-evidence-families.js
-evidence-floors.json
 .pipeline.lock

@@ -16,7 +16,8 @@ $archiveVerifier = Join-Path $source 'verify-archive-corpus.js'
 $peterVerifier = Join-Path $source 'verify-peter-evidence.js'
 $externalVerifier = Join-Path $source 'verify-external-evidence.js'
 $newsVerifier = Join-Path $source 'verify-news-evidence.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier) -or -not (Test-Path $newsVerifier)) {
+$surfaceVerifier = Join-Path $source 'verify-deploy-surface.js'
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $surfaceVerifier)) {
   Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
 }
@@ -44,6 +45,13 @@ if ($LASTEXITCODE -ne 0) {
 & node $newsVerifier
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'Verified news evidence validation failed; deployment aborted.'
+  exit 6
+}
+# The public surface is an allow-list: anything not explicitly approved must be
+# excluded by default, so a newly added script can never leak by omission.
+& node $surfaceVerifier
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'Public deploy surface is not fail-closed; deployment aborted.'
   exit 6
 }
 
@@ -94,3 +102,12 @@ Write-Host "Deploying $dir to Vercel production..."
 & $vercel @args
 if ($LASTEXITCODE -ne 0) { Write-Error "Vercel deploy failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 Write-Host "Deploy complete."
+
+# Prove the live surface, not just the local config. Production is also rebuilt by
+# the Vercel Git integration when publish-github.ps1 pushes, so this assertion must
+# be repeated after the mirror; see the post-deploy assertion in the workflows.
+& node $surfaceVerifier --live
+if ($LASTEXITCODE -ne 0) {
+  Write-Error 'Live deploy surface assertion failed: a non-public path is reachable in production.'
+  exit 8
+}
