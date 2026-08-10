@@ -417,6 +417,13 @@ const forecastFilters = initialForecastFilters();
 let activeDomain = forecastFilters.domain;
 let overlayOn = true;
 let predictionRevision = { updated:null, basis:'', changes:[] };
+function latestRevisionDate(){
+  return String(predictionRevision.updated || '').slice(0, 10);
+}
+function revisedInLatestRevision(event){
+  const revisionDate = latestRevisionDate();
+  return !!event.revisedAt && !!revisionDate && event.revisedAt === revisionDate;
+}
 const themeDefinitions = {
   agents:/\b(agent|agents|agentic|agi|superintelligen|frontier model|ai r&d|expert capability|recursive self|continual-learning)\b/i,
   work:/\b(work|labor|labour|employment|jobs?|income|dividend|tax|econom|revenue|wealth|capital|gdp)\b/i,
@@ -736,7 +743,7 @@ function updateFilterCounts(){
   setSelectCounts('branchFilter', branchCounts);
   setSelectCounts('probabilityFilter', probabilityCounts);
   setSelectCounts('themeFilter', themeCounts);
-  setText('changedCount', events.filter(event => event.revisedAt).length);
+  setText('changedCount', events.filter(revisedInLatestRevision).length);
 }
 function matchesForecastFilters(event){
   const branch = branchForEvent(event.t).key;
@@ -747,7 +754,7 @@ function matchesForecastFilters(event){
     && (forecastFilters.branch === 'all' || branch === forecastFilters.branch)
     && (forecastFilters.probability === 'all' || probabilityBand(event.prob) === forecastFilters.probability)
     && (forecastFilters.theme === 'all' || themes.includes(forecastFilters.theme))
-    && (!forecastFilters.changed || !!event.revisedAt)
+    && (!forecastFilters.changed || revisedInLatestRevision(event))
     && queryTerms.every(term => searchable.includes(term));
 }
 function applyForecastFilters(syncUrl = true){
