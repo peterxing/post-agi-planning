@@ -48,9 +48,25 @@ const infrastructure = [];
 
 /*
  * Fetch an article, distinguishing "the source is protecting itself from bots" from "the
- * evidence changed". Retries clear a transient challenge in most cases; only a persistent
- * one is reported, and it is reported as an infrastructure fault, never as quote drift.
+ * evidence changed" — and, since those were once the only two options, from a third case the
+ * original code could not express: "the article is not there any more".
+ *
+ * Every thrown error collapsed into kind 'network' and every bad status into kind 'http'. The
+ * caller then filed the entire bucket under INFRASTRUCTURE, printed "This is NOT evidence
+ * drift and no citation should be dropped for it", and deferred the publish. For a bot
+ * challenge, a timeout, a 429 or a 5xx that is exactly right. For a 404, a 410 or a host that
+ * does not resolve it is false in the one direction that matters: the article is GONE. That
+ * is a fact about the evidence, not about the network, and the instruction attached to it
+ * told a reader not to drop a citation that no longer exists. Over a 60-day ceiling a deleted
+ * news article is the ordinary case, not an exotic one, so this excuse was on a timer.
+ *
+ * A terminal failure also stops retrying. Retrying cannot make an article exist.
+ *
+ * 401, 403 and 429 stay INFRASTRUCTURE deliberately. A paywall, a bot block and a removal are
+ * indistinguishable from outside, so they must not be promoted to an evidence fault on a
+ * guess — the fail-closed direction there is to defer, not to accuse.
  */
+const GONE_STATUS = new Set([404, 410]);
 async function fetchArticleVerified(url, attempts = 4) {
   let last = null;
   for (let i = 1; i <= attempts; i++) {
@@ -58,12 +74,34 @@ async function fetchArticleVerified(url, attempts = 4) {
     try {
       res = await fetchArticle(url);
     } catch (err) {
+      /* ENOTFOUND is NXDOMAIN — the host itself does not exist. EAI_AGAIN is a DNS server
+         that did not answer, which is transient and must NOT be treated as terminal. */
+      const code = (err && err.cause && err.cause.code) || (err && err.code) || '';
+      if (code === 'ENOTFOUND') {
+        return { ok: false, failure: { kind: 'dns', terminal: true, detail: `host does not resolve (${code})` }, attempts: i };
+      }
       last = { kind: 'network', detail: err.message };
       await new Promise(r => setTimeout(r, 700 * i));
       continue;
     }
     if (!res.ok) {
-      last = { kind: 'http', detail: `HTTP ${res.status}` };
+      /* fetchArticle does NOT throw on a DNS failure — it RETURNS {ok:false, status:undefined,
+         reason:'getaddrinfo ENOTFOUND <host>'}. The first version of this classifier looked for
+         ENOTFOUND in a thrown error's cause.code, so it never fired, and the non-existent host
+         fell through to the generic branch and was excused as infrastructure. It would also have
+         printed the detail as "HTTP undefined" — a status that never existed, asserted in a line
+         a human reads. Both were written against an assumed interface; these branches are
+         written against the measured one. */
+      const reason = res.reason || (res.status ? `HTTP ${res.status}` : 'no response and no reason reported');
+      if (GONE_STATUS.has(res.status)) {
+        return { ok: false, failure: { kind: 'gone', terminal: true, detail: reason }, attempts: i };
+      }
+      /* ENOTFOUND is NXDOMAIN: the host does not exist. EAI_AGAIN is a DNS server that did not
+         answer — transient, and deliberately not matched here. */
+      if (!res.status && /\bENOTFOUND\b/.test(reason)) {
+        return { ok: false, failure: { kind: 'dns', terminal: true, detail: `host does not resolve — ${reason}` }, attempts: i };
+      }
+      last = { kind: 'http', detail: reason };
       await new Promise(r => setTimeout(r, 700 * i));
       continue;
     }
@@ -476,10 +514,20 @@ async function main() {
       const got = await fetchArticleVerified(s.resolvedUrl);
 
       if (!got.ok) {
-        /* THE CRITICAL DISTINCTION. The source did not answer with its article. That is the
-           network's fault, not the evidence's. We do NOT say the quote vanished, we do NOT
-           demote the citation, and we do NOT silently pass. For DOI-bearing journal articles
-           we first try an independent open API before giving up. */
+        /* THE CRITICAL DISTINCTION, now drawn in two places rather than one. A source that
+           did not answer is the network's fault; a source that answered "there is nothing
+           here" is the evidence's. Only the first is excusable, and the comment that used to
+           sit here claimed both were. For DOI-bearing journal articles we still try an
+           independent open API first — corroboration is positive evidence and outranks a
+           dead publisher URL either way. */
+        const cause = got.failure.kind === 'challenge' ? `a bot challenge — ${got.failure.detail}` : got.failure.detail;
+        const unresolved = tail => {
+          if (got.failure.terminal) {
+            fail(`${key}: THE CITED ARTICLE IS GONE — ${cause} after ${got.attempts} attempt(s)${tail}. A 404, a 410 or an unresolvable host is a fact about the EVIDENCE, not about the network: retrying cannot make an article exist, so this is not deferrable as infrastructure and the citation must be re-reviewed or replaced`);
+          } else {
+            infrastructure.push(`${key}: could not verify (source returned ${cause} after ${got.attempts} attempts)${tail}`);
+          }
+        };
         const doi = doiFromUrl(s.resolvedUrl, s.headline);
         if (doi) {
           try {
@@ -489,17 +537,17 @@ async function main() {
               continue;
             }
             if (pmc.ok) {
-              infrastructure.push(`${key}: could not verify (source returned ${got.failure.kind === 'challenge' ? 'a bot challenge' : got.failure.detail} after ${got.attempts} attempts); Europe PMC confirmed the record (${pmc.journal}, ${pmc.firstPublicationDate}) but the quote is drawn from the full text, not the abstract, so it could not be re-attested`);
+              unresolved(`; Europe PMC confirmed the record (${pmc.journal}, ${pmc.firstPublicationDate}) but the quote is drawn from the full text, not the abstract, so it could not be re-attested`);
               continue;
             }
-            infrastructure.push(`${key}: could not verify (source returned ${got.failure.kind === 'challenge' ? 'a bot challenge' : got.failure.detail} after ${got.attempts} attempts); Europe PMC fallback also unavailable (${pmc.detail})`);
+            unresolved(`; Europe PMC fallback also unavailable (${pmc.detail})`);
             continue;
           } catch (err) {
-            infrastructure.push(`${key}: could not verify (${got.failure.detail}); Europe PMC fallback threw ${err.message}`);
+            unresolved(`; Europe PMC fallback threw ${err.message}`);
             continue;
           }
         }
-        infrastructure.push(`${key}: could not verify (source returned ${got.failure.kind === 'challenge' ? `a bot challenge — ${got.failure.detail}` : got.failure.detail} after ${got.attempts} attempts)`);
+        unresolved('');
         continue;
       }
 
