@@ -40,6 +40,26 @@ function setText(id, value){
   const element = document.getElementById(id);
   if (element) element.textContent = value;
 }
+/* Every date this site renders is a captured or recorded UTC instant, so it must be formatted in
+   UTC. Formatting in the reader's own zone makes a cited source's publication date depend on who
+   is reading it: an article captured at 2026-07-31T20:39:14Z renders as "Aug 1, 2026" east of
+   UTC+4 while the publisher's own page — one click away — says July 31. On a site whose whole
+   claim is that dates are captured from the page and never inferred, that is a correctness bug,
+   not a formatting preference. These helpers exist so the rule is structural rather than
+   remembered at each call site; verify-ui.js fails the build if a bare formatter reappears. */
+function utcInstant(value){
+  const date = value instanceof Date ? value : new Date(value);
+  return isNaN(date.getTime()) ? null : date;
+}
+function formatUtcDate(value){
+  const date = utcInstant(value);
+  return date ? date.toLocaleDateString('en-US', { timeZone:'UTC', day:'numeric', month:'short', year:'numeric' }) : '';
+}
+function formatUtcDateTime(value){
+  const date = utcInstant(value);
+  /* The zone is named because a bare time of day is ambiguous to every reader outside UTC. */
+  return date ? date.toLocaleString('en-US', { timeZone:'UTC', day:'numeric', month:'short', hour:'numeric', minute:'2-digit' }) + ' UTC' : '';
+}
 function animateMetric(id, target, suffix){
   const element = document.getElementById(id);
   if (!element) return;
@@ -345,7 +365,7 @@ function renderRevisionTrail(){
   const updated = new Date(predictionRevision.updated);
   const dateLabel = isNaN(updated.getTime())
     ? 'Latest published revision'
-    : updated.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+    : formatUtcDate(updated);
   const changes = predictionRevision.changes || [];
   summary.textContent = changes.length
     ? `${dateLabel}: ${changes.length} material event thresholds changed. Dates and branch anchors stayed fixed; the full source basis remains in predictions.json.`
@@ -355,7 +375,7 @@ function renderRevisionTrail(){
       const revised = new Date(`${change.revisedAt}T00:00:00Z`);
       const revisedLabel = isNaN(revised.getTime())
         ? change.revisedAt
-        : revised.toLocaleDateString('en-US', { timeZone:'UTC', day:'numeric', month:'short', year:'numeric' });
+        : formatUtcDate(revised);
       return `<a class="revision-link" href="#event-${change.id}">
         <time datetime="${htmlText(change.revisedAt)}">${htmlText(revisedLabel)}</time>
         <span><strong>${htmlText(change.title)}</strong><small>${htmlText(change.note)}</small></span>
@@ -644,8 +664,9 @@ function currencyCard(entry){
   const url = safeHttpUrl(entry.url) || '';
   const published = entry.publishedAt ? new Date(entry.publishedAt) : null;
   const dateText = published && !isNaN(published.getTime())
-    ? published.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' })
+    ? formatUtcDate(published)
     : '';
+  const publishedUtc = published && !isNaN(published.getTime()) ? published.toISOString().slice(0, 10) : '';
   const age = Number(entry.ageDays);
   /* Plain language, because "27d" is jargon. The age is computed from the captured
      publication date, so it degrades honestly rather than claiming false freshness. */
@@ -677,7 +698,7 @@ function currencyCard(entry){
     ? `<a class="tl-signal-link" href="${htmlText(url)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
     : '';
   return `
-    <details class="tl-signal tl-currency" data-kind="currency" data-evidence-medium="currency" data-freshness="${htmlText(entry.freshness || '')}">
+    <details class="tl-signal tl-currency" data-kind="currency" data-evidence-medium="currency" data-freshness="${htmlText(entry.freshness || '')}" data-published-utc="${htmlText(publishedUtc)}">
       <summary>
         <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
         <span class="tl-signal-summary-text">
@@ -692,7 +713,7 @@ function currencyCard(entry){
         ${rationale}
         ${quote}
         <div class="tl-signal-foot">
-          <span class="tl-signal-date">Published ${htmlText(dateText)}</span>
+          <span class="tl-signal-date">Published <time datetime="${htmlText(publishedUtc)}">${htmlText(dateText)}</time></span>
           <span class="tl-signal-actions">${link}</span>
         </div>
       </div>
@@ -1292,10 +1313,9 @@ const predictionsReady = (function loadPredictions(){
       if (stamp && d.updated){
         const dt = new Date(d.updated);
         if (!isNaN(dt.getTime())){
-          setText('heroPredFreshness', 'Forecast revised · '
-            + dt.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }));
+          setText('heroPredFreshness', 'Forecast revised · ' + formatUtcDate(dt));
           stamp.textContent = '\u25C8 Predictions revised from the latest news & @peterxing\u2019s X activity \u00b7 last revised '
-            + dt.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+            + formatUtcDate(dt);
           stamp.hidden = false;
         }
       }
@@ -1333,10 +1353,10 @@ function renderSignalMetadata(data){
   const newest = new Date(data.newestItemAt);
   const updatedLabel = isNaN(updated.getTime())
     ? 'update time unavailable'
-    : updated.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+    : formatUtcDate(updated);
   const newestLabel = isNaN(newest.getTime())
     ? 'newest-item time unavailable'
-    : newest.toLocaleString('en-US', { day:'numeric', month:'short', hour:'numeric', minute:'2-digit' });
+    : formatUtcDateTime(newest);
   const freshness = data.sourceFresh === true ? 'fresh source' : 'source freshness unverified';
   const archiveVerified = sourceStatus.mode === 'archive-verified';
   const sourceQualifier = archiveVerified
@@ -1619,7 +1639,7 @@ function hasCompleteSignalCoverage(data){
            ? ' · first-party hydrated + oEmbed cross-check'
            : d.sourceStatus && d.sourceStatus.reason ? ` · ${d.sourceStatus.reason}` : '';
          stamp.textContent = `Prediction evidence · ${d.coverage.direct}/${d.coverage.total} direct · zero searches · ${authorship.authored || 0} Peter wrote · ${authorship.reposted || 0} Peter reposted · ${owners.external || 0} external · max reuse ${d.coverage.maxReuse} · ${sourceLabel}${sourceState} · checked `
-           + dt.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+           + formatUtcDate(dt);
          stamp.hidden = false;
        }
       }

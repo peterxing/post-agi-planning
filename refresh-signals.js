@@ -2518,12 +2518,13 @@ async function main(){
     // lacks its reviewed X origin evidence, rather than letting it stand alone.
     if (!embeds[predictionId]) continue;
     const rendered = [];
+    const demotedHere = [];
     for (const entry of entries) {
       const src = CURRENCY_SOURCES[entry.source];
       if (!src) continue;
       const ageDays = Math.round((currencyNow - new Date(src.publishedAt).getTime()) / 864e5);
       if (ageDays > CURRENCY_MAX_AGE_DAYS) {
-        currencyDemoted.push(`${predictionId}: ${entry.source} (${src.publisherHost}, ${ageDays}d) exceeded the ${CURRENCY_MAX_AGE_DAYS}-day ceiling — demoted to X-only`);
+        demotedHere.push({ source:entry.source, host:src.publisherHost, ageDays });
         continue;
       }
       const bucket = ageDays <= 14 ? '<=14d'
@@ -2554,10 +2555,27 @@ async function main(){
       });
     }
     if (rendered.length) currency[predictionId] = rendered;
+    /* A demotion that leaves the prediction with another live reference is routine maintenance.
+       One that leaves it with NONE is a coverage regression: the prediction reverts to X-only and
+       wants a replacement harvested. Same mechanism, different consequence, so they are reported
+       as different things rather than as one undifferentiated list. */
+    for (const d of demotedHere) {
+      currencyDemoted.push({
+        predictionId,
+        ...d,
+        emptied: rendered.length === 0,
+      });
+    }
   }
   if (currencyDemoted.length) {
-    console.error(`[refresh] currency: ${currencyDemoted.length} reference(s) aged out and were demoted to X-only (publication proceeds; the X origin is untouched):`);
-    currencyDemoted.forEach(d => console.error(`[refresh]   ${d}`));
+    const emptied = currencyDemoted.filter(d => d.emptied);
+    console.error(`[refresh] currency: ${currencyDemoted.length} reference(s) aged out past the ${CURRENCY_MAX_AGE_DAYS}-day ceiling and were demoted to X-only (publication proceeds; the X origin is untouched):`);
+    currencyDemoted.forEach(d => console.error(
+      `[refresh]   ${d.emptied ? 'EMPTIED  ' : 'reduced  '}${d.predictionId}: ${d.source} (${d.host}, ${d.ageDays}d)${d.emptied ? ' — prediction now has NO current reference; harvest a replacement' : ' — prediction retains another live reference'}`,
+    ));
+    if (emptied.length) {
+      console.error(`[refresh] currency: ${emptied.length} prediction(s) lost their last current reference — ${[...new Set(emptied.map(d => d.predictionId))].join(', ')}`);
+    }
   }
   // The note must stay literally true: it may only claim an all-X corpus while one actually exists.
   const note = mediumTally.news === 0
@@ -2605,6 +2623,7 @@ async function main(){
         sources: new Set(Object.values(currency).flat().map(c => c.key)).size,
         withoutCurrency: PREDICTIONS.length - Object.keys(currency).length,
         demoted: currencyDemoted.length,
+        demotedEmptied: currencyDemoted.filter(d => d.emptied).length,
         maxAgeDays: CURRENCY_MAX_AGE_DAYS,
         freshness: currencyFreshness,
       },

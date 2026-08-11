@@ -516,6 +516,56 @@ function requestStatus(pathname) {
   }
   await restoreContext.close();
 
+  /* Every date on this site is a captured UTC instant. Formatting one in the reader's own zone
+     makes a cited source's publication date depend on who is reading it — an article captured at
+     2026-07-31T20:39:14Z renders "Aug 1, 2026" east of UTC+4 while the publisher's own page says
+     July 31 — which contradicts a source the reader can check in one click. Two guards, because
+     the static one alone would pass on a helper that was written correctly and then never called.
+     The rendered one loads the real page at the two extremes of the inhabited offset range and
+     requires byte-identical output, which is the property that actually matters: the same page
+     must not assert two different publication dates for the same citation. */
+  const appSource = require('fs').readFileSync(require('path').join(__dirname, 'app.js'), 'utf8');
+  const bareFormatters = appSource.split('\n')
+    .map((line, index) => ({ line:line.trim(), n:index + 1 }))
+    .filter(row => /\.toLocale(Date|Time)?String\(/.test(row.line)
+      && !/timeZone:'UTC'/.test(row.line)
+      && !/Math\.round\(n\)/.test(row.line));
+  if (bareFormatters.length) {
+    failures++;
+    console.log(`  FAIL app.js formats ${bareFormatters.length} date(s) in the reader's local zone · ${bareFormatters.map(r => `L${r.n}`).join(', ')}`);
+  } else {
+    console.log('[utc-dates] 1/1 static checks passed');
+  }
+
+  const zoneRenders = [];
+  for (const timezoneId of ['Pacific/Kiritimati', 'Pacific/Midway']) {
+    const zoneContext = await browser.newContext({ viewport:{ width:1280, height:900 }, timezoneId });
+    const zonePage = await zoneContext.newPage();
+    await zonePage.goto(`${URL}${URL.includes('?') ? '&' : '?'}scoutTheme=light`, { waitUntil:'networkidle' });
+    await zonePage.waitForFunction(() => document.querySelectorAll('#timelineBody .event').length > 0);
+    zoneRenders.push(await zonePage.evaluate(() => Array.from(
+      document.querySelectorAll('.tl-currency[data-published-utc]'),
+      node => ({
+        utc:node.dataset.publishedUtc,
+        rendered:node.querySelector('.tl-signal-date time')?.textContent?.trim() || '',
+      }),
+    )));
+    await zoneContext.close();
+  }
+  const [east, west] = zoneRenders;
+  const expectedCurrencyCards = Object.values(signals.currency || {}).reduce((sum, list) => sum + list.length, 0);
+  const zoneMismatch = east.filter((row, index) => row.rendered !== west[index]?.rendered);
+  const utcMismatch = east.filter(row => {
+    const parsed = new Date(`${row.rendered} UTC`);
+    return isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== row.utc;
+  });
+  if (!east.length || east.length !== expectedCurrencyCards || zoneMismatch.length || utcMismatch.length) {
+    failures++;
+    console.log(`  FAIL currency dates are reader-location dependent · cards ${east.length}/${expectedCurrencyCards} · zone mismatches ${zoneMismatch.length} · UTC mismatches ${utcMismatch.length}${utcMismatch.length ? ` · ${JSON.stringify(utcMismatch.slice(0, 3))}` : ''}`);
+  } else {
+    console.log(`[utc-dates] ${east.length}/${expectedCurrencyCards} currency dates identical at UTC+14 and UTC-11 and equal to the captured date`);
+  }
+
   await browser.close();
   if (failures) {
     console.log(`RESULT: FAIL (${failures} observatory check${failures === 1 ? '' : 's'})`);

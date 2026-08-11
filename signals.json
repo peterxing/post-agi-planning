@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11T02:03:51.643Z",
+  "updated": "2026-08-11T02:30:07.951Z",
   "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "archive-verified",
   "sourceStatus": {
@@ -73,7 +73,7 @@
       "count": 29
     }
   ],
-  "sourceFetchedAt": "2026-08-11T02:02:46.478Z",
+  "sourceFetchedAt": "2026-08-11T02:28:52.108Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
@@ -147,6 +147,7 @@
       "sources": 7,
       "withoutCurrency": 95,
       "demoted": 0,
+      "demotedEmptied": 0,
       "maxAgeDays": 60,
       "freshness": {
         "<=14d": 3,
@@ -987,7 +988,7 @@
       "date": "17 May 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Ken Griffin went home on a Friday \"fairly depressed\" after watching AI agents at Citadel do work that used to take teams of PhDs in finance months to complet…",
-      "likes": 12320,
+      "likes": 12322,
       "rts": 1788
     },
     "2028-2": {
