@@ -78,8 +78,8 @@ const SHOT = process.argv[3] || null;
          satisfy this check — it is supplementary and can never be a prediction's evidence. */
       const originCard = node => node.querySelector(
         '.event-body > .tl-signal:not(.tl-currency), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency)');
-      const eventCoverage = eventNodes.every(originCard);
-      const horizonCoverage = horizonNodes.every(node =>
+      const eventCoverage = eventNodes.length > 0 && eventNodes.every(originCard);
+      const horizonCoverage = horizonNodes.length > 0 && horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2

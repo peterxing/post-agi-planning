@@ -106,7 +106,13 @@ function requestStatus(pathname) {
       const ids = [...document.querySelectorAll('[id]')].map(element => element.id);
       const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
       const outcomeRows = [...document.querySelectorAll('.simulator-outcome')];
-      const outcomesDoNotOverlap = outcomeRows.every(row => {
+      const chapterBodies = [...document.querySelectorAll('#chapters .ch-body')];
+      const simulatorInputs = [...document.querySelectorAll('.simulator-control input')];
+      const svgTextNodes = [...document.querySelectorAll('#probabilitySimulatorMap text')];
+      // every() over an empty list returns true, so each predicate below is gated on a
+      // non-empty list and its size is reported: a selector that stops matching must
+      // fail this gate, not silently degrade it to a vacuous pass.
+      const outcomesDoNotOverlap = outcomeRows.length > 0 && outcomeRows.every(row => {
         const copy = row.querySelector('.simulator-outcome-copy').getBoundingClientRect();
         const stat = row.querySelector('.simulator-outcome-stat').getBoundingClientRect();
         return copy.right <= stat.left || copy.bottom <= stat.top || stat.bottom <= copy.top;
@@ -166,16 +172,18 @@ function requestStatus(pathname) {
           searchRegionRole:document.getElementById('atlasSearchResults')?.getAttribute('role'),
           searchInputRole:document.getElementById('atlasSearch')?.getAttribute('role'),
         },
-        collapsedChapters:[...document.querySelectorAll('#chapters .ch-body')].every(element => element.hidden),
+        chapterBodies:chapterBodies.length,
+        collapsedChapters:chapterBodies.length > 0 && chapterBodies.every(element => element.hidden),
         simulator:{
           map:Boolean(document.querySelector('#probabilitySimulatorMap svg')),
-          controls:[...document.querySelectorAll('.simulator-control input')].length,
-          enabled:[...document.querySelectorAll('.simulator-control input')].every(input => !input.disabled),
+          controls:simulatorInputs.length,
+          enabled:simulatorInputs.length > 0 && simulatorInputs.every(input => !input.disabled),
           probabilities:[...document.querySelectorAll('.simulator-outcome-stat')].map(element => element.textContent.trim()),
           disclaimer:document.getElementById('simulatorDisclaimer')?.textContent || '',
           labels:outcomeRows.map(row => row.getAttribute('aria-label')),
           noOverlap:outcomesDoNotOverlap,
-          svgPercentText:[...document.querySelectorAll('#probabilitySimulatorMap text')].every(element => !element.textContent.includes('%')),
+          svgTextNodes:svgTextNodes.length,
+          svgPercentText:svgTextNodes.length > 0 && svgTextNodes.every(element => !element.textContent.includes('%')),
         },
         figures:{
           count:figures.length,
@@ -216,7 +224,9 @@ function requestStatus(pathname) {
     check(results, 'horizon map and cards align', state.horizonNodes === expectedHorizon && state.horizonCards === expectedHorizon);
     check(results, 'six reality observations render', state.reality === 6, String(state.reality));
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
-    check(results, 'collapsed chapters leave the accessibility tree', state.collapsedChapters);
+    check(results, 'collapsed chapters leave the accessibility tree',
+      state.chapterBodies === 13 && state.collapsedChapters,
+      JSON.stringify({ bodies:state.chapterBodies }));
     check(results, 'prediction evidence is complete and direct-only',
       state.evidenceCards === expectedEvents + expectedHorizon
       && state.predictionSearches === 0
@@ -275,8 +285,10 @@ function requestStatus(pathname) {
       && state.simulator.controls === 3
       && state.simulator.enabled
       && JSON.stringify(state.simulator.probabilities) === JSON.stringify(['70%','18%','45%','42%','28%'])
+      && state.simulator.labels.length === 5
       && state.simulator.labels.every(label => /^.+Conditional likelihood: \d+ percent\.$/i.test(label))
       && state.simulator.noOverlap
+      && state.simulator.svgTextNodes > 0
       && state.simulator.svgPercentText
       && /Simulation only/i.test(state.simulator.disclaimer),
       JSON.stringify(state.simulator.probabilities));
@@ -304,12 +316,19 @@ function requestStatus(pathname) {
     await evidenceToggle.click();
     const evidenceState = await page.evaluate(() => ({
       pressed:document.getElementById('overlayToggle').getAttribute('aria-pressed'),
-      hiddenEvidence:[...document.querySelectorAll('#timelineAtlas .tl-signal, #timelineAtlas .tl-signal-unavailable')]
-        .every(element => getComputedStyle(element).display === 'none'),
+      signalNodes:document.querySelectorAll('#timelineAtlas .tl-signal, #timelineAtlas .tl-signal-unavailable').length,
+      hiddenEvidence:(() => {
+        const signals = [...document.querySelectorAll('#timelineAtlas .tl-signal, #timelineAtlas .tl-signal-unavailable')];
+        return signals.length > 0 && signals.every(element => getComputedStyle(element).display === 'none');
+      })(),
       eventCount:document.querySelectorAll('#timelineBody .event').length,
     }));
     check(results, 'evidence toggle hides evidence only',
-      evidenceState.pressed === 'false' && evidenceState.hiddenEvidence && evidenceState.eventCount === expectedEvents);
+      evidenceState.pressed === 'false'
+      && evidenceState.signalNodes > 0
+      && evidenceState.hiddenEvidence
+      && evidenceState.eventCount === expectedEvents,
+      JSON.stringify({ signals:evidenceState.signalNodes, events:evidenceState.eventCount }));
     await evidenceToggle.click();
 
     await page.locator('.chip[data-domain="technology"]').click();
@@ -420,11 +439,13 @@ function requestStatus(pathname) {
     if (profile.reduced) {
       check(results, 'reduced motion renders static editorial figures',
         !figureMotion.motionReady
+        && figureMotion.figures.length === 5
         && figureMotion.figures.every(figure => figure.visible && figure.animationName === 'none' && Number(figure.revealOpacity) === 1),
         JSON.stringify(figureMotion));
     } else {
       check(results, 'normal motion visibly activates every editorial figure',
         figureMotion.motionReady
+        && figureMotion.figures.length === 5
         && figureMotion.figures.every(figure =>
           figure.visible
           && figure.animationName.includes('editorial-path-draw')
@@ -454,11 +475,15 @@ function requestStatus(pathname) {
     const readerState = await page.evaluate(() => ({
       open:!document.getElementById('reader').hidden,
       toc:document.querySelectorAll('#rdToc .rd-toc-item').length,
-      inert:[...document.querySelectorAll('.content > :not(#reader)')].every(element => element.inert),
+      inertSiblings:document.querySelectorAll('.content > :not(#reader)').length,
+      inert:(() => {
+        const siblings = [...document.querySelectorAll('.content > :not(#reader)')];
+        return siblings.length > 0 && siblings.every(element => element.inert);
+      })(),
       active:document.activeElement?.id,
     }));
     check(results, 'reader opens with complete route navigation',
-      readerState.open && readerState.toc === 13 && readerState.inert && readerState.active === 'rdClose');
+      readerState.open && readerState.toc === 13 && readerState.inertSiblings > 0 && readerState.inert && readerState.active === 'rdClose');
     await page.keyboard.press('Escape');
     check(results, 'reader restores trigger focus',
       await page.evaluate(() => document.activeElement?.id === 'readBookBtn' && document.getElementById('reader').hidden));
