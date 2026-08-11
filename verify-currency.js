@@ -259,6 +259,37 @@ async function main() {
     ok('no currency links are published, so no ceiling governed anything and none is required');
   }
 
+  // ---- LEDGER FLOOR --------------------------------------------------------------------
+  /* Every check below compares the PAGE against the LEDGER, which makes the ledger the reference —
+     and nothing pinned the reference's own size. Delete a reviewed source from currency-evidence.js
+     and remove its links from signals.json and the two agree perfectly: "predictions cited 8 of 103
+     (reviewed ledger maps 8)", "10 link(s) across 8 source(s) (reviewed ledger maps 10 across 8)",
+     and the run exits exactly as it does when pristine. Measured, not reasoned: a coherent 9 -> 8
+     removal produced the pristine exit code and no finding of any kind.
+     This is Friday-critical. On 2026-08-14 the coverage line should read "8 of 9 — 1 skipped as
+     demoted"; with a source deleted instead it reads "8 of 8 — 0 skipped as demoted". THE NUMERATOR
+     IS 8 IN BOTH, so the count I transmit and the count it is compared against would agree while the
+     underlying states differ completely — a demotion that happened versus a source that vanished.
+     Age demotion NEVER shrinks the ledger, so this floor cannot fire on a correct demotion. */
+  const floors = JSON.parse(fs.readFileSync(path.join(root, 'evidence-floors.json'), 'utf8'));
+  const ledgerFloor = floors.currencyLedgerSources;
+  const ledgerSize = Object.keys(CURRENCY_SOURCES).length;
+  if (!Number.isInteger(ledgerFloor)) {
+    fail('evidence-floors.json does not record an integer currencyLedgerSources, so the size of the '
+      + 'reviewed ledger is unpinned and a deleted source would be indistinguishable from a demoted one. '
+      + 'This run refuses to substitute a literal for a recorded floor.');
+  } else if (ledgerSize < ledgerFloor) {
+    fail(`REVIEWED LEDGER SHRANK: currency-evidence.js holds ${ledgerSize} source(s), below the recorded floor `
+      + `of ${ledgerFloor}. Age demotion removes a LINK from signals.json and leaves the reviewed SOURCE in place, `
+      + 'so this is not a demotion — a reviewed source was deleted. Every page/ledger consistency check agrees '
+      + 'when both shrink together, so this floor is the only thing that can see it. If the removal was '
+      + 'deliberate and reviewed, lower the floor in evidence-floors.json in the same change.');
+  } else {
+    ok(`reviewed ledger holds ${ledgerSize} source(s), at or above the recorded floor of ${ledgerFloor}`
+      + `${ledgerSize > ledgerFloor ? ' — the floor should be RAISED to lock in the growth' : ''}`
+      + ' — demotion never shrinks the ledger, so a drop here means deletion, not age-out');
+  }
+
   // ---- the universe of valid prediction ids -------------------------------------------
   const ids = new Set();
   predictions.years.forEach(y => (y.events || []).forEach((_, i) => ids.add(`${y.year}-${i}`)));

@@ -3,5 +3,7 @@
   "note": "Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.",
   "peterTotal": 30,
   "peterAuthored": 11,
-  "maxReuse": 9
+  "maxReuse": 9,
+  "currencyLedgerSourcesNote": "Count of reviewed sources in the currency ledger. AGE DEMOTION NEVER SHRINKS THE LEDGER — it removes a link from signals.json while the reviewed source remains — so this floor is unaffected by a demotion and a drop below it means a source was DELETED, not demoted. Every currency consistency check compares the page against the ledger, so when both shrink together they agree and the loss is invisible; this is the only pin on the reference itself. Raising it is a reviewed manual edit.",
+  "currencyLedgerSources": 9
 }
