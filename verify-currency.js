@@ -749,7 +749,15 @@ async function main() {
      This line exists so that two instruments can anchor to the same self-verifying field and
      read the same answer, instead of each predicting the same instant correctly and describing
      different builds. */
-  if (CEILING_USABLE && DEMOTION_RULE) {
+  /* The anchor's ABSENCE must never be silent. This line is the field two instruments key a
+     cross-run comparison to, so a reader who does not see it must be told that it was not
+     computed — otherwise a missing anchor is indistinguishable from an anchor nobody looked
+     for, which is the same defect class as an inertness declaration sitting in the pass
+     channel. Every route out of this block therefore either prints the anchor or registers
+     the axis. */
+  if (!CEILING_USABLE || !DEMOTION_RULE) {
+    inert('artefact anchor', `the build-vs-crossing anchor was NOT computed (${!DEMOTION_RULE ? "the builder's demotion rule is unreadable" : 'the recorded ceiling is unusable'}), so nothing below states whether this artefact predates or follows the earliest demotion crossing — do not anchor a cross-instrument comparison to a line that was never produced`);
+  } else {
     const builtAt = Date.parse(signals.updated);
     if (!Number.isFinite(builtAt)) {
       fail('signals.updated is not a parseable timestamp, so the artefact cannot say when it was built and no demotion comparison can be anchored to it');
@@ -766,6 +774,8 @@ async function main() {
         const iso = t => new Date(t).toISOString().replace('.000Z', 'Z');
         const dh = (builtAt - crossAt) / 36e5;
         ok(`ARTEFACT ANCHOR  signals.json states it was BUILT at ${iso(builtAt)}. The earliest demotion crossing in the reviewed ledger is ${iso(crossAt)} (${crossKey}), derived from the builder's ${DEMOTION_RULE.key} rule. This artefact was built ${dh >= 0 ? `${dh.toFixed(2)}h AFTER` : `${(-dh).toFixed(2)}h BEFORE`} that crossing, so a published count read from it ${dh >= 0 ? 'CAN' : 'CANNOT'} reflect the demotion. ANCHOR ANY CROSS-INSTRUMENT COMPARISON TO THIS FIELD RATHER THAN TO A SCHEDULER'S nextRunAt — the schedule is configuration with no counterparty and its instant is only a LOWER BOUND on the rebuild, while this field is stated by the artefact and pinned by the emitted-age axis below`);
+      } else {
+        inert('artefact anchor', `NO demotion crossing could be derived: not one of the ${Object.keys(sources).length} registered ledger source(s) has a parseable publishedAt, so the earliest crossing is unknown and this run states nothing about whether the artefact predates or follows it`);
       }
     }
   }
@@ -1255,6 +1265,21 @@ async function main() {
     advisories.forEach(a => console.log(`  !    ${a}`));
   }
 
+  /* THE INVENTORY IS UNCONDITIONAL; ONLY THE VERDICT IS CONDITIONAL.
+     This list used to sit below the problems block, so any run that exited 1 printed no axis
+     inventory at all — a reader scanning for "was this axis judged?" saw nothing and could not
+     distinguish "judged and clean" from "never judged". The prose survived in ADVISORY, but a
+     machine-readable completeness list is the stronger claim precisely because it is what a
+     reader trusts INSTEAD of reading the prose, so suppressing it on failure is worse than
+     suppressing the prose. A failing run is also exactly when an unjudged axis matters most:
+     the failure may BE the unjudged axis. The exit ordering below is unchanged — problems
+     still outrank infrastructure, which still outranks inertness — only the reporting moved. */
+  if (inertAxes.length) {
+    console.log('\nAXES NOT VERIFIED IN THIS RUN — nothing was verified on the following axes,');
+    console.log('  whatever this run exits. An axis listed here carries NO verdict in either direction:');
+    inertAxes.forEach(a => console.log(`    - ${a}`));
+  }
+
   if (problems.length) {
     console.error('\nFAILED');
     problems.forEach(p => console.error(`  - ${p}`));
@@ -1271,8 +1296,7 @@ async function main() {
   }
   if (inertAxes.length) {
     console.log('\nverify:currency PASSED BUT INERT');
-    console.log('  Nothing failed, and nothing was verified on the following axes:');
-    inertAxes.forEach(a => console.log(`    - ${a}`));
+    console.log('  Nothing failed, and the axes listed above were not verified.');
     console.log('  This is a legitimate state (an entirely demoted currency layer is honest, not broken)');
     console.log('  and publication PROCEEDS. It must not be recorded as a verified currency layer.');
     process.exit(EXIT_INERT);
