@@ -633,6 +633,18 @@ async function main() {
        the demotion decision itself rather than from a proximity guess. */
     let bandEdge = 0;
     let ceilingSensitive = 0;
+    /* THE INSTRUMENT DERIVES THE WINDOW; A HUMAN NO LONGER COMPUTES IT IN PROSE. This exists
+       because I got it wrong in exactly the way this file keeps naming. Asked when the pass
+       would first fire on live data, I hand-computed 59.5d (`round>=`) — the NEAREST NEIGHBOUR
+       of the declared `round>`, whose crossing is easy to do in your head. The answer is the
+       EXTREMUM of the space, `ceil>=` at 59.0d, and it is already sitting in RULE_OFFSETS,
+       sorted, requiring no evaluation at all. So the alternatives were derived while the
+       boundary of the derived set was copied by hand: one rule space wearing two names, the
+       second copy living in prose where nothing executes it and no fixture can catch it.
+       Verified against this code by driving publishedAt across 58.9/59.001/59.501/60.001/
+       60.501/61.001d — silent, {ceil>=}, {round>=,ceil>=}, {round>=,floor>=,ceil>,ceil>=},
+       {5 of 6}, silent — so the window is [59.0d, 61.0d] and both endpoints are measured. */
+    let nextWindow = null;
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
         const exact = (emittedAt - Date.parse(c.publishedAt)) / 864e5;
@@ -654,6 +666,14 @@ async function main() {
         if (demote.length && keep.length) {
           ceilingSensitive++;
           ok(`CEILING-SENSITIVE  ${pid}  ${c.key}  ${exact.toFixed(3)}d against the ${MAX_AGE_DAYS}d ceiling — THE RULE DECIDES PUBLICATION on this row, not the data: ${demote.join('/')} demote it, ${keep.join('/')} keep it. Rounding agreement is load-bearing for whether this link appears at all`);
+        } else if (!demote.length) {
+          /* Not yet sensitive. The window opens when the FIRST rule in the space flips, which
+             is the minimum over RULE_OFFSETS — never the neighbour of the declared rule. */
+          const at = Date.parse(c.publishedAt);
+          const opens = Object.entries(RULE_OFFSETS)
+            .map(([key, off]) => ({ key, when: at + (MAX_AGE_DAYS + off) * 864e5 }))
+            .sort((a, b) => a.when - b.when)[0];
+          if (!nextWindow || opens.when < nextWindow.when) nextWindow = { ...opens, pid, key: c.key, rule: opens.key };
         }
       }
     }
@@ -661,6 +681,9 @@ async function main() {
        one that never ran, which is the defect this file keeps finding elsewhere. */
     if (pinned) {
       ok(`boundary sweep  ${pinned} published link(s) checked — ${bandEdge} within 12h of a freshness band edge, ${ceilingSensitive} where the demotion rule itself decides publication at the ${MAX_AGE_DAYS}d ceiling`);
+      if (!ceilingSensitive && nextWindow) {
+        ok(`  ...next ceiling-sensitivity window opens ${new Date(nextWindow.when).toISOString()} on ${nextWindow.pid}/${nextWindow.key}, driven by ${nextWindow.rule} — the EXTREMUM of the ${Object.keys(RULE_OFFSETS).length}-rule space, derived from RULE_OFFSETS rather than computed by hand`);
+      }
     }
   }
 
