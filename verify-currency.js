@@ -340,7 +340,17 @@ async function main() {
      demoted"; with a source deleted instead it reads "8 of 8 — 0 skipped as demoted". THE NUMERATOR
      IS 8 IN BOTH, so the count I transmit and the count it is compared against would agree while the
      underlying states differ completely — a demotion that happened versus a source that vanished.
-     Age demotion NEVER shrinks the ledger, so this floor cannot fire on a correct demotion. */
+     Age demotion NEVER shrinks the ledger, so this floor cannot fire on a correct demotion.
+     THIS WAS A `>=` FLOOR AND THAT MADE IT SELF-CERTIFYING. Measured in shipped bytes: edit the
+     registration alone to 8, or to 0, and the run is byte-identical to pristine — exit 70, no
+     finding, and the green line cheerfully prints "at or above the recorded floor of 0". A floor
+     compared with `actual >= registered` is satisfied by LOWERING THE REGISTRATION, which is the one
+     operand a manual edit to this file can move; `currencyMaxAgeDays` and `maxReuse` are both caught
+     on that route and this was not. Delivery needs no exotic access: JSON.parse resolves DUPLICATE
+     KEYS to the last value, so appending one line to a file whose design mandates manual human edits
+     sets it. It is now an EXACT registration, for the same reason the ceiling and the nine identities
+     are: a change to a reviewed field is unreviewed until the registration moves with it. Growth is a
+     failure here too — a tenth source is a reviewed addition and must be registered as one. */
   const ledgerFloor = floors.currencyLedgerSources;
   const ledgerSize = Object.keys(CURRENCY_SOURCES).length;
   if (!Number.isInteger(ledgerFloor)) {
@@ -348,15 +358,21 @@ async function main() {
       + 'reviewed ledger is unpinned and a deleted source would be indistinguishable from a demoted one. '
       + 'This run refuses to substitute a literal for a recorded floor.');
   } else if (ledgerSize < ledgerFloor) {
-    fail(`REVIEWED LEDGER SHRANK: currency-evidence.js holds ${ledgerSize} source(s), below the recorded floor `
-      + `of ${ledgerFloor}. Age demotion removes a LINK from signals.json and leaves the reviewed SOURCE in place, `
+    fail(`REVIEWED LEDGER SHRANK: currency-evidence.js holds ${ledgerSize} source(s), against a REGISTERED `
+      + `${ledgerFloor}. Age demotion removes a LINK from signals.json and leaves the reviewed SOURCE in place, `
       + 'so this is not a demotion — a reviewed source was deleted. Every page/ledger consistency check agrees '
-      + 'when both shrink together, so this floor is the only thing that can see it. If the removal was '
-      + 'deliberate and reviewed, lower the floor in evidence-floors.json in the same change.');
+      + 'when both shrink together, so this registration is the only thing that can see it. If the removal was '
+      + 'deliberate and reviewed, change the registration in the same reviewed change that removes the source.');
+  } else if (ledgerSize > ledgerFloor) {
+    fail(`REVIEWED LEDGER GREW UNREGISTERED: currency-evidence.js holds ${ledgerSize} source(s), against a `
+      + `REGISTERED ${ledgerFloor}. This is an EXACT registration, not a floor: growth is a reviewed addition `
+      + 'and is unreviewed until the registration moves with it. Registering a number BELOW the true size is '
+      + 'also how a `>=` floor is defeated — the registration is the one operand a manual edit to this file '
+      + 'can move, so it may not be the slack side of an inequality.');
   } else {
-    ok(`reviewed ledger holds ${ledgerSize} source(s), at or above the recorded floor of ${ledgerFloor}`
-      + `${ledgerSize > ledgerFloor ? ' — the floor should be RAISED to lock in the growth' : ''}`
-      + ' — demotion never shrinks the ledger, so a drop here means deletion, not age-out');
+    ok(`reviewed ledger holds EXACTLY the registered ${ledgerSize} source(s) — equality, not a floor, so `
+      + 'lowering the registration is a finding rather than a licence; demotion never shrinks the ledger, '
+      + 'so a drop here means deletion, not age-out');
   }
 
   // ---- REGISTERED LEDGER IDENTITY ------------------------------------------------------
