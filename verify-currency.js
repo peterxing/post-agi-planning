@@ -288,6 +288,72 @@ async function main() {
     }
   }
 
+  /* ---- EMITTED AGE PIN ----------------------------------------------------------------
+   * Everything above RECOMPUTES age from the ledger and compares outcomes. That makes this
+   * gate a second implementation rather than an independent check: signals.json emits
+   * ageDays and freshness on every link plus a coverage histogram, and nothing asserted
+   * those were derivable from publishedAt at all. A drift between the publisher's rounding
+   * (refresh-signals.js) and this file's would therefore surface somewhere downstream as a
+   * phantom histogram discrepancy instead of failing here with both values named.
+   *
+   * The epoch is signals.updated, not now. The emitted ages were computed at the publish
+   * instant, so recomputing against the current clock would fail purely as a function of
+   * how long after publication the gate happens to run.
+   */
+  const emittedAt = Date.parse(signals.updated);
+  if (!Number.isFinite(emittedAt)) {
+    fail('signals.updated is not a parseable timestamp — emitted currency ages cannot be reproduced');
+  } else {
+    const bandOf = a => (a <= 14 ? '<=14d' : a <= 30 ? '15-30d' : a <= 90 ? '31-90d' : a <= 365 ? '91-365d' : '>1yr');
+    const impliedHist = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
+    let pinned = 0;
+    let discriminating = 0;
+    for (const [pid, list] of Object.entries(published)) {
+      for (const c of list) {
+        const at = Date.parse(c.publishedAt);
+        if (!Number.isFinite(at)) { fail(`${pid}: ${c.key} has an unparseable publishedAt (${c.publishedAt})`); continue; }
+        const expected = Math.round((emittedAt - at) / 864e5);
+        if (c.ageDays !== expected) {
+          fail(`${pid}: ${c.key} emits ageDays ${c.ageDays}, but publishedAt ${c.publishedAt} against signals.updated ${signals.updated} gives ${expected} — publisher and verifier disagree on the definition of age`);
+        }
+        const band = bandOf(c.ageDays);
+        if (c.freshness !== band) {
+          fail(`${pid}: ${c.key} emits freshness "${c.freshness}", but its emitted ageDays ${c.ageDays} falls in ${band}`);
+        }
+        impliedHist[band]++;
+        pinned++;
+        if (Math.floor((emittedAt - at) / 864e5) !== expected) discriminating++;
+      }
+    }
+    const coverageHist = signals.coverage && signals.coverage.currency && signals.coverage.currency.freshness;
+    if (!coverageHist) {
+      fail('coverage.currency.freshness is absent — the published freshness histogram cannot be checked against the links it summarises');
+    } else if (JSON.stringify(coverageHist) !== JSON.stringify(impliedHist)) {
+      fail(`coverage.currency.freshness ${JSON.stringify(coverageHist)} does not match the histogram implied by the emitted per-link ages ${JSON.stringify(impliedHist)}`);
+    } else if (pinned) {
+      ok(`emitted ages pinned  ${pinned} link(s) reproduce both ageDays and freshness from publishedAt against signals.updated, and the coverage histogram matches`);
+    }
+    /* A pin that both candidate definitions satisfy proves nothing on that run. Say so,
+       rather than letting a vacuous pass read as a discriminating one. */
+    if (pinned && !discriminating) {
+      ok(`emitted-age pin is NOT discriminating today: every link's age is identical under round and floor, so this run could not detect a rounding drift`);
+    } else if (pinned) {
+      ok(`emitted-age pin discriminates on ${discriminating} of ${pinned} link(s) where round and floor differ — a rounding drift would fail here`);
+    }
+    /* Boundary proximity: within 12h of a band edge, publisher and verifier must agree on
+       rounding or the histogram splits. Surfaced so a boundary-sensitive run is known in
+       advance rather than diagnosed from a failed assertion afterwards. */
+    for (const [pid, list] of Object.entries(published)) {
+      for (const c of list) {
+        const exact = (emittedAt - Date.parse(c.publishedAt)) / 864e5;
+        const edge = [14, 30, 90, 365].find(e => Math.abs(exact - (e + 0.5)) < 0.5);
+        if (edge !== undefined) {
+          ok(`boundary-sensitive  ${pid}  ${c.key}  ${exact.toFixed(2)}d is within 12h of the ${edge}d band edge — rounding agreement is load-bearing on this run`);
+        }
+      }
+    }
+  }
+
   // ---- LIVE RE-VERIFICATION ------------------------------------------------------------
   if (OFFLINE) {
     ok('offline mode: skipped live re-fetch (not valid for publish)');
