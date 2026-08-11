@@ -2,7 +2,14 @@
 // Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
 if (require.main === module) require('./pipeline-lock').guard('verify:author');
 
-const { chromium } = require(require('path').join(process.env.TEMP, 'pap-explore', 'node_modules', 'playwright'));
+/* Resolved as a normal project dependency (playwright is a declared devDependency), the same
+   way verify-site/reality/perpred/observatory/performance/news-evidence all resolve it. This
+   line previously reached into %TEMP%\pap-explore\node_modules — a scratch directory outside
+   the project that the OS is free to delete at any time, and did. That is not a dependency,
+   it is a gate whose availability depends on temp-cleanup timing: it fails as EXIT_INSTRUMENT
+   (76) with every figure correctly discarded, but it fails for a reason unrelated to the site
+   and at a moment nobody chooses. A verifier must not be able to disappear between runs. */
+const { chromium } = require('playwright');
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8787';
 

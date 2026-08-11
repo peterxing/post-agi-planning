@@ -1273,11 +1273,26 @@ async function main() {
      reader trusts INSTEAD of reading the prose, so suppressing it on failure is worse than
      suppressing the prose. A failing run is also exactly when an unjudged axis matters most:
      the failure may BE the unjudged axis. The exit ordering below is unchanged — problems
-     still outrank infrastructure, which still outranks inertness — only the reporting moved. */
+     still outrank infrastructure, which still outranks inertness — only the reporting moved.
+
+     TWO SEPARATE HAZARDS ARE HANDLED HERE, BOTH FOUND BY REVIEW RATHER THAN BY THE FILE.
+     (1) The list is DE-DUPLICATED. Two routes may register the same axis name — the artefact
+     anchor already has two, mutually exclusive today — and an axis printed twice tells a reader
+     nothing a single line does not. Nothing reads inertAxes as a count (both uses below test
+     emptiness only), so collapsing duplicates cannot change an exit code.
+     (2) The header deliberately does NOT contain the previous wording as a substring. The old
+     header opened with a "Nothing failed" clause and then declared, in the same sentence, that
+     the listed axes had gone unverified; a first rewrite of it preserved that second clause
+     verbatim — so a substring matcher would have returned TRUE on BOTH the old and the new
+     file. That is worse than a matcher that breaks, because it silently reports the old version
+     as present on new bytes. A version string that cannot distinguish versions is not a version
+     string. The old wording is deliberately NOT quoted here either: prose that quotes the
+     string it replaced re-creates the collision inside the file that documents it. */
   if (inertAxes.length) {
-    console.log('\nAXES NOT VERIFIED IN THIS RUN — nothing was verified on the following axes,');
-    console.log('  whatever this run exits. An axis listed here carries NO verdict in either direction:');
-    inertAxes.forEach(a => console.log(`    - ${a}`));
+    const axes = [...new Set(inertAxes)];
+    console.log('\nAXES NOT VERIFIED IN THIS RUN — no verdict was reached on the axes listed below,');
+    console.log('  whatever this run exits. An axis listed here carries NO finding in either direction:');
+    axes.forEach(a => console.log(`    - ${a}`));
   }
 
   if (problems.length) {
