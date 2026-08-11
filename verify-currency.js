@@ -602,11 +602,21 @@ async function main() {
   }
 
   // ---- REPORT --------------------------------------------------------------------------
+  /* LEDGER AND PAGE ARE DIFFERENT POPULATIONS AND ONLY COINCIDE WHILE NOTHING IS DEMOTED.
+     Until the first age-out every one of these numbers is the same under either reading, so a
+     label naming the page while counting the ledger is indistinguishable from a correct one —
+     and becomes wrong silently, on a schedule, on the single day the layer changes. Each line
+     therefore states which population it counted and never mixes the two in one figure. */
+  const citedOnPage = Object.keys(published).length;
+  const sourcesOnPage = new Set(Object.values(published).flat().map(link => link.key)).size;
+  const ledgerPredictions = Object.keys(mappings).length;
+  const ledgerSources = Object.keys(sources).length;
   console.log('\ncurrency layer');
-  console.log(`  predictions cited      ${Object.keys(mappings).length} of ${ids.size}`);
-  console.log(`  links / sources        ${linkCount} / ${Object.keys(sources).length}`);
-  console.log(`  X-only predictions     ${ids.size - Object.keys(mappings).length}`);
-  console.log(`  demoted for age        ${demoted.size} of ${Object.keys(sources).length} sources (ceiling ${MAX_AGE_DAYS}d) — X origin retained, publish proceeds`);
+  console.log(`  predictions cited      ${citedOnPage} of ${ids.size} on the page (reviewed ledger maps ${ledgerPredictions})`);
+  const linksOnPage = Object.values(published).flat().length;
+  console.log(`  links / sources        ${linksOnPage} link(s) across ${sourcesOnPage} source(s) on the page (reviewed ledger maps ${linkCount} pair(s) across ${ledgerSources} source(s))`);
+  console.log(`  X-only predictions     ${ids.size - citedOnPage}`);
+  console.log(`  demoted for age        ${demoted.size} of ${ledgerSources} ledger source(s) (ceiling ${MAX_AGE_DAYS}d) — X origin retained, publish proceeds`);
   /* Surface what is ABOUT to age out, so a scheduled run can refresh a reference while the
      existing one is still valid and there is never a gap. A rule the automation cannot see is
      a rule it will not follow, so the deadline is printed rather than left to be recomputed. */
