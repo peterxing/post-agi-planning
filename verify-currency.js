@@ -44,7 +44,19 @@ const EXCLUDED_HOSTS = new Set(['arxiv.org', 'biorxiv.org', 'medrxiv.org', 'ssrn
    pipeline interlock already uses. An infrastructure fault blocks publication WITHOUT ever
    being recorded as an evidence-integrity event. */
 const EXIT_INFRASTRUCTURE = 75;
+/* Exit 70 = PASSED BUT INERT. Every check below can be true over an empty input set, and a
+   check over an empty set reports the same green as a check that passed. Yesterday those
+   checks were taught to ANNOUNCE their inertness — but the announcement goes to stdout while
+   publish-github.ps1 decides on $LASTEXITCODE alone, so to the caller an inert gate and a
+   verified gate were the same byte. That is the sentence retired one level down, still live
+   one level up: the fix landed in a channel the consumer does not read.
+
+   70 is deliberately NOT a failure. An entirely demoted currency layer is a legitimate,
+   truthful state, and blocking publication because an optional layer aged out is the exact
+   defect this file avoids elsewhere. It proceeds — it just cannot be reported as verified. */
+const EXIT_INERT = 70;
 const infrastructure = [];
+const inertAxes = [];
 
 /*
  * Fetch an article, distinguishing "the source is protecting itself from bots" from "the
@@ -366,6 +378,7 @@ async function main() {
        bare `if (count)` emits NOTHING at zero, so the run is silent about a check that did
        not run, and silence is indistinguishable from a check that ran and held. */
     ok('refresh relation is INERT on this run: no ledger entry is within the ceiling, so nothing was tested about currency postdating its X origin');
+    inertAxes.push('refresh relation');
   }
 
   /* ---- PUBLISHED SET MUST BE A SUBSET OF THE REVIEWED LEDGER ---------------------------
@@ -416,6 +429,7 @@ async function main() {
       ok(`published set traced to the ledger  ${traced} of ${publishedCount} published link(s) resolve to a reviewed, correctly-mapped ledger entry with ${PINNED_FIELDS.length} fields byte-equal — an unreviewed or altered link cannot reach the page`);
     } else {
       ok('published-set trace is INERT on this run: signals.json publishes no currency links, so this check establishes nothing about fabrication');
+      inertAxes.push('fabrication trace');
     }
   }
 
@@ -465,6 +479,7 @@ async function main() {
       ok(`emitted ages pinned  ${pinned} link(s) reproduce both ageDays and freshness from publishedAt against signals.updated, and the coverage histogram matches`);
     } else {
       ok('emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
+      inertAxes.push('emitted-age pin');
     }
     /* A pin that both candidate definitions satisfy proves nothing on that run. Say so,
        rather than letting a vacuous pass read as a discriminating one. */
@@ -500,6 +515,7 @@ async function main() {
   let liveSkippedDemoted = 0;
   if (OFFLINE) {
     ok('live re-verification is INERT: --offline skipped every fetch, so this run establishes NOTHING about headline, quote or date drift and is not valid for publish');
+    inertAxes.push('live re-verification (--offline)');
   } else {
     for (const [key, s] of Object.entries(sources)) {
       /* A demoted source is not published, so its live state cannot affect a reader. Fetching
@@ -571,6 +587,7 @@ async function main() {
       ok(`live re-verification covered ${liveFetched} of ${totalSources} source(s) — ${liveSkippedDemoted} skipped as demoted (not on the page); headline, verbatim quote and publication date were re-read from the live article for every covered source`);
     } else {
       ok(`live re-verification is INERT on this run: 0 of ${totalSources} source(s) were fetched (${liveSkippedDemoted} demoted, none published), so a green result here establishes NOTHING about drift — no live article was read`);
+      inertAxes.push('live re-verification');
     }
   }
 
@@ -605,6 +622,14 @@ async function main() {
     console.error('  article. This is NOT evidence drift and no citation should be dropped for it.');
     infrastructure.forEach(p => console.error(`  - ${p}`));
     process.exit(EXIT_INFRASTRUCTURE);
+  }
+  if (inertAxes.length) {
+    console.log('\nverify:currency PASSED BUT INERT');
+    console.log('  Nothing failed, and nothing was verified on the following axes:');
+    inertAxes.forEach(a => console.log(`    - ${a}`));
+    console.log('  This is a legitimate state (an entirely demoted currency layer is honest, not broken)');
+    console.log('  and publication PROCEEDS. It must not be recorded as a verified currency layer.');
+    process.exit(EXIT_INERT);
   }
   console.log('\nverify:currency PASS');
 }
