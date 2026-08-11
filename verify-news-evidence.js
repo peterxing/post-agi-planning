@@ -50,12 +50,25 @@ const {
 const readJson = file => JSON.parse(fs.readFileSync(path.join(__dirname, file), 'utf8').replace(/^\uFEFF/, ''));
 const predictions = readJson('predictions.json');
 const signals = readJson('signals.json');
+// Fails closed: `catch { return {} }` here silently restored the hardcoded reuse ceiling of 10 that
+// the registered value exists to tighten, and reported the same exit code either way. The integer
+// assertion is the second half — measured before it was added, maxReuse:"not-a-number" left this
+// verifier at exit 0 with the ceiling silently loosened from the registered 9 to that literal.
 const floors = (() => {
+  let doc;
   try {
-    return readJson('evidence-floors.json');
-  } catch {
-    return {};
+    doc = readJson('evidence-floors.json');
+  } catch (error) {
+    console.error(`RESULT: FAIL — evidence-floors.json could not be read as JSON (${error.message}). The evidence `
+      + 'ratchet is a gate, not a hint: refusing rather than falling back to the ceiling it exists to tighten.');
+    process.exit(1);
   }
+  if (!Number.isInteger(doc.maxReuse)) {
+    console.error(`RESULT: FAIL — evidence-floors.json: maxReuse must be an integer, found ${JSON.stringify(doc.maxReuse)}. `
+      + 'Refusing rather than coercing it to the hardcoded ceiling of 10 this registration exists to tighten.');
+    process.exit(1);
+  }
+  return doc;
 })();
 
 const MAX_REVIEWED_REUSE = Math.min(10, Number.isFinite(Number(floors.maxReuse)) ? Number(floors.maxReuse) : 10);

@@ -5,6 +5,33 @@ if (require.main === module) require('./pipeline-lock').guard('verify:coverage')
 
 const fs = require('fs');
 const path = require('path');
+
+/* Read BEFORE the sibling requires below, deliberately. refresh-signals.js parses this same file at
+   MODULE SCOPE, so requiring it first made the refusal here dead on arrival: measured against
+   83495FEE2DF739B2, this message printed in 0 of 2 rows built to trigger it while the run exited 76
+   from inside the import. A guard's reachability is part of the guard, and "does it fail closed" and
+   "does THIS line ever execute" are different questions. Reading first also makes this the FIRST
+   reader rather than a later one, so the integer assertion is duplicated here rather than inherited —
+   moving a read earlier re-aims every control that used to run before it, and the reader this now
+   displaces was the stricter of the two. */
+const ratchet = (() => {
+  let doc;
+  try {
+    doc = JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, ''));
+  } catch (error) {
+    console.error(`RESULT: FAIL — evidence-floors.json could not be read as JSON (${error.message}). The evidence `
+      + 'ratchet is a gate, not a hint: refusing rather than falling back to the baselines it exists to raise.');
+    process.exit(1);
+  }
+  for (const key of ['peterTotal', 'peterAuthored', 'maxReuse']) {
+    if (!Number.isInteger(doc[key])) {
+      console.error(`RESULT: FAIL — evidence-floors.json: ${key} must be an integer, found ${JSON.stringify(doc[key])}. `
+        + 'Refusing rather than coercing it to the baseline this ratchet exists to raise.');
+      process.exit(1);
+    }
+  }
+  return doc;
+})();
 const {
   FAMILY_DEFINITIONS,
   familyForPrediction,
@@ -34,13 +61,7 @@ const predictionTextById = new Map([
 ]);
 // Gates ratchet in the safe direction only: evidence-floors.json records the strongest composition a
 // published run has achieved, so a later regression fails here instead of shipping weaker evidence.
-const ratchet = (() => {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8'));
-  } catch {
-    return {};
-  }
-})();
+// The read itself is hoisted above the requires at the top of this file; see the note there.
 const MIN_STICKY_PETER_MAPPINGS = Math.max(24, Number(ratchet.peterTotal) || 0);
 const MIN_AUTHORED_PETER_MAPPINGS = Math.max(10, Number(ratchet.peterAuthored) || 0);
 const MAX_REVIEWED_REUSE = Math.min(10, Number.isFinite(Number(ratchet.maxReuse)) ? Number(ratchet.maxReuse) : 10);

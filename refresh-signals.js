@@ -75,16 +75,33 @@ const BASE_MIN_STICKY_PETER_MAPPINGS = 24;
 const BASE_MIN_AUTHORED_PETER_MAPPINGS = 10;
 const BASE_MAX_REVIEWED_REUSE = 10;
 function readEvidenceFloors() {
+  /* FAILS CLOSED, and it did not used to. This returned {peterTotal:0, peterAuthored:0,
+     maxReuse:Infinity} on any read error, which is not a neutral default: Math.max/Math.min then
+     resolve every gate to the BASE_* baseline the ratchet exists to raise, silently, mid-build,
+     while the run continues and publishes. Three bytes of UTF-8 BOM — the default of the "reviewed,
+     explained manual edit" this file's own note asks for, on Windows — were enough. A registration
+     is only load-bearing in the readers that FAIL when it is absent, and that is a property of each
+     READ-SITE, not of the file: the sibling read at the ratchet writer never had a fallback, so the
+     same corrupt file weakened this one and threw in that one. */
+  let raw;
   try {
-    const raw = JSON.parse(fs.readFileSync(FLOORS, 'utf8'));
-    return {
-      peterTotal: Number(raw.peterTotal) || 0,
-      peterAuthored: Number(raw.peterAuthored) || 0,
-      maxReuse: Number.isFinite(Number(raw.maxReuse)) ? Number(raw.maxReuse) : Infinity,
-    };
-  } catch {
-    return { peterTotal: 0, peterAuthored: 0, maxReuse: Infinity };
+    raw = JSON.parse(fs.readFileSync(FLOORS, 'utf8').replace(/^\uFEFF/, ''));
+  } catch (error) {
+    throw new Error(`evidence-floors.json could not be read as JSON (${error.message}). This runs at MODULE `
+      + 'SCOPE, so it is the first reader in any process that imports this file, and a bare SyntaxError here '
+      + 'is reported as an instrument fault against whichever program did the importing.');
   }
+  for (const key of ['peterTotal', 'peterAuthored', 'maxReuse']) {
+    if (!Number.isInteger(raw[key])) {
+      throw new Error(`evidence-floors.json: ${key} must be an integer, found ${JSON.stringify(raw[key])}. `
+        + 'Refusing rather than coercing it to the baseline this ratchet exists to raise.');
+    }
+  }
+  return {
+    peterTotal: raw.peterTotal,
+    peterAuthored: raw.peterAuthored,
+    maxReuse: raw.maxReuse,
+  };
 }
 const EVIDENCE_RATCHET = readEvidenceFloors();
 const MIN_STICKY_PETER_MAPPINGS = Math.max(
@@ -2745,7 +2762,8 @@ async function main(){
         + `${ratchetKeys.join('/')}. Refusing to write: an unrecognised key here would overwrite a `
         + 'reviewed registration with a builder-computed value, which is the one thing this file exists to prevent.');
     }
-    const existingFloors = JSON.parse(fs.readFileSync(FLOORS, 'utf8'));
+    // Same spelling as every other read of this file: a BOM must not decide which reads survive.
+    const existingFloors = JSON.parse(fs.readFileSync(FLOORS, 'utf8').replace(/^\uFEFF/, ''));
     fs.writeFileSync(FLOORS, JSON.stringify({
       ...existingFloors,
       updated: new Date().toISOString().slice(0, 10),

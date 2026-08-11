@@ -25,12 +25,27 @@ const expectedIds = [
 const expected = new Set(expectedIds);
 const problems = [];
 // Honour the monotonic evidence ratchet: evidence-floors.json can only tighten this ceiling.
+// Fails closed: `catch { return {} }` here silently restored the hardcoded reuse ceiling of 10 that
+// the registered value exists to tighten, and reported the same exit code either way. The integer
+// assertion is the second half — a valid-JSON registration of the WRONG TYPE reaches
+// `Number.isFinite(Number(x)) ? … : 10` below and resolves to that same literal without any parse
+// ever failing. Measured before it was added: maxReuse:"not-a-number" exited 0 with no mention of
+// this file at all.
 const ratchet = (() => {
+  let doc;
   try {
-    return JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, ''));
-  } catch {
-    return {};
+    doc = JSON.parse(fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, ''));
+  } catch (error) {
+    console.error(`RESULT: FAIL — evidence-floors.json could not be read as JSON (${error.message}). The evidence `
+      + 'ratchet is a gate, not a hint: refusing rather than falling back to the ceiling it exists to tighten.');
+    process.exit(1);
   }
+  if (!Number.isInteger(doc.maxReuse)) {
+    console.error(`RESULT: FAIL — evidence-floors.json: maxReuse must be an integer, found ${JSON.stringify(doc.maxReuse)}. `
+      + 'Refusing rather than coercing it to the hardcoded ceiling of 10 this registration exists to tighten.');
+    process.exit(1);
+  }
+  return doc;
 })();
 const MAX_REVIEWED_REUSE = Math.min(10, Number.isFinite(Number(ratchet.maxReuse)) ? Number(ratchet.maxReuse) : 10);
 const qualityClasses = new Set([

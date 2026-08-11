@@ -240,7 +240,19 @@ async function main() {
   const predictions = JSON.parse(fs.readFileSync(path.join(root, 'predictions.json'), 'utf8'));
   const signals = JSON.parse(fs.readFileSync(path.join(root, 'signals.json'), 'utf8'));
   const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
-  const floors = JSON.parse(fs.readFileSync(path.join(root, 'evidence-floors.json'), 'utf8'));
+  /* Deliberately UNGUARDED: a corrupt registration must reach the exit-76 trap, never a fallback.
+     The BOM strip is here because a reviewed manual edit on Windows adds one and every other read of
+     this file must resolve the same bytes to the same value; the re-thrown message exists so the
+     trap names THIS file instead of a bare JSON syntax error against an innocent one. */
+  const floors = (() => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(root, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, ''));
+    } catch (error) {
+      throw new Error(`evidence-floors.json could not be read as JSON (${error.message}). Every registered `
+        + 'term in this run — the ceiling, the ledger floor and the nine identities — resolves from this '
+        + 'file, so there is no fallback that would not be the hardcoded value the registration replaces.');
+    }
+  })();
 
   // ---- REGISTERED CEILING ---------------------------------------------------------------
   /* The artefact says what governed publication; the environment says what this machine thinks
