@@ -322,6 +322,12 @@ async function main() {
        "published" made the line read "11 published link(s)" on a run where zero were
        published. The noun must match the number it is attached to. */
     ok(`refresh relation enforced  ${originChecked.total} ledger entr${originChecked.total === 1 ? 'y' : 'ies'} within the ceiling postdate the X evidence they refresh (${originChecked.published} of them live-published); ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
+  } else {
+    /* The pin was taught to announce its own inertness and this check was not, in the same
+       file and the same commit — the instance was fixed and the class was not swept. A
+       bare `if (count)` emits NOTHING at zero, so the run is silent about a check that did
+       not run, and silence is indistinguishable from a check that ran and held. */
+    ok('refresh relation is INERT on this run: no ledger entry is within the ceiling, so nothing was tested about currency postdating its X origin');
   }
 
   /* ---- PUBLISHED SET MUST BE A SUBSET OF THE REVIEWED LEDGER ---------------------------
@@ -444,17 +450,29 @@ async function main() {
   }
 
   // ---- LIVE RE-VERIFICATION ------------------------------------------------------------
+  /* Count what this section ACTUALLY fetched. Every branch below prints a reassuring green
+     line — "skipped (demoted)", "UNREACHABLE but corroborated", "live OK" — but the section
+     made no aggregate claim, so a run in which nothing was fetched at all was byte-for-byte
+     as green as a run in which every link was re-verified. That matters on a schedule: each
+     age-out moves one more source onto the demoted skip path, so the number of links this
+     gate genuinely re-checks trends toward zero while its output stays entirely reassuring.
+     A reader of a green chain must be able to see how much live verification stood behind
+     it, so the count is stated and zero is announced rather than passed over in silence. */
+  let liveFetched = 0;
+  let liveSkippedDemoted = 0;
   if (OFFLINE) {
-    ok('offline mode: skipped live re-fetch (not valid for publish)');
+    ok('live re-verification is INERT: --offline skipped every fetch, so this run establishes NOTHING about headline, quote or date drift and is not valid for publish');
   } else {
     for (const [key, s] of Object.entries(sources)) {
       /* A demoted source is not published, so its live state cannot affect a reader. Fetching
          it could only produce a drift or challenge failure on a link nobody can see — which is
          the same defect class as failing the publish because an optional layer aged out. Skip. */
       if (demoted.has(key)) {
+        liveSkippedDemoted++;
         ok(`live re-fetch skipped  ${key}  (demoted for age; not published, so its live state cannot affect the page)`);
         continue;
       }
+      liveFetched++;
       const got = await fetchArticleVerified(s.resolvedUrl);
 
       if (!got.ok) {
@@ -499,6 +517,12 @@ async function main() {
         fail(`${key}: DATE DRIFT — stored ${s.publishedAt.slice(0, 10)}, live page now reports ${ex.publishedAt.slice(0, 10)}`);
       }
       ok(`live OK  ${key}  ${s.publishedAt.slice(0, 10)}  ${collapse(s.publisher).split(' | ')[0]}${got.attempts > 1 ? `  (cleared after ${got.attempts} attempts)` : ''}`);
+    }
+    const totalSources = Object.keys(sources).length;
+    if (liveFetched) {
+      ok(`live re-verification covered ${liveFetched} of ${totalSources} source(s) — ${liveSkippedDemoted} skipped as demoted (not on the page); headline, verbatim quote and publication date were re-read from the live article for every covered source`);
+    } else {
+      ok(`live re-verification is INERT on this run: 0 of ${totalSources} source(s) were fetched (${liveSkippedDemoted} demoted, none published), so a green result here establishes NOTHING about drift — no live article was read`);
     }
   }
 
