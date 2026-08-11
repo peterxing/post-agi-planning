@@ -29,6 +29,7 @@ if (require.main === module) require('./pipeline-lock').guard('refresh-signals')
 
 const fs = require('fs');
 const path = require('path');
+const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
 const {
   FAMILY_DEFINITIONS,
   familyForPrediction,
@@ -2476,6 +2477,88 @@ async function main(){
     mappingIntegrityErrors.push('news evidence may never substitute for the Peter floors');
   }
   const sourceStatus = sourceStatusFor(source, sourceAttempts);
+  /*
+   * THE CURRENCY LAYER — additive, and strictly subordinate to the reviewed X evidence.
+   *
+   * Every prediction keeps exactly one reviewed direct X status as its ORIGIN evidence.
+   * A currency reference is an optional SECOND item: a recent, live-verified, authoritative
+   * news or peer-reviewed article showing where the world currently stands on that claim.
+   * It never replaces, demotes or substitutes for an X mapping, never counts toward the
+   * Peter floors, and never touches the ratchet. Coverage is deliberately sparse — a
+   * prediction with no genuinely relevant current reference simply gets none, which is a
+   * truthful gap rather than a defect to be papered over.
+   *
+   * The histogram below is COMPUTED from the emitted references, never declared, so it
+   * cannot drift away from what is actually published.
+   */
+  const currency = {};
+  const currencyFreshness = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
+  let currencyLinks = 0;
+  const currencyNow = Date.now();
+  /* AGE-OUT IS A DEMOTION, NOT A FAULT.
+   *
+   * A currency reference exists to show where the world CURRENTLY stands, so one that has
+   * aged past the ceiling has stopped doing its job. That is not evidence of anything wrong
+   * with the article — it is still genuine and still says what it said — so it must never be
+   * treated like quote drift or a fabricated source, which signal that a citation may no
+   * longer support its claim and rightly fail closed.
+   *
+   * The demotion is applied HERE, at the point of emission, so it is effective rather than
+   * advisory: an expired reference simply never reaches signals.json, and the prediction
+   * falls back to the X-only state that the great majority of predictions already occupy.
+   * Dropping it is safe by construction — a currency entry is refused below unless its
+   * reviewed X origin exists, and currency can never satisfy a Peter floor or the ratchet —
+   * so a demotion cannot reduce coverage or breach a gate. The freshness histogram and the
+   * link/source counts are computed from what is actually emitted, so they follow automatically.
+   */
+  const CURRENCY_MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
+  const currencyDemoted = [];
+  for (const [predictionId, entries] of Object.entries(CURRENCY_MAPPINGS)) {
+    // Additive only: refuse to emit a currency reference for a prediction that somehow
+    // lacks its reviewed X origin evidence, rather than letting it stand alone.
+    if (!embeds[predictionId]) continue;
+    const rendered = [];
+    for (const entry of entries) {
+      const src = CURRENCY_SOURCES[entry.source];
+      if (!src) continue;
+      const ageDays = Math.round((currencyNow - new Date(src.publishedAt).getTime()) / 864e5);
+      if (ageDays > CURRENCY_MAX_AGE_DAYS) {
+        currencyDemoted.push(`${predictionId}: ${entry.source} (${src.publisherHost}, ${ageDays}d) exceeded the ${CURRENCY_MAX_AGE_DAYS}-day ceiling — demoted to X-only`);
+        continue;
+      }
+      const bucket = ageDays <= 14 ? '<=14d'
+        : ageDays <= 30 ? '15-30d'
+          : ageDays <= 90 ? '31-90d'
+            : ageDays <= 365 ? '91-365d' : '>1yr';
+      currencyFreshness[bucket]++;
+      currencyLinks++;
+      rendered.push({
+        key: entry.source,
+        url: src.resolvedUrl,
+        // og:site_name is sometimes a marketing string; keep the captured value intact and
+        // give the UI a short form rather than inventing a cleaner publisher name here.
+        publisher: src.publisher,
+        publisherShort: String(src.publisher || '').split(' | ')[0].trim(),
+        publisherHost: src.publisherHost,
+        headline: src.headline,
+        author: src.author || '',
+        publishedAt: src.publishedAt,
+        ageDays,
+        freshness: bucket,
+        sourceQuality: src.sourceQuality,
+        quote: src.quote,
+        rationale: entry.rationale,
+        provenance: entry.provenance || null,
+        reviewedAt: entry.reviewedAt,
+        evidenceType: 'currency',
+      });
+    }
+    if (rendered.length) currency[predictionId] = rendered;
+  }
+  if (currencyDemoted.length) {
+    console.error(`[refresh] currency: ${currencyDemoted.length} reference(s) aged out and were demoted to X-only (publication proceeds; the X origin is untouched):`);
+    currencyDemoted.forEach(d => console.error(`[refresh]   ${d}`));
+  }
   // The note must stay literally true: it may only claim an all-X corpus while one actually exists.
   const note = mediumTally.news === 0
     ? 'Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.'
@@ -2515,8 +2598,19 @@ async function main(){
       byPeterAuthorship: peterAuthorshipTally,
       bySourceQuality: sourceQualityTally,
       byEvidenceType: evidenceTypeTally,
+      // Additive layer, reported separately so it can never be mistaken for direct coverage.
+      currency: {
+        predictions: Object.keys(currency).length,
+        links: currencyLinks,
+        sources: new Set(Object.values(currency).flat().map(c => c.key)).size,
+        withoutCurrency: PREDICTIONS.length - Object.keys(currency).length,
+        demoted: currencyDemoted.length,
+        maxAgeDays: CURRENCY_MAX_AGE_DAYS,
+        freshness: currencyFreshness,
+      },
     },
     embeds,
+    currency,
     search: {},
     reality,
   };

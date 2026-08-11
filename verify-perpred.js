@@ -72,14 +72,19 @@ const SHOT = process.argv[3] || null;
 
       const eventNodes = Array.from(document.querySelectorAll('#timelineBody .event'));
       const horizonNodes = Array.from(document.querySelectorAll('#horizonBody .horizon-item'));
-      const eventCoverage = eventNodes.every(node =>
-        node.querySelector('.event-body > .tl-signal'));
+      /* Origin evidence is the reviewed X status. When a prediction also carries an additive
+         current reference the pair is wrapped in .tl-evidence-group, so the origin card sits
+         one level deeper. Both shapes must be accepted, but a .tl-currency card may NEVER
+         satisfy this check — it is supplementary and can never be a prediction's evidence. */
+      const originCard = node => node.querySelector(
+        '.event-body > .tl-signal:not(.tl-currency), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency)');
+      const eventCoverage = eventNodes.every(originCard);
       const horizonCoverage = horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2
         && node.querySelector('.horizon-caveat')
-        && node.querySelector('.horizon-signal .tl-signal'));
+        && node.querySelector('.horizon-signal .tl-signal:not(.tl-currency)'));
       const searchLinks = Array.from(document.querySelectorAll('.tl-signal-search')).map(a => a.href);
       const dates = Array.from(document.querySelectorAll('.tl-signal-date')).map(d => d.textContent.trim());
       const directSchema = Object.keys(embeds).every(key => {
@@ -160,8 +165,18 @@ const SHOT = process.argv[3] || null;
         expectedEventCount: datedKeys.length,
         horizonCount: horizonNodes.length,
         expectedHorizonCount: horizonItems.length,
-        cards: document.querySelectorAll('#timelineBody .event-body .tl-signal, #horizonBody .horizon-signal .tl-signal').length,
-        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal, #horizonBody .horizon-signal > .tl-signal').length,
+        cards: document.querySelectorAll('#timelineBody .event-body .tl-signal:not(.tl-currency), #horizonBody .horizon-signal .tl-signal:not(.tl-currency)').length,
+        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal:not(.tl-currency), #horizonBody .horizon-signal > .tl-signal:not(.tl-currency), #timelineBody .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency), #horizonBody .horizon-signal > .tl-evidence-group > .tl-signal:not(.tl-currency)').length,
+        /* The additive currency layer, counted separately so it can never be mistaken for
+           direct coverage. Every currency card must sit inside an evidence group that also
+           contains an origin card — asserted below. */
+        currencyCards: document.querySelectorAll('.tl-signal.tl-currency').length,
+        orphanCurrency: [...document.querySelectorAll('.tl-signal.tl-currency')].filter(card => {
+          const group = card.closest('.tl-evidence-group');
+          return !group || !group.querySelector('.tl-signal:not(.tl-currency)');
+        }).length,
+        currencyWithXAffordance: [...document.querySelectorAll('.tl-signal.tl-currency')].filter(card =>
+          card.querySelector('[data-tweet], a[href*="x.com"], a[href*="twitter.com"]')).length,
         chips: searchLinks.length,
         expectedSearches: 0,
         strayCards: document.querySelectorAll('#timelineBody .year-row > div > .tl-signal').length,
@@ -223,10 +238,15 @@ const SHOT = process.argv[3] || null;
       coverageMetadata: stats.coverageMetadata,
       reality: stats.realityCount === 6,
       layout: stats.strayCards === 0 && stats.datesMissing === 0,
+      /* The currency layer is strictly additive: no currency card may stand alone without
+         an origin card beside it, and none may carry an X affordance that would let a news
+         article read as one of Peter's posts. */
+      currencyAdditive: stats.orphanCurrency === 0,
+      currencyNotDisguisedAsX: stats.currencyWithXAffordance === 0,
       console: errors.length === 0,
     };
     const ok = Object.values(checks).every(Boolean);
-    console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} evidence=${stats.evidenceItems} direct=${stats.cards} searches=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
+    console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} evidence=${stats.evidenceItems} direct=${stats.cards} currency=${stats.currencyCards} searches=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
     if (!ok) console.log('   CHECKS:', JSON.stringify(checks));
     if (errors.length) console.log('   ERRORS:', errors.slice(0, 4).join(' | '));
     if (stats.missingKeys.length) console.log('   MISSING:', stats.missingKeys.slice(0, 12).join(', '));

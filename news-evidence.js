@@ -513,11 +513,53 @@ function renderedPublishedDate(mainText) {
     pattern.lastIndex = 0;
     let match;
     while ((match = pattern.exec(window))) {
-      const parsed = new Date(match[0].replace(/,/g, ''));
+      // Parse as UTC. A bare calendar date ("Jul 24, 2026") is otherwise parsed in the
+      // RUNNER'S local timezone and then serialised back through toISOString() in UTC, so
+      // every date-only page shifted one day EARLIER on any host east of UTC. That silently
+      // publishes a wrong publication date, which this system treats as fabrication.
+      const parsed = new Date(`${match[0].replace(/,/g, '')} UTC`);
       if (!Number.isNaN(parsed.getTime())) found.add(parsed.toISOString().slice(0, 10));
     }
   }
   return found.size === 1 ? [...found][0] : '';
+}
+
+/*
+ * BOT-CHALLENGE / INTERSTITIAL DETECTION.
+ *
+ * Some publishers (nature.com among them) intermittently answer an automated request with a
+ * ~3KB "Client Challenge" shell instead of the article — and serve it with HTTP 200. Status
+ * alone therefore does NOT mean "fetched". This matters far more than it looks: a challenge
+ * shell contains none of the article prose, so a naive verifier concludes the supporting
+ * quote has vanished and reports EVIDENCE DRIFT against a citation that is completely
+ * genuine and completely unchanged.
+ *
+ * An infrastructure fault must never be able to evict real evidence. This classifies the two
+ * apart so callers can retry and, if it persists, report UNVERIFIABLE-INFRASTRUCTURE rather
+ * than accusing the source of tampering.
+ */
+const CHALLENGE_MARKERS_STRONG = [
+  'cf-browser-verification', '__cf_chl', 'Client Challenge', 'Attention Required! | Cloudflare',
+  'Checking your browser before accessing', 'DDoS protection by', 'Please verify you are a human',
+];
+const CHALLENGE_MARKERS_WEAK = [
+  'JavaScript is disabled in your browser', 'Enable JavaScript and cookies to continue', 'Just a moment',
+];
+function detectBotChallenge(html, mainText) {
+  const body = String(html || '');
+  const prose = String(mainText || '');
+  const strong = CHALLENGE_MARKERS_STRONG.find(m => body.includes(m));
+  if (strong) return { challenged: true, reason: `interstitial marker "${strong}"` };
+  // These phrases can legitimately appear inside a real article, so they only count as a
+  // challenge when the response is also too small to BE an article.
+  if (body.length < 20000) {
+    const weak = CHALLENGE_MARKERS_WEAK.find(m => body.includes(m));
+    if (weak) return { challenged: true, reason: `interstitial marker "${weak}" in a ${body.length}-byte response` };
+    if (prose.length < 500) {
+      return { challenged: true, reason: `implausibly small response (${body.length} bytes, ${prose.length} chars of prose)` };
+    }
+  }
+  return { challenged: false, reason: '' };
 }
 
 function extractArticle(html, finalUrl) {
@@ -525,7 +567,12 @@ function extractArticle(html, finalUrl) {
   const headline = metaContent(html, ['og:title', 'twitter:title'])
     || collapse(ld.headline || ld.name || '')
     || collapse((html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1] || '')
-    || collapse((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '');
+    || collapse((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '')
+    // Academic publishers often expose only these. Appended LAST on purpose: a new tag
+    // earlier in the chain would change already-captured headlines and trip the drift
+    // check on genuine articles. This only adds reach where the chain currently returns
+    // nothing, and an empty headline still fails closed.
+    || metaContent(html, ['citation_title', 'dc.title', 'DC.title', 'dcterms.title']);
   const publisher = metaContent(html, ['og:site_name', 'application-name', 'publisher', 'DC.publisher'])
     || nameOf(ld.publisher)
     || nameOf(ld.sourceOrganization)
@@ -542,11 +589,19 @@ function extractArticle(html, finalUrl) {
     'article:modified_time', 'og:published_time', 'pubdate', 'publish-date', 'DC.date.issued',
   ])
     || collapse(ld.datePublished || ld.dateCreated || '')
-    || collapse((html.match(/<time[^>]+datetime\s*=\s*["']([^"']+)["']/i) || [])[1] || '');
+    || collapse((html.match(/<time[^>]+datetime\s*=\s*["']([^"']+)["']/i) || [])[1] || '')
+    // Same reasoning as the headline chain: academic-publisher tags appended last so no
+    // already-captured date can shift. A date that still cannot be extracted fails closed.
+    || metaContent(html, ['citation_publication_date', 'citation_online_date', 'DC.date', 'dcterms.date']);
   const mainText = extractMainText(html);
   let publishedAt = '';
   if (publishedRaw) {
-    const parsed = new Date(publishedRaw);
+    // A value with no time-of-day is a bare calendar date and therefore carries no
+    // timezone. new Date() would interpret it in LOCAL time and toISOString() would then
+    // serialise it in UTC, recording the date one day EARLY on any host east of UTC.
+    // Verified at UTC+10: '2026/06/15', 'June 15, 2026' and '15 June 2026' all shifted.
+    const bareCalendarDate = !/\d:\d/.test(publishedRaw);
+    const parsed = new Date(bareCalendarDate ? `${publishedRaw} UTC` : publishedRaw);
     if (!Number.isNaN(parsed.getTime())) publishedAt = parsed.toISOString();
   }
   if (!publishedAt) {
@@ -587,6 +642,15 @@ function normalizeForQuote(value) {
     .replace(/[\u2010-\u2015]/g, '-')
     .replace(/\u00a0/g, ' ')
     .replace(/\s+/g, ' ')
+    /* Collapse whitespace introduced by inline markup boundaries. A sentence spanning an
+       <a>, <em>, <strong> or <time> tag strips to "revealed Thursday , are", so a recorded
+       quote that crosses one would stop matching the moment a publisher adds or removes a
+       mid-sentence link — the prose unchanged, yet reported as quote drift. That is the
+       same false-evidence-fault class as the bot challenge. This touches only whitespace
+       ADJACENT TO punctuation: it can never make two different words compare equal, so it
+       normalises presentation without weakening the verbatim guarantee. */
+    .replace(/\s+([,.;:!?)\]])/g, '$1')
+    .replace(/([(\[])\s+/g, '$1')
     .trim()
     .toLowerCase();
 }
@@ -669,6 +733,7 @@ module.exports = {
   classifyHost,
   collapse,
   decodeEntities,
+  detectBotChallenge,
   extractArticle,
   extractMainText,
   fetchArticle,

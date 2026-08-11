@@ -129,7 +129,8 @@ function requestStatus(pathname) {
         horizonCards:document.querySelectorAll('#horizonBody .horizon-item').length,
         reality:document.querySelectorAll('#signalsGrid .observation-card').length,
         chapters:document.querySelectorAll('#chapters .chapter').length,
-        evidenceCards:document.querySelectorAll('#timelineBody .tl-signal, #horizonBody .tl-signal').length,
+        evidenceCards:document.querySelectorAll('#timelineBody .tl-signal:not(.tl-currency), #horizonBody .tl-signal:not(.tl-currency)').length,
+        currencyCards:document.querySelectorAll('#timelineBody .tl-signal.tl-currency, #horizonBody .tl-signal.tl-currency').length,
         evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
         predictionSearches:document.querySelectorAll('.tl-signal-search').length,
         invalidPredictionSearches:[...document.querySelectorAll('.tl-signal-search')].filter(link => {
@@ -138,12 +139,12 @@ function requestStatus(pathname) {
             || !/^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
             || url.searchParams.get('f') !== 'live';
         }).length,
-        peterEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
-        peterAuthoredEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter wrote this/.test(summary.textContent)).length,
-        peterRepostedEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Peter reposted this/.test(summary.textContent)).length,
-        externalEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
-        scenarioEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
-        leadingEvidence:[...document.querySelectorAll('.tl-signal summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
+        peterEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
+        peterAuthoredEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter wrote this/.test(summary.textContent)).length,
+        peterRepostedEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter reposted this/.test(summary.textContent)).length,
+        externalEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
+        scenarioEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
+        leadingEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
         evidenceDashboard:{
           direct:document.getElementById('evidenceDirectStat')?.textContent.trim(),
           authored:document.getElementById('evidenceAuthoredStat')?.textContent.trim(),
@@ -525,3 +526,4 @@ function requestStatus(pathname) {
   console.error(error);
   process.exit(1);
 });
+

@@ -7,6 +7,7 @@ if (require.main === module) require('./pipeline-lock').guard('validate');
 const fs = require('fs');
 const path = require('path');
 const { validateFamilyCoverage } = require('./evidence-families');
+const { MONTH_ESTIMATES, PREREQUISITES, bandForYear, precisionForBand } = require('./month-estimates');
 const FILE = process.argv[2] || path.join(__dirname, 'predictions.json');
 const DOMAINS = ['individual', 'social', 'technology', 'economic', 'geopolitical', 'governance'];
 const EPISTEMIC_LABELS = new Set(['conditional', 'speculative']);
@@ -20,6 +21,7 @@ const SIMULATOR_ANCHORS = new Map([
 
 const problems = [];
 const eventRows = [];
+const monthRows = new Map();
 let d;
 try { d = JSON.parse(fs.readFileSync(FILE, 'utf8').replace(/^\uFEFF/, '')); }
 catch (e) { console.log('FAIL: not valid JSON — ' + e.message); process.exit(1); }
@@ -67,6 +69,30 @@ for (const y of d.years) {
         }
         if (!Number.isFinite(e.prob)) problems.push(tag + ': simAnchor "' + e.simAnchor + '" requires a numeric prob');
       }
+    }
+    // Additive month estimate. It never replaces or edits `t`, which is the sticky binding
+    // key every evidence approval is keyed on, and it may never move `prob`.
+    if (e) {
+      const id = `${y.year}-${i}`;
+      const expectedBand = bandForYear(y.year);
+      if (!Number.isInteger(e.m) || e.m < 1 || e.m > 12) {
+        problems.push(tag + ': event "' + e.t + '" needs an integer month estimate m in 1–12');
+      }
+      if (e.mBand !== expectedBand) {
+        problems.push(tag + ': event "' + e.t + '" mBand must be ' + expectedBand + ' for ' + y.year + ', not ' + e.mBand);
+      }
+      if (e.mPrecision !== precisionForBand(expectedBand)) {
+        problems.push(tag + ': event "' + e.t + '" mPrecision must be ' + precisionForBand(expectedBand) + ' for a ±' + expectedBand + '-month band');
+      }
+      if (typeof e.mBasis !== 'string' || e.mBasis.trim().length < 40) {
+        problems.push(tag + ': event "' + e.t + '" needs a stated month basis tied to a real pace signal');
+      }
+      const table = MONTH_ESTIMATES[id];
+      if (!table) problems.push(tag + ': event ' + id + ' has no entry in month-estimates.js');
+      else if (table.m !== e.m || table.basis !== e.mBasis) {
+        problems.push(tag + ': event ' + id + ' month data does not match month-estimates.js');
+      }
+      monthRows.set(id, { year: y.year, month: e.m, band: e.mBand, text: e.t });
     }
     if (e && typeof e.t === 'string' && e.t.trim()) eventRows.push({ id: `${y.year}-${i}`, year: y.year, text: e.t.trim() });
   }
@@ -126,6 +152,12 @@ if (!horizon || typeof horizon !== 'object' || Array.isArray(horizon)) {
       else horizonIds.add(item.id);
       if (!nonEmptyString(item.t)) problems.push(`${tag}: t missing/empty`);
       if (/\b20(?:2[6-9]|3\d|40)\b/.test(String(item.t || ''))) problems.push(`${tag}: t must remain undated`);
+      // The seven horizon items are deliberately undated. Assigning a month to the
+      // Transcension or ruliad horizon would be fabrication, so the fields must be absent
+      // rather than blank — the UI states the absence as a deliberate epistemic choice.
+      for (const field of ['m', 'mBand', 'mPrecision', 'mBasis']) {
+        if (item[field] != null) problems.push(`${tag}: carries ${field}; horizon items must never be dated`);
+      }
       if (!DOMAINS.includes(item.d)) problems.push(`${tag}: invalid domain d=${item.d}`);
       if (!EPISTEMIC_LABELS.has(item.epistemic)) problems.push(`${tag}: epistemic must be conditional or speculative`);
       if (typeof item.conditionalProb !== 'number' || item.conditionalProb < 0 || item.conditionalProb > 100) {
@@ -215,6 +247,45 @@ const expectedEvidenceIds = [
 const familyCoverage = validateFamilyCoverage(expectedEvidenceIds);
 if (familyCoverage.missing.length || familyCoverage.extra.length) {
   problems.push(`evidence-family coverage mismatch (missing: ${familyCoverage.missing.join(', ') || 'none'}; extra: ${familyCoverage.extra.join(', ') || 'none'})`);
+}
+
+/*
+ * Month-estimate coherence. Three separate properties, each a hard failure:
+ *
+ *  1. Coverage — every dated event carries an estimate and no orphan estimate exists.
+ *  2. Monotonic bands — uncertainty may never narrow as the forecast moves further out.
+ *     This is what stops a confident-looking month appearing in 2038.
+ *  3. Dependency ordering — a milestone defined as following another may never be
+ *     scheduled before it. Equality is allowed because two milestones can genuinely land
+ *     in the same window; only a strict inversion is incoherent.
+ */
+for (const id of Object.keys(MONTH_ESTIMATES)) {
+  if (!monthRows.has(id)) problems.push(`month-estimates.js has an estimate for ${id}, which is not a dated event`);
+}
+let previousBand = -Infinity;
+let previousYear = -Infinity;
+for (const year of d.years.map(y => Number(y.year)).sort((a, b) => a - b)) {
+  const band = bandForYear(year);
+  if (band < previousBand) {
+    problems.push(`month band narrows from ±${previousBand} in ${previousYear} to ±${band} in ${year}; uncertainty must widen with distance`);
+  }
+  previousBand = band;
+  previousYear = year;
+}
+function monthOrdinal(id) {
+  const row = monthRows.get(id);
+  return row ? row.year * 12 + row.month : null;
+}
+for (const edge of PREREQUISITES) {
+  const after = monthOrdinal(edge.after);
+  const before = monthOrdinal(edge.before);
+  if (after == null) { problems.push(`prerequisite edge references unknown event ${edge.after}`); continue; }
+  if (before == null) { problems.push(`prerequisite edge references unknown event ${edge.before}`); continue; }
+  if (after < before) {
+    const a = monthRows.get(edge.after);
+    const b = monthRows.get(edge.before);
+    problems.push(`${edge.after} (${a.year}-${String(a.month).padStart(2, '0')}) is scheduled before its prerequisite ${edge.before} (${b.year}-${String(b.month).padStart(2, '0')}): ${edge.why}`);
+  }
 }
 
 const STOP = new Set(('the a an and or of to in on for with by from at as is are be becomes become into '

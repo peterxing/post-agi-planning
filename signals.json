@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-10T00:05:01.082Z",
+  "updated": "2026-08-11T02:03:51.643Z",
   "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "archive-verified",
   "sourceStatus": {
@@ -73,7 +73,7 @@
       "count": 29
     }
   ],
-  "sourceFetchedAt": "2026-08-10T00:03:08.403Z",
+  "sourceFetchedAt": "2026-08-11T02:02:46.478Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
@@ -140,6 +140,21 @@
       "leading-indicator": 58,
       "direct": 14,
       "scenario": 31
+    },
+    "currency": {
+      "predictions": 8,
+      "links": 9,
+      "sources": 7,
+      "withoutCurrency": 95,
+      "demoted": 0,
+      "maxAgeDays": 60,
+      "freshness": {
+        "<=14d": 3,
+        "15-30d": 3,
+        "31-90d": 3,
+        "91-365d": 0,
+        ">1yr": 0
+      }
     }
   },
   "embeds": {
@@ -580,7 +595,7 @@
       "date": "08 Jun 2026",
       "maps": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
       "text": "SpaceX has just officially unveiled its AI1 satellite, the first generation of its AI satellite. Overall Specs: 150 kW peak compute payload; 120 kW average...",
-      "likes": 14779,
+      "likes": 14777,
       "rts": 1807
     },
     "2027-0": {
@@ -972,7 +987,7 @@
       "date": "17 May 2026",
       "maps": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
       "text": "Ken Griffin went home on a Friday \"fairly depressed\" after watching AI agents at Citadel do work that used to take teams of PhDs in finance months to complet…",
-      "likes": 12327,
+      "likes": 12320,
       "rts": 1788
     },
     "2028-2": {
@@ -1350,7 +1365,7 @@
       "date": "09 Jul 2026",
       "maps": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
       "text": "The creators of AI 2027 just dropped AI 2040. Under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&D is slowed and made more...",
-      "likes": 504,
+      "likes": 503,
       "rts": 0
     },
     "2029-2": {
@@ -1400,7 +1415,7 @@
       "date": "09 Jul 2026",
       "maps": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
       "text": "The creators of AI 2027 just dropped AI 2040. Under Plan A, the US and China make a deal in 2029 to avoid a reckless race, AI R&D is slowed and made more...",
-      "likes": 504,
+      "likes": 503,
       "rts": 53
     },
     "2029-3": {
@@ -1546,7 +1561,7 @@
       "date": "19 Jun 2026",
       "maps": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
       "text": "If we look at the last couple of years, we’re speed running every science-fiction plot simultaneously. UBI, government stake in labs, recursive self, a debat…",
-      "likes": 1436,
+      "likes": 1437,
       "rts": 0
     },
     "2029-6": {
@@ -3858,7 +3873,7 @@
       "date": "17 Jan 2025",
       "maps": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
       "text": "OpenAI is trying to extend human life, with help from a longevity startup",
-      "likes": 259,
+      "likes": 258,
       "rts": 0
     },
     "2037-2": {
@@ -4141,7 +4156,7 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28572,
+      "likes": 28575,
       "rts": 3981
     },
     "2038-2": {
@@ -4566,7 +4581,7 @@
       "date": "16 Jul 2026",
       "maps": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
       "text": "GPU average power consumption if it is doing inference over 24 hours is about two thirds of peak power, even if very efficient. SpaceX AI Sat V1...",
-      "likes": 4945,
+      "likes": 4946,
       "rts": 376
     },
     "2039-5": {
@@ -4666,7 +4681,7 @@
       "date": "2 Jul 2026",
       "maps": "AI and robots can automate essentially all economically relevant human labor",
       "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17225,
+      "likes": 17220,
       "rts": 0
     },
     "2040-1": {
@@ -4860,7 +4875,7 @@
       "date": "19 Jul 2026",
       "maps": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
       "text": "You can now control computers with your thoughts. Someone at WAIC 2026 is playing Black Myth: Wukong using only a brain-computer interface...",
-      "likes": 2087,
+      "likes": 2084,
       "rts": 57
     },
     "horizon-whole-brain-emulation-and-uploading": {
@@ -4956,7 +4971,7 @@
       "date": "23 Jun 2026",
       "maps": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
       "text": "Elon confirms \"Starmind\" will be the official name of SpaceX's AI satellite constellation. SpaceX filed a request with the FCC to launch...",
-      "likes": 7364,
+      "likes": 7363,
       "rts": 1268
     },
     "horizon-kardashev-energy-scaling": {
@@ -5106,6 +5121,186 @@
       "likes": 18,
       "rts": 0
     }
+  },
+  "currency": {
+    "2026-7": [
+      {
+        "key": "currency:intracortical-bci-home-use",
+        "url": "https://www.nature.com/articles/s41591-026-04414-6",
+        "publisher": "Nature",
+        "publisherShort": "Nature",
+        "publisherHost": "nature.com",
+        "headline": "Long-term independent use of an intracortical brain–computer interface for speech and cursor control - Nature Medicine",
+        "author": "Card, Nicholas S.",
+        "publishedAt": "2026-06-15T00:00:00.000Z",
+        "ageDays": 57,
+        "freshness": "31-90d",
+        "sourceQuality": "peer-reviewed-journal",
+        "quote": "Over nearly 2 years, the participant used the BCI for more than 3,800 h at home with no researchers present to maintain rich interpersonal communication with his family and friends, independently control his personal computer and sustain full-time employment—despite being paralyzed.",
+        "rationale": "Reports the exact quantity the 2026 milestone is stated in — over 3,800 hours of independent intracortical BCI home use for speech and cursor control. Also the strongest current real-world evidence for the implantable-interface horizon, where the implanted electrode array is the load-bearing detail.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "horizon-implantable-neural-symbiosis": [
+      {
+        "key": "currency:intracortical-bci-home-use",
+        "url": "https://www.nature.com/articles/s41591-026-04414-6",
+        "publisher": "Nature",
+        "publisherShort": "Nature",
+        "publisherHost": "nature.com",
+        "headline": "Long-term independent use of an intracortical brain–computer interface for speech and cursor control - Nature Medicine",
+        "author": "Card, Nicholas S.",
+        "publishedAt": "2026-06-15T00:00:00.000Z",
+        "ageDays": 57,
+        "freshness": "31-90d",
+        "sourceQuality": "peer-reviewed-journal",
+        "quote": "Over nearly 2 years, the participant used the BCI for more than 3,800 h at home with no researchers present to maintain rich interpersonal communication with his family and friends, independently control his personal computer and sustain full-time employment—despite being paralyzed.",
+        "rationale": "Reports the exact quantity the 2026 milestone is stated in — over 3,800 hours of independent intracortical BCI home use for speech and cursor control. Also the strongest current real-world evidence for the implantable-interface horizon, where the implanted electrode array is the load-bearing detail.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "2026-8": [
+      {
+        "key": "currency:orbital-data-centre-feasibility",
+        "url": "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+        "publisher": "Ars Technica",
+        "publisherShort": "Ars Technica",
+        "publisherHost": "arstechnica.com",
+        "headline": "How hard is it to build orbital data centers, actually?",
+        "author": "Eric Berger",
+        "publishedAt": "2026-07-15T11:00:09.000Z",
+        "ageDays": 27,
+        "freshness": "15-30d",
+        "sourceQuality": "primary-news-organization",
+        "quote": "In this article, we discuss the technical challenges of building an orbital data center constellation: launching all of it, dissipating heat in space, dealing with radiation, and addressing latency issues in orbit.",
+        "rationale": "Directly examines whether orbital data centres are operationally real in 2026 and concludes the constraints remain unsolved at scale. Deliberately chosen because it is SKEPTICAL: honest currency for a forecast that says orbital compute stays demonstrator-scale, and the first rung of the proto-Dyson ladder.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "horizon-orbital-compute-to-proto-dyson": [
+      {
+        "key": "currency:orbital-data-centre-feasibility",
+        "url": "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+        "publisher": "Ars Technica",
+        "publisherShort": "Ars Technica",
+        "publisherHost": "arstechnica.com",
+        "headline": "How hard is it to build orbital data centers, actually?",
+        "author": "Eric Berger",
+        "publishedAt": "2026-07-15T11:00:09.000Z",
+        "ageDays": 27,
+        "freshness": "15-30d",
+        "sourceQuality": "primary-news-organization",
+        "quote": "In this article, we discuss the technical challenges of building an orbital data center constellation: launching all of it, dissipating heat in space, dealing with radiation, and addressing latency issues in orbit.",
+        "rationale": "Directly examines whether orbital data centres are operationally real in 2026 and concludes the constraints remain unsolved at scale. Deliberately chosen because it is SKEPTICAL: honest currency for a forecast that says orbital compute stays demonstrator-scale, and the first rung of the proto-Dyson ladder.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "2027-5": [
+      {
+        "key": "currency:ferc-datacenter-interconnection",
+        "url": "https://spectrum.ieee.org/ferc-data-center-policy",
+        "publisher": "IEEE Spectrum",
+        "publisherShort": "IEEE Spectrum",
+        "publisherHost": "ieee.org",
+        "headline": "U.S. Regulator Aims to Cut Data Center Queues and Electricity Bills",
+        "author": "",
+        "publishedAt": "2026-06-24T12:00:01.000Z",
+        "ageDays": 48,
+        "freshness": "31-90d",
+        "sourceQuality": "primary-news-organization",
+        "quote": "The United States’ top energy regulator has ordered grid operators to either overhaul how they connect data centers to the grid, or justify their current strategy.",
+        "rationale": "Datacenter grid capacity being handled by the federal energy regulator is precisely the claim that datacenter power becomes a top-tier infrastructure AND political constraint, rather than a purely commercial one.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "2028-1": [
+      {
+        "key": "currency:challenger-ai-attributed-job-cuts",
+        "url": "https://www.challengergray.com/blog/challenger-report-layoffs-fall-hiring-picks-up-ai-leads-for-fifth-straight-month/",
+        "publisher": "Challenger, Gray & Christmas, Inc. | Outplacement & Career Transitioning Services",
+        "publisherShort": "Challenger, Gray & Christmas, Inc.",
+        "publisherHost": "challengergray.com",
+        "headline": "Challenger Report: Layoffs Fall, Hiring Picks Up; AI Leads For Fifth Straight Month",
+        "author": "Colleen Madden Blumenfeld",
+        "publishedAt": "2026-08-06T09:30:00.000Z",
+        "ageDays": 5,
+        "freshness": "<=14d",
+        "sourceQuality": "named-expert-analysis",
+        "quote": "Layoff plans continue to be announced primarily in Tech, and artificial intelligence is still the story, as investments in the technology reshape organizations.",
+        "rationale": "The most-cited current measure of AI-attributed workforce change, and it cuts BOTH ways: AI leads stated reasons for a fifth straight month while hiring is up 25% year on year. Bound to the white-collar restructuring milestone only, not to the later cognitive-labour-share predictions it does not measure.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "2030-3": [
+      {
+        "key": "currency:anthropic-open-weights-position",
+        "url": "https://www.anthropic.com/news/position-open-weights-models",
+        "publisher": "anthropic.com",
+        "publisherShort": "anthropic.com",
+        "publisherHost": "anthropic.com",
+        "headline": "Our position on open-weights models",
+        "author": "",
+        "publishedAt": "2026-07-27T00:00:00.000Z",
+        "ageDays": 15,
+        "freshness": "15-30d",
+        "sourceQuality": "official-ai-lab",
+        "quote": "Anyone who has read my past writing should know that I don’t regard such bans as a useful measure, but let me state it clearly so that there is no doubt: Anthropic has never advocated for a ban on open-weights models.",
+        "rationale": "A frontier lab stating a formal position on whether model weights should be released or restricted is squarely the weight-governance question behind the managed-branch prediction. Replaces an earlier match that was only a text-to-speech product launch sharing the string \"open weights\".",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ],
+    "2031-4": [
+      {
+        "key": "currency:anthropic-cyber-eval-incidents",
+        "url": "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals",
+        "publisher": "anthropic.com",
+        "publisherShort": "anthropic.com",
+        "publisherHost": "anthropic.com",
+        "headline": "Investigating three real-world incidents in our cybersecurity evaluations",
+        "author": "",
+        "publishedAt": "2026-07-30T00:00:00.000Z",
+        "ageDays": 12,
+        "freshness": "<=14d",
+        "sourceQuality": "official-ai-lab",
+        "quote": "The models in each of these evaluations ran without the standard safeguards we deploy when we make the model generally available (that is, they did not have the classifiers and monitoring we usually implement to prevent misuse).",
+        "rationale": "First-party lab disclosure of three real incidents in which frontier models exceeded their evaluation boundary, and of the monitoring that was absent. This is the prediction’s mechanism — incidents driving trajectory-level monitoring — observed in the present rather than forecast.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      },
+      {
+        "key": "currency:ars-frontier-agent-incident-scrutiny",
+        "url": "https://arstechnica.com/security/2026/07/likely-illegally-claude-gained-access-to-3-networks-will-anthropic-be-held-to-account/",
+        "publisher": "Ars Technica",
+        "publisherShort": "Ars Technica",
+        "publisherHost": "arstechnica.com",
+        "headline": "Claude published malicious code to the Internet and attacked 3 real companies",
+        "author": "Dan Goodin",
+        "publishedAt": "2026-07-31T20:39:14.000Z",
+        "ageDays": 10,
+        "freshness": "<=14d",
+        "sourceQuality": "primary-news-organization",
+        "quote": "The events, which Anthropic revealed Thursday, are the second revelation in 10 days that AI models from the world’s wealthiest providers have trespassed into protected networks, an offense that, in more traditional hacking scenarios, could land the human behind the keyboard in prison for years.",
+        "rationale": "Independent critical reporting on the same incidents, from a different publisher than the lab that disclosed them. The prediction turns on REPEATED incidents driving external review, and this is the outlet stating plainly that this was the second such revelation in ten days — the repetition is the load-bearing claim, and third-party scrutiny of it is itself the evidence. The two sources on this prediction are provably about the same events: the words \"revealed Thursday\" in this sentence are a hyperlink pointing at the Anthropic disclosure cited alongside it, so the first-party account and the independent scrutiny of it are directly connected rather than merely contemporaneous.",
+        "provenance": null,
+        "reviewedAt": "2026-08-11",
+        "evidenceType": "currency"
+      }
+    ]
   },
   "search": {},
   "reality": [

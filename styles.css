@@ -1257,9 +1257,105 @@ button { color: inherit; }
 .tl-signal-detail .tl-signal-head { display: none; }
 .event-body .tl-signal { margin-top: 12px; padding: 0; }
 .event-body .tl-signal-text { font-size: .82rem; }
+/* ESTIMATED TIMING.
+   Deliberately quiet: timing is context for the prediction, not a competing headline. The
+   precision tier is carried in the words themselves ("Q3 2027" vs "Mid 2032"), so styling
+   never has to encode meaning that the text does not already state. */
+.event-timing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--cp-border);
+  border-left: 3px solid var(--cp-border-strong);
+  border-radius: 0.625rem;
+  background: var(--cp-surface-soft);
+}
+.event-timing-label {
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .54rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cp-text-soft);
+}
+.event-timing-value { font-size: .84rem; font-weight: 600; color: var(--cp-text); }
+.event-timing-elapsed {
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .58rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cp-accent);
+  border: 1px solid var(--cp-accent);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+/* Year-precision is the majority (54 of 96), so it must not look like a downgrade — it is
+   simply the honest resolution for those forecasts. */
+.event-timing[data-precision="year"] { border-left-color: var(--cp-border); }
+.event-timing[data-precision="month"] { border-left-color: var(--cp-accent); }
+.event-timing-basis {
+  flex: 1 1 100%;
+  margin-top: 2px;
+  font-size: .76rem;
+  line-height: 1.5;
+  color: var(--cp-text-muted);
+}
+.event-timing-basis summary {
+  cursor: pointer;
+  list-style: none;
+  width: fit-content;
+  font-size: .68rem;
+  color: var(--cp-accent);
+  border-bottom: 1px dotted var(--cp-accent);
+}
+.event-timing-basis summary::-webkit-details-marker { display: none; }
+.event-timing-basis[open] summary { margin-bottom: 6px; }
+.horizon-timing { margin-bottom: 4px; border-left-color: var(--cp-accent); }
+
 .timeline.evidence-off .tl-signal,
 .timeline.evidence-off .tl-signal-search,
 .timeline.evidence-off .tl-signal-unavailable { display: none; }
+
+/* ORIGIN vs CURRENT evidence.
+   Two different claims deserve two different visual registers. The origin card is the
+   reviewed X status the prediction was built on; the current reference is a later,
+   independently verified article. The band labels carry the meaning, so the styling only
+   has to reinforce a distinction the text already makes. */
+.tl-evidence-group { margin-top: 12px; }
+.tl-evidence-group .tl-signal { margin-top: 6px; }
+.tl-evidence-band {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tl-evidence-band:first-child { margin-top: 0; }
+.tl-evidence-band::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--cp-border);
+}
+.tl-evidence-band-label {
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .54rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cp-text-soft);
+  white-space: nowrap;
+}
+.tl-evidence-band-current .tl-evidence-band-label { color: var(--cp-accent); }
+.tl-signal.tl-currency { border-left: 3px solid var(--cp-accent); }
+.tl-currency .tl-signal-method {
+  color: var(--cp-text-soft);
+  text-transform: none;
+  letter-spacing: .02em;
+}
+/* Freshness is encoded in the text itself; this only adds a quiet non-colour-only cue for
+   the most recent tier, so nothing depends on colour perception to be understood. */
+.tl-currency[data-freshness="<=14d"] .tl-signal-method { color: var(--cp-accent); font-weight: 700; }
 .tl-signal-search,
 .tl-signal-unavailable {
   width: 100%;

@@ -22,7 +22,8 @@ const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, r
     const sep = url.includes('?') ? '&' : '?';
     await page.goto(url + sep + 'scoutTheme=' + th, { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(2800);
-    const cards = await page.$$eval('.tl-signal', els => els.length).catch(() => 0);
+    const cards = await page.$$eval('.tl-signal:not(.tl-currency)', els => els.length).catch(() => 0);
+    const currencyCards = await page.$$eval('.tl-signal.tl-currency', els => els.length).catch(() => 0);
     const searches = await page.$$eval('.tl-signal-search', els => els.length).catch(() => 0);
     const unavailable = await page.$$eval('.tl-signal-unavailable', els => els.length).catch(() => 0);
     const expected = await page.$$eval('#timelineBody .event, #horizonBody .horizon-item', els => els.length).catch(() => 0);
@@ -32,8 +33,8 @@ const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, r
       app:!!document.querySelector('script[src="app.js"]'),
       styles:!!document.querySelector('link[href="styles.css"]'),
     })).catch(() => ({ app:false, styles:false }));
-    const dates = await page.$$eval('.tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
-    const mislabelledHistorical = await page.$$eval('.tl-signal', els => els.filter(card => {
+    const dates = await page.$$eval('.tl-signal:not(.tl-currency) .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
+    const mislabelledHistorical = await page.$$eval('.tl-signal:not(.tl-currency)', els => els.filter(card => {
       const date = card.querySelector('.tl-signal-date')?.textContent.trim() || '';
       const label = card.querySelector('summary')?.textContent || '';
       return /\b20(1\d|2[0-3])$/.test(date)
@@ -48,12 +49,17 @@ const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, r
       && /Archive-verified source chain/i.test(dashboard)
       && /first-party status JSON/i.test(dashboard);
     const assetsValid = splitAssets.app && splitAssets.styles;
-    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    /* The currency layer is ADDITIVE. Every prediction must still show its reviewed X card,
+       counted above, and the currency cards must be exactly the reviewed mappings — never
+       more (a fabricated card) and never fewer (a card lost in rendering). */
+    const expectedCurrency = Object.values(signals.currency || {}).reduce((n, list) => n + list.length, 0);
+    const currencyExact = currencyCards === expectedCurrency;
+    console.log(`[${th}] consoleErrors=${errs.length} cards=${cards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));
     issues += errs.length + searches + unavailable + Math.abs(cards - expected)
-      + mislabelledHistorical.length + Number(!sourceHonest) + Number(!assetsValid);
+      + mislabelledHistorical.length + Number(!sourceHonest) + Number(!assetsValid) + Number(!currencyExact);
     await ctx.close();
   }
   await browser.close();

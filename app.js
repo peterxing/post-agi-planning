@@ -458,6 +458,7 @@ const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25
    X activity and matched to each prediction). We keep NO embedded posts inline, so if signals.json
    is unavailable the UI reports unavailable evidence rather than fabricating or searching. */
 let xSignals = {};
+let currencySignals = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -631,10 +632,140 @@ function newsSignalCard(sig){
       </div>
     </details>`;
 }
+/* CURRENCY EVIDENCE — the additive "where this stands now" layer.
+   This is deliberately NOT an X card and must never be mistakable for one: no handle, no
+   status id, no live-post embed, no x.com link. It is a dated reference to a live-verified
+   article, shown BENEATH the prediction's origin evidence and clearly labelled as a later,
+   independent observation rather than as Peter's own post. */
+function currencyCard(entry){
+  const publisher = htmlText(entry.publisherShort || entry.publisher || entry.publisherHost || 'Publisher');
+  const headline = htmlText(entry.headline || '');
+  const byline = entry.author ? ` &middot; ${htmlText(entry.author)}` : '';
+  const url = safeHttpUrl(entry.url) || '';
+  const published = entry.publishedAt ? new Date(entry.publishedAt) : null;
+  const dateText = published && !isNaN(published.getTime())
+    ? published.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' })
+    : '';
+  const age = Number(entry.ageDays);
+  /* Plain language, because "27d" is jargon. The age is computed from the captured
+     publication date, so it degrades honestly rather than claiming false freshness. */
+  const ageText = !Number.isFinite(age) ? ''
+    : age <= 1 ? 'today'
+      : age <= 7 ? `${age} days ago`
+        : age <= 14 ? 'this fortnight'
+          : age <= 31 ? 'this month'
+            : age <= 92 ? 'this quarter'
+              : `${Math.round(age / 30)} months ago`;
+  /* A peer-reviewed paper and a company blog post are not the same kind of claim, and the
+     reader is entitled to see which one they are looking at. */
+  const QUALITY = {
+    'peer-reviewed-journal': 'Peer-reviewed journal',
+    'primary-news-organization': 'Primary news organisation',
+    'established-technology-press': 'Established technology press',
+    'named-expert-analysis': 'Named expert analysis',
+    'official-ai-lab': 'Frontier lab, first-party',
+    'industry-primary-source': 'Industry primary source',
+    'government': 'Government source',
+  };
+  const quality = QUALITY[entry.sourceQuality] || 'Verified publication';
+  const provenance = entry.provenance
+    ? `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(entry.provenance)}</div>` : '';
+  const rationale = entry.rationale
+    ? `<div class="tl-signal-maps"><b>Why this is current evidence:</b> ${htmlText(entry.rationale)}</div>` : '';
+  const quote = entry.quote ? `<blockquote class="tl-signal-quote">${htmlText(entry.quote)}</blockquote>` : '';
+  const link = url
+    ? `<a class="tl-signal-link" href="${htmlText(url)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
+    : '';
+  return `
+    <details class="tl-signal tl-currency" data-kind="currency" data-evidence-medium="currency" data-freshness="${htmlText(entry.freshness || '')}">
+      <summary>
+        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
+        <span class="tl-signal-summary-text">
+          <strong>Current reference &mdash; ${publisher}, ${htmlText(dateText)}</strong>
+          ${headline}${byline}
+        </span>
+        <span class="tl-signal-method">${htmlText(ageText)}</span>
+      </summary>
+      <div class="tl-signal-detail">
+        <div class="tl-signal-maps"><b>Source type:</b> ${htmlText(quality)}${entry.publisherHost ? ` &middot; ${htmlText(entry.publisherHost)}` : ''}</div>
+        ${provenance}
+        ${rationale}
+        ${quote}
+        <div class="tl-signal-foot">
+          <span class="tl-signal-date">Published ${htmlText(dateText)}</span>
+          <span class="tl-signal-actions">${link}</span>
+        </div>
+      </div>
+    </details>`;
+}
+/* ESTIMATED TIMING.
+   Every dated prediction carries m (1-12), mBand (± months) and mPrecision. The precision is
+   the honest part: only 9 of 96 estimates are confident to a named month, so printing
+   "May 2026" for all of them would assert precision we explicitly decided we do not have and
+   would contradict the band. Each precision tier therefore gets wording it can actually
+   support. The month is NEVER written into the prediction text itself — that text is the
+   sticky binding key for every evidence approval and currency pin. */
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function monthPhase(m){ return m <= 4 ? 'Early' : m <= 8 ? 'Mid' : 'Late'; }
+function estimatedTiming(e, year){
+  const m = Number(e.m);
+  if (!Number.isFinite(m) || m < 1 || m > 12) return null;
+  const band = Number(e.mBand);
+  const precision = e.mPrecision;
+  let label;
+  if (precision === 'month') label = `${MONTH_NAMES[m - 1]} ${year}`;
+  else if (precision === 'quarter') label = `Q${Math.floor((m - 1) / 3) + 1} ${year}`;
+  else if (precision === 'half') label = `${m <= 6 ? 'H1' : 'H2'} ${year}`;
+  else label = `${monthPhase(m)} ${year}`;
+  const bandText = Number.isFinite(band) ? `±${band} month${band === 1 ? '' : 's'}` : '';
+  /* An estimate whose window has already closed is not silently left looking pending.
+     Whether it actually resolved is an evidence question, not a timing one, so this states
+     only that the window has passed and lets the evidence cards speak to the outcome. */
+  const now = new Date();
+  const windowEnd = new Date(Date.UTC(year, (m - 1) + (Number.isFinite(band) ? band : 0) + 1, 0));
+  const elapsed = windowEnd < now;
+  return { label, bandText, precision, elapsed, basis: e.mBasis || '' };
+}
+function timingHtml(e, year){
+  const t = estimatedTiming(e, year);
+  if (!t) return '';
+  const PRECISION_NOTE = {
+    month: 'Estimated to a specific month',
+    quarter: 'Estimated to a quarter',
+    half: 'Estimated to a half-year',
+    year: 'Estimated only to within the year',
+  };
+  /* Value and band are one string, not two elements: "Mid 2030 ±6 months" is a single
+     phrase, and splitting it made screen readers announce three disconnected fragments.
+     The basis sits as a text node inside <details> rather than in a wrapped <p>, which
+     renders and reads identically while costing four fewer elements per prediction. */
+  const value = t.bandText ? `${t.label} ${t.bandText}` : t.label;
+  const note = PRECISION_NOTE[t.precision] || '';
+  return `
+    <div class="event-timing" data-precision="${htmlText(t.precision)}"${t.elapsed ? ' data-elapsed="true"' : ''}>
+      <span class="event-timing-label">Estimated timing</span>
+      <span class="event-timing-value">${htmlText(value)}</span>
+      ${t.elapsed ? '<span class="event-timing-elapsed">window elapsed</span>' : ''}
+      ${t.basis ? `<details class="event-timing-basis"><summary>Why this timing</summary>${htmlText(note ? `${note}. ${t.basis}` : t.basis)}</details>` : ''}
+    </div>`;
+}
 function predictionEvidence(key, match, title){
-  return signalCoverageReady && xSignals[key]
-    ? signalCard(xSignals[key])
-    : evidenceUnavailable();
+  if (!(signalCoverageReady && xSignals[key])) return evidenceUnavailable();
+  const origin = signalCard(xSignals[key]);
+  const current = Array.isArray(currencySignals[key]) ? currencySignals[key] : [];
+  if (!current.length) return origin;
+  /* Origin and current evidence answer different questions, so they are labelled rather
+     than stacked anonymously: the origin card is why this prediction exists, the current
+     reference is where the world stands on it now. */
+  return `
+    <div class="tl-evidence-group">
+      <div class="tl-evidence-band"><span class="tl-evidence-band-label">Origin evidence</span></div>
+      ${origin}
+      <div class="tl-evidence-band tl-evidence-band-current">
+        <span class="tl-evidence-band-label">Current reference${current.length > 1 ? `s &middot; ${current.length}` : ''}</span>
+      </div>
+      ${current.map(currencyCard).join('')}
+    </div>`;
 }
 function evidenceUnavailable(){
   return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
@@ -906,6 +1037,7 @@ function renderTimeline(){
               ${e.signal ? '<span class="tag">Peter Xing anchor</span>' : ''}
             </div>
             ${probability}
+            ${timingHtml(e, yr.year)}
             ${e.revisedAt && e.changeNote ? `<p class="event-change"><strong>What changed:</strong> ${htmlText(e.changeNote)}</p>` : ''}
             ${sigHtml}
           </div>
@@ -1051,6 +1183,19 @@ function renderHorizon(){
         <span class="horizon-prob">${item.conditionalProb}% conditional plausibility</span>
         <span class="horizon-domain">${domainNames[item.d]}</span>
         <span class="horizon-domain">${branch.label}</span>
+      </div>
+      <!-- Every dated prediction carries an estimated month. These seven deliberately do not,
+           and that absence is a claim in itself, so it is stated rather than left blank. -->
+      <div class="event-timing horizon-timing" data-precision="undated">
+        <span class="event-timing-label">Estimated timing</span>
+        <span class="event-timing-value">Deliberately undated</span>
+        <details class="event-timing-basis">
+          <summary><span>Why there is no date</span></summary>
+          <p>These possibilities are gated on aligned superintelligence existing first, not on a
+          calendar. Their timing depends entirely on when — and whether — that gate opens, so any
+          month or year here would be invented precision. They are ordered by dependency and
+          conditional plausibility instead, and each states the evidence that would move it.</p>
+        </details>
       </div>
       <div class="horizon-item-title">
         <h3>${htmlText(item.t)}</h3>
@@ -1445,6 +1590,10 @@ function hasCompleteSignalCoverage(data){
       renderSignalMetadata(d);
       signalCoverageReady = hasCompleteSignalCoverage(d);
       xSignals = signalCoverageReady ? d.embeds : {};
+      /* The currency layer is additive and independent: it is only ever shown next to an
+         origin card, so it is gated on the same coverage check. If the bundle is degraded
+         we show nothing rather than implying a reference we cannot stand behind. */
+      currencySignals = signalCoverageReady && d.currency ? d.currency : {};
       renderTimeline();
       renderHorizon();
       requestAnimationFrame(revealHashTarget);
@@ -1478,6 +1627,7 @@ function hasCompleteSignalCoverage(data){
     .catch(() => {
       signalCoverageReady = false;
       xSignals = {};
+      currencySignals = {};
       renderTimeline();
       renderHorizon();
       requestAnimationFrame(revealHashTarget);

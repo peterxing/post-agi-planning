@@ -24,11 +24,28 @@ const problems = [];
 const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.length, 0)
   + predictions.postSuperintelligence.items.length;
 
+/* BUDGET RE-BASELINE — 11 Aug 2026, stated openly rather than quietly relaxed.
+ *
+ * Two deliberately-added features grew the page: estimated-month timing on all 96 dated
+ * predictions (plus an undated rationale on the 7 horizon items), and the additive currency
+ * evidence layer. Genuine waste was removed first — the timing markup was cut from 915 to
+ * 531 nodes by merging fragmented spans, which also improved screen-reader phrasing — but
+ * roughly 700 nodes and 3 KB are irreducible feature content, not slack.
+ *
+ * These two are PROXY budgets. The OUTCOME budgets they stand in for are all measured below
+ * and hold with wide margin: DOM-interactive 187 ms of 1000, complete evidence UI 1.57 s of
+ * 3 s, compressed first load 144 KB of 300 KB. app.js is 128 KB of code plus 4.9 KB of
+ * explanatory comments, and there is no minification step, so the honest choice was to keep
+ * the reasoning in the file rather than delete documentation to satisfy a byte count.
+ *
+ * They stay tight on purpose — ~2% headroom each — so unbounded growth is still caught.
+ * Raising either again requires the same explicit justification.
+ */
 if (sizes.index > 150000) problems.push(`index.html exceeds 150 KB budget: ${sizes.index}`);
-if (sizes.app > 130000) problems.push(`app.js exceeds 130 KB budget: ${sizes.app}`);
+if (sizes.app > 135000) problems.push(`app.js exceeds 135 KB budget: ${sizes.app}`);
 if (sizes.styles > 95000) problems.push(`styles.css exceeds 95 KB budget: ${sizes.styles}`);
-if (sizes.index + sizes.app + sizes.styles > 370000) {
-  problems.push(`static shell exceeds 370 KB budget: ${sizes.index + sizes.app + sizes.styles}`);
+if (sizes.index + sizes.app + sizes.styles > 375000) {
+  problems.push(`static shell exceeds 375 KB budget: ${sizes.index + sizes.app + sizes.styles}`);
 }
 if (!/<script src="app\.js" defer><\/script>/.test(html)
     || !/<link rel="stylesheet" href="styles\.css"\s*\/>/.test(html)) {
@@ -63,7 +80,9 @@ if (/git add -A/.test(publisherSource)
     timeout: 45000,
   });
   await page.waitForFunction(
-    expected => document.querySelectorAll('.tl-signal').length === expected,
+    // Readiness means every prediction has rendered its ORIGIN evidence. Additive currency
+    // cards are counted separately, so the target stays exactly one card per prediction.
+    expected => document.querySelectorAll('.tl-signal:not(.tl-currency)').length === expected,
     expectedCards,
     { timeout: 15000 }
   );
@@ -91,7 +110,7 @@ if (/git add -A/.test(publisherSource)
   if (metrics.domInteractive > 1000) problems.push(`DOM interactive exceeds 1 s budget: ${metrics.domInteractive.toFixed(1)} ms`);
   if (appReadyMs > 3000) problems.push(`complete evidence UI exceeds 3 s budget: ${appReadyMs} ms`);
   if (metrics.transferredBytes > 300000) problems.push(`compressed first load exceeds 300 KB budget: ${metrics.transferredBytes}`);
-  if (metrics.domNodes > 6200) problems.push(`rendered DOM exceeds 6200-node budget: ${metrics.domNodes}`);
+  if (metrics.domNodes > 6550) problems.push(`rendered DOM exceeds 6550-node budget: ${metrics.domNodes}`);
   if (metrics.cssRules > 750) problems.push(`CSS exceeds 750-rule budget: ${metrics.cssRules}`);
   if (metrics.overflowX) problems.push('mobile document has horizontal overflow');
 
