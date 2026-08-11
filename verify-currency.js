@@ -455,8 +455,35 @@ async function main() {
    * ledger values field by field.
    */
   {
+    /* THE FIELD COUNT IN THE LINE BELOW USED TO BE PINNED_FIELDS.length — A CONSTANT PRINTED
+       WHERE A MEASUREMENT BELONGED. The loop skipped any field the ledger did not define
+       (`if (ledger[f] === undefined) continue`), so the number of comparisons actually made
+       was never the number reported. Measured on the live ledger by dropping each pinned
+       field in turn: 5 of the 8 are independently required elsewhere and a neighbour catches
+       their absence, but url, publisherHost and author are NOT — for those three, absence in
+       the ledger silently disabled the comparison while this line went on asserting that
+       "an unreviewed or altered link cannot reach the page" over 8 fields it had not read.
+
+       That is reachable, not theoretical. Measured end to end: with `author` absent from the
+       ledger, a published link carrying "FABRICATED BYLINE — NOT REVIEWED" produced NO
+       finding and the same exit code as a pristine run; with `url` absent, a link repointed
+       at https://example-not-reviewed.test/article did the same. The identical mutation with
+       the ledger field present is caught and named twice. So the only thing separating a
+       fabricated byline or an arbitrary unreviewed host from the live page was whether the
+       ledger happened to pin that field — and the forged count is precisely what made it
+       invisible, because the verdict is correct on every run where the ledger is complete.
+
+       Both halves are fixed here: comparisons are COUNTED rather than assumed, and a value
+       the page emits for a field the ledger does not pin is a FAULT, not a skip — it is by
+       definition unreviewed evidence on the page, which is the exact sentence this block
+       claims to guarantee. A field absent from BOTH sides is legitimate (a genuinely
+       by-line-less article) and is counted and reported rather than passed over in silence. */
     const PINNED_FIELDS = ['url', 'publisher', 'publisherHost', 'author', 'headline', 'publishedAt', 'sourceQuality', 'quote'];
+    const present = v => v !== undefined && v !== null && String(v).trim() !== '';
     let traced = 0;
+    let compared = 0;
+    let absentBoth = 0;
+    const unpinned = [];
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
         const ledger = sources[c.key];
@@ -471,7 +498,16 @@ async function main() {
         }
         traced++;
         for (const f of PINNED_FIELDS) {
-          if (ledger[f] === undefined) continue;
+          if (!present(ledger[f])) {
+            if (present(c[f])) {
+              unpinned.push(`${pid}/${c.key}/${f}`);
+              fail(`${pid}: published currency link ${c.key} emits ${f} ${JSON.stringify(c[f])}, but the reviewed ledger PINS NO VALUE for ${f} — that value reached the live page without ever being reviewed, and the field-by-field trace could not compare it`);
+            } else {
+              absentBoth++;
+            }
+            continue;
+          }
+          compared++;
           if (collapse(c[f]) !== collapse(ledger[f])) {
             fail(`${pid}: published currency link ${c.key} emits ${f} ${JSON.stringify(c[f])}, but the reviewed ledger holds ${JSON.stringify(ledger[f])} — the published evidence does not match what was reviewed`);
           }
@@ -480,7 +516,15 @@ async function main() {
     }
     const publishedCount = Object.values(published).reduce((n, l) => n + l.length, 0);
     if (publishedCount) {
-      ok(`published set traced to the ledger  ${traced} of ${publishedCount} published link(s) resolve to a reviewed, correctly-mapped ledger entry with ${PINNED_FIELDS.length} fields byte-equal — an unreviewed or altered link cannot reach the page`);
+      const possible = traced * PINNED_FIELDS.length;
+      ok(`published set traced to the ledger  ${traced} of ${publishedCount} published link(s) resolve to a reviewed, correctly-mapped ledger entry; ${compared} of ${possible} pinned-field comparison(s) WERE ACTUALLY MADE (${absentBoth} field(s) absent from both the ledger and the page, so nothing unreviewed reached it; ${unpinned.length} emitted with no ledger value, each failed above) — this count is measured, not PINNED_FIELDS.length`);
+      if (unpinned.length) {
+        fail(`the fabrication trace is INCOMPLETE on this run: ${unpinned.length} published field value(s) had no reviewed counterpart to compare against (${unpinned.slice(0, 6).join(', ')}${unpinned.length > 6 ? ', …' : ''}) — "an unreviewed or altered link cannot reach the page" DOES NOT HOLD for this run`);
+      } else if (compared === possible) {
+        ok(`  ...and the trace is COMPLETE: every one of the ${PINNED_FIELDS.length} pinned fields was present on both sides for all ${traced} link(s), so an unreviewed or altered link cannot reach the page`);
+      } else {
+        ok(`  ...trace complete over the fields that exist: ${absentBoth} pinned field(s) are absent from both sides and therefore carry nothing to the page; no emitted value went uncompared`);
+      }
     } else {
       ok('published-set trace is INERT on this run: signals.json publishes no currency links, so this check establishes nothing about fabrication');
       inertAxes.push('fabrication trace');
