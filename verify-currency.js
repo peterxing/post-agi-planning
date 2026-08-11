@@ -290,6 +290,37 @@ async function main() {
       + ' — demotion never shrinks the ledger, so a drop here means deletion, not age-out');
   }
 
+  // ---- DATE SPELLING -------------------------------------------------------------------
+  /* refresh-signals.js L2044 copies publishedAt VERBATIM from the upstream feed and nothing in
+     the currency chain calls toISOString() on it, so THE SPELLING IS THE PUBLISHER'S CHOICE, not
+     this pipeline's. Every value is canonical ...Z today, but that is a property of today's
+     feeds. One European source emitting +01:00 is enough to change it.
+     This matters beyond this file. The independent 08-14 delegate parses with a canonical-Z
+     regex and REFUSES anything else, so a non-canonical date would make one instrument refuse
+     while this one proceeded — two instruments disagreeing about one artefact with nothing
+     connecting them. Naming it here is what makes that disagreement audible.
+     Values are compared by parsed instant everywhere in this file, so a non-canonical spelling
+     is not itself a value error and does not fail: it is reported, loudly, once. */
+  const dateSpellings = [];
+  for (const [pid, links] of Object.entries(signals.currency || {})) {
+    for (const c of links) {
+      if (!c.publishedAt) continue;
+      if (!Number.isFinite(Date.parse(c.publishedAt))) {
+        fail(`${pid}: published currency link ${c.key} emits an UNPARSEABLE publishedAt ${JSON.stringify(c.publishedAt)} — every age, ordering and boundary judgement in this run depends on parsing it`);
+      } else if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(c.publishedAt)) {
+        dateSpellings.push(`${c.key} (${c.publishedAt})`);
+      }
+    }
+  }
+  if (dateSpellings.length) {
+    ok(`NON-CANONICAL DATE SPELLING  ${dateSpellings.length} currency date(s) are NOT canonical ISO-8601 UTC: ${dateSpellings.join(', ')}. `
+      + 'This file compares parsed instants throughout, so these values are judged correctly here — but the builder copies the '
+      + 'publisher spelling verbatim, and the independent 08-14 delegate refuses non-canonical dates outright, so THE TWO '
+      + 'INSTRUMENTS WOULD REACH DIFFERENT VERDICTS ON THIS ARTEFACT. Not a value error and not a pass.');
+  } else {
+    ok(`all ${Object.values(signals.currency || {}).flat().length} currency date(s) are canonical ISO-8601 UTC, so no zone was inferred anywhere and the independent delegate's canonical-only parser agrees with this file by construction`);
+  }
+
   // ---- the universe of valid prediction ids -------------------------------------------
   const ids = new Set();
   predictions.years.forEach(y => (y.events || []).forEach((_, i) => ids.add(`${y.year}-${i}`)));
@@ -597,7 +628,18 @@ async function main() {
           }
           compared++;
           if (collapse(c[f]) !== collapse(ledger[f])) {
-            fail(`${pid}: published currency link ${c.key} emits ${f} ${JSON.stringify(c[f])}, but the reviewed ledger holds ${JSON.stringify(ledger[f])} — the published evidence does not match what was reviewed`);
+            /* Strictness is deliberate and stays: a page value that is not byte-identical to the
+               reviewed one did not come from the ledger verbatim, and that is worth failing on.
+               But two legal ISO-8601 spellings of ONE instant land here too, and the generic
+               message then names the wrong cause — "not what was reviewed" sends someone hunting
+               for fabricated evidence when a publisher merely respelled a zone. Fail closed, and
+               say which of the two it is. */
+            const sameInstant = f === 'publishedAt'
+              && Number.isFinite(Date.parse(c[f])) && Number.isFinite(Date.parse(ledger[f]))
+              && Date.parse(c[f]) === Date.parse(ledger[f]);
+            fail(`${pid}: published currency link ${c.key} emits ${f} ${JSON.stringify(c[f])}, but the reviewed ledger holds ${JSON.stringify(ledger[f])} — ${sameInstant
+              ? 'these are the SAME INSTANT spelled two ways, so this is a transcription divergence and NOT fabricated evidence; the page still did not come from the ledger verbatim, so it fails closed'
+              : 'the published evidence does not match what was reviewed'}`);
           }
         }
       }
@@ -860,10 +902,31 @@ async function main() {
         fail(`${key}: the reviewed supporting quote is no longer present verbatim in the live article`);
       }
 
-      if (ex.publishedAt && ex.publishedAt.slice(0, 10) !== s.publishedAt.slice(0, 10)) {
-        fail(`${key}: DATE DRIFT — stored ${s.publishedAt.slice(0, 10)}, live page now reports ${ex.publishedAt.slice(0, 10)}`);
+      /* DATE DRIFT compares the day, deliberately: publishers routinely adjust a timestamp by
+         minutes and that is not drift. It used to compare publishedAt.slice(0, 10) — the first
+         ten characters of the STRING — on two operands that are both PUBLISHER-CONTROLLED
+         SPELLINGS. A written day prefix carries no zone, and with a legal offset (-12:00..+14:00)
+         one prefix spans a ~50h UTC window, so the comparison was neither "same instant" nor
+         "same UTC day". Measured, live, on two values identical to the millisecond
+         (2026-06-15T00:00:00.000Z vs 2026-06-14T14:00:00.000-10:00): "DATE DRIFT — stored
+         2026-06-14, live page now reports 2026-06-15", while every Date.parse-based neighbour
+         passed and was right. The day is now taken from the parsed INSTANT, so the check means
+         what it always claimed to mean, and an unparseable date on either side fails closed
+         instead of being compared as text. */
+      const utcDay = (v) => {
+        const t = Date.parse(v);
+        return Number.isFinite(t) ? new Date(t).toISOString().slice(0, 10) : null;
+      };
+      if (ex.publishedAt) {
+        const liveDay = utcDay(ex.publishedAt);
+        const storedDay = utcDay(s.publishedAt);
+        if (liveDay === null || storedDay === null) {
+          fail(`${key}: a publication date could not be parsed, so drift is undecidable — stored ${JSON.stringify(s.publishedAt)}, live page reports ${JSON.stringify(ex.publishedAt)}`);
+        } else if (liveDay !== storedDay) {
+          fail(`${key}: DATE DRIFT — stored ${storedDay}, live page now reports ${liveDay} (UTC days of the parsed instants, not of the written strings)`);
+        }
       }
-      ok(`live OK  ${key}  ${s.publishedAt.slice(0, 10)}  ${collapse(s.publisher).split(' | ')[0]}${got.attempts > 1 ? `  (cleared after ${got.attempts} attempts)` : ''}`);
+      ok(`live OK  ${key}  ${utcDay(s.publishedAt) || 'unparseable'}  ${collapse(s.publisher).split(' | ')[0]}${got.attempts > 1 ? `  (cleared after ${got.attempts} attempts)` : ''}`);
     }
     const totalSources = Object.keys(sources).length;
     if (liveFetched) {
