@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11T04:15:26.732Z",
+  "updated": "2026-08-11T04:29:12.823Z",
   "note": "Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.",
   "source": "archive-verified",
   "sourceStatus": {
@@ -73,7 +73,7 @@
       "count": 29
     }
   ],
-  "sourceFetchedAt": "2026-08-11T04:14:18.956Z",
+  "sourceFetchedAt": "2026-08-11T04:28:12.804Z",
   "sourceFresh": true,
   "newestItemAt": "2026-07-19T20:27:25.000Z",
   "history": {
@@ -4157,7 +4157,7 @@
       "date": "06 Jul 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "New Anthropic research: A global workspace in language models. Of everything happening in your brain right now, only a tiny fraction is consciously accessibl…",
-      "likes": 28573,
+      "likes": 28572,
       "rts": 3981
     },
     "2038-2": {
@@ -4682,7 +4682,7 @@
       "date": "2 Jul 2026",
       "maps": "AI and robots can automate essentially all economically relevant human labor",
       "text": "AI+Robots will be able to do everything, resulting in universal high income. Work will be optional.",
-      "likes": 17220,
+      "likes": 17221,
       "rts": 0
     },
     "2040-1": {
