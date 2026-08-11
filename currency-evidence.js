@@ -26,7 +26,20 @@ const CURRENCY_SOURCES = {
     retrievedAt: '2026-08-11',
     sourceQuality: "peer-reviewed-journal",
     quote: "Over nearly 2 years, the participant used the BCI for more than 3,800 h at home with no researchers present to maintain rich interpersonal communication with his family and friends, independently control his personal computer and sustain full-time employment—despite being paralyzed.",
-    textSha256: "dbc3171520195111feae547e24e5ba0f835367f83631c1142f3a98a1887610f0",
+    textSha256: "122849cc59301c3adc832310458f0d996367898614fc3e59d30bc8216504c0d1",
+  },
+  'currency:injectable-implant-power-outlet': {
+    url: "https://spectrum.ieee.org/injectable-bioelectronic-implant-power-outlet",
+    resolvedUrl: "https://spectrum.ieee.org/injectable-bioelectronic-implant-power-outlet",
+    publisher: "IEEE Spectrum",
+    publisherHost: "ieee.org",
+    author: "",
+    headline: "Injectable Outlet in the Body Powers Bioelectric Implants",
+    publishedAt: "2026-07-21T14:00:01.000Z",
+    retrievedAt: '2026-08-11',
+    sourceQuality: "primary-news-organization",
+    quote: "By inserting a needle into the outlets, the researchers could recharge the batteries of the neural interface devices as well as receive data from them at the implants’ maximum transfer speeds of nearly 16 megabits per second.",
+    textSha256: "d3a70256f70c86e5d5394e84668e151db8e7ccfb1daa34527c00bb315288b761",
   },
   'currency:orbital-data-centre-feasibility': {
     url: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
@@ -39,7 +52,7 @@ const CURRENCY_SOURCES = {
     retrievedAt: '2026-08-11',
     sourceQuality: "primary-news-organization",
     quote: "In this article, we discuss the technical challenges of building an orbital data center constellation: launching all of it, dissipating heat in space, dealing with radiation, and addressing latency issues in orbit.",
-    textSha256: "a0a1c6997c08d8ad9119e9b4044606362edd599c305f7b5f8eafee51501cd18f",
+    textSha256: "8765db6b43863389a842e507a88958772ed56d47115ae7abfae848ea67559792",
   },
   'currency:ferc-datacenter-interconnection': {
     url: "https://spectrum.ieee.org/ferc-data-center-policy",
@@ -104,7 +117,7 @@ const CURRENCY_SOURCES = {
     retrievedAt: '2026-08-11',
     sourceQuality: "primary-news-organization",
     quote: "The events, which Anthropic revealed Thursday, are the second revelation in 10 days that AI models from the world’s wealthiest providers have trespassed into protected networks, an offense that, in more traditional hacking scenarios, could land the human behind the keyboard in prison for years.",
-    textSha256: "62b418322ea5fb1efe438b7de72bc72ec9faf79fabf819dd41918ce7e56ab49c",
+    textSha256: "2553aebb67e8f91caad06ff452393560a66f37b87f7f165e6ea24493b930022c",
   },
 };
 
@@ -116,6 +129,14 @@ const CURRENCY_GROUPS = [
     evidenceType: 'currency',
     reviewedAt: '2026-08-11',
     rationale: "Reports the exact quantity the 2026 milestone is stated in — over 3,800 hours of independent intracortical BCI home use for speech and cursor control. Also the strongest current real-world evidence for the implantable-interface horizon, where the implanted electrode array is the load-bearing detail.",
+  },
+  {
+    source: "currency:injectable-implant-power-outlet",
+    ids: ["horizon-implantable-neural-symbiosis"],
+    reuseFamily: "implantable-hardware-longevity",
+    evidenceType: 'currency',
+    reviewedAt: '2026-08-11',
+    rationale: "Evidences the horizon item’s two load-bearing physical claims at once: chronic powering of implanted neural interfaces without a permanent infection-prone socket, and BIDIRECTIONAL high-bandwidth exchange with those implants, measured here at nearly 16 megabits per second. Reported in mice, rats and pigs as a laboratory device, so it evidences the hardware dependency without implying clinical efficacy, regulatory approval or durable human home use.",
   },
   {
     source: "currency:orbital-data-centre-feasibility",
