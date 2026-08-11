@@ -341,7 +341,7 @@ async function main() {
         continue;
       }
 
-      // Within the ceiling, so it must actually be on the page it claims to be on.
+      // Within the ceiling, so it must actually be published in signals.json as it claims.
       if (!livePublished && embeds[pid]) {
         fail(`${pid}: ${entry.source} is ${age} days old and within the ceiling, but is MISSING from signals.json currency — a reviewed reference silently failed to publish`);
       }
@@ -594,28 +594,70 @@ async function main() {
     }
     const totalSources = Object.keys(sources).length;
     if (liveFetched) {
-      ok(`live re-verification covered ${liveFetched} of ${totalSources} source(s) — ${liveSkippedDemoted} skipped as demoted (not on the page); headline, verbatim quote and publication date were re-read from the live article for every covered source`);
+      ok(`live re-verification covered ${liveFetched} of ${totalSources} source(s) — ${liveSkippedDemoted} skipped as demoted (absent from signals.json) — headline, verbatim quote and publication date were re-read from the live article for every covered source [NUMERATOR = reviewed ledger sources RE-FETCHED this run; DENOMINATOR = the reviewed ledger, which demotion never shrinks. Compare the NUMERATOR only, and never against a signals.json ROW count]`);
     } else {
       ok(`live re-verification is INERT on this run: 0 of ${totalSources} source(s) were fetched (${liveSkippedDemoted} demoted, none published), so a green result here establishes NOTHING about drift — no live article was read`);
       inertAxes.push('live re-verification');
     }
   }
 
+  // ---- RENDER GATE ---------------------------------------------------------------------
+  /* EVERY FIGURE IN THIS FILE IS ABOUT signals.json, NOT ABOUT THE PAGE. app.js publishes the
+     currency layer only while hasCompleteSignalCoverage() holds and empties it to {} otherwise,
+     so the demotion, freshness and coverage numbers below can all be exactly right about the
+     artefact while a reader sees no currency evidence at all. This gate opens no browser, so
+     that state is invisible to it by construction. The cheapest NECESSARY conditions of the
+     predicate are therefore read straight out of the artefact. The predicate itself is
+     deliberately NOT reimplemented — a second copy of a function this file does not own drifts
+     silently — so a pass here is NECESSARY, NOT SUFFICIENT: verify-site.js and
+     verify-observatory.js remain the only instruments that count rendered cards. */
+  /* Anchors are IDENTIFIERS WITH A CLOSING BOUNDARY, not substrings. A bare .includes() is
+     satisfied by any rename that merely APPENDS — 'hasCompleteSignalCoverageV2' contains
+     'hasCompleteSignalCoverage' — so a prefix match would survive the exact edit it exists to
+     detect, on all three anchors at once. Measured: a suffix rename left every anchor matching
+     and this check silently green. */
+  const RENDER_ANCHORS = [
+    ['function hasCompleteSignalCoverage(', /function\s+hasCompleteSignalCoverage\s*\(/],
+    ['signalCoverageReady = hasCompleteSignalCoverage(', /signalCoverageReady\s*=\s*hasCompleteSignalCoverage\s*\(/],
+    ['currencySignals = signalCoverageReady &&', /currencySignals\s*=\s*signalCoverageReady\s*&&/],
+  ];
+  const appSrc = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
+  const missingAnchors = RENDER_ANCHORS.filter(([, re]) => !re.test(appSrc)).map(([label]) => label);
+  if (missingAnchors.length) {
+    /* Fail CLOSED. If the renderer no longer contains the gate this check models, the check is
+       stale, and a stale check that keeps returning green is worse than no check at all. */
+    fail(`render gate is UNREADABLE: app.js no longer contains ${missingAnchors.map(a => `'${a}'`).join(' or ')} — this models a renderer that has since changed and must be re-derived before its result means anything`);
+  } else {
+    const searchIds = signals.search && typeof signals.search === 'object' ? Object.keys(signals.search).length : 0;
+    const embedIds = signals.embeds && typeof signals.embeds === 'object' ? Object.keys(signals.embeds).length : 0;
+    const shut = [];
+    if (signals.sourceFresh !== true) shut.push(`sourceFresh is ${JSON.stringify(signals.sourceFresh)}, not true`);
+    if (!embedIds) shut.push('embeds is absent or empty');
+    if (searchIds) shut.push(`${searchIds} search id(s) present`);
+    if (shut.length) {
+      fail(`render gate SHUT (${shut.join('; ')}): app.js sets currencySignals = {} on this artefact, so every count in the report below is true of signals.json and FALSE OF THE PAGE — the layer can be perfect in the file and absent for every reader`);
+    } else {
+      ok(`render gate is OPEN on its cheapest NECESSARY conditions (sourceFresh === true, 0 search id(s), ${embedIds} embed id(s)) so the signals.json figures below can reach the page — NECESSARY, NOT SUFFICIENT: hasCompleteSignalCoverage() is deliberately not reimplemented here, and verify-site.js / verify-observatory.js are the gates that count rendered cards`);
+    }
+  }
+
   // ---- REPORT --------------------------------------------------------------------------
-  /* LEDGER AND PAGE ARE DIFFERENT POPULATIONS AND ONLY COINCIDE WHILE NOTHING IS DEMOTED.
-     Until the first age-out every one of these numbers is the same under either reading, so a
-     label naming the page while counting the ledger is indistinguishable from a correct one —
-     and becomes wrong silently, on a schedule, on the single day the layer changes. Each line
-     therefore states which population it counted and never mixes the two in one figure. */
-  const citedOnPage = Object.keys(published).length;
-  const sourcesOnPage = new Set(Object.values(published).flat().map(link => link.key)).size;
+  /* THREE POPULATIONS ARE IN PLAY AND THEY ONLY COINCIDE WHILE NOTHING IS DEMOTED: the reviewed
+     ledger (which demotion never shrinks), signals.json (which it does), and the rendered page
+     (which the render gate can empty independently of both). Until the first age-out every one
+     of these numbers is the same under all three readings, so a label naming the wrong one is
+     indistinguishable from a correct one — and becomes wrong silently, on a schedule, on the
+     single day the layer changes. Each line therefore states which population it counted.
+     NOTHING HERE MAY CLAIM THE PAGE: this gate never fetches it. */
+  const citedInFile = Object.keys(published).length;
+  const sourcesInFile = new Set(Object.values(published).flat().map(link => link.key)).size;
   const ledgerPredictions = Object.keys(mappings).length;
   const ledgerSources = Object.keys(sources).length;
-  console.log('\ncurrency layer');
-  console.log(`  predictions cited      ${citedOnPage} of ${ids.size} on the page (reviewed ledger maps ${ledgerPredictions})`);
-  const linksOnPage = Object.values(published).flat().length;
-  console.log(`  links / sources        ${linksOnPage} link(s) across ${sourcesOnPage} source(s) on the page (reviewed ledger maps ${linkCount} pair(s) across ${ledgerSources} source(s))`);
-  console.log(`  X-only predictions     ${ids.size - citedOnPage}`);
+  console.log('\ncurrency layer  [all counts are of signals.json — see RENDER GATE above]');
+  console.log(`  predictions cited      ${citedInFile} of ${ids.size} in signals.json (reviewed ledger maps ${ledgerPredictions})`);
+  const linksInFile = Object.values(published).flat().length;
+  console.log(`  links / sources        ${linksInFile} link(s) across ${sourcesInFile} source(s) in signals.json (reviewed ledger maps ${linkCount} pair(s) across ${ledgerSources} source(s))`);
+  console.log(`  X-only predictions     ${ids.size - citedInFile}`);
   console.log(`  demoted for age        ${demoted.size} of ${ledgerSources} ledger source(s) (ceiling ${MAX_AGE_DAYS}d) — X origin retained, publish proceeds`);
   /* Surface what is ABOUT to age out, so a scheduled run can refresh a reference while the
      existing one is still valid and there is never a gap. A rule the automation cannot see is
