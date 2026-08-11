@@ -201,8 +201,17 @@ function doiFromUrl(url, headline) {
 
 const problems = [];
 const notes = [];
+/* A third channel, for facts that are neither a pass nor a value error. It exists because the
+   NON-CANONICAL DATE SPELLING advisory used to ship through ok() with the words "Not a value error
+   and not a pass" in its own body — a line printed under the label `ok` and then having to deny,
+   in prose, the channel that carried it. If the channel had carried the meaning the sentence would
+   have been unnecessary. Advisories do not change the exit status, because a publisher's choice of
+   date spelling genuinely is not a build failure; they get their own label and their own section so
+   nothing counts them as a pass. */
+const advisories = [];
 function fail(msg) { problems.push(msg); }
 function ok(msg) { notes.push(msg); }
+function advise(msg) { advisories.push(msg); }
 
 function collapse(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
 
@@ -396,12 +405,21 @@ async function main() {
      the currency chain calls toISOString() on it, so THE SPELLING IS THE PUBLISHER'S CHOICE, not
      this pipeline's. Every value is canonical ...Z today, but that is a property of today's
      feeds. One European source emitting +01:00 is enough to change it.
-     This matters beyond this file. The independent 08-14 delegate parses with a canonical-Z
-     regex and REFUSES anything else, so a non-canonical date would make one instrument refuse
-     while this one proceeded — two instruments disagreeing about one artefact with nothing
-     connecting them. Naming it here is what makes that disagreement audible.
+     This matters beyond this file, and the way it matters is the part this file may NOT assert.
+     An earlier version of this block stated that "the independent 08-14 delegate REFUSES anything
+     else, so THE TWO INSTRUMENTS WOULD REACH DIFFERENT VERDICTS ON THIS ARTEFACT". That sentence
+     was a QUOTATION FROM THE COUNTERPARTY'S PROSE, not a measurement: verify-currency-independent.ps1
+     does not exist anywhere in this tree (measured: 0 files, and 0 .ps1 here mention IsoUtc), so
+     nothing this program can read would have to change for the claim to become false. It was also
+     WRONG — the canonical-only parser is in the counterparty's PRIMARY instrument, not its
+     delegate, and on a respelled artefact this file and that delegate both go green and AGREE.
+     A verdict-bearing sentence about an instrument you cannot execute is decoration. What this
+     file can honestly say is what it measured about its OWN input, plus the fact that cross-
+     instrument agreement on spelling is NOT established here, by anything, and must be read off
+     the other instrument's own output.
      Values are compared by parsed instant everywhere in this file, so a non-canonical spelling
-     is not itself a value error and does not fail: it is reported, loudly, once. */
+     is not itself a value error and does not fail: it is reported, loudly, once, in a channel that
+     is neither a pass nor a failure — because it is neither. */
   const dateSpellings = [];
   for (const [pid, links] of Object.entries(signals.currency || {})) {
     for (const c of links) {
@@ -414,12 +432,15 @@ async function main() {
     }
   }
   if (dateSpellings.length) {
-    ok(`NON-CANONICAL DATE SPELLING  ${dateSpellings.length} currency date(s) are NOT canonical ISO-8601 UTC: ${dateSpellings.join(', ')}. `
-      + 'This file compares parsed instants throughout, so these values are judged correctly here — but the builder copies the '
-      + 'publisher spelling verbatim, and the independent 08-14 delegate refuses non-canonical dates outright, so THE TWO '
-      + 'INSTRUMENTS WOULD REACH DIFFERENT VERDICTS ON THIS ARTEFACT. Not a value error and not a pass.');
+    advise(`NON-CANONICAL DATE SPELLING  ${dateSpellings.length} currency date(s) are NOT canonical ISO-8601 UTC: ${dateSpellings.join(', ')}. `
+      + 'This file compares parsed instants throughout, so these values are judged correctly HERE. The builder copies the '
+      + 'publisher spelling verbatim, so any instrument that re-parses the printed string rather than the instant may read '
+      + 'them differently. Whether that has happened is NOT established by this run and cannot be — no other instrument is '
+      + 'in this tree to execute — so read it off that instrument\u2019s own output, not off this line.');
   } else {
-    ok(`all ${Object.values(signals.currency || {}).flat().length} currency date(s) are canonical ISO-8601 UTC, so no zone was inferred anywhere and the independent delegate's canonical-only parser agrees with this file by construction`);
+    ok(`all ${Object.values(signals.currency || {}).flat().length} currency date(s) are canonical ISO-8601 UTC, so no zone `
+      + 'was inferred anywhere in this run. This says nothing about any other instrument: none is present in this tree to be '
+      + 'measured, and a claim about one would be a quotation');
   }
 
   // ---- the universe of valid prediction ids -------------------------------------------
@@ -1135,6 +1156,10 @@ async function main() {
   }
   console.log(`  freshness              ${Object.entries(buckets).map(([k, v]) => `${k} ${v}`).join(' | ')}`);
   notes.forEach(n => console.log(`  ok   ${n}`));
+  if (advisories.length) {
+    console.log('\nADVISORY — neither a pass nor a value error, and counted as neither');
+    advisories.forEach(a => console.log(`  !    ${a}`));
+  }
 
   if (problems.length) {
     console.error('\nFAILED');
@@ -1179,6 +1204,13 @@ main().catch(err => {
     console.error('  These are NOT verification results. The run reached no verdict, so nothing here is');
     console.error('  final; they are printed so a lost forward-looking advisory cannot read as silence.');
     notes.forEach(n => console.error(`  - ${n}`));
+  }
+  if (advisories.length) {
+    // Same reasoning as the notes flush directly above, and it applies with more force: an advisory
+    // is by construction the thing no exit code will carry, so a crash that swallowed one would emit
+    // silence for a fact that had already been established. Flushed in full, labelled, not counted.
+    console.error(`\nADVISORIES RECORDED BEFORE THE FAILURE — neither passes nor value errors:`);
+    advisories.forEach(a => console.error(`  ! ${a}`));
   }
   console.error('\nINSTRUMENT FAULT — verify-currency.js threw before completing. This is NOT an evidence');
   console.error('  fault and NOT a deferral: re-running will reproduce it. DISCARD EVERY FIGURE FROM THIS');
