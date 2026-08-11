@@ -913,7 +913,20 @@ main().catch(err => {
     console.error('\nFINDINGS RECORDED BEFORE THE INSTRUMENT FAILED (these are real and must not be discarded):');
     problems.forEach(p => console.error(`  - ${p}`));
   }
-  if (notes.length) console.error(`\n${notes.length} check(s) had already passed before the failure; the run is INCOMPLETE and none of its counts are final.`);
+  if (notes.length) {
+    // These are flushed in FULL, not counted. Printing only notes.length put a count in the slot
+    // where the content belongs, and it discarded the one line most likely to be load-bearing: the
+    // forward-looking ceiling-sensitivity advisory is an ok() note, so a crash after it was computed
+    // produced output byte-indistinguishable from a run in which the window simply had not opened.
+    // Silence has several causes — the window is shut, the advisory was lost, nothing ran at all —
+    // and an instrument must never emit the same silence for a quiet truth and a destroyed reading.
+    // They are labelled, not suppressed: an incomplete run's greens are observations for diagnosing
+    // the fault, never verification, and the DISCARD instruction below still governs every figure.
+    console.error(`\nOBSERVATIONS RECORDED BEFORE THE FAILURE — ${notes.length} check(s) had already passed.`);
+    console.error('  These are NOT verification results. The run reached no verdict, so nothing here is');
+    console.error('  final; they are printed so a lost forward-looking advisory cannot read as silence.');
+    notes.forEach(n => console.error(`  - ${n}`));
+  }
   console.error('\nINSTRUMENT FAULT — verify-currency.js threw before completing. This is NOT an evidence');
   console.error('  fault and NOT a deferral: re-running will reproduce it. DISCARD EVERY FIGURE FROM THIS');
   console.error('  RUN, including any that looks right, and fix the instrument.');
