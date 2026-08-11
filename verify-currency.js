@@ -324,6 +324,28 @@ async function main() {
   const ageing = [];
   const originChecked = { total: 0, published: 0, dayPrecision: 0, thinnestDays: null };
   const published = signals.currency || {};
+  /* THE EXPIRY INSTANT MUST COME FROM THE BUILDER'S RULE, not from a second formula that merely
+     agrees today. refresh-signals.js demotes when Math.round(ageDays) > ceiling, which fires at
+     publishedAt + (ceiling + 0.5)d — that half day is a property of Math.round and of the strict
+     `>`, and it moves if either changes. Both are therefore READ OUT of the builder and the
+     offset derived from the pair; an unrecognised rule fails closed rather than printing a
+     confident wrong instant. Measured on the line this replaces, which computed
+     now + (ceiling - roundedAge)d: it put ferc a full day early (2026-08-23 for a row that
+     survives the 08-23 build at 59.7d), and because it inherited the rounding of `age` it
+     printed 2026-08-14 at 00:30Z and 2026-08-13 at 23:30Z ON THE SAME DAY for the same link —
+     a date that changes with the hour the gate happens to run is not a deadline. */
+  const DEMOTION_RULE = (() => {
+    const builder = fs.readFileSync(path.join(root, 'refresh-signals.js'), 'utf8');
+    const round = builder.match(/ageDays\s*=\s*Math\.(round|floor|ceil)\(\s*\(\s*currencyNow\s*-\s*new Date\(\s*src\.publishedAt\s*\)\.getTime\(\)\s*\)\s*\/\s*864e5\s*\)/);
+    const cmp = builder.match(/if\s*\(\s*ageDays\s*(>=?)\s*CURRENCY_MAX_AGE_DAYS\s*\)/);
+    if (!round || !cmp) return null;
+    const offsets = { 'round>': 0.5, 'round>=': -0.5, 'floor>': 1, 'floor>=': 0, 'ceil>': 0, 'ceil>=': -1 };
+    const key = `${round[1]}${cmp[1]}`;
+    return Object.prototype.hasOwnProperty.call(offsets, key) ? { key, offset: offsets[key] } : null;
+  })();
+  if (!DEMOTION_RULE) {
+    fail('the currency demotion rule is UNREADABLE in refresh-signals.js (age rounding and/or the ceiling comparison did not match) — expiry instants cannot be derived from the rule that actually demotes, and must not be printed as if they were');
+  }
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
       const s = sources[entry.source];
@@ -346,7 +368,14 @@ async function main() {
         fail(`${pid}: ${entry.source} is ${age} days old and within the ceiling, but is MISSING from signals.json currency — a reviewed reference silently failed to publish`);
       }
       if (age >= REFRESH_AT_DAYS) {
-        ageing.push(`${pid}  ${entry.source}  ${age}d — expires in ${MAX_AGE_DAYS - age}d (${new Date(Date.now() + (MAX_AGE_DAYS - age) * 864e5).toISOString().slice(0, 10)})`);
+        /* Days remaining is derived from the crossing instant, not from the rounded age, so it
+           does not inherit the same drift the printed date used to. */
+        const crossing = DEMOTION_RULE
+          ? new Date(new Date(s.publishedAt).getTime() + (MAX_AGE_DAYS + DEMOTION_RULE.offset) * 864e5)
+          : null;
+        ageing.push(crossing
+          ? `${pid}  ${entry.source}  ${age}d — ${((crossing - now) / 864e5).toFixed(1)}d remaining; demotes on the FIRST BUILD AFTER ${crossing.toISOString().replace('.000Z', 'Z')} (derived from the builder's ${DEMOTION_RULE.key} ceiling rule)`
+          : `${pid}  ${entry.source}  ${age}d — EXPIRY UNKNOWN: the builder's demotion rule could not be read`);
       }
 
       if (age <= 14) buckets['<=14d']++;
