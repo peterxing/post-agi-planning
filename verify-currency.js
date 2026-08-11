@@ -334,12 +334,18 @@ async function main() {
      survives the 08-23 build at 59.7d), and because it inherited the rounding of `age` it
      printed 2026-08-14 at 00:30Z and 2026-08-13 at 23:30Z ON THE SAME DAY for the same link —
      a date that changes with the hour the gate happens to run is not a deadline. */
+  /* THE RULE SPACE, DECLARED ONCE. Every downstream question of the form "what else could the
+     builder be doing?" — the expiry offset, and the discrimination counts far below — resolves
+     against THIS table and nothing else. A second list of candidate rules written somewhere else
+     would agree with this one today and diverge on exactly the edit that adds a rule. */
+  const RULE_OFFSETS = { 'round>': 0.5, 'round>=': -0.5, 'floor>': 1, 'floor>=': 0, 'ceil>': 0, 'ceil>=': -1 };
+  const AGE_RULES = [...new Set(Object.keys(RULE_OFFSETS).map(k => k.replace(/[><=]+$/, '')))];
   const DEMOTION_RULE = (() => {
     const builder = fs.readFileSync(path.join(root, 'refresh-signals.js'), 'utf8');
     const round = builder.match(/ageDays\s*=\s*Math\.(round|floor|ceil)\(\s*\(\s*currencyNow\s*-\s*new Date\(\s*src\.publishedAt\s*\)\.getTime\(\)\s*\)\s*\/\s*864e5\s*\)/);
     const cmp = builder.match(/if\s*\(\s*ageDays\s*(>=?)\s*CURRENCY_MAX_AGE_DAYS\s*\)/);
     if (!round || !cmp) return null;
-    const offsets = { 'round>': 0.5, 'round>=': -0.5, 'floor>': 1, 'floor>=': 0, 'ceil>': 0, 'ceil>=': -1 };
+    const offsets = RULE_OFFSETS;
     const key = `${round[1]}${cmp[1]}`;
     if (!Object.prototype.hasOwnProperty.call(offsets, key)) return null;
     /* ONE READING OF THE BUILDER, USED FOR BOTH THE DECISION AND THE DEADLINE. Hardcoding the
@@ -500,7 +506,16 @@ async function main() {
     const bandOf = a => (a <= 14 ? '<=14d' : a <= 30 ? '15-30d' : a <= 90 ? '31-90d' : a <= 365 ? '91-365d' : '>1yr');
     const impliedHist = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
     let pinned = 0;
-    let discriminating = 0;
+    /* ONE COUNTER PER ALTERNATIVE, because no single counter can stand for the rule space.
+       For non-integral elapsed the discriminating sets are DISJOINT AND EXHAUSTIVE: frac < .5
+       makes round === floor so only ceil differs; frac > .5 makes round === ceil so only floor
+       differs. A row therefore NEVER separates the pin from both rivals, which means a
+       round-vs-floor count is not a weak measure of discriminating power against ceil — it is
+       exactly the set of rows BLIND to ceil. Measured on the live artefact: 6 vs floor, 5 vs
+       ceil, 0 both, 0 neither, and 6+5+0 === 11. Counting one rival and concluding about "a
+       rounding drift" is the same widening as counting a ledger and naming a page. */
+    const PINNED_RULE = 'round';
+    const discrimVs = Object.fromEntries(AGE_RULES.filter(r => r !== PINNED_RULE).map(r => [r, 0]));
     let ageAxisFailures = 0;
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
@@ -530,7 +545,9 @@ async function main() {
         }
         impliedHist[band]++;
         pinned++;
-        if (Math.floor((emittedAt - at) / 864e5) !== expected) discriminating++;
+        for (const r of Object.keys(discrimVs)) {
+          if (Math[r]((emittedAt - at) / 864e5) !== expected) discrimVs[r]++;
+        }
       }
     }
     const coverageHist = signals.coverage && signals.coverage.currency && signals.coverage.currency.freshness;
@@ -551,24 +568,55 @@ async function main() {
       ok('emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
       inertAxes.push('emitted-age pin');
     }
-    /* A pin that both candidate definitions satisfy proves nothing on that run. Say so,
-       rather than letting a vacuous pass read as a discriminating one. */
-    if (pinned && !discriminating) {
-      ok(`emitted-age pin is NOT discriminating today: every link's age is identical under round and floor, so this run could not detect a rounding drift`);
-    } else if (pinned) {
-      ok(`emitted-age pin discriminates on ${discriminating} of ${pinned} link(s) where round and floor differ — a rounding drift would fail here`);
+    /* A pin that a candidate definition also satisfies proves nothing against THAT definition.
+       The claim is refused while ANY alternative is at zero, and the blind one is named — a
+       general conclusion ("a rounding drift would fail here") is only available when every rule
+       the reader above can return has been separated from the pin on this run. */
+    if (pinned) {
+      const blind = Object.entries(discrimVs).filter(([, n]) => n === 0).map(([r]) => r);
+      const detail = Object.entries(discrimVs).map(([r, n]) => `${n} vs ${r}`).join(', ');
+      ok(blind.length === Object.keys(discrimVs).length
+        ? `emitted-age pin is NOT discriminating today: every link's age is identical under ${AGE_RULES.join('/')}, so this run could not detect a rounding drift of any kind`
+        : blind.length
+        ? `emitted-age pin is BLIND to ${blind.join(' and ')} on this run — ${detail} of ${pinned} link(s). It would catch a drift toward ${Object.keys(discrimVs).filter(r => !blind.includes(r)).join('/')} and NOT one toward ${blind.join('/')}; this run carries no general claim about rounding`
+        : `emitted-age pin discriminates against every alternative rule refresh-signals.js could declare — ${detail} of ${pinned} link(s), so a drift to any of ${AGE_RULES.filter(r => r !== PINNED_RULE).join(' or ')} would fail here`);
     }
-    /* Boundary proximity: within 12h of a band edge, publisher and verifier must agree on
-       rounding or the histogram splits. Surfaced so a boundary-sensitive run is known in
-       advance rather than diagnosed from a failed assertion afterwards. */
+    /* Boundary proximity, in two KINDS that must not share a sentence. A band edge decides which
+       histogram BUCKET a link is filed under; the demotion ceiling decides whether the link is
+       PUBLISHED AT ALL. The edge list below is the band edges only — appending the ceiling to it
+       would put a bucket-misfiling and a publication decision under one label, which is the same
+       widening this section was just repaired for. The ceiling gets its own pass, derived from
+       the demotion decision itself rather than from a proximity guess. */
+    let bandEdge = 0;
+    let ceilingSensitive = 0;
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
         const exact = (emittedAt - Date.parse(c.publishedAt)) / 864e5;
         const edge = [14, 30, 90, 365].find(e => Math.abs(exact - (e + 0.5)) < 0.5);
         if (edge !== undefined) {
-          ok(`boundary-sensitive  ${pid}  ${c.key}  ${exact.toFixed(2)}d is within 12h of the ${edge}d band edge — rounding agreement is load-bearing on this run`);
+          bandEdge++;
+          ok(`band-edge  ${pid}  ${c.key}  ${exact.toFixed(2)}d is within 12h of the ${edge}d band edge — publisher and verifier must agree on rounding or this link is filed in the wrong freshness BUCKET (it stays published either way)`);
+        }
+        /* Not a distance heuristic: run the actual demotion decision under every rule in the
+           table and report only genuine disagreement. This fires when the RULE, not the data,
+           decides whether the link is on the site. */
+        const decided = Object.keys(RULE_OFFSETS).map(key => {
+          const fn = key.replace(/[><=]+$/, '');
+          const a = Math[fn](exact);
+          return { key, demoted: key.endsWith('>=') ? a >= MAX_AGE_DAYS : a > MAX_AGE_DAYS };
+        });
+        const demote = decided.filter(d => d.demoted).map(d => d.key);
+        const keep = decided.filter(d => !d.demoted).map(d => d.key);
+        if (demote.length && keep.length) {
+          ceilingSensitive++;
+          ok(`CEILING-SENSITIVE  ${pid}  ${c.key}  ${exact.toFixed(3)}d against the ${MAX_AGE_DAYS}d ceiling — THE RULE DECIDES PUBLICATION on this row, not the data: ${demote.join('/')} demote it, ${keep.join('/')} keep it. Rounding agreement is load-bearing for whether this link appears at all`);
         }
       }
+    }
+    /* State the population even when nothing fired: a silent advisory is indistinguishable from
+       one that never ran, which is the defect this file keeps finding elsewhere. */
+    if (pinned) {
+      ok(`boundary sweep  ${pinned} published link(s) checked — ${bandEdge} within 12h of a freshness band edge, ${ceilingSensitive} where the demotion rule itself decides publication at the ${MAX_AGE_DAYS}d ceiling`);
     }
   }
 
