@@ -27,6 +27,7 @@ require('./pipeline-lock').guard('verify-currency');
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { fetchArticle, extractArticle, quotePresent, registrableHost, detectBotChallenge, normalizeForQuote } = require('./news-evidence');
 
 const OFFLINE = process.argv.includes('--offline');
@@ -248,6 +249,27 @@ function originBar(raw) {
 }
 
 async function main() {
+  /* INSTRUMENT IDENTITY — printed FIRST, before any read that could throw, so that every run
+     carries the identity of the bytes that produced it. Between publishes this file has no
+     commit identity at all: a verdict quoted from an edited working tree is a verdict from
+     bytes nobody can name, and the reader cannot tell from the output alone. Reporting the
+     hash separately from the run does not fix that, because a state block is written by hand
+     and can describe a revision the run did not use — which is exactly how a stale count got
+     into one. So the instrument states its own identity, in its own output, at every exit.
+     Self-reported and therefore not proof against tampering; it is proof against DRIFT, which
+     is the actual failure mode. Compare it to the published blob to decide if it is pinned. */
+  try {
+    const selfBytes = fs.readFileSync(__filename);
+    console.log(`INSTRUMENT BYTES  ${path.basename(__filename)}  sha256=${crypto.createHash('sha256').update(selfBytes).digest('hex').slice(0, 16).toUpperCase()}  ${selfBytes.length} b`);
+  } catch (e) {
+    /* Not fatal and not silent: a run that cannot name its own bytes still measures the
+       evidence correctly, but the reader must know the verdict is unattributable.
+       The three INSTRUMENT lines this file can emit are deliberately distinguished by their
+       SECOND token — BYTES (identity known), IDENTITY (identity unavailable), FAULT (the
+       crash banner) — because a matcher keyed on the first token alone returns TRUE for all
+       three, and would read a crash, or a run that could not name itself, as a named run. */
+    advise(`INSTRUMENT IDENTITY UNAVAILABLE — this run could not read its own source (${e.code || e.message}), so the bytes that produced the verdict below cannot be named from this output`);
+  }
   const root = __dirname;
   const predictions = JSON.parse(fs.readFileSync(path.join(root, 'predictions.json'), 'utf8'));
   const signals = JSON.parse(fs.readFileSync(path.join(root, 'signals.json'), 'utf8'));
