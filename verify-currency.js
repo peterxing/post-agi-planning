@@ -651,23 +651,36 @@ async function main() {
     ['currencySignals = signalCoverageReady &&', /currencySignals\s*=\s*signalCoverageReady\s*&&/],
   ];
   const appSrc = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
-  const missingAnchors = RENDER_ANCHORS.filter(([, re]) => !re.test(appSrc)).map(([label]) => label);
+  const anchorLines = [];
+  const missingAnchors = [];
+  for (const [label, re] of RENDER_ANCHORS) {
+    const m = appSrc.match(re);
+    if (!m) { missingAnchors.push(label); continue; }
+    // Line numbers are REPORTED, never asserted: a located number helps a reader navigate,
+    // a pinned one is still a number after the unrelated edit that invalidates it.
+    anchorLines.push(`${label.replace(/\s*[({].*$/, '')} @${appSrc.slice(0, m.index).split('\n').length}`);
+  }
+  /* THE ARTEFACT CONDITIONS ARE EVALUATED UNCONDITIONALLY, NOT INSIDE THE ANCHOR RESULT. They are
+     facts about signals.json and nothing in app.js can change them, so nesting them under a
+     readable model would let an UNREADABLE MODEL SUPPRESS A REAL SHUT GATE — one fault masking
+     another, inside the check written for a masking class. Both conditions can fire together and
+     both are reported. The anchor result only qualifies what a PASS is worth. */
+  const searchIds = signals.search && typeof signals.search === 'object' ? Object.keys(signals.search).length : 0;
+  const embedIds = signals.embeds && typeof signals.embeds === 'object' ? Object.keys(signals.embeds).length : 0;
+  const shut = [];
+  if (signals.sourceFresh !== true) shut.push(`sourceFresh is ${JSON.stringify(signals.sourceFresh)}, not true`);
+  if (!embedIds) shut.push('embeds is absent or empty');
+  if (searchIds) shut.push(`${searchIds} search id(s) present`);
+  if (shut.length) {
+    fail(`render gate SHUT (${shut.join('; ')}): app.js sets currencySignals = {} on this artefact, so every count in the report below is true of signals.json and FALSE OF THE PAGE — the layer can be perfect in the file and absent for every reader`);
+  }
   if (missingAnchors.length) {
-    /* Fail CLOSED. If the renderer no longer contains the gate this check models, the check is
-       stale, and a stale check that keeps returning green is worse than no check at all. */
-    fail(`render gate is UNREADABLE: app.js no longer contains ${missingAnchors.map(a => `'${a}'`).join(' or ')} — this models a renderer that has since changed and must be re-derived before its result means anything`);
-  } else {
-    const searchIds = signals.search && typeof signals.search === 'object' ? Object.keys(signals.search).length : 0;
-    const embedIds = signals.embeds && typeof signals.embeds === 'object' ? Object.keys(signals.embeds).length : 0;
-    const shut = [];
-    if (signals.sourceFresh !== true) shut.push(`sourceFresh is ${JSON.stringify(signals.sourceFresh)}, not true`);
-    if (!embedIds) shut.push('embeds is absent or empty');
-    if (searchIds) shut.push(`${searchIds} search id(s) present`);
-    if (shut.length) {
-      fail(`render gate SHUT (${shut.join('; ')}): app.js sets currencySignals = {} on this artefact, so every count in the report below is true of signals.json and FALSE OF THE PAGE — the layer can be perfect in the file and absent for every reader`);
-    } else {
-      ok(`render gate is OPEN on its cheapest NECESSARY conditions (sourceFresh === true, 0 search id(s), ${embedIds} embed id(s)) so the signals.json figures below can reach the page — NECESSARY, NOT SUFFICIENT: hasCompleteSignalCoverage() is deliberately not reimplemented here, and verify-site.js / verify-observatory.js are the gates that count rendered cards`);
-    }
+    /* Fail CLOSED. A stale model that keeps returning green is worse than no model at all. */
+    fail(`render gate model is UNREADABLE: app.js no longer contains ${missingAnchors.map(a => `'${a}'`).join(' or ')} — ${shut.length
+      ? 'the SHUT verdict above is derived from signals.json alone and stands unaffected'
+      : `the artefact conditions (sourceFresh === true, ${searchIds} search id(s), ${embedIds} embed id(s)) do pass, but with the model unreadable that carries NO CLAIM ABOUT THE PAGE`} — re-derive it before its result means anything`);
+  } else if (!shut.length) {
+    ok(`render gate is OPEN on its cheapest NECESSARY conditions (sourceFresh === true, 0 search id(s), ${embedIds} embed id(s)) so the signals.json figures below can reach the page — NECESSARY, NOT SUFFICIENT: hasCompleteSignalCoverage() is deliberately not reimplemented here, and verify-site.js / verify-observatory.js are the gates that count rendered cards [constructs located in app.js at ${anchorLines.join(', ')}]`);
   }
 
   // ---- REPORT --------------------------------------------------------------------------
