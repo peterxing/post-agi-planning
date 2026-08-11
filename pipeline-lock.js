@@ -83,6 +83,12 @@ const ORPHAN_MINUTES = Math.max(ORPHAN_FLOOR_MINUTES, Number(process.env.PAP_LOC
 const HEARTBEAT_MS = Math.max(5000, Math.min(HEARTBEAT_CEILING_MS, Number(process.env.PAP_LOCK_HEARTBEAT_MS) || HEARTBEAT_CEILING_MS));
 const POLL_MS = Math.max(200, Number(process.env.PAP_LOCK_POLL_MS) || 5000);
 const EXIT_DEFERRED = 75;
+// An instrument fault: the tool crashed rather than reaching a verdict. Distinct from DEFERRED (75),
+// which means "nothing was wrong, try later", and from 1, which asserts a real evidence fault. These
+// three demand different remedies — wait, fix the instrument, audit the evidence — so they must not
+// share a code. 76 is verify-currency.js's existing EXIT_INSTRUMENT and is unused by every other
+// guarded tool, so adopting it here unifies the vocabulary without redefining any current code.
+const EXIT_INSTRUMENT = 76;
 const PURPOSES = new Set(['scheduled-forecast', 'scheduled-author', 'interactive', 'manual']);
 
 function nowIso() {
@@ -316,11 +322,31 @@ function guard(activity, { purpose = null, waitSeconds = null } = {}) {
         process.exit(130);
       });
     }
-    process.on('uncaughtException', error => {
-      releaseImplicit();
-      throw error;
-    });
   }
+  // A crash OUTSIDE a tool's own main() handler is an instrument fault, and it must report the same
+  // way whether or not this process happens to own the lock. Before this was hoisted out of the
+  // owner-only block above, one fault produced two undeclared codes: an owner re-threw from inside
+  // this handler, which makes node exit 7, while an inheritor fell through to node's default and
+  // exited 1 — the EVIDENCE code, indistinguishable at the exit status from a real evidence fault.
+  // Lock ownership is unrelated to the fault, so it must not choose the code or the remedy.
+  // releaseImplicit is idempotent and owner-matched, so this is a no-op for an inheriting process:
+  // a tool must never release a lock its parent holds.
+  const reportInstrumentFault = (error, kind) => {
+    releaseImplicit();
+    try {
+      console.error('');
+      console.error(`[pipeline-lock] INSTRUMENT FAULT — ${activity} threw ${kind} and could not`);
+      console.error('[pipeline-lock] complete. This is NOT an evidence fault and NOT a deferral:');
+      console.error('[pipeline-lock] the run measured nothing, so DISCARD EVERY FIGURE IT PRINTED,');
+      console.error('[pipeline-lock] including any that look right. Fix the instrument and re-run.');
+      console.error(error && error.stack ? error.stack : String(error));
+    } catch {
+      /* reporting must never mask the fault it is reporting */
+    }
+    process.exit(EXIT_INSTRUMENT);
+  };
+  process.on('uncaughtException', error => reportInstrumentFault(error, 'an uncaught exception'));
+  process.on('unhandledRejection', error => reportInstrumentFault(error, 'an unhandled rejection'));
   return result;
 }
 
@@ -390,6 +416,7 @@ module.exports = {
   LOCK_FILE,
   LOCK_BASENAME,
   EXIT_DEFERRED,
+  EXIT_INSTRUMENT,
   STALE_MINUTES,
   ORPHAN_MINUTES,
   HEARTBEAT_MS,

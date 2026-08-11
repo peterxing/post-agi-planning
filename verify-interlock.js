@@ -192,6 +192,37 @@ check(!fs.existsSync(SANDBOX), 'a normal exit must release the implicit lock');
   clearSandbox();
   notes.push('crash release: hard-killed holder reclaimed by the next actor');
 
+  // 7a. A tool that THROWS must report an instrument fault, and lock ownership must not choose the
+  // code. Test 7 above uses SIGKILL, which is uncatchable, so it exercises stale reclamation and
+  // says nothing about a catchable crash — the two paths only looked like one test. Before this was
+  // fixed, an owning process re-threw from inside its own uncaughtException handler and node exited
+  // 7, while an INHERITING process had no handler at all and fell through to node's default exit 1
+  // — the evidence code, indistinguishable at the exit status from a real evidence fault, which the
+  // publisher then reports as EVIDENCE and sends an operator to audit data that was never measured.
+  // One fault, one remedy, therefore one code, in both arms.
+  for (const [arm, ownerEnv] of [['owning', ''], ['inheriting', 'parent-session-owner']]) {
+    for (const [kind, code] of [
+      ['throw new Error("injected")', 'an uncaught exception'],
+      ['Promise.reject(new Error("injected"))', 'an unhandled rejection'],
+    ]) {
+      clearSandbox();
+      const crashed = spawnSync(process.execPath,
+        ['-e', `require('./pipeline-lock').guard('crashtest'); ${kind};`],
+        { cwd: DIR, env: { ...process.env, PAP_LOCK_FILE: SANDBOX, PAP_PIPELINE_OWNER: ownerEnv }, encoding: 'utf8' });
+      check(crashed.status === 76,
+        `${code} in an ${arm} tool must exit 76 INSTRUMENT, got ${crashed.status}`);
+      check(/INSTRUMENT FAULT/.test(`${crashed.stdout}${crashed.stderr}`),
+        `${code} in an ${arm} tool must name itself an instrument fault, not print a bare stack`);
+      // An inheriting tool must never delete a lock its parent still holds, even while crashing.
+      if (arm === 'inheriting') {
+        check(fs.existsSync(SANDBOX),
+          'a crashing tool that INHERITED the lock must leave its parent lock in place');
+      }
+    }
+  }
+  clearSandbox();
+  notes.push('instrument faults: throw and rejection both exit 76 in the owning and inheriting arms');
+
   // 7b. A crashed SESSION run must not wedge the tree for the whole stale ceiling.
   // A scheduled run acquires a session lock and then dies without releasing. Its heartbeat stops,
   // but nothing can prove the holder is gone, so every later run defers until the 90 minute ceiling
