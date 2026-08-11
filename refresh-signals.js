@@ -2728,7 +2728,26 @@ async function main(){
   if (ratchet.peterTotal !== EVIDENCE_RATCHET.peterTotal
     || ratchet.peterAuthored !== EVIDENCE_RATCHET.peterAuthored
     || ratchet.maxReuse !== EVIDENCE_RATCHET.maxReuse) {
+    /* This writer owns THREE fields and the file holds more than three. It used to emit
+       {updated, note, ...ratchet} with no spread of the file on disk, so every reviewed
+       registration alongside the ratchet — the currency ledger floor, the registered ceiling and
+       their explanatory notes — was DELETED whenever the Peter ratchet advanced. Measured: a
+       simulated advance dropped currencyLedgerSources, currencyMaxAgeDays and both notes, and the
+       next verify-currency run refused on two counts. That is fail-closed, so the reach is deletion
+       and never substitution; but a build that silently discards reviewed human edits is a data
+       loss, and the checks that call this file the one term the checked change cannot move are only
+       entitled to say so while that is true. Preserve everything this writer does not own, and
+       assert the owned key set so a later edit cannot quietly grow into a registration slot. */
+    const RATCHET_KEYS = ['peterTotal', 'peterAuthored', 'maxReuse'];
+    const ratchetKeys = Object.keys(ratchet).sort();
+    if (ratchetKeys.join(',') !== RATCHET_KEYS.slice().sort().join(',')) {
+      throw new Error(`evidence-floors writer owns exactly ${RATCHET_KEYS.join('/')} but was handed `
+        + `${ratchetKeys.join('/')}. Refusing to write: an unrecognised key here would overwrite a `
+        + 'reviewed registration with a builder-computed value, which is the one thing this file exists to prevent.');
+    }
+    const existingFloors = JSON.parse(fs.readFileSync(FLOORS, 'utf8'));
     fs.writeFileSync(FLOORS, JSON.stringify({
+      ...existingFloors,
       updated: new Date().toISOString().slice(0, 10),
       note: 'Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.',
       ...ratchet,

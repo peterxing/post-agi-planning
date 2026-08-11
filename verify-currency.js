@@ -239,10 +239,15 @@ async function main() {
      changed in one place and BLIND TO ONE CHANGED IN THE PLACE IT IS ACTUALLY CHANGED — a deploy
      edit moves both, and the run then prints "agreement MEASURED, not inherited" over a ceiling
      that is wrong by thirty days. Measured: artefact 90 with env 90 exits 70 with no finding.
-     Nothing in that pair says what the ceiling is SUPPOSED to be. This does. It lives in the file
-     that has no automatic writers, so only a reviewed manual edit can move it, which is exactly
-     what the other two terms lack. The ARTEFACT remains the value judged against, because it is
-     what actually governed publication; the registration governs whether that was legitimate. */
+     Nothing in that pair says what the ceiling is SUPPOSED to be. This does. It lives in
+     evidence-floors.json, which — contrary to what an earlier version of this comment asserted —
+     DOES have an automatic writer: refresh-signals.js rewrites it whenever the Peter ratchet
+     advances. That writer used to emit only its own three fields and DELETED every registration
+     beside them; it now preserves what it does not own and asserts its own key set, so it can
+     neither substitute nor drop this value. The claim being made here is therefore about a property
+     that was checked, not one that was assumed. The ARTEFACT remains the value judged against,
+     because it is what actually governed publication; the registration governs whether that was
+     legitimate. */
   const registeredCeiling = floors.currencyMaxAgeDays;
   if (!Number.isInteger(registeredCeiling)) {
     fail('evidence-floors.json does not record an integer currencyMaxAgeDays, so no term in this run states '
@@ -331,6 +336,59 @@ async function main() {
     ok(`reviewed ledger holds ${ledgerSize} source(s), at or above the recorded floor of ${ledgerFloor}`
       + `${ledgerSize > ledgerFloor ? ' — the floor should be RAISED to lock in the growth' : ''}`
       + ' — demotion never shrinks the ledger, so a drop here means deletion, not age-out');
+  }
+
+  // ---- REGISTERED LEDGER IDENTITY ------------------------------------------------------
+  /* The floor above is a CARDINALITY, and a cardinality pins how many, never WHICH. Measured in
+     shipped bytes: substitute the reviewed Nature source for one at example.invalid, hold the count
+     at 9 and hold publishedAt constant, and this file exits 70 with ZERO findings — while the
+     traceability line above still prints "11 of 11 published link(s) resolve to a reviewed,
+     correctly-mapped ledger entry" and "83 of 88 pinned-field comparison(s) WERE ACTUALLY MADE".
+     Those lines are correct and they vouch for the substitute, because url is one of the compared
+     fields and BOTH SIDES MOVED TOGETHER. A live run does fail, but as "THE CITED ARTICLE IS GONE —
+     host does not resolve": a link-rot diagnosis contingent on the substitute being unreachable, so
+     it is a property of that fixture's hostname and not detection of substitution.
+     Host is not fine enough either — these 9 sources span 5 hosts, 3 of them spectrum.ieee.org — so
+     the escape from a relation is not a coarser registration, it is IDENTITY. publishedAt is pinned
+     with the url because Friday's predicted demotion instant IS publishedAt + the ceiling, and the
+     only other check on that field compares page against ledger, which one coherent edit moves. */
+  const identities = floors.currencyLedgerIdentities;
+  if (!identities || typeof identities !== 'object' || Array.isArray(identities) || !Object.keys(identities).length) {
+    fail('evidence-floors.json does not record currencyLedgerIdentities, so nothing in this run states WHICH '
+      + 'sources are the reviewed ones. The ledger-size floor pins only how many, and a substitution holds the '
+      + 'count. This run refuses to treat a cardinality as an identity.');
+  } else {
+    const idProblems = [];
+    for (const [key, want] of Object.entries(identities)) {
+      const held = CURRENCY_SOURCES[key];
+      if (!want || typeof want !== 'object' || typeof want.url !== 'string' || typeof want.publishedAt !== 'string') {
+        idProblems.push(`${key}: the registration itself is malformed (needs url and publishedAt), so it asserts nothing`);
+      } else if (!held) {
+        idProblems.push(`${key}: REGISTERED BUT ABSENT from the reviewed ledger — this source was removed or renamed`);
+      } else if (held.url !== want.url) {
+        idProblems.push(`${key}: SUBSTITUTED — the reviewed ledger now cites ${held.url}, but the registered `
+          + `identity is ${want.url}. The count is unchanged, so no size floor can see this`);
+      } else if (held.publishedAt !== want.publishedAt) {
+        idProblems.push(`${key}: publishedAt MOVED — the ledger holds ${held.publishedAt}, the registration `
+          + `holds ${want.publishedAt}. Every demotion instant is computed from this field`);
+      }
+    }
+    for (const key of Object.keys(CURRENCY_SOURCES)) {
+      if (!(key in identities)) {
+        idProblems.push(`${key}: PRESENT IN THE LEDGER BUT NEVER REGISTERED — it reached the reviewed set without `
+          + 'a reviewed registration. If it was added deliberately, register it in the same change');
+      }
+    }
+    if (idProblems.length) {
+      fail(`REVIEWED LEDGER IDENTITY DIVERGED from evidence-floors.json on ${idProblems.length} source(s): `
+        + `${idProblems.join('; ')}. A substitution holds the cardinality and moves the page and the ledger `
+        + 'together, so every consistency check between them agrees; the registration is the only term the '
+        + 'substituting change cannot move.');
+    } else {
+      ok(`all ${Object.keys(identities).length} reviewed source(s) match their REGISTERED identity by full url and `
+        + 'publishedAt, so this line reports WHICH sources are published and not merely how many — a substitution '
+        + 'that held the count at 9 exits 70 with no finding against every other check in this file');
+    }
   }
 
   // ---- DATE SPELLING -------------------------------------------------------------------
