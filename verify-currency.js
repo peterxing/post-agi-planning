@@ -341,19 +341,28 @@ async function main() {
     if (!round || !cmp) return null;
     const offsets = { 'round>': 0.5, 'round>=': -0.5, 'floor>': 1, 'floor>=': 0, 'ceil>': 0, 'ceil>=': -1 };
     const key = `${round[1]}${cmp[1]}`;
-    return Object.prototype.hasOwnProperty.call(offsets, key) ? { key, offset: offsets[key] } : null;
+    if (!Object.prototype.hasOwnProperty.call(offsets, key)) return null;
+    /* ONE READING OF THE BUILDER, USED FOR BOTH THE DECISION AND THE DEADLINE. Hardcoding the
+       rounding here while deriving it for the expiry would put a derived reading and a copied
+       one inside a single instrument, agreeing today and diverging on exactly the edit that
+       matters. MEASURED, and it is not hypothetical: at the pre-registered 2026-08-14T22:01Z
+       build the Nature link sits at 60.917d, where round gives 61 (DEMOTED) and floor gives 60
+       (NOT DEMOTED) — the rounding function alone decides Friday's verdict for the one link
+       Friday is about. */
+    return { key, offset: offsets[key], age: ms => Math[round[1]](ms / 864e5), past: a => (cmp[1] === '>' ? a > MAX_AGE_DAYS : a >= MAX_AGE_DAYS) };
   })();
   if (!DEMOTION_RULE) {
-    fail('the currency demotion rule is UNREADABLE in refresh-signals.js (age rounding and/or the ceiling comparison did not match) — expiry instants cannot be derived from the rule that actually demotes, and must not be printed as if they were');
+    fail('the currency demotion rule is UNREADABLE in refresh-signals.js (age rounding and/or the ceiling comparison did not match) — expiry instants cannot be derived from the rule that actually demotes, and the age decisions below fall back to an ASSUMED round/> and must not be read as agreeing with the builder');
   }
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
       const s = sources[entry.source];
       if (!s) continue;
-      const age = Math.round((now - new Date(s.publishedAt)) / 864e5);
+      const elapsed = now - new Date(s.publishedAt);
+      const age = DEMOTION_RULE ? DEMOTION_RULE.age(elapsed) : Math.round(elapsed / 864e5);
       const livePublished = (published[pid] || []).some(c => c.key === entry.source);
 
-      if (age > MAX_AGE_DAYS) {
+      if (DEMOTION_RULE ? DEMOTION_RULE.past(age) : age > MAX_AGE_DAYS) {
         demoted.add(entry.source);
         if (livePublished) {
           fail(`${pid}: ${entry.source} is ${age} days old, past the ${MAX_AGE_DAYS}-day ceiling, yet is STILL PUBLISHED in signals.json — the age-out demotion did not take effect`);
@@ -492,13 +501,28 @@ async function main() {
     const impliedHist = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
     let pinned = 0;
     let discriminating = 0;
+    let ageAxisFailures = 0;
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
         const at = Date.parse(c.publishedAt);
         if (!Number.isFinite(at)) { fail(`${pid}: ${c.key} has an unparseable publishedAt (${c.publishedAt})`); continue; }
+        /* TWO INDEPENDENT AXES, AND THEIR DISAGREEMENT IS THE INFORMATIVE PART. `expected` is
+           PINNED to round on purpose — it is the ratchet that catches a silent drift toward
+           floor. `byBuilder` is DERIVED from whatever rule refresh-signals.js currently declares.
+           Agreement between them is only worth something because they come from different
+           places; when they part, which one the artefact follows says whether the rule changed
+           or the artefact is stale, and neither check could tell those apart alone. */
         const expected = Math.round((emittedAt - at) / 864e5);
-        if (c.ageDays !== expected) {
-          fail(`${pid}: ${c.key} emits ageDays ${c.ageDays}, but publishedAt ${c.publishedAt} against signals.updated ${signals.updated} gives ${expected} — publisher and verifier disagree on the definition of age`);
+        const byBuilder = DEMOTION_RULE ? DEMOTION_RULE.age(emittedAt - at) : null;
+        const pinOk = c.ageDays === expected;
+        const builderOk = byBuilder === null || c.ageDays === byBuilder;
+        if (!pinOk || !builderOk) {
+          ageAxisFailures++;
+          fail(!pinOk && builderOk
+            ? `${pid}: ${c.key} RULE CHANGE — the artefact emits ageDays ${c.ageDays}, which reproduces under the rule refresh-signals.js now declares (${DEMOTION_RULE.key} gives ${byBuilder}) but NOT under this gate's pinned round (${expected}). The artefact follows the new rule and the pin asserts the superseded one; align them deliberately and do not relax the pin to make this pass`
+            : pinOk && !builderOk
+            ? `${pid}: ${c.key} STALE ARTEFACT — the artefact emits ageDays ${c.ageDays}, which reproduces under round, but refresh-signals.js now declares ${DEMOTION_RULE.key} which gives ${byBuilder}. signals.json was built by a rule the builder no longer contains and must be rebuilt before its ages mean anything`
+            : `${pid}: ${c.key} emits ageDays ${c.ageDays}, but publishedAt ${c.publishedAt} against signals.updated ${signals.updated} gives ${expected} — publisher and verifier disagree on the definition of age`);
         }
         const band = bandOf(c.ageDays);
         if (c.freshness !== band) {
@@ -515,7 +539,14 @@ async function main() {
     } else if (JSON.stringify(coverageHist) !== JSON.stringify(impliedHist)) {
       fail(`coverage.currency.freshness ${JSON.stringify(coverageHist)} does not match the histogram implied by the emitted per-link ages ${JSON.stringify(impliedHist)}`);
     } else if (pinned) {
-      ok(`emitted ages pinned  ${pinned} link(s) reproduce both ageDays and freshness from publishedAt against signals.updated, and the coverage histogram matches`);
+      /* The agreement claim is CONDITIONAL ON AGREEMENT. Printed unconditionally it appeared
+         beside its own STALE ARTEFACT failures on the very battery that introduced it — a green
+         sentence about two axes concurring, in a run where they had just been shown to differ. */
+      ok(ageAxisFailures === 0 && DEMOTION_RULE
+        ? `emitted ages pinned  ${pinned} link(s) reproduce both ageDays and freshness from publishedAt against signals.updated, and the coverage histogram matches [two independent axes agree: this gate's pinned round, and the ${DEMOTION_RULE.key} rule read out of refresh-signals.js]`
+        : ageAxisFailures === 0
+        ? `emitted ages pinned  ${pinned} link(s) reproduce ageDays and freshness against this gate's PINNED round, and the coverage histogram matches — but the builder's own rule is UNREADABLE, so the second axis was unavailable and this is ONE measurement, not two agreeing`
+        : `emitted ages: the freshness histogram matches the emitted per-link ages, but ${ageAxisFailures} of ${pinned} link(s) FAILED the age axes above — this line reports the histogram only and asserts nothing about rounding`);
     } else {
       ok('emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
       inertAxes.push('emitted-age pin');
