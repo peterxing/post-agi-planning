@@ -122,6 +122,20 @@ function parseXDate(raw) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+/* The X evidence ledger stores a human-readable DAY ("22 Jun 2026"), not an instant. That
+ * day materialises as midnight UTC, so a naive instant comparison passes any article
+ * published later on the SAME day — even though the post's true time is unknown and the
+ * ordering therefore UNDEMONSTRABLE. Treating an unknowable ordering as a pass is fail-open,
+ * so a day-precision origin is cleared only by a strictly LATER day. When the ledger does
+ * carry a time the instant is demonstrable and is used as-is.
+ */
+function originBar(raw) {
+  const at = parseXDate(raw);
+  if (!at) return null;
+  const dayPrecision = !/\d:\d/.test(String(raw));
+  return { at, dayPrecision, bar: dayPrecision ? at.getTime() + 864e5 - 1 : at.getTime() };
+}
+
 async function main() {
   const root = __dirname;
   const predictions = JSON.parse(fs.readFileSync(path.join(root, 'predictions.json'), 'utf8'));
@@ -248,6 +262,7 @@ async function main() {
   const buckets = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
   const demoted = new Set();
   const ageing = [];
+  const originChecked = { total: 0, dayPrecision: 0, thinnestDays: null };
   const published = signals.currency || {};
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
@@ -281,11 +296,27 @@ async function main() {
       else buckets['>1yr']++;
 
       const originRaw = embeds[pid] && (embeds[pid].postedAt || embeds[pid].date);
-      const origin = parseXDate(originRaw);
-      if (origin && new Date(s.publishedAt) <= origin) {
-        fail(`${pid}: ${entry.source} (${s.publishedAt.slice(0, 10)}) is not newer than its X origin evidence (${originRaw}) — it cannot refresh evidence older than itself`);
+      const origin = originBar(originRaw);
+      if (!origin) {
+        // An unpairable origin must never read as a pass: that is the shape that let a
+        // missing field silently disable a guard everywhere else in this pipeline.
+        fail(`${pid}: ${entry.source} is published but its X origin date could not be resolved (${JSON.stringify(originRaw)}) — the refresh relation is unverifiable, so it fails closed`);
+      } else {
+        originChecked.total++;
+        if (origin.dayPrecision) originChecked.dayPrecision++;
+        const marginDays = (Date.parse(s.publishedAt) - origin.at.getTime()) / 864e5;
+        if (originChecked.thinnestDays == null || marginDays < originChecked.thinnestDays) {
+          originChecked.thinnestDays = marginDays;
+        }
+        if (Date.parse(s.publishedAt) <= origin.bar) {
+          fail(`${pid}: ${entry.source} (${s.publishedAt.slice(0, 10)}) is not newer than its X origin evidence (${originRaw})${origin.dayPrecision ? ' — a day-precision origin is cleared only by a strictly later day, because same-day ordering is undemonstrable' : ''} — it cannot refresh evidence older than itself`);
+        }
       }
     }
+  }
+
+  if (originChecked.total) {
+    ok(`refresh relation enforced  ${originChecked.total} published link(s) postdate the X evidence they refresh; ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
   }
 
   /* ---- EMITTED AGE PIN ----------------------------------------------------------------
