@@ -43,6 +43,20 @@ const EXCLUDED_HOSTS = new Set(['arxiv.org', 'biorxiv.org', 'medrxiv.org', 'ssrn
 /* Exit 75 = DEFERRED, the same non-failure "did not publish, changed nothing" status the
    pipeline interlock already uses. An infrastructure fault blocks publication WITHOUT ever
    being recorded as an evidence-integrity event. */
+/* EXIT 76 = INSTRUMENT. A crash is not an evidence fault and it is not a deferral. The old
+   handler was `main().catch(err => { console.error(err); process.exit(1); })`, which is both
+   halves of the defect this file keeps finding: it exits 1, the EVIDENCE code, so an
+   instrument failure is indistinguishable by status from a real integrity finding — and
+   because `problems`/`notes` are buffered and flushed at the END of main(), it discarded
+   EVERY measurement taken before the throw. Measured on a fixture with an unparseable
+   publishedAt: the age pin correctly detected and reported the bad date, then a later line
+   threw, and the entire run emitted 12 lines of stack trace and NOTHING ELSE. A correct
+   finding was made and destroyed by the reporting path. Remedy differs from every other
+   code here — not "fix the evidence", not "re-run later", but "fix the instrument" — so by
+   the remedy criterion it gets its own status, and the accumulated findings are flushed
+   first because a run that measured something must never report as though it measured
+   nothing. */
+const EXIT_INSTRUMENT = 76;
 const EXIT_INFRASTRUCTURE = 75;
 /* Exit 70 = PASSED BUT INERT. Every check below can be true over an empty input set, and a
    check over an empty set reports the same green as a check that passed. Yesterday those
@@ -645,9 +659,20 @@ async function main() {
        60.501/61.001d — silent, {ceil>=}, {round>=,ceil>=}, {round>=,floor>=,ceil>,ceil>=},
        {5 of 6}, silent — so the window is [59.0d, 61.0d] and both endpoints are measured. */
     let nextWindow = null;
+    let unparseableDates = 0;
     for (const [pid, list] of Object.entries(published)) {
       for (const c of list) {
-        const exact = (emittedAt - Date.parse(c.publishedAt)) / 864e5;
+        /* NaN IS A CONSTANT, AND IT FALLS ON THE PASSING SIDE OF EVERY COMPARISON BELOW. An
+           unparseable publishedAt makes `exact` NaN; `NaN > ceiling` and `NaN >= ceiling` are
+           both false, so all six rules report KEEP, `demote.length` is 0, and the row reads as
+           comfortably fresh and rule-insensitive — the strongest green this pass can emit — on
+           the one input where nothing was measured at all. The band-edge test degrades the same
+           way, since `Math.abs(NaN - x) < 0.5` is false. The pin at the top of this section does
+           catch the same input, but this loop must not depend on a neighbour for its own
+           population, and the excluded rows are counted and stated rather than skipped. */
+        const pubAt = Date.parse(c.publishedAt);
+        if (!Number.isFinite(pubAt)) { unparseableDates++; continue; }
+        const exact = (emittedAt - pubAt) / 864e5;
         const edge = [14, 30, 90, 365].find(e => Math.abs(exact - (e + 0.5)) < 0.5);
         if (edge !== undefined) {
           bandEdge++;
@@ -669,9 +694,8 @@ async function main() {
         } else if (!demote.length) {
           /* Not yet sensitive. The window opens when the FIRST rule in the space flips, which
              is the minimum over RULE_OFFSETS — never the neighbour of the declared rule. */
-          const at = Date.parse(c.publishedAt);
           const opens = Object.entries(RULE_OFFSETS)
-            .map(([key, off]) => ({ key, when: at + (MAX_AGE_DAYS + off) * 864e5 }))
+            .map(([key, off]) => ({ key, when: pubAt + (MAX_AGE_DAYS + off) * 864e5 }))
             .sort((a, b) => a.when - b.when)[0];
           if (!nextWindow || opens.when < nextWindow.when) nextWindow = { ...opens, pid, key: c.key, rule: opens.key };
         }
@@ -680,8 +704,8 @@ async function main() {
     /* State the population even when nothing fired: a silent advisory is indistinguishable from
        one that never ran, which is the defect this file keeps finding elsewhere. */
     if (pinned) {
-      ok(`boundary sweep  ${pinned} published link(s) checked — ${bandEdge} within 12h of a freshness band edge, ${ceilingSensitive} where the demotion rule itself decides publication at the ${MAX_AGE_DAYS}d ceiling`);
-      if (!ceilingSensitive && nextWindow) {
+      ok(`boundary sweep  ${pinned} published link(s) checked — ${bandEdge} within 12h of a freshness band edge, ${ceilingSensitive} where the demotion rule itself decides publication at the ${MAX_AGE_DAYS}d ceiling${unparseableDates ? `, ${unparseableDates} EXCLUDED for an unparseable publishedAt and therefore NOT swept` : ''}`);
+      if (!ceilingSensitive && nextWindow && Number.isFinite(nextWindow.when)) {
         ok(`  ...next ceiling-sensitivity window opens ${new Date(nextWindow.when).toISOString()} on ${nextWindow.pid}/${nextWindow.key}, driven by ${nextWindow.rule} — the EXTREMUM of the ${Object.keys(RULE_OFFSETS).length}-rule space, derived from RULE_OFFSETS rather than computed by hand`);
       }
     }
@@ -884,4 +908,15 @@ async function main() {
   console.log('\nverify:currency PASS');
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch(err => {
+  if (problems.length) {
+    console.error('\nFINDINGS RECORDED BEFORE THE INSTRUMENT FAILED (these are real and must not be discarded):');
+    problems.forEach(p => console.error(`  - ${p}`));
+  }
+  if (notes.length) console.error(`\n${notes.length} check(s) had already passed before the failure; the run is INCOMPLETE and none of its counts are final.`);
+  console.error('\nINSTRUMENT FAULT — verify-currency.js threw before completing. This is NOT an evidence');
+  console.error('  fault and NOT a deferral: re-running will reproduce it. DISCARD EVERY FIGURE FROM THIS');
+  console.error('  RUN, including any that looks right, and fix the instrument.');
+  console.error(err && err.stack ? err.stack : err);
+  process.exit(EXIT_INSTRUMENT);
+});
