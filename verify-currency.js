@@ -30,10 +30,17 @@ const path = require('path');
 const { fetchArticle, extractArticle, quotePresent, registrableHost, detectBotChallenge, normalizeForQuote } = require('./news-evidence');
 
 const OFFLINE = process.argv.includes('--offline');
-/* Must read the SAME environment variable as refresh-signals.js. If the writer demoted at one
-   ceiling and the verifier judged at another, the two would disagree about what is publishable
-   and the consistency assertions below would fire on a correct tree. */
-const MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
+/* The OPERATOR of the demotion predicate is read from refresh-signals.js at L360 so it cannot drift
+   silently. The OPERAND used to be read from this environment variable instead, which made builder
+   and checker agree BY CONSTRUCTION rather than BY MEASUREMENT: both resolved the same mutable var
+   independently, so a checker judging at 90 while the artefact was built at 60 passed with no
+   divergence reported, and an artefact claiming any ceiling at all went unread. Reaching for the
+   operator while inheriting the operand leaves half a predicate unverified in a check that reads as
+   fully derived. The env value is now kept ONLY as the thing to disagree with; the ceiling that is
+   judged against is the one the builder RECORDED IN THE ARTEFACT, because that is the operand that
+   actually governed publication. Resolved in main() at ARTEFACT CEILING, once signals.json is read. */
+const ENV_MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
+let MAX_AGE_DAYS = ENV_MAX_AGE_DAYS;
 /* Refresh a reference BEFORE it expires, not after. Re-reviewing at 45 days means the
    replacement is sourced while the existing link is still valid, so a prediction never passes
    through a window with no current reference at all. */
@@ -215,6 +222,42 @@ async function main() {
   const predictions = JSON.parse(fs.readFileSync(path.join(root, 'predictions.json'), 'utf8'));
   const signals = JSON.parse(fs.readFileSync(path.join(root, 'signals.json'), 'utf8'));
   const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
+
+  // ---- ARTEFACT CEILING ----------------------------------------------------------------
+  /* refresh-signals.js L2627 records the ceiling it actually used. Judge against THAT, and treat
+     any disagreement with the environment as a finding rather than resolving it silently. Absence
+     REFUSES rather than defaulting to 60: a default in this slot is indistinguishable from a
+     recorded value, which is the whole defect. Absence is legitimate only when the currency layer
+     published nothing, because then no age governed anything and there is nothing to judge. */
+  const publishedCurrency = Object.values(signals.currency || {}).reduce((n, l) => n + (l || []).length, 0);
+  const emittedCeiling = signals.coverage && signals.coverage.currency
+    ? signals.coverage.currency.maxAgeDays
+    : undefined;
+  if (emittedCeiling === null) {
+    // refresh-signals.js writes null here when Number(env) produced NaN, so the builder compared
+    // every age against NaN — which is false for all of them, demoting nothing, ever. That is a
+    // silently INERT ceiling, not a missing field, and the two must not report the same way.
+    fail('coverage.currency.maxAgeDays is null — the FINGERPRINT OF A NaN CEILING: refresh-signals.js '
+      + 'read a malformed CURRENCY_MAX_AGE_DAYS, so every age comparison was false and NOTHING WAS EVER '
+      + 'DEMOTED. The published set cannot be trusted to respect any ceiling. Fix the environment, not this file.');
+  } else if (typeof emittedCeiling === 'number' && Number.isFinite(emittedCeiling)) {
+    MAX_AGE_DAYS = emittedCeiling;
+    if (emittedCeiling !== ENV_MAX_AGE_DAYS) {
+      fail(`BUILDER/CHECKER CEILING DIVERGENCE: the artefact records maxAgeDays ${emittedCeiling}, but this `
+        + `run's environment derives ${ENV_MAX_AGE_DAYS}. The artefact's value is what governed publication and is `
+        + 'what every age below is judged against; the divergence is reported rather than resolved, because a '
+        + 'checker that silently adopts either number agrees with the builder by construction instead of measurement.');
+    } else {
+      ok(`ceiling read from the ARTEFACT  coverage.currency.maxAgeDays = ${emittedCeiling}d, and this run's `
+        + 'environment independently derives the same value — agreement MEASURED, not inherited');
+    }
+  } else if (publishedCurrency > 0) {
+    fail(`coverage.currency.maxAgeDays is ${JSON.stringify(emittedCeiling)}, which is not a number, yet `
+      + `${publishedCurrency} currency link(s) are published — the ceiling that governed them cannot be read, so `
+      + 'no age assertion below can be trusted. This run refuses to substitute a default for a recorded value.');
+  } else {
+    ok('no currency links are published, so no ceiling governed anything and none is required');
+  }
 
   // ---- the universe of valid prediction ids -------------------------------------------
   const ids = new Set();
