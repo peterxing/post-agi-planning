@@ -108,10 +108,20 @@ async function fetchArticleVerified(url, attempts = 4) {
       if (GONE_STATUS.has(res.status)) {
         return { ok: false, failure: { kind: 'gone', terminal: true, detail: reason }, attempts: i };
       }
-      /* ENOTFOUND is NXDOMAIN: the host does not exist. EAI_AGAIN is a DNS server that did not
-         answer — transient, and deliberately not matched here. */
-      if (!res.status && /\bENOTFOUND\b/.test(reason)) {
-        return { ok: false, failure: { kind: 'dns', terminal: true, detail: `host does not resolve — ${reason}` }, attempts: i };
+      /* Key on the STRUCTURED libuv code, not on the prose. ENOTFOUND is NXDOMAIN — the host
+         does not exist. EAI_AGAIN is a DNS server that did not answer, which is transient and
+         must stay deferrable: treating it as terminal would hard-fail a live article over a
+         DNS blip, which is the false-accusation direction and worse than deferring.
+
+         The message regex survives only for a failure that carries no code at all, and when it
+         fires it STAMPS the detail to say so, because a message-derived classification is
+         weaker evidence than a code-derived one and must never be mistaken for it. */
+      const code = res.code || '';
+      if (code === 'ENOTFOUND') {
+        return { ok: false, failure: { kind: 'dns', terminal: true, detail: `host does not resolve (${code}) — ${reason}` }, attempts: i };
+      }
+      if (!code && !res.status && /\bENOTFOUND\b/.test(reason)) {
+        return { ok: false, failure: { kind: 'dns', terminal: true, detail: `host does not resolve — ${reason} [classified from message text; no structured error code was present]` }, attempts: i };
       }
       last = { kind: 'http', detail: reason };
       await new Promise(r => setTimeout(r, 700 * i));

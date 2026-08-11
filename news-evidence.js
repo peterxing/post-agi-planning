@@ -337,13 +337,18 @@ function requestOnce(url) {
           truncated: aborted,
         });
       });
-      response.on('error', error => resolve({ ok: false, reason: error.message }));
+      response.on('error', error => resolve({ ok: false, reason: error.message, code: error.code }));
     });
     request.on('timeout', () => {
       request.destroy();
-      resolve({ ok: false, reason: `timeout after ${FETCH_TIMEOUT_MS}ms` });
+      resolve({ ok: false, reason: `timeout after ${FETCH_TIMEOUT_MS}ms`, code: 'ETIMEDOUT' });
     });
-    request.on('error', error => resolve({ ok: false, reason: error.message }));
+    /* Carry the STRUCTURED code, not just the message. A caller that needs to tell "this host
+       does not exist" from "this host did not answer" was previously forced to pattern-match
+       the message text, which keys the decision to the message format rather than to the
+       failure. libuv codes (ENOTFOUND, EAI_AGAIN, ECONNRESET, ETIMEDOUT) are stable and
+       locale-invariant; the prose around them is neither guaranteed to be. */
+    request.on('error', error => resolve({ ok: false, reason: error.message, code: error.code }));
     request.end();
   });
 }
@@ -362,7 +367,7 @@ async function fetchArticle(url) {
       return { ok: false, finalUrl: current, redirects, reason: `rejected source: ${gate.reason}` };
     }
     const response = await requestOnce(current);
-    if (!response.ok) return { ok: false, finalUrl: current, redirects, reason: response.reason };
+    if (!response.ok) return { ok: false, finalUrl: current, redirects, reason: response.reason, code: response.code };
     const status = Number(response.status);
     if (status >= 300 && status < 400 && response.headers.location) {
       const next = new URL(response.headers.location, current).toString();
