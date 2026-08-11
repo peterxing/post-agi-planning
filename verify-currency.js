@@ -324,6 +324,57 @@ async function main() {
     ok(`refresh relation enforced  ${originChecked.total} ledger entr${originChecked.total === 1 ? 'y' : 'ies'} within the ceiling postdate the X evidence they refresh (${originChecked.published} of them live-published); ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
   }
 
+  /* ---- PUBLISHED SET MUST BE A SUBSET OF THE REVIEWED LEDGER ---------------------------
+   * Every check above walks the LEDGER and asks whether each reviewed entry reached
+   * signals.json. That is one direction only. Nothing asked the converse: whether every
+   * link the site actually publishes traces back to a reviewed entry at all.
+   *
+   * The gap is the exact failure this whole layer exists to prevent. A currency object
+   * present in signals.json but absent from the ledger — through a publisher bug, a stale
+   * emission, or a hand edit — carries a URL, headline, author and quote that no review
+   * ever approved, and it renders on the page as evidence. Measured before this block
+   * existed: an invented link with a fabricated URL, headline and quote passed
+   * verify:currency, verify:matcher, verify:coverage, verify:peter, verify:external and
+   * verify:news, all exit 0, none naming it. Counts did not catch it because it changes
+   * no count the gates assert, and the card-count gates simply expected one more card and
+   * found one more card.
+   *
+   * Key presence alone is not enough either: a known key with an altered URL or quote is
+   * the same fabrication wearing a reviewed name. So the emitted fields are pinned to the
+   * ledger values field by field.
+   */
+  {
+    const PINNED_FIELDS = ['url', 'publisher', 'publisherHost', 'author', 'headline', 'publishedAt', 'sourceQuality', 'quote'];
+    let traced = 0;
+    for (const [pid, list] of Object.entries(published)) {
+      for (const c of list) {
+        const ledger = sources[c.key];
+        if (!ledger) {
+          fail(`${pid}: published currency link ${JSON.stringify(c.key)} (${c.url}) has NO entry in the reviewed ledger — it is unreviewed evidence on the live page`);
+          continue;
+        }
+        const mapped = (mappings[pid] || []).some(e => e.source === c.key);
+        if (!mapped) {
+          fail(`${pid}: published currency link ${c.key} exists in the ledger but is NOT mapped to this prediction — it was never reviewed as evidence for ${pid}`);
+          continue;
+        }
+        traced++;
+        for (const f of PINNED_FIELDS) {
+          if (ledger[f] === undefined) continue;
+          if (collapse(c[f]) !== collapse(ledger[f])) {
+            fail(`${pid}: published currency link ${c.key} emits ${f} ${JSON.stringify(c[f])}, but the reviewed ledger holds ${JSON.stringify(ledger[f])} — the published evidence does not match what was reviewed`);
+          }
+        }
+      }
+    }
+    const publishedCount = Object.values(published).reduce((n, l) => n + l.length, 0);
+    if (publishedCount) {
+      ok(`published set traced to the ledger  ${traced} of ${publishedCount} published link(s) resolve to a reviewed, correctly-mapped ledger entry with ${PINNED_FIELDS.length} fields byte-equal — an unreviewed or altered link cannot reach the page`);
+    } else {
+      ok('published-set trace is INERT on this run: signals.json publishes no currency links, so this check establishes nothing about fabrication');
+    }
+  }
+
   /* ---- EMITTED AGE PIN ----------------------------------------------------------------
    * Everything above RECOMPUTES age from the ledger and compares outcomes. That makes this
    * gate a second implementation rather than an independent check: signals.json emits
