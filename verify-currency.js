@@ -262,7 +262,7 @@ async function main() {
   const buckets = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };
   const demoted = new Set();
   const ageing = [];
-  const originChecked = { total: 0, dayPrecision: 0, thinnestDays: null };
+  const originChecked = { total: 0, published: 0, dayPrecision: 0, thinnestDays: null };
   const published = signals.currency || {};
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
@@ -303,6 +303,7 @@ async function main() {
         fail(`${pid}: ${entry.source} is published but its X origin date could not be resolved (${JSON.stringify(originRaw)}) — the refresh relation is unverifiable, so it fails closed`);
       } else {
         originChecked.total++;
+        if (livePublished) originChecked.published++;
         if (origin.dayPrecision) originChecked.dayPrecision++;
         const marginDays = (Date.parse(s.publishedAt) - origin.at.getTime()) / 864e5;
         if (originChecked.thinnestDays == null || marginDays < originChecked.thinnestDays) {
@@ -316,7 +317,11 @@ async function main() {
   }
 
   if (originChecked.total) {
-    ok(`refresh relation enforced  ${originChecked.total} published link(s) postdate the X evidence they refresh; ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
+    /* Count what is actually measured. This loop walks the LEDGER, so an entry within the
+       ceiling is checked whether or not it reached signals.json; calling that total
+       "published" made the line read "11 published link(s)" on a run where zero were
+       published. The noun must match the number it is attached to. */
+    ok(`refresh relation enforced  ${originChecked.total} ledger entr${originChecked.total === 1 ? 'y' : 'ies'} within the ceiling postdate the X evidence they refresh (${originChecked.published} of them live-published); ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
   }
 
   /* ---- EMITTED AGE PIN ----------------------------------------------------------------
@@ -363,6 +368,8 @@ async function main() {
       fail(`coverage.currency.freshness ${JSON.stringify(coverageHist)} does not match the histogram implied by the emitted per-link ages ${JSON.stringify(impliedHist)}`);
     } else if (pinned) {
       ok(`emitted ages pinned  ${pinned} link(s) reproduce both ageDays and freshness from publishedAt against signals.updated, and the coverage histogram matches`);
+    } else {
+      ok('emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
     }
     /* A pin that both candidate definitions satisfy proves nothing on that run. Say so,
        rather than letting a vacuous pass read as a discriminating one. */
