@@ -212,6 +212,18 @@ const advisories = [];
 function fail(msg) { problems.push(msg); }
 function ok(msg) { notes.push(msg); }
 function advise(msg) { advisories.push(msg); }
+/* Announcing an axis as inert and REGISTERING it were two statements a caller had to remember
+   to make together, and the drift between them is one-directional and silent: an announcement
+   with no registration is a skip that can still exit 0, while a registration with no
+   announcement is an exit code nobody can explain. That is precisely how AGE JUDGEMENTS NOT
+   PERFORMED — the skip that suppresses the demotion sweep — ended up the only inertness
+   declaration in this file with no axis behind it, and it stayed that way while five siblings
+   three lines away did it correctly. A convention that five call sites follow and one does not
+   is not a convention, it is a defect waiting for the sixth author. They are one act, so they
+   are one call: the axis cannot be registered without saying so, and saying so cannot fail to
+   move the exit status. Note the channel too — an inert axis is BY DEFINITION not a pass, so
+   this never routes through ok(). */
+function inert(axis, msg) { advisories.push(msg); inertAxes.push(axis); }
 
 function collapse(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
 
@@ -698,10 +710,26 @@ async function main() {
   if (ceilingSkipped) {
     /* Declared, not silent. A ceiling this run refused cannot judge an age, but a skip that
        prints nothing is indistinguishable from a population that had nothing to flag — the
-       vacuous green this file has been bitten by before. Report the count and the reason. */
-    ok(`AGE JUDGEMENTS NOT PERFORMED  ${ceilingSkipped} ledger entr(ies) were NOT judged for age, because the `
+       vacuous green this file has been bitten by before. Report the count and the reason.
+
+       IT WAS REPORTED THROUGH ok() AND CARRIED "This is a SKIP, not a pass." IN ITS OWN BODY —
+       a line printed under a green label and then denying, in prose, the channel that carried
+       it. That is verbatim the defect advise() was built for eleven hundred lines above, and
+       the sentence was the evidence: if the channel had carried the meaning it would have been
+       unnecessary. Fixing the instance and not sweeping the class is what left it here.
+
+       The channel was the smaller half. This was the ONLY inertness declaration in this file
+       that did not register an inert axis. Three others do — refresh relation (below),
+       emitted-age pin, live re-verification — so each of those can only reach EXIT_INERT. This
+       one could reach 0. It is also the one that matters most: skipping the sweep suppresses
+       the demotion verdict AND the "within the ceiling but MISSING from signals.json" guard,
+       which is the Friday-critical pair. A run that judged no ages must not be readable as a
+       verified currency layer, and that must be true of the exit code rather than of whoever
+       is reading the log. Registering the axis makes the refusal mechanical. */
+    inert(`age judgement (recorded ceiling refused — ${ceilingSkipped} ledger entr(ies) unjudged)`,
+      `AGE JUDGEMENTS NOT PERFORMED  ${ceilingSkipped} ledger entr(ies) were NOT judged for age, because the `
       + 'recorded ceiling was refused above and this run will not fall back to the environment value it just '
-      + 'rejected. Nothing below asserts that any link is within or past a ceiling. This is a SKIP, not a pass.');
+      + 'rejected. No age, demotion, or MISSING-from-signals assertion below covers them.');
   }
 
   if (originChecked.total) {
@@ -715,8 +743,8 @@ async function main() {
        file and the same commit — the instance was fixed and the class was not swept. A
        bare `if (count)` emits NOTHING at zero, so the run is silent about a check that did
        not run, and silence is indistinguishable from a check that ran and held. */
-    ok('refresh relation is INERT on this run: no ledger entry is within the ceiling, so nothing was tested about currency postdating its X origin');
-    inertAxes.push('refresh relation');
+    inert('refresh relation',
+      'refresh relation is INERT on this run: no ledger entry is within the ceiling, so nothing was tested about currency postdating its X origin');
   }
 
   /* ---- PUBLISHED SET MUST BE A SUBSET OF THE REVIEWED LEDGER ---------------------------
@@ -821,8 +849,8 @@ async function main() {
         ok(`  ...trace complete over the fields that exist: ${absentBoth} pinned field(s) are absent from both sides and therefore carry nothing to the page; no emitted value went uncompared`);
       }
     } else {
-      ok('published-set trace is INERT on this run: signals.json publishes no currency links, so this check establishes nothing about fabrication');
-      inertAxes.push('fabrication trace');
+      inert('fabrication trace',
+        'published-set trace is INERT on this run: signals.json publishes no currency links, so this check establishes nothing about fabrication');
     }
   }
 
@@ -904,8 +932,8 @@ async function main() {
         ? `emitted ages pinned  ${pinned} link(s) reproduce ageDays and freshness against this gate's PINNED round, and the coverage histogram matches — but the builder's own rule is UNREADABLE, so the second axis was unavailable and this is ONE measurement, not two agreeing`
         : `emitted ages: the freshness histogram matches the emitted per-link ages, but ${ageAxisFailures} of ${pinned} link(s) FAILED the age axes above — this line reports the histogram only and asserts nothing about rounding`);
     } else {
-      ok('emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
-      inertAxes.push('emitted-age pin');
+      inert('emitted-age pin',
+        'emitted-age pin had NO published links to check on this run — it is INERT here and establishes nothing about rounding; a green chain does not mean this pin held');
     }
     /* A pin that a candidate definition also satisfies proves nothing against THAT definition.
        The claim is refused while ANY alternative is at zero, and the blind one is named — a
@@ -1004,8 +1032,8 @@ async function main() {
   let liveFetched = 0;
   let liveSkippedDemoted = 0;
   if (OFFLINE) {
-    ok('live re-verification is INERT: --offline skipped every fetch, so this run establishes NOTHING about headline, quote or date drift and is not valid for publish');
-    inertAxes.push('live re-verification (--offline)');
+    inert('live re-verification (--offline)',
+      'live re-verification is INERT: --offline skipped every fetch, so this run establishes NOTHING about headline, quote or date drift and is not valid for publish');
   } else {
     for (const [key, s] of Object.entries(sources)) {
       /* A demoted source is not published, so its live state cannot affect a reader. Fetching
@@ -1097,8 +1125,8 @@ async function main() {
     if (liveFetched) {
       ok(`live re-verification covered ${liveFetched} of ${totalSources} source(s) — ${liveSkippedDemoted} skipped as demoted (absent from signals.json) — headline, verbatim quote and publication date were re-read from the live article for every covered source [NUMERATOR = reviewed ledger sources RE-FETCHED this run; DENOMINATOR = the reviewed ledger, which demotion never shrinks. Compare the NUMERATOR only, and never against a signals.json ROW count]`);
     } else {
-      ok(`live re-verification is INERT on this run: 0 of ${totalSources} source(s) were fetched (${liveSkippedDemoted} demoted, none published), so a green result here establishes NOTHING about drift — no live article was read`);
-      inertAxes.push('live re-verification');
+      inert('live re-verification',
+        `live re-verification is INERT on this run: 0 of ${totalSources} source(s) were fetched (${liveSkippedDemoted} demoted, none published), so a green result here establishes NOTHING about drift — no live article was read`);
     }
   }
 
