@@ -731,6 +731,44 @@ async function main() {
       + 'recorded ceiling was refused above and this run will not fall back to the environment value it just '
       + 'rejected. No age, demotion, or MISSING-from-signals assertion below covers them.');
   }
+
+  /* THE ANCHOR MUST BE THE ARTEFACT, NOT THE SCHEDULER.
+     Two instruments comparing published counts across a demotion have to agree on WHICH BUILD
+     they are describing, and the obvious anchor — the scheduler's next-run instant — is the
+     wrong one. A schedule is CONFIGURATION: "enabled", "daily", "nextRunAt" are three
+     statements of intent with no counterparty, and reading them confirms only that someone
+     asked for a build. Measured against this repository's own history, 17 rebuilds of
+     signals.json across 21 days landed at 00-13h UTC with the mass at 02-05h, and ZERO in the
+     20:00-23:59Z band that the current schedule nominates — so the configured instant is a
+     LOWER BOUND on the rebuild, not the rebuild. An instant is not an event.
+     signals.updated is the opposite kind of fact: it is the artefact stating when it was
+     built, it is fail-guarded where it is parsed, and it is PINNED by the emitted-age axis
+     below, which reproduces every published link's ageDays from its publishedAt against this
+     exact field. It cannot be advanced without failing that axis. So it is both self-reported
+     and cross-checked, which is precisely what nextRunAt is not.
+     This line exists so that two instruments can anchor to the same self-verifying field and
+     read the same answer, instead of each predicting the same instant correctly and describing
+     different builds. */
+  if (CEILING_USABLE && DEMOTION_RULE) {
+    const builtAt = Date.parse(signals.updated);
+    if (!Number.isFinite(builtAt)) {
+      fail('signals.updated is not a parseable timestamp, so the artefact cannot say when it was built and no demotion comparison can be anchored to it');
+    } else {
+      let crossAt = null;
+      let crossKey = null;
+      for (const [key, s] of Object.entries(sources)) {
+        const pub = Date.parse(s.publishedAt);
+        if (!Number.isFinite(pub)) continue;
+        const cross = pub + (MAX_AGE_DAYS + DEMOTION_RULE.offset) * 864e5;
+        if (crossAt === null || cross < crossAt) { crossAt = cross; crossKey = key; }
+      }
+      if (crossAt !== null) {
+        const iso = t => new Date(t).toISOString().replace('.000Z', 'Z');
+        const dh = (builtAt - crossAt) / 36e5;
+        ok(`ARTEFACT ANCHOR  signals.json states it was BUILT at ${iso(builtAt)}. The earliest demotion crossing in the reviewed ledger is ${iso(crossAt)} (${crossKey}), derived from the builder's ${DEMOTION_RULE.key} rule. This artefact was built ${dh >= 0 ? `${dh.toFixed(2)}h AFTER` : `${(-dh).toFixed(2)}h BEFORE`} that crossing, so a published count read from it ${dh >= 0 ? 'CAN' : 'CANNOT'} reflect the demotion. ANCHOR ANY CROSS-INSTRUMENT COMPARISON TO THIS FIELD RATHER THAN TO A SCHEDULER'S nextRunAt — the schedule is configuration with no counterparty and its instant is only a LOWER BOUND on the rebuild, while this field is stated by the artefact and pinned by the emitted-age axis below`);
+      }
+    }
+  }
 
   if (originChecked.total) {
     /* Count what is actually measured. This loop walks the LEDGER, so an entry within the
