@@ -40,7 +40,16 @@ const OFFLINE = process.argv.includes('--offline');
    judged against is the one the builder RECORDED IN THE ARTEFACT, because that is the operand that
    actually governed publication. Resolved in main() at ARTEFACT CEILING, once signals.json is read. */
 const ENV_MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
+/* Seeded from the environment so the value is defined before signals.json is read, and OVERWRITTEN
+   in every branch of ARTEFACT CEILING — including the branches that refuse. It used to be assigned
+   only in the numeric branch, so a run that declared the recorded ceiling unreadable went on to
+   judge every age against the environment number it had just refused: artefact null with env 0
+   produced the NaN fingerprint AND 11 findings reading "past the 0-day ceiling, yet is STILL
+   PUBLISHED". Fail-closed and correct in verdict, but eleven of its findings were computed against
+   an operand the same run rejected. CEILING_USABLE is what the age checks read, so a refused
+   ceiling SKIPS them and SAYS SO, rather than judging with a fallback or falling silently vacuous. */
 let MAX_AGE_DAYS = ENV_MAX_AGE_DAYS;
+let CEILING_USABLE = false;
 /* Refresh a reference BEFORE it expires, not after. Re-reviewing at 45 days means the
    replacement is sourced while the existing link is still valid, so a prediction never passes
    through a window with no current reference at all. */
@@ -222,6 +231,25 @@ async function main() {
   const predictions = JSON.parse(fs.readFileSync(path.join(root, 'predictions.json'), 'utf8'));
   const signals = JSON.parse(fs.readFileSync(path.join(root, 'signals.json'), 'utf8'));
   const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
+  const floors = JSON.parse(fs.readFileSync(path.join(root, 'evidence-floors.json'), 'utf8'));
+
+  // ---- REGISTERED CEILING ---------------------------------------------------------------
+  /* The artefact says what governed publication; the environment says what this machine thinks
+     today. BOTH resolve from CURRENCY_MAX_AGE_DAYS, so comparing them is a tripwire for a config
+     changed in one place and BLIND TO ONE CHANGED IN THE PLACE IT IS ACTUALLY CHANGED — a deploy
+     edit moves both, and the run then prints "agreement MEASURED, not inherited" over a ceiling
+     that is wrong by thirty days. Measured: artefact 90 with env 90 exits 70 with no finding.
+     Nothing in that pair says what the ceiling is SUPPOSED to be. This does. It lives in the file
+     that has no automatic writers, so only a reviewed manual edit can move it, which is exactly
+     what the other two terms lack. The ARTEFACT remains the value judged against, because it is
+     what actually governed publication; the registration governs whether that was legitimate. */
+  const registeredCeiling = floors.currencyMaxAgeDays;
+  if (!Number.isInteger(registeredCeiling)) {
+    fail('evidence-floors.json does not record an integer currencyMaxAgeDays, so no term in this run states '
+      + 'what the ceiling is SUPPOSED to be. The artefact and the environment both resolve from '
+      + 'CURRENCY_MAX_AGE_DAYS and agree with each other at any value. This run refuses to proceed on a '
+      + 'comparison in which every operand can be moved by the change being checked for.');
+  }
 
   // ---- ARTEFACT CEILING ----------------------------------------------------------------
   /* refresh-signals.js L2627 records the ceiling it actually used. Judge against THAT, and treat
@@ -237,21 +265,37 @@ async function main() {
     // refresh-signals.js writes null here when Number(env) produced NaN, so the builder compared
     // every age against NaN — which is false for all of them, demoting nothing, ever. That is a
     // silently INERT ceiling, not a missing field, and the two must not report the same way.
+    MAX_AGE_DAYS = NaN;
     fail('coverage.currency.maxAgeDays is null — the FINGERPRINT OF A NaN CEILING: refresh-signals.js '
       + 'read a malformed CURRENCY_MAX_AGE_DAYS, so every age comparison was false and NOTHING WAS EVER '
       + 'DEMOTED. The published set cannot be trusted to respect any ceiling. Fix the environment, not this file.');
   } else if (typeof emittedCeiling === 'number' && Number.isFinite(emittedCeiling)) {
     MAX_AGE_DAYS = emittedCeiling;
+    CEILING_USABLE = true;
     if (emittedCeiling !== ENV_MAX_AGE_DAYS) {
       fail(`BUILDER/CHECKER CEILING DIVERGENCE: the artefact records maxAgeDays ${emittedCeiling}, but this `
         + `run's environment derives ${ENV_MAX_AGE_DAYS}. The artefact's value is what governed publication and is `
         + 'what every age below is judged against; the divergence is reported rather than resolved, because a '
         + 'checker that silently adopts either number agrees with the builder by construction instead of measurement.');
-    } else {
-      ok(`ceiling read from the ARTEFACT  coverage.currency.maxAgeDays = ${emittedCeiling}d, and this run's `
-        + 'environment independently derives the same value — agreement MEASURED, not inherited');
+    }
+    /* Checked independently of the environment comparison above, because the two failures are
+       different: a DIVERGENCE means one of two copies moved, an UNREGISTERED ceiling means the
+       value itself was never approved — and the second is invisible to the first whenever a
+       deploy edit moves both copies together, which is the normal shape of the real mutation. */
+    if (Number.isInteger(registeredCeiling) && emittedCeiling !== registeredCeiling) {
+      fail(`UNREGISTERED CEILING: the artefact records maxAgeDays ${emittedCeiling}, but the REGISTERED ceiling in `
+        + `evidence-floors.json is ${registeredCeiling} (this run's environment derives ${ENV_MAX_AGE_DAYS}). `
+        + 'Agreement between the artefact and the environment proves only that one config value was read twice — a '
+        + 'single deploy-config edit moves both. The published set was governed by a ceiling nobody registered. If '
+        + 'the change was intended, register it in evidence-floors.json in the same reviewed change.');
+    } else if (Number.isInteger(registeredCeiling) && emittedCeiling === ENV_MAX_AGE_DAYS) {
+      ok(`ceiling agrees on THREE terms  artefact coverage.currency.maxAgeDays = ${emittedCeiling}d, this run's `
+        + `environment derives ${ENV_MAX_AGE_DAYS}d, and evidence-floors.json REGISTERS ${registeredCeiling}d. `
+        + 'The first two both resolve from CURRENCY_MAX_AGE_DAYS and would agree with each other at any value; the '
+        + 'registration is the only term the checked change cannot move, so it is the one carrying this line');
     }
   } else if (publishedCurrency > 0) {
+    MAX_AGE_DAYS = NaN;
     fail(`coverage.currency.maxAgeDays is ${JSON.stringify(emittedCeiling)}, which is not a number, yet `
       + `${publishedCurrency} currency link(s) are published — the ceiling that governed them cannot be read, so `
       + 'no age assertion below can be trusted. This run refuses to substitute a default for a recorded value.');
@@ -271,7 +315,6 @@ async function main() {
      IS 8 IN BOTH, so the count I transmit and the count it is compared against would agree while the
      underlying states differ completely — a demotion that happened versus a source that vanished.
      Age demotion NEVER shrinks the ledger, so this floor cannot fire on a correct demotion. */
-  const floors = JSON.parse(fs.readFileSync(path.join(root, 'evidence-floors.json'), 'utf8'));
   const ledgerFloor = floors.currencyLedgerSources;
   const ledgerSize = Object.keys(CURRENCY_SOURCES).length;
   if (!Number.isInteger(ledgerFloor)) {
@@ -479,6 +522,7 @@ async function main() {
   if (!DEMOTION_RULE) {
     fail('the currency demotion rule is UNREADABLE in refresh-signals.js (age rounding and/or the ceiling comparison did not match) — expiry instants cannot be derived from the rule that actually demotes, and the age decisions below fall back to an ASSUMED round/> and must not be read as agreeing with the builder');
   }
+  let ceilingSkipped = 0;
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
       const s = sources[entry.source];
@@ -486,6 +530,11 @@ async function main() {
       const elapsed = now - new Date(s.publishedAt);
       const age = DEMOTION_RULE ? DEMOTION_RULE.age(elapsed) : Math.round(elapsed / 864e5);
       const livePublished = (published[pid] || []).some(c => c.key === entry.source);
+
+      if (!CEILING_USABLE) {
+        ceilingSkipped++;
+        continue;
+      }
 
       if (DEMOTION_RULE ? DEMOTION_RULE.past(age) : age > MAX_AGE_DAYS) {
         demoted.add(entry.source);
@@ -537,6 +586,15 @@ async function main() {
         }
       }
     }
+  }
+
+  if (ceilingSkipped) {
+    /* Declared, not silent. A ceiling this run refused cannot judge an age, but a skip that
+       prints nothing is indistinguishable from a population that had nothing to flag — the
+       vacuous green this file has been bitten by before. Report the count and the reason. */
+    ok(`AGE JUDGEMENTS NOT PERFORMED  ${ceilingSkipped} ledger entr(ies) were NOT judged for age, because the `
+      + 'recorded ceiling was refused above and this run will not fall back to the environment value it just '
+      + 'rejected. Nothing below asserts that any link is within or past a ceiling. This is a SKIP, not a pass.');
   }
 
   if (originChecked.total) {

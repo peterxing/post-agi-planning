@@ -5,5 +5,7 @@
   "peterAuthored": 11,
   "maxReuse": 9,
   "currencyLedgerSourcesNote": "Count of reviewed sources in the currency ledger. AGE DEMOTION NEVER SHRINKS THE LEDGER — it removes a link from signals.json while the reviewed source remains — so this floor is unaffected by a demotion and a drop below it means a source was DELETED, not demoted. Every currency consistency check compares the page against the ledger, so when both shrink together they agree and the loss is invisible; this is the only pin on the reference itself. Raising it is a reviewed manual edit.",
-  "currencyLedgerSources": 9
+  "currencyLedgerSources": 9,
+  "currencyMaxAgeDaysNote": "EXACT REGISTRATION, not a ratchet. The ceiling the currency demotion is SUPPOSED to use. The artefact records what governed publication and the environment records what a machine thinks today, but BOTH resolve from CURRENCY_MAX_AGE_DAYS, so a single deploy-config edit moves both and they agree at the wrong value. This is the only term in the comparison that the thing under test cannot rewrite, because changing it is a reviewed manual edit made here. Friday's numerator exists only because 60 demotes one source; at 90 nothing demotes and every gate still passes.",
+  "currencyMaxAgeDays": 60
 }
