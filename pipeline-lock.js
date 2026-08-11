@@ -45,18 +45,42 @@ const LOCK_FILE = process.env.PAP_LOCK_FILE
   ? path.resolve(process.env.PAP_LOCK_FILE)
   : path.join(__dirname, '.pipeline.lock');
 const LOCK_BASENAME = '.pipeline.lock';
-const STALE_MINUTES = Math.max(5, Number(process.env.PAP_LOCK_STALE_MINUTES) || 90);
+/**
+ * These three constants are the only thing standing between a live run and a false reclaim, so an
+ * environment variable may make each one SAFER but never weaker — the same monotonic rule
+ * evidence-floors.json applies to the coverage gates. Before this, `PAP_LOCK_ORPHAN_MINUTES=2` was
+ * accepted and silently cut the orphan grace to below the measured silence between heartbeats,
+ * which would have made false reclaims of healthy runs routine rather than hypothetical. A gate
+ * that prose forbids but code permits is not a gate.
+ */
+const STALE_FLOOR_MINUTES = 90;
+const ORPHAN_FLOOR_MINUTES = 30;
+const HEARTBEAT_CEILING_MS = 60000;
+const STALE_MINUTES = Math.max(STALE_FLOOR_MINUTES, Number(process.env.PAP_LOCK_STALE_MINUTES) || 0);
 /**
  * A session lock records the pid of the shell that acquired it. That supervisor is only a hint —
- * in fresh-shell-per-command environments it exits immediately even though the run continues — so a
- * dead supervisor alone never reclaims a lock. It reclaims only once the lock has ALSO been idle
- * this long, which a live run can never be: every guarded tool heartbeats on entry and then again
- * every HEARTBEAT_MS while it works. Without this rule a run that dies mid-flight (agent crash, app
- * restart, reboot, cancelled task) wedges the whole tree for the full STALE_MINUTES ceiling, and
- * every scheduled run in that window burns its --wait and then defers. That is the stall this fixes.
+ * in fresh-shell-per-command environments it exits within seconds even though the run continues —
+ * so a dead supervisor alone never reclaims a lock. It reclaims only once the lock has ALSO been
+ * idle past this grace.
+ *
+ * Read the heartbeat honestly. It advances when a guarded tool ENTERS, and then every HEARTBEAT_MS
+ * only for as long as that tool's own process stays alive. Nothing beats BETWEEN guarded tools, so
+ * a perfectly healthy run falls silent for however long it spends thinking, fetching, or running
+ * unguarded work. Measured on live runs on 2026-08-11: bursts of beats 16-22 seconds apart while
+ * tools ran back to back (faster than this timer can fire, because each beat is a fresh tool
+ * entry), separated by silences of 5.4 minutes on the scheduled run and 11.3 minutes under an
+ * independent monitor. HEARTBEAT AGE IS THEREFORE AN ACTIVITY SIGNAL, NOT A LIVENESS SIGNAL, and
+ * this grace is sized against the worst observed silence — not against HEARTBEAT_MS.
+ *
+ * The grace is deliberately generous because the two failure modes are not symmetric. Waiting too
+ * long merely delays a deferral. Reclaiming too early declares a LIVE run dead, and the reclaim
+ * path then instructs the next run to treat that interrupted work as a missed run, corrupting run
+ * continuity rather than just being noisy. Without the rule at all, a run that dies mid-flight
+ * (agent crash, app restart, reboot, cancelled task) wedges the tree for the full STALE_MINUTES
+ * ceiling while every scheduled run in that window burns its --wait and then defers.
  */
-const ORPHAN_MINUTES = Math.max(2, Number(process.env.PAP_LOCK_ORPHAN_MINUTES) || 15);
-const HEARTBEAT_MS = Math.max(5000, Number(process.env.PAP_LOCK_HEARTBEAT_MS) || 60000);
+const ORPHAN_MINUTES = Math.max(ORPHAN_FLOOR_MINUTES, Number(process.env.PAP_LOCK_ORPHAN_MINUTES) || 0);
+const HEARTBEAT_MS = Math.max(5000, Math.min(HEARTBEAT_CEILING_MS, Number(process.env.PAP_LOCK_HEARTBEAT_MS) || HEARTBEAT_CEILING_MS));
 const POLL_MS = Math.max(200, Number(process.env.PAP_LOCK_POLL_MS) || 5000);
 const EXIT_DEFERRED = 75;
 const PURPOSES = new Set(['scheduled-forecast', 'scheduled-author', 'interactive', 'manual']);
@@ -273,10 +297,12 @@ function guard(activity, { purpose = null, waitSeconds = null } = {}) {
   if (result.reclaimed) {
     console.error(`[pipeline-lock] Continuing after reclaiming a stale lock: ${result.reclaimed}`);
   }
-  // Keep proving this run is alive while it works. A guarded tool can run for many minutes
-  // (archive hydration, the verifier suite, deploy), and without this the lock would look idle even
-  // though the run is healthy. unref'd so it can never hold the process open — the point of this
-  // change is to remove hangs, not add one.
+  // Keep proving this run is alive while THIS TOOL works. A single guarded tool can run for many
+  // minutes (archive hydration, the verifier suite, deploy), and without this the lock would look
+  // idle even though the tool is healthy. It cannot cover the gaps BETWEEN guarded tools, because
+  // this timer dies with the process that owns it — which is why ORPHAN_MINUTES is sized against
+  // observed inter-tool silence rather than against HEARTBEAT_MS. unref'd so it can never hold the
+  // process open — the point of this is to remove hangs, not add one.
   const beat = setInterval(() => touchHeartbeat({ owner }), HEARTBEAT_MS);
   if (typeof beat.unref === 'function') beat.unref();
   if (result.state === 'acquired' && !sessionOwner) {
@@ -365,6 +391,8 @@ module.exports = {
   LOCK_BASENAME,
   EXIT_DEFERRED,
   STALE_MINUTES,
+  ORPHAN_MINUTES,
+  HEARTBEAT_MS,
   acquire,
   release,
   guard,

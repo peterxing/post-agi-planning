@@ -197,15 +197,18 @@ check(!fs.existsSync(SANDBOX), 'a normal exit must release the implicit lock');
   // but nothing can prove the holder is gone, so every later run defers until the 90 minute ceiling
   // expires. That is the stall this guards against: a dead acquiring shell plus an idle lock must be
   // reclaimed after the much shorter orphan grace, while a FRESH lock is still strictly respected.
-  const orphanEnv = { PAP_LOCK_ORPHAN_MINUTES: '2' };
+  // Fixtures are derived from the SHIPPED ORPHAN_MINUTES rather than from a test-only override, so
+  // this exercises the constant production actually runs and keeps tracking it if it ever changes.
+  const { ORPHAN_MINUTES } = require('./pipeline-lock');
+  const orphanAgeMs = Math.ceil(ORPHAN_MINUTES * 2) * 60000;
   const sessionOrphan = {
     owner: 'scheduled-forecast-crashed', purpose: 'scheduled-forecast', mode: 'session',
     pid: null, supervisorPid: 999996, activity: null, host: os.hostname(),
-    startedAt: new Date(Date.now() - 30 * 60000).toISOString(),
-    heartbeatAt: new Date(Date.now() - 30 * 60000).toISOString(),
+    startedAt: new Date(Date.now() - orphanAgeMs).toISOString(),
+    heartbeatAt: new Date(Date.now() - orphanAgeMs).toISOString(),
   };
   fs.writeFileSync(SANDBOX, JSON.stringify(sessionOrphan));
-  result = runLock(['acquire', '--owner=after-session-crash', '--purpose=scheduled-forecast'], orphanEnv);
+  result = runLock(['acquire', '--owner=after-session-crash', '--purpose=scheduled-forecast']);
   check(result.status === 0, 'a crashed session run must not wedge the tree until the stale ceiling');
   check(/reclaimed stale lock/i.test(`${result.stdout}${result.stderr}`),
     'session orphan reclamation must be reported loudly');
@@ -214,13 +217,43 @@ check(!fs.existsSync(SANDBOX), 'a normal exit must release the implicit lock');
   // The same orphan rule must NOT steal a lock that is still being heartbeated by a live run.
   fs.writeFileSync(SANDBOX, JSON.stringify({
     ...sessionOrphan, owner: 'scheduled-forecast-live',
-    startedAt: new Date(Date.now() - 30 * 60000).toISOString(),
+    startedAt: new Date(Date.now() - orphanAgeMs).toISOString(),
     heartbeatAt: new Date().toISOString(),
   }));
-  result = runLock(['acquire', '--owner=other-actor', '--purpose=scheduled-forecast'], orphanEnv);
+  result = runLock(['acquire', '--owner=other-actor', '--purpose=scheduled-forecast']);
   check(result.status === 75, 'a heartbeating session holder must still defer other actors, not be reclaimed');
   clearSandbox();
   notes.push('session orphan: crashed run reclaimed after the orphan grace, live run still respected');
+
+  // 7c. The orphan grace must be sized for the silence between guarded tools, and must never be
+  // narrowed by configuration. The heartbeat only advances when a guarded tool ENTERS and then
+  // every HEARTBEAT_MS while that tool's own process lives, so a healthy run is routinely silent for
+  // minutes at a time — 5.4 and 11.3 minute silences were both measured on live runs on 2026-08-11.
+  // A grace at or below that silence would reclaim LIVE runs, which is strictly worse than
+  // deferring: the reclaim tells the next run to treat the interrupted work as a missed run.
+  check(ORPHAN_MINUTES >= 30,
+    `the orphan grace must stay well clear of the worst observed inter-tool silence (is ${ORPHAN_MINUTES}m)`);
+  const narrowAttempt = spawnSync(process.execPath,
+    ['-e', "process.stdout.write(String(require('./pipeline-lock').ORPHAN_MINUTES))"],
+    { cwd: DIR, encoding: 'utf8', env: { ...process.env, PAP_LOCK_ORPHAN_MINUTES: '2' } });
+  check(Number(narrowAttempt.stdout) >= 30,
+    `PAP_LOCK_ORPHAN_MINUTES must never narrow the grace (got ${narrowAttempt.stdout})`);
+  const staleAttempt = spawnSync(process.execPath,
+    ['-e', "process.stdout.write(String(require('./pipeline-lock').STALE_MINUTES))"],
+    { cwd: DIR, encoding: 'utf8', env: { ...process.env, PAP_LOCK_STALE_MINUTES: '5' } });
+  check(Number(staleAttempt.stdout) >= 90,
+    `PAP_LOCK_STALE_MINUTES must never narrow the ceiling (got ${staleAttempt.stdout})`);
+  const beatAttempt = spawnSync(process.execPath,
+    ['-e', "process.stdout.write(String(require('./pipeline-lock').HEARTBEAT_MS))"],
+    { cwd: DIR, encoding: 'utf8', env: { ...process.env, PAP_LOCK_HEARTBEAT_MS: '600000' } });
+  check(Number(beatAttempt.stdout) <= 60000,
+    `PAP_LOCK_HEARTBEAT_MS must never slow the cadence (got ${beatAttempt.stdout})`);
+  const widened = spawnSync(process.execPath,
+    ['-e', "process.stdout.write(String(require('./pipeline-lock').ORPHAN_MINUTES))"],
+    { cwd: DIR, encoding: 'utf8', env: { ...process.env, PAP_LOCK_ORPHAN_MINUTES: '120' } });
+  check(Number(widened.stdout) === 120,
+    `PAP_LOCK_ORPHAN_MINUTES must still be able to WIDEN the grace (got ${widened.stdout})`);
+  notes.push(`lock safety constants ratchet one way only: orphan ${ORPHAN_MINUTES}m floor, stale 90m floor, heartbeat 60s ceiling`);
 
   // 8. The live server must refuse the lock file.
   const base = process.argv[2];
