@@ -1,11 +1,11 @@
 {
-  "updated": "2026-08-03",
+  "updated": "2026-08-12",
   "note": "Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.",
   "peterTotal": 30,
   "peterAuthored": 11,
   "maxReuse": 9,
   "currencyLedgerSourcesNote": "Count of reviewed sources in the currency ledger. AGE DEMOTION NEVER SHRINKS THE LEDGER — it removes a link from signals.json while the reviewed source remains — so this floor is unaffected by a demotion and a drop below it means a source was DELETED, not demoted. Every currency consistency check compares the page against the ledger, so when both shrink together they agree and the loss is invisible; this is the only pin on the reference itself. Raising it is a reviewed manual edit.",
-  "currencyLedgerSources": 9,
+  "currencyLedgerSources": 10,
   "currencyMaxAgeDaysNote": "EXACT REGISTRATION, not a ratchet. The ceiling the currency demotion is SUPPOSED to use. The artefact records what governed publication and the environment records what a machine thinks today, but BOTH resolve from CURRENCY_MAX_AGE_DAYS, so a single deploy-config edit moves both and they agree at the wrong value. This is the only term in the comparison that the thing under test cannot rewrite. That is a checked property, not an assumed one: refresh-signals.js DOES write this file on a ratchet advance, and it used to emit only its own three fields and delete every registration beside them, so this value would have vanished at the next Peter improvement. That writer now preserves what it does not own and asserts its own key set. Friday's numerator exists only because 60 demotes one source; at 90 nothing demotes and every gate still passes.",
   "currencyMaxAgeDays": 60,
   "currencyLedgerIdentitiesNote": "EXACT REGISTRATION of WHICH nine sources are the reviewed ones, not how many. currencyLedgerSources is a CARDINALITY and a cardinality cannot see a SUBSTITUTION: replace a reviewed source with a never-reviewed one, hold the count at 9 and hold publishedAt constant, and every page/ledger check agrees because both sides moved together — measured, exit 70 with zero findings, while the traceability line still reported 11 of 11 links resolving to a reviewed entry. Host is not fine enough either: these 9 sources span only 5 hosts, so 3 spectrum.ieee.org entries are mutually substitutable under a host assertion. Identity is the finest grain there is, which is why the regress stops at the full URL. publishedAt is registered with it because Friday BUILDS ITS PREDICTED DEMOTION INSTANT FROM IT (publishedAt + ceiling), and the only other check on that field compares the page against the ledger, which one coherent edit moves together. Changing any entry is a reviewed manual edit made here.",
@@ -37,6 +37,10 @@
     "currency:intracortical-bci-home-use": {
       "url": "https://www.nature.com/articles/s41591-026-04414-6",
       "publishedAt": "2026-06-15T00:00:00.000Z"
+    },
+    "currency:nih-bci-home-speech-3800-hours": {
+      "url": "https://www.nih.gov/news-events/nih-research-matters/brain-computer-device-helps-man-speak",
+      "publishedAt": "2026-07-14T00:00:00.000Z"
     },
     "currency:ny-datacenter-moratorium": {
       "url": "https://spectrum.ieee.org/new-york-data-center-ban",

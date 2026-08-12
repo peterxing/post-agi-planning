@@ -589,9 +589,23 @@ function extractArticle(html, finalUrl) {
   // A byline is optional. Publishers frequently put a social profile URL in
   // article:author; a URL is not a byline, so drop it rather than publish it.
   const author = /^(https?:\/\/|@|www\.)/i.test(authorRaw) || authorRaw.length > 120 ? '' : authorRaw;
+  // A MODIFICATION time is not a PUBLICATION date, and article:modified_time was previously
+  // read as one. That is a freshness fabrication in both directions. Measured on
+  // nih.gov/news-events/nih-research-matters/brain-computer-device-helps-man-speak, which
+  // carries og:updated_time and article:modified_time (2026-07-30T14:49:47-04:00) and NO
+  // published tag at all, while the page shows readers "July 14, 2026": the old chain
+  // recorded the article 16 days fresher than it is, and every later publisher edit would
+  // silently re-start its 60-day currency clock without one word of new reporting. It also
+  // guarantees drift, since the value changes whenever the page is touched, so the verifier
+  // would eventually report a date change on an article that never changed. Removing it lets
+  // such a page fall through to renderedPublishedDate(), which reads the date the publisher
+  // actually shows readers. Verified safe against the whole reviewed ledger before removal:
+  // 6 of 9 sources resolve via article:published_time and 3 already fall through, so NO
+  // captured date moves. A page with no honest publication date now fails closed, which is
+  // the correct outcome for a layer whose entire job is stating how current something is.
   const publishedRaw = metaContent(html, [
     'article:published_time', 'datePublished', 'date', 'parsely-pub-date',
-    'article:modified_time', 'og:published_time', 'pubdate', 'publish-date', 'DC.date.issued',
+    'og:published_time', 'pubdate', 'publish-date', 'DC.date.issued',
   ])
     || collapse(ld.datePublished || ld.dateCreated || '')
     || collapse((html.match(/<time[^>]+datetime\s*=\s*["']([^"']+)["']/i) || [])[1] || '')

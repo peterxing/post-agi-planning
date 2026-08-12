@@ -12,7 +12,7 @@
     "postDate": "15 Jul 2026",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Frontier agents reliably complete multi-hour computer workflows with human review, while monitored research systems can persist for days or weeks and require trajectory-level safeguards",
     "basis": "Peter reposted this report of a research agent left running autonomously for eight days with an outer loop rewriting its own harness, a days-scale autonomous-research leading indicator for the persistence clause of this milestone rather than confirmation of the underlying result or of reliable multi-hour workflows at scale."
@@ -30,7 +30,7 @@
     "postDate": "01 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Humanoid robots move onto live factory lines in the thousands, but remain far short of general physical labor",
     "basis": "Humanoid mass deployment directly supports the live-factory-line series."
   },
@@ -47,7 +47,7 @@
     "postDate": "15 May 2026",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Peer-reviewed intracortical BCI home use surpasses 3,800 hours for speech and cursor control in one participant; Neuralink PRIME-family trials remain safety-first",
     "basis": "Peter's authored link to a Neuralink participant creating art through the implant is a concrete functional BCI leading indicator; it does not establish the separate 3,800-hour BrainGate result or pivotal efficacy."
@@ -65,7 +65,7 @@
     "postDate": "08 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
     "basis": "SpaceX AI-satellite compute-power specifications directly support orbital-compute demonstration."
   },
@@ -82,7 +82,7 @@
     "postDate": "14 Oct 2020",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Most production software is written end-to-end by AI, with humans specifying goals and reviewing exceptions",
     "basis": "Peter's authored post explicitly identifies AI code generation as a leading indicator for end-to-end software production; it does not claim the forecast threshold has already been reached."
@@ -100,7 +100,7 @@
     "postDate": "9 Jul 2026",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-30",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Full automation of AI R&D remains incomplete, but coding agents materially accelerate model research",
     "basis": "Peter reposted this independent evaluation-organisation result showing a frontier model leading the Coding Agent Index inside a production coding-agent harness, and the same evaluator being used for pre-release model evaluation. It is a measured coding-agent capability leading indicator for the second clause of this milestone; it does not demonstrate that AI R&D is automated, and the first clause is deliberately left unclaimed."
@@ -118,7 +118,7 @@
     "postDate": "28 Oct 2020",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Human-level AI becomes operationally disruptive across every major industry, forcing simultaneous business-model and workforce redesign",
     "basis": "Peter's authored post directly links AI to accelerating human-labor decline, a defensible leading indicator for cross-industry workforce redesign rather than proof of economy-wide disruption."
@@ -136,7 +136,7 @@
     "postDate": "17 May 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Most white-collar professions in leading economies revolve around supervising and coordinating AI agents",
     "basis": "AI agents performing PhD-level finance work directly supports white-collar agent supervision."
   },
@@ -153,7 +153,7 @@
     "postDate": "12 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Superintelligence emerges and recursive self-improvement begins on my ungoverned 2028–2030 branch",
     "basis": "The post explicitly discusses superintelligence and recursive self-improvement."
   },
@@ -170,7 +170,7 @@
     "postDate": "09 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "scenario",
     "predictionText": "The US and China enter serious negotiations on frontier-compute declarations, inspections and training limits",
     "basis": "Peter reposted this summary of AI 2040's Plan A, in which the US and China strike a 2029 deal to avoid a reckless race and make AI R&D slower and more transparent; it is a precise scenario source for these negotiations, not evidence that such talks have begun."
@@ -188,7 +188,7 @@
     "postDate": "09 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Managed branch: the US and China temporarily pause the largest frontier training runs while preserving inference",
     "basis": "The post explicitly describes a 2029 US-China deal slowing AI R&D."
   },
@@ -205,7 +205,7 @@
     "postDate": "19 Jun 2026",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-30",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Erosion of labor-tax revenue makes AI dividends, sovereign AI stakes and compute rents mainstream policy",
     "basis": "Peter reposted this observation from a long-standing exponential-technology author that UBI-style transfers and government equity stakes in AI labs both entered mainstream debate inside a single quarter, a leading indicator for the AI-dividend and sovereign-AI-stake instruments in this milestone. It does not evidence the labor-tax-erosion cause or compute rents, which remain unclaimed."
@@ -223,7 +223,7 @@
     "postDate": "08 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Absent a sustained slowdown, AI fully automates frontier AI R&D by 2030",
     "basis": "The post directly discusses timelines to full automation of AI R&D."
   },
@@ -240,7 +240,7 @@
     "postDate": "23 Jul 2020",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "The first drugs substantially designed by AI gain major-regulator approval",
     "basis": "Peter's authored post describes AI generating and accelerating drug candidates, an exact technical leading indicator; it does not imply that a major regulator has approved one."
@@ -258,7 +258,7 @@
     "postDate": "08 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "On the unpaused branch, fully automated AI R&D delivers roughly a 10x research speedup",
     "basis": "Reviewed reuse within the AI-R&D automation threshold series."
   },
@@ -275,7 +275,7 @@
     "postDate": "10 Nov 2019",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
     "basis": "Peter's authored post describes real port automation and worker response, a concrete physical-labor leading indicator rather than evidence that the forecast's quantitative share has been reached."
@@ -293,7 +293,7 @@
     "postDate": "02 Apr 2020",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Governments fund universal-scale biodefense, rapid vaccines and continuous pathogen monitoring",
     "basis": "Peter's authored post explicitly covers AI prediction and monitoring of infectious-disease outbreaks, a direct technical leading indicator for continuous pathogen monitoring rather than universal-scale government deployment."
@@ -311,7 +311,7 @@
     "postDate": "22 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Continuously running AI agents form a virtual workforce of at least 100 million copies",
     "basis": "The post explicitly discusses a continuously scaling AI workforce reaching billions."
   },
@@ -328,7 +328,7 @@
     "postDate": "18 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Managed branch: the strongest AIs reach top-human-expert capability across essentially every cognitive field",
     "basis": "Expert-level capability across every subject directly supports the managed top-expert milestone."
   },
@@ -345,7 +345,7 @@
     "postDate": "21 Sep 2023",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Universal high income or an AI dividend becomes a permanent institution in multiple major economies",
     "basis": "Peter's authored post explicitly connects AI abundance to universal high income, a precise scenario leading indicator rather than evidence that a permanent institution already exists."
@@ -363,7 +363,7 @@
     "postDate": "27 Apr 2017",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Human employment falls below half of working-age adults in at least one leading economy",
     "basis": "Peter's authored post directly cites a half-of-jobs robot-replacement scenario, a tightly related labor-displacement leading indicator; it does not equate jobs with the working-age employment ratio."
@@ -381,7 +381,7 @@
     "postDate": "17 Jan 2025",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "AI-driven research delivers major disease cures and abundant low-cost clean energy",
     "basis": "Peter's authored post covers an OpenAI model developed for longevity biology, a concrete AI-driven research leading indicator for the health half of this milestone; it does not establish a major cure or clean-energy abundance."
@@ -399,7 +399,7 @@
     "postDate": "06 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
     "basis": "Published model-internal-state research directly supports human-understandable interpretability."
   },
@@ -416,7 +416,7 @@
     "postDate": "16 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "At least one orbital-compute platform sustains 1 MW of disclosed electrical power with matched radiators and a named external workload for 90 days",
     "basis": "SpaceX AI-satellite GPU inference and power requirements support the orbital-compute power series."
   },
@@ -433,7 +433,7 @@
     "postDate": "2 Jul 2026",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-30",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "scenario",
     "predictionText": "AI and robots can automate essentially all economically relevant human labor",
     "basis": "Peter reposted this first-person claim from a principal building both frontier AI and humanoid robots that AI plus robots will be able to do everything and make work optional. It is a named scenario source for the full-automation endpoint of this milestone, stated as a forward-looking claim by an interested party, not a measurement or a demonstration that the capability exists."
@@ -451,7 +451,7 @@
     "postDate": "12 Jan 2022",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-07-29",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Implantable neural interfaces could support high-bandwidth, bidirectional human–AI symbiosis and sensory restoration",
     "basis": "Peter's authored post explicitly connects an implanted Neuralink interface to disability support and robot control, a functional implantable-BCI leading indicator; it does not demonstrate bidirectional sensory restoration or neural symbiosis."
@@ -469,7 +469,7 @@
     "postDate": "19 Jul 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Genuinely non-invasive neural interfaces could become a separate, lower-risk path to communication and augmentation",
     "basis": "The full observed post describes an external non-invasive thought-control BCI demonstration."
   },
@@ -486,7 +486,7 @@
     "postDate": "23 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Orbital data centres could expand into self-growing solar-powered compute networks on a proto-Dyson trajectory",
     "basis": "An AI-satellite constellation directly supports the orbital compute-network trajectory."
   },
@@ -503,7 +503,7 @@
     "postDate": "21 Jun 2026",
     "observedIn": "x-api-user-timeline",
     "reviewedAt": "2026-07-20",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "predictionText": "Civilizational energy use could climb by measurable orders of magnitude toward Kardashev-scale thresholds",
     "basis": "The post explicitly discusses climbing the Kardashev scale."
   },
@@ -520,7 +520,7 @@
     "postDate": "11 Nov 2021",
     "observedIn": "archive-verified",
     "reviewedAt": "2026-08-03",
-    "lastVerifiedAt": "2026-08-11",
+    "lastVerifiedAt": "2026-08-12",
     "evidenceType": "leading-indicator",
     "predictionText": "Ruliad research could become forecast-relevant only if it yields discriminating, testable physical predictions or engineering consequences",
     "basis": "Peter's authored post engages directly with the ruliad by name, citing Wolfram's newly published ruliad write-up from the Wolfram Physics Project and his own explanatory infographic. It is a leading indicator of the framework's development and of Peter's tracking of it, not evidence that the ruliad has yielded discriminating, testable physical predictions or engineering consequences. It supersedes the previously reviewed external Stephen Wolfram 2020 Physics Project launch status on specificity, because that status predates and does not name the ruliad, and because a defensible Peter-authored status outranks external evidence under the reviewed evidence priority."
