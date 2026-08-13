@@ -4,8 +4,32 @@ if (require.main === module) require('./pipeline-lock').guard('verify:ui');
 const { chromium } = require('playwright');
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const predictions = require('./predictions.json');
 const signals = require('./signals.json');
+
+/* REDUCED MOTION: COVERAGE, NOT PRESENCE (GC seq-129 §4, 2026-08-13).
+   The 'reduced-motion' profile below re-runs every ordinary check under reducedMotion:'reduce',
+   which proves the page RENDERS under the preference — it does not prove motion is SUPPRESSED.
+   A build that animated identically under 'reduce' passed all of those checks. Counting
+   `prefers-reduced-motion` occurrences has the same defect one level up: a block guarding 3 of 8
+   keyframes is indistinguishable from one guarding all 8.
+
+   So the keyframe list is READ OUT OF styles.css rather than restated here — a newly added
+   @keyframes is covered automatically instead of being remembered — and the assertion is made
+   against the live computed styles of every element: under 'reduce', NOTHING may animate. */
+const STYLES_PATH = path.join(__dirname, 'styles.css');
+const declaredKeyframes = [...new Set(
+  [...fs.readFileSync(STYLES_PATH, 'utf8').matchAll(/@keyframes\s+([A-Za-z0-9_-]+)/g)].map(m => m[1])
+)];
+if (declaredKeyframes.length === 0) {
+  console.error('[verify:ui] REFUSED — styles.css declares zero @keyframes. Either the stylesheet '
+    + 'moved or the parse broke; an empty keyframe list would make the reduced-motion assertion '
+    + 'vacuously true against an empty subject.');
+  process.exit(1);
+}
+const observedAnimating = new Set();
 
 const URL = process.argv[2] || 'http://127.0.0.1:8787/';
 /* A12 CLASS (GC seq-115, 2026-08-13). An expectation coerced out of a MISSING field is not an
@@ -540,6 +564,52 @@ function requestStatus(pathname) {
         JSON.stringify(figureMotion));
     }
 
+    /* The subject is EVERY element, not a remembered selector list, because the failure being
+       hunted is "a keyframe escaped its @media (prefers-reduced-motion: no-preference) block" and
+       that failure arrives on whatever element the new rule happens to target. Threshold 0.05s:
+       the global `* { animation-duration:.01ms !important }` sweep at styles.css L1827 neutralises
+       any keyframe authored OUTSIDE a no-preference block (currently `fade`) without changing its
+       computed animation-name, so name alone would report a false positive. Duration is what the
+       user experiences. */
+    const motionAudit = await page.evaluate(() => {
+      const animating = [];
+      const names = new Set();
+      for (const element of document.querySelectorAll('*')) {
+        const style = getComputedStyle(element);
+        const name = style.animationName;
+        if (!name || name === 'none') continue;
+        const longest = Math.max(...style.animationDuration.split(',').map(v => parseFloat(v) || 0));
+        name.split(',').map(part => part.trim()).forEach(part => names.add(part));
+        if (longest > 0.05) {
+          const raw = element.className;
+          animating.push({
+            tag:element.tagName.toLowerCase(),
+            cls:String(raw && raw.baseVal !== undefined ? raw.baseVal : (raw || '')).slice(0, 60),
+            name,
+            duration:style.animationDuration,
+          });
+        }
+      }
+      return { animating:animating.slice(0, 10), animatingCount:animating.length, names:[...names] };
+    });
+    motionAudit.names.forEach(name => observedAnimating.add(name));
+    const undeclared = motionAudit.names.filter(name => !declaredKeyframes.includes(name));
+    check(results, 'every animation running on the page is declared in styles.css',
+      undeclared.length === 0, JSON.stringify(undeclared));
+    if (profile.reduced) {
+      check(results, 'reduced motion leaves NO element animating, site-wide',
+        motionAudit.animatingCount === 0,
+        JSON.stringify({ count:motionAudit.animatingCount, sample:motionAudit.animating }));
+    } else {
+      /* PAIRED POSITIVE CONTROL. Without this, the assertion above is satisfied by a page that
+         animates nothing anywhere — a build that lost its motion layer entirely would report
+         reduced-motion compliance. This is the same non-empty-subject rule the DOM quantifiers
+         in this file already carry. */
+      check(results, 'normal motion DOES animate (control: the reduced-motion assertion has a subject)',
+        motionAudit.animatingCount > 0,
+        JSON.stringify({ count:motionAudit.animatingCount, names:motionAudit.names }));
+    }
+
     if (profile.mobile || profile.compactNav) {
       const menu = page.locator('#navToggle');
       await menu.click();
@@ -587,6 +657,15 @@ function requestStatus(pathname) {
     failed.forEach(result => console.log(`  FAIL ${result.label}${result.detail ? ` · ${result.detail}` : ''}`));
     await context.close();
   }
+
+  /* Reported, NOT asserted. `sim-node-response` fires only on .simulator-map.is-updating and
+     `fade` only on .fut-panel.active/.q-block/.result, so a declared keyframe can be legitimately
+     unobserved across these profiles. Asserting "every declared keyframe was seen" would fail for
+     correct code; asserting nothing would hide a keyframe that became dead. So it prints. */
+  const unobserved = declaredKeyframes.filter(name => !observedAnimating.has(name));
+  console.log(`[reduced-motion] ${declaredKeyframes.length} @keyframes declared in styles.css; `
+    + `${observedAnimating.size} observed live`
+    + (unobserved.length ? `; not exercised by these profiles: ${unobserved.join(', ')}` : ''));
 
   const restoreContext = await browser.newContext({ viewport:{ width:1280, height:900 } });
   const restorePage = await restoreContext.newPage();

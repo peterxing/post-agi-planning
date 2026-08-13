@@ -594,35 +594,13 @@ button { color: inherit; }
   border-radius: 50%;
   background: var(--cp-accent);
 }
-.forecast-lens-plot { min-height: 312px; padding: 18px 0 6px; }
-.forecast-lens-plot svg { display: block; width: 100%; height: auto; overflow: visible; }
-.lens-grid { stroke: var(--cp-border); }
-.lens-density { fill: var(--cp-surface-soft); stroke: var(--cp-border); }
-.lens-density.is-high { fill: var(--cp-accent-soft); stroke: var(--cp-accent); }
-.lens-probability {
-  fill: none;
-  stroke: var(--cp-accent);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.lens-point { fill: var(--cp-surface); stroke: var(--cp-accent); stroke-width: 2; }
-.lens-current { stroke: var(--cp-text); stroke-width: 1.5; stroke-dasharray: 4 4; }
-.lens-branch { fill: var(--cp-accent-soft); stroke: var(--cp-accent); stroke-dasharray: 5 5; }
-.lens-label,
-.lens-value {
-  fill: var(--cp-text-muted);
-  font-family: Consolas, "Courier New", Courier, monospace;
-}
-.lens-label { font-size: 10px; }
-.lens-value { font-size: 9px; }
-.forecast-lens figcaption {
-  padding-top: 14px;
-  border-top: 1px solid var(--cp-border);
-  color: var(--cp-text-muted);
-  font-size: .74rem;
-  line-height: 1.5;
-}
+/* The hero lens PLOT (.forecast-lens-plot, .lens-grid/-density/-probability/-point/-current/
+   -branch/-label/-value and .forecast-lens figcaption) was superseded by the probability
+   simulator map, which now occupies .forecast-lens. Removed 2026-08-13 after verify:ui's new
+   keyframe audit reported `lens-draw` declared and never running: measured 0 matches for all 12
+   selectors against the live DOM and 0 references to any of them in app.js/index.html, with no
+   dynamic `'lens-' +` construction, so they could not be emitted in any state. .forecast-lens,
+   .forecast-lens-head and .forecast-lens h2 remain live and are kept. */
 .probability-simulator { padding-bottom: 20px; }
 .simulator-intro {
   max-width: 610px;
@@ -1688,16 +1666,10 @@ button { color: inherit; }
   .hero-copy > *:nth-child(4) { animation-delay: .21s; }
   .hero-copy > *:nth-child(5) { animation-delay: .28s; }
   .forecast-lens { animation: observatory-enter .7s .18s both; }
-  .lens-probability {
-    stroke-dasharray: 1600;
-    stroke-dashoffset: 1600;
-    animation: lens-draw 1.1s .3s ease forwards;
-  }
   @keyframes observatory-enter {
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: none; }
   }
-  @keyframes lens-draw { to { stroke-dashoffset: 0; } }
 }
 
 @media (max-width: 1040px) {
