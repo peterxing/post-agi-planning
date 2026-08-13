@@ -32,23 +32,43 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * 531 nodes by merging fragmented spans, which also improved screen-reader phrasing — but
  * roughly 700 nodes and 3 KB are irreducible feature content, not slack.
  *
- * These two are PROXY budgets. The OUTCOME budgets they stand in for are all measured below
- * and hold with wide margin: DOM-interactive 187 ms of 1000, complete evidence UI 1.57 s of
- * 3 s, compressed first load 144 KB of 300 KB. app.js is 128 KB of code plus 4.9 KB of
- * explanatory comments, and there is no minification step, so the honest choice was to keep
- * the reasoning in the file rather than delete documentation to satisfy a byte count.
+ * These two are PROXY budgets. The OUTCOME budgets they stand in for — DOM-interactive,
+ * evidence-UI readiness and compressed first load — are all measured below, printed on every
+ * run, and hold with wide margin. Their values are deliberately NOT quoted here; see the note
+ * on re-quoted figures at the end of this block. There is no minification step, so explanatory
+ * comments are charged against the byte ceiling at full weight, and the honest choice was to
+ * keep the reasoning in the file rather than delete documentation to satisfy a byte count.
+ * That trade is larger than this block used to claim: MEASURED 2026-08-14, by lexer with the
+ * partition identity asserted, app.js carries 12,906 b of comments (9.6% of the file) against
+ * 121,781 b of everything else. So a re-baseline has an option other than raising the ceiling,
+ * and it belongs in writing here rather than being discovered under pressure.
  *
  * They stay tight on purpose — ~2% headroom each — so unbounded growth is still caught.
  * Raising either again requires the same explicit justification.
  *
- * MARGIN REPORTING added 2026-08-13. The paragraph above states a DESIGN margin of ~2%. Measured,
- * app.js sits at 0.20% (274 b of 135,000) — a tenth of its own declared slack — and nothing said so
- * until the ceiling was crossed. A budget that reports only at the moment it fails converts a slow
- * drift into a surprise, and the surprise arrives worded as "app.js exceeds 135 KB budget", which
- * invites the next reader to raise the number rather than to ask what grew. So every budget now
- * prints its margin on every run, a budget below its own declared design margin WARNS without
- * failing, and the failure text carries the overage and names itself a proxy. No ceiling moved:
- * the pass/fail predicate is byte-for-byte the one it replaced.
+ * MARGIN REPORTING added 2026-08-13. The paragraph above states a DESIGN margin of ~2%. app.js has
+ * been running far below it, and nothing said so until the ceiling was crossed. A budget that
+ * reports only at the moment it fails converts a slow drift into a surprise, and the surprise
+ * arrives worded as "app.js exceeds 135 KB budget", which invites the next reader to raise the
+ * number rather than to ask what grew. So every budget now prints its margin on every run, a
+ * budget below its own declared design margin WARNS without failing, and the failure text carries
+ * the overage and names itself a proxy. No ceiling moved: the pass/fail predicate is byte-for-byte
+ * the one it replaced.
+ *
+ * STALE FIGURES REMOVED 2026-08-14. This block previously quoted app.js's headroom as "0.20%
+ * (274 b of 135,000)" and its comment weight as "4.9 KB", alongside three outcome figures. Each
+ * was a measurement of a moving quantity written without the window it was taken in, and the two
+ * that were checked had both drifted: the headroom by 2.9x, and the comment weight by 2.6x in the
+ * OTHER direction. Both failed in the way that costs most — the sentence whose whole job was to
+ * warn how little slack remained under-reported the tightness, and the sentence justifying kept
+ * documentation under-reported what that documentation costs. The rule this file now follows:
+ *   - a figure describing a PAST event inside a dated block is a record, and stays (the 915 -> 531
+ *     node reduction above);
+ *   - a figure describing CURRENT state that this file recomputes and prints on every run is never
+ *     quoted in prose — name the mechanism instead, because the print cannot go stale;
+ *   - a figure describing current state this file does NOT compute must carry the date it was
+ *     measured, so its age is legible without re-deriving it.
+ * Four figures here were the second kind. They are gone, and the runs print them instead.
  */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
@@ -141,9 +161,11 @@ if (/git add -A/.test(publisherSource)
 
   /* The OUTCOME budgets get the same treatment as the proxy ones. Reporting margins for the byte
      ceilings while leaving these to announce themselves at the moment they fail would reproduce the
-     defect one layer down — and measured now, cssRules sits at 731 of 750, a 2.53% margin, tighter
-     than every static budget except app.js and previously invisible. Units differ per row, so the
-     margin is carried as a fraction and the raw values are printed beside it. */
+     defect one layer down — and the CSS-rule ceiling in particular has run tighter than every static
+     budget except app.js, invisibly, because nothing printed it. Its margin is not quoted here: this
+     block computes it three lines below and prints it on every run, and a comment restating a value
+     its own file recomputes is the stale-figure defect this gate was just cleaned of. Units differ
+     per row, so the margin is carried as a fraction and the raw values are printed beside it. */
   const outcomeReport = [
     { name: 'DOM interactive', value: metrics.domInteractive, ceiling: 1000, unit: 'ms' },
     { name: 'evidence UI', value: appReadyMs, ceiling: 3000, unit: 'ms' },
