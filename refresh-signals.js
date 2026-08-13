@@ -386,6 +386,10 @@ function themeScore(text, kws){
   }
   return { s, hit };
 }
+/* THE REGISTERED POPULATION, KEPT SEPARATELY FROM THE SURVIVING ONE. Published `coverage.total` and
+   the completeness gate both read this rather than PREDICTIONS.length, so the denominator is the
+   number of predictions the source file OFFERED, not the number that made it through. */
+let PREDICTION_CENSUS = null;
 function buildPredictions(){
   let years = null;
   let horizonItems = [];
@@ -491,9 +495,22 @@ function buildPredictions(){
       + `(years/events/horizon), kept ${kept.years}/${kept.events}/${kept.horizon}, `
       + `dropped ${dropped.length} — ${dropped.join('; ')}`);
   }
-  if (out.length) return out;
+  if (out.length) {
+    PREDICTION_CENSUS = { registered, kept, dropped, total: registered.events + registered.horizon };
+    return out;
+  }
   // Offline fallback: inline defaults, one matcher per year (id = YEAR-0).
-  return DEFAULT_PREDICTIONS.map(p => ({ id: p.year + '-0', year: p.year, evIndex: 0, maps: p.maps, search: p.search, phrases: p.phrases, strong: p.strong, sw: [], weak: p.weak, concepts: detectConcepts(p.maps) }));
+  const fallback = DEFAULT_PREDICTIONS.map(p => ({ id: p.year + '-0', year: p.year, evIndex: 0, maps: p.maps, search: p.search, phrases: p.phrases, strong: p.strong, sw: [], weak: p.weak, concepts: detectConcepts(p.maps) }));
+  /* The fallback is its own registered population: nothing was read, so nothing could be dropped.
+     Recording it keeps the published denominator sourced from the census in EVERY path rather than
+     from the survivor array in one path and the census in another. */
+  PREDICTION_CENSUS = {
+    registered: { years: fallback.length, events: fallback.length, horizon: 0 },
+    kept: { years: fallback.length, events: fallback.length, horizon: 0 },
+    dropped: [],
+    total: fallback.length,
+  };
+  return fallback;
 }
 
 
@@ -2415,8 +2432,24 @@ async function main(){
   if (unaccounted.length) {
     mappingIntegrityErrors.push(`predictions neither cited nor recorded as uncited: ${unaccounted.join(", ")}`);
   }
+  /* THE DENOMINATOR IS THE REGISTERED POPULATION, NOT THE SURVIVING ONE, AND THE DROP IS OBSERVED
+     DIRECTLY. Both operands of the old `accountedIds.size === PREDICTIONS.length` descend from
+     PREDICTIONS — uncited is grown by iterating it — so a dropped prediction left both sides at
+     once and the gate stayed true over a smaller world. buildPredictions() now refuses on any drop,
+     which makes this sound TODAY, but only for a reason two thousand lines upstream that this gate
+     could not see or state: soften that refusal to a warning and this silently goes vacuous again.
+     So the dependency is made local instead of assumed. `registeredTotal` is what predictions.json
+     OFFERED and `dropped.length === 0` is checked here, so the gate observes the loss itself and
+     stays correct whatever severity the upstream guard is later given. */
+  const registeredTotal = PREDICTION_CENSUS ? PREDICTION_CENSUS.total : PREDICTIONS.length;
+  const populationIntact = !!PREDICTION_CENSUS && PREDICTION_CENSUS.dropped.length === 0;
+  if (!populationIntact) {
+    mappingIntegrityErrors.push(`the forecast population lost ${PREDICTION_CENSUS ? PREDICTION_CENSUS.dropped.length : 'an unknown number of'} `
+      + 'entries between predictions.json and the matcher build, so coverage would be reported over a shrunken population');
+  }
   const coverageComplete = mappingIntegrityErrors.length === 0
-    && accountedIds.size === PREDICTIONS.length;
+    && populationIntact
+    && accountedIds.size === registeredTotal;
   const ownerTally = {};
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
@@ -2592,7 +2625,7 @@ async function main(){
   if (currencyRefusedNoOrigin.length) {
     console.error(`[refresh] currency: ${currencyRefusedNoOrigin.length} of ${currencyRegistered} registered `
       + `entr(ies) refused — their prediction carries no reviewed origin evidence for a currency link to `
-      + `refresh. Expected while ${PREDICTIONS.length - Object.keys(embeds).length} of ${PREDICTIONS.length} `
+      + `refresh. Expected while ${registeredTotal - Object.keys(embeds).length} of ${registeredTotal} `
       + `predictions are honestly uncited; reported so the ledger's reach is visible rather than implied.`);
   }
   if (currencyDemoted.length) {
@@ -2654,7 +2687,9 @@ async function main(){
     coverage: {
       cited: Object.keys(embeds).length,
       searches: Object.keys(searches).length,
-      total: PREDICTIONS.length,
+      // The REGISTERED count. A survivor count published as `total` reads as "103 that exist"
+      // when it may mean "103 that survived"; those differ exactly when something went wrong.
+      total: registeredTotal,
       complete: coverageComplete,
       uniqueSources: directUsesByPost.size,
       maxReuse: maxPostReuseObserved,
@@ -2669,7 +2704,7 @@ async function main(){
         predictions: Object.keys(currency).length,
         links: currencyLinks,
         sources: new Set(Object.values(currency).flat().map(c => c.key)).size,
-        withoutCurrency: PREDICTIONS.length - Object.keys(currency).length,
+        withoutCurrency: registeredTotal - Object.keys(currency).length,
         /* The ledger's reach, so `links: 0` is explained rather than merely observed.
            registered === refusedNoOrigin + unknownSource + demoted + links, asserted above. */
         registered: currencyRegistered,
@@ -2703,7 +2738,10 @@ async function main(){
     staleSourcesRejected,
     apiCaps,
     counts,
-    predictions: PREDICTIONS.length,
+    // `predictions` is the REGISTERED count; `datedPredictions`/`horizonItems` below are KEPT
+    // counts. In every shipping state they agree, because a drop fails the run — if they ever
+    // disagree in a captured payload, that difference is the loss.
+    predictions: registeredTotal,
     datedPredictions: datedPredictionCount,
     horizonItems: horizonPredictionCount,
     matched: Object.keys(embeds).length,
@@ -2712,7 +2750,7 @@ async function main(){
     searchFallbacks: Object.keys(searches).length,
     coverageComplete,
     directCoverageComplete: coverageComplete
-      && (Object.keys(embeds).length + Object.keys(uncited).length) === PREDICTIONS.length,
+      && (Object.keys(embeds).length + Object.keys(uncited).length) === registeredTotal,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
@@ -2771,12 +2809,14 @@ async function main(){
   };
   fs.writeFileSync(DBG, JSON.stringify(debugPayload, null, 2) + '\n');
 
-  console.error(`[refresh] Prepared direct coverage ${currentCoveredIds.size}/${PREDICTIONS.length}, using ${directUsesByPost.size} unique sources (max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
+  console.error(`[refresh] Prepared direct coverage ${currentCoveredIds.size}/${registeredTotal}, using ${directUsesByPost.size} unique sources (max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
   if (!coverageComplete) {
-    throw new Error(`direct coverage incomplete (${currentCoveredIds.size}/${PREDICTIONS.length}): ${mappingIntegrityErrors.join('; ')}`);
+    // Denominator is the REGISTERED population: this message fires precisely when the two can
+    // differ, so it is the one place that must not quote the survivor count.
+    throw new Error(`direct coverage incomplete (${currentCoveredIds.size}/${registeredTotal}): ${mappingIntegrityErrors.join('; ')}`);
   }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
-  console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${PREDICTIONS.length}).`);
+  console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${registeredTotal}).`);
   /* X RETIREMENT 2026-08-13 — the automatic ratchet WRITER is retired, not the ratchet.
      This writer only ever advanced peterTotal/peterAuthored/maxReuse, which were floors on X
      evidence and were removed from evidence-floors.json by reviewed manual edit when X was
@@ -2789,7 +2829,7 @@ async function main(){
   console.log(JSON.stringify({
     cited: Object.keys(embeds).length,
     searches: Object.keys(searches).length,
-    total: PREDICTIONS.length,
+    total: registeredTotal,
     uniqueSources: directUsesByPost.size,
     maximumUniqueMatches,
     maxReuse: maxPostReuseObserved,
