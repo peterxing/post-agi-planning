@@ -4,13 +4,18 @@
 /*
  * verify-currency.js — proves the additive currency layer end to end.
  *
- * The currency layer sits ALONGSIDE the reviewed X evidence, never in place of it. Every
- * prediction keeps exactly one reviewed direct X status; a currency link is an optional
- * second, newer, independently-verified reference. So this verifier has two jobs:
+ * The currency layer sits ALONGSIDE the reviewed direct evidence, never in place of it. A currency
+ * link is an optional second, newer, independently-verified reference. So this verifier has two jobs:
  *
  *   1. Prove every currency source is still genuinely what we said it was, live, right now.
  *   2. Prove the currency layer has not disturbed anything it is forbidden to touch —
- *      the X mappings, the Peter floors, the ratchet, or the prediction texts.
+ *      the reviewed mappings, the floors, the ratchet, or the prediction texts.
+ *
+ * X RETIREMENT 2026-08-13 — this block previously read "the reviewed X evidence" and "every
+ * prediction keeps exactly one reviewed direct X status". Both were live present-tense contracts, and
+ * the second is now false in two ways: the medium is news, and 96 of 103 predictions keep NO direct
+ * evidence at all and are recorded in the uncited channel instead. The layer itself is medium-blind —
+ * it compares dates and fetches URLs — so nothing below this line changed with the migration.
  *
  * It fails closed. A source that cannot be fetched, whose headline has been rewritten, whose
  * supporting quote has vanished, or which is older than the evidence it claims to refresh,
@@ -639,9 +644,18 @@ async function main() {
    * is a real integrity fault and still fails closed. Quote drift, headline drift and
    * fabricated sources remain exit 1; unreachable hosts and bot challenges remain exit 75.
    *
-   * Demotion is safe by construction: currency is refused unless its reviewed X origin exists
-   * and can never satisfy a Peter floor or the ratchet, so dropping one cannot reduce coverage
-   * or breach a gate. It degrades to the X-only state 95 predictions already occupy.
+   * Demotion is safe by construction: currency is refused unless the reviewed direct evidence it
+   * refreshes exists, and it can never satisfy an evidence floor or the ratchet on its own, so
+   * dropping one cannot reduce coverage or breach a gate. It degrades to the prediction's base
+   * state — its reviewed citation if it has one, the uncited channel if it does not.
+   *
+   * X RETIREMENT 2026-08-13 — this paragraph read "unless its reviewed X origin exists" and "it
+   * degrades to the X-only state 95 predictions already occupy". Both were refuted by the artefact
+   * (byEvidenceMedium {x:0, news:7}): there is no X origin left to depend on and no prediction
+   * occupies an X-only state. It mattered more than an ordinary stale comment because it is the
+   * SAFETY ARGUMENT for a live gate — the reason the demotion below is allowed to be silent — and an
+   * argument resting on a corpus that no longer exists cannot discharge that duty. The argument is
+   * restated above against what actually exists; the assertions themselves are unchanged.
    */
   const now = new Date();
   const buckets = { '<=14d': 0, '15-30d': 0, '31-90d': 0, '91-365d': 0, '>1yr': 0 };

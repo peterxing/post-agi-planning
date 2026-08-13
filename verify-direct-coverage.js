@@ -247,7 +247,10 @@ for (const predictionId of expectedIds) {
        one field over. External evidence is an X status from another account: X-medium, retired. */
     problems.push(`${predictionId}: external X evidence was retired on 2026-08-13 and must not be published`);
   } else if (signal.evidenceOwner === 'news') {
-    // News is tier 3: legitimate only where the prediction has no reviewed X evidence at all.
+    /* News is the ONLY evidence tier since 2026-08-13; it was tier 3 beneath X before that. The
+       checks below are unchanged and still reject any prediction that also carries an approval or an
+       external mapping — that is no longer "news must not displace X evidence" but "no retired X
+       evidence may be present at all", which is strictly stronger. */
     const mapping = NEWS_MAPPINGS[predictionId];
     const article = mapping && NEWS_SOURCES[mapping.source];
     if (!mapping || !article || approvals[predictionId] || EXTERNAL_MAPPINGS[predictionId]
@@ -257,7 +260,7 @@ for (const predictionId of expectedIds) {
         || signal.mappingRationale !== mapping.rationale
         || signal.reuseFamily !== mapping.reuseFamily
         || signal.evidenceType !== mapping.evidenceType) {
-      problems.push(`${predictionId}: mapping is not backed by the reviewed news ledger, or displaces X evidence`);
+      problems.push(`${predictionId}: mapping is not backed by the reviewed news ledger, or carries retired X evidence`);
     }
     if (signal.kind !== 'news'
         || signal.activityKind !== 'news'

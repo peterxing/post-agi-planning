@@ -1,18 +1,24 @@
-// refresh-signals.js — match @peterxing's newest relevant X activity to every REHOBOAM prediction,
-// and write signals.json (loaded by index.html at runtime).
+// refresh-signals.js — match every REHOBOAM prediction to a live-verified news article, and write
+// signals.json (loaded by index.html at runtime).
 //
-// RETRIEVAL (bulk timeline independent)
-//   DISCOVERY: Wayback CDX status URLs for twitter.com/x.com and peterxing/PeterXing, fully paginated
-//   and merged with private API-era history plus public signals.json history.
-//   VERIFICATION: every activity is hydrated through X's first-party tweet-result endpoint at >=600 ms
-//   spacing, then independently cross-checked through X oEmbed. The persistent corpus-of-record stays
-//   under pap-secrets and is never served, deployed or committed.
-//   OPTIONAL DIAGNOSTIC: the authenticated X API is probed when configured, but quota/auth/plan/network
-//   failures do not block archive discovery or direct-status verification.
+// X RETIREMENT 2026-08-13 — this header described a retrieval pipeline this file NO LONGER HAS:
+// Wayback CDX discovery, X first-party tweet-result hydration at >=600 ms, X oEmbed cross-checks, an
+// authored/quote/reply/repost corpus, and a Peter-first evidence priority. Every one of those clauses
+// is refuted by the file itself (zero CDX and zero X API call sites remain) and by what it publishes
+// (byPeterAuthorship {authored:0, reposted:0}; byEvidenceMedium {x:0, news:7}). It survived the
+// migration because ONE honest sentence in the block — the corpus-of-record is "never served" —
+// carried four false ones past a marker-scoped sweep. A retirement marker exempts a block; it does
+// not make the block true.
 //
-// CORPUS KINDS: authored, quote, reply and repost. Evidence priority is Peter-authored/quoted/replied,
-// then Peter-reposted, then reviewed authoritative external evidence. Automatic candidates never
-// self-approve; prediction/status pairs remain explicit in evidence-approvals.json.
+// RETRIEVAL (single tier)
+//   DISCOVERY: authoritative news publishers only. No profile feed, no archive, no X API.
+//   VERIFICATION: every candidate article is fetched live at review AND at publish time; headline,
+//   publisher, byline and date are extracted from the fetched page, an exact verbatim supporting quote
+//   must still be present, and a SHA-256 of the extracted main text is re-checked at publish.
+//   Aggregators, shorteners, press-release mills and content farms are rejected.
+//   NOTHING IS SUBSTITUTED: a prediction with no qualifying source inside the window is recorded in
+//   the uncited channel, by id, with the window that was searched — never given a weaker citation.
+//   Automatic candidates never self-approve; prediction/article pairs remain explicit and reviewed.
 //
 // MATCHING (newest valid signal first)
 //   The prediction set is loaded from predictions.json (revised DAILY from the latest news + his posts —
@@ -1934,6 +1940,9 @@ async function main(){
 
   // Build exactly one reviewed direct embed per prediction.
   const embeds = {}; const searches = {}; const chosen = {}; const uncited = {};
+  /* X RETIREMENT 2026-08-13 - refusals raised by the retired-medium branches inside the loop below.
+     mappingIntegrityErrors does not exist yet at that point, so they are collected here and merged. */
+  const retiredMediumRefusals = [];
   for (const p of PREDICTIONS) {
     const c = picks[p.id];
     if (!c) {
@@ -2018,101 +2027,25 @@ async function main(){
         };
         continue;
       }
-      let externalText = cleanText(external.text);
-      if (externalText.length > 160) externalText = externalText.slice(0, 157) + '\u2026';
-      const reuseCount = externalUsesBySource[mapping.source] || 1;
-      embeds[p.id] = {
-        id: external.statusId,
-        kind: 'external',
-        activityKind: 'external',
-        authorship: 'external',
-        evidenceOwner: 'external',
-        author: external.handle,
-        displayName: external.displayName,
-        url: external.url,
-        provenance: {
-          evidenceOwner: 'external',
-          activityKind: 'external',
-          account: external.handle,
-          displayName: external.displayName,
-          retrievedAt: external.retrievedAt,
-          sourceQuality: external.sourceQuality,
-          verifiedThrough: 'first-party-status+oembed',
-          sourceChain: ['tweet-result', 'x-oembed'],
-        },
-        recency: 'external',
-        matchMethod: 'reviewed-external',
-        matchBasis: mapping.evidenceType,
-        assignmentMode: reuseCount > 1 ? 'external-reuse' : 'unique',
-        evidenceFamily: p.evidenceFamily,
-        reuseFamily: mapping.reuseFamily,
-        evidenceType: mapping.evidenceType,
-        mappingRationale: mapping.rationale,
-        sourceQuality: external.sourceQuality,
-        reuseCount,
-        matchedConcepts: [...p.concepts],
-        matchedFacets: [mapping.evidenceType],
-        reviewed: true,
-        reviewedAt: mapping.reviewedAt,
-        date: fmtDate(new Date(external.postedAt)),
-        maps: p.maps,
-        text: externalText,
-      };
-      chosen[p.id] = `external:@${external.handle} [${mapping.evidenceType}/${embeds[p.id].assignmentMode} source=${mapping.source} reuse=${reuseCount}]`;
+      /* X RETIREMENT 2026-08-13 - REFUSED AT THE PRODUCER, NOT ONLY AT THE GATE. This branch BUILT an
+         X-medium embed: authorship 'external', an x.com url, verifiedThrough 'first-party-status+oembed'
+         and sourceChain ['tweet-result', 'x-oembed']. It was unreachable only because EXTERNAL_MAPPINGS
+         and EXTERNAL_SOURCES are empty, and its output was rejected far downstream by the evidenceOwner
+         gate. Both are properties of neighbours. Repopulate either constant and the builder runs again.
+         The construction is deleted so a reinstated X mapping fails HERE, as a reinstatement, before any
+         retired provenance is assembled. */
+      retiredMediumRefusals.push(`${p.id}: reviewed external X evidence was retired on 2026-08-13; `
+        + `EXTERNAL_MAPPINGS/EXTERNAL_SOURCES must stay empty and no X embed may be rebuilt`);
       continue;
     }
-    const pick = c.t;
-    const approval = evidenceApprovals[p.id];
-    let { created } = pick;
-    const author = approval.author;
-    const activityKind = approval.activityKind;
-    const authorship = activityKind === 'post' ? 'authored' : 'reposted';
-    let text = cleanText(approval.publicText);
-    const prevE = prevEmbeds[p.id];
-    if (text.length > 160) text = text.slice(0, 157) + '\u2026';
-    const reuseCount = postUses.get(pick.id) || 1;
-    const relationship = approval.relationship;
-    const directUrl = approval.publicUrl;
-    embeds[p.id] = {
-      id: pick.id,
-      kind: activityKind,
-      activityKind,
-      authorship,
-      evidenceOwner: 'peterxing',
-      author,
-      displayName: activityKind === 'post' ? 'Peter Xing' : author,
-      url: directUrl,
-      provenance: {
-        evidenceOwner: 'peterxing',
-        activityKind,
-        account: 'peterxing',
-        displayName: 'Peter Xing',
-        relationship,
-        activityId: approval.activityId,
-        observedIn: approval.observedIn,
-        verifiedThrough: 'archive-verified',
-        lastVerifiedAt: approval.lastVerifiedAt,
-        sourceChain: ['wayback-cdx', 'tweet-result', 'x-oembed'],
-      },
-      recency: c.tier,
-      matchMethod: c.matchMethod,
-      matchBasis: approval.evidenceType || c.facetBasis,
-      assignmentMode: reuseCount > 1 ? 'family-reuse' : 'unique',
-      evidenceFamily: p.evidenceFamily,
-      reuseCount,
-      matchedConcepts: c.conceptHits,
-      matchedFacets: [c.facetBasis],
-      evidenceType: approval.evidenceType || 'direct',
-      sourceQuality: 'peterxing-activity',
-      mappingRationale: approval.basis,
-      reviewed: true,
-      reviewedAt: approval.reviewedAt,
-      lastVerifiedAt: approval.lastVerifiedAt,
-      date: approval.postDate || fmtDate(created),
-      maps: p.maps,
-      text,
-    };
-    chosen[p.id] = `${activityKind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank}] sticky-reviewed`;
+    /* X RETIREMENT 2026-08-13 - REFUSED AT THE PRODUCER. This branch BUILT a @peterxing embed carrying
+       verifiedThrough 'archive-verified' and sourceChain ['wayback-cdx', 'tweet-result', 'x-oembed'],
+       assembled from evidence-approvals.json. It is unreachable today only because the approvals reader
+       returns {} and the X candidate pipeline yields no picks - by empty inputs, not by design. Building
+       retired provenance and relying on a gate 200 lines downstream to reject it is the same shape as
+       every other defect found this week: the property is carried by a neighbour, not by this code. */
+    retiredMediumRefusals.push(`${p.id}: reviewed @peterxing X evidence was retired on 2026-08-13; `
+      + `no archive-verified activity embed may be rebuilt`);
   }
 
   /* ---- 4. REALITY SIGNALS - REBUILT ON THE NEWS LAYER, 2026-08-13 ---------------------------------
@@ -2289,6 +2222,10 @@ async function main(){
 
   const mappingIntegrityErrors = [];
   if (!sourceFresh) mappingIntegrityErrors.push('fresh verified activity source unavailable');
+  /* The two X provenance BUILDERS were replaced by refusals inside the matching loop, which runs
+     long before this channel exists. Their refusals are carried here so a reinstated X mapping fails
+     as a NAMED retirement breach rather than only as a generic "unaccounted prediction". */
+  if (retiredMediumRefusals.length) mappingIntegrityErrors.push(...retiredMediumRefusals);
   if (invalidReuse.length) {
     mappingIntegrityErrors.push(`invalid reviewed reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
   }
@@ -2532,7 +2469,6 @@ async function main(){
       console.error(`[refresh] currency: ${emptied.length} prediction(s) lost their last current reference — ${[...new Set(emptied.map(d => d.predictionId))].join(', ')}`);
     }
   }
-  // The note must stay literally true: it may only claim an all-X corpus while one actually exists.
   /* The note must stay literally true about the CURRENT ladder, not a retired one. With the X corpus
      retired there is no preference order left to describe: there is one tier, and the honest thing to
      state alongside it is what happens to the predictions it does NOT cover. */

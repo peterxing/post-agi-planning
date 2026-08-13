@@ -1332,7 +1332,7 @@ const SIGNAL_SOURCE_LABELS = {
 function renderSignalMetadata(data){
   const newsMappings = Number(data.coverage?.byEvidenceMedium?.news)
     || Number(data.coverage?.byEvidenceOwner?.news) || 0;
-  /* The provenance stamp must stay literally true: it may name an all-X corpus only while one exists. */
+  /* The provenance stamp must stay literally true: it may name only evidence the artefact carries. */
   const sourceLabel = (SIGNAL_SOURCE_LABELS[data.source] || 'source unrecognised')
     + (newsMappings ? ` · ${newsMappings} live-verified article${newsMappings === 1 ? '' : 's'}` : '');
   const sourceStatus = data.sourceStatus || {};

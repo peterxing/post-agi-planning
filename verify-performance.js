@@ -40,13 +40,36 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  *
  * They stay tight on purpose — ~2% headroom each — so unbounded growth is still caught.
  * Raising either again requires the same explicit justification.
+ *
+ * MARGIN REPORTING added 2026-08-13. The paragraph above states a DESIGN margin of ~2%. Measured,
+ * app.js sits at 0.20% (274 b of 135,000) — a tenth of its own declared slack — and nothing said so
+ * until the ceiling was crossed. A budget that reports only at the moment it fails converts a slow
+ * drift into a surprise, and the surprise arrives worded as "app.js exceeds 135 KB budget", which
+ * invites the next reader to raise the number rather than to ask what grew. So every budget now
+ * prints its margin on every run, a budget below its own declared design margin WARNS without
+ * failing, and the failure text carries the overage and names itself a proxy. No ceiling moved:
+ * the pass/fail predicate is byte-for-byte the one it replaced.
  */
-if (sizes.index > 150000) problems.push(`index.html exceeds 150 KB budget: ${sizes.index}`);
-if (sizes.app > 135000) problems.push(`app.js exceeds 135 KB budget: ${sizes.app}`);
-if (sizes.styles > 95000) problems.push(`styles.css exceeds 95 KB budget: ${sizes.styles}`);
-if (sizes.index + sizes.app + sizes.styles > 375000) {
-  problems.push(`static shell exceeds 375 KB budget: ${sizes.index + sizes.app + sizes.styles}`);
+const BUDGETS = [
+  { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 135000 },
+  { name: 'styles.css', bytes: sizes.styles, ceiling: 95000 },
+  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 375000 },
+];
+const DESIGN_MARGIN = 0.02;
+const budgetReport = BUDGETS.map(budget => {
+  const headroom = budget.ceiling - budget.bytes;
+  return { ...budget, headroom, fraction: headroom / budget.ceiling };
+});
+for (const budget of budgetReport) {
+  if (budget.headroom < 0) {
+    problems.push(`${budget.name} exceeds its ${Math.round(budget.ceiling / 1000)} KB budget by `
+      + `${-budget.headroom} b (${budget.bytes} of ${budget.ceiling}). This is a PROXY budget: read `
+      + 'the outcome budgets printed below before considering a re-baseline, and raise the ceiling '
+      + 'only with the explicit justification the block above requires.');
+  }
 }
+const tightBudgets = budgetReport.filter(budget => budget.headroom >= 0 && budget.fraction < DESIGN_MARGIN);
 if (!/<script src="app\.js" defer><\/script>/.test(html)
     || !/<link rel="stylesheet" href="styles\.css"\s*\/>/.test(html)) {
   problems.push('index.html must load local cacheable app.js and styles.css assets');
@@ -116,7 +139,45 @@ if (/git add -A/.test(publisherSource)
   if (metrics.cssRules > 750) problems.push(`CSS exceeds 750-rule budget: ${metrics.cssRules}`);
   if (metrics.overflowX) problems.push('mobile document has horizontal overflow');
 
+  /* The OUTCOME budgets get the same treatment as the proxy ones. Reporting margins for the byte
+     ceilings while leaving these to announce themselves at the moment they fail would reproduce the
+     defect one layer down — and measured now, cssRules sits at 731 of 750, a 2.53% margin, tighter
+     than every static budget except app.js and previously invisible. Units differ per row, so the
+     margin is carried as a fraction and the raw values are printed beside it. */
+  const outcomeReport = [
+    { name: 'DOM interactive', value: metrics.domInteractive, ceiling: 1000, unit: 'ms' },
+    { name: 'evidence UI', value: appReadyMs, ceiling: 3000, unit: 'ms' },
+    { name: 'first load', value: metrics.transferredBytes, ceiling: 300000, unit: 'b' },
+    { name: 'rendered DOM', value: metrics.domNodes, ceiling: 6550, unit: 'nodes' },
+    { name: 'CSS rules', value: metrics.cssRules, ceiling: 750, unit: 'rules' },
+  ].map(budget => {
+    const headroom = budget.ceiling - budget.value;
+    return { ...budget, headroom, fraction: headroom / budget.ceiling };
+  });
+  const tightOutcomes = outcomeReport.filter(budget => budget.headroom >= 0 && budget.fraction < DESIGN_MARGIN);
+
   console.log(`Static bytes: index=${sizes.index}; app=${sizes.app}; css=${sizes.styles}; shell=${sizes.index + sizes.app + sizes.styles}`);
+  console.log('Budget margins — PROXY (static bytes):');
+  budgetReport
+    .slice()
+    .sort((a, b) => a.fraction - b.fraction)
+    .forEach(budget => console.log(`  ${budget.headroom < 0 ? 'OVER' : budget.fraction < DESIGN_MARGIN ? 'TIGHT' : 'ok  '} `
+      + `${budget.name.padEnd(15)} ${String(budget.bytes).padStart(7)} / ${String(budget.ceiling).padEnd(7)} `
+      + `headroom ${String(budget.headroom).padStart(7)} b (${(budget.fraction * 100).toFixed(2)}%)`));
+  console.log('Budget margins — OUTCOME (what the proxies stand in for):');
+  outcomeReport
+    .slice()
+    .sort((a, b) => a.fraction - b.fraction)
+    .forEach(budget => console.log(`  ${budget.headroom < 0 ? 'OVER' : budget.fraction < DESIGN_MARGIN ? 'TIGHT' : 'ok  '} `
+      + `${budget.name.padEnd(15)} ${String(Math.round(budget.value)).padStart(7)} / ${String(budget.ceiling).padEnd(7)} `
+      + `headroom ${String(Math.round(budget.headroom)).padStart(7)} ${budget.unit} (${(budget.fraction * 100).toFixed(2)}%)`));
+  const allTight = [...tightBudgets, ...tightOutcomes];
+  if (allTight.length) {
+    console.log(`WARNING — ${allTight.length} budget(s) below the ~${DESIGN_MARGIN * 100}% design margin this file `
+      + `declares: ${allTight.map(budget => `${budget.name} ${Math.round(budget.headroom)} ${budget.unit || 'b'}`).join('; ')}. `
+      + 'Not a failure and not a reason to raise a ceiling — it is the notice that the next edit to '
+      + 'that file may fail this gate, so the growth can be examined before it blocks a publish.');
+  }
   console.log(`Mobile load: transfer=${metrics.transferredBytes}; decoded=${metrics.decodedBytes}; interactive=${metrics.domInteractive.toFixed(1)}ms; appReady=${appReadyMs}ms; DOM=${metrics.domNodes}; CSS=${metrics.cssRules}`);
   if (problems.length) {
     console.log(`RESULT: FAIL (${problems.length} problem(s))`);
