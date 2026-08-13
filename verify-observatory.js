@@ -231,7 +231,23 @@ function requestStatus(pathname) {
         coordinate:document.getElementById('heroCoordinate')?.textContent.trim(),
         freshness:document.getElementById('heroSignalFreshness')?.textContent.trim(),
         reducedDuration:getComputedStyle(document.querySelector('.hero-copy h1')).animationDuration,
+        /* CROSS-REALM DEPENDENCY, STATED BECAUSE IT IS LOAD-BEARING AND INVISIBLE.
+           `htmlText` is not declared in this file. It resolves because this code runs in the PAGE
+           realm and app.js L507 `function htmlText(value){` is a top-level function declaration in
+           a CLASSIC script (index.html L84 `<script src="app.js" defer>`, zero type="module" in the
+           document), so it becomes a property of the page's global object.
+
+           That is three unstated facts in two other files holding up one probe. IIFE-wrap app.js,
+           convert it to type="module", or bundle it, and this throws ReferenceError inside the
+           page — which, since this evaluate has no try/catch, kills the WHOLE `state` object and
+           fails verify:ui at the evaluate's opening line, ~100 lines from the cause.
+
+           Calling the real shipped function is the point: a local copy would test the copy and
+           leave the site's actual escaping unverified. So the dependency stays and is made
+           self-diagnosing instead — 'MISSING' is reported distinctly from a real escaping failure,
+           and the check below names the cause. */
         escapedText:(() => {
+          if (typeof htmlText !== 'function') return 'MISSING';
           const probe = document.createElement('div');
           probe.innerHTML = htmlText('&lt;img src=x onerror=alert(1)&gt;');
           return probe.children.length === 0 && probe.textContent === '<img src=x onerror=alert(1)>';
@@ -341,7 +357,16 @@ function requestStatus(pathname) {
     check(results, 'search uses a standard live results region rather than a partial combobox',
       state.finder.searchRegionRole === 'region' && state.finder.searchInputRole === null,
       JSON.stringify({ region:state.finder.searchRegionRole, input:state.finder.searchInputRole }));
-    check(results, 'JSON-derived text is escaped at render time', state.escapedText);
+    /* Reported as three outcomes, not two. `MISSING` means the probe never ran because `htmlText`
+       was not a page global — an app.js packaging change, not an escaping failure — and saying so
+       here is the difference between a one-line diagnosis and a ReferenceError 100 lines upstream. */
+    check(results, 'JSON-derived text is escaped at render time',
+      state.escapedText === true,
+      state.escapedText === 'MISSING'
+        ? 'PROBE DID NOT RUN: htmlText is not a page global — app.js must stay an unwrapped classic '
+          + 'script (index.html <script src="app.js" defer>). An IIFE wrap, type="module" or a bundler '
+          + 'removes the global this probe calls; re-expose it or move the probe.'
+        : String(state.escapedText));
     check(results, 'probability simulator loads published anchors',
       state.simulator.map
       && state.simulator.controls === 3
