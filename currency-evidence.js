@@ -3,13 +3,13 @@
 // regenerate, so publisher, headline, byline, date and text hash always come from the page
 // itself rather than from memory.
 //
-// THE CURRENCY LAYER IS ADDITIVE AND SUBORDINATE.
-//   - It NEVER deletes, demotes, replaces or displaces a reviewed X mapping. Every
-//     prediction keeps its ORIGIN evidence; currency is a second, separate LATEST layer.
-//   - It contributes NOTHING to the Peter floors or to evidence-floors.json. A currency
-//     item can never satisfy, raise or substitute for a Peter mapping.
-//   - It is distinct from the tier-3 news fallback, which remains unchanged: that tier
-//     applies only where a prediction has no defensible X evidence at all.
+// THE CURRENCY LAYER IS ADDITIVE AND SEPARATE.
+//   - X evidence was retired 2026-08-13. This preamble described a two-tier model: a reviewed X mapping as ORIGIN
+//     evidence, with currency as a subordinate LATEST layer. Neither the X mappings nor the
+//     Peter floors exist now; they were removed rather than zeroed.
+//   - A prediction is either CITED by a live-verified article published inside the currency
+//     window, or recorded as UNCITED. There is no tier beneath which currency sits.
+//   - Currency remains additive: it never converts an uncited prediction into a cited one.
 //   - Coverage is deliberately incomplete. A prediction with no genuinely supporting recent
 //     article carries NO currency link, and that is a truthful result rather than a gap.
 //     Stretching a marginal article to hit a freshness target is the fabrication failure

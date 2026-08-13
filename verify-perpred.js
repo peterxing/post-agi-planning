@@ -250,7 +250,7 @@ const SHOT = process.argv[3] || null;
         directSchema,
         searchSchema,
         coverageMetadata: signals.coverage && signals.coverage.complete === true
-          && signals.coverage.direct === Object.keys(embeds).length
+          && signals.coverage.cited === Object.keys(embeds).length
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
           /* X RETIREMENT 2026-08-13 — these required 24 sticky @peterxing mappings and 10 authored

@@ -48,7 +48,7 @@ const signals = require('./signals.json');
        stamp would have failed here. The stamp must now carry the cited/uncited accounting, and must
        not resurrect any X-era phrase. */
     const uncitedCount = Number(signals.uncited && signals.uncited.count) || 0;
-    const sourceHonest = stamp.includes(`${signals.coverage.direct} of ${signals.coverage.total} cited`)
+    const sourceHonest = stamp.includes(`${signals.coverage.cited} of ${signals.coverage.total} cited`)
       && stamp.includes(`${uncitedCount} searched with no qualifying source`)
       && /live-verified news and research/i.test(stamp)
       && !/Peter wrote|Peter reposted|max reuse|archive-verified|first-party hydrated/i.test(stamp)
@@ -62,10 +62,10 @@ const signals = require('./signals.json');
     /* EVIDENCE ACCOUNTING. Rendered cited cards and rendered uncited notices must each match
        the artefact exactly, and together they must account for EVERY rendered prediction.
        Checking only the total would let a cited card silently become an uncited notice. */
-    const citedExact = cards === Number(signals.coverage.direct);
+    const citedExact = cards === Number(signals.coverage.cited);
     const uncitedExact = uncitedCards === uncitedCount;
     const totalityExact = (cards + uncitedCards) === expected;
-    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${signals.coverage.direct} uncited=${uncitedCards}/${uncitedCount} totality=${cards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${signals.coverage.cited} uncited=${uncitedCards}/${uncitedCount} totality=${cards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));

@@ -24,7 +24,7 @@ const expectedEvidenceTypes = Object.values(signals.embeds || {})
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
-const artefactCited = Number(signals.coverage && signals.coverage.direct) || 0;
+const artefactCited = Number(signals.coverage && signals.coverage.cited) || 0;
 const artefactUncited = Number(signals.uncited && signals.uncited.count) || 0;
 const artefactReality = Array.isArray(signals.reality) ? signals.reality.length : 0;
 const expectedChanged = predictions.years.reduce(
@@ -290,7 +290,7 @@ function requestStatus(pathname) {
     const expectedPublishers = new Set(Object.values(signals.embeds || {})
       .map(e => e.publisherHost).filter(Boolean)).size;
     check(results, 'evidence dashboard reports the cited/uncited accounting from signals.json',
-      state.evidenceDashboard.cited === `${signals.coverage.direct} of ${signals.coverage.total}`
+      state.evidenceDashboard.cited === `${signals.coverage.cited} of ${signals.coverage.total}`
       && state.evidenceDashboard.uncited === String(expectedUncited)
       && state.evidenceDashboard.articles === String(expectedArticles)
       && state.evidenceDashboard.publishers === String(expectedPublishers)

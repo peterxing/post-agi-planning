@@ -1370,7 +1370,7 @@ function renderEvidenceDashboard(data, sourceLabel, freshness){
      sources are. */
   const coverage = data.coverage || {};
   const total = Number(coverage.total) || 0;
-  const cited = Number(coverage.direct) || 0;
+  const cited = Number(coverage.cited) || 0;
   const uncited = Number(data.uncited && data.uncited.count) || 0;
   const windowDays = Number(data.uncited && data.uncited.windowDays) || 0;
   const embeds = Object.values(data.embeds || {});
@@ -1535,7 +1535,7 @@ function hasCompleteSignalCoverage(data){
   return xRetired
     && data.coverage
     && data.coverage.complete === true
-    && data.coverage.direct === directIds.length
+    && data.coverage.cited === directIds.length
     && data.coverage.searches === 0
     && data.coverage.total === expected.length
     && Number(media.news || owners.news || 0) === directIds.length
@@ -1631,7 +1631,7 @@ function hasCompleteSignalCoverage(data){
          const uncitedCount = Number(d.uncited && d.uncited.count) || 0;
          const windowDays = Number(d.uncited && d.uncited.windowDays) || 0;
          const windowText = windowDays ? ` · ${windowDays}-day currency window` : '';
-         stamp.textContent = `Prediction evidence · ${d.coverage.direct} of ${d.coverage.total} cited · `
+         stamp.textContent = `Prediction evidence · ${d.coverage.cited} of ${d.coverage.total} cited · `
            + `${uncitedCount} searched with no qualifying source · zero search fallbacks · `
            + `${sourceLabel}${windowText} · checked `
            + formatUtcDate(dt);
@@ -2071,8 +2071,10 @@ function renderResult(body){
 renderPlanner();
 
 /* ---------- Reality signals grid ---------- */
-/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this hourly from
-   signals.json's reality[] — @peterxing's most notable recent real post/repost per theme. */
+/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this from
+   signals.json's reality[] — the most recent live-verified news observation per theme. (X evidence was retired 2026-08-13;
+   this comment previously described the field as @peterxing posts/reposts, which the section has
+   not rendered since.) */
 /* The offline baseline claims NOTHING. Six themes are named so the section keeps its shape before
    signals.json arrives, but every card states that no source is loaded rather than asserting an
    observation the page cannot stand behind. The previous fallback shipped six "Open the latest

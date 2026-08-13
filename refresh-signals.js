@@ -22,7 +22,7 @@
 //   every reuse belongs to the same explicitly declared compatible evidence family.
 //   Predictions with no reviewed direct mapping fail publication; search fallbacks are never emitted.
 //
-//   node refresh-signals.js                 # harvest + match + write signals.json (+ optional reposts.json)
+//   node refresh-signals.js                 # harvest + match + write signals.json
 //   X_ARCHIVE_BACKFILL=1 X_ARCHIVE_HYDRATE_LIMIT=400 node refresh-signals.js
 // Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
 if (require.main === module) require('./pipeline-lock').guard('refresh-signals');
@@ -41,8 +41,9 @@ const {
 } = require('./external-evidence');
 // Tier 3 of the evidence ladder. Consulted per prediction ONLY when neither a reviewed @peterxing
 // activity nor a reviewed authoritative external X status exists for that specific prediction. A
-// degraded or unpaid X API never triggers this path, because archive-verified retrieval does not
-// use the X API. News can never satisfy or bypass the Peter floors or the evidence ratchet.
+// X evidence was retired 2026-08-13. Live-verified news is no longer a fallback beneath an X corpus: it is the ONLY
+// evidence medium. The Peter floors and the archive-verified path were removed, not merely
+// zeroed, so there is no floor for news to bypass and no X API in the retrieval chain.
 const {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
@@ -213,7 +214,7 @@ const STOP = new Set(('the a an and or of to in on for with by from at as is are
   + 'nations company companies people percent units unit scales pass passes passing run running').split(/\s+/));
 
 // Load the live prediction set from predictions.json (revised daily) and expand it into ONE matcher per
-// EVENT (not per year), so every individual prediction can be mapped to its own @peterxing post/repost.
+// EVENT (not per year), so every individual prediction can be matched to its own evidence source.
 // Each matcher: {id:"YEAR-INDEX", year, evIndex, maps:<event title>, search, phrases, strong, sw, weak}.
 // Terms are derived from the event's own title (sw = whole-word strong terms); the year's curated `match`
 // keywords are applied only to that year's HEADLINE event so it keeps its high-quality topical matching.
@@ -1991,8 +1992,6 @@ async function main(){
             date: fmtDate(new Date(article.publishedAt)),
             maps: p.maps,
             text: newsText,
-            likes: 0,
-            rts: 0,
           };
           chosen[p.id] = `news:${article.publisherHost} [${newsMapping.evidenceType}/${embeds[p.id].assignmentMode} source=${newsMapping.source} reuse=${newsReuse}]`;
           continue;
@@ -2051,21 +2050,18 @@ async function main(){
         date: fmtDate(new Date(external.postedAt)),
         maps: p.maps,
         text: externalText,
-        likes: 0,
-        rts: 0,
       };
       chosen[p.id] = `external:@${external.handle} [${mapping.evidenceType}/${embeds[p.id].assignmentMode} source=${mapping.source} reuse=${reuseCount}]`;
       continue;
     }
     const pick = c.t;
     const approval = evidenceApprovals[p.id];
-    let { likes: lk, rts, created } = pick;
+    let { created } = pick;
     const author = approval.author;
     const activityKind = approval.activityKind;
     const authorship = activityKind === 'post' ? 'authored' : 'reposted';
     let text = cleanText(approval.publicText);
     const prevE = prevEmbeds[p.id];
-    if ((!rts || rts === 0) && prevE && prevE.id === pick.id && prevE.rts) rts = prevE.rts;
     if (text.length > 160) text = text.slice(0, 157) + '\u2026';
     const reuseCount = postUses.get(pick.id) || 1;
     const relationship = approval.relationship;
@@ -2108,8 +2104,6 @@ async function main(){
       date: approval.postDate || fmtDate(created),
       maps: p.maps,
       text,
-      likes: lk,
-      rts: rts || 0,
     };
     chosen[p.id] = `${activityKind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank}] sticky-reviewed`;
   }
@@ -2409,13 +2403,14 @@ async function main(){
   // the rule now has no referent. It is removed rather than left comparing against a retired constant.
   const sourceStatus = sourceStatusFor(source, sourceAttempts);
   /*
-   * THE CURRENCY LAYER — additive, and strictly subordinate to the reviewed X evidence.
+   * THE CURRENCY LAYER — additive, and separate from cited evidence.
    *
-   * Every prediction keeps exactly one reviewed direct X status as its ORIGIN evidence.
-   * A currency reference is an optional SECOND item: a recent, live-verified, authoritative
-   * news or peer-reviewed article showing where the world currently stands on that claim.
-   * It never replaces, demotes or substitutes for an X mapping, never counts toward the
-   * Peter floors, and never touches the ratchet. Coverage is deliberately sparse — a
+   * X evidence was retired 2026-08-13. This layer was designed when each prediction carried a reviewed X status as its
+   * ORIGIN evidence and currency was a second, subordinate item. There is no origin tier now:
+   * a prediction is either CITED by a live-verified article inside the currency window or it is
+   * recorded as UNCITED. The currency layer survives as an additive "where things currently
+   * stand" reference and still never converts an uncited prediction into a cited one.
+   * Coverage is deliberately sparse — a
    * prediction with no genuinely relevant current reference simply gets none, which is a
    * truthful gap rather than a defect to be papered over.
    *
@@ -2558,18 +2553,6 @@ async function main(){
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
     newestItemAt: citedNewestAt,
-    history: {
-      count: archive.payload.count,
-      verifiedCount: archive.payload.verifiedCount,
-      kinds: archive.payload.kinds,
-      oldestItemAt: archive.payload.oldestItemAt || historyOldestAt,
-      /* X RETIREMENT 2026-08-13 - newestItemAt used to mean "the newest harvested X status", and with the
-         corpus empty it published as null: a live-freshness field that silently stopped measuring
-         anything. It now means what the site can actually attest - the publication date of the most
-         recent source it CITES - computed from the emitted embeds so it cannot drift from them. */
-      newestItemAt: archive.payload.newestItemAt || citedNewestAt,
-      discoveryIds: archive.payload.discovery.count,
-    },
     /* THE UNCITED CHANNEL. Three of the site owner’s own headline subjects - Dyson/Kardashev, mind
        uploading, and the ruliad - have ZERO matches across ~90 days of all 58 harvested feeds. That is a
        property of the world, not of the matcher: they are speculative frameworks with no fortnightly news
@@ -2582,12 +2565,11 @@ async function main(){
       items: uncited,
     },
     coverage: {
-      direct: Object.keys(embeds).length,
+      cited: Object.keys(embeds).length,
       searches: Object.keys(searches).length,
       total: PREDICTIONS.length,
       complete: coverageComplete,
       uniqueSources: directUsesByPost.size,
-      maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
       byEvidenceOwner: ownerTally,
@@ -2713,7 +2695,7 @@ async function main(){
      is now changed ONLY by a reviewed manual edit — which is strictly stronger than a build that
      can rewrite its own gate. Nothing here may be relaxed to make a run pass. */
   console.log(JSON.stringify({
-    direct: Object.keys(embeds).length,
+    cited: Object.keys(embeds).length,
     searches: Object.keys(searches).length,
     total: PREDICTIONS.length,
     uniqueSources: directUsesByPost.size,

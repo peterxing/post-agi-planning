@@ -292,8 +292,8 @@ for (const [sourceId, uses] of usesByPost) {
 
 const coverage = signals.coverage || {};
 if (coverage.complete !== true
-    || coverage.direct !== actualIds.length
-    || (Number(coverage.direct) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length
+    || coverage.cited !== actualIds.length
+    || (Number(coverage.cited) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length
     || coverage.searches !== 0
     || coverage.total !== expectedIds.length
     || coverage.uniqueSources !== usesByPost.size
