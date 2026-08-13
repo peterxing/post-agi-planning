@@ -1738,7 +1738,6 @@ button { color: inherit; }
   .forecast-lens { padding: 18px; }
   .forecast-lens-head { display: block; }
   .forecast-live { margin-top: 10px; }
-  .forecast-lens-plot { min-height: 240px; }
   .simulator-map { min-height: 0; }
   .simulator-outcome { grid-template-columns: minmax(0, 1fr) 58px; }
   .simulator-outcome-rail { grid-column: 1 / -1; grid-row: 2; }

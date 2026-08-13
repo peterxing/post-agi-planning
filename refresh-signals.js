@@ -397,15 +397,42 @@ function buildPredictions(){
     }
   } catch(e){}
   const out = [];
+  /* THE 103 DENOMINATOR IS LOAD-BEARING AND IT USED TO BE ABLE TO CHANGE WITHOUT SAYING SO.
+     Three guards below drop malformed entries, and every one of them dropped silently: a year, an
+     event, or a horizon item that failed its shape check simply never reached `out`. That matters
+     more than an ordinary skip because the population this function returns IS the denominator of
+     every ratio the site publishes ("7 of 103 cited"), and the completeness check downstream is
+     `accountedIds.size === PREDICTIONS.length` — SELF-REFERENTIAL, so it stays true over a
+     population that has quietly shrunk. A malformed event would have moved 103 to 102 and left
+     coverage reporting complete, with the drop recorded nowhere.
+     MEASURED at this build: registered 15 years / 96 events / 7 horizon items, kept 15 / 96 / 7,
+     skipped 0 — the guards are LATENT, not firing. So this refuses rather than counts: a counter
+     that can never increment is the vacuous shape, whereas a refusal states what must hold.
+     The offline fallback is untouched: a failed parse leaves `years` null and `horizonItems` empty,
+     registering nothing, so the identity holds at 0 == 0 and the DEFAULT_PREDICTIONS path below
+     still runs. Only a file that parses AND contains a malformed entry refuses. */
+  const registered = { years: 0, events: 0, horizon: 0 };
+  const kept = { years: 0, events: 0, horizon: 0 };
+  const dropped = [];
   if (years) {
     for (const y of years) {
-      if (!y || typeof y.year !== 'number' || !Array.isArray(y.events)) continue;
+      registered.years++;
+      if (!y || typeof y.year !== 'number' || !Array.isArray(y.events)) {
+        dropped.push(`years[${registered.years - 1}]: not a year record (year=${JSON.stringify(y && y.year)}, `
+          + `events=${y && Array.isArray(y.events) ? 'array' : typeof (y && y.events)})`);
+        continue;
+      }
+      kept.years++;
       const m = y.match || {};
       const cur = { phrases: Array.isArray(m.phrases) ? m.phrases : [], strong: Array.isArray(m.strong) ? m.strong : [], weak: Array.isArray(m.weak) ? m.weak : [] };
       const hasCur = !!(cur.phrases.length || cur.strong.length || cur.weak.length);
       const hi = hasCur ? headlineIndex(y.events, m.headline) : -1;
       y.events.forEach((e, i) => {
-        if (!e || !e.t) return;
+        registered.events++;
+        if (!e || !e.t) {
+          dropped.push(`${y.year}-${i}: event has no title text (t=${JSON.stringify(e && e.t)})`);
+          return;
+        }
         const ev = deriveEventTerms(e.t);
         const id = y.year + '-' + i;
         const slot = { id, year: y.year, evIndex: i, domain: e.d || '', maps: e.t,
@@ -418,13 +445,20 @@ function buildPredictions(){
            slot.strong = cur.strong.filter(t => termMatchesTopic(t, topic));
            slot.weak = cur.weak.filter(t => termMatchesTopic(t, topic));
          }
+        kept.events++;
         out.push(slot);
       });
     }
   }
   for (let i = 0; i < horizonItems.length; i++) {
+    registered.horizon++;
     const item = horizonItems[i];
-    if (!item || !item.id || !item.t) continue;
+    if (!item || !item.id || !item.t) {
+      dropped.push(`postSuperintelligence.items[${i}]: missing id or title `
+        + `(id=${JSON.stringify(item && item.id)}, t=${JSON.stringify(item && item.t)})`);
+      continue;
+    }
+    kept.horizon++;
     const m = item.match || {};
     const ev = deriveEventTerms(item.t);
     const phrases = Array.isArray(m.phrases) ? m.phrases : [];
@@ -447,6 +481,15 @@ function buildPredictions(){
       concepts: detectConcepts(conceptText),
       evidenceFamily: familyForPrediction(id),
     });
+  }
+  /* THE IDENTITY, ASKED OF THE REGISTERED POPULATION AND NEVER OF THE SURVIVING ONE. Comparing the
+     survivors to anything derived from the survivors is the vacuous shape: a dropped entry leaves
+     both sides at once and the check stays green while reporting a smaller world. */
+  if (dropped.length) {
+    throw new Error('predictions.json contains malformed entries and the forecast population would '
+      + `silently shrink: registered ${registered.years}/${registered.events}/${registered.horizon} `
+      + `(years/events/horizon), kept ${kept.years}/${kept.events}/${kept.horizon}, `
+      + `dropped ${dropped.length} — ${dropped.join('; ')}`);
   }
   if (out.length) return out;
   // Offline fallback: inline defaults, one matcher per year (id = YEAR-0).
