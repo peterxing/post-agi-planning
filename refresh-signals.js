@@ -1943,9 +1943,23 @@ async function main(){
     }
   }
   for (const predictionId of newsEligibleIds) {
+    /* A73 - THIS EXIT WAS ONE DISJUNCTION COVERING TWO OPPOSITE EVENTS, AND ONLY ONE OF THEM IS
+       DESIGNED. `!mapping` is the ordinary case and MUST stay silent here: it is the honest absence,
+       and it is recorded downstream where every prediction is visited again (uncited[p.id], with the
+       window that was searched). MEASURED at this build: 96 of 103 take that branch, 7 resolve.
+       `mapping && !article` is the opposite - a reviewed mapping naming a source that does not
+       exist - and it had no channel anywhere. It is unreachable today because news-evidence.js
+       refuses to construct it ("Unknown news evidence source"), which was proven by mutation rather
+       than read: injecting a group with an unknown source throws, and the unmutated control requires
+       cleanly. Unreachable is a property of that guard, not of this loop, so this refuses instead of
+       dropping - if the construction guard is ever removed, this says what it was holding up. */
     const mapping = NEWS_MAPPINGS[predictionId];
-    const article = mapping && NEWS_SOURCES[mapping.source];
-    if (!mapping || !article) continue;
+    if (!mapping) continue;
+    const article = NEWS_SOURCES[mapping.source];
+    if (!article) {
+      throw new Error(`news mapping ${predictionId} names source ${mapping.source}, which is absent `
+        + 'from NEWS_SOURCES - refusing to drop a reviewed mapping silently');
+    }
     const check = await verifyNewsSource(mapping.source, article);
     if (check.problems.length) {
       newsIntegrityErrors.push(...check.problems);

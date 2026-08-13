@@ -703,7 +703,18 @@ async function main() {
   for (const [pid, list] of Object.entries(mappings)) {
     for (const entry of list) {
       const s = sources[entry.source];
-      if (!s) continue;
+      if (!s) {
+        /* A73 - A VERIFIER THAT SILENTLY SKIPS WHAT IT CANNOT RESOLVE REPORTS PASS OVER A SHRUNKEN
+           POPULATION, which is the one failure this file exists to prevent in the builder. It is
+           unreachable today - currency-evidence.js throws "Unknown currency source" at construction,
+           proven by mutation with a passing unmutated control - but that is the other module's
+           property, not this one's, so it is refused here rather than dropped. MEASURED at this
+           build: 8 mapped predictions, 13 entries, 0 unresolvable. */
+        fail(`${pid}: currency entry names source ${entry.source}, which is absent from `
+          + 'CURRENCY_SOURCES - the entry cannot be aged or checked, and skipping it silently would '
+          + 'report PASS over a population smaller than the one that was registered');
+        continue;
+      }
       const elapsed = now - new Date(s.publishedAt);
       const age = DEMOTION_RULE ? DEMOTION_RULE.age(elapsed) : Math.round(elapsed / 864e5);
       const livePublished = (published[pid] || []).some(c => c.key === entry.source);
