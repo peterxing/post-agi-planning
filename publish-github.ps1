@@ -1,4 +1,4 @@
-<#
+﻿<#
   publish-github.ps1 — mirror the curated, SECRET-FREE public file set into the
   GitHub repo peterxing/post-agi-planning and push to main.
 
@@ -14,6 +14,16 @@
   verifiers which read it as their subject can be falsified from the mirror alone; the
   helper decides only WHO WE AUTHENTICATE AS and can neither add, remove nor rename a
   published file. A missing or malformed helper is fail-closed as exit 2.
+
+  ENCODING CONTRACT: this file MUST keep its UTF-8 BOM. Windows PowerShell 5.1 decodes a
+  BOM-less file as ANSI/CP1252, where the three bytes of an em dash become a-circumflex,
+  euro, and 0x94 - and CP1252 0x94 is a RIGHT DOUBLE QUOTATION MARK, which PowerShell honours
+  as a string delimiter. Every em dash inside a double-quoted string therefore terminates that
+  string early and the whole script fails to parse at RUN time. That is not hypothetical: this
+  script was unrunnable on 2026-08-13 for exactly this reason. The trap is silent because the
+  four verifiers that read this file read it as TEXT and pass on a file that cannot parse, and
+  because ParseFile called from a UTF-8 host reports it clean. Verify with the 5.1 host itself.
+  Keep the BOM, or keep every string ASCII-only. Do not do neither.
 
   EXIT CODES — two outcomes share a code only if they imply the SAME NEXT ACTION. Severity is
   not the criterion; remedy is. A code whose members demand opposite responses is empty, because

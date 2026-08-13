@@ -37,11 +37,26 @@ if ($LASTEXITCODE -ne 0) {
 # or was unreachable), which is NOT an evidence fault: it blocks the deploy as DEFERRED
 # and is reported distinctly so a transient network fault never evicts genuine evidence.
 & node $currencyVerifier
-if ($LASTEXITCODE -eq 75) {
+$currencyExit = $LASTEXITCODE
+if ($currencyExit -eq 75) {
   Write-Warning 'Currency evidence could not be verified due to an infrastructure fault (source unreachable or bot challenge). Deployment DEFERRED; no evidence has been changed or demoted.'
   exit 75
 }
-if ($LASTEXITCODE -ne 0) {
+# Exit 70 is PASSED BUT INERT: nothing failed, and one or more axes verified NOTHING. An
+# entirely demoted currency layer is honest rather than broken, so it must NOT block the
+# deploy - refusing to publish because an additive layer aged out is the same defect as
+# demoting evidence for a network fault. publish-github.ps1 already treats 70 this way; this
+# helper did not, so a legitimate inert state failed here as 'validation failed' and blocked
+# publication entirely. It is still not a verified currency layer: the gate names the inert
+# axes on stdout immediately above, and this warning points at them rather than restating them.
+# ASCII ONLY BELOW, DELIBERATELY. This file is UTF-8 with no BOM and the deploy is invoked
+# through Windows PowerShell, which decodes a BOM-less file as ANSI: a U+2014 em dash inside a
+# double-quoted string decodes to a stray right-quote and breaks the parse at RUN time while
+# [Parser]::ParseFile in a UTF-8 host still reports it clean.
+if ($currencyExit -eq 70) {
+  Write-Warning "Currency gate PASSED BUT INERT - one or more axes verified NOTHING on this run; the gate listed them by name under 'verify:currency PASSED BUT INERT' above. Deployment proceeds; this run does not establish the currency evidence."
+}
+if ($currencyExit -ne 0 -and $currencyExit -ne 70) {
   Write-Error 'Currency evidence validation failed; deployment aborted.'
   exit 6
 }
