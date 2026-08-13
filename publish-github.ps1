@@ -410,7 +410,13 @@ if ($unexpectedStaged -or $forbidden) {
 
 # 4) Commit + push only when there is a real change.
 if (-not $staged -or $staged.Count -eq 0) { Write-Host 'publish-github: no changes to push.'; exit 0 }
-$stamp = (Get-Date).ToString('yyyy-MM-dd HH:mm')
+# DATE BASIS IS PART OF A DATE. This stamp was (Get-Date) — the HOST's local wall clock, printed
+# with no offset and no basis. Git already records the authoritative committer date WITH its offset,
+# so the subject line's only job is to be readable, and an unlabelled local time is the one a reader
+# most reasonably assumes is UTC. That assumption is a whole day wrong for any run before 10:00 on a
+# UTC+10 host. Everything machine-written in this tree is UTC (new Date().toISOString()); this now
+# matches it and says so, so no reader has to guess which clock produced it.
+$stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm') + 'Z'
 
 # PROVENANCE — THE MESSAGE MUST CARRY INFORMATION ABOUT ITS OWN COMMIT.
 # The former subject was the CONSTANT string "Site sync: predictions, signals, book & author"
