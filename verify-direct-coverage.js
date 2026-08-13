@@ -101,6 +101,8 @@ if (!signals.sourceFetchedAt) problems.push('signals.sourceFetchedAt is missing'
    decoration. It also asserts the INVERSE - no X-era mode, primary source or action may reappear - so a
    regression to the old emitter fails here instead of quietly republishing a false description. */
 const sourceStatus = signals.sourceStatus || {};
+/* The two media retired on 2026-08-13, named once so the three assertions below cannot drift apart. */
+const RETIRED_SOURCES = ['x-api', 'archive-verified'];
 if (sourceStatus.activeSource !== signals.source
     || signals.source !== 'news-verified'
     || sourceStatus.primarySource !== 'live-verified-news'
@@ -110,8 +112,36 @@ if (sourceStatus.activeSource !== signals.source
     || sourceStatus.actionRequired !== null
     || Number(sourceStatus.windowDays) !== Number(ratchet.currencyMaxAgeDays)
     || !Array.isArray(signals.sourceAttempts)
+    /* VACUITY (GC seq-116). `[].every(...)` is TRUE, so an EMPTY sourceAttempts satisfied this clause
+       and the artefact could drop its entire retirement record with this gate green. The tree failed
+       closed only because verify-perpred.js L287 happens to require both sources BY NAME — a
+       neighbour, not this gate. Asserted positively here so this gate stands on its own. */
+    || !RETIRED_SOURCES.every(source => signals.sourceAttempts.some(
+      attempt => attempt.source === source && attempt.status === 'retired'))
     || !signals.sourceAttempts.every(attempt => attempt.status === 'retired')) {
   problems.push('signals source metadata must describe the live-verified news chain and the registered currency window');
+}
+/* DECLARED KEYS (GC seq-116 §3). `sourceStatus.retiredSources` is read by NO code anywhere in this
+   tree. It is published for a PERSON: the site's own record of WHAT was retired, the artefact-level
+   twin of sourceAttempts. A discriminator that deletes every key nothing reads would delete it, and
+   the failure mode is not a broken gate but a site that can no longer prove its own history. A
+   declaration protected by nothing is protected by hope, so it is asserted here AGAINST its
+   machine-readable twin: the two must name the same sources, so neither can be dropped, emptied or
+   drifted from the other without failing. This is what promotes a DECLARED key to an ASSERTED one. */
+const declaredRetired = Array.isArray(sourceStatus.retiredSources) ? sourceStatus.retiredSources : null;
+const attemptedRetired = Array.isArray(signals.sourceAttempts)
+  ? signals.sourceAttempts.filter(attempt => attempt.status === 'retired').map(attempt => attempt.source)
+  : [];
+const asSet = list => [...new Set(list)].sort().join('|');
+if (!declaredRetired || !declaredRetired.length) {
+  problems.push('signals.sourceStatus.retiredSources is missing or empty: the published record of '
+    + 'what was retired must survive every rebuild, or the site cannot evidence its own migration');
+} else if (asSet(declaredRetired) !== asSet(attemptedRetired)) {
+  problems.push(`signals.sourceStatus.retiredSources (${declaredRetired.join(', ')}) does not match `
+    + `the retired entries in sourceAttempts (${attemptedRetired.join(', ') || 'none'})`);
+} else if (asSet(declaredRetired) !== asSet(RETIRED_SOURCES)) {
+  problems.push(`signals.sourceStatus.retiredSources (${declaredRetired.join(', ')}) does not name `
+    + `the media retired on 2026-08-13 (${RETIRED_SOURCES.join(', ')})`);
 }
 if (/oembed|first-party|archive-discovered|hydrat|X API/i.test(String(sourceStatus.message || ''))
     || /oembed|first-party|X API/i.test(String(sourceStatus.primarySource || ''))) {
