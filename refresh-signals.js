@@ -39,11 +39,12 @@ const {
   EXTERNAL_MAPPINGS,
   EXTERNAL_SOURCES,
 } = require('./external-evidence');
-// Tier 3 of the evidence ladder. Consulted per prediction ONLY when neither a reviewed @peterxing
-// activity nor a reviewed authoritative external X status exists for that specific prediction. A
-// X evidence was retired 2026-08-13. Live-verified news is no longer a fallback beneath an X corpus: it is the ONLY
-// evidence medium. The Peter floors and the archive-verified path were removed, not merely
-// zeroed, so there is no floor for news to bypass and no X API in the retrieval chain.
+// X RETIREMENT 2026-08-13 - live-verified news is the ONLY evidence medium. It is no longer a tier
+// beneath an archive corpus, because there is no archive corpus: the archive path, the X API and the
+// Peter floors were REMOVED, not zeroed. There is no floor for news to bypass and no external call
+// in the retrieval chain but the article fetch itself. Eligibility is per prediction: a prediction is
+// evidenced when a live-verified article inside the currency window supports it, and is recorded as
+// an explicit uncited absence when none does.
 const {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
@@ -352,9 +353,12 @@ function detectConcepts(text){
   return out;
 }
 
-// "Reality Signals" themes: each card on the site's Reality-Signals grid is filled daily with @peterxing's
-// most notable RECENT real item on that theme (his actual post/repost text + link), so the grid evolves
-// with his timeline. Keywords are matched whole-word (multi-word phrases matched as substrings).
+// X RETIREMENT 2026-08-13 - "Reality Signals" is a NEWS FIELD LOG, not a @peterxing feed. Each card
+// on the site's Reality-Signals grid is filled from the articles live-verified during this run: the
+// most notable observation on that theme inside the currency window, carrying its publisher, date and
+// age (see the reality[] build at the observedArticles loop). A theme with no qualifying source in
+// window renders as an explicit absence rather than a stale item.
+// Keywords are matched whole-word (multi-word phrases matched as substrings).
 const REALITY_THEMES = [
   { tag: 'LABOUR',     kws: ['jobs', 'unemployment', 'layoff', 'layoffs', 'hiring', 'workforce', 'labor', 'labour', 'employment', 'white collar', 'wages', 'salary', 'ubi', 'recent graduate'] },
   { tag: 'CODE',       kws: ['code', 'coding', 'software', 'developer', 'developers', 'engineer', 'engineering', 'programming', 'programmer', 'agent', 'agents', 'agentic', 'vibe coding', 'devin', 'copilot'] },
@@ -1628,7 +1632,9 @@ async function main(){
   assertNoXIngestFiles();
   const optionalReposts = [];
 
-  // Merge the verified corpus by original status ID for matching; activity IDs remain on each record.
+  // X RETIREMENT 2026-08-13 - this merged the verified archive corpus by its original source ID.
+  // `timeline` is empty BY CONSTRUCTION (see the retirement note above it), so this loop is a no-op
+  // retained only to keep the downstream shape unchanged. Nothing is read and nothing reaches the map.
   const byId = new Map();
   for (const it of [...timeline, ...optionalReposts]) {
     if (!it || isNaN(it.created.getTime())) continue;
@@ -1879,11 +1885,12 @@ async function main(){
     externalUsesBySource[mapping.source] = (externalUsesBySource[mapping.source] || 0) + 1;
   }
 
-  // TIER 3 — verified news. Eligibility is per prediction and evidence-based, never API-state-based:
-  // a prediction qualifies only when it has neither a reviewed @peterxing activity nor a reviewed
-  // authoritative external X status. News is consulted after the full archive pipeline has run, so a
-  // degraded X API alone can never trigger it. Every mapping is live-fetched and quote-checked here
-  // and again in the publish preflight; any failure blocks the mapping rather than degrading it.
+  // X RETIREMENT 2026-08-13 - verified news is the SOLE evidence medium, NOT a tier consulted after
+  // some other pipeline has run. `picks` and EXTERNAL_MAPPINGS are both empty post-retirement, so
+  // every prediction is news-eligible and the filter below is a structural guard rather than a
+  // fallback condition. There is no upstream pipeline to wait for and no API state to depend on.
+  // Every mapping is live-fetched and quote-checked here and again in the publish preflight; any
+  // failure blocks the mapping rather than degrading it.
   const newsEligibleIds = new Set(PREDICTIONS
     .filter(p => !picks[p.id] && !EXTERNAL_MAPPINGS[p.id])
     .map(p => p.id));

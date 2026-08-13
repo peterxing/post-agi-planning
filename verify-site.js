@@ -10,6 +10,23 @@ if (require.main === module) require('./pipeline-lock').guard('verify');
 const { chromium } = require('playwright');
 const signals = require('./signals.json');
 
+/* A12 CLASS (GC seq-115, 2026-08-13). `Number(field) || 0` turns a renamed or deleted operand into
+   a comparison against 0, which an empty render satisfies trivially. Absence is refused up front and
+   the field is NAMED, so this can never be mistaken for a data regression. Note the deliberate
+   exception in verify-perpred.js L262-263: there `|| 0` guards a POSITIVE ABSENCE assertion, where
+   the zero is the finding rather than a manufactured expectation, and must not be "fixed". */
+function requiredCount(value, fieldPath) {
+  const n = Number(value);
+  if (value === undefined || value === null || !Number.isFinite(n) || n < 0) {
+    console.error(`[verify:site] REFUSED — signals.json ${fieldPath} is missing or unusable `
+      + `(got ${JSON.stringify(value)}). No expectation can be derived from an absent field.`);
+    process.exit(1);
+  }
+  return n;
+}
+const artefactCited = requiredCount(signals.coverage && signals.coverage.cited, 'coverage.cited');
+const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 'uncited.count');
+
 (async () => {
   const url = process.argv[2] || 'http://127.0.0.1:8787/';
   const themes = ['dark', 'light'];
@@ -47,8 +64,8 @@ const signals = require('./signals.json');
        Peter reposted, external, max reuse, archive-verified, first-party hydrated - so an honest news
        stamp would have failed here. The stamp must now carry the cited/uncited accounting, and must
        not resurrect any X-era phrase. */
-    const uncitedCount = Number(signals.uncited && signals.uncited.count) || 0;
-    const sourceHonest = stamp.includes(`${signals.coverage.cited} of ${signals.coverage.total} cited`)
+    const uncitedCount = artefactUncited;
+    const sourceHonest = stamp.includes(`${artefactCited} of ${signals.coverage.total} cited`)
       && stamp.includes(`${uncitedCount} searched with no qualifying source`)
       && /live-verified news and research/i.test(stamp)
       && !/Peter wrote|Peter reposted|max reuse|archive-verified|first-party hydrated/i.test(stamp)
@@ -62,10 +79,10 @@ const signals = require('./signals.json');
     /* EVIDENCE ACCOUNTING. Rendered cited cards and rendered uncited notices must each match
        the artefact exactly, and together they must account for EVERY rendered prediction.
        Checking only the total would let a cited card silently become an uncited notice. */
-    const citedExact = cards === Number(signals.coverage.cited);
+    const citedExact = cards === artefactCited;
     const uncitedExact = uncitedCards === uncitedCount;
     const totalityExact = (cards + uncitedCards) === expected;
-    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${signals.coverage.cited} uncited=${uncitedCards}/${uncitedCount} totality=${cards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${artefactCited} uncited=${uncitedCards}/${uncitedCount} totality=${cards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));

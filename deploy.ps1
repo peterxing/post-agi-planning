@@ -1,4 +1,4 @@
-# deploy.ps1 — pushes the static site in this folder to Vercel production.
+﻿# deploy.ps1 — pushes the static site in this folder to Vercel production.
 # Headless through the Vercel CLI's cached login so the daily refresh workflow can call it unattended.
 #
 # One-time setup (you, in a terminal):

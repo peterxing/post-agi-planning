@@ -8,6 +8,21 @@ const predictions = require('./predictions.json');
 const signals = require('./signals.json');
 
 const URL = process.argv[2] || 'http://127.0.0.1:8787/';
+/* A12 CLASS (GC seq-115, 2026-08-13). An expectation coerced out of a MISSING field is not an
+   expectation: `Number(x) || 0` turns a renamed or deleted operand into a comparison against 0,
+   which the DOM then satisfies trivially, and the arm goes on to print the conclusion of a
+   measurement it never made. Absence is therefore a REFUSAL here, taken before any arm runs, and
+   the message NAMES the field so the failure can never be read as a data regression.
+   Proven by mutation: renaming or deleting coverage.cited must abort this file, not pass it. */
+function required(value, fieldPath, predicate) {
+  if (value === undefined || value === null || !predicate(value)) {
+    console.error(`[verify:ui] REFUSED — signals.json ${fieldPath} is missing or unusable `
+      + `(got ${JSON.stringify(value)}). No expectation can be derived from an absent field.`);
+    process.exit(1);
+  }
+  return value;
+}
+const isCount = value => Number.isFinite(Number(value)) && Number(value) >= 0;
 const expectedEvents = predictions.years.reduce((sum, year) => sum + year.events.length, 0);
 const expectedTechnology = predictions.years.reduce(
   (sum, year) => sum + year.events.filter(event => event.d === 'technology').length,
@@ -24,15 +39,19 @@ const expectedEvidenceTypes = Object.values(signals.embeds || {})
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
-const artefactCited = Number(signals.coverage && signals.coverage.cited) || 0;
-const artefactUncited = Number(signals.uncited && signals.uncited.count) || 0;
-const artefactReality = Array.isArray(signals.reality) ? signals.reality.length : 0;
+const artefactCited = Number(required(
+  signals.coverage && signals.coverage.cited, 'coverage.cited', isCount));
+const artefactUncited = Number(required(
+  signals.uncited && signals.uncited.count, 'uncited.count', isCount));
+const artefactReality = required(signals.reality, 'reality', Array.isArray).length;
 const expectedChanged = predictions.years.reduce(
   (sum, year) => sum + year.events.filter(event => event.revisedAt === predictions.updated.slice(0, 10)).length,
   0
 );
 const expectedOwners = signals.coverage.byEvidenceOwner;
-const expectedAuthorship = signals.coverage.byPeterAuthorship || { authored:0, reposted:0 };
+const expectedAuthorship = required(
+  signals.coverage.byPeterAuthorship, 'coverage.byPeterAuthorship',
+  value => isCount(value.authored) && isCount(value.reposted));
 const expectedPeterStatuses = new Set(
   Object.values(signals.embeds).filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)
 ).size;
@@ -284,8 +303,9 @@ function requestStatus(pathname) {
     /* Every figure is compared against signals.json, never against a literal, so the panel cannot
        drift from the artefact it summarises. Cited and uncited are asserted TOGETHER: publishing one
        without the other is exactly how 7-of-103 gets made to look like 7-of-7. */
-    const expectedUncited = Number(signals.uncited && signals.uncited.count) || 0;
-    const expectedWindow = Number(signals.uncited && signals.uncited.windowDays) || 0;
+    const expectedUncited = artefactUncited;
+    const expectedWindow = Number(required(
+      signals.uncited && signals.uncited.windowDays, 'uncited.windowDays', isCount));
     const expectedArticles = new Set(Object.values(signals.embeds || {}).map(e => e.id)).size;
     const expectedPublishers = new Set(Object.values(signals.embeds || {})
       .map(e => e.publisherHost).filter(Boolean)).size;

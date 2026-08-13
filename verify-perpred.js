@@ -256,7 +256,11 @@ const SHOT = process.argv[3] || null;
           /* X RETIREMENT 2026-08-13 — these required 24 sticky @peterxing mappings and 10 authored
              ones to be PRESENT. Asserted absent rather than compared: a retired floor compared
              numerically is the 'x < null is x < 0' trap, where a missing floor silently satisfies
-             every '>=' it appears in. */
+             every '>=' it appears in.
+             A12-CLASS EXCEPTION (GC seq-112/115) — DO NOT "FIX" THE `|| 0` ON THE NEXT TWO LINES.
+             Elsewhere `|| 0` manufactures an expectation out of an absent field and is a defect.
+             Here the ZERO IS THE FINDING: these two lines assert that the retired X owner and medium
+             tallies are absent-or-zero, so coercing absence to 0 is the intended semantics. */
           && signals.coverage.stickyPeterFloor === undefined
           && signals.coverage.stickyPeterAuthoredFloor === undefined
           && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) === 0

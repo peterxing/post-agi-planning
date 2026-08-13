@@ -431,9 +431,15 @@ async function runBrowserProof(baseUrl, log) {
     }
   }
   // News must never be counted as Peter evidence.
+  /* A12 CLASS (GC seq-115). `owners.news || 0` was an expectation manufactured from an absent key:
+     with the tally deleted AND no news embeds it reads 0 !== 0 and passes vacuously, on a payload
+     that has lost its evidence accounting entirely. The tally must be PRESENT and numeric. */
   const owners = (signals.coverage && signals.coverage.byEvidenceOwner) || {};
-  if (Number(owners.news || 0) !== publishedNews.length) {
-    problems.push(`coverage.byEvidenceOwner.news (${owners.news || 0}) does not match published news embeds (${publishedNews.length})`);
+  if (!Number.isFinite(Number(owners.news))) {
+    problems.push('coverage.byEvidenceOwner.news is missing or non-numeric, so the news tally '
+      + `cannot be compared against the ${publishedNews.length} published news embeds`);
+  } else if (Number(owners.news) !== publishedNews.length) {
+    problems.push(`coverage.byEvidenceOwner.news (${owners.news}) does not match published news embeds (${publishedNews.length})`);
   }
   /* X RETIREMENT 2026-08-13 - SECOND ATTEMPT. GC seq-90 caught `floors.peterTotal || 0` making this
      `0 < 0`. My first repair wrote `const peterFloor = null`, and GC seq-91 measured that `x < null`
