@@ -130,13 +130,22 @@ if (sourceStatus.activeSource !== signals.source
     || !signals.sourceAttempts.every(attempt => attempt.status === 'retired')) {
   problems.push('signals source metadata must describe the live-verified news chain and the registered currency window');
 }
-/* DECLARED KEYS (GC seq-116 §3). `sourceStatus.retiredSources` is read by NO code anywhere in this
-   tree. It is published for a PERSON: the site's own record of WHAT was retired, the artefact-level
-   twin of sourceAttempts. A discriminator that deletes every key nothing reads would delete it, and
-   the failure mode is not a broken gate but a site that can no longer prove its own history. A
-   declaration protected by nothing is protected by hope, so it is asserted here AGAINST its
-   machine-readable twin: the two must name the same sources, so neither can be dropped, emptied or
-   drifted from the other without failing. This is what promotes a DECLARED key to an ASSERTED one. */
+/* DECLARED KEYS (GC seq-116 §3). `sourceStatus.retiredSources` is CONSUMED by no code: nothing on
+   the site renders it and no gate branches on its contents. Its only reads in this tree are the two
+   in the assertion immediately below, which exist to protect it. It is published for a PERSON: the
+   site's own record of WHAT was retired, the artefact-level twin of sourceAttempts. A discriminator
+   that deletes every key nothing consumes would delete it, and the failure mode is not a broken gate
+   but a site that can no longer prove its own history. A declaration protected by nothing is
+   protected by hope, so it is asserted here AGAINST its machine-readable twin: the two must name the
+   same sources, so neither can be dropped, emptied or drifted from the other without failing. This
+   is what promotes a DECLARED key to an ASSERTED one.
+
+   The previous wording asserted a universal absence of readers — refuted seven lines below by the
+   very reads this comment introduces, and true only of the state BEFORE the fix it describes. Found
+   2026-08-14 by A97, which measures reference cardinality against the claim. A universal quantifier
+   over this tree is checkable, and that one was false. The correction deliberately does NOT restate
+   the old sentence verbatim: a comment that quotes a false claim in order to retire it carries the
+   claim's own signature, and no phrase-keyed instrument can tell use from mention. */
 const declaredRetired = Array.isArray(sourceStatus.retiredSources) ? sourceStatus.retiredSources : null;
 const attemptedRetired = Array.isArray(signals.sourceAttempts)
   ? signals.sourceAttempts.filter(attempt => attempt.status === 'retired').map(attempt => attempt.source)
@@ -333,6 +342,31 @@ for (const [sourceId, uses] of usesByPost) {
 }
 
 const coverage = signals.coverage || {};
+/* GC seq-144 §1, MEASURED BY MUTATION IN A SANDBOX. `coverage.total` is the REGISTERED count, and
+   `expectedIds` above is an unfiltered recount of the same file, so under a dropped entry both are
+   the pre-drop number and the `coverage.total !== expectedIds.length` term below cannot fire. It is
+   narrowed, not dead — it still catches the offline-fallback population and any drift between the
+   two reads — and the loss itself was still caught twice (L347's cited+uncited identity, and the
+   `missing` roster). But a term that cannot observe the failure it appears to guard is the vacuous
+   shape this tree keeps finding, so the loss is now published and asserted DIRECTLY rather than
+   inferred from a denominator that only disagreed because it was wrong.
+
+   These are separate from the block below on purpose: folded in, a shrunken population would be
+   reported as "must declare exact N/N ... and reuse metrics", which names neither the drop nor its
+   size. A gate that fires with the wrong reason costs the next reader the whole investigation. */
+if (!Number.isInteger(coverage.kept) || !Number.isInteger(coverage.dropped)) {
+  problems.push('signals.coverage must publish integer `kept` and `dropped` counts so a shrunken '
+    + 'forecast population is observable from outside the writer process');
+} else {
+  if (coverage.dropped !== 0) {
+    problems.push(`signals.coverage.dropped is ${coverage.dropped}: the writer discarded malformed `
+      + 'entries and the published forecast population is smaller than predictions.json');
+  }
+  if (coverage.kept !== expectedIds.length) {
+    problems.push(`signals.coverage.kept (${coverage.kept}) does not match the ${expectedIds.length} `
+      + 'predictions in predictions.json: the published population is not the authored one');
+  }
+}
 if (coverage.complete !== true
     || coverage.cited !== actualIds.length
     || (Number(coverage.cited) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length

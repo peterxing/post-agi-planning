@@ -2463,6 +2463,12 @@ async function main(){
      OFFERED and `dropped.length === 0` is checked here, so the gate observes the loss itself and
      stays correct whatever severity the upstream guard is later given. */
   const registeredTotal = PREDICTION_CENSUS ? PREDICTION_CENSUS.total : PREDICTIONS.length;
+  /* Survivors and losses, published beside the registered count so the drop is an OBSERVABLE in
+     the artefact rather than something a reader must infer from two numbers disagreeing. */
+  const keptTotal = PREDICTION_CENSUS
+    ? PREDICTION_CENSUS.kept.events + PREDICTION_CENSUS.kept.horizon
+    : PREDICTIONS.length;
+  const droppedCount = PREDICTION_CENSUS ? PREDICTION_CENSUS.dropped.length : 0;
   const populationIntact = !!PREDICTION_CENSUS && PREDICTION_CENSUS.dropped.length === 0;
   if (!populationIntact) {
     mappingIntegrityErrors.push(`the forecast population lost ${PREDICTION_CENSUS ? PREDICTION_CENSUS.dropped.length : 'an unknown number of'} `
@@ -2711,6 +2717,18 @@ async function main(){
       // The REGISTERED count. A survivor count published as `total` reads as "103 that exist"
       // when it may mean "103 that survived"; those differ exactly when something went wrong.
       total: registeredTotal,
+      /* GC seq-144 §1. Publishing an honest denominator removed the only way a SEPARATE PROCESS
+         could infer a drop: verify-direct-coverage.js recounts predictions.json unfiltered, and
+         once `total` became the registered count its `coverage.total !== expectedIds.length` term
+         compares two pre-drop numbers and cannot differ. Measured by mutation rather than argued:
+         that term is indeed blind to a drop (it still catches the offline-fallback path and any
+         drift between the two file reads, so it is narrowed, not dead), while L347's
+         cited+uncited identity and the `missing` roster both still fire — the loss was never
+         detected by one term alone. The repair is not to restore a dishonest denominator but to
+         PUBLISH THE LOSS, so a consumer observes it directly instead of inferring it from a
+         mismatch that only existed because a number was wrong. */
+      kept: keptTotal,
+      dropped: droppedCount,
       complete: coverageComplete,
       uniqueSources: directUsesByPost.size,
       maxReuse: maxPostReuseObserved,
