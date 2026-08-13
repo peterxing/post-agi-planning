@@ -47,10 +47,23 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * clock it came from only half-carries it. In the on-disk BYTES this gate weighs — statSync, not
  * string length; the two differ here by 219 b of multi-byte characters, and quoting the char count
  * against a byte ceiling was the first version of this sentence — deleting every comment recovers
- * 13,063 b, 9.68% of the file. That exceeds the 12,922 b the comment spans occupy, because 146
- * comment-only lines take their indentation and line terminators with them. So a re-baseline has an
- * option other than raising the ceiling, and it belongs in writing here rather than being
- * discovered under pressure.
+ * 13,072 b, 9.69% of the file: the comment spans occupy 12,922 b and a further 150 b is the
+ * indentation and line terminators of the 149 lines that cease to exist with them.
+ *
+ * THIS FIGURE HAS BEEN WRONG TWICE AND THE SECOND WAY IS THE INSTRUCTIVE ONE. It was first
+ * published as 13,063 b. Re-measuring it by CONSTRUCTION — build the file with every comment
+ * deleted, then weigh it — gave 13,069 b, which matched the reviewer's independent figure exactly.
+ * That agreement was worthless: the reconstruction joined lines with '\n', silently normalising
+ * this file's CRLF, and the artefact happened to be the same size as the disagreement under
+ * examination. AN INSTRUMENT ARTEFACT THAT COINCIDENTALLY REPRODUCES THE OTHER PARTY'S NUMBER IS
+ * INDISTINGUISHABLE FROM INDEPENDENT CONFIRMATION, and is more dangerous than a plain error
+ * because it arrives wearing corroboration. Settled by never joining at all: walk the original
+ * characters, carry each line's own terminator, emit or drop whole lines. Confirmed by a second
+ * decomposition that shares no code with the first (span bytes + the uncovered bytes on vanishing
+ * lines = 12,922 + 150). Do not "correct" this back without rebuilding the file and weighing it.
+ *
+ * So a re-baseline has an option other than raising the ceiling, and it belongs in writing here
+ * rather than being discovered under pressure.
  *
  * They stay tight on purpose — ~2% headroom each — so unbounded growth is still caught.
  * Raising either again requires the same explicit justification.
