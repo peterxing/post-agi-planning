@@ -296,6 +296,17 @@ async function pool(items, size, worker) {
       results[i] = await worker(items[i]);
     }
   }));
+  /* Completeness here is true BY CONSTRUCTION — pre-sized array, every index claimed exactly once,
+     Promise.all propagating any rejection — so no caller need check it. That is precisely why this
+     assertion is worth its two lines: by-construction guarantees are invisible to a reader and to
+     any external audit, and they stop being true the moment someone rewrites this with `push` or
+     swallows a worker rejection. The invariant is now checked rather than merely explained, so a
+     future refactor that breaks it fails here instead of silently handing every caller a short
+     population. */
+  if (results.length !== items.length || results.some(entry => entry === undefined)) {
+    throw new Error(`pool lost entries: ${items.length} in, `
+      + `${results.filter(entry => entry !== undefined).length} out`);
+  }
   return results;
 }
 
