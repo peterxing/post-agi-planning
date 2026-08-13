@@ -1795,6 +1795,13 @@ async function main(){
   const rawCandidateLists = {};
   const unapprovedCandidateCounts = {};
   const guardRejections = {};
+  /* THE THIRD OUTCOME, WHICH WAS THE ONLY UNRECORDED ONE. Each eligible item ends in exactly one
+     of three states: rejected for relevance, rejected by a guard, or accepted as a candidate.
+     Guard rejections were recorded with samples; acceptances land in `cands`; relevance rejections
+     — the MOST COMMON outcome — returned silently, so the ledger described a population strictly
+     smaller than the one considered while carrying no sign of the difference. Recording it lets the
+     identity below be stated at the granularity where the loss is decided: per candidate. */
+  const relevanceRejections = {};
   for (const p of PREDICTIONS) {
     const cands = [];
     const approval = evidenceApprovals[p.id];
@@ -1808,7 +1815,10 @@ async function main(){
       const qualified = direct.ok ? direct : family;
       const assignmentMode = direct.ok ? 'direct' : 'family-reuse-candidate';
       const { scored, matchMethod } = qualified;
-      if (!qualified.ok && direct.reason === 'relevance') continue;
+      if (!qualified.ok && direct.reason === 'relevance') {
+        relevanceRejections[p.id] = (relevanceRejections[p.id] || 0) + 1;
+        continue;
+      }
       if (!qualified.ok) {
         if (!guardRejections[p.id]) guardRejections[p.id] = { count: 0, samples: [] };
         guardRejections[p.id].count++;
@@ -1846,6 +1856,17 @@ async function main(){
         facetBasis: direct.ok ? 'prediction-facets' : 'declared-family',
         created: t.created,
       });
+    }
+    /* CONSIDERED == REJECTED-FOR-RELEVANCE + REJECTED-BY-GUARDS + ACCEPTED. Asserted rather than
+       assumed: this is the loop where a silently-dropped candidate would be invisible, and a
+       count that only ever grows on the paths someone remembered to instrument cannot detect a
+       new unrecorded exit. A future `continue` added above without a counterpart breaks this. */
+    const relevanceDropped = relevanceRejections[p.id] || 0;
+    const guardDropped = guardRejections[p.id] ? guardRejections[p.id].count : 0;
+    if (relevanceDropped + guardDropped + cands.length !== eligible.length) {
+      throw new Error(`candidate accounting lost items for ${p.id}: considered ${eligible.length}, `
+        + `relevance-rejected ${relevanceDropped}, guard-rejected ${guardDropped}, `
+        + `accepted ${cands.length} — an exit in this loop records nothing`);
     }
     cands.sort((a, b) =>
       (b.assignmentMode === 'direct') - (a.assignmentMode === 'direct')
@@ -2779,6 +2800,7 @@ async function main(){
     matchMethods: matchMethodTally,
     coverageChange,
     guardRejections,
+    relevanceRejections,
     candidateAudit,
     embedKinds: kindTally,
     embedTiers: tierTally,
