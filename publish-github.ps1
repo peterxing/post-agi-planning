@@ -393,8 +393,50 @@ if ($unexpectedStaged -or $forbidden) {
 # 4) Commit + push only when there is a real change.
 if (-not $staged -or $staged.Count -eq 0) { Write-Host 'publish-github: no changes to push.'; exit 0 }
 $stamp = (Get-Date).ToString('yyyy-MM-dd HH:mm')
+
+# PROVENANCE — THE MESSAGE MUST CARRY INFORMATION ABOUT ITS OWN COMMIT.
+# The former subject was the CONSTANT string "Site sync: predictions, signals, book & author"
+# on every commit, while the diffs behind it ranged from 1 to 8 files. Measured over the last
+# twelve: 12/12 identical subject; predictions.json actually present in 0 of them, signals.json
+# in 2. It was shaped like a manifest and had zero mutual information with the change.
+# The cost is specific, not cosmetic: the single most important property of a publish is whether
+# it MOVED THE LIVE SITE, and a served-file change was indistinguishable in the log from a
+# tooling-only change. That distinction was carried entirely by out-of-band byte hashes.
+# The served set is READ FROM .vercelignore — the fail-closed allow-list that actually decides
+# what reaches the domains — rather than restated here, so this cannot drift away from it.
+$vercelIgnore = Join-Path $Clone '.vercelignore'
+$servedNames = @()
+if (Test-Path $vercelIgnore) {
+  $servedNames = @(Get-Content $vercelIgnore |
+    Where-Object { $_ -match '^!' } |
+    ForEach-Object { $_.Substring(1).Trim() })
+}
+# vercel.json is uploaded as configuration and never served, so it is not a live-surface move.
+$servedChanged = @($staged | Where-Object { $_ -in $servedNames -and $_ -ne 'vercel.json' })
+$otherChanged  = @($staged | Where-Object { $_ -notin $servedChanged })
+if ($servedNames.Count -eq 0) {
+  # Refuse to guess. A missing/unreadable allow-list must not silently render every publish
+  # as "no live change" — that is the exact false reassurance this block exists to remove.
+  $surfaceNote = 'live surface UNKNOWN (.vercelignore unreadable)'
+} elseif ($servedChanged.Count -gt 0) {
+  $surfaceNote = "live surface CHANGED: $($servedChanged -join ', ')"
+} else {
+  $surfaceNote = 'live surface unchanged (no served file in this commit)'
+}
+$subject = "Site sync ($stamp): $($staged.Count) file(s) — $surfaceNote"
+$bodyLines = @("Changed files ($($staged.Count)):")
+$bodyLines += ($staged | ForEach-Object {
+  if ($_ -in $servedChanged) { "  $_  [SERVED]" } else { "  $_" }
+})
+if ($otherChanged.Count -gt 0) {
+  $bodyLines += ''
+  $bodyLines += 'Files not marked [SERVED] are source/tooling only and cannot alter the live bytes.'
+}
+$body = $bodyLines -join "`n"
+
 git -c user.name='Peter Xing' -c user.email='peterxing@users.noreply.github.com' commit -q `
-  -m "Site sync: predictions, signals, book & author ($stamp)" `
+  -m $subject `
+  -m $body `
   -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>" 2>&1 | Out-Null
 
 $out = (git push $pushUrl "HEAD:$Branch" 2>&1 | Out-String)

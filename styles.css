@@ -597,7 +597,7 @@ button { color: inherit; }
 /* The hero lens PLOT (.forecast-lens-plot, .lens-grid/-density/-probability/-point/-current/
    -branch/-label/-value and .forecast-lens figcaption) was superseded by the probability
    simulator map, which now occupies .forecast-lens. Removed 2026-08-13 after verify:ui's new
-   keyframe audit reported `lens-draw` declared and never running: measured 0 matches for all 12
+   keyframe audit reported `lens-draw` declared and never running: measured 0 matches for all 10
    selectors against the live DOM and 0 references to any of them in app.js/index.html, with no
    dynamic `'lens-' +` construction, so they could not be emitted in any state. .forecast-lens,
    .forecast-lens-head and .forecast-lens h2 remain live and are kept. */
