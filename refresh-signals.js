@@ -992,6 +992,33 @@ const FACET_GUARDS = [
     ],
   },
 ];
+/* VACUITY GUARD, AT MODULE LOAD. `[].every(...)` is true, so an empty FACET_GUARDS turns the facet
+   relevance gate into a pass-through that still reports posts as facet-qualified, and a guard whose
+   `all` list is empty does the same one level down. Both are one careless edit away and neither
+   would fail any existing gate, so the whole table is validated here.
+
+   WHY AT LOAD RATHER THAN AT THE POINT OF USE. Both assertions originally lived inside
+   passesFacetGuards(). Mutation showed they were NOT ARMED there for `refresh-signals.js`: emptying
+   FACET_GUARDS, and emptying a guard's `all` list, both ran the daily pipeline to completion with
+   byte-identical output, because the daily news-only path never scores a post. Module scope runs on
+   every require and every direct invocation, so this placement is armed for every entry point.
+
+   CORRECTION, RECORDED SO THE WRONG REASON IS NOT REUSED. "Unreachable" was measured from ONE entry
+   point and is false for the file: verify-signal-matcher.js calls qualifyPost() directly. Measured
+   counterfactual — the old point-of-use placement, with FACET_GUARDS emptied, run through
+   verify-signal-matcher.js: exit 76, "FACET_GUARDS is empty" thrown. So that placement WAS armed,
+   for that entry point, and unarmed only for the daily writer. Reachability measured from a single
+   caller is not reachability, and a mutant that survives one entry point has not survived the
+   program. The placement here is still right — load scope dominates every call site — but the
+   justification is "armed for all entry points", not "the call site is dead". */
+if (!Array.isArray(FACET_GUARDS) || !FACET_GUARDS.length) {
+  throw new Error('FACET_GUARDS is empty: the facet gate would approve every post');
+}
+for (const g of FACET_GUARDS) {
+  if ('all' in g && (!Array.isArray(g.all) || !g.all.length)) {
+    throw new Error(`FACET_GUARD "${g.title}" has an empty \`all\` list: it would approve every post`);
+  }
+}
 
 const QUANTITY_TOKEN = '(\\d+(?:\\.\\d+)?[mbt]?|millions|billions|trillions|one|two|three|four|five|six|seven|eight|nine|ten)';
 function scaledQuantity(token, unit){
@@ -1491,6 +1518,11 @@ function passesFacetGuards(text, p){
       && !/\b(?:outer space|space power|space solar|spacex|starlink|orbital|orbit|moon|lunar|mars|off world)\b/.test(normText)) {
     return false;
   }
+  /* VACUITY GUARD lives at module load, immediately below the FACET_GUARDS constant, not here.
+     Both this table's non-emptiness and each guard's `all` list are validated there, because
+     mutation showed the point-of-use placement was not armed for the daily pipeline. Do not move
+     the assertions back into this function without re-proving by mutation that every entry point
+     executes it — refresh-signals.js does not, verify-signal-matcher.js does. */
   return FACET_GUARDS.every(g => {
     if ((g.domains && !g.domains.has(p.domain)) || !g.title.test(normTitle)) return true;
     return g.all ? g.all.every(rx => rx.test(normText)) : g.text.test(normText);
@@ -2194,7 +2226,7 @@ async function main(){
       mode: predictionIds.length === 1 ? 'unique'
         : owners[0] === 'external' ? 'external-reuse'
           : owners[0] === 'news' ? 'news-reuse' : 'family-reuse',
-      reviewed: uses.every(use => use.embed.reviewed === true),
+      reviewed: uses.length > 0 && uses.every(use => use.embed.reviewed === true),
       mappingRationales: Object.fromEntries(uses.map(use => [
         use.predictionId,
         use.embed.mappingRationale,

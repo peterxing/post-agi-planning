@@ -115,9 +115,18 @@ if (sourceStatus.activeSource !== signals.source
     /* VACUITY (GC seq-116). `[].every(...)` is TRUE, so an EMPTY sourceAttempts satisfied this clause
        and the artefact could drop its entire retirement record with this gate green. The tree failed
        closed only because verify-perpred.js L287 happens to require both sources BY NAME — a
-       neighbour, not this gate. Asserted positively here so this gate stands on its own. */
+       neighbour, not this gate. Asserted positively here so this gate stands on its own.
+
+       SECOND PASS: the positive assertion below quantifies over RETIRED_SOURCES, so it inherited the
+       same defect one level up. Empty that constant and BOTH clauses go vacuous together — the
+       by-name check passes over no names, and the all-retired check is then reached with nothing
+       proven about sourceAttempts. A gate whose subject is a constant must assert the constant. */
+    || RETIRED_SOURCES.length === 0
     || !RETIRED_SOURCES.every(source => signals.sourceAttempts.some(
       attempt => attempt.source === source && attempt.status === 'retired'))
+    /* Reached only when the clause above found every named source, so sourceAttempts is provably
+       non-empty HERE — a property of the ordering in this `||` chain, not of this line. Do not
+       reorder these two clauses. */
     || !signals.sourceAttempts.every(attempt => attempt.status === 'retired')) {
   problems.push('signals source metadata must describe the live-verified news chain and the registered currency window');
 }

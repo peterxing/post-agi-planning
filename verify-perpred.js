@@ -358,12 +358,24 @@ const SHOT = process.argv[3] || null;
       searches: links.length,
       /* INVERTED 2026-08-13. A search link counted as "honest" only if it pointed at
          x.com/search?q=from:peterxing. None is honest now - the offline state must show the
-         unavailable notice and link nowhere - so honesty is the ABSENCE of any X link. */
-      honest: links.length === 0
+         unavailable notice and link nowhere - so honesty is the ABSENCE of any X link.
+
+         NON-VACUITY, ASSERTED IN PLACE. `[].every(...)` is true, so "no anchor points at X" is
+         satisfied by a page that rendered NO ANCHORS AT ALL — precisely the broken-render state this
+         offline test exists to detect. That case is covered structurally by `offline.expected >= 103`
+         and `offline.unavailable === offline.expected` below, both counted from this same DOM
+         snapshot, so the gate does fail on a blank page. But the cover is a NEIGHBOUR, and a
+         neighbour is a refactor away from being the fourth accidental save in this tree. The
+         quantifier now proves its own subject non-empty: measured 154 anchors in the failure state
+         (site chrome, chapter and footer links all render before signals are fetched), so `> 0` is a
+         measured floor, not an assumption, and it cannot false-fail without the page being broken. */
+      honest: document.querySelectorAll('a[href]').length > 0
+        && links.length === 0
         && [...document.querySelectorAll('a[href]')].every(link => {
           try { return !/(?:^|\.)(?:x\.com|twitter\.com)$/i.test(new URL(link.href, location.href).hostname); }
           catch { return true; }
         }),
+      anchors: document.querySelectorAll('a[href]').length,
     };
   });
   const offlineOk = offline.expected >= 103
@@ -372,7 +384,7 @@ const SHOT = process.argv[3] || null;
     && offline.unavailable === offline.expected
     && offline.honest
     && offlineErrors.length === 0;
-  console.log(`[signals-fetch-failure] searches=${offline.searches}/${offline.expected} direct=${offline.direct} unavailable=${offline.unavailable} errs=${offlineErrors.length} -> ${offlineOk ? 'OK' : 'FAIL'}`);
+  console.log(`[signals-fetch-failure] searches=${offline.searches}/${offline.expected} direct=${offline.direct} unavailable=${offline.unavailable} anchors=${offline.anchors} errs=${offlineErrors.length} -> ${offlineOk ? 'OK' : 'FAIL'}`);
   if (offlineErrors.length) console.log('   ERRORS:', offlineErrors.slice(0, 4).join(' | '));
   if (!offlineOk) pass = false;
   await offlineContext.close();
