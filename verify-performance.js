@@ -80,9 +80,11 @@ if (/git add -A/.test(publisherSource)
     timeout: 45000,
   });
   await page.waitForFunction(
-    // Readiness means every prediction has rendered its ORIGIN evidence. Additive currency
-    // cards are counted separately, so the target stays exactly one card per prediction.
-    expected => document.querySelectorAll('.tl-signal:not(.tl-currency)').length === expected,
+    // Readiness means every prediction is ACCOUNTED FOR (X retirement 2026-08-13): it has
+    // rendered either its cited origin card or its explicit uncited notice. Additive currency
+    // cards are counted separately and never satisfy readiness for a prediction.
+    expected => (document.querySelectorAll('.tl-signal:not(.tl-currency)').length
+      + document.querySelectorAll('.tl-signal-uncited').length) === expected,
     expectedCards,
     { timeout: 15000 }
   );

@@ -1472,7 +1472,7 @@
         "caveat": "Current implanted studies are small and safety-first; company announcements alone do not establish efficacy, bandwidth or durable home use, and surgery plus chronic hardware carry material risks.",
         "match": {
           "headline": "Implantable bidirectional BCI and neural symbiosis",
-          "search": "from:peterxing Neuralink BCI neural implant",
+          "search": "Neuralink BCI neural implant",
           "phrases": [
             "brain computer interface",
             "neural implant",
@@ -1515,7 +1515,7 @@
         "caveat": "Current genuinely non-invasive systems do not match implanted bandwidth. Endovascular BCIs are minimally invasive, not non-invasive, and wrist sEMG or other peripheral muscle and nerve interfaces are not BCIs.",
         "match": {
           "headline": "Genuinely non-invasive BCI pathway",
-          "search": "from:peterxing non-invasive BCI EEG MEG ultrasound",
+          "search": "non-invasive BCI EEG MEG ultrasound",
           "phrases": [
             "non invasive bci",
             "eeg brain computer",
@@ -1558,7 +1558,7 @@
         "caveat": "A connectome is a wiring diagram, not a functional emulation; a chatbot or digital replica trained on a person's data is not an upload, and whether any copy preserves subjective identity continuity may remain untestable.",
         "match": {
           "headline": "Whole-brain emulation, uploading and identity continuity",
-          "search": "from:peterxing whole brain emulation mind uploading connectome",
+          "search": "whole brain emulation mind uploading connectome",
           "phrases": [
             "whole brain emulation",
             "mind uploading",
@@ -1601,7 +1601,7 @@
         "caveat": "A storage payload, edge-inference satellite, proposed constellation or regulatory filing is not a hyperscale space data centre. Small orbital clusters are not a Dyson swarm, and this trajectory does not imply a complete stellar enclosure.",
         "match": {
           "headline": "Orbital compute and proto-Dyson infrastructure",
-          "search": "from:peterxing orbital compute space solar Dyson",
+          "search": "orbital compute space solar Dyson",
           "phrases": [
             "orbital data center",
             "space data centre",
@@ -1644,7 +1644,7 @@
         "caveat": "The Kardashev scale is an energy-use classification, not evidence that civilizations inevitably progress through it. Type I and Type II remain long-horizon reference points, not near-term achievements.",
         "match": {
           "headline": "Measurable Kardashev energy scaling",
-          "search": "from:peterxing Kardashev energy scale Type I Type II",
+          "search": "Kardashev energy scale Type I Type II",
           "phrases": [
             "kardashev scale",
             "type i civilization",
@@ -1686,7 +1686,7 @@
         "caveat": "John Smart presents the Transcension Hypothesis as a speculative futures and astrobiology hypothesis resting on unvalidated assumptions; it has no empirical confirmation and may conflict with the outward proto-Dyson branch.",
         "match": {
           "headline": "John Smart Transcension Hypothesis",
-          "search": "from:peterxing Transcension Hypothesis inner space density",
+          "search": "Transcension Hypothesis inner space density",
           "phrases": [
             "transcension hypothesis",
             "inner space",
@@ -1727,7 +1727,7 @@
         "caveat": "The ruliad is a computational-metaphysics and foundational-physics research construct with unfinished formalism, not an established physical theory, a destination, a simulation to enter or a proven roadmap for superintelligence.",
         "match": {
           "headline": "Ruliad testable physics branch",
-          "search": "from:peterxing Wolfram ruliad testable physics",
+          "search": "Wolfram ruliad testable physics",
           "phrases": [
             "the ruliad",
             "rulial space",

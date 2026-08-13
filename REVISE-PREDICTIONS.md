@@ -5,9 +5,32 @@
 post-superintelligence horizon shown on the Post-AGI Planning site.
 Both `index.html` (display) and `refresh-signals.js` (post matching) read it at runtime. The daily
 job REVISES it — **adds new predictions, updates existing ones, and removes outdated ones** — from
-the latest information online and from @peterxing's X posts/reposts. Editing this file changes the
+the latest verifiable reporting and research online. Editing this file changes the
 site; no HTML edit is needed. The hourly job reassesses it, but the anti-thrash rule means most
 hours update signals only and leave the forecast unchanged.
+
+## X retirement (2026-08-13)
+
+**This file previously ordered the next reviser to preserve a direct-X evidence contract. It does
+not any more, and reinstating one is now a publication failure.** The site owner's instruction:
+
+> remove all references to x posts and stop using the x api for the predictions — replace and add any
+> references based on the latest news from the last 2 weeks instead
+
+| Retired | Replaced by |
+| --- | --- |
+| one reviewed direct X evidence card per prediction | one reviewed **news** citation per prediction where a qualifying source exists, and an explicit **uncited** record where none does |
+| `x-archive.js`, `verify-peter-evidence.js`, `verify-archive-corpus.js`, `verify-external-evidence.js`, `verify-id.js` | `news-evidence.js`, `verify-news-evidence.js`, `verify-currency.js` |
+| `evidence-approvals.json` and the `external-evidence.js` X statuses | asserted **empty**; a non-empty ledger fails publication |
+| the `peterTotal` / `peterAuthored` / `maxReuse` floors | removed, not zeroed — a floor of 0 reads as a *satisfied* gate |
+| the X API and the private @peterxing corpus | live news fetch inside a 14-day window; the build no longer names the secrets directory |
+
+**Do not restore any of the above.** The commands are gone, so an instruction to run them cannot be
+obeyed — and improvising a substitute is how a fabricated source enters a forecast. If evidence is
+missing, the correct outcome is an **uncited** record with its reason stated, not a weaker citation.
+Coverage is currently 7 cited / 96 uncited of 103; that ratio is a measurement, and it must never be
+improved by widening the window, lowering the source bar, or reusing a source across unrelated
+claims.
 
 ## Schema
 
@@ -32,7 +55,7 @@ hours update signals only and leave the forecast unchanged.
       ],
       "match": {                             // how refresh-signals.js maps his posts to THIS year
         "headline": "short topic label used by matching diagnostics",
-        "search":   "a diagnostic from:peterxing query; never a public fallback",
+        "search":   "topic terms used only as a matcher diagnostic; never a public fallback",
         "phrases":  ["multi-word phrases", "weighted 3"],
         "strong":   ["strong-prefix terms", "weighted 2"],
         "weak":     ["single", "words", "weighted 1"]
@@ -54,7 +77,7 @@ hours update signals only and leave the forecast unchanged.
       "caveat": "What remains unknown or unvalidated",
       "match": {
         "headline": "Short topic label",
-        "search": "from:peterxing diagnostic matching terms",
+        "search": "topic terms used only as a matcher diagnostic",
         "phrases": [], "strong": [], "weak": []
       }
     }]
@@ -152,19 +175,22 @@ no daily wording churn, only material verifiable change, preserve monotonicity a
 coherence, keep Peter's anchor unless he explicitly changes it, and set `revisedAt` + `changeNote`
 citing the specific verified source. Only primary/original reporting, official lab/company/agency/
 regulator announcements, peer-reviewed journals or named expert analysis qualify — the same
-source-quality bar as external X evidence. Aggregators, syndicators, press-release mills and content
+source-quality bar as published news evidence. Aggregators, syndicators, press-release mills and content
 farms are never a basis for a forecast change.
 
-Then re-run `node validate-predictions.js`. **Changing `predictionText` invalidates sticky evidence
-bindings**, so re-run `x-archive.js --hydrate=120`, `verify-peter-evidence.js --update` and
-`refresh-signals.js` afterwards and restore complete N/N direct coverage before publishing.
+Then re-run `node validate-predictions.js`. **Changing a prediction's text invalidates the reviewed
+evidence binding for it**, so re-run `node refresh-signals.js` and `node verify-news-evidence.js`
+afterwards. A prediction whose binding no longer holds becomes **uncited** until a qualifying source
+is reviewed for its new wording — it must never keep a citation that was approved against different
+text.
 
 ## Daily revision rules
 
-1. **Ground every change.** Base edits on (a) the latest news/research you can verify online and
-   (b) @peterxing's recent X posts/reposts (see `signals-debug.json` for source freshness and match
-   details; raw authenticated activity stays outside the repo). Put a short, specific justification
-   in `basis`. Never invent his posts or activity.
+1. **Ground every change.** Base edits on the latest news and research you can verify online: primary
+   reporting, official lab/company/agency/regulator announcements, peer-reviewed journals, or named
+   expert analysis. See `signals-debug.json` for source freshness and match diagnostics. Put a short,
+   specific justification in `basis`. **Never invent a source, quote, date or provenance** — an
+   unsupported prediction is published as uncited, which is an honest outcome and always available.
 2. **Add** genuinely new, well-sourced predictions to the right year/domain (e.g. a newly-credible
    milestone). Keep titles crisp and falsifiable; set a realistic `prob`.
 3. **Update** predictions when reality moves: recalibrate dates/probabilities, sharpen wording, or
@@ -214,63 +240,45 @@ bindings**, so re-run `x-archive.js --hydrate=120`, `verify-peter-evidence.js --
    Peter-ungoverned branches explicitly so a later top-expert milestone does not appear to follow an
    earlier unqualified superintelligence milestone in the same world. Run `validate-predictions.js`;
    its duplicate-family, near-overlap, post-automation-career, and branch-order checks must pass.
-11. **Keep X matching verified, broad, and conservative.** Bulk profile feeds are unavailable and
-   must not be treated as a publication source. Use `x-archive.js` to fully paginate Wayback CDX across
-   `twitter.com`/`x.com` and `peterxing`/`PeterXing`, merge private API-era history and public historical
-   signal bundles, sort IDs numerically, and hydrate a time-stratified batch through X first-party
-   `tweet-result` at least 600 ms apart. Independently cross-check the original author and Peter
-   activity URL through X oEmbed. Cache the private corpus under `pap-secrets`; never serve, deploy,
-   print or commit it. The authenticated API is an optional diagnostic/seed, not a hard dependency.
-   Literal title terms may be supplemented by the controlled concept ontology, but one distinctive shared concept
-   or two substantive corroborating concepts are required, semantic-only matches are limited to
-   recent activity, and every applicable claim-facet guard remains mandatory. Generic capability,
-   computation, energy, space, economy, infrastructure, institutions, governance, scaling and AI
-   overlap supports a match but never qualifies by itself. Allocate valid matches
-   unique-post-first, then permit reuse only inside an explicitly reviewed compatible concept family
-   or threshold/scenario series. A single status may support at most 10 predictions; every repeated
-   status must retain its
-   reviewed mapped IDs and rationale in audit output. Run
-   `verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, maximum unique
-   coverage, candidate samples, guard rejections, unused relevant posts, and coverage change. Never
-   weaken freshness or facet guards to increase the count. An unsupported claim fails publication
-   until it receives a reviewed defensible Peter mapping or authoritative external direct status.
-   Candidate and assignment priority is Peter-authored/quoted/replied, then Peter-reposted, then
-   authoritative external; that priority never weakens relevance or facet guards.
+11. **Keep evidence matching verified, narrow, and conservative.** Every citation is a reviewed news
+   article, fetched live at review time and again at publish time, with its verbatim quote re-located
+   in the fetched text and a SHA-256 of that text re-checked. Aggregators, shorteners, press-release
+   mills and content farms are refused. Literal title terms may be supplemented by the controlled
+   concept ontology, but one distinctive shared concept or two substantive corroborating concepts are
+   required, and every applicable claim-facet guard remains mandatory. Generic capability, computation,
+   energy, space, economy, infrastructure, institutions, governance, scaling and AI overlap supports a
+   match but never qualifies by itself. Allocate unique-source-first, then permit reuse only inside an
+   explicitly reviewed compatible evidence family — where a **source** is the resolved article URL,
+   never the ledger row name, so two rows quoting one article are one source used twice. Run
+   `node verify-signal-matcher.js` and inspect `signals-debug.json` for method counts, candidate
+   samples and guard rejections. **Never weaken a freshness or facet guard to increase the count**:
+   fix the data, or accept the uncited record. An unsupported claim is published as **uncited** with
+   its reason stated — that is a correct outcome, not a gap to be filled. Nothing self-approves.
 12. **Keep the horizon dependency-gated and undated.** Do not add years after 2040. Every horizon
    item needs a stable ID, epistemic label, conditional plausibility, 2-4 dependencies, 2-4
-   indicators, a caveat and a curated diagnostic `from:peterxing` match definition. Run the same
-   unique-post-first allocation across dated and horizon items; horizon keys are
-   `horizon-STABLE-ID`.
+   indicators, a caveat and a curated topic-term match definition. Run the same unique-source-first
+   allocation across dated and horizon items; horizon keys are `horizon-STABLE-ID`.
 13. **Preserve the five probability-simulator anchors.** Exactly one dated event must retain each
    stable `simAnchor`: `agi` in 2026, `ungoverned` in 2028, `managed` in 2029, `default` in 2030,
    and `handoff` in 2040. Their wording and probabilities may evolve, but do not rename, duplicate,
    remove or move these machine keys. `validate-predictions.js` fails publication if the contract
    breaks.
-14. **Preserve the direct-X evidence contract.** Every dated event and horizon item must have
-   exactly one entry in `evidence-families.js` and exactly one public direct-X evidence card. Prefer a real
-   post/quote/reply written by Peter, then a repost observed in @peterxing's activity, whose exact
-   prediction/post pair is active and sticky
-   in `evidence-approvals.json`. Each sticky approval binds its status/activity IDs, relationship,
-   public excerpt, exact prediction text, review date, last verification date and rationale. Resolve
-   it against the private archive-verified corpus even when it is absent from a recent window; evidence
-   age is not verification freshness. Publication must retain at least the existing 24 reviewed Peter
-   mappings, including at least 10 Peter-authored mappings,
-   mappings. Otherwise use a reviewed authoritative status from
-   `external-evidence.js`, explicitly labeled `direct`, `scenario`, or `leading-indicator` with
-   source quality and rationale. New external posts never self-approve. Search fallbacks are forbidden:
-   `signals.search` must remain absent, null or empty. Family matching must pass the same claim-specific
-   facet guards as literal and semantic matching. Reuse is permitted only inside one explicitly
-   reviewed compatible concept family or threshold/scenario series; large groups remain visible in
-   `signals-debug.json` with all mapped IDs and their reviewed rationales.
+14. **Preserve the news evidence contract.** Every dated event and horizon item must have exactly one
+   entry in `evidence-families.js` and exactly one of the following: a reviewed news citation in
+   `news-evidence.js`, or an **uncited** record stating the reason and the search actually performed.
+   There is no third state, and there is no fallback: `signals.search` must remain absent, null or
+   empty. A citation must be published inside the 14-day currency window, must resolve HTTP 200 live
+   at publish time, and must carry publisher, published date, **date provenance**, verbatim quote and
+   text hash. Reuse is permitted only inside one explicitly reviewed compatible evidence family, and
+   two rows quoting one article count as **one source used twice**.
+
    `refresh-signals.js` must exit nonzero and leave the last complete `signals.json` untouched
-   whenever reviewed direct coverage is below N/N, the Peter floor falls below 24, Peter-authored
-   coverage falls below 10, freshness is
-   false, provenance is invalid, one status exceeds 10 uses, or reuse crosses a reviewed
-   compatibility group. Record a safe `sourceStatus` reason (`authentication-expired`,
-   `credits-depleted`, `access-or-plan-restricted`, `rate-limited`, `service-error`, or
-   `network-error`) whenever the optional authenticated API degrades. `sourceAttempts` must also show
-   Wayback discovery, first-party hydration and oEmbed cross-check counts. Never expose credentials,
-   raw API response bodies or private corpus records.
+   whenever a citation fails live verification, a quote or hash drifts, provenance is incomplete,
+   reuse crosses a reviewed family, or the cited-plus-uncited total does not exactly equal the
+   prediction count. **Reinstating X evidence is itself a failure**: a retired X ingest file, an
+   `evidenceOwner` of `peterxing` or `external`, a `from:peterxing` requirement, an x.com link, or
+   any undeclared network host each fail publication by name.
+
 
 ## Procedure
 
@@ -280,14 +288,12 @@ cd C:\Users\peterxing\pap-deploy
 # 2. Validate it:
 node validate-predictions.js          # must print "RESULT: PASS"
 # 3. Re-run matching so signals.json re-maps his posts to the revised predictions:
-node x-archive.js --hydrate=120        # advance private archive verification
 node refresh-signals.js               # exits 0; rewrites signals.json + signals-debug.json
 node verify-signal-matcher.js          # semantic positive/negative fixtures must pass
-node verify-direct-coverage.js         # every prediction needs exactly one reviewed direct status
-node verify-archive-corpus.js          # discovery, corpus isolation, pace and source-chain contract
-node verify-peter-evidence.js --update # live-check original + Peter activity status, then date the audit
-node verify-external-evidence.js       # external statuses hydrate + cross-check and retain provenance
-node verify-news-evidence.js           # tier-3 news mappings re-resolve, quote-match and fail closed
+node verify-direct-coverage.js         # cited + uncited must account for every prediction exactly
+node verify-news-evidence.js           # every citation re-resolves, quote-matches and fails closed
+node verify-currency.js                # exit 70 = PASSED BUT INERT, a legitimate empty layer
+node verify-deploy-surface.js          # deploy surface and network egress are both allow-lists
 node verify-performance.js             # split-asset, transfer, DOM and render budgets
 # 4. Hash-sync and deploy only through the guarded helper:
 C:\Users\peterxing\pap-site\deploy.ps1

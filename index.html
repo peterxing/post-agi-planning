@@ -214,7 +214,7 @@ html[data-theme="dark"] {
         <h2 id="timelineHeading">The forecast has a spine—and branches</h2>
       </div>
       <div class="section-prose">
-        <p>The dated predictions are organized by year, domain, impact, probability, and branch. Every event has reviewed direct evidence: relevant <strong>@peterxing</strong> posts and reposts are prioritized, then clearly labeled authoritative external X sources provide scenario or leading-indicator evidence, and where a prediction has no defensible X evidence a live-verified news article is used and labeled as news. Search-only fallbacks are prohibited.</p>
+        <p>The dated predictions are organized by year, domain, impact, probability, and branch. Evidence is drawn only from authoritative news and research published inside the currency window, fetched live and quote-checked at publication. Where no qualifying source exists, the prediction says so and records the window searched. Search-only fallbacks are prohibited and nothing older or adjacent is substituted.</p>
         <div class="forecast-stamps">
           <div class="sig-stamp" id="predStamp" hidden></div>
           <div class="sig-stamp" id="sigStamp" hidden></div>
@@ -229,32 +229,27 @@ html[data-theme="dark"] {
             <span class="instrument-label">Evidence ledger / publication strength</span>
             <h3 id="evidenceDashboardTitle">See what the forecast rests on</h3>
           </div>
-          <p>Every prediction has one reviewed direct source. Peter-written and Peter-reposted evidence are counted separately; external cards are labeled as scenario or leading-indicator evidence, and verified news articles are labeled as news.</p>
+          <p>Each cited prediction carries one live-verified source: fetched at review and again at publication, with a verbatim quote and a checksum of the article text. Predictions with no qualifying source in the window are shown as searched and uncited rather than left blank.</p>
         </div>
         <div class="evidence-stat-grid" aria-label="Evidence coverage summary">
-          <div class="evidence-stat"><span>Direct coverage</span><strong id="evidenceDirectStat">—</strong></div>
-          <div class="evidence-stat"><span>Peter wrote</span><strong id="evidenceAuthoredStat">—</strong></div>
-          <div class="evidence-stat"><span>Peter reposted</span><strong id="evidenceRepostedStat">—</strong></div>
-          <div class="evidence-stat"><span>External mappings</span><strong id="evidenceExternalStat">—</strong></div>
-          <div class="evidence-stat"><span>Unique statuses</span><strong id="evidenceReuseStat">—</strong></div>
-          <div class="evidence-stat"><span>Maximum reuse</span><strong id="evidenceMaxReuseStat">—</strong></div>
+          <div class="evidence-stat"><span>Cited in window</span><strong id="evidenceCitedStat">—</strong></div>
+          <div class="evidence-stat"><span>Searched, no source</span><strong id="evidenceUncitedStat">—</strong></div>
+          <div class="evidence-stat"><span>Unique articles</span><strong id="evidenceArticlesStat">—</strong></div>
+          <div class="evidence-stat"><span>Publishers</span><strong id="evidencePublishersStat">—</strong></div>
+          <div class="evidence-stat"><span>Currency window</span><strong id="evidenceWindowStat">—</strong></div>
+          <div class="evidence-stat"><span>Newest source</span><strong id="evidenceNewestStat">—</strong></div>
         </div>
       </div>
       <div class="evidence-composition">
         <div class="composition-row">
-          <span>Peter wrote this</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidenceAuthoredBar"></i></span>
-          <strong id="evidenceAuthoredShare">—</strong>
-        </div>
-        <div class="composition-row">
-          <span>Peter reposted this</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidenceRepostedBar"></i></span>
-          <strong id="evidenceRepostedShare">—</strong>
+          <span>Cited in the currency window</span>
+          <span class="composition-track" aria-hidden="true"><i id="evidenceCitedBar"></i></span>
+          <strong id="evidenceCitedShare">—</strong>
         </div>
         <div class="composition-row external">
-          <span>External mappings</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidenceExternalBar"></i></span>
-          <strong id="evidenceExternalShare">—</strong>
+          <span>Searched, no qualifying source</span>
+          <span class="composition-track" aria-hidden="true"><i id="evidenceUncitedBar"></i></span>
+          <strong id="evidenceUncitedShare">—</strong>
         </div>
         <div class="evidence-type-row" id="evidenceTypeMix" aria-label="Evidence type mix">
           <span>Loading evidence types…</span>
@@ -775,7 +770,7 @@ html[data-theme="dark"] {
         <h2>The future is already leaving traces</h2>
       </div>
       <div class="section-prose">
-        <p>These are not predictions. They are six fresh, verified observations from <strong>@peterxing</strong> activity that indicate which capabilities, constraints, and branches are loading now.</p>
+        <p>These are not predictions. They are dated observations drawn from the same live-verified published sources as the forecast evidence &mdash; each one attributed to its publisher and its publication date &mdash; indicating which capabilities, constraints and branches are loading now. Where a domain has no qualifying observation inside the currency window, it is left blank and counted rather than filled.</p>
         <div class="signal-station" id="realityMeta" aria-live="polite">Awaiting live observation metadata…</div>
       </div>
     </div>
@@ -916,7 +911,7 @@ html[data-theme="dark"] {
 </ul>
 <p>You don't have to pick one. Most people switch routes halfway through, which is the entire point of a map: you can see where the roads connect.</p>
 <h2>This is a living document</h2>
-<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits the Post-AGI Atlas — a timeline engine running from 2026 to 2040 — and alongside each prediction we layer <strong>reviewed direct evidence</strong>: Peter's own X activity first, then authoritative external X scenario or leading-indicator sources, and live-verified news where no defensible X evidence exists. The percentages are maintained planning estimates, not live market prices or promises. A forecast that never updates isn't a forecast; it's a fossil. Read each percentage as a weather report, not a prophecy.</p>
+<p>The forecasts in these pages are tied to a model that breathes. Behind the book sits the Post-AGI Atlas — a timeline engine running from 2026 to 2040 — and alongside each prediction we layer <strong>reviewed direct evidence</strong>: authoritative news, fetched and checked at publication time, carrying a named publisher, a publication date and a verbatim supporting quote. Every citation also records what its source does <em>not</em> establish. Where no qualifying source was published inside the currency window, the prediction reports that search rather than borrowing a weaker one. The percentages are maintained planning estimates, not live market prices or promises. A forecast that never updates isn't a forecast; it's a fossil. Read each percentage as a weather report, not a prophecy.</p>
 <div class="pullbox">
 <h4>If you only have ten minutes</h4>
 <p>Read the Opening, skim the Five Futures, and do the six-question planner at the end. That's enough to stop the free-floating dread and convert it into a first move. Everything else is depth you can add later.</p>

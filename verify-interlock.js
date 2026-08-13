@@ -77,18 +77,41 @@ check(!fs.existsSync(path.join(SITE, LOCK_NAME)),
 
 // Every guarded entry point must claim the tree before it reads protected files.
 const guarded = [
-  'refresh-signals.js', 'x-archive.js', 'validate-predictions.js', 'verify-site.js',
+  'refresh-signals.js', 'validate-predictions.js', 'verify-site.js',
   'verify-signal-matcher.js', 'verify-perpred.js', 'verify-reality.js', 'verify-author.js',
   'verify-observatory.js', 'verify-performance.js', 'verify-direct-coverage.js',
-  'verify-archive-corpus.js', 'verify-external-evidence.js', 'verify-peter-evidence.js',
+
   'verify-deploy-surface.js', 'verify-currency.js',
-  'review-evidence-candidates.js',
 ];
-const PROTECTED = ['predictions.json', 'signals.json', 'evidence-approvals.json', 'evidence-floors.json'];
+/* X retirement (2026-08-13). These entry points were removed with the X evidence pipeline.
+   They are DECLARED rather than merely deleted from the list above, because a bare deletion
+   is indistinguishable from an oversight: if one of these files ever returns it must fail
+   this gate until it is re-guarded, instead of silently reading the tree unlocked. */
+const RETIRED_ENTRY_POINTS = {
+  'review-evidence-candidates.js': 'reviewed X evidence candidates; no X candidates exist',
+  'verify-id.js': 'called the X syndication API (cdn.syndication.twimg.com)',
+  'x-archive.js': 'built the private X status archive',
+  'verify-peter-evidence.js': 'verified @peterxing status evidence',
+};
+const PROTECTED = ['predictions.json', 'signals.json', 'evidence-floors.json'];
 function stripComments(source) {
   return source.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
 }
 
+/* A guarded name that no longer exists means this list is STALE. Reporting it as "does not
+   acquire the interlock" is the opposite of the truth — a file that is absent cannot read
+   the tree at all — so name the real defect instead. */
+for (const file of guarded) {
+  if (!fs.existsSync(path.join(DIR, file))) {
+    problems.push(`${file} is listed as a guarded entry point but does not exist (stale list)`);
+    continue;
+  }
+}
+for (const [file, reason] of Object.entries(RETIRED_ENTRY_POINTS)) {
+  if (fs.existsSync(path.join(DIR, file))) {
+    problems.push(`${file} was retired (${reason}) but has returned; re-guard it or remove it`);
+  }
+}
 for (const file of guarded) {
   const text = readOr(path.join(DIR, file));
   const guardAt = text.indexOf("require('./pipeline-lock').guard(");

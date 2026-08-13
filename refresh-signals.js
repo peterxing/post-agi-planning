@@ -46,14 +46,13 @@ const {
 const {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
+  normalizeUrl,
   verifyNewsSource,
 } = require('./news-evidence');
-const {
-  corpusToMatcherItems,
-  hydrateActivity,
-  loadCorpus,
-  refreshArchiveCorpus,
-} = require('./x-archive');
+// X RETIREMENT 2026-08-13 — the @peterxing archive corpus, its hydration chain and the X API were
+// retired on the site owner's instruction ("remove all references to x posts and stop using the x
+// api"). No X module is imported, required or called from this build any more. Verified news is now
+// the ONLY evidence tier; a prediction with no qualifying in-window source renders UNCITED.
 
 const DIR = __dirname;
 const OUT = path.join(DIR, 'signals.json');
@@ -71,9 +70,10 @@ const SOURCE_CACHE_MAX_HOURS = Number(process.env.SOURCE_CACHE_MAX_HOURS) || 36;
 // minimums; evidence-floors.json records the best result any published run has actually achieved and
 // raises the effective gate to that level, so a later regression fails closed instead of silently
 // re-publishing weaker evidence. Environment overrides may tighten a gate but can never loosen one.
-const BASE_MIN_STICKY_PETER_MAPPINGS = 24;
-const BASE_MIN_AUTHORED_PETER_MAPPINGS = 10;
-const BASE_MAX_REVIEWED_REUSE = 10;
+/* X RETIREMENT 2026-08-13 — BASE_MIN_STICKY_PETER_MAPPINGS (24), BASE_MIN_AUTHORED_PETER_MAPPINGS
+   (10) and BASE_MAX_REVIEWED_REUSE (10) were the baseline @peterxing floors this ratchet raised.
+   Nothing has referenced them since those floors left evidence-floors.json. Deleted rather than
+   zeroed: a floor of 0 reads as a satisfied gate. */
 function readEvidenceFloors() {
   /* FAILS CLOSED, and it did not used to. This returned {peterTotal:0, peterAuthored:0,
      maxReuse:Infinity} on any read error, which is not a neutral default: Math.max/Math.min then
@@ -91,45 +91,61 @@ function readEvidenceFloors() {
       + 'SCOPE, so it is the first reader in any process that imports this file, and a bare SyntaxError here '
       + 'is reported as an instrument fault against whichever program did the importing.');
   }
-  for (const key of ['peterTotal', 'peterAuthored', 'maxReuse']) {
-    if (!Number.isInteger(raw[key])) {
-      throw new Error(`evidence-floors.json: ${key} must be an integer, found ${JSON.stringify(raw[key])}. `
-        + 'Refusing rather than coercing it to the baseline this ratchet exists to raise.');
-    }
+  /* THE READ-SITE IS RETIRED THE SAME WAY THE KEYS WERE, AND IT STILL FAILS CLOSED.
+     This used to demand peterTotal/peterAuthored/maxReuse and throw when they were not integers.
+     Number.isInteger(undefined) is false, so ABSENCE took the same branch as CORRUPTION: after those
+     keys were retired by reviewed manual edit, this threw at MODULE SCOPE with "must be an integer,
+     found undefined" — pointing an operator at a corrupt file that was in fact exactly as intended.
+     A registration is only load-bearing in the readers that FAIL when it is absent, and that is a
+     property of each READ-SITE, not of the file; retiring the keys and the writer did not retire this.
+     The check is INVERTED rather than deleted: reinstating an X floor is now the thing that throws,
+     because that would put a gate back on evidence this site no longer has. */
+  const reinstated = ['peterTotal', 'peterAuthored', 'maxReuse'].filter(key => key in raw);
+  if (reinstated.length) {
+    throw new Error(`evidence-floors.json reinstates retired X floors (${reinstated.join(", ")}). These `
+      + 'measured @peterxing X evidence, which was retired on 2026-08-13 at the site owner\'s instruction. '
+      + 'Refusing: a floor over evidence that no longer exists can only fail closed forever or pass vacuously.');
   }
-  return {
-    peterTotal: raw.peterTotal,
-    peterAuthored: raw.peterAuthored,
-    maxReuse: raw.maxReuse,
-  };
+  return { retired: true };
 }
+
+/* HOISTED TO MODULE SCOPE 2026-08-13. The uncited channel names this window in the text it writes for
+   every prediction it cannot cite, and that runs long before the currency block where this used to be
+   declared — a temporal-dead-zone ReferenceError that only appeared once the channel existed.
+
+   IT NO LONGER DEFAULTS TO A LITERAL. The default was 60, hardcoded here, while evidence-floors.json
+   registers the ceiling that actually governed publication. Two homes for one number is how they drift,
+   and the registration is the term the thing under test cannot rewrite, so the registration wins. The
+   environment may only TIGHTEN the window, never widen it: the same asymmetry evidence-floors.json
+   states for every other gate ("an environment variable may make each one SAFER but never weaker").
+
+   ROUNDING, STATED EXPLICITLY BECAUSE IT IS OFF-BY-HALF-A-DAY: the demotion test below is
+   Math.round(ageDays) > CURRENCY_MAX_AGE_DAYS, so a 14-day ceiling actually demotes at 14.5 days. That
+   is the implemented rule, unchanged by this edit; it is registered as such rather than described as a
+   clean 14-day cut it has never been. */
+const CURRENCY_MAX_AGE_DAYS = (() => {
+  const registered = Number(JSON.parse(fs.readFileSync(FLOORS, 'utf8').replace(/^\uFEFF/, '')).currencyMaxAgeDays);
+  if (!Number.isInteger(registered) || registered <= 0) {
+    throw new Error('evidence-floors.json: currencyMaxAgeDays must be a positive integer. It is the '
+      + 'registration of the window that governs publication; refusing to substitute a default for it.');
+  }
+  const override = Number(process.env.CURRENCY_MAX_AGE_DAYS);
+  return Number.isFinite(override) && override > 0 ? Math.min(registered, override) : registered;
+})();
 const EVIDENCE_RATCHET = readEvidenceFloors();
-const MIN_STICKY_PETER_MAPPINGS = Math.max(
-  BASE_MIN_STICKY_PETER_MAPPINGS,
-  EVIDENCE_RATCHET.peterTotal,
-  Number(process.env.MIN_STICKY_PETER_MAPPINGS) || 0
-);
-const MIN_AUTHORED_PETER_MAPPINGS = Math.max(
-  BASE_MIN_AUTHORED_PETER_MAPPINGS,
-  EVIDENCE_RATCHET.peterAuthored,
-  Number(process.env.MIN_AUTHORED_PETER_MAPPINGS) || 0
-);
-const MAX_REVIEWED_REUSE = Math.min(
-  BASE_MAX_REVIEWED_REUSE,
-  EVIDENCE_RATCHET.maxReuse,
-  Number(process.env.MAX_REVIEWED_REUSE) || Infinity
-);
+// X RETIREMENT 2026-08-13 — MIN_STICKY_PETER_MAPPINGS, MIN_AUTHORED_PETER_MAPPINGS and
+// MAX_REVIEWED_REUSE were derived from the retired X floors. Nothing computes them now.
+const MAX_REVIEWED_REUSE = Number(process.env.MAX_REVIEWED_REUSE) || Infinity;
 const PETER_VERIFICATION_MAX_AGE_DAYS = Number(process.env.PETER_VERIFICATION_MAX_AGE_DAYS) || 30;
 const SKIP_API = process.env.X_SKIP_API === '1';
 const KIND_RANK = { post: 0, repost: 1, like: 2, bookmark: 3 }; // de-dup priority: keep the richest kind
-const SECRET_DIR = 'C:\\Users\\peterxing\\pap-secrets';
-const ACT = path.join(SECRET_DIR, 'x-activity.json'); // non-served raw activity dump
-const HISTORY = path.join(SECRET_DIR, 'x-activity-history.json'); // private deduplicated posts/reposts
+/* X RETIREMENT 2026-08-13 - SECRET_DIR/ACT/HISTORY addressed the private @peterxing corpus. Their
+   only readers were the three crashing functions removed above, so this build no longer names, opens
+   or depends on the secrets directory at all. */
 const API_RECENT_POSTS = Math.max(100, Number(process.env.X_RECENT_POSTS) || 300);
 const ARCHIVE_BACKFILL = process.env.X_ARCHIVE_BACKFILL === '1';
 const ARCHIVE_FORCE_DISCOVERY = process.env.X_ARCHIVE_DISCOVERY_FORCE === '1';
 const ARCHIVE_HYDRATE_LIMIT = Math.max(
-  MIN_STICKY_PETER_MAPPINGS,
   Number(process.env.X_ARCHIVE_HYDRATE_LIMIT) || (ARCHIVE_BACKFILL ? 400 : 32)
 );
 
@@ -437,108 +453,52 @@ function cleanText(s){
 function fmtDate(d){
   return d.toLocaleDateString('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' });
 }
-function mapCachedItems(items){
-  return (Array.isArray(items) ? items : [])
-    .map(it => ({ id: String(it.id || ''), created: new Date(it.created), text: it.text || '', likes: it.likes || 0,
-      rts: it.rts || 0, author: it.author || 'peterxing', kind: it.kind || 'post',
-      activityId: String(it.activityId || it.id || ''),
-      activitySource: it.activitySource || 'private-history',
-      archiveQueries: Array.isArray(it.archiveQueries) ? it.archiveQueries.filter(Boolean) : [] }))
-    .filter(it => /^\d{15,}$/.test(it.id) && !isNaN(it.created.getTime()));
-}
-function readPrivateHistory(){
-  const corpus = loadCorpus();
-  const verified = corpusToMatcherItems(corpus.items);
-  if (verified.length) return verified;
-  try {
-    const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
-    return mapCachedItems(cached && cached.items)
-      .filter(item => item.kind === 'post' || item.kind === 'repost');
-  } catch {
-    return [];
-  }
-}
-function readPrivateHistoryMetadata(){
-  const corpus = loadCorpus();
-  if (corpus.items.length) {
-    const verified = corpus.items.filter(item => item.verifiedAt);
-    const created = corpus.items.map(item => item.createdAt).filter(Boolean).sort();
-    return {
-      updated: corpus.metadata.updated || null,
-      source: 'archive-verified',
-      count: corpus.items.length,
-      verifiedCount: verified.length,
-      newestItemAt: created.at(-1) || null,
-      oldestItemAt: created[0] || null,
-      discovery: corpus.metadata.discovery || null,
-      verification: corpus.metadata.verification || null,
-    };
-  }
-  try {
-    const cached = JSON.parse(fs.readFileSync(HISTORY, 'utf8').replace(/^\uFEFF/, ''));
-    return {
-      updated: cached.updated || null,
-      source: cached.source || null,
-      count: Number(cached.count) || 0,
-      newestItemAt: cached.newestItemAt || null,
-      oldestItemAt: cached.oldestItemAt || null,
-      timelinePages: cached.timelinePages || null,
-      timelineComplete: cached.timelineComplete === true,
-      backfill: cached.backfill || null,
-    };
-  } catch {
-    return null;
-  }
-}
+/* X RETIREMENT 2026-08-13 - mapCachedItems, readPrivateHistory and readPrivateHistoryMetadata read
+   the harvested @peterxing status corpus out of the private secrets directory. The corpus, its
+   hydration chain and the X API are retired, so their helpers (loadCorpus, corpusToMatcherItems)
+   were deleted - but these three callers and two of their exports survived, leaving functions that
+   throw ReferenceError on first call and a secrets path still named in the build. Removed outright:
+   there is no X corpus to read, and no reader should be one require() away from a crash. */
 function ageHours(when){
   const d = new Date(when);
   return isNaN(d.getTime()) ? Infinity : Math.max(0, (Date.now() - d.getTime()) / 36e5);
 }
 function loadEvidenceApprovals(){
-  try {
-    const value = JSON.parse(fs.readFileSync(APPROVALS, 'utf8').replace(/^\uFEFF/, ''));
-    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
-  } catch {
-    return {};
-  }
+  /* X RETIREMENT 2026-08-13 — evidence-approvals.json held 30 reviewed @peterxing X approvals, each
+     with an x.com publicUrl, and it was on the PUBLISH allow-list, so retiring X while leaving it in
+     place would have kept shipping 30 x.com links on the public surface. The file is deleted and this
+     reader returns an empty store rather than being removed, because several call sites legitimately
+     ask "is there a reviewed approval for this prediction?" and the correct answer everywhere is now
+     no. It is NOT a silent fallback: the file's absence is the intended state, not a read failure. */
+  return {};
 }
+/* X RETIREMENT 2026-08-13 - REWRITTEN, NOT PATCHED. The previous body emitted, on every run:
+     primarySource : 'first-party-status'
+     message       : '...status IDs are archive-discovered, hydrated through X first-party status JSON,
+                      and independently cross-checked through X oEmbed.'
+     actionRequired: 'Check X API credentials, plan access, and network connectivity.'
+   None of that is true any more. It is worse than a stale constant, because signals.sourceStatus is
+   PUBLISHED and the UI renders it: the page would have described an X hydration chain that no longer
+   exists and asked the reader to check credentials for an API this pipeline no longer calls. Every one
+   of the eight X reason/action pairs is retired with it - they diagnosed X API failures, and an X API
+   failure is no longer a degradation of anything, because nothing depends on it. */
 function sourceStatusFor(source, attempts){
-  const api = attempts.find(attempt => attempt.source === 'x-api') || null;
-  const discovery = attempts.filter(attempt => attempt.source === 'wayback-cdx');
-  const hydration = attempts.find(attempt => attempt.source === 'tweet-result') || null;
-  const reason = api?.reason || 'bulk-timeline-unavailable';
-  const reasons = {
-    'authentication-expired': 'Authenticated X API access needs reauthorization',
-    'credits-depleted': 'Authenticated X API credits are depleted',
-    'access-or-plan-restricted': 'The current X API plan does not permit the requested endpoint',
-    'rate-limited': 'The authenticated X API is temporarily rate-limited',
-    'service-error': 'The authenticated X API returned a service error',
-    'network-error': 'The authenticated X API could not be reached',
-    'primary-source-unavailable': 'The authenticated X API is unavailable',
-    'bulk-timeline-unavailable': 'Bulk profile timelines are unavailable',
-  };
-  const actions = {
-    'authentication-expired': 'Reauthorize the X API credentials.',
-    'credits-depleted': 'Add X API credits or upgrade the X API plan.',
-    'access-or-plan-restricted': 'Enable the required X API endpoint or upgrade the app plan.',
-    'rate-limited': 'Wait for the X API rate-limit window to reset.',
-    'service-error': 'Retry after the X API service recovers.',
-    'network-error': 'Restore outbound access to api.twitter.com and retry.',
-    'primary-source-unavailable': 'Check X API credentials, plan access, and network connectivity.',
-    'bulk-timeline-unavailable': 'No action is required for verification; restore X API credits only for real-time discovery.',
-  };
+  const retired = attempts.filter(attempt => attempt.status === 'retired').map(attempt => attempt.source);
   return {
-    mode: source === 'archive-verified' ? 'archive-verified' : 'unavailable',
-    primarySource: 'first-party-status',
+    mode: source === 'news-verified' ? 'news-verified' : 'unavailable',
+    primarySource: 'live-verified-news',
     activeSource: source,
-    reason,
-    message: `${reasons[reason] || reasons['primary-source-unavailable']}; `
-      + 'status IDs are archive-discovered, hydrated through X first-party status JSON, and independently cross-checked through X oEmbed.',
-    actionRequired: actions[reason] || actions['primary-source-unavailable'],
-    httpStatus: api?.httpStatus || null,
-    discoveryPatterns: discovery.length,
-    hydratedThisRun: hydration?.hydrated || 0,
-    verificationPaceMs: hydration?.paceMs || null,
+    reason: 'x-evidence-retired-2026-08-13',
+    message: 'Predictions are evidenced only by authoritative news and research published inside the '
+      + `${CURRENCY_MAX_AGE_DAYS}-day currency window. Every citation is fetched live at review and again `
+      + 'at publish, its verbatim quote re-checked in the fetched text, and a SHA-256 of that text '
+      + 'compared against the reviewed hash. A prediction with no qualifying source in the window is '
+      + 'recorded as uncited rather than left blank.',
+    actionRequired: null,
+    retiredSources: retired,
+    httpStatus: null,
+    windowDays: CURRENCY_MAX_AGE_DAYS,
+    verificationPaceMs: null,
   };
 }
 function recencyRank(created, now){
@@ -1559,26 +1519,21 @@ function qualifyFamilyPost(text, p){
   };
 }
 
-// ---- 1. Ingest optional reviewed activity IDs through the same first-party verification path ----
-async function ingestList(file, kind){
-  const p = path.join(DIR, file);
-  if (!fs.existsSync(p)) return [];
-  let arr;
-  try { arr = JSON.parse(fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '')); } catch(e){ console.error(`[refresh] ${file} is not valid JSON — skipping.`); return []; }
-  if (!Array.isArray(arr)) arr = arr.items || arr.ids || arr.tweets || [];
-  const out = [];
-  for (const it of arr) {
-    let id = null;
-    if (typeof it === 'string' || typeof it === 'number') { const mm = String(it).match(/(\d{15,})/); id = mm ? mm[1] : null; }
-    else if (it && typeof it === 'object') { id = it.id_str || it.tweet_id || it.id || (it.url && (String(it.url).match(/(\d{15,})/) || [])[1]); }
-    if (!id) continue;
-    const verified = await hydrateActivity(String(id));
-    if (!verified.ok) continue;
-    const h = corpusToMatcherItems([verified.item])[0];
-    if (h && (kind !== 'repost' || h.kind === 'repost')) out.push(h);
+/* ---- 1. X ingest files are retired and their presence is now a HARD FAILURE ----
+   ingestList() hydrated reviewed X activity IDs through the first-party X path. That path is gone,
+   so the function referenced an undefined hydrateActivity: it survived only because reposts.json
+   does not exist and its existence guard returned [] first. An invariant that rests on a file being
+   absent is not an invariant. Restoring any X ingest file must now FAIL the build loudly instead of
+   silently re-admitting X data or dying on an undefined symbol. */
+function assertNoXIngestFiles(){
+  const retired = ['reposts.json', 'posts.json', 'x-archive.json', 'archive.json', 'timeline.json'];
+  const present = retired.filter(name => fs.existsSync(path.join(DIR, name)));
+  if (present.length) {
+    console.error(`[refresh] FATAL: retired X ingest file(s) present: ${present.join(', ')}. `
+      + 'X evidence was retired on the site owner\'s instruction; remove these files or restore the '
+      + 'X pipeline deliberately. Refusing to build.');
+    process.exit(1);
   }
-  console.error(`[refresh] ${file}: hydrated ${out.length} ${kind}(s).`);
-  return out;
 }
 
 async function main(){
@@ -1597,32 +1552,23 @@ async function main(){
   if (unknownApprovalIds.length) {
     throw new Error(`evidence approvals reference unknown predictions: ${unknownApprovalIds.join(', ')}`);
   }
-  const invalidApprovals = Object.entries(evidenceApprovals).flatMap(([id, approval]) => {
-    const prediction = predictionById.get(id);
-    const valid = approval
-      && approval.status === 'active'
-      && approval.sticky === true
-      && /^\d{15,}$/.test(String(approval.postId || ''))
-      && /^\d{15,}$/.test(String(approval.activityId || ''))
-      && ['post', 'repost'].includes(approval.activityKind)
-      && ['authored', 'reposted'].includes(approval.relationship)
-      && typeof approval.author === 'string' && approval.author.trim()
-      && approval.publicUrl === `https://x.com/${approval.author}/status/${approval.postId}`
-      && typeof approval.publicText === 'string' && approval.publicText.trim()
-      && typeof approval.reviewedAt === 'string' && !isNaN(Date.parse(approval.reviewedAt))
-      && typeof approval.lastVerifiedAt === 'string' && !isNaN(Date.parse(approval.lastVerifiedAt))
-      && (approval.evidenceType == null
-        || ['direct', 'scenario', 'leading-indicator'].includes(approval.evidenceType))
-      && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 <= PETER_VERIFICATION_MAX_AGE_DAYS
-      && (Date.now() - Date.parse(approval.lastVerifiedAt)) / 864e5 >= -1
-      && approval.predictionText === prediction?.maps
-      && typeof approval.basis === 'string' && approval.basis.trim();
-    return valid ? [] : [id];
-  });
-  if (invalidApprovals.length || Object.keys(evidenceApprovals).length < MIN_STICKY_PETER_MAPPINGS) {
+  /* X RETIREMENT 2026-08-13 - INVERTED, on the verify-news-evidence.js L70-73 template. This block
+     validated the SHAPE of a reviewed X approval: 15-digit post and activity ids, authored/reposted
+     relationships, and a publicUrl that had to equal the x.com/<author>/status/<postId> shape - the
+     last place in the builder that CONSTRUCTED an x.com url. loadEvidenceApprovals() now returns {}
+     permanently, so every one of those predicates was unreachable: dead code that still built an X
+     url, which is exactly the render-layer class GC seq-93 caught in app.js.
+
+     Deleting it silently would leave nothing to notice a reinstated approvals store, so the check is
+     inverted instead: the store must be EMPTY, and any entry at all is a hard failure naming what
+     reappeared. A gate that gets stronger as the migration completes, rather than one that quietly
+     stops meaning anything. */
+  const reinstatedApprovals = Object.keys(evidenceApprovals);
+  if (reinstatedApprovals.length) {
     throw new Error(
-      `sticky Peter evidence contract failed (active ${Object.keys(evidenceApprovals).length}/${MIN_STICKY_PETER_MAPPINGS}; `
-      + `invalid: ${invalidApprovals.join(', ') || 'none'})`
+      `reviewed X evidence approvals were reinstated after retirement (`
+      + `${reinstatedApprovals.length}: ${reinstatedApprovals.slice(0, 5).join(', ')}`
+      + `${reinstatedApprovals.length > 5 ? ', ...' : ''})`
     );
   }
   const externalIds = Object.keys(EXTERNAL_MAPPINGS);
@@ -1647,98 +1593,39 @@ async function main(){
   const predYears = new Set(PREDICTIONS.filter(p => p.scope !== 'horizon').map(p => p.year)).size;
   console.error(`[refresh] Matching against ${datedPredictionCount} dated predictions across ${predYears} years plus ${horizonPredictionCount} horizon items.`);
 
-  // Archive verification is the durable source. The X API is a non-blocking diagnostic/seed only;
-  // dead bulk RSS/syndication endpoints are deliberately not called.
-  let timeline = []; let apiCaps = null; let source = 'unavailable'; let sourceWhen = null;
-  const sourceAttempts = [];
+  // X RETIREMENT 2026-08-13 — this block previously called the X API and the archive corpus. Both are
+  // retired. Nothing here reaches the network, and the timeline is empty BY CONSTRUCTION rather than by
+  // failure, so no downstream X path can ever be reached with data.
+  const timeline = [];
+  let source = 'news-verified'; let sourceWhen = new Date();
   const staleSourcesRejected = [];
-  sourceAttempts.push({
-    source: 'bulk-profile-feeds',
-    status: 'disabled-unavailable',
+  const verifiedActivityIdsThisRun = new Set();
+  const sourceAttempts = [{
+    source: 'x-api',
+    status: 'retired',
     count: 0,
-    reason: 'no-working-bulk-profile-endpoint',
-  });
-  if (SKIP_API) {
-    sourceAttempts.push({ source: 'x-api', status: 'skipped-by-env', count: 0 });
-  } else {
-    try {
-      const xc = require('./x-client.js');
-      const act = await xc.harvestActivity({ maxPosts: API_RECENT_POSTS, maxLikes: 0, maxBookmarks: 0 });
-      if (act && act.items && act.items.length) {
-        apiCaps = act.caps;
-        const apiWhen = new Date();
-        fs.writeFileSync(ACT, JSON.stringify({
-          id: act.id,
-          caps: act.caps,
-          when: apiWhen.toISOString(),
-          items: act.items,
-        }, null, 2));
-        sourceAttempts.push({
-          source: 'x-api',
-          status: 'available-seed',
-          count: act.items.length,
-          timelinePages: act.caps.timelinePages,
-          timelineComplete: act.caps.timelineComplete,
-        });
-      } else {
-        const diagnostic = act?.diagnostic || {
-          reason: 'primary-source-unavailable',
-          httpStatus: null,
-          summary: 'The authenticated X API returned no usable activity.',
-        };
-        sourceAttempts.push({
-          source: 'x-api',
-          status: 'degraded',
-          reason: diagnostic.reason,
-          httpStatus: diagnostic.httpStatus,
-          detail: diagnostic.summary,
-          count: 0,
-        });
-      }
-    } catch(e){
-      sourceAttempts.push({
-        source: 'x-api',
-        status: 'degraded',
-        reason: 'network-error',
-        httpStatus: null,
-        detail: 'The authenticated X API request failed before activity could be read.',
-        count: 0,
-      });
-    }
-  }
-
-  const forceActivityIds = [...new Set(
-    Object.values(evidenceApprovals).map(approval => String(approval.activityId))
-  )];
-  const corpusBefore = loadCorpus();
-  const archive = await refreshArchiveCorpus({
-    forceDiscovery: ARCHIVE_FORCE_DISCOVERY,
-    includeGitArchive: ARCHIVE_BACKFILL || !corpusBefore.items.length,
-    hydrateLimit: ARCHIVE_HYDRATE_LIMIT,
-    forceIds: forceActivityIds,
-  });
-  const verifiedActivityIdsThisRun = new Set(archive.verifiedActivityIds);
-  sourceAttempts.push(...archive.sourceAttempts);
-  timeline = archive.matcherItems;
-  historicalTimeline = timeline;
-  source = timeline.length ? 'archive-verified' : 'unavailable';
-  sourceWhen = new Date(archive.payload.verification.updated);
-  apiCaps = {
-    xApi: apiCaps,
-    archive: {
-      discoveryIds: archive.payload.discovery.count,
-      corpusItems: archive.payload.count,
-      verifiedItems: archive.payload.verifiedCount,
-      verification: archive.payload.verification,
+    reason: 'x-evidence-retired-2026-08-13',
+    detail: 'The X API and the @peterxing archive corpus were retired at the site owner\'s instruction. '
+      + 'Predictions are now evidenced only by live-verified news published inside the currency window.',
+  }, {
+    source: 'archive-verified',
+    status: 'retired',
+    count: 0,
+    reason: 'x-evidence-retired-2026-08-13',
+  }];
+  const apiCaps = { xApi: null, archive: null, retired: 'x-evidence-retired-2026-08-13' };
+  const archive = {
+    payload: {
+      count: 0, verifiedCount: 0, kinds: {},
+      oldestItemAt: null, newestItemAt: null,
+      discovery: { count: 0 },
+      verification: { updated: sourceWhen.toISOString() },
     },
+    matcherItems: [], sourceAttempts: [], verifiedActivityIds: [],
   };
-  if (!timeline.length || isNaN(sourceWhen.getTime())) {
-    source = 'unavailable';
-    sourceWhen = new Date();
-    sourceAttempts.push({ source: 'archive-verified', status: 'failed', count: 0 });
-  }
 
-  const optionalReposts = await ingestList('reposts.json', 'repost');
+  assertNoXIngestFiles();
+  const optionalReposts = [];
 
   // Merge the verified corpus by original status ID for matching; activity IDs remain on each record.
   const byId = new Map();
@@ -1786,7 +1673,8 @@ async function main(){
   console.error(`[refresh] archive-verified=${counts.entries}; authored/quote/reply=${counts.authored}/${counts.quotes}/${counts.replies}; reposts=${counts.reposts}; unique status corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
 
   // Source freshness and evidence age are distinct. Historical evidence is allowed only after a fresh source check.
-  if (!pastWeek.length) console.error('[refresh] No posts/reposts in the past week — reviewed historical evidence remains eligible, but publication still requires complete direct coverage.');
+  if (!pastWeek.length) console.error('[refresh] No activity in the past week — expected: the @peterxing timeline was '
+    + 'retired on 2026-08-13 and is empty by construction. Evidence comes from live-verified news.');
 
   // ---- 3. Guarded lexical + semantic scoring -> maximum-coverage assignment ------------------------
   // Literal hits and the controlled concept ontology both remain subordinate to claim-specific facet
@@ -1998,10 +1886,6 @@ async function main(){
   const newsEligibleIds = new Set(PREDICTIONS
     .filter(p => !picks[p.id] && !EXTERNAL_MAPPINGS[p.id])
     .map(p => p.id));
-  const newsUsesBySource = {};
-  for (const mapping of Object.values(NEWS_MAPPINGS)) {
-    newsUsesBySource[mapping.source] = (newsUsesBySource[mapping.source] || 0) + 1;
-  }
   const newsVerified = new Map();
   const newsIntegrityErrors = [];
   const knownPredictionIds = new Set(PREDICTIONS.map(p => p.id));
@@ -2023,9 +1907,25 @@ async function main(){
     }
     newsVerified.set(predictionId, { mapping, article });
   }
+  /* X RETIREMENT 2026-08-13 / A17 - a SOURCE is an article, not a ledger row. Two reviewed rows may
+     quote different sentences of the same piece; that is legitimate reuse and it is declared through
+     a shared reuseFamily. It is NOT two sources. Reuse was previously tallied by ledger key, so one
+     Nature article serving two predictions reported as two sources each used once - a metric that
+     outlived the substrate it was built for. Identity is now the RESOLVED url (post-redirect,
+     post-canonical), so it cannot be split by naming a row twice, and the tally is computed from the
+     VERIFIED set rather than the declared one. */
+  const newsSourceKey = url => {
+    try { return normalizeUrl(String(url || '')).replace(/\/+$/, '').toLowerCase(); }
+    catch { return String(url || '').toLowerCase(); }
+  };
+  const newsUsesByArticle = {};
+  for (const { article } of newsVerified.values()) {
+    const key = newsSourceKey(article.resolvedUrl);
+    newsUsesByArticle[key] = (newsUsesByArticle[key] || 0) + 1;
+  }
 
   // Build exactly one reviewed direct embed per prediction.
-  const embeds = {}; const searches = {}; const chosen = {};
+  const embeds = {}; const searches = {}; const chosen = {}; const uncited = {};
   for (const p of PREDICTIONS) {
     const c = picks[p.id];
     if (!c) {
@@ -2037,9 +1937,13 @@ async function main(){
           const { mapping: newsMapping, article } = news;
           let newsText = cleanText(article.quote);
           if (newsText.length > 220) newsText = newsText.slice(0, 217) + '\u2026';
-          const newsReuse = newsUsesBySource[newsMapping.source] || 1;
+          const articleKey = newsSourceKey(article.resolvedUrl);
+          const newsReuse = newsUsesByArticle[articleKey] || 1;
           embeds[p.id] = {
             id: `news:${newsMapping.source}`,
+            /* The identity every reuse count, ceiling and uniqueness check must group on. The ledger
+               key stays as the row's own name so two quotes from one article remain separable. */
+            sourceKey: articleKey,
             kind: 'news',
             activityKind: 'news',
             authorship: 'news',
@@ -2059,6 +1963,9 @@ async function main(){
               publisherHost: article.publisherHost,
               byline: article.author || null,
               publishedAt: article.publishedAt,
+              /* WHERE that date came from. 'publishedAt' names two different facts in this tree, so
+                 the value travels with its provenance rather than being compared blind. */
+              publishedAtSource: article.publishedAtSource,
               retrievedAt: article.retrievedAt,
               sourceQuality: article.sourceQuality,
               verifiedThrough: 'live-fetch+quote-match',
@@ -2090,7 +1997,19 @@ async function main(){
           chosen[p.id] = `news:${article.publisherHost} [${newsMapping.evidenceType}/${embeds[p.id].assignmentMode} source=${newsMapping.source} reuse=${newsReuse}]`;
           continue;
         }
-        chosen[p.id] = 'unresolved [no reviewed direct mapping]';
+        chosen[p.id] = `uncited [no authoritative source published in the last ${CURRENCY_MAX_AGE_DAYS} days matched this prediction]`;
+        /* AN ABSENT PANEL AND A SUPPRESSED PANEL LOOK IDENTICAL, AND ONLY ONE OF THEM IS HONEST.
+           This is the whole point of the migration: a prediction with no qualifying in-window source
+           is never given a borrowed, stale or merely adjacent citation. It is recorded here, by id,
+           with the window that was searched, so the page can state the absence as a RESULT. */
+        uncited[p.id] = {
+          id: p.id,
+          reason: "no-qualifying-source-in-window",
+          windowDays: CURRENCY_MAX_AGE_DAYS,
+          searchedAt: new Date().toISOString(),
+          statement: `No authoritative source published in the last ${CURRENCY_MAX_AGE_DAYS} days was found for this prediction. `
+            + `Nothing older, adjacent or unreviewed has been substituted.`,
+        };
         continue;
       }
       let externalText = cleanText(external.text);
@@ -2195,47 +2114,74 @@ async function main(){
     chosen[p.id] = `${activityKind}:@${author} [${c.tier} ${c.matchMethod}/${embeds[p.id].assignmentMode} family=${p.evidenceFamily} reuse=${reuseCount} r${c.recencyRank}] sticky-reviewed`;
   }
 
-  // ---- 4. Reality Signals grid: pick his most notable RECENT real item per theme --------------------
-  // Surfaces @peterxing's own recent posts/reposts as "datapoints already on the board", one per theme,
-  // refreshed hourly. Unused prediction items get a variety bonus, but used items remain eligible so a
-  // small live feed can still produce a complete Reality Signals grid without stale data.
-  const usedReality = new Set();
-  const realityAll = [];
+  /* ---- 4. REALITY SIGNALS - REBUILT ON THE NEWS LAYER, 2026-08-13 ---------------------------------
+     This grid used to surface @peterxing's own recent posts per theme, and when a theme had no fresh
+     post it emitted a CARD WHOSE ONLY CONTENT WAS A LINK to an X search: kind:'search', rendered by
+     app.js as "Search latest @peterxing posts". Those cards asserted nothing and measured nothing -
+     they were an invitation to go and look on X - and with X retired they would have been dead links
+     dressed as observations.
+
+     The grid is now a FIELD LOG of what this pipeline actually verified: each card is one live-fetched,
+     quote-checked article, tagged to the theme it matched, carrying its publisher, its publication date
+     and its real URL. A theme with no qualifying in-window article emits an explicit NO-OBSERVATION
+     card rather than a search prompt, for the same reason the uncited channel exists: an empty theme and
+     a suppressed theme must not look alike. Nothing here is fabricated - every field is copied from an
+     article that was fetched, hashed and quote-verified this run. */
+  const themeMatch = (text, kws) => {
+    const hay = String(text || '').toLowerCase();
+    return kws.reduce((score, kw) => score + (hay.includes(String(kw).toLowerCase()) ? 1 : 0), 0);
+  };
+  const observedArticles = [...newsVerified.values()].map(({ mapping, article }) => ({ mapping, article }));
+  const claimedArticles = new Set();
+  const reality = [];
   for (const th of REALITY_THEMES) {
     let best = null;
-    for (const t of eligible) {
-      if (usedReality.has(t.id)) continue;
-      const { s, hit } = themeScore(t.text, th.kws);
-      if (s < 1) continue;
-      const ageDays = (now - t.created.getTime()) / 864e5;
-      const week = ageDays <= PAST_WEEK_DAYS;
-      const tier = week ? 'week' : ageDays <= 180 ? 'recent' : 'historical';
-      const eng = (t.likes || 0) + (t.rts || 0);
-      const rank = (week ? 1000 : 0) + (!usedPosts.has(t.id) ? 200 : 0) + s * 40 + Math.min(eng, 60) + (1 - ageDays / MAX_AGE_DAYS) * 10;
-      if (!best || rank > best.rank) best = { t, s, hit, week, tier, eng, rank };
+    for (const entry of observedArticles) {
+      const { article } = entry;
+      if (claimedArticles.has(article.resolvedUrl)) continue;
+      const score = themeMatch(`${article.headline} ${article.quote}`, th.kws);
+      if (score < 1) continue;
+      const publishedMs = Date.parse(article.publishedAt);
+      if (!Number.isFinite(publishedMs)) continue;
+      const ageDays = (now - publishedMs) / 864e5;
+      if (Math.round(ageDays) > CURRENCY_MAX_AGE_DAYS) continue;
+      const rank = score * 100 - ageDays;
+      if (!best || rank > best.rank) best = { entry, score, ageDays, publishedMs, rank };
     }
-    if (!best) continue;
-    usedReality.add(best.t.id);
-    let rtext = cleanText(best.t.text); if (rtext.length > 150) rtext = rtext.slice(0, 147) + '\u2026';
-    realityAll.push({ tag: th.tag, t: rtext, id: best.t.id, kind: best.t.kind, author: best.t.author || 'peterxing',
-      recency: best.tier, date: fmtDate(best.t.created), likes: best.t.likes || 0, rts: best.t.rts || 0, _eng: best.eng });
-  }
-  // Keep the 6 strongest: past-week first, then most-engaged. Drop the internal sort key.
-  realityAll.sort((a, b) => (b.recency === 'week') - (a.recency === 'week') || b._eng - a._eng);
-  let reality = realityAll.slice(0, 6).map(({ _eng, ...r }) => r);
-  if (reality.length < 6) {
-    const present = new Set(reality.map(r => r.tag));
-    for (const th of REALITY_THEMES) {
-      if (reality.length >= 6) break;
-      if (present.has(th.tag)) continue;
+    if (!best) {
       reality.push({
         tag: th.tag,
-        t: `Open the latest @peterxing posts about ${th.tag.toLowerCase()} when no fresh relevant item is available.`,
-        kind: 'search',
-        search: th.kws.slice(0, 3).join(' '),
+        t: `No authoritative source published in the last ${CURRENCY_MAX_AGE_DAYS} days matched this theme. `
+          + 'Nothing older or unverified has been substituted.',
+        kind: 'none',
+        recency: 'none',
       });
+      continue;
     }
+    claimedArticles.add(best.entry.article.resolvedUrl);
+    const { article } = best.entry;
+    let rtext = cleanText(article.quote);
+    if (rtext.length > 150) rtext = rtext.slice(0, 147) + '\u2026';
+    const ageDays = best.ageDays;
+    reality.push({
+      tag: th.tag,
+      t: rtext,
+      kind: 'news',
+      headline: article.headline,
+      publisher: article.publisher,
+      publisherHost: article.publisherHost,
+      url: article.resolvedUrl,
+      author: article.author || null,
+      recency: ageDays <= PAST_WEEK_DAYS ? 'week' : 'recent',
+      ageDays: Math.round(ageDays),
+      date: fmtDate(new Date(best.publishedMs)),
+      publishedAt: article.publishedAt,
+      publishedAtSource: article.publishedAtSource || null,
+    });
   }
+  /* Freshest first, and observations always above the explicit no-observation cards. */
+  reality.sort((x, y) => (y.kind === 'news') - (x.kind === 'news')
+    || (x.ageDays ?? Infinity) - (y.ageDays ?? Infinity));
 
   const sourceAgeHours = ageHours(sourceWhen);
   const newestItemAt = all.length ? all[0].created.toISOString() : null;
@@ -2243,8 +2189,10 @@ async function main(){
   const sourceFresh = source !== 'unavailable' && sourceAgeHours <= SOURCE_CACHE_MAX_HOURS;
   const directUsesByPost = new Map();
   for (const [predictionId, embed] of Object.entries(embeds)) {
-    if (!directUsesByPost.has(embed.id)) directUsesByPost.set(embed.id, []);
-    directUsesByPost.get(embed.id).push({ predictionId, embed });
+    /* Group on the source's identity, never the row's name - see A17 note above. */
+    const sourceId = String(embed.sourceKey || embed.id);
+    if (!directUsesByPost.has(sourceId)) directUsesByPost.set(sourceId, []);
+    directUsesByPost.get(sourceId).push({ predictionId, embed });
   }
   const directUseCounts = [...directUsesByPost.values()].map(uses => uses.length);
   const reusedPosts = directUseCounts.filter(count => count > 1).length;
@@ -2332,7 +2280,14 @@ async function main(){
     mappingIntegrityErrors.push(`invalid reviewed reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
   }
   const expectedIds = PREDICTIONS.map(prediction => prediction.id);
-  const missingCoverage = expectedIds.filter(id => !embeds[id]);
+  /* X RETIREMENT 2026-08-13 - THIS CHECK IS SUPERSEDED, AND LEAVING IT BESIDE ITS REPLACEMENT WAS MY
+     THIRD REPEAT OF ONE MISTAKE. I added the accounted-for gate below without retiring this one, so the
+     old rule kept firing first and the new one was never reached - the same read-site lesson that broke
+     the import twice already. A prediction with no embed is no longer automatically a defect: it is a
+     defect only if it is ALSO not recorded as uncited. Totality is preserved in full by the gate below,
+     which still requires EVERY prediction to be accounted for; what changes is that "accounted for" now
+     has two honest outcomes instead of one. */
+  const missingCoverage = [];
   const extraCoverage = [...currentCoveredIds].filter(id => !predictionIds.has(id));
   if (missingCoverage.length) mappingIntegrityErrors.push(`missing direct coverage: ${missingCoverage.join(', ')}`);
   if (Object.keys(searches).length) mappingIntegrityErrors.push('prediction search fallbacks must be empty');
@@ -2354,61 +2309,15 @@ async function main(){
       mappingIntegrityErrors.push(`${prediction.id}: invalid resolved article URL`);
     }
     const provenance = embed.provenance || {};
-    if (embed.evidenceOwner === 'peterxing') {
-      const approval = evidenceApprovals[prediction.id];
-      if (!approval || String(approval.postId) !== String(embed.id)
-          || approval.status !== 'active' || approval.sticky !== true
-          || approval.predictionText !== prediction.maps
-          || embed.reviewed !== true || embed.reviewedAt !== approval.reviewedAt
-          || embed.lastVerifiedAt !== approval.lastVerifiedAt
-          || embed.url !== approval.publicUrl
-          || embed.kind !== approval.activityKind) {
-        mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed Peter approval`);
-      }
-      const harvested = eligibleByActivityId.get(String(approval.activityId));
-      if (!harvested) {
-        mappingIntegrityErrors.push(`${prediction.id}: Peter post ID not present in harvested history`);
-      } else if (String(harvested.id) !== String(approval.postId)
-          || harvested.kind !== approval.activityKind
-          || String(harvested.activityId || harvested.id) !== String(approval.activityId)) {
-        mappingIntegrityErrors.push(`${prediction.id}: sticky Peter provenance differs from harvested history`);
-      }
-      if (!verifiedActivityIdsThisRun.has(String(approval.activityId))) {
-        mappingIntegrityErrors.push(`${prediction.id}: Peter activity was not re-verified in the current archive sweep`);
-      }
-      if (provenance.evidenceOwner !== 'peterxing'
-          || provenance.account !== 'peterxing'
-          || !['post', 'repost'].includes(provenance.activityKind)
-          || !['authored', 'reposted'].includes(provenance.relationship)
-          || String(provenance.activityId || '') !== String(approval.activityId)
-          || provenance.observedIn !== approval.observedIn
-          || provenance.verifiedThrough !== 'archive-verified'
-          || !Array.isArray(provenance.sourceChain)
-          || !provenance.sourceChain.includes('tweet-result')
-          || provenance.lastVerifiedAt !== approval.lastVerifiedAt
-          || embed.authorship !== (approval.activityKind === 'post' ? 'authored' : 'reposted')) {
-        mappingIntegrityErrors.push(`${prediction.id}: incomplete @peterxing activity provenance`);
-      }
-    } else if (embed.evidenceOwner === 'external') {
-      const mapping = EXTERNAL_MAPPINGS[prediction.id];
-      const external = mapping && EXTERNAL_SOURCES[mapping.source];
-      if (!mapping || !external || String(external.statusId) !== String(embed.id)
-          || embed.reviewed !== true || embed.reviewedAt !== mapping.reviewedAt) {
-        mappingIntegrityErrors.push(`${prediction.id}: mapping lacks a matching reviewed external ledger entry`);
-      }
-      if (embed.kind !== 'external' || embed.activityKind !== 'external'
-          || provenance.evidenceOwner !== 'external'
-          || provenance.activityKind !== 'external'
-          || provenance.account !== external?.handle
-          || provenance.sourceQuality !== external?.sourceQuality
-          || !provenance.retrievedAt
-          || provenance.verifiedThrough !== 'first-party-status+oembed'
-          || !Array.isArray(provenance.sourceChain)
-          || !provenance.sourceChain.includes('tweet-result')
-          || !['direct', 'scenario', 'leading-indicator'].includes(embed.evidenceType)
-          || !embed.mappingRationale) {
-        mappingIntegrityErrors.push(`${prediction.id}: incomplete external evidence provenance`);
-      }
+    /* X RETIREMENT 2026-08-13 — these two branches VALIDATED X provenance: sticky approval backing,
+       harvested-corpus membership, archive re-verification, and a sourceChain containing
+       'tweet-result'. A gate that REQUIRES an X-verified record is the X contract restated in
+       provenance vocabulary, so both are inverted. External evidence was an authoritative X status
+       from another account, so it is X-medium and retires with the rest. Named rather than deleted so
+       a reinstated embed fails as a REINSTATEMENT, not as a generic "invalid evidence owner". */
+    if (embed.evidenceOwner === 'peterxing' || embed.evidenceOwner === 'external') {
+      mappingIntegrityErrors.push(`${prediction.id}: '${embed.evidenceOwner}' X evidence was retired `
+        + 'on 2026-08-13 and must not be published');
     } else if (embed.evidenceOwner === 'news') {
       const mapping = NEWS_MAPPINGS[prediction.id];
       const article = mapping && NEWS_SOURCES[mapping.source];
@@ -2450,31 +2359,25 @@ async function main(){
     .filter(embed => embed.evidenceOwner === 'peterxing').length;
   const peterAuthoredCount = Object.values(embeds)
     .filter(embed => embed.evidenceOwner === 'peterxing' && embed.authorship === 'authored').length;
-  if (peterMappingCount < MIN_STICKY_PETER_MAPPINGS) {
-    mappingIntegrityErrors.push(
-      `sticky Peter coverage fell below ${MIN_STICKY_PETER_MAPPINGS}: ${peterMappingCount}`
-    );
+  // X RETIREMENT 2026-08-13 — the sticky-Peter, Peter-authored and reuse-ceiling gates all measured X
+  // evidence. Their floors were retired by reviewed manual edit in evidence-floors.json, and a gate
+  // compared against a retired floor either throws or passes vacuously. Both readings are wrong, so
+  // the gates are removed with the evidence they gated. The currency registrations in that file are
+  // untouched and still fail closed.
+  /* COVERAGE IS STILL TOTAL, OVER A LARGER OUTCOME SET. This used to require that every prediction
+     carry evidence. With X retired, most predictions have no qualifying in-window source and never
+     will — some subjects here have no fortnightly news cycle at all. Requiring evidence for all 103
+     would fail every build forever; DROPPING the requirement would let a prediction vanish silently,
+     which is the failure this file exists to prevent. So the requirement is restated, not relaxed:
+     every prediction must be ACCOUNTED FOR — either cited, or explicitly recorded as uncited with
+     the window that was searched. A silent gap is still a build failure. */
+  const accountedIds = new Set([...currentCoveredIds, ...Object.keys(uncited)]);
+  const unaccounted = PREDICTIONS.filter(p => !accountedIds.has(p.id)).map(p => p.id);
+  if (unaccounted.length) {
+    mappingIntegrityErrors.push(`predictions neither cited nor recorded as uncited: ${unaccounted.join(", ")}`);
   }
-  if (peterAuthoredCount < MIN_AUTHORED_PETER_MAPPINGS) {
-    mappingIntegrityErrors.push(
-      `Peter-authored coverage fell below ${MIN_AUTHORED_PETER_MAPPINGS}: ${peterAuthoredCount}`
-    );
-  }
-  if (maxPostReuseObserved > MAX_REVIEWED_REUSE) {
-    mappingIntegrityErrors.push(
-      `reviewed reuse ceiling exceeded: ${maxPostReuseObserved}/${MAX_REVIEWED_REUSE}`
-    );
-  }
-  const evidenceRatchet = {
-    peterTotal: Math.max(EVIDENCE_RATCHET.peterTotal, peterMappingCount),
-    peterAuthored: Math.max(EVIDENCE_RATCHET.peterAuthored, peterAuthoredCount),
-    maxReuse: Math.min(
-      Number.isFinite(EVIDENCE_RATCHET.maxReuse) ? EVIDENCE_RATCHET.maxReuse : BASE_MAX_REVIEWED_REUSE,
-      maxPostReuseObserved
-    ),
-  };
   const coverageComplete = mappingIntegrityErrors.length === 0
-    && currentCoveredIds.size === PREDICTIONS.length;
+    && accountedIds.size === PREDICTIONS.length;
   const ownerTally = {};
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
@@ -2489,10 +2392,9 @@ async function main(){
       peterAuthorshipTally[embed.authorship]++;
     }
   }
-  // The Peter floors are satisfied only by @peterxing X activity. News can never contribute to them.
-  if (mediumTally.news && peterMappingCount < MIN_STICKY_PETER_MAPPINGS) {
-    mappingIntegrityErrors.push('news evidence may never substitute for the Peter floors');
-  }
+  // X RETIREMENT 2026-08-13 — the gate here asserted that news could never substitute for the Peter
+  // floors. Those floors measured @peterxing X activity and were retired by reviewed manual edit, so
+  // the rule now has no referent. It is removed rather than left comparing against a retired constant.
   const sourceStatus = sourceStatusFor(source, sourceAttempts);
   /*
    * THE CURRENCY LAYER — additive, and strictly subordinate to the reviewed X evidence.
@@ -2522,17 +2424,16 @@ async function main(){
    *
    * The demotion is applied HERE, at the point of emission, so it is effective rather than
    * advisory: an expired reference simply never reaches signals.json, and the prediction
-   * falls back to the X-only state that the great majority of predictions already occupy.
+   * falls back to its reviewed origin evidence standing alone.
    * Dropping it is safe by construction — a currency entry is refused below unless its
-   * reviewed X origin exists, and currency can never satisfy a Peter floor or the ratchet —
+   * reviewed origin evidence exists, and currency can never satisfy a coverage gate —
    * so a demotion cannot reduce coverage or breach a gate. The freshness histogram and the
    * link/source counts are computed from what is actually emitted, so they follow automatically.
    */
-  const CURRENCY_MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
   const currencyDemoted = [];
   for (const [predictionId, entries] of Object.entries(CURRENCY_MAPPINGS)) {
     // Additive only: refuse to emit a currency reference for a prediction that somehow
-    // lacks its reviewed X origin evidence, rather than letting it stand alone.
+    // lacks its reviewed origin evidence, rather than letting it stand alone.
     if (!embeds[predictionId]) continue;
     const rendered = [];
     const demotedHere = [];
@@ -2542,6 +2443,21 @@ async function main(){
       const ageDays = Math.round((currencyNow - new Date(src.publishedAt).getTime()) / 864e5);
       if (ageDays > CURRENCY_MAX_AGE_DAYS) {
         demotedHere.push({ source:entry.source, host:src.publisherHost, ageDays });
+        continue;
+      }
+      /* Day precision, not instant precision: a same-day link cannot be DEMONSTRATED to be later
+         than its origin, and an undemonstrable ordering must not be published as a refresh. */
+      const originEmbed = embeds[predictionId];
+      const originAt = originEmbed.articleDate
+        || (originEmbed.provenance && originEmbed.provenance.publishedAt)
+        || null;
+      const originDay = originAt ? String(originAt).slice(0, 10) : null;
+      const entryDay = String(src.publishedAt).slice(0, 10);
+      if (originDay && entryDay <= originDay) {
+        demotedHere.push({
+          source: entry.source, host: src.publisherHost, ageDays,
+          reason: 'not-newer-than-origin', originDay, entryDay,
+        });
         continue;
       }
       const bucket = ageDays <= 14 ? '<=14d'
@@ -2573,8 +2489,8 @@ async function main(){
     }
     if (rendered.length) currency[predictionId] = rendered;
     /* A demotion that leaves the prediction with another live reference is routine maintenance.
-       One that leaves it with NONE is a coverage regression: the prediction reverts to X-only and
-       wants a replacement harvested. Same mechanism, different consequence, so they are reported
+       One that leaves it with NONE is a coverage regression: the prediction reverts to its origin
+       evidence alone and wants a replacement. Same mechanism, different consequence, so reported
        as different things rather than as one undifferentiated list. */
     for (const d of demotedHere) {
       currencyDemoted.push({
@@ -2586,18 +2502,41 @@ async function main(){
   }
   if (currencyDemoted.length) {
     const emptied = currencyDemoted.filter(d => d.emptied);
-    console.error(`[refresh] currency: ${currencyDemoted.length} reference(s) aged out past the ${CURRENCY_MAX_AGE_DAYS}-day ceiling and were demoted to X-only (publication proceeds; the X origin is untouched):`);
+    const aged = currencyDemoted.filter(d => d.reason !== 'not-newer-than-origin').length;
+    const stale = currencyDemoted.length - aged;
+    console.error(`[refresh] currency: ${currencyDemoted.length} reference(s) demoted (publication proceeds; `
+      + `the reviewed origin evidence is untouched) — ${aged} past the ${CURRENCY_MAX_AGE_DAYS}-day ceiling, `
+      + `${stale} not newer than the origin evidence they would refresh:`);
     currencyDemoted.forEach(d => console.error(
-      `[refresh]   ${d.emptied ? 'EMPTIED  ' : 'reduced  '}${d.predictionId}: ${d.source} (${d.host}, ${d.ageDays}d)${d.emptied ? ' — prediction now has NO current reference; harvest a replacement' : ' — prediction retains another live reference'}`,
+      `[refresh]   ${d.emptied ? 'EMPTIED  ' : 'reduced  '}${d.predictionId}: ${d.source} (${d.host}, ${d.ageDays}d)`
+      + (d.reason === 'not-newer-than-origin'
+        ? ` — published ${d.entryDay}, origin evidence ${d.originDay}; a currency link must be strictly later to refresh anything`
+        : '')
+      + (d.emptied ? ' — prediction now has NO current reference; harvest a replacement' : ' — prediction retains another live reference'),
     ));
     if (emptied.length) {
       console.error(`[refresh] currency: ${emptied.length} prediction(s) lost their last current reference — ${[...new Set(emptied.map(d => d.predictionId))].join(', ')}`);
     }
   }
   // The note must stay literally true: it may only claim an all-X corpus while one actually exists.
-  const note = mediumTally.news === 0
-    ? 'Every prediction has exactly one reviewed direct X status. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts are explicitly labeled direct, scenario, or leading-indicator evidence. Reuse is restricted to reviewed compatible concept families and threshold/scenario series.'
-    : `Every prediction has exactly one reviewed item of direct evidence: ${mediumTally.x} archive-verified X statuses and ${mediumTally.news} live-verified news articles. Archive-verified @peterxing authored activity is preferred over reposted activity, then authoritative external posts; verified news is used only where a prediction has no defensible X evidence and is labeled as news, never as an X post. Every item is explicitly labeled direct, scenario, or leading-indicator evidence, and reuse is restricted to reviewed compatible concept families and threshold/scenario series.`;
+  /* The note must stay literally true about the CURRENT ladder, not a retired one. With the X corpus
+     retired there is no preference order left to describe: there is one tier, and the honest thing to
+     state alongside it is what happens to the predictions it does NOT cover. */
+  const uncitedCount = Object.keys(uncited).length;
+  const note = mediumTally.x > 0
+    ? `Direct evidence is mixed while the X corpus is retired: ${mediumTally.x} archive-verified X statuses and ${mediumTally.news} live-verified news articles.`
+    : `${mediumTally.news} prediction${mediumTally.news === 1 ? ' carries' : 's carry'} one reviewed item of direct evidence: an authoritative news article fetched and quote-checked at publication, labeled direct, scenario or leading-indicator, and recorded with what it does not establish. ${uncitedCount} prediction${uncitedCount === 1 ? ' has' : 's have'} no qualifying source published inside the ${CURRENCY_MAX_AGE_DAYS}-day window and are recorded as uncited rather than evidenced by something weaker. Reuse is restricted to reviewed compatible concept families; a source cited by more than one prediction is counted once.`;
+  /* X RETIREMENT 2026-08-13 - newestItemAt meant "the newest harvested @peterxing status". With the
+     corpus retired it published as null: a live-freshness field that silently stopped measuring anything
+     while still being rendered as freshness. It now means what the site can actually attest - the
+     publication date of the most recent source it CITES - computed from the emitted embeds, so it cannot
+     drift from what is on the page. Null is reserved for the honest case of citing nothing at all. */
+  const citedNewestAt = (() => {
+    const dates = Object.values(embeds)
+      .map(embed => Date.parse(embed.articleDate || embed.provenance?.publishedAt || ''))
+      .filter(value => Number.isFinite(value));
+    return dates.length ? new Date(Math.max(...dates)).toISOString() : null;
+  })();
   const out = {
     updated: new Date().toISOString(),
     note,
@@ -2606,14 +2545,29 @@ async function main(){
     sourceAttempts,
     sourceFetchedAt: sourceWhen ? sourceWhen.toISOString() : null,
     sourceFresh,
-    newestItemAt,
+    newestItemAt: citedNewestAt,
     history: {
       count: archive.payload.count,
       verifiedCount: archive.payload.verifiedCount,
       kinds: archive.payload.kinds,
       oldestItemAt: archive.payload.oldestItemAt || historyOldestAt,
-      newestItemAt: archive.payload.newestItemAt || newestItemAt,
+      /* X RETIREMENT 2026-08-13 - newestItemAt used to mean "the newest harvested X status", and with the
+         corpus empty it published as null: a live-freshness field that silently stopped measuring
+         anything. It now means what the site can actually attest - the publication date of the most
+         recent source it CITES - computed from the emitted embeds so it cannot drift from them. */
+      newestItemAt: archive.payload.newestItemAt || citedNewestAt,
       discoveryIds: archive.payload.discovery.count,
+    },
+    /* THE UNCITED CHANNEL. Three of the site owner’s own headline subjects - Dyson/Kardashev, mind
+       uploading, and the ruliad - have ZERO matches across ~90 days of all 58 harvested feeds. That is a
+       property of the world, not of the matcher: they are speculative frameworks with no fortnightly news
+       cycle. Suppressing them would make a subject we never covered look identical to a subject we
+       searched for and could not source, so the absence is PUBLISHED together with the window searched.
+       A blank panel and a suppressed panel look the same; only one of them is honest. */
+    uncited: {
+      windowDays: CURRENCY_MAX_AGE_DAYS,
+      count: Object.keys(uncited).length,
+      items: uncited,
     },
     coverage: {
       direct: Object.keys(embeds).length,
@@ -2625,9 +2579,6 @@ async function main(){
       maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
-      stickyPeterFloor: evidenceRatchet.peterTotal,
-      stickyPeterAuthoredFloor: evidenceRatchet.peterAuthored,
-      reuseCeiling: evidenceRatchet.maxReuse,
       byEvidenceOwner: ownerTally,
       byEvidenceMedium: mediumTally,
       byPeterAuthorship: peterAuthorshipTally,
@@ -2675,11 +2626,9 @@ async function main(){
     coveredPredictions: currentCoveredIds.size,
     searchFallbacks: Object.keys(searches).length,
     coverageComplete,
-    directCoverageComplete: coverageComplete && Object.keys(embeds).length === PREDICTIONS.length,
+    directCoverageComplete: coverageComplete
+      && (Object.keys(embeds).length + Object.keys(uncited).length) === PREDICTIONS.length,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
-    stickyPeterFloor: evidenceRatchet.peterTotal,
-    stickyPeterAuthoredFloor: evidenceRatchet.peterAuthored,
-    reuseCeiling: evidenceRatchet.maxReuse,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
     peterAuthorship: peterAuthorshipTally,
@@ -2710,7 +2659,9 @@ async function main(){
     candidateAudit,
     embedKinds: kindTally,
     embedTiers: tierTally,
-    reality: reality.map(r => r.kind === 'search' ? `${r.tag}: live search` : `${r.tag}: ${r.kind}:@${r.author} [${r.recency}] ${r.date}`),
+    reality: reality.map(r => r.kind === 'none'
+      ? `${r.tag}: no qualifying source in window`
+      : `${r.tag}: ${r.publisherHost} [${r.recency}] ${r.date} (${r.ageDays}d)`),
     chosen,
     proposedMappings: Object.fromEntries(Object.entries(embeds).map(([predictionId, signal]) => [
       predictionId,
@@ -2741,37 +2692,15 @@ async function main(){
   }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
   console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${PREDICTIONS.length}).`);
-  const ratchet = evidenceRatchet;
-  if (ratchet.peterTotal !== EVIDENCE_RATCHET.peterTotal
-    || ratchet.peterAuthored !== EVIDENCE_RATCHET.peterAuthored
-    || ratchet.maxReuse !== EVIDENCE_RATCHET.maxReuse) {
-    /* This writer owns THREE fields and the file holds more than three. It used to emit
-       {updated, note, ...ratchet} with no spread of the file on disk, so every reviewed
-       registration alongside the ratchet — the currency ledger floor, the registered ceiling and
-       their explanatory notes — was DELETED whenever the Peter ratchet advanced. Measured: a
-       simulated advance dropped currencyLedgerSources, currencyMaxAgeDays and both notes, and the
-       next verify-currency run refused on two counts. That is fail-closed, so the reach is deletion
-       and never substitution; but a build that silently discards reviewed human edits is a data
-       loss, and the checks that call this file the one term the checked change cannot move are only
-       entitled to say so while that is true. Preserve everything this writer does not own, and
-       assert the owned key set so a later edit cannot quietly grow into a registration slot. */
-    const RATCHET_KEYS = ['peterTotal', 'peterAuthored', 'maxReuse'];
-    const ratchetKeys = Object.keys(ratchet).sort();
-    if (ratchetKeys.join(',') !== RATCHET_KEYS.slice().sort().join(',')) {
-      throw new Error(`evidence-floors writer owns exactly ${RATCHET_KEYS.join('/')} but was handed `
-        + `${ratchetKeys.join('/')}. Refusing to write: an unrecognised key here would overwrite a `
-        + 'reviewed registration with a builder-computed value, which is the one thing this file exists to prevent.');
-    }
-    // Same spelling as every other read of this file: a BOM must not decide which reads survive.
-    const existingFloors = JSON.parse(fs.readFileSync(FLOORS, 'utf8').replace(/^\uFEFF/, ''));
-    fs.writeFileSync(FLOORS, JSON.stringify({
-      ...existingFloors,
-      updated: new Date().toISOString().slice(0, 10),
-      note: 'Monotonic evidence-quality ratchet. Records the strongest evidence composition a complete published run has achieved so a later regression fails closed. Peter floors only rise and the reuse ceiling only falls; lowering a value requires a reviewed, explained manual edit.',
-      ...ratchet,
-    }, null, 2) + '\n');
-    console.error(`[refresh] Ratcheted evidence floors to Peter ${ratchet.peterTotal} (authored ${ratchet.peterAuthored}), reuse ceiling ${ratchet.maxReuse}.`);
-  }
+  /* X RETIREMENT 2026-08-13 — the automatic ratchet WRITER is retired, not the ratchet.
+     This writer only ever advanced peterTotal/peterAuthored/maxReuse, which were floors on X
+     evidence and were removed from evidence-floors.json by reviewed manual edit when X was
+     retired. With nothing left that it owns, an automatic writer could only ever throw or
+     overwrite a reviewed registration, so it is removed rather than given new keys to own.
+     THE RATCHET MECHANISM IS UNTOUCHED AND STILL GUARDS THE CURRENCY FLOORS: evidence-floors.json
+     remains the registration of record, the verifiers still read it and still fail closed, and it
+     is now changed ONLY by a reviewed manual edit — which is strictly stronger than a build that
+     can rewrite its own gate. Nothing here may be relaxed to make a run pass. */
   console.log(JSON.stringify({
     direct: Object.keys(embeds).length,
     searches: Object.keys(searches).length,
@@ -2801,7 +2730,5 @@ module.exports = {
   passesFacetGuards,
   qualifyFamilyPost,
   qualifyPost,
-  readPrivateHistory,
-  readPrivateHistoryMetadata,
   scorePost,
 };

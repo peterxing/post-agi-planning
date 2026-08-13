@@ -12,34 +12,18 @@ $source = 'C:\Users\peterxing\pap-deploy'
 Set-Location $dir
 
 $coverageVerifier = Join-Path $source 'verify-direct-coverage.js'
-$archiveVerifier = Join-Path $source 'verify-archive-corpus.js'
-$peterVerifier = Join-Path $source 'verify-peter-evidence.js'
-$externalVerifier = Join-Path $source 'verify-external-evidence.js'
 $newsVerifier = Join-Path $source 'verify-news-evidence.js'
 $currencyVerifier = Join-Path $source 'verify-currency.js'
 $surfaceVerifier = Join-Path $source 'verify-deploy-surface.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier)) {
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier)) {
   Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
 }
 & node $coverageVerifier
+# X RETIREMENT 2026-08-13 — the coverage gate now measures verified-news coverage; the archive,
+# Peter and external X gates are removed with the evidence they verified.
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'Direct X evidence coverage is incomplete; deployment aborted.'
-  exit 6
-}
-& node $archiveVerifier
-if ($LASTEXITCODE -ne 0) {
-  Write-Error 'Archive discovery and first-party verification validation failed; deployment aborted.'
-  exit 6
-}
-& node $peterVerifier
-if ($LASTEXITCODE -ne 0) {
-  Write-Error 'Reviewed Peter X evidence validation failed; deployment aborted.'
-  exit 6
-}
-& node $externalVerifier
-if ($LASTEXITCODE -ne 0) {
-  Write-Error 'External X evidence validation failed; deployment aborted.'
   exit 6
 }
 # Tier-3 news mappings must re-resolve and still carry their exact reviewed quote at deploy time.

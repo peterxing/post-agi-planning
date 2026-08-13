@@ -171,8 +171,16 @@ if (!horizon || typeof horizon !== 'object' || Array.isArray(horizon)) {
         problems.push(`${tag}: match object missing`);
       } else {
         if (!nonEmptyString(match.headline)) problems.push(`${tag}: match.headline missing/empty`);
-        if (!nonEmptyString(match.search) || !/\bfrom:peterxing\b/i.test(match.search)) {
-          problems.push(`${tag}: match.search must be an honest from:peterxing query`);
+        /* X RETIREMENT 2026-08-13 - INVERTED. This required every horizon matcher to carry a
+           `from:peterxing` X search operator, so REMOVING X failed validation: a gate that mandated
+           the very thing the site owner asked to be removed. It is inverted rather than deleted, on the
+           same template as verify-news-evidence.js: the operator must now be ABSENT, so a reinstatement
+           fails here instead of slipping back in. match.search itself survives - it carries the topical
+           terms the matcher scores against, which were never X-specific. */
+        if (!nonEmptyString(match.search)) {
+          problems.push(`${tag}: match.search missing/empty`);
+        } else if (/\bfrom:\s*peterxing\b|x\.com|twitter\.com/i.test(match.search)) {
+          problems.push(`${tag}: match.search reinstates a retired X search operator`);
         }
         for (const field of ['phrases', 'strong', 'weak']) {
           if (!Array.isArray(match[field]) || match[field].some(v => !nonEmptyString(v))) {

@@ -15,6 +15,18 @@ const expectedTechnology = predictions.years.reduce(
 );
 const expectedYears = predictions.years.length;
 const expectedHorizon = predictions.postSuperintelligence.items.length;
+/* X retirement (2026-08-13). The evidence mix is derived from signals.json rather than
+   asserted as '> 0', which was an X-era portfolio expectation that says nothing about
+   whether the rendered label matches the record it came from. */
+const expectedEvidenceTypes = Object.values(signals.embeds || {})
+  .reduce((acc, embed) => {
+    const key = embed.evidenceType || 'direct';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+const artefactCited = Number(signals.coverage && signals.coverage.direct) || 0;
+const artefactUncited = Number(signals.uncited && signals.uncited.count) || 0;
+const artefactReality = Array.isArray(signals.reality) ? signals.reality.length : 0;
 const expectedChanged = predictions.years.reduce(
   (sum, year) => sum + year.events.filter(event => event.revisedAt === predictions.updated.slice(0, 10)).length,
   0
@@ -139,25 +151,30 @@ function requestStatus(pathname) {
         currencyCards:document.querySelectorAll('#timelineBody .tl-signal.tl-currency, #horizonBody .tl-signal.tl-currency').length,
         evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
         predictionSearches:document.querySelectorAll('.tl-signal-search').length,
-        invalidPredictionSearches:[...document.querySelectorAll('.tl-signal-search')].filter(link => {
-          const url = new URL(link.href);
-          return url.hostname !== 'x.com' || url.pathname !== '/search'
-            || !/^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
-            || url.searchParams.get('f') !== 'live';
+        /* X RETIREMENT 2026-08-13 - INVERTED. This called a search chip INVALID unless its href was
+           an x.com/search url carrying from:peterxing, so it failed the build precisely BECAUSE the
+           migration succeeded. No search chip is legitimate now, so the measure becomes "does the
+           page reach X at all" - counted across every anchor and every script in the document,
+           not only inside chips that no longer exist. */
+        xLinks:[...document.querySelectorAll('a[href]')].filter(link => {
+          try { return /(?:^|\.)(?:x\.com|twitter\.com)$/i.test(new URL(link.href, location.href).hostname); }
+          catch { return false; }
         }).length,
+        xScripts:[...document.querySelectorAll('script[src]')].filter(script =>
+          /twitter\.com|x\.com/i.test(script.src)).length,
+        uncitedCards:document.querySelectorAll('#timelineBody .tl-signal-uncited, #horizonBody .tl-signal-uncited').length,
         peterEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
-        peterAuthoredEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter wrote this/.test(summary.textContent)).length,
-        peterRepostedEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter reposted this/.test(summary.textContent)).length,
+        newsEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /News evidence/.test(summary.textContent)).length,
         externalEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
-        scenarioEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Scenario source/.test(summary.textContent)).length,
-        leadingEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Leading indicator/.test(summary.textContent)).length,
+        scenarioEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /scenario source/i.test(summary.textContent)).length,
+        leadingEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /leading indicator/i.test(summary.textContent)).length,
         evidenceDashboard:{
-          direct:document.getElementById('evidenceDirectStat')?.textContent.trim(),
-          authored:document.getElementById('evidenceAuthoredStat')?.textContent.trim(),
-          reposted:document.getElementById('evidenceRepostedStat')?.textContent.trim(),
-          external:document.getElementById('evidenceExternalStat')?.textContent.trim(),
-          unique:document.getElementById('evidenceReuseStat')?.textContent.trim(),
-          maxReuse:document.getElementById('evidenceMaxReuseStat')?.textContent.trim(),
+          cited:document.getElementById('evidenceCitedStat')?.textContent.trim(),
+          uncited:document.getElementById('evidenceUncitedStat')?.textContent.trim(),
+          articles:document.getElementById('evidenceArticlesStat')?.textContent.trim(),
+          publishers:document.getElementById('evidencePublishersStat')?.textContent.trim(),
+          window:document.getElementById('evidenceWindowStat')?.textContent.trim(),
+          newest:document.getElementById('evidenceNewestStat')?.textContent.trim(),
           typeMix:document.getElementById('evidenceTypeMix')?.textContent.replace(/\s+/g, ' ').trim(),
           source:document.getElementById('evidenceSourceHealth')?.textContent.replace(/\s+/g, ' ').trim(),
         },
@@ -222,49 +239,74 @@ function requestStatus(pathname) {
       JSON.stringify({ brands:state.brandTitles, reader:state.readerBrand }));
     check(results, 'later years compact by default', state.collapsedYears === profile.collapsedYears, `${state.collapsedYears}/${profile.collapsedYears}`);
     check(results, 'horizon map and cards align', state.horizonNodes === expectedHorizon && state.horizonCards === expectedHorizon);
-    check(results, 'six reality observations render', state.reality === 6, String(state.reality));
+    check(results, 'reality observations render, all of them',
+      state.reality === artefactReality && state.reality > 0,
+      `${state.reality}/${artefactReality}`);
     check(results, 'all chapters render', state.chapters === 13, String(state.chapters));
     check(results, 'collapsed chapters leave the accessibility tree',
       state.chapterBodies === 13 && state.collapsedChapters,
       JSON.stringify({ bodies:state.chapterBodies }));
-    check(results, 'prediction evidence is complete and direct-only',
-      state.evidenceCards === expectedEvents + expectedHorizon
+    /* X retirement (2026-08-13). A prediction is no longer required to carry a card; it is
+       required to be ACCOUNTED FOR. Both populations are pinned to the artefact AND to each
+       other, so a cited card quietly degrading into an uncited notice still fails. */
+    check(results, 'every prediction is accounted for as cited or uncited',
+      state.evidenceCards === artefactCited
+      && state.uncitedCards === artefactUncited
+      && state.evidenceCards + state.uncitedCards === expectedEvents + expectedHorizon
       && state.predictionSearches === 0
-      && state.evidenceUnavailable === 0
-      && state.invalidPredictionSearches === 0,
-      JSON.stringify({ cards:state.evidenceCards, unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
+      && state.evidenceUnavailable === 0,
+      JSON.stringify({ cited:state.evidenceCards, expectedCited:artefactCited,
+        uncited:state.uncitedCards, expectedUncited:artefactUncited,
+        total:expectedEvents + expectedHorizon,
+        unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
     if (state.evidenceCards > 0) {
-      check(results, 'mixed provenance labels are explicit',
-        state.peterEvidence + state.externalEvidence === state.evidenceCards
-        && state.peterAuthoredEvidence === expectedAuthorship.authored
-        && state.peterRepostedEvidence === expectedAuthorship.reposted
-        && state.scenarioEvidence > 0
-        && state.leadingEvidence > 0,
+      /* X retirement (2026-08-13). Retired labels are asserted ABSENT rather than counted into
+         a total: 'peter + external === cards' is satisfied trivially once both are zero and the
+         card count is zero too, so it would pass on an empty page. Assert the positive claim
+         (every card is labelled news) and the negative one (no X label survives) separately. */
+      check(results, 'every cited card is labelled news evidence and no X label survives',
+        state.newsEvidence === state.evidenceCards
+        && state.peterEvidence === 0
+        && state.externalEvidence === 0
+        && state.scenarioEvidence === (expectedEvidenceTypes.scenario || 0)
+        && state.leadingEvidence === (expectedEvidenceTypes['leading-indicator'] || 0),
         JSON.stringify({
-          peter:state.peterEvidence,
-          authored:state.peterAuthoredEvidence,
-          reposted:state.peterRepostedEvidence,
-          external:state.externalEvidence,
+          news:state.newsEvidence,
+          cards:state.evidenceCards,
+          retiredPeter:state.peterEvidence,
+          retiredExternal:state.externalEvidence,
           scenario:state.scenarioEvidence,
+          expectedScenario:expectedEvidenceTypes.scenario || 0,
           leading:state.leadingEvidence,
+          expectedLeading:expectedEvidenceTypes['leading-indicator'] || 0,
         }));
     }
-    check(results, 'evidence dashboard exposes composition, reuse and degraded source',
-      state.evidenceDashboard.direct === `${expectedEvents + expectedHorizon}/${expectedEvents + expectedHorizon}`
-      && state.evidenceDashboard.authored === String(expectedAuthorship.authored)
-      && state.evidenceDashboard.reposted === String(expectedAuthorship.reposted)
-      && state.evidenceDashboard.external === String(expectedOwners.external)
-      && state.evidenceDashboard.unique === String(signals.coverage.uniquePosts)
-      && state.evidenceDashboard.maxReuse === `${signals.coverage.maxReuse}×`
-      && state.evidenceDashboard.typeMix.includes(`Peter wrote · ${expectedAuthorship.authored}`)
-      && state.evidenceDashboard.typeMix.includes(`Peter reposted · ${expectedAuthorship.reposted}`)
-      && state.evidenceDashboard.typeMix.includes(`Peter unique statuses · ${expectedPeterStatuses}`)
-      && state.evidenceDashboard.typeMix.includes(`External unique statuses · ${expectedExternalStatuses}`)
-      && state.evidenceDashboard.typeMix.includes(`Maximum reviewed reuse · ${signals.coverage.maxReuse} of ${signals.coverage.reuseCeiling}`)
-      && /Archive-verified source chain/i.test(state.evidenceDashboard.source)
-      && /first-party status JSON/i.test(state.evidenceDashboard.source)
-      && /Wayback|archive-discovered/i.test(state.evidenceDashboard.source),
+    /* Every figure is compared against signals.json, never against a literal, so the panel cannot
+       drift from the artefact it summarises. Cited and uncited are asserted TOGETHER: publishing one
+       without the other is exactly how 7-of-103 gets made to look like 7-of-7. */
+    const expectedUncited = Number(signals.uncited && signals.uncited.count) || 0;
+    const expectedWindow = Number(signals.uncited && signals.uncited.windowDays) || 0;
+    const expectedArticles = new Set(Object.values(signals.embeds || {}).map(e => e.id)).size;
+    const expectedPublishers = new Set(Object.values(signals.embeds || {})
+      .map(e => e.publisherHost).filter(Boolean)).size;
+    check(results, 'evidence dashboard reports the cited/uncited accounting from signals.json',
+      state.evidenceDashboard.cited === `${signals.coverage.direct} of ${signals.coverage.total}`
+      && state.evidenceDashboard.uncited === String(expectedUncited)
+      && state.evidenceDashboard.articles === String(expectedArticles)
+      && state.evidenceDashboard.publishers === String(expectedPublishers)
+      && state.evidenceDashboard.window === `${expectedWindow} days`
+      && !/Peter wrote|Peter reposted|Maximum reviewed reuse|unique statuses/i.test(state.evidenceDashboard.typeMix)
+      && !/Archive-verified|first-party status|Wayback|archive-discovered/i.test(state.evidenceDashboard.source)
+      && /Live-verified sources/i.test(state.evidenceDashboard.source),
       JSON.stringify(state.evidenceDashboard));
+    check(results, 'no X link, X script or X-era evidence card survives on the page',
+      state.xLinks === 0 && state.xScripts === 0 && state.predictionSearches === 0
+      && state.peterEvidence === 0 && state.externalEvidence === 0,
+      `xLinks=${state.xLinks} xScripts=${state.xScripts} searches=${state.predictionSearches} `
+      + `peter=${state.peterEvidence} external=${state.externalEvidence}`);
+    check(results, 'every uncited prediction states its search instead of a fault',
+      state.uncitedCards === expectedUncited && state.evidenceUnavailable === 0,
+      `uncitedCards=${state.uncitedCards} expected=${expectedUncited} unavailable=${state.evidenceUnavailable}`);
     check(results, 'forecast finder exposes counts, deep links and latest revisions',
       state.finder.changed === expectedChanged
       && state.finder.deepLinks === expectedEvents + expectedYears + expectedHorizon
@@ -584,11 +626,16 @@ function requestStatus(pathname) {
     const parsed = new Date(`${row.rendered} UTC`);
     return isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== row.utc;
   });
-  if (!east.length || east.length !== expectedCurrencyCards || zoneMismatch.length || utcMismatch.length) {
+  /* The DOM is pinned to the artefact in BOTH directions: rows declared but not rendered
+     fail, and rows rendered but not declared fail. An artefact that declares zero is
+     reported as inert below rather than skipped, so 'no rows' can never read as 'passed'. */
+  if (east.length !== expectedCurrencyCards || zoneMismatch.length || utcMismatch.length) {
     failures++;
     console.log(`  FAIL currency dates are reader-location dependent · cards ${east.length}/${expectedCurrencyCards} · zone mismatches ${zoneMismatch.length} · UTC mismatches ${utcMismatch.length}${utcMismatch.length ? ` · ${JSON.stringify(utcMismatch.slice(0, 3))}` : ''}`);
   } else {
-    console.log(`[utc-dates] ${east.length}/${expectedCurrencyCards} currency dates identical at UTC+14 and UTC-11 and equal to the captured date`);
+    console.log(expectedCurrencyCards === 0
+      ? '[utc-dates] currency layer is INERT: signals.currency declares 0 rows and the DOM renders 0. Nothing to compare; the artefact pin still holds in both directions.'
+      : `[utc-dates] ${east.length}/${expectedCurrencyCards} currency dates identical at UTC+14 and UTC-11 and equal to the captured date`);
   }
 
   await browser.close();

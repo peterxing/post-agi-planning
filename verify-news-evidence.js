@@ -29,7 +29,8 @@ if (require.main === module) require('./pipeline-lock').guard('verify:news');
 
 const fs = require('fs');
 const path = require('path');
-const approvals = require('./evidence-approvals.json');
+// X RETIREMENT 2026-08-13 — evidence-approvals.json is deleted; there are no X approvals to read.
+const approvals = {};
 const { EXTERNAL_MAPPINGS } = require('./external-evidence');
 const news = require('./news-evidence');
 
@@ -63,11 +64,13 @@ const floors = (() => {
       + 'ratchet is a gate, not a hint: refusing rather than falling back to the ceiling it exists to tighten.');
     process.exit(1);
   }
-  if (!Number.isInteger(doc.maxReuse)) {
-    console.error(`RESULT: FAIL — evidence-floors.json: maxReuse must be an integer, found ${JSON.stringify(doc.maxReuse)}. `
-      + 'Refusing rather than coercing it to the hardcoded ceiling of 10 this registration exists to tighten.');
-    process.exit(1);
-  }
+// X RETIREMENT 2026-08-13 — this demanded an X-post reuse ceiling and exited 1 when it was absent,
+// which made the NEWS verifier unrunnable the moment X was retired. Inverted, exactly as the
+// refresh-signals read-site was: reinstating a retired X floor is now what fails.
+if (['peterTotal', 'peterAuthored', 'maxReuse'].some(k => k in doc)) {
+  console.error('verify:news FAILED - evidence-floors.json reinstates a retired X floor.');
+  process.exit(1);
+}
   return doc;
 })();
 
@@ -201,6 +204,7 @@ async function runProofs(log) {
       publisherHost: 'arstechnica.com',
       headline: 'Proof',
       publishedAt: '2026-01-01T00:00:00.000Z',
+      publishedAtSource: 'page',
       retrievedAt: '2026-01-01',
       sourceQuality: 'primary-news-organization',
       quote: 'A sufficiently long verbatim supporting sentence used only for the ceiling proof.',
@@ -240,6 +244,7 @@ async function runProofs(log) {
     publisherHost: 'arstechnica.com',
     headline: 'An article that was never published',
     publishedAt: '2026-01-01T00:00:00.000Z',
+    publishedAtSource: 'page',
     retrievedAt: '2026-01-01',
     sourceQuality: 'primary-news-organization',
     quote: 'A fabricated sentence that no real article on this publisher has ever contained anywhere.',
@@ -265,6 +270,9 @@ async function runProofs(log) {
     author: discovered.extracted.author,
     headline: discovered.extracted.headline,
     publishedAt: discovered.extracted.publishedAt,
+    /* This date was read out of the fetched page, not out of a feed - which is exactly the
+       distinction publishedAtSource exists to record. */
+    publishedAtSource: 'page',
     retrievedAt: new Date().toISOString().slice(0, 10),
     sourceQuality: 'primary-news-organization',
     quote: discovered.sentence,
@@ -427,9 +435,21 @@ async function runBrowserProof(baseUrl, log) {
   if (Number(owners.news || 0) !== publishedNews.length) {
     problems.push(`coverage.byEvidenceOwner.news (${owners.news || 0}) does not match published news embeds (${publishedNews.length})`);
   }
-  const peterFloor = Number(floors.peterTotal || 0);
-  if (Number(owners.peterxing || 0) < peterFloor) {
-    problems.push(`Peter coverage ${owners.peterxing || 0} is below the ratcheted floor ${peterFloor}; news must never make up the difference`);
+  /* X RETIREMENT 2026-08-13 - SECOND ATTEMPT. GC seq-90 caught `floors.peterTotal || 0` making this
+     `0 < 0`. My first repair wrote `const peterFloor = null`, and GC seq-91 measured that `x < null`
+     IS `x < 0`, because null coerces to 0 in a relational comparison. I changed the SPELLING of the
+     vacuity and left the semantics - then wrote an authoritative comment on top asserting this exact
+     line was handled. That is worse than the untouched bug: the note gives the next reader, or the
+     next agent, a documented reason not to look. Prose-vs-code drift about the fix itself.
+
+     There is no Peter evidence left to floor, so a numeric floor of ANY value is meaningless here.
+     The intent - "news must never make up the difference" - is re-expressed positively against
+     something that still exists: after the retirement, X-owned coverage must be ABSENT. An absent key
+     and a zero both satisfy that; a reappearance fails it. Asserted, not defaulted. */
+  const peterOwned = Number(owners.peterxing || 0);
+  if (peterOwned !== 0) {
+    problems.push(`coverage.byEvidenceOwner.peterxing is ${peterOwned}; @peterxing X evidence was retired `
+      + 'on 2026-08-13 and must be absent. A nonzero count means an X mapping was reinstated.');
   }
 
   // Live re-verification of every reviewed news source before publish.

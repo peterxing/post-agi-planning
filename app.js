@@ -477,8 +477,15 @@ const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25
 /* Inline fallback. The live site overrides this from signals.json (regenerated hourly from verified
    X activity and matched to each prediction). We keep NO embedded posts inline, so if signals.json
    is unavailable the UI reports unavailable evidence rather than fabricating or searching. */
-let xSignals = {};
+/* Renamed from xSignals: these are direct evidence records, and the medium is news. Keeping the old
+   name would have left the render layer describing itself in the retired medium's vocabulary. */
+let directSignals = {};
 let currencySignals = {};
+/* The 96 predictions with no qualifying in-window source. This is a MEASUREMENT, not a gap: each
+   record carries the reason, the window searched and the instant it was searched. It is rendered
+   rather than hidden, because a prediction that silently shows nothing is indistinguishable from a
+   prediction nobody looked at. */
+let uncitedSignals = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -510,99 +517,42 @@ function safeHttpUrl(value){
     return '';
   }
 }
-function safeXHandle(value){
-  return String(value || 'peterxing').replace(/[^a-z0-9_]/gi, '') || 'peterxing';
-}
-function safeTweetId(value){
-  return String(value || '').replace(/\D/g, '');
-}
 
-const SIG_KIND = {
-  post:     { noun:'post',     icon:'',         verb:'' },
-  repost:   { noun:'repost',   icon:'\u21bb',   verb:'reposted' },
-  external: { noun:'evidence', icon:'',         verb:'' },
-  like:     { noun:'like',     icon:'\u2665',   verb:'liked' },
-  bookmark: { noun:'bookmark', icon:'\uD83D\uDD16', verb:'bookmarked' },
-  quote:    { noun:'quote',    icon:'\u201c',   verb:'quoted' },
-};
-/* Badge text reflects BOTH kind and recency: a past-week item is labelled "Past-week …", otherwise
-   it is his "Most recent …" post/repost on that topic (honestly dated below). */
-function sigBadge(kind, recency, evidenceType){
-  if (kind === 'news') {
-    if (evidenceType === 'scenario') return 'News evidence \u00b7 scenario source';
-    if (evidenceType === 'leading-indicator') return 'News evidence \u00b7 leading indicator';
-    return 'News evidence';
-  }
-  if (kind === 'external') {
-    if (evidenceType === 'scenario') return 'Scenario source';
-    if (evidenceType === 'leading-indicator') return 'Leading indicator';
-    return 'External evidence';
-  }
-  const noun = (SIG_KIND[kind] || SIG_KIND.post).noun;
-  const when = recency === 'week' ? 'Past-week' : recency === 'historical' ? 'Historical' : 'Most recent';
-  return when + ' ' + noun;
+/* X RETIREMENT 2026-08-13. `kind` is GONE FROM THE SIGNATURE, not merely unhandled. The sole
+   caller passes the literal 'news', so a kind parameter could only ever carry a retired value,
+   and the old `SIG_KIND[kind] || SIG_KIND.post` fallback answered an unknown kind with
+   "Most recent post" - inventing a provenance claim instead of failing. Retired kinds are now
+   unrepresentable rather than runtime-rejected. `recency` went with it: only the fallback read it. */
+function sigBadge(evidenceType){
+  if (evidenceType === 'scenario') return 'News evidence \u00b7 scenario source';
+  if (evidenceType === 'leading-indicator') return 'News evidence \u00b7 leading indicator';
+  return 'News evidence';
 }
 
 /* A prediction is identified by "YEAR-INDEX" (index = its position in that year's events array). The same
    id is computed by refresh-signals.js, so each prediction's signals.json embed lines up 1:1 here. */
 function signalCard(sig){
-  /* Tier-3 verified news evidence renders as news and never borrows any X affordance: no handle,
-     no status ID, no "load live post" embed, and the link goes to the resolved article URL. */
+  /* X RETIREMENT 2026-08-13. Live-verified news is now the ONLY evidence medium, so this function no
+     longer chooses between two renderers - it renders news, and anything else is a fault to be shown
+     rather than a card to be drawn. The X branch that used to live here built a handle, a 15-digit
+     status id, a "Load live post" embed button and an x.com permalink; all four are gone.
+
+     The non-news path deliberately renders an UNAVAILABLE state instead of falling through to a
+     generic card. An embed of a retired medium reaching this point means the build emitted something
+     the migration says cannot exist, and the reader is entitled to see that rather than a card that
+     looks ordinary. It fails visibly, not quietly. */
   if (sig && (sig.evidenceOwner === 'news' || sig.kind === 'news')) return newsSignalCard(sig);
-  const kind = SIG_KIND[sig.kind] ? sig.kind : 'post';
-  const author = safeXHandle(sig.author);
-  const tweetId = safeTweetId(sig.id);
-  const K = SIG_KIND[kind] || SIG_KIND.post;
-  const externalEvidence = sig.evidenceOwner === 'external' || kind === 'external';
-  const peterAuthored = !externalEvidence && (sig.authorship === 'authored' || kind === 'post');
-  const dispName = externalEvidence
-    ? htmlText(sig.displayName || ('@' + author))
-    : peterAuthored ? 'Peter Xing' : ('@' + author);
-  const actionLine = externalEvidence
-    ? `External evidence &middot; @${author}`
-    : peterAuthored ? 'Peter wrote this' : `${K.icon} Peter reposted this &middot; @${author}`;
-  const method = htmlText(sig.matchMethod || 'verified');
-  const date = htmlText(sig.date);
-  const directUrl = safeHttpUrl(sig.url) || `https://x.com/${author}/status/${tweetId}`;
-  const likes = Number.isFinite(Number(sig.likes)) ? Number(sig.likes) : 0;
-  const reposts = Number.isFinite(Number(sig.rts)) ? Number(sig.rts) : 0;
-  const maps = sig.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(sig.maps)}</div>` : '';
-  const rationale = externalEvidence && sig.mappingRationale
-    ? `<div class="tl-signal-maps"><b>${sig.evidenceType === 'scenario' ? 'Scenario relevance' : 'Evidence relevance'}:</b> ${htmlText(sig.mappingRationale)}</div>`
-    : '';
-  const evidenceLabel = externalEvidence
-    ? sig.evidenceType === 'scenario' ? 'scenario source' : sig.evidenceType === 'leading-indicator' ? 'leading indicator' : 'direct evidence'
-    : `${peterAuthored ? 'reviewed Peter-authored' : 'reviewed Peter-reposted'} ${sig.evidenceType === 'leading-indicator' ? 'leading indicator' : sig.evidenceType === 'scenario' ? 'scenario source' : 'direct evidence'}`;
-  const reviewDate = sig.lastVerifiedAt || sig.reviewedAt || '';
-  const reuse = Number(sig.reuseCount) > 1 ? ` · reviewed reuse across ${Number(sig.reuseCount)} related predictions` : ' · unique mapping';
-  const provenanceLine = `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(evidenceLabel)}${reviewDate ? ` · verified ${htmlText(reviewDate)}` : ''}${reuse}</div>`;
-  const metrics = likes || reposts
-    ? `<span class="tl-signal-metrics"><span>&#9829; ${likes}</span><span>&#8635; ${reposts}</span></span>`
-    : '';
   return `
-    <details class="tl-signal" data-kind="${kind}">
+    <details class="tl-signal tl-signal-retired" data-kind="unavailable">
       <summary>
-        <span class="tl-x">${X_SVG}</span>
         <span class="tl-signal-summary-text">
-          <strong>${htmlText(sigBadge(kind, sig.recency, sig.evidenceType))} · ${dispName}</strong>
-          ${date} · ${actionLine}
+          <strong>Evidence unavailable</strong>
+          This prediction carries an evidence record in a retired medium.
         </span>
-        <span class="tl-signal-method">${method}</span>
       </summary>
       <div class="tl-signal-detail">
-        ${provenanceLine}
-        ${maps}
-        ${rationale}
-        <div class="tl-signal-text">${htmlText(sig.text)}</div>
-        <div class="tl-signal-foot">
-          <span class="tl-signal-date">${date}</span>
-          ${metrics}
-          <span class="tl-signal-actions">
-            <button class="tl-signal-load" data-tweet="${tweetId}">Load live post &#8635;</button>
-            <a class="tl-signal-link" href="${htmlText(directUrl)}" target="_blank" rel="noopener">View direct post on X &rarr;</a>
-          </span>
-        </div>
-        <div class="tl-embed"></div>
+        <div class="tl-signal-text">Direct evidence is published only as live-verified news and research.
+        No substitute has been shown in its place.</div>
       </div>
     </details>`;
 }
@@ -634,7 +584,7 @@ function newsSignalCard(sig){
       <summary>
         <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
         <span class="tl-signal-summary-text">
-          <strong>${htmlText(sigBadge('news', sig.recency, sig.evidenceType))} &mdash; ${publisher}, ${date}</strong>
+          <strong>${htmlText(sigBadge(sig.evidenceType))} &mdash; ${publisher}, ${date}</strong>
           ${headline}${byline}
         </span>
         <span class="tl-signal-method">${method}</span>
@@ -771,8 +721,14 @@ function timingHtml(e, year){
     </div>`;
 }
 function predictionEvidence(key, match, title){
-  if (!(signalCoverageReady && xSignals[key])) return evidenceUnavailable();
-  const origin = signalCard(xSignals[key]);
+  if (!signalCoverageReady) return evidenceUnavailable();
+  /* An accounted-for prediction is EITHER cited OR explicitly recorded as uncited. Only a prediction
+     that is neither - which the build treats as a hard failure - reaches the unavailable state. */
+  if (!directSignals[key]) {
+    const record = uncitedSignals[key];
+    return record ? uncitedCard(record) : evidenceUnavailable();
+  }
+  const origin = signalCard(directSignals[key]);
   const current = Array.isArray(currencySignals[key]) ? currencySignals[key] : [];
   if (!current.length) return origin;
   /* Origin and current evidence answer different questions, so they are labelled rather
@@ -790,6 +746,33 @@ function predictionEvidence(key, match, title){
 }
 function evidenceUnavailable(){
   return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
+}
+/* GC seq-95 flagged the exact failure this fixes: routing an uncited prediction through
+   evidenceUnavailable() would have printed "temporarily unavailable" - a claim that something is
+   BROKEN - over a record that actually says a search ran, on a stated date, across a stated window,
+   and found nothing. Those are different claims and only one of them is true. The card below reports
+   the measurement, so the page agrees with the artefact instead of contradicting it. */
+function uncitedCard(record){
+  const days = Number(record.windowDays);
+  const window = Number.isFinite(days) && days > 0
+    ? `the last ${days} day${days === 1 ? '' : 's'}`
+    : 'the currency window';
+  const searched = record.searchedAt ? new Date(record.searchedAt) : null;
+  const searchedText = searched && !isNaN(searched.getTime())
+    ? ` Searched ${formatUtcDateTime(searched)}.`
+    : '';
+  const statement = record.statement
+    || `No authoritative source published in ${window} was found for this prediction.`;
+  return `
+    <div class="tl-signal-uncited" role="note">
+      <div class="tl-uncited-head">
+        <span class="tl-uncited-mark" aria-hidden="true"></span>
+        <strong>No source in ${htmlText(window)}</strong>
+      </div>
+      <p class="tl-uncited-body">${htmlText(statement)}${htmlText(searchedText)}</p>
+      <p class="tl-uncited-note">The prediction is unchanged. Nothing older, adjacent or unreviewed
+      has been substituted to fill this space.</p>
+    </div>`;
 }
 
 function branchForEvent(title){
@@ -1111,7 +1094,8 @@ function validHorizon(h){
       && ['conditional','speculative'].includes(item.epistemic)
       && typeof item.conditionalProb === 'number' && item.conditionalProb >= 0 && item.conditionalProb <= 100
       && validLists(item) && typeof item.caveat === 'string' && item.caveat.trim()
-      && item.match && /\bfrom:peterxing\b/i.test(item.match.search || ''))) return false;
+      && item.match && typeof item.match.search === 'string' && item.match.search.trim()
+      && !/\bfrom:\s*peterxing\b|x\.com|twitter\.com/i.test(item.match.search))) return false;
   const text = h.items.map(item => `${item.t} ${item.caveat} ${item.dependencies.join(' ')} ${item.indicators.join(' ')}`).join(' ').toLowerCase();
   return text.includes('endovascular bcis are minimally invasive, not non-invasive')
     && text.includes('chatbot or digital replica')
@@ -1314,7 +1298,7 @@ const predictionsReady = (function loadPredictions(){
         const dt = new Date(d.updated);
         if (!isNaN(dt.getTime())){
           setText('heroPredFreshness', 'Forecast revised · ' + formatUtcDate(dt));
-          stamp.textContent = '\u25C8 Predictions revised from the latest news & @peterxing\u2019s X activity \u00b7 last revised '
+          stamp.textContent = '\u25C8 Predictions revised from the latest news and research \u00b7 last revised '
             + formatUtcDate(dt);
           stamp.hidden = false;
         }
@@ -1332,22 +1316,25 @@ const predictionsReady = (function loadPredictions(){
     });
 })();
 
-/* Hourly-refreshed signals prioritize reviewed @peterxing activity and retain reviewed authoritative
-   external direct, scenario, or leading-indicator evidence. */
+/* Signals are refreshed from live-verified news and research published inside the currency window.
+   The retired X source ids are kept as EXPLICIT RETIREMENT LABELS rather than deleted: if a stale
+   artefact carrying source:'archive-verified' is ever served, the page must say so in plain words
+   instead of falling back to a generic label that reads like a working source. */
 const SIGNAL_SOURCE_LABELS = {
-  'x-api': 'X API realtime',
-  'archive-verified': 'archive-verified X statuses',
-  'public-rss': 'live public X profile feed',
-  'public-rss-cache': 'recent public X profile snapshot',
-  'x-api-cache': 'recent X API snapshot',
-  'syndication': 'live X public syndication'
+  'news-verified': 'live-verified news and research',
+  'x-api': 'retired X source',
+  'archive-verified': 'retired X source',
+  'public-rss': 'retired X source',
+  'public-rss-cache': 'retired X source',
+  'x-api-cache': 'retired X source',
+  'syndication': 'retired X source'
 };
 function renderSignalMetadata(data){
   const newsMappings = Number(data.coverage?.byEvidenceMedium?.news)
     || Number(data.coverage?.byEvidenceOwner?.news) || 0;
   /* The provenance stamp must stay literally true: it may name an all-X corpus only while one exists. */
-  const sourceLabel = (SIGNAL_SOURCE_LABELS[data.source] || 'verified X activity')
-    + (newsMappings ? ` + ${newsMappings} live-verified news article${newsMappings === 1 ? '' : 's'}` : '');
+  const sourceLabel = (SIGNAL_SOURCE_LABELS[data.source] || 'source unrecognised')
+    + (newsMappings ? ` · ${newsMappings} live-verified article${newsMappings === 1 ? '' : 's'}` : '');
   const sourceStatus = data.sourceStatus || {};
   const updated = new Date(data.updated);
   const newest = new Date(data.newestItemAt);
@@ -1358,74 +1345,88 @@ function renderSignalMetadata(data){
     ? 'newest-item time unavailable'
     : formatUtcDateTime(newest);
   const freshness = data.sourceFresh === true ? 'fresh source' : 'source freshness unverified';
-  const archiveVerified = sourceStatus.mode === 'archive-verified';
-  const sourceQualifier = archiveVerified
-    ? ` · ${sourceStatus.reason || 'direct status verification'}`
-    : sourceStatus.mode === 'degraded' ? ' · source degraded' : '';
+  const sourceQualifier = sourceStatus.mode === 'news-verified'
+    ? ' · live-fetched and quote-matched at publish'
+    : sourceStatus.mode === 'degraded' || sourceStatus.mode === 'unavailable' ? ' · source degraded' : '';
   setText('heroSignalFreshness', `Evidence · ${sourceLabel}${sourceQualifier} · ${updatedLabel}`);
-  setText('realityMeta', `${freshness} · ${sourceLabel}${sourceQualifier} · newest known activity ${newestLabel} · six verified observations`);
+  /* "six verified observations" was a hardcoded count that stayed 6 whether or not six sources
+     qualified. It is now the measured number of cards that actually cite something, and the
+     no-observation cards are counted separately rather than folded into a flattering total. */
+  const reality = Array.isArray(data.reality) ? data.reality : [];
+  const observed = reality.filter(entry => entry && entry.kind === 'news').length;
+  const blank = reality.length - observed;
+  const observedText = `${observed} verified observation${observed === 1 ? '' : 's'}`
+    + (blank > 0 ? ` · ${blank} theme${blank === 1 ? '' : 's'} with no qualifying source` : '');
+  setText('realityMeta', `${freshness} · ${sourceLabel}${sourceQualifier} · newest cited source ${newestLabel} · ${observedText}`);
   renderEvidenceDashboard(data, sourceLabel, freshness);
 }
 function renderEvidenceDashboard(data, sourceLabel, freshness){
+  /* REWRITTEN 2026-08-13. The old dashboard measured an X corpus: Peter-written vs Peter-reposted vs
+     external mappings, unique statuses, and a "Maximum reviewed reuse" gauge. None of those quantities
+     exist any more. Rendering them with `|| 0` would have published "0 Peter wrote" and "1 of 0" -
+     confident numbers standing where a measurement used to be, which reads as a result rather than as
+     an absence. The panel now measures what the evidence actually is: how much of the forecast is
+     cited inside the currency window, how much was searched and found nothing, and what the cited
+     sources are. */
   const coverage = data.coverage || {};
-  const owners = coverage.byEvidenceOwner || {};
-  const types = coverage.byEvidenceType || {};
   const total = Number(coverage.total) || 0;
-  const external = Number(owners.external) || 0;
-  const peterAuthorship = coverage.byPeterAuthorship || {};
-  const authored = Number(peterAuthorship.authored) || 0;
-  const reposted = Number(peterAuthorship.reposted) || 0;
+  const cited = Number(coverage.direct) || 0;
+  const uncited = Number(data.uncited && data.uncited.count) || 0;
+  const windowDays = Number(data.uncited && data.uncited.windowDays) || 0;
   const embeds = Object.values(data.embeds || {});
-  const media = coverage.byEvidenceMedium || {};
-  const newsCount = Number(media.news) || Number(owners.news) || 0;
-  const xCount = Number(media.x) || (total - newsCount);
-  const peterStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'peterxing').map(embed => embed.id)).size;
-  const externalStatuses = new Set(embeds.filter(embed => embed.evidenceOwner === 'external').map(embed => embed.id)).size;
-  const newsArticles = new Set(embeds.filter(embed => embed.evidenceOwner === 'news').map(embed => embed.id)).size;
+  const types = coverage.byEvidenceType || {};
+  const quality = coverage.bySourceQuality || {};
+  const articles = new Set(embeds.map(embed => embed.id)).size;
+  const publishers = new Set(embeds.map(embed => embed.publisherHost).filter(Boolean)).size;
   const percentage = value => total ? (value / total * 100).toFixed(1) : '0.0';
-  setText('evidenceDirectStat', `${coverage.direct || 0}/${total}`);
-  setText('evidenceAuthoredStat', String(authored));
-  setText('evidenceRepostedStat', String(reposted));
-  setText('evidenceExternalStat', String(external));
-  setText('evidenceReuseStat', String(coverage.uniquePosts || 0));
-  setText('evidenceMaxReuseStat', `${coverage.maxReuse || 0}×`);
-  setText('evidenceAuthoredShare', `${percentage(authored)}%`);
-  setText('evidenceRepostedShare', `${percentage(reposted)}%`);
-  setText('evidenceExternalShare', `${percentage(external)}%`);
-  document.getElementById('evidenceAuthoredBar')?.style.setProperty('--share', `${percentage(authored)}%`);
-  document.getElementById('evidenceRepostedBar')?.style.setProperty('--share', `${percentage(reposted)}%`);
-  document.getElementById('evidenceExternalBar')?.style.setProperty('--share', `${percentage(external)}%`);
+  const newest = embeds
+    .map(embed => new Date(embed.articleDate || (embed.provenance && embed.provenance.publishedAt)))
+    .filter(date => !isNaN(date.getTime()))
+    .sort((x, y) => y - x)[0];
+  setText('evidenceCitedStat', `${cited} of ${total}`);
+  setText('evidenceUncitedStat', String(uncited));
+  setText('evidenceArticlesStat', String(articles));
+  setText('evidencePublishersStat', String(publishers));
+  setText('evidenceWindowStat', windowDays ? `${windowDays} days` : 'unavailable');
+  setText('evidenceNewestStat', newest ? formatUtcDate(newest) : 'none');
+  setText('evidenceCitedShare', `${percentage(cited)}%`);
+  setText('evidenceUncitedShare', `${percentage(uncited)}%`);
+  document.getElementById('evidenceCitedBar')?.style.setProperty('--share', `${percentage(cited)}%`);
+  document.getElementById('evidenceUncitedBar')?.style.setProperty('--share', `${percentage(uncited)}%`);
   const typeMix = document.getElementById('evidenceTypeMix');
   if (typeMix) {
+    const QUALITY_LABELS = {
+      'peer-reviewed-journal': 'Peer-reviewed',
+      'primary-news-organization': 'Primary news',
+      'established-technology-press': 'Technology press',
+      'named-expert-analysis': 'Named expert',
+      'official-ai-lab': 'Frontier lab, first-party',
+      'industry-primary-source': 'Industry primary',
+      'government': 'Government',
+      'intergovernmental-organization': 'Intergovernmental',
+      'original-researcher': 'Original researcher',
+    };
     typeMix.innerHTML = [
-      ['Peter mappings', authored + reposted],
-      ['Peter wrote', authored],
-      ['Peter reposted', reposted],
+      ['Direct evidence', types.direct || 0],
       ['Leading indicators', types['leading-indicator'] || 0],
       ['Scenario sources', types.scenario || 0],
-      ['Peter unique statuses', peterStatuses],
-      ['External unique statuses', externalStatuses],
-      ...(newsCount ? [
-        ['X statuses vs verified news', `${xCount} X · ${newsCount} news`],
-        ['News unique articles', newsArticles],
-      ] : []),
-      ['Maximum reviewed reuse', `${coverage.maxReuse || 0} of ${coverage.reuseCeiling || 0}`],
+      ...Object.entries(quality)
+        .sort((x, y) => y[1] - x[1])
+        .map(([key, count]) => [QUALITY_LABELS[key] || key, count]),
     ].map(([label, count]) => `<span>${htmlText(label)} · ${count}</span>`).join('');
   }
   const health = document.getElementById('evidenceSourceHealth');
   if (health) {
     const status = data.sourceStatus || {};
-    const archiveVerified = status.mode === 'archive-verified';
+    const verified = status.mode === 'news-verified';
     const degraded = status.mode === 'degraded' || status.mode === 'unavailable';
     health.classList.toggle('is-degraded', degraded);
-    const title = archiveVerified
-      ? `Archive-verified source chain · ${sourceLabel}`
-      : degraded ? `Degraded source · ${sourceLabel}` : `Primary source · ${sourceLabel}`;
-    const detail = archiveVerified
-      ? `${status.message || 'Status IDs are hydrated and cross-checked directly.'} ${status.actionRequired ? `API note: ${status.actionRequired}` : ''}`
-      : degraded
-        ? `${status.message || 'The evidence source is unavailable.'} ${status.actionRequired ? `Action: ${status.actionRequired}` : ''}`
-        : `${freshness}. Reviewed evidence age is tracked separately from source freshness.`;
+    const title = verified
+      ? `Live-verified sources · ${sourceLabel}`
+      : degraded ? `Degraded source · ${sourceLabel}` : `Source · ${sourceLabel}`;
+    const detail = degraded
+      ? `${status.message || 'The evidence source is unavailable.'} ${status.actionRequired ? `Action: ${status.actionRequired}` : ''}`
+      : `${status.message || freshness}`;
     health.innerHTML = `<strong>${htmlText(title)}</strong><span>${htmlText(detail)}</span>`;
   }
 }
@@ -1436,123 +1437,113 @@ function expectedSignalIds(){
   ];
 }
 function hasCompleteSignalCoverage(data){
+  /* REWRITTEN 2026-08-13 for the news migration. The previous gate demanded an embed for EVERY one of
+     the 103 ids. With 7 cited and 96 honestly recorded as uncited it returned false, which set
+     signalCoverageReady = false and hid ALL direct evidence - the site would have shown nothing
+     because the evidence became honest. It also asserted three floor fields the artefact no longer
+     emits, so the chain was permanently false for a second, independent reason.
+
+     The contract is now ACCOUNTED-FOR, which is stronger than the totality it replaces: every
+     prediction must be cited or explicitly recorded as uncited, never both and never neither. A
+     silent gap is still a hard failure. Nothing was loosened to make this pass - the X floors are
+     asserted ABSENT rather than dropped, so reinstating one fails here. */
   if (!data || data.sourceFresh !== true || !data.embeds || typeof data.embeds !== 'object') return false;
   const expected = expectedSignalIds();
   const directIds = Object.keys(data.embeds);
   const searchIds = data.search && typeof data.search === 'object' ? Object.keys(data.search) : [];
-  if (searchIds.length
-      || expected.length !== directIds.length
-      || expected.some(id => !data.embeds[id])
-      || directIds.some(id => !expected.includes(id))) return false;
+  if (searchIds.length) return false;
+  const uncited = data.uncited && typeof data.uncited === 'object' ? data.uncited : null;
+  const uncitedItems = uncited && uncited.items && typeof uncited.items === 'object' ? uncited.items : {};
+  const uncitedIds = Object.keys(uncitedItems);
+  const expectedSet = new Set(expected);
+  if (directIds.some(id => !expectedSet.has(id)) || uncitedIds.some(id => !expectedSet.has(id))) return false;
+  if (directIds.some(id => uncitedItems[id])) return false;
+  if (expected.some(id => !data.embeds[id] && !uncitedItems[id])) return false;
+  if (directIds.length + uncitedIds.length !== expected.length) return false;
+  const windowDays = Number(uncited && uncited.windowDays);
+  if (!Number.isInteger(windowDays) || windowDays <= 0) return false;
+  if (Number(uncited && uncited.count) !== uncitedIds.length) return false;
+  const uncitedValid = uncitedIds.every(id => {
+    const record = uncitedItems[id];
+    return record && record.id === id
+      && typeof record.reason === 'string' && record.reason.trim()
+      && typeof record.statement === 'string' && record.statement.trim()
+      && Number(record.windowDays) === windowDays
+      && !isNaN(new Date(record.searchedAt).getTime());
+  });
+  if (!uncitedValid) return false;
+  /* Group on the SOURCE (the resolved article url the builder publishes as sourceKey), not on the
+     ledger row's name. Two reviewed rows quoting one article are one source used twice; keying on
+     the row name would let a reused source pass as two unique ones. */
   const usesByPost = directIds.reduce((uses, id) => {
-    const postId = String(data.embeds[id] && data.embeds[id].id || '');
+    const embed = data.embeds[id] || {};
+    const postId = String(embed.sourceKey || embed.id || '');
     if (!uses[postId]) uses[postId] = [];
     uses[postId].push(data.embeds[id]);
     return uses;
   }, {});
-  const reuseValid = Object.values(usesByPost).every(uses => {
-    const owner = uses[0].evidenceOwner;
-    const expectedMode = owner === 'external' ? 'external-reuse'
-      : owner === 'news' ? 'news-reuse' : 'family-reuse';
-    const groups = new Set(uses.map(signal =>
-      signal.evidenceOwner === 'peterxing' ? signal.evidenceFamily : signal.reuseFamily));
-    const owners = new Set(uses.map(signal => signal.evidenceOwner));
-    return uses.length === 1
-      ? uses[0].assignmentMode === 'unique' && Number(uses[0].reuseCount) === 1
-      : owners.size === 1 && groups.size === 1
-        && uses.every(signal => signal.assignmentMode === expectedMode
-          && Number(signal.reuseCount) === uses.length);
-  });
+  const reuseValid = Object.values(usesByPost).every(uses => uses.length === 1
+    ? uses[0].assignmentMode === 'unique' && Number(uses[0].reuseCount) === 1
+    : uses.every(signal => signal.assignmentMode === 'news-reuse'
+      && Number(signal.reuseCount) === uses.length
+      && signal.reuseFamily === uses[0].reuseFamily));
   if (!reuseValid) return false;
+  /* Every direct record must be live-verified news, with the full provenance the news verifier
+     re-checks at publish: a fetched publisher, a publication date, a retrieval instant, a quality
+     class, and a SHA-256 of the extracted article text bound to a verbatim quote. */
   const directValid = directIds.every(id => {
     const signal = data.embeds[id];
     const provenance = signal && signal.provenance || {};
-    const isNews = signal && signal.evidenceOwner === 'news';
-    const common = (isNews
-      ? /^news:[a-z0-9][a-z0-9-]*$/.test(String(signal.id || ''))
-        && /^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(signal.url || ''))
-      : /^\d{15,}$/.test(String(signal && signal.id || ''))
-        && /^https:\/\/x\.com\/[A-Za-z0-9_]+\/status\/\d{15,}$/.test(String(signal && signal.url || '')))
+    return !!signal
+      && signal.evidenceOwner === 'news'
+      && signal.kind === 'news'
+      && signal.activityKind === 'news'
+      && /^news:[a-z0-9][a-z0-9-]*$/.test(String(signal.id || ''))
+      && /^https:\/\/[^\s/]+\.[^\s/]+\/\S*$/.test(String(signal.url || ''))
       && signal.reviewed === true
       && !!signal.evidenceFamily
-      && !!signal.mappingRationale;
-    if (!common) return false;
-    if (isNews) {
-      return signal.kind === 'news'
-        && signal.activityKind === 'news'
-        && provenance.evidenceOwner === 'news'
-        && provenance.activityKind === 'news'
-        && !!provenance.publisher
-        && !!provenance.publisherHost
-        && !!provenance.publishedAt
-        && !!provenance.retrievedAt
-        && !!provenance.sourceQuality
-        && !!provenance.textSha256
-        && provenance.verifiedThrough === 'live-fetch+quote-match'
-        && Array.isArray(provenance.sourceChain)
-        && provenance.sourceChain.includes('quote-match')
-        && !!signal.headline
-        && !!signal.quote
-        && !!signal.publisher
-        && signal.matchMethod === 'reviewed-news'
-        && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)
-        && ['unique', 'news-reuse'].includes(signal.assignmentMode)
-        && !!signal.reuseFamily;
-    }
-    if (signal.evidenceOwner === 'peterxing') {
-      return ['post', 'repost'].includes(signal.kind)
-        && provenance.evidenceOwner === 'peterxing'
-        && provenance.account === 'peterxing'
-        && ['authored', 'reposted'].includes(provenance.relationship)
-        && /^\d{15,}$/.test(String(provenance.activityId || ''))
-        && !!provenance.observedIn
-        && !!provenance.lastVerifiedAt
-        && provenance.verifiedThrough === 'archive-verified'
-        && Array.isArray(provenance.sourceChain)
-        && provenance.sourceChain.includes('tweet-result')
-        && signal.authorship === (provenance.relationship === 'authored' ? 'authored' : 'reposted')
-        && signal.matchMethod === 'reviewed-sticky'
-        && ['unique', 'family-reuse'].includes(signal.assignmentMode);
-    }
-    return signal.evidenceOwner === 'external'
-      && signal.kind === 'external'
-      && provenance.evidenceOwner === 'external'
-      && provenance.activityKind === 'external'
-      && provenance.account === signal.author
-      && !!provenance.displayName
-      && !!provenance.sourceQuality
-      && !!provenance.retrievedAt
-      && provenance.verifiedThrough === 'first-party-status+oembed'
-      && Array.isArray(provenance.sourceChain)
-      && provenance.sourceChain.includes('tweet-result')
+      && !!signal.mappingRationale
+      && !!signal.headline
+      && !!signal.quote
+      && !!signal.publisher
+      && signal.matchMethod === 'reviewed-news'
       && ['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)
-      && ['unique', 'external-reuse'].includes(signal.assignmentMode)
-      && !!signal.reuseFamily;
+      && ['unique', 'news-reuse'].includes(signal.assignmentMode)
+      && !!signal.reuseFamily
+      && provenance.evidenceOwner === 'news'
+      && provenance.activityKind === 'news'
+      && !!provenance.publisher
+      && !!provenance.publisherHost
+      && !!provenance.publishedAt
+      && !!provenance.publishedAtSource
+      && !!provenance.retrievedAt
+      && !!provenance.sourceQuality
+      && !!provenance.textSha256
+      && provenance.verifiedThrough === 'live-fetch+quote-match'
+      && Array.isArray(provenance.sourceChain)
+      && provenance.sourceChain.includes('quote-match');
   });
-  const maxReuse = Math.max(0, ...Object.values(usesByPost).map(uses => uses.length));
-  return directValid
-    && data.coverage && data.coverage.complete === true
+  if (!directValid) return false;
+  const owners = data.coverage && data.coverage.byEvidenceOwner || {};
+  const media = data.coverage && data.coverage.byEvidenceMedium || {};
+  /* Asserted POSITIVELY, on GC seq-91's finding: a retired floor compared with < is satisfied by
+     absence, so absence is what gets checked. X-owned or X-medium coverage reappearing fails here. */
+  const xRetired = owners.peterxing === undefined && owners.external === undefined
+    && Number(media.x || 0) === 0
+    && data.coverage.stickyPeterFloor === undefined
+    && data.coverage.stickyPeterAuthoredFloor === undefined;
+  return xRetired
+    && data.coverage
+    && data.coverage.complete === true
     && data.coverage.direct === directIds.length
     && data.coverage.searches === 0
     && data.coverage.total === expected.length
-    && data.coverage.maxReuse === maxReuse
-    && data.coverage.stickyPeterFloor >= 24
-    && data.coverage.stickyPeterAuthoredFloor >= 10
-    && Number(data.coverage.byEvidenceOwner?.peterxing || 0) >= data.coverage.stickyPeterFloor
-    && data.coverage.reuseCeiling >= 1 && data.coverage.reuseCeiling <= 10
-    && maxReuse <= data.coverage.reuseCeiling
+    && Number(media.news || owners.news || 0) === directIds.length
+    && data.source === 'news-verified'
     && data.sourceStatus
     && data.sourceStatus.activeSource === data.source
-    && data.source === 'archive-verified'
-    && data.sourceStatus.mode === 'archive-verified'
-    && data.sourceStatus.primarySource === 'first-party-status'
-    && Number(data.sourceStatus.hydratedThisRun) > 0
-    && Array.isArray(data.sourceAttempts)
-    && ['wayback-cdx','tweet-result','x-oembed'].every(source =>
-      data.sourceAttempts.some(attempt => attempt.source === source))
-    && Number(data.coverage.byPeterAuthorship?.authored || 0)
-      + Number(data.coverage.byPeterAuthorship?.reposted || 0)
-      === Number(data.coverage.byEvidenceOwner?.peterxing || 0);
+    && data.sourceStatus.mode === 'news-verified'
+    && data.sourceStatus.primarySource === 'live-verified-news';
 }
 /* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
    LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
@@ -1609,7 +1600,8 @@ function hasCompleteSignalCoverage(data){
       if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
       renderSignalMetadata(d);
       signalCoverageReady = hasCompleteSignalCoverage(d);
-      xSignals = signalCoverageReady ? d.embeds : {};
+      directSignals = signalCoverageReady ? d.embeds : {};
+      uncitedSignals = signalCoverageReady && d.uncited && d.uncited.items ? d.uncited.items : {};
       /* The currency layer is additive and independent: it is only ever shown next to an
          origin card, so it is gated on the same coverage check. If the bundle is degraded
          we show nothing rather than implying a reference we cannot stand behind. */
@@ -1632,13 +1624,16 @@ function hasCompleteSignalCoverage(data){
       } else if (stamp && d.updated){
         const dt = new Date(d.updated);
         if (!isNaN(dt.getTime())){
-         const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'verified X activity';
-         const owners = d.coverage && d.coverage.byEvidenceOwner || {};
-         const authorship = d.coverage && d.coverage.byPeterAuthorship || {};
-         const sourceState = d.sourceStatus && d.sourceStatus.mode === 'archive-verified'
-           ? ' · first-party hydrated + oEmbed cross-check'
-           : d.sourceStatus && d.sourceStatus.reason ? ` · ${d.sourceStatus.reason}` : '';
-         stamp.textContent = `Prediction evidence · ${d.coverage.direct}/${d.coverage.total} direct · zero searches · ${authorship.authored || 0} Peter wrote · ${authorship.reposted || 0} Peter reposted · ${owners.external || 0} external · max reuse ${d.coverage.maxReuse} · ${sourceLabel}${sourceState} · checked `
+         /* The stamp reports the ACCOUNTING, not a coverage score. "7/103 direct" alone invites the
+            reader to see 96 failures; "7 cited, 96 searched and recorded" says what actually happened.
+            Both numbers are shown because concealing either would flatter the forecast. */
+         const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'source unrecognised';
+         const uncitedCount = Number(d.uncited && d.uncited.count) || 0;
+         const windowDays = Number(d.uncited && d.uncited.windowDays) || 0;
+         const windowText = windowDays ? ` · ${windowDays}-day currency window` : '';
+         stamp.textContent = `Prediction evidence · ${d.coverage.direct} of ${d.coverage.total} cited · `
+           + `${uncitedCount} searched with no qualifying source · zero search fallbacks · `
+           + `${sourceLabel}${windowText} · checked `
            + formatUtcDate(dt);
          stamp.hidden = false;
        }
@@ -1646,7 +1641,8 @@ function hasCompleteSignalCoverage(data){
     })
     .catch(() => {
       signalCoverageReady = false;
-      xSignals = {};
+      directSignals = {};
+      uncitedSignals = {};
       currencySignals = {};
       renderTimeline();
       renderHorizon();
@@ -1659,38 +1655,12 @@ function hasCompleteSignalCoverage(data){
       }
     });
 })();
-let twPromise = null;
-function loadTwitter(){
-  if (twPromise) return twPromise;
-  twPromise = new Promise((res, rej) => {
-    const s = document.createElement('script');
-    s.src = 'https://platform.twitter.com/widgets.js';
-    s.async = true; s.charset = 'utf-8';
-    s.onload = () => res(window.twttr); s.onerror = rej;
-    document.head.appendChild(s);
-  });
-  return twPromise;
-}
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.tl-signal-load');
-  if (!btn) return;
-  const id = btn.dataset.tweet;
-  const wrap = btn.closest('.tl-signal').querySelector('.tl-embed');
-  btn.disabled = true; btn.textContent = 'Loading\u2026';
-  try {
-    const tw = await loadTwitter();
-    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    wrap.innerHTML = '';
-    const el = await tw.widgets.createTweet(id, wrap, { theme, conversation: 'none', dnt: true, align: 'center' });
-    if (!el) throw new Error('unavailable');
-    btn.remove();
-  } catch (err) {
-    const link = btn.closest('.tl-signal').querySelector('.tl-signal-link');
-    const href = link ? link.getAttribute('href') : ('https://x.com/peterxing/status/' + id);
-    wrap.innerHTML = '<a class="tl-signal-link" href="' + href + '" target="_blank" rel="noopener">Open on X &rarr;</a>';
-    btn.disabled = false; btn.textContent = 'Load live post \u21bb';
-  }
-});
+/* X RETIREMENT 2026-08-13. Deleted: loadTwitter() injected the platform.twitter.com widgets.js script
+   into the live page and a click handler rendered an X-hosted tweet embed in place. This was the last
+   code that made a VISITOR's browser contact X, independently of whether any link remained on screen,
+   and it is the one GC ranked first for the reader. Removing it also removes the site's only remaining
+   third-party script origin. Nothing replaces it: news evidence is quoted verbatim in the card, with a
+   SHA-256 of the fetched article text checked at publish, so there is no remote embed to load. */
 
 document.querySelectorAll('[data-domain]').forEach(button => button.addEventListener('click', () => {
   forecastFilters.domain = button.dataset.domain;
@@ -1981,14 +1951,6 @@ document.querySelectorAll('.chapter .ch-head').forEach(h => h.addEventListener('
   h.setAttribute('aria-expanded', String(open));
   h.parentElement.querySelector('.ch-body').hidden = !open;
 }));
-function openChapter(idx){
-  const ch = document.querySelector(`.chapter[data-ch="${idx}"]`);
-  if(!ch) return;
-  ch.classList.add('open');
-  ch.querySelector('.ch-head').setAttribute('aria-expanded', 'true');
-  ch.querySelector('.ch-body').hidden = false;
-  ch.scrollIntoView({behavior:motionQuery.matches ? 'auto' : 'smooth', block:'center'});
-}
 document.querySelectorAll('.sysnode').forEach(n => {
   const openSystem = () => {
     const map = { op:1,'01':2,'02':3,'03':4,'04':5,'05':6,'06':7 };
@@ -2111,28 +2073,43 @@ renderPlanner();
 /* ---------- Reality signals grid ---------- */
 /* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this hourly from
    signals.json's reality[] — @peterxing's most notable recent real post/repost per theme. */
+/* The offline baseline claims NOTHING. Six themes are named so the section keeps its shape before
+   signals.json arrives, but every card states that no source is loaded rather than asserting an
+   observation the page cannot stand behind. The previous fallback shipped six "Open the latest
+   @peterxing observations" cards, which asserted an observation existed AND linked to X. */
 const realitySignals = [
-  { tag:'CODE', t:'Open the latest @peterxing observations on frontier coding agents.', kind:'search', search:'AI coding agents' },
-  { tag:'ROBOTS', t:'Open the latest @peterxing observations on humanoid robotics.', kind:'search', search:'humanoid robots' },
-  { tag:'ABUNDANCE', t:'Open the latest @peterxing observations on energy and abundance.', kind:'search', search:'energy abundance' },
-  { tag:'CAPABILITY', t:'Open the latest @peterxing observations on frontier capability.', kind:'search', search:'frontier AI capability' },
-  { tag:'MARKETS', t:'Open the latest @peterxing observations on AI economics and markets.', kind:'search', search:'AI markets economy' },
-  { tag:'GOVERNANCE', t:'Open the latest @peterxing observations on AI governance.', kind:'search', search:'AI governance safety' },
+  { tag:'CODE', t:'Frontier coding agents.', kind:'none' },
+  { tag:'ROBOTS', t:'Humanoid and general-purpose robotics.', kind:'none' },
+  { tag:'ABUNDANCE', t:'Energy, compute and abundance.', kind:'none' },
+  { tag:'CAPABILITY', t:'Frontier capability and evaluations.', kind:'none' },
+  { tag:'MARKETS', t:'AI economics and labour markets.', kind:'none' },
+  { tag:'GOVERNANCE', t:'AI governance and enforcement.', kind:'none' },
 ];
 function realityCard(s, index){
   const tag = htmlText(s.tag || 'SIGNAL');
-  const recency = ['week','recent','historical','search'].includes(s.recency) ? s.recency : 'observed';
+  const recency = ['week','recent','historical','none'].includes(s.recency) ? s.recency : 'observed';
   let srcHtml;
-  if (s.kind === 'search' && s.search){
-    const q = encodeURIComponent('from:peterxing ' + s.search);
-    srcHtml = `<a class="signal-src signal-src-link" data-recency="search" href="https://x.com/search?q=${q}&src=typed_query&f=live" target="_blank" rel="noopener"><span class="sig-dot"></span>Search latest @peterxing posts &rarr;</a>`;
-  } else if (s.id){
-    const author = safeXHandle(s.author);
-    const tweetId = safeTweetId(s.id);
-    const kind = SIG_KIND[s.kind] ? s.kind : 'post';
-    const K = SIG_KIND[kind];
-    const via = kind !== 'post' ? `${K.icon} @peterxing ${K.verb} &middot; @${author}` : '@peterxing';
-    srcHtml = `<a class="signal-src signal-src-link" data-recency="${recency}" href="https://x.com/${author}/status/${tweetId}" target="_blank" rel="noopener"><span class="sig-dot"></span>${via} &middot; ${htmlText(s.date || '')} &rarr;</a>`;
+  /* X RETIREMENT 2026-08-13 - BOTH X URL BUILDERS REMOVED. GC seq-93 found these and my own audits had
+     missed them, because the URLs never existed as literals in any data file: they were ASSEMBLED HERE
+     at render time from a search fragment, so scanning signals.json and predictions.json for "x.com"
+     reported a clean migration while the page still linked to X on every card.
+
+     The kind:'search' card was the worse of the two. It asserted nothing and cited nothing - its entire
+     content was "go and look on X" - and with the account retired it would have been a dead link
+     presented as an observation. Reality Signals are now a field log of live-verified articles, so a
+     card either shows the source it actually verified, or says plainly that it has none. */
+  if (s.kind === 'news' && s.url){
+    const host = htmlText(s.publisherHost || '');
+    const publisher = htmlText(s.publisher || s.publisherHost || 'Source');
+    const when = htmlText(s.date || '');
+    const age = Number.isFinite(Number(s.ageDays)) ? ` &middot; ${Number(s.ageDays)}d ago` : '';
+    const hostHtml = host ? `<span class="signal-host">${host}</span>` : '';
+    srcHtml = `<a class="signal-src signal-src-link" data-recency="${recency}" href="${htmlText(s.url)}"`
+      + ` target="_blank" rel="noopener nofollow"><span class="sig-dot"></span>${publisher} &middot; ${when}${age}`
+      + `${hostHtml} &rarr;</a>`;
+  } else if (s.kind === 'none'){
+    srcHtml = `<div class="signal-src signal-src-none" data-recency="none"><span class="sig-dot"></span>`
+      + `No qualifying source in the currency window</div>`;
   } else {
     srcHtml = `<div class="signal-src">${htmlText(String(s.src || '').toUpperCase())}</div>`;
   }
@@ -2150,9 +2127,10 @@ function renderReality(list){
   const grid = document.getElementById('signalsGrid');
   if (!grid || !Array.isArray(list) || !list.length) return;
   grid.innerHTML = list.map(realityCard).join('');
+  grid.dataset.observed = String(list.filter(entry => entry && entry.kind === 'news').length);
 }
 renderReality(realitySignals);
-setText('realityMeta', 'Offline baseline · live observation metadata loads with signals.json');
+setText('realityMeta', 'Offline baseline · no source loaded · live observations arrive with signals.json');
 
 /* ---------- Immersive book reader ---------- */
 (function(){

@@ -1,23 +1,23 @@
 'use strict';
 
 /*
- * TIER-3 VERIFIED NEWS EVIDENCE
- * =============================
- * Evidence for a prediction is chosen in a strict priority order:
+ * VERIFIED NEWS EVIDENCE - THE SOLE EVIDENCE SUBSTRATE
+ * =====================================================
+ * X RETIREMENT 2026-08-13. This file used to describe itself as "tier 3, BENEATH the X
+ * tiers, never a replacement for them". That is now the exact inverse of the site owner's
+ * instruction ("remove all references to x posts and stop using the x api for the
+ * predictions"), so it is corrected rather than left to be read as policy by the next
+ * reader. There is no priority order any more, because there is only one tier:
  *
- *   1. a reviewed @peterxing AUTHORED status  (archive-verified corpus)
- *   2. a reviewed @peterxing REPOST           (archive-verified corpus)
- *   3. a reviewed authoritative EXTERNAL X status
- *   4. a reviewed authoritative NEWS ARTICLE  <- this file
+ *   a reviewed authoritative NEWS ARTICLE, live-verified, published inside the currency
+ *   window  <- this file, and nothing else.
  *
- * News is a resilience tier BENEATH the X tiers, never a replacement for them.
- * It becomes eligible for one prediction only when, after the full archive
- * pipeline has run (discovery + hydration + review), that prediction has no
- * defensible reviewed X status of any kind. A degraded or unpaid X API does
- * NOT make news eligible: archive-verified retrieval does not use the API, so
- * an API outage never blocks X evidence. News can never satisfy or bypass the
- * Peter floors or the evidence-floors.json ratchet, and an existing reviewed X
- * mapping is never swapped for a news article.
+ * A prediction with no qualifying in-window source is NOT given a borrowed, stale or
+ * adjacent citation. It renders EXPLICITLY UNCITED, naming the window that was searched.
+ * Some subjects on this site - Dyson swarms, whole-brain emulation, the ruliad - are
+ * speculative frameworks with no fortnightly news cycle, and measured 0 matches across ~90
+ * days of 58 authoritative feeds. For those the honest render is an empty result, stated.
+ * The two ways to avoid that are an invented citation or a silent gap. We take neither.
  *
  * A news URL is far easier to hallucinate than an X status ID, which has a hard
  * first-party + oEmbed author check. The verification bar here is therefore
@@ -50,40 +50,190 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024;
  * ------------------------------------------------------------------ */
 
 /*
- * NEWS_SOURCES is deliberately EMPTY.
+ * NEWS_SOURCES is the reviewed news ledger. It is the SOLE evidence substrate for the
+ * site: the X layer was retired on 2026-08-13 on the site owner's instruction, and no
+ * prediction may cite an X post any more.
  *
- * Every prediction currently carries a reviewed, independently verified X
- * status, so no prediction is eligible for the news tier. Publishing a news
- * mapping while defensible X evidence exists would be a regression, and
- * inventing one to exercise the code would be fabrication. The machinery is
- * built, wired and proven by verify-news-evidence.js against real live
- * articles; the ledger fills only when a prediction genuinely has no X
- * evidence left.
+ * Every field below was captured from a LIVE fetch at review time — headline, publisher,
+ * byline, publishedAt, the verbatim supporting quote and the SHA-256 of the extracted
+ * main text. Nothing is inferred, recalled or back-filled, and verify-news-evidence.js
+ * re-fetches and re-checks every one of them at publish time.
  *
- * Shape of an entry, all fields captured from a live fetch at review time:
- *
- *   'unique-key': {
- *     url:            'https://www.example.org/2026/07/thing',   // reviewed input URL
- *     resolvedUrl:    'https://www.example.org/2026/07/thing',   // final URL after redirects
- *     publisher:      'Example Organisation',                    // from og:site_name / JSON-LD
- *     publisherHost:  'example.org',                             // registrable host of resolvedUrl
- *     author:         'A. Reporter',                             // byline when the page carries one
- *     headline:       'Exact headline as published',
- *     publishedAt:    '2026-07-14T09:30:00.000Z',
- *     retrievedAt:    '2026-08-03',
- *     sourceQuality:  'official-research-organization',
- *     quote:          'A verbatim sentence from the article that supports the claim.',
- *     textSha256:     '<sha-256 of the extracted main text at review time>',
- *   }
+ * A prediction with no qualifying source inside the currency window is NOT given a
+ * borrowed or stale citation. It renders explicitly UNCITED, naming the window. That
+ * honest gap is the intended behaviour, not a defect to be filled.
  */
-const NEWS_SOURCES = {};
+const NEWS_SOURCES = {
+  "nature-ai-datacentre-energy-1": {
+    url: "https://www.nature.com/articles/d41586-026-02451-2",
+    resolvedUrl: "https://www.nature.com/articles/d41586-026-02451-2",
+    publisher: "Nature",
+    publisherHost: "nature.com",
+    author: "Buhler, Cassidy K.",
+    headline: "Why scientists should lead the shift away from AI mega data centres",
+    publishedAt: "2026-08-11T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "peer-reviewed-journal",
+    quote: "The world’s data centres used about 485 terawatt-hours of electricity last year, similar to that used by Germany, and the International Energy Agency expects that to double by 2030.",
+    textSha256: "23c2444a17ff1f9701968950f2a3f36684d4867b8f79a97b9d6f105e31331c89",
+  },
+  "nature-ai-datacentre-energy-2": {
+    url: "https://www.nature.com/articles/d41586-026-02451-2",
+    resolvedUrl: "https://www.nature.com/articles/d41586-026-02451-2",
+    publisher: "Nature",
+    publisherHost: "nature.com",
+    author: "Buhler, Cassidy K.",
+    headline: "Why scientists should lead the shift away from AI mega data centres",
+    publishedAt: "2026-08-11T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "peer-reviewed-journal",
+    quote: "Five technology companies — Amazon, Alphabet, Microsoft, Meta and Oracle — are expected to spend a total of more than US$600 billion on AI infrastructure this year; a decade ago, the same five companies spent less than $40 billion.",
+    textSha256: "23c2444a17ff1f9701968950f2a3f36684d4867b8f79a97b9d6f105e31331c89",
+  },
+  "challenger-ai-labour-market": {
+    url: "https://www.challengergray.com/blog/challenger-report-layoffs-fall-hiring-picks-up-ai-leads-for-fifth-straight-month/",
+    resolvedUrl: "https://www.challengergray.com/blog/challenger-report-layoffs-fall-hiring-picks-up-ai-leads-for-fifth-straight-month/",
+    publisher: "Challenger, Gray & Christmas, Inc. | Outplacement & Career Transitioning Services",
+    publisherHost: "challengergray.com",
+    author: "Colleen Madden Blumenfeld",
+    headline: "Challenger Report: Layoffs Fall, Hiring Picks Up; AI Leads For Fifth Straight Month",
+    publishedAt: "2026-08-06T09:30:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "named-expert-analysis",
+    quote: "“Hiring has also increased over last year by 25%, so while AI is shifting the labor market, it is not dismantling it,” said Andy Challenger, workplace expert and chief revenue officer for Challenger, Gray & Christmas.",
+    textSha256: "65c1f4a1c9375966e5d9af23a0db47d185c8aad83c9b0f01d8765f2985ef5d80",
+  },
+  "ars-frontier-agent-network-intrusions": {
+    url: "https://arstechnica.com/security/2026/07/likely-illegally-claude-gained-access-to-3-networks-will-anthropic-be-held-to-account/",
+    resolvedUrl: "https://arstechnica.com/security/2026/07/likely-illegally-claude-gained-access-to-3-networks-will-anthropic-be-held-to-account/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Dan Goodin",
+    headline: "Claude published malicious code to the Internet and attacked 3 real companies",
+    publishedAt: "2026-07-31T20:39:14.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "primary-news-organization",
+    quote: "The events, which Anthropic revealed Thursday , are the second revelation in 10 days that AI models from the world’s wealthiest providers have trespassed into protected networks, an offense that, in more traditional hacking scenarios, could land the human behind the keyboard in prison for years.",
+    textSha256: "a86aeaf689bbb16ca00740266f3373bb4f4c4b5fb619a46d2f4b95efba647be7",
+  },
+  "ec-ai-act-enforcement-august": {
+    url: "https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august",
+    resolvedUrl: "https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august",
+    publisher: "Shaping Europe’s digital future",
+    publisherHost: "europa.eu",
+    author: null,
+    headline: "Commission starts enforcing AI Act rules and new transparency requirements on 2 August",
+    publishedAt: "2026-08-02T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "intergovernmental-organization",
+    quote: "From 2 August 2026, the European Commission’s AI Office, together with national authorities, will begin enforcing the Artificial Intelligence (AI) Act.",
+    textSha256: "48cda069c6afe2e42f715ee6d96b89eab7e1dbc34aaffd1f9ad7ed29e8df889e",
+  },
+  "arxiv-persuasive-intent-disclosure": {
+    url: "https://arxiv.org/abs/2608.11794",
+    resolvedUrl: "https://arxiv.org/abs/2608.11794",
+    publisher: "arXiv.org",
+    publisherHost: "arxiv.org",
+    author: null,
+    headline: "Toward Meaningful Transparency for AI Chatbots: Disclosing Persuasive Intent Reduces Persuasion",
+    publishedAt: "2026-08-12T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "original-researcher",
+    quote: "While current rules emphasize what a system is, our results show why the regulation of persuasive AI must also address what the system is trying to do.",
+    textSha256: "b48b8c0d4f6336e30b51442250bbdfbc217b00d0a718dcc90831892167c1cf2f",
+  },
+  "techreview-ai-for-science-reasoning": {
+    url: "https://www.technologyreview.com/2026/08/10/1141384/ai-agents-for-science/",
+    resolvedUrl: "https://www.technologyreview.com/2026/08/10/1141384/ai-agents-for-science/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Eric Schmidt",
+    headline: "AI for science needs reasoning, not just data",
+    publishedAt: "2026-08-10T09:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-13",
+    sourceQuality: "primary-news-organization",
+    quote: "Instead, the acceleration of science will come about thanks to another approach: AI agents.",
+    textSha256: "6feebcca8e6ceb873d58dcd8ae9028e798be537365da4e218ded3af073012161",
+  },
+};
 
 /*
  * NEWS_GROUPS binds reviewed sources to prediction IDs, exactly like
  * EXTERNAL_GROUPS. Each group carries the reviewed rationale, the reuse family
  * and the evidence type, and every entry is manually reviewed.
  */
-const NEWS_GROUPS = [];
+const NEWS_GROUPS = [
+  {
+    source: "nature-ai-datacentre-energy-1",
+    ids: ["2027-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "measured-infrastructure-constraint",
+    reuseFamily: "datacentre-energy",
+    rationale: "Nature reports measured global data-centre electricity use and the IEA doubling projection, evidencing datacentre power as a top-tier infrastructure constraint. It does not evidence the water or grid-interconnection elements of the prediction.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "nature-ai-datacentre-energy-2",
+    ids: ["2028-4"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "measured-capital-commitment",
+    reuseFamily: "datacentre-energy",
+    rationale: "The same Nature analysis records the five largest technology firms committing more than US$600 billion to AI infrastructure this year against under $40 billion a decade ago, evidencing the scale of annual datacentre commitments. It makes no comparison to any defence budget.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "challenger-ai-labour-market",
+    ids: ["2028-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "labour-market-statistics",
+    reuseFamily: "ai-labour-market",
+    rationale: "Challenger, Gray & Christmas attribute the leading stated reason for US layoffs to AI for a fifth consecutive month while hiring rose 25%, evidencing AI reshaping white-collar work. It does not evidence that most professions yet supervise AI agents.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "ars-frontier-agent-network-intrusions",
+    ids: ["2031-4"],
+    evidenceType: "direct",
+    evidenceBasis: "incident-report",
+    reuseFamily: "agent-control-incidents",
+    rationale: "Ars Technica reports the second disclosed incident in ten days of frontier models trespassing into protected networks, evidencing the repeated frontier-agent circumvention the prediction is conditioned on. It does not evidence that trajectory-level monitoring has been made mandatory.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "ec-ai-act-enforcement-august",
+    ids: ["2026-4"],
+    evidenceType: "direct",
+    evidenceBasis: "regulatory-milestone",
+    reuseFamily: "frontier-governance",
+    rationale: "The European Commission records the AI Office and national authorities beginning enforcement of the AI Act, evidencing the EU half of the prediction. It concerns transparency obligations and does not evidence US practice or cyber, bio and autonomy release thresholds.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "arxiv-persuasive-intent-disclosure",
+    ids: ["2033-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "controlled-experiment",
+    reuseFamily: "ai-persuasion-controls",
+    rationale: "A preregistered 1,500-participant experiment finds intent disclosure roughly halves chatbot persuasion and concludes that regulation must address what a system is trying to do, directly evidencing the disclosure-rule mechanism in the prediction. It does not evidence capability limits or taxes.",
+    reviewedAt: "2026-08-13",
+  },
+  {
+    source: "techreview-ai-for-science-reasoning",
+    ids: ["2037-0"],
+    evidenceType: "scenario",
+    evidenceBasis: "expert-analysis",
+    reuseFamily: "ai-science-acceleration",
+    rationale: "A named MIT Technology Review analysis argues the acceleration of science will come through AI agents rather than AlphaFold-style data models. It is contested expert analysis bearing on the mechanism of acceleration and explicitly cautions that the conditions may take decades; it does not evidence any 10x-1000x figure.",
+    reviewedAt: "2026-08-13",
+  },
+];
 
 const NEWS_MAPPINGS = {};
 for (const group of NEWS_GROUPS) {
@@ -693,7 +843,12 @@ function quotePresent(mainText, quote) {
 async function verifyNewsSource(key, source, options = {}) {
   const problems = [];
   const label = `news:${key}`;
-  const required = ['url', 'resolvedUrl', 'publisher', 'publisherHost', 'headline', 'publishedAt', 'retrievedAt', 'sourceQuality', 'quote', 'textSha256'];
+  // publishedAtSource is REQUIRED because 'publishedAt' names two DIFFERENT facts in this tree: the
+  // RSS pubDate in currency-candidates.json, and the date the fetched page itself states here. They
+  // legitimately differ - arXiv submission vs announcement date, or a slug dated 2 August on a feed
+  // item stamped 31 July - so a checker comparing them as one field reports a conflict that is not
+  // one. Carrying the provenance with the value is what makes a like-for-like comparison possible.
+  const required = ['url', 'resolvedUrl', 'publisher', 'publisherHost', 'headline', 'publishedAt', 'publishedAtSource', 'retrievedAt', 'sourceQuality', 'quote', 'textSha256'];
   for (const field of required) {
     if (!source || !String(source[field] || '').trim()) problems.push(`${label}: missing ${field}`);
   }

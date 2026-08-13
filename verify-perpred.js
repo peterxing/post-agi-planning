@@ -28,12 +28,24 @@ const SHOT = process.argv[3] || null;
       const embedValues = Object.values(embeds);
       const methodCounts = {};
       const postUses = {};
+      const rowsPerSource = {};
       const badMethods = [];
       for (const e of embedValues) {
         methodCounts[e.matchMethod] = (methodCounts[e.matchMethod] || 0) + 1;
-        if (!postUses[e.id]) postUses[e.id] = [];
-        postUses[e.id].push(e);
-        if (!['lexical', 'semantic', 'hybrid', 'family', 'reviewed-sticky', 'reviewed-external'].includes(e.matchMethod)) badMethods.push(e.id || '(missing id)');
+        /* X retirement (2026-08-13). Under X, e.id WAS the source — a status id. Under the news
+           contract the source is the resolved ARTICLE (sourceKey); e.id is only a ledger row
+           name. Counting reuse by id lets one article be split across N rows and read as no
+           reuse at all, which would silently evade the reuse ceiling. Count by article. */
+        const sourceIdentity = e.sourceKey || e.id;
+        if (!postUses[sourceIdentity]) postUses[sourceIdentity] = [];
+        postUses[sourceIdentity].push(e);
+        if (!rowsPerSource[sourceIdentity]) rowsPerSource[sourceIdentity] = new Set();
+        rowsPerSource[sourceIdentity].add(e.id);
+        /* X retirement (2026-08-13). 'lexical', 'semantic', 'hybrid' and 'family' were automatic
+           X matchers; 'reviewed-sticky' and 'reviewed-external' were the reviewed X ledgers. The
+           news contract is reviewed-only, so exactly one method is legal and any of the retired
+           names reappearing is a REGRESSION that must fail loudly rather than be tolerated. */
+        if (e.matchMethod !== 'reviewed-news') badMethods.push((e.id || '(missing id)') + ' -> ' + e.matchMethod);
       }
       const datedKeys = predictions.years.flatMap(y => y.events.map((_, i) => `${y.year}-${i}`));
       const horizon = predictions.postSuperintelligence;
@@ -41,8 +53,21 @@ const SHOT = process.argv[3] || null;
       const horizonKeys = horizonItems.map(item => `horizon-${item.id}`);
       const expectedKeys = [...datedKeys, ...horizonKeys];
       const coveredKeys = new Set(Object.keys(embeds));
-      const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key));
+      /* X retirement (2026-08-13). A prediction is no longer required to carry evidence; it is
+         required to be ACCOUNTED FOR — cited by a reviewed news source, or explicitly recorded
+         as uncited with a reason. Both at once is a double-count and is charged separately, so
+         the totality can never be satisfied by moving a prediction into two populations. */
+      const uncitedItems = (signals.uncited && signals.uncited.items) || {};
+      const uncitedKeys = new Set(Object.keys(uncitedItems));
+      const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key) && !uncitedKeys.has(key));
+      const doubleCountedKeys = expectedKeys.filter(key => coveredKeys.has(key) && uncitedKeys.has(key));
       const extraKeys = [...coveredKeys].filter(key => !expectedKeys.includes(key));
+      const extraUncitedKeys = [...uncitedKeys].filter(key => !expectedKeys.includes(key));
+      /* Every uncited record must state WHY, or the uncited population becomes a dumping ground. */
+      const unexplainedUncited = Object.keys(uncitedItems).filter(k => {
+        const r = uncitedItems[k] || {};
+        return !r.reason || !String(r.reason).trim() || !r.statement || !String(r.statement).trim();
+      });
 
       const stringList = value => Array.isArray(value) && value.length >= 2 && value.length <= 4
         && value.every(v => typeof v === 'string' && v.trim());
@@ -59,7 +84,10 @@ const SHOT = process.argv[3] || null;
           && typeof item.conditionalProb === 'number' && item.conditionalProb >= 0 && item.conditionalProb <= 100
           && stringList(item.dependencies) && stringList(item.indicators)
           && typeof item.caveat === 'string' && item.caveat.trim()
-          && item.match && /\bfrom:peterxing\b/i.test(item.match.search || ''));
+          /* INVERTED 2026-08-13: the operator must now be ABSENT. This line REQUIRED it, so removing
+             X from the data failed verification - a gate mandating the thing being retired. */
+          && item.match && typeof item.match.search === 'string' && item.match.search.trim()
+          && !/\bfrom:\s*peterxing\b|x\.com|twitter\.com/i.test(item.match.search));
       const horizonText = horizonItems.map(item => `${item.t} ${item.caveat}`).join(' ').toLowerCase();
       const horizonCaveats = [
         'endovascular bcis are minimally invasive, not non-invasive',
@@ -72,19 +100,31 @@ const SHOT = process.argv[3] || null;
 
       const eventNodes = Array.from(document.querySelectorAll('#timelineBody .event'));
       const horizonNodes = Array.from(document.querySelectorAll('#horizonBody .horizon-item'));
-      /* Origin evidence is the reviewed X status. When a prediction also carries an additive
-         current reference the pair is wrapped in .tl-evidence-group, so the origin card sits
-         one level deeper. Both shapes must be accepted, but a .tl-currency card may NEVER
-         satisfy this check — it is supplementary and can never be a prediction's evidence. */
+      /* Origin evidence is the reviewed NEWS card (X retirement 2026-08-13). When a prediction
+         also carries an additive current reference the pair is wrapped in .tl-evidence-group, so
+         the origin card sits one level deeper. Both shapes must be accepted, but a .tl-currency
+         card may NEVER satisfy this check — it is supplementary, never a prediction's evidence.
+
+         RENDERED TOTALITY. A prediction without a qualifying source is not blank: it renders an
+         explicit uncited notice. So the DOM rule is an EXCLUSIVE OR — exactly one of the two must
+         be present. Accepting "either" alone would let a double render pass; requiring the card
+         alone would fail every honestly uncited prediction. This is the strongest check here,
+         because it proves the PAGE accounts for every prediction, not merely the artefact. */
       const originCard = node => node.querySelector(
         '.event-body > .tl-signal:not(.tl-currency), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency)');
-      const eventCoverage = eventNodes.length > 0 && eventNodes.every(originCard);
+      const uncitedNotice = node => node.querySelector('.tl-signal-uncited');
+      const accountedFor = node => !!originCard(node) !== !!uncitedNotice(node);
+      const eventCoverage = eventNodes.length > 0 && eventNodes.every(accountedFor);
+      const unaccountedEvents = eventNodes
+        .map((node, i) => (accountedFor(node) ? null : (node.id || ('#' + i))))
+        .filter(Boolean);
       const horizonCoverage = horizonNodes.length > 0 && horizonNodes.every(node =>
         node.querySelector('.horizon-epistemic')
         && node.querySelector('.horizon-prob')
         && node.querySelectorAll('.horizon-block').length === 2
         && node.querySelector('.horizon-caveat')
-        && node.querySelector('.horizon-signal .tl-signal:not(.tl-currency)'));
+        && (!!node.querySelector('.horizon-signal .tl-signal:not(.tl-currency)')
+            !== !!node.querySelector('.horizon-signal .tl-signal-uncited')));
       const searchLinks = Array.from(document.querySelectorAll('.tl-signal-search')).map(a => a.href);
       const dates = Array.from(document.querySelectorAll('.tl-signal-date')).map(d => d.textContent.trim());
       const directSchema = Object.keys(embeds).every(key => {
@@ -121,44 +161,28 @@ const SHOT = process.argv[3] || null;
             && ['unique', 'news-reuse'].includes(e.assignmentMode)
             && !!e.reuseFamily;
         }
-        if (e.evidenceOwner === 'peterxing') {
-          return ['post', 'repost'].includes(e.kind)
-            && provenance.evidenceOwner === 'peterxing'
-            && provenance.account === 'peterxing'
-            && ['authored', 'reposted'].includes(provenance.relationship)
-            && /^\d{15,}$/.test(String(provenance.activityId || ''))
-            && !!provenance.observedIn
-            && provenance.verifiedThrough === 'archive-verified'
-            && Array.isArray(provenance.sourceChain)
-            && provenance.sourceChain.includes('tweet-result')
-            && !!provenance.lastVerifiedAt
-            && e.authorship === (provenance.relationship === 'authored' ? 'authored' : 'reposted')
-            && e.matchMethod === 'reviewed-sticky'
-            && ['unique', 'family-reuse'].includes(e.assignmentMode);
-        }
-        return e.evidenceOwner === 'external'
-          && e.kind === 'external'
-          && provenance.evidenceOwner === 'external'
-          && provenance.activityKind === 'external'
-          && provenance.account === e.author
-          && !!provenance.displayName
-          && !!provenance.sourceQuality
-          && !!provenance.retrievedAt
-          && provenance.verifiedThrough === 'first-party-status+oembed'
-          && Array.isArray(provenance.sourceChain)
-          && provenance.sourceChain.includes('tweet-result')
-          && e.authorship === 'external'
-          && ['direct', 'scenario', 'leading-indicator'].includes(e.evidenceType)
-          && ['unique', 'external-reuse'].includes(e.assignmentMode);
+        /* X RETIREMENT 2026-08-13 — a rendered card owned by 'peterxing' or 'external' is a
+           reinstatement, not a valid card. The old code ACCEPTED either whenever its X provenance was
+           well-formed, which is the X contract restated in provenance vocabulary. The only valid
+           owner is news, checked above; everything else is rejected. */
+        return false;
       });
       const searchSchema = Object.keys(searches).length === 0;
+      /* X retirement (2026-08-13). 'external-reuse' and 'family-reuse' were the X reuse modes
+         for the external ledger and Peter's evidence families. News reuse is legitimate only
+         when one article supports several predictions WITHIN ONE DECLARED compatible family.
+         The family must be non-empty: undefined === undefined collapses to a single group, so
+         an undeclared family would otherwise satisfy this check by being absent — the same
+         shape as a retired floor silently satisfying every comparison it appears in. */
       const invalidReuse = Object.entries(postUses).filter(([, uses]) => {
         if (uses.length <= 1) return false;
         const owners = new Set(uses.map(use => use.evidenceOwner));
-        const groups = new Set(uses.map(use => use.evidenceOwner === 'external' ? use.reuseFamily : use.evidenceFamily));
-        const expectedMode = uses[0].evidenceOwner === 'external' ? 'external-reuse' : 'family-reuse';
-        return owners.size !== 1 || groups.size !== 1
-          || uses.some(use => use.assignmentMode !== expectedMode);
+        const families = new Set(uses.map(use => use.reuseFamily));
+        return owners.size !== 1
+          || !owners.has('news')
+          || families.size !== 1
+          || !String(uses[0].reuseFamily || '').trim()
+          || uses.some(use => use.assignmentMode !== 'news-reuse');
       }).map(([id]) => id);
       return {
         eventCount: eventNodes.length,
@@ -187,12 +211,40 @@ const SHOT = process.argv[3] || null;
         sourceFetchedAt: signals.sourceFetchedAt || null,
         newestItemAt: signals.newestItemAt || null,
         realityCount: Array.isArray(signals.reality) ? signals.reality.length : 0,
+        realityMalformed: (Array.isArray(signals.reality) ? signals.reality : []).map((r, i) => {
+          const miss = [];
+          if (!r || !String(r.tag || '').trim()) miss.push('tag');
+          if (!r || !String(r.kind || '').trim()) miss.push('kind');
+          /* Every signal must SAY something: cited signals carry the article quote, uncited
+             ones carry the honest "no qualifying source" statement. Both live in .t */
+          if (!r || !String(r.t || '').trim()) miss.push('t');
+          /* A headline belongs to an article, so only a cited signal can have one. */
+          if (r && r.kind !== 'none' && !String(r.headline || '').trim()) miss.push('headline');
+          /* A signal either cites a publisher+url, or is explicitly kind:'none'. Anything
+             else is a half-rendered card claiming a source it cannot show. */
+          if (r && r.kind !== 'none') {
+            if (!String(r.publisher || '').trim()) miss.push('publisher');
+            if (!String(r.url || '').trim()) miss.push('url');
+            if (!String(r.date || '').trim()) miss.push('date');
+          }
+          return miss.length ? ('#' + i + ' ' + (r && r.tag ? r.tag : '?') + ' missing ' + miss.join('/')) : null;
+        }).filter(Boolean),
         methodCounts,
         badMethods,
         maxReuse: Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
         invalidReuse,
         missingKeys,
         extraKeys,
+        doubleCountedKeys,
+        unaccountedEvents,
+        sourceRowFanOut: Object.keys(rowsPerSource)
+          .filter(k => rowsPerSource[k].size > 1)
+          .map(k => k + ' -> ' + [...rowsPerSource[k]].join(' + ')),
+        extraUncitedKeys,
+        unexplainedUncited,
+        citedCount: Object.keys(embeds).length,
+        uncitedCount: uncitedKeys.size,
+        expectedCount: expectedKeys.length,
         eventCoverage,
         horizonCoverage,
         directSchema,
@@ -201,14 +253,14 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.direct === Object.keys(embeds).length
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
-          && signals.coverage.stickyPeterFloor >= 24
-          && signals.coverage.stickyPeterAuthoredFloor >= 10
-          && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) >= signals.coverage.stickyPeterFloor
-          && signals.coverage.reuseCeiling >= 1 && signals.coverage.reuseCeiling <= 10
-          && signals.coverage.maxReuse <= signals.coverage.reuseCeiling
-          && Number(signals.coverage.byPeterAuthorship?.authored || 0)
-            + Number(signals.coverage.byPeterAuthorship?.reposted || 0)
-            === Number(signals.coverage.byEvidenceOwner?.peterxing || 0)
+          /* X RETIREMENT 2026-08-13 — these required 24 sticky @peterxing mappings and 10 authored
+             ones to be PRESENT. Asserted absent rather than compared: a retired floor compared
+             numerically is the 'x < null is x < 0' trap, where a missing floor silently satisfies
+             every '>=' it appears in. */
+          && signals.coverage.stickyPeterFloor === undefined
+          && signals.coverage.stickyPeterAuthoredFloor === undefined
+          && Number(signals.coverage.byEvidenceOwner?.peterxing || 0) === 0
+          && Number(signals.coverage.byEvidenceMedium?.x || 0) === 0
           && signals.coverage.maxReuse === Math.max(0, ...Object.values(postUses).map(uses => uses.length)),
         horizonSchema,
         horizonCaveats,
@@ -217,17 +269,26 @@ const SHOT = process.argv[3] || null;
     });
 
     const checks = {
-      source: stats.sourceFresh && stats.source === 'archive-verified' && !!stats.sourceFetchedAt && !!stats.newestItemAt
+      /* X RETIREMENT 2026-08-13 — this demanded source 'archive-verified', primarySource
+         'first-party-status', a positive hydration count and wayback-cdx/tweet-result/x-oembed
+         attempts. All five are X-era facts the artefact no longer carries, so this REACHABLE check
+         failed on every term. It now asserts the news contract and additionally asserts every
+         recorded attempt is RETIRED, so a quiet return to any X source fails here. */
+      source: stats.sourceFresh && stats.source === 'news-verified' && !!stats.sourceFetchedAt && !!stats.newestItemAt
         && stats.sourceStatus && stats.sourceStatus.activeSource === stats.source
-        && stats.sourceStatus.mode === 'archive-verified'
-        && stats.sourceStatus.primarySource === 'first-party-status'
-        && Number(stats.sourceStatus.hydratedThisRun) > 0
+        && stats.sourceStatus.mode === 'news-verified'
+        && stats.sourceStatus.primarySource === 'live-verified-news'
+        && Number(stats.sourceStatus.windowDays) > 0
         && Array.isArray(stats.sourceAttempts)
-        && ['wayback-cdx','tweet-result','x-oembed'].every(source =>
-          stats.sourceAttempts.some(attempt => attempt.source === source)),
+        && ['x-api', 'archive-verified'].every(source =>
+          stats.sourceAttempts.some(attempt => attempt.source === source && attempt.status === 'retired'))
+        && !stats.sourceAttempts.some(attempt => attempt.status !== 'retired'),
       eventCount: stats.eventCount === stats.expectedEventCount,
       horizonCount: stats.horizonCount === stats.expectedHorizonCount && stats.expectedHorizonCount >= 7,
-      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length,
+      exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length
+        && !stats.doubleCountedKeys.length && !stats.extraUncitedKeys.length
+        && !stats.unexplainedUncited.length
+        && (stats.citedCount + stats.uncitedCount) === stats.expectedCount,
       renderedCoverage: stats.eventCoverage && stats.horizonCoverage,
       horizonSchema: stats.horizonSchema && stats.horizonCaveats,
       methods: !stats.badMethods.length,
@@ -236,7 +297,10 @@ const SHOT = process.argv[3] || null;
       searchSchema: stats.searchSchema,
       searches: stats.chips === 0 && stats.expectedSearches === 0,
       coverageMetadata: stats.coverageMetadata,
-      reality: stats.realityCount === 6,
+      /* Was 'realityCount === 6', a hardcoded count that any added signal breaks and that
+         asserted nothing about quality. The real risks are the layer silently emptying and
+         a malformed entry rendering blank, so assert a floor AND well-formedness. */
+      reality: stats.realityCount >= 6 && stats.realityMalformed.length === 0,
       layout: stats.strayCards === 0 && stats.datesMissing === 0,
       /* The currency layer is strictly additive: no currency card may stand alone without
          an origin card beside it, and none may carry an X affordance that would let a news
@@ -249,7 +313,14 @@ const SHOT = process.argv[3] || null;
     console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} evidence=${stats.evidenceItems} direct=${stats.cards} currency=${stats.currencyCards} searches=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
     if (!ok) console.log('   CHECKS:', JSON.stringify(checks));
     if (errors.length) console.log('   ERRORS:', errors.slice(0, 4).join(' | '));
-    if (stats.missingKeys.length) console.log('   MISSING:', stats.missingKeys.slice(0, 12).join(', '));
+    console.log(`   accounting: cited=${stats.citedCount} + uncited=${stats.uncitedCount} = ${stats.citedCount + stats.uncitedCount} of ${stats.expectedCount}`);
+    if (stats.missingKeys.length) console.log('   MISSING (neither cited nor uncited):', stats.missingKeys.slice(0, 12).join(', '));
+    if (stats.doubleCountedKeys.length) console.log('   DOUBLE-COUNTED (cited AND uncited):', stats.doubleCountedKeys.slice(0, 12).join(', '));
+    if (stats.unaccountedEvents.length) console.log('   RENDERED WITHOUT EXACTLY ONE EVIDENCE STATE:', stats.unaccountedEvents.slice(0, 12).join(', '));
+    if (stats.realityMalformed.length) console.log('   MALFORMED REALITY SIGNALS:', stats.realityMalformed.slice(0, 6).join(' | '));
+    if (stats.sourceRowFanOut.length) console.log('   NOTE one article, multiple ledger rows (reuse counted by article):', stats.sourceRowFanOut.slice(0, 4).join(' | '));
+    if (stats.extraUncitedKeys.length) console.log('   UNCITED FOR UNKNOWN PREDICTION:', stats.extraUncitedKeys.slice(0, 12).join(', '));
+    if (stats.unexplainedUncited.length) console.log('   UNCITED WITHOUT REASON/STATEMENT:', stats.unexplainedUncited.slice(0, 12).join(', '));
     if (stats.extraKeys.length) console.log('   EXTRA:', stats.extraKeys.slice(0, 12).join(', '));
     if (stats.badMethods.length) console.log('   BAD METHODS:', stats.badMethods.slice(0, 4).join(' | '));
     if (SHOT) await page.screenshot({ path: SHOT.replace('THEME', theme), fullPage: false });
@@ -281,12 +352,14 @@ const SHOT = process.argv[3] || null;
       direct: document.querySelectorAll('.tl-signal').length,
       unavailable: document.querySelectorAll('.tl-signal-unavailable').length,
       searches: links.length,
-      honest: links.every(link => {
-        const url = new URL(link.href);
-        return url.hostname === 'x.com' && url.pathname === '/search'
-          && /^from:peterxing(?:\s|$)/i.test(url.searchParams.get('q') || '')
-          && url.searchParams.get('f') === 'live';
-      }),
+      /* INVERTED 2026-08-13. A search link counted as "honest" only if it pointed at
+         x.com/search?q=from:peterxing. None is honest now - the offline state must show the
+         unavailable notice and link nowhere - so honesty is the ABSENCE of any X link. */
+      honest: links.length === 0
+        && [...document.querySelectorAll('a[href]')].every(link => {
+          try { return !/(?:^|\.)(?:x\.com|twitter\.com)$/i.test(new URL(link.href, location.href).hostname); }
+          catch { return true; }
+        }),
     };
   });
   const offlineOk = offline.expected >= 103

@@ -40,7 +40,19 @@ const OFFLINE = process.argv.includes('--offline');
    fully derived. The env value is now kept ONLY as the thing to disagree with; the ceiling that is
    judged against is the one the builder RECORDED IN THE ARTEFACT, because that is the operand that
    actually governed publication. Resolved in main() at ARTEFACT CEILING, once signals.json is read. */
-const ENV_MAX_AGE_DAYS = Number(process.env.CURRENCY_MAX_AGE_DAYS || 60);
+const ENV_MAX_AGE_DAYS = (() => {
+  /* Same derivation as refresh-signals.js: the REGISTERED ceiling governs, and an environment
+     variable may only tighten it. A hardcoded fallback here would be a fourth, fictitious term. */
+  let registered = NaN;
+  try {
+    registered = Number(JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'evidence-floors.json'), 'utf8').replace(/^\uFEFF/, '')
+    ).currencyMaxAgeDays);
+  } catch { /* left NaN; the registered-ceiling check below reports it properly. */ }
+  const override = Number(process.env.CURRENCY_MAX_AGE_DAYS);
+  if (!Number.isInteger(registered) || registered <= 0) return Number.isFinite(override) && override > 0 ? override : NaN;
+  return Number.isFinite(override) && override > 0 ? Math.min(registered, override) : registered;
+})();
 /* Seeded from the environment so the value is defined before signals.json is read, and OVERWRITTEN
    in every branch of ARTEFACT CEILING — including the branches that refuse. It used to be assigned
    only in the numeric branch, so a run that declared the recorded ceiling unreadable went on to
@@ -514,11 +526,16 @@ async function main() {
   const mappings = CURRENCY_MAPPINGS;
   const embeds = signals.embeds || {};
 
-  // ---- STRUCTURAL: the currency layer must not disturb the X layer ---------------------
-  if (Object.keys(embeds).length !== ids.size) {
-    fail(`direct X coverage regressed: ${Object.keys(embeds).length} embeds for ${ids.size} predictions`);
+  // ---- STRUCTURAL: the currency layer must not disturb the evidence layer ---------------
+  const uncitedItems = (signals.uncited && signals.uncited.items) || {};
+  const both = [...ids].filter(id => embeds[id] && uncitedItems[id]);
+  const neither = [...ids].filter(id => !embeds[id] && !uncitedItems[id]);
+  if (both.length || neither.length) {
+    fail(`evidence accounting broke: ${both.length} prediction(s) both cited and uncited, `
+      + `${neither.length} accounted for by neither`);
   } else {
-    ok(`all ${ids.size} predictions still carry reviewed direct X evidence`);
+    ok(`all ${ids.size} predictions accounted for  ${Object.keys(embeds).length} cited, `
+      + `${Object.keys(uncitedItems).length} recorded as having no qualifying source`);
   }
 
   const reuse = {};
@@ -526,9 +543,14 @@ async function main() {
 
   for (const [pid, list] of Object.entries(mappings)) {
     if (!ids.has(pid)) fail(`currency mapping references unknown prediction id ${pid}`);
-    // A currency link is additive. It may only ever appear on a prediction that ALREADY has
-    // its reviewed X origin evidence; it can never be the sole evidence for a prediction.
-    if (!embeds[pid]) fail(`${pid}: has a currency link but no reviewed X origin evidence — currency must be additive, never a substitute`);
+    /* A currency link is additive: it may only appear on a prediction that ALREADY carries reviewed
+       origin evidence, and can never be the sole evidence for one. A ledger entry whose prediction
+       has no origin evidence must therefore be WITHHELD from the artefact - so the assertion is on
+       what was emitted, not on what was reviewed. */
+    if (!embeds[pid] && (signals.currency || {})[pid]) {
+      fail(`${pid}: a currency link was PUBLISHED for a prediction with no origin evidence — `
+        + 'currency must be additive, never a substitute');
+    }
     for (const entry of list) {
       linkCount++;
       reuse[entry.source] = (reuse[entry.source] || 0) + 1;
@@ -683,6 +705,27 @@ async function main() {
           fail(`${pid}: ${entry.source} is ${age} days old, past the ${MAX_AGE_DAYS}-day ceiling, yet is STILL PUBLISHED in signals.json — the age-out demotion did not take effect`);
         } else {
           ok(`demoted (not an evidence fault)  ${pid}  ${entry.source}  ${age}d > ${MAX_AGE_DAYS}d ceiling — absent from signals.json, X origin retained`);
+        }
+        continue;
+      }
+
+      /* SECOND LEGITIMATE WITHHOLDING. A currency link exists to show something NEWER than the
+         origin evidence. When the origin is itself a recent article, a link dated on or before it
+         refreshes nothing, and the builder withholds it. Judged on DAY precision because a same-day
+         ordering cannot be demonstrated. Publishing one anyway is still a hard failure. */
+      const originEmbed = embeds[pid];
+      const originAt = originEmbed
+        && (originEmbed.articleDate || (originEmbed.provenance && originEmbed.provenance.publishedAt));
+      const originDay = originAt ? String(originAt).slice(0, 10) : null;
+      const entryDay = String(s.publishedAt).slice(0, 10);
+      if (originDay && entryDay <= originDay) {
+        demoted.add(entry.source);
+        if (livePublished) {
+          fail(`${pid}: ${entry.source} (${entryDay}) is PUBLISHED but is not newer than the origin `
+            + `evidence it claims to refresh (${originDay}) — a currency link must be strictly later`);
+        } else {
+          ok(`withheld (not an evidence fault)  ${pid}  ${entry.source}  ${entryDay} <= origin ${originDay} `
+            + '— absent from signals.json, origin evidence retained');
         }
         continue;
       }

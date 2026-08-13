@@ -51,14 +51,11 @@ param(
 $ErrorActionPreference = 'Continue'
 
 $coverageVerifier = Join-Path $Deploy 'verify-direct-coverage.js'
-$archiveVerifier = Join-Path $Deploy 'verify-archive-corpus.js'
-$peterVerifier = Join-Path $Deploy 'verify-peter-evidence.js'
-$externalVerifier = Join-Path $Deploy 'verify-external-evidence.js'
 $newsVerifier = Join-Path $Deploy 'verify-news-evidence.js'
 $currencyVerifier = Join-Path $Deploy 'verify-currency.js'
 $surfaceVerifier = Join-Path $Deploy 'verify-deploy-surface.js'
 $interlockVerifier = Join-Path $Deploy 'verify-interlock.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $archiveVerifier) -or -not (Test-Path $peterVerifier) -or -not (Test-Path $externalVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier) -or -not (Test-Path $interlockVerifier)) {
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier) -or -not (Test-Path $interlockVerifier)) {
   Write-Error 'publish-github: evidence preflight verifier is missing; publication aborted.'
   exit 7
 }
@@ -68,29 +65,15 @@ Push-Location $Deploy
 # evidence naming something that did not happen. A skip is $null and renders as 'skipped'.
 # Control flow is unchanged: PowerShell evaluates `$null -eq 0` and `1 -eq 0` both as False, so
 # every gating condition below behaves exactly as before; only what is REPORTED changes.
+# X RETIREMENT 2026-08-13 — the archive, Peter and external gates verified X evidence that no longer
+# exists. They are removed, not stubbed: a gate kept alive over an empty subject reports green for
+# having nothing to check, which is the one reading this chain must never produce. Coverage, news,
+# currency, surface and interlock are unchanged and still gate publication.
 & node $coverageVerifier
 $coverageExit = $LASTEXITCODE
 if ($coverageExit -eq 0) {
-  & node $archiveVerifier
-  $archiveExit = $LASTEXITCODE
-  if ($archiveExit -eq 0) {
-    & node $peterVerifier
-    $peterExit = $LASTEXITCODE
-  } else {
-    $peterExit = $null
-  }
-  if ($archiveExit -eq 0 -and $peterExit -eq 0) {
-    & node $externalVerifier
-    $externalExit = $LASTEXITCODE
-  } else {
-    $externalExit = $null
-  }
-  if ($externalExit -eq 0) {
-    & node $newsVerifier
-    $newsExit = $LASTEXITCODE
-  } else {
-    $newsExit = $null
-  }
+  & node $newsVerifier
+  $newsExit = $LASTEXITCODE
   if ($newsExit -eq 0) {
     & node $currencyVerifier
     $currencyExit = $LASTEXITCODE
@@ -110,9 +93,6 @@ if ($coverageExit -eq 0) {
     $interlockExit = $null
   }
 } else {
-  $archiveExit = $null
-  $peterExit = $null
-  $externalExit = $null
   $newsExit = $null
   $currencyExit = $null
   $surfaceExit = $null
@@ -147,8 +127,8 @@ if ($currencyInert) {
 # reported as "direct evidence preflight failed" — sending an operator to audit evidence that was
 # never found wanting, and erasing the CATCH-UP that a deferred run obliges the next one to take.
 $gates = [ordered]@{
-  coverage = $coverageExit; archive  = $archiveExit;  peter   = $peterExit;   external  = $externalExit
-  news     = $newsExit;     currency = $currencyExit; surface = $surfaceExit; interlock = $interlockExit
+  coverage = $coverageExit; news     = $newsExit;     currency = $currencyExit
+  surface  = $surfaceExit;  interlock = $interlockExit
 }
 $render = (($gates.GetEnumerator() | ForEach-Object {
   '{0}={1}' -f $_.Key, $(if ($null -eq $_.Value) { 'skipped' } else { $_.Value })
@@ -236,10 +216,16 @@ git reset --hard --quiet "origin/$Branch" 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: reset failed ($LASTEXITCODE)"; exit 5 }
 
 # 2) Copy the curated PUBLIC allow-list (explicit names only — never wildcards).
+# X RETIREMENT 2026-08-13 - verify-id.js was REMOVED from this list because the file itself was
+# deleted: it made a live call to cdn.syndication.twimg.com, the last network egress to an X host
+# in the tree. It is not merely dropped here -- verify-interlock.js RETIRED_ENTRY_POINTS asserts
+# it stays ABSENT, so restoring the file fails that gate until it is re-guarded. Naming an
+# approved source that does not exist aborts publication at exit 3 (TERMINAL), so a deletion
+# anywhere in the tree must be paid for HERE in the same change.
 $fromDeploy = @(
-  'README.md','package.json','index.html','app.js','styles.css','predictions.json','signals.json','author.json','evidence-approvals.json','evidence-floors.json','external-evidence.js','news-evidence.js','currency-evidence.js','currency-subjects.js','currency-text-pins.json',
-  'server.js','refresh-signals.js','x-archive.js','x-client.js','x-auth.js','harvest-loop.js','review-evidence-candidates.js','pipeline-lock.js',
-  'validate-predictions.js','verify-site.js','verify-signal-matcher.js','verify-perpred.js','verify-reality.js','verify-id.js','verify-author.js','verify-observatory.js','verify-performance.js','verify-direct-coverage.js','verify-archive-corpus.js','verify-peter-evidence.js','verify-external-evidence.js','verify-news-evidence.js','verify-currency.js','verify-deploy-surface.js','verify-interlock.js','evidence-families.js',
+  'README.md','package.json','index.html','app.js','styles.css','predictions.json','signals.json','author.json','evidence-floors.json','external-evidence.js','news-evidence.js','currency-evidence.js','currency-subjects.js','currency-text-pins.json',
+  'server.js','refresh-signals.js','pipeline-lock.js',
+  'validate-predictions.js','verify-site.js','verify-signal-matcher.js','verify-perpred.js','verify-reality.js','verify-author.js','verify-observatory.js','verify-performance.js','verify-direct-coverage.js','verify-news-evidence.js','verify-currency.js','verify-deploy-surface.js','verify-interlock.js','evidence-families.js',
   # month-estimates.js is mirrored because validate-predictions.js L10 IMPORTS EXECUTABLE
   # PREDICATES from it (bandForYear, precisionForBand), not merely data. A gate whose
   # imported behaviour lives outside the published set can change what `npm run validate`
@@ -255,7 +241,7 @@ $fromDeploy = @(
   # the guarantor was the least falsifiable thing in the tree. Publishing it is safe because
   # token resolution now lives in publish-credentials.ps1, which stays off this list.
   'publish-github.ps1',
-  'launch.ps1','watchdog.ps1','REVISE-PREDICTIONS.md','X-API-SETUP.md'
+  'launch.ps1','watchdog.ps1','REVISE-PREDICTIONS.md'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')
@@ -294,7 +280,7 @@ foreach ($f in $fromSite)   { $sweepTargets += ,@($f, $Site) }
 # "permitted to publish", so the exclusion must never spell the name out. One list, one meaning.
 # This comment does not spell it either: the first rewrite of these lines quoted the offending
 # literal while explaining it, and re-tripped the same gate from the prose describing the trap.
-$forbiddenPattern = '(?i)(^|/)\.env(\.(?!example)[^/]*)?$|x-activity|x-status-corpus|x-wayback|x-external-account|timeline-raw|signals-debug|x-debug|(^|/)\.pipeline\.lock$|cloudflared\.exe|(^|/)url\.txt$|\.log$|node_modules|(^|/)\.vercel(/|$)|publish-credentials\.ps1'
+$forbiddenPattern = '(?i)(^|/)\.env(\.(?!example)[^/]*)?$|x-activity|x-status-corpus|x-wayback|x-external-account|timeline-raw|signals-debug|x-debug|evidence-approvals|(^|/)\.pipeline\.lock$|cloudflared\.exe|(^|/)url\.txt$|\.log$|node_modules|(^|/)\.vercel(/|$)|publish-credentials\.ps1'
 
 foreach ($pair in $sweepTargets) {
   $f = $pair[0]; $root = $pair[1]
@@ -342,6 +328,32 @@ foreach ($f in $fromSite) {
   (Get-Item $d).LastWriteTime = $touch
 }
 
+# X RETIREMENT 2026-08-13 - files this publisher USED to carry and no longer approves. The copy
+# step above only ever ADDS, so a withdrawn file stays tracked in the mirror forever and trips the
+# allow-list scan below at exit 3 on every future run. Declaring them by name WITH the reason keeps
+# the gate fail-closed: only these DECLARED retirements are deleted, and any other unapproved path
+# still aborts publication rather than being silently destroyed. Removing a name from this list
+# once the mirror no longer carries it is safe; adding one is a decision to DELETE from the mirror.
+$retiredFromMirror = @(
+  'x-client.js',                    # X API client
+  'x-auth.js',                      # X API OAuth
+  'x-archive.js',                   # Wayback/X archive harvester
+  'harvest-loop.js',                # X corpus harvest loop
+  'review-evidence-candidates.js',  # X candidate review tool
+  'verify-id.js',                   # called cdn.syndication.twimg.com, the last X network egress
+  'verify-peter-evidence.js',       # verified @peterxing X mappings
+  'verify-external-evidence.js',    # verified external X statuses
+  'verify-archive-corpus.js',       # verified the X status corpus
+  'evidence-approvals.json',        # the reviewed X approvals ledger itself
+  'X-API-SETUP.md'                  # X API setup documentation
+)
+$stillTracked = @(git ls-files) | Where-Object { $_ -in $retiredFromMirror }
+if ($stillTracked) {
+  git rm --quiet -- $stillTracked 2>&1 | Out-Null
+  if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: retiring withdrawn mirror paths failed ($LASTEXITCODE)"; exit 5 }
+  Write-Host "publish-github: retired from mirror: $($stillTracked -join ', ')"
+}
+
 # 3) Fail closed on any path outside the explicit public allow-list, then stage only copied paths.
 $tracked = @(git ls-files)
 $untracked = @(git ls-files --others --exclude-standard)
@@ -356,8 +368,13 @@ if ($unexpectedTracked -or $unexpectedUntracked -or $unexpectedIgnored) {
 git add -- $copiedAllowlist 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: explicit staging failed ($LASTEXITCODE)"; exit 5 }
 $staged = @(git diff --cached --name-only)
-$unexpectedStaged = $staged | Where-Object { $_ -notin $copiedAllowlist }
-$forbidden = $staged | Where-Object { $_ -match $forbiddenPattern }
+$unexpectedStaged = $staged | Where-Object { $_ -notin $copiedAllowlist -and $_ -notin $retiredFromMirror }
+# A DELETION is the opposite of a publication. evidence-approvals.json is now matched by
+# $forbiddenPattern precisely so it can never be published, and removing it from the mirror is how
+# that is enforced - so testing the forbidden pattern against a staged deletion would abort the
+# very act that satisfies it. Only paths staged for ADDITION or MODIFICATION are tested.
+$stagedNotDeleted = @(git diff --cached --name-only --diff-filter=d)
+$forbidden = $stagedNotDeleted | Where-Object { $_ -match $forbiddenPattern }
 if ($unexpectedStaged -or $forbidden) {
   git reset --hard --quiet "origin/$Branch" 2>&1 | Out-Null
   Write-Error "publish-github: non-allow-listed or forbidden file staged, aborted: $(@($unexpectedStaged + $forbidden) -join ', ')"; exit 3

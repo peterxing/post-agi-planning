@@ -1369,6 +1369,77 @@ button { color: inherit; }
   font-size: .62rem;
   line-height: 1.45;
 }
+
+/* ---- Recorded absence of evidence (signals.uncited) ------------------------------------------
+   Rendered for a prediction whose 14-day source search completed and found nothing qualifying.
+   Visually a measurement, not a failure: muted surface, dashed edge, no accent claim. */
+.tl-signal-uncited {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--cp-bg-elevated);
+  border: 1px dashed var(--cp-border);
+  border-left: 3px solid var(--cp-border-strong);
+  border-radius: 0.625rem;
+  color: var(--cp-text-muted);
+}
+.tl-uncited-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 7px;
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .64rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cp-text-soft);
+}
+.tl-uncited-head strong { font-weight: 700; color: var(--cp-text); letter-spacing: .06em; }
+/* An open ring: looked, found nothing. A filled dot would read as a signal that exists. */
+.tl-uncited-mark {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--cp-border-strong);
+  background: transparent;
+}
+.tl-uncited-body {
+  margin: 0 0 7px;
+  font-size: .84rem;
+  line-height: 1.5;
+  color: var(--cp-text);
+}
+.tl-uncited-note {
+  margin: 0;
+  font-size: .72rem;
+  line-height: 1.45;
+  color: var(--cp-text-soft);
+}
+
+/* ---- Retired-medium record --------------------------------------------------------------------
+   A stored record whose medium was retired. It must NOT render as a working citation, so it keeps
+   the warning edge rather than the accent one. */
+.tl-signal.tl-signal-retired {
+  border-left-color: var(--cp-warning);
+  background: var(--cp-surface-soft);
+}
+.tl-signal.tl-signal-retired summary { color: var(--cp-text-muted); }
+
+/* ---- Source chip with no live source ----------------------------------------------------------
+   Hollow dot for the same reason as the uncited ring: nothing is being claimed. */
+.signal-src-none { color: var(--cp-text-soft); }
+.signal-src-none .sig-dot {
+  background: transparent;
+  border: 1.5px solid var(--cp-border-strong);
+  box-sizing: border-box;
+}
+.signal-host {
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .62rem;
+  letter-spacing: .04em;
+  color: var(--cp-text-muted);
+}
+
 .tl-signal-search {
   display: block;
   text-decoration: none;

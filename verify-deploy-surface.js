@@ -24,7 +24,7 @@ if (require.main === module) require('./pipeline-lock').guard('verify:surface');
   Usage
     node verify-deploy-surface.js                     static gate only (fail-closed)
     node verify-deploy-surface.js --live              static + both production domains
-    node verify-deploy-surface.js --live https://x/   static + explicit base URLs
+    node verify-deploy-surface.js --live https://host/ static + explicit base URLs
 
   Exit 0 pass · 1 fail.
 */
@@ -60,6 +60,74 @@ const CONFIG_NOT_SERVED = new Set(['vercel.json']);
 // already excludes them; listing them again is defence in depth and keeps
 // verify-interlock.js's ".vercelignore excludes .pipeline.lock" assertion true.
 const ALLOWED_TRAILING_DENIES = new Set(['.env*', '.vercel', '.pipeline.lock']);
+
+/* ---------------------------------------------------------------------------------------------
+   EGRESS ALLOW-LIST — the same rule as the deploy surface, pointed outward.
+
+   The deploy surface was fail-OPEN until it became an allow-list: anything matching no deny pattern
+   was served by default. Network egress had the identical shape — a host nobody had thought to
+   forbid was callable by default — and it hid a live X API call on cdn.syndication.twimg.com for a
+   full day, because every X search anyone ran looked for x.com and twitter.com.
+
+   So this is default-DENY. Every https? host named anywhere in the tree's own JavaScript must appear
+   below. Adding a publisher is a one-line reviewed edit; that IS the review event. A host nobody
+   declared fails closed without anyone having had to predict it. */
+const ALLOWED_EGRESS_HOSTS = new Set([
+  // local verification and the two production domains
+  '127.0.0.1', 'peterxing.com', 'post-agi-planning.vercel.app',
+  // reviewed news + currency publishers (primary reporting, journals, labs, agencies, regulators)
+  'arstechnica.com', 'feeds.arstechnica.com', 'arxiv.org', 'rss.arxiv.org', 'bair.berkeley.edu',
+  'blogs.nvidia.com', 'deepmind.google', 'digital-strategy.ec.europa.eu', 'huggingface.co',
+  'news.mit.edu', 'news.un.org', 'openai.com', 'research.google', 'spacenews.com',
+  'spectrum.ieee.org', 'www.aisi.gov.uk', 'www.anthropic.com', 'www.bls.gov',
+  'www.challengergray.com', 'www.ebi.ac.uk', 'www.eia.gov', 'www.esa.int', 'www.fda.gov',
+  'www.federalreserve.gov', 'www.iea.org', 'www.imf.org', 'www.microsoft.com', 'www.nasa.gov',
+  'www.nature.com', 'www.nih.gov', 'www.nist.gov', 'www.science.org', 'www.technologyreview.com',
+  'www.theverge.com', 'www.who.int',
+  /* NEGATIVE fixtures. These exist so the news verifier can PROVE it rejects an aggregator, a
+     shortener, a press-release mill and a fabricated URL. They are named in order to be refused. */
+  'bit.ly', 'example.org', 'example-not-reviewed.test', 'news.google.com', 'www.prnewswire.com',
+  // a neutral placeholder used in a usage example
+  'host',
+]);
+
+/* Named rather than merely absent, so the failure says WHY. Bare hostnames, so this declaration
+   cannot itself trip the scanner that reads https? URLs. */
+const RETIRED_EGRESS_HOSTS = new Map([
+  ['x.com', 'X evidence retired 2026-08-13'],
+  ['twitter.com', 'X evidence retired 2026-08-13'],
+  ['api.twitter.com', 'the X API was retired 2026-08-13'],
+  ['api.x.com', 'the X API was retired 2026-08-13'],
+  ['cdn.syndication.twimg.com', 'the X syndication API was retired 2026-08-13'],
+  ['publish.twitter.com', 'the X oEmbed endpoint was retired 2026-08-13'],
+  ['platform.twitter.com', 'the X widget script was retired 2026-08-13'],
+  ['web.archive.org', 'Wayback activity discovery was retired with the X archive on 2026-08-13'],
+]);
+
+function assertEgressHosts() {
+  const scanned = [];
+  for (const name of fs.readdirSync(DIR)) {
+    if (!name.endsWith('.js')) continue;
+    if (!fs.statSync(path.join(DIR, name)).isFile()) continue;
+    const text = fs.readFileSync(path.join(DIR, name), 'utf8');
+    for (const match of text.matchAll(/https?:\/\/([A-Za-z0-9.\-]+)/g)) {
+      scanned.push([match[1].toLowerCase(), name]);
+    }
+  }
+  const seen = new Set();
+  for (const [host, file] of scanned) {
+    if (seen.has(`${host}|${file}`)) continue;
+    seen.add(`${host}|${file}`);
+    if (RETIRED_EGRESS_HOSTS.has(host)) {
+      problems.push(`${file} names the retired host ${host} — ${RETIRED_EGRESS_HOSTS.get(host)}`);
+    } else if (!ALLOWED_EGRESS_HOSTS.has(host)) {
+      problems.push(`${file} names undeclared network host ${host}; egress is an allow-list, so add it `
+        + 'to ALLOWED_EGRESS_HOSTS as a reviewed edit or remove the call');
+    }
+  }
+  notes.push(`Egress allow-list: ${new Set(scanned.map(([h]) => h)).size} distinct host(s) named across `
+    + `the tree's JavaScript, all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) explicitly refused.`);
+}
 
 const problems = [];
 const notes = [];
@@ -250,6 +318,8 @@ async function assertLive(base) {
   const argv = process.argv.slice(2);
   const live = argv.includes('--live');
   const bases = argv.filter(a => /^https?:\/\//i.test(a)).map(a => a.replace(/\/+$/, ''));
+
+  assertEgressHosts();
 
   if (live || bases.length) {
     for (const base of (bases.length ? bases : PRODUCTION)) {

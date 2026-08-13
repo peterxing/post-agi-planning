@@ -11,8 +11,6 @@
   "scripts": {
     "serve": "node server.js",
     "refresh": "node refresh-signals.js",
-    "refresh:archive": "node x-archive.js --hydrate=120",
-    "review:candidates": "node review-evidence-candidates.js",
     "validate": "node validate-predictions.js",
     "verify": "node verify-site.js http://127.0.0.1:8787",
     "verify:matcher": "node verify-signal-matcher.js",
@@ -22,9 +20,6 @@
     "verify:ui": "node verify-observatory.js http://127.0.0.1:8787",
     "verify:performance": "node verify-performance.js http://127.0.0.1:8787",
     "verify:coverage": "node verify-direct-coverage.js",
-    "verify:peter": "node verify-peter-evidence.js",
-    "verify:archive": "node verify-archive-corpus.js",
-    "verify:external": "node verify-external-evidence.js",
     "verify:news": "node verify-news-evidence.js",
     "verify:currency": "node verify-currency.js",
     "verify:surface": "node verify-deploy-surface.js",
@@ -35,4 +30,3 @@
     "playwright": "1.61.1"
   }
 }
-
