@@ -154,6 +154,36 @@ const PROOF_FEEDS = [
   'https://www.nature.com/nature.rss',
 ];
 
+/* The UNFILTERED expected set of proofs. This exists because of the census lesson: a completeness
+   check over a results array cannot see an entry that was never appended, so a proof that did not
+   run is ABSENT rather than failed and pushes no problem. That is why `kept`/`dropped` had to be
+   published for the forecast population rather than inferred from survivors, and it is why the
+   roster here is written out rather than derived from what ran. Drift is caught in both directions:
+   a roster entry with no result means the run did not establish it, and a result with no roster
+   entry means this list went stale. */
+const PROOF_ROSTER = [
+  'aggregator, shortener and press-release mill rejected before fetch',
+  'reuse ceiling holds against an over-ceiling ledger',
+  'fabricated / non-existent article fails closed',
+  'real authoritative article verifies end to end',
+  'quote drift fails closed',
+  'headline drift fails closed',
+];
+
+/* The capability each proof licenses the PASS line to claim. The verdict sentence is BUILT from
+   this, so a proof that did not run cannot contribute its clause — the old line named four
+   capabilities unconditionally, and on a feed outage three of the six proofs are skipped, so it
+   claimed "proven live" and "drift" on a run that established neither. A sentence assembled from
+   results cannot make that mistake; one written by hand always can. */
+const PROOF_CAPABILITY = {
+  'aggregator, shortener and press-release mill rejected before fetch': 'aggregators',
+  'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
+  'fabricated / non-existent article fails closed': 'fabrication',
+  'real authoritative article verifies end to end': 'live retrieval',
+  'quote drift fails closed': 'quote drift',
+  'headline drift fails closed': 'headline drift',
+};
+
 async function discoverProofArticle() {
   for (const feed of PROOF_FEEDS) {
     const response = await fetchArticle(feed).catch(() => ({ ok: false }));
@@ -254,11 +284,19 @@ async function runProofs(log) {
   record('fabricated / non-existent article fails closed', fabricatedFailed,
     fabricated.problems[0] || 'no problem reported');
 
-  // Proofs 1 and 3 need a real, currently published article.
+  // The live-retrieval and drift proofs need a real, currently published article.
   const discovered = await discoverProofArticle();
   if (!discovered) {
+    /* The names are DERIVED from the roster, not written out. This line used to read "proofs 1 and
+       3 were not exercised" — a hand-maintained inventory that named TWO when THREE entries are
+       missing from `results` (live retrieval, quote drift, headline drift). It was wrong in the
+       honest half of the very output that was covering for the dishonest exit code, and it had no
+       way to fail. */
+    const missing = PROOF_ROSTER.filter(name => !results.some(result => result.name === name));
     log('  INFRASTRUCTURE — no proof article could be retrieved from any authoritative feed;');
-    log('  proofs 1 and 3 were not exercised this run. This is a network fault, not an evidence fault.');
+    log(`  ${missing.length} proof(s) were not exercised this run. This is a network fault, not an `
+      + 'evidence fault.');
+    missing.forEach(name => log(`    - not exercised: ${name}`));
     return { results, infrastructure: true };
   }
 
@@ -472,6 +510,13 @@ async function runBrowserProof(baseUrl, log) {
   for (const proof of proofs.results) {
     if (!proof.passed) problems.push(`proof failed: ${proof.name}`);
   }
+  const exercised = new Set(proofs.results.map(proof => proof.name));
+  const notExercised = PROOF_ROSTER.filter(name => !exercised.has(name));
+  const offRoster = [...exercised].filter(name => !PROOF_ROSTER.includes(name));
+  if (offRoster.length) {
+    problems.push(`proof roster is stale: ${offRoster.join('; ')} ran but is not registered, so the `
+      + 'run cannot be checked for completeness');
+  }
 
   const baseUrl = process.argv[2];
   if (baseUrl) {
@@ -488,7 +533,36 @@ async function runBrowserProof(baseUrl, log) {
   const state = mappingIds.length
     ? `${mappingIds.length} reviewed news mapping(s) are live, quoted and unchanged`
     : 'no prediction currently needs the news tier — every prediction still has reviewed X evidence';
-  console.log(`RESULT: PASS — ${state}; the verified-news path is proven live and fails closed on fabrication, drift and aggregators.`);
+  /* Assembled from the proofs that actually ran and passed, never written by hand. */
+  const proven = proofs.results
+    .filter(proof => proof.passed && PROOF_CAPABILITY[proof.name])
+    .map(proof => PROOF_CAPABILITY[proof.name]);
+  if (notExercised.length) {
+    /* PASSED BUT INERT, the exit-70 shape this tree already uses for the currency gate: nothing
+       failed, and one or more axes verified NOTHING. A total feed outage is a network fault, not an
+       evidence fault, so it must not FAIL and must not block publication — but it may not be
+       reported as a full pass either, which is exactly what this gate did before. The proofs that
+       could not run are named, because a count would leave the reader unable to tell which
+       capability is unestablished. */
+    console.log(`RESULT: PASSED BUT INERT — ${state}. `
+      + `${notExercised.length} of ${PROOF_ROSTER.length} proof(s) were NOT EXERCISED on this run, `
+      + 'so it does not establish them:');
+    notExercised.forEach(name => console.log(`  - not exercised: ${name}`));
+    console.log(`  proven this run: ${proven.length ? proven.join(', ') : 'nothing'}.`);
+    /* `infrastructure` had 0 consumers tree-wide: the reason was published and read by nothing, so
+       the exit code carried none of it. It is consumed HERE rather than assumed, because the roster
+       gap is detected structurally and a missing proof need not be a network fault — asserting a
+       cause the run did not establish would be the same defect one level down. */
+    console.log(proofs.infrastructure
+      ? '  Cause: no proof article could be retrieved from any authoritative feed. That is a '
+        + 'network fault, not an evidence fault; the live news citations above were checked '
+        + 'individually and are unaffected.'
+      : '  Cause: NOT ESTABLISHED — the proofs are absent from the results and the harness did not '
+        + 'report an infrastructure fault. Treat this as an instrument defect until explained.');
+    process.exit(70);
+  }
+  console.log(`RESULT: PASS — ${state}; the verified-news path is proven live and fails closed on `
+    + `${proven.join(', ')} (${proofs.results.length}/${PROOF_ROSTER.length} proofs exercised).`);
 })().catch(error => {
   console.error(error);
   process.exit(1);

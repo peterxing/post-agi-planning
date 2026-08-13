@@ -38,10 +38,19 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * on re-quoted figures at the end of this block. There is no minification step, so explanatory
  * comments are charged against the byte ceiling at full weight, and the honest choice was to
  * keep the reasoning in the file rather than delete documentation to satisfy a byte count.
- * That trade is larger than this block used to claim: MEASURED 2026-08-14, by lexer with the
- * partition identity asserted, app.js carries 12,906 b of comments (9.6% of the file) against
- * 121,781 b of everything else. So a re-baseline has an option other than raising the ceiling,
- * and it belongs in writing here rather than being discovered under pressure.
+ * That trade is larger than this block used to claim, and the figure that serves the decision is
+ * not "how much of the file is comments" but "how much deleting them would recover". MEASURED
+ * 2026-08-13 UTC — the basis is named because this tree writes machine dates in UTC
+ * (`new Date().toISOString()` in verify-news-evidence.js), the host runs at UTC+10, and a
+ * hand-written date with no basis is one clock away from being a different day. The rule below
+ * says an uncomputed figure must carry the date it was measured; a date that does not say which
+ * clock it came from only half-carries it. In the on-disk BYTES this gate weighs — statSync, not
+ * string length; the two differ here by 219 b of multi-byte characters, and quoting the char count
+ * against a byte ceiling was the first version of this sentence — deleting every comment recovers
+ * 13,063 b, 9.68% of the file. That exceeds the 12,922 b the comment spans occupy, because 146
+ * comment-only lines take their indentation and line terminators with them. So a re-baseline has an
+ * option other than raising the ceiling, and it belongs in writing here rather than being
+ * discovered under pressure.
  *
  * They stay tight on purpose — ~2% headroom each — so unbounded growth is still caught.
  * Raising either again requires the same explicit justification.

@@ -106,14 +106,25 @@ const RETIRED_EGRESS_HOSTS = new Map([
 
 function assertEgressHosts() {
   const scanned = [];
+  let filesRead = 0;
   for (const name of fs.readdirSync(DIR)) {
     if (!name.endsWith('.js')) continue;
     if (!fs.statSync(path.join(DIR, name)).isFile()) continue;
     const text = fs.readFileSync(path.join(DIR, name), 'utf8');
+    filesRead++;
     for (const match of text.matchAll(/https?:\/\/([A-Za-z0-9.\-]+)/g)) {
       scanned.push([match[1].toLowerCase(), name]);
     }
   }
+  /* TOTALITY. This sweep is a DETECTOR, not a roster — a host absent from `scanned` was not
+     found, so an empty result and a clean result print the same reassuring sentence: "0 distinct
+     host(s) named across the tree's JavaScript, all declared". Nothing distinguished a gate that
+     examined everything and approved it from one that examined nothing. An input that could not be
+     examined is an error, not a zero. */
+  check(filesRead > 0, 'egress sweep read 0 JavaScript files; it cannot have verified anything');
+  check(scanned.length > 0,
+    `egress sweep read ${filesRead} JavaScript file(s) and found no http(s) host at all; the tree `
+    + 'makes network calls, so this is an instrument fault, not a clean result');
   const seen = new Set();
   for (const [host, file] of scanned) {
     if (seen.has(`${host}|${file}`)) continue;
@@ -126,7 +137,9 @@ function assertEgressHosts() {
     }
   }
   notes.push(`Egress allow-list: ${new Set(scanned.map(([h]) => h)).size} distinct host(s) named across `
-    + `the tree's JavaScript, all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) explicitly refused.`);
+    + `${filesRead} JavaScript file(s), all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) `
+    + 'explicitly refused. DECLARED LIMIT: .js only — hosts named in .ps1, .json, .html or .css are '
+    + 'outside this sweep.');
 }
 
 const problems = [];
@@ -309,6 +322,20 @@ async function assertLive(base) {
   const rootStatus = await head(`${base}/?cb=${cb}`);
   check(rootStatus === 200, `${base}/ must serve the site but returned ${rootStatus || 'no response'}`);
   check(reachable.length === 0, `${base} exposes non-public paths: ${reachable.join(', ')}`);
+  /* ABSENT IS NOT FAILED, the same shape found in the news gate's proof harness. A served file is
+     only checked if its name reaches this loop, and `targets` is built from what EXISTS on disk
+     plus a regex scrape of the publisher — `safeRead` returns '' silently, so a scrape that fails
+     shrinks the roster with no signal at all. An approved public file missing from all three
+     sources is never probed, pushes no problem, and leaves confirmedServed quietly short while the
+     note below prints the shortfall as though it were an observation. The ratio was REPORTED and
+     never CHECKED, so the reader was handed the discrepancy and the exit code was not. Today the
+     gap is closed only by redundancy between the two trees; that is a coincidence of inventory, not
+     a guarantee, and it is the file-missing-from-a-deploy-path case this gate exists for. Named,
+     never counted: a count cannot tell you which file went unverified. */
+  const unprobed = [...served].filter(name => !statuses.some(entry => entry.name === name));
+  check(confirmedServed === served.size,
+    `${base}: only ${confirmedServed} of ${served.size} approved public files were confirmed served`
+    + `${unprobed.length ? `; never probed at all: ${unprobed.join(', ')}` : ''}`);
   notes.push(`${base}: ${targets.length} paths probed · document root ${rootStatus} · ${confirmedServed}/${served.size} approved public files served · ${reachable.length} unexpected reachable.`);
 }
 

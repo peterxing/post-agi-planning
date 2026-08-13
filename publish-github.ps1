@@ -84,7 +84,11 @@ $coverageExit = $LASTEXITCODE
 if ($coverageExit -eq 0) {
   & node $newsVerifier
   $newsExit = $LASTEXITCODE
-  if ($newsExit -eq 0) {
+  # 70 from the news gate is PASSED BUT INERT and MUST continue the chain. Gating the next three
+  # verifiers on -eq 0 would have made a truthful "3 of 6 proofs were not exercised" silently skip
+  # currency, surface and interlock — punishing the gate for reporting honestly, which is how a
+  # useful signal gets weakened back out of existence.
+  if ($newsExit -eq 0 -or $newsExit -eq 70) {
     & node $currencyVerifier
     $currencyExit = $LASTEXITCODE
   } else {
@@ -129,6 +133,16 @@ $currencyInert = ($currencyExit -eq 70)
 if ($currencyInert) {
   Write-Warning "publish-github: currency gate PASSED BUT INERT — one or more axes verified NOTHING on this run; the gate listed them by name under 'verify:currency PASSED BUT INERT' above. Publication proceeds; this run does not establish the currency evidence."
 }
+# The news gate joins the 70 vocabulary for the same reason and by the same rule. On a total
+# authoritative-feed outage it skips 3 of its 6 proofs, and a skipped proof is ABSENT from the
+# results array rather than failed, so it pushed no problem and the gate exited 0 while printing
+# that the path was "proven live and fails closed on ... drift" — naming two capabilities that did
+# not execute. Routing that state to 70 is STRICTLY STRONGER than what it did before, not a
+# relaxation: the only runs affected are ones that previously reported a full pass.
+$newsInert = ($newsExit -eq 70)
+if ($newsInert) {
+  Write-Warning "publish-github: news gate PASSED BUT INERT — one or more live proofs were NOT EXERCISED on this run; the gate listed them by name under 'RESULT: PASSED BUT INERT' above. Publication proceeds because the live news citations were each checked individually; this run does not establish the unexercised proofs."
+}
 # TWO OUTCOMES MAY SHARE AN EXIT CODE ONLY IF THEY IMPLY THE SAME NEXT ACTION. Two facts reach
 # this verdict and they demand opposite responses:
 #   6  the site was MEASURED and rejected  -> a human fixes the evidence; re-running changes nothing.
@@ -152,8 +166,12 @@ $deferred = @($measured | Where-Object { $_.Value -eq 75 })
 # evidence that was never measured, the same misdirection the 75 special case was fixed for.
 # It joins exit 7, INSTRUMENT, which already means "the verifier itself is not usable".
 $instrument = @($measured | Where-Object { $_.Value -eq 76 })
+# Sanctioned-inert gates are NAMED IN A SET rather than special-cased inline. The currency case was
+# written as a bare `$_.Key -eq 'currency'` clause, so admitting the second one would have meant a
+# second clause and a third would have meant a third — a shape that grows a new place to forget.
+$inertSanctioned = @('currency', 'news')
 $faults   = @($measured | Where-Object {
-  $_.Value -ne 0 -and $_.Value -ne 75 -and $_.Value -ne 76 -and -not ($_.Key -eq 'currency' -and $_.Value -eq 70)
+  $_.Value -ne 0 -and $_.Value -ne 75 -and $_.Value -ne 76 -and -not ($inertSanctioned -contains $_.Key -and $_.Value -eq 70)
 })
 # PRECEDENCE IS LOAD-BEARING: a gate that RAN and rejected the site outranks a deferral, so a real
 # evidence fault can never be masked by another actor taking the tree mid-chain. A crashed gate
