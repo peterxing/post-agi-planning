@@ -2179,9 +2179,21 @@ async function main(){
       publishedAtSource: article.publishedAtSource || null,
     });
   }
-  /* Freshest first, and observations always above the explicit no-observation cards. */
+  /* Freshest first, and observations always above the explicit no-observation cards.
+     ORDER ON THE EXACT INSTANT, NOT ON `ageDays`. ageDays is Math.round()ed, so two articles a day
+     apart collapse to the same integer as the clock moves; the comparator then returns 0 and the
+     order falls through to insertion order, which carries no editorial meaning. That reshuffled
+     Nature against MIT Technology Review between two builds 85 minutes apart with no data change.
+     NO TAG TIE-BREAK: the no-observation cards all have a null instant, so an alphabetical
+     tie-break would reorder them out of the site's theme sequence -- a presentation change nobody
+     asked for. Array.prototype.sort is stable per ES2019, and insertion order here is a static
+     theme list, so ties keep their existing published order and a rebuild is still reproducible. */
+  const publishedInstant = r => {
+    const ms = r.publishedAt ? Date.parse(r.publishedAt) : NaN;
+    return Number.isFinite(ms) ? ms : -Infinity;
+  };
   reality.sort((x, y) => (y.kind === 'news') - (x.kind === 'news')
-    || (x.ageDays ?? Infinity) - (y.ageDays ?? Infinity));
+    || (publishedInstant(x) === publishedInstant(y) ? 0 : publishedInstant(y) - publishedInstant(x)));
 
   const sourceAgeHours = ageHours(sourceWhen);
   const newestItemAt = all.length ? all[0].created.toISOString() : null;
@@ -2574,8 +2586,7 @@ async function main(){
       searches: Object.keys(searches).length,
       total: PREDICTIONS.length,
       complete: coverageComplete,
-      uniquePosts: directUsesByPost.size,
-      peterUniquePosts: usedPosts.size,
+      uniqueSources: directUsesByPost.size,
       maximumUniqueMatches,
       maxReuse: maxPostReuseObserved,
       reuseDistribution,
@@ -2686,7 +2697,7 @@ async function main(){
   };
   fs.writeFileSync(DBG, JSON.stringify(debugPayload, null, 2) + '\n');
 
-  console.error(`[refresh] Prepared direct coverage ${currentCoveredIds.size}/${PREDICTIONS.length}, using ${directUsesByPost.size} unique statuses (maximum unique Peter matches ${maximumUniqueMatches}, actual ${usedPosts.size}, max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
+  console.error(`[refresh] Prepared direct coverage ${currentCoveredIds.size}/${PREDICTIONS.length}, using ${directUsesByPost.size} unique sources (max reviewed reuse ${maxPostReuseObserved}) [${Object.entries(ownerTally).map(([k, v]) => v + ' ' + k).join(', ')}] [${Object.entries(matchMethodTally).map(([k, v]) => v + ' ' + k).join(', ')}].`);
   if (!coverageComplete) {
     throw new Error(`direct coverage incomplete (${currentCoveredIds.size}/${PREDICTIONS.length}): ${mappingIntegrityErrors.join('; ')}`);
   }
@@ -2705,8 +2716,7 @@ async function main(){
     direct: Object.keys(embeds).length,
     searches: Object.keys(searches).length,
     total: PREDICTIONS.length,
-    uniquePosts: directUsesByPost.size,
-    peterUniquePosts: usedPosts.size,
+    uniqueSources: directUsesByPost.size,
     maximumUniqueMatches,
     maxReuse: maxPostReuseObserved,
     byEvidenceOwner: ownerTally,

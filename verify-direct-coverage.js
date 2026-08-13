@@ -296,7 +296,7 @@ if (coverage.complete !== true
     || (Number(coverage.direct) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length
     || coverage.searches !== 0
     || coverage.total !== expectedIds.length
-    || coverage.uniquePosts !== usesByPost.size
+    || coverage.uniqueSources !== usesByPost.size
     || coverage.maxReuse !== maxReuse
     || coverage.stickyPeterFloor !== undefined
     || coverage.stickyPeterAuthoredFloor !== undefined
