@@ -2414,15 +2414,41 @@ async function main(){
    * link/source counts are computed from what is actually emitted, so they follow automatically.
    */
   const currencyDemoted = [];
+  /* REFUSAL CHANNEL, NOT A SILENT `continue`.
+     The refusal below is correct — a currency reference must never stand without the reviewed
+     origin evidence it refreshes — but it used to drop the entry with NO record in any counter:
+     not in `demoted`, not in `links`, not anywhere. Measured, that is the MAJORITY of the ledger
+     (8 of 13 entries at the time of writing), so `demoted: 5` read as "5 of the ledger were
+     dropped" when 13 were registered and 8 had vanished before the age test ever ran. The comment
+     said "somehow lacks", which is the tell: the author expected an anomaly and it is the common
+     case, because only 7 of 103 predictions carry origin evidence at all.
+     Every registered entry now lands in exactly one bucket and the buckets are asserted to sum. */
+  const currencyRefusedNoOrigin = [];
+  const currencyUnknownSource = [];
   for (const [predictionId, entries] of Object.entries(CURRENCY_MAPPINGS)) {
-    // Additive only: refuse to emit a currency reference for a prediction that somehow
-    // lacks its reviewed origin evidence, rather than letting it stand alone.
-    if (!embeds[predictionId]) continue;
+    // Additive only: refuse to emit a currency reference for a prediction that lacks its
+    // reviewed origin evidence, rather than letting it stand alone.
+    if (!embeds[predictionId]) {
+      for (const entry of entries) currencyRefusedNoOrigin.push({ predictionId, source: entry.source });
+      continue;
+    }
     const rendered = [];
     const demotedHere = [];
     for (const entry of entries) {
       const src = CURRENCY_SOURCES[entry.source];
-      if (!src) continue;
+      /* Second silent drop, same class as the origin refusal above and more dangerous: a ledger
+         entry naming a source key that no longer exists in CURRENCY_SOURCES — a rename, a typo, a
+         deleted source — used to vanish here with no record at all. It is the one drop that IS a
+         fault rather than a policy, so it is collected and reported rather than counted quietly.
+
+         UNREACHABLE TODAY, AND SAID SO RATHER THAN LEFT TO LOOK ARMED. currency-evidence.js throws
+         `Unknown currency source` while building CURRENCY_MAPPINGS, so no bad key can arrive here
+         by any supported path. This is defense in depth for the day that validator is refactored,
+         and it is PROVEN reachable rather than assumed: bypassing the upstream validator and
+         injecting `currency:INJECTED-TYPO` fires this branch, reports the entry by name, and the
+         accounting identity below still balances (14 = 8 + 1 + 5 + 0). An unreachable branch that
+         nobody has exercised is not a guard; this one has been exercised. */
+      if (!src) { currencyUnknownSource.push({ predictionId, source: entry.source }); continue; }
       const ageDays = Math.round((currencyNow - new Date(src.publishedAt).getTime()) / 864e5);
       if (ageDays > CURRENCY_MAX_AGE_DAYS) {
         demotedHere.push({ source:entry.source, host:src.publisherHost, ageDays });
@@ -2482,6 +2508,35 @@ async function main(){
         emptied: rendered.length === 0,
       });
     }
+  }
+  /* ACCOUNTING IDENTITY. Every registered ledger entry lands in exactly one bucket: refused for a
+     missing origin, refused for an unknown source key, demoted, or rendered. Asserting the sum is
+     what turns `links: 0` from an EMERGENT state into a STATED one — with the identity, a page
+     showing no currency links is fully explained by the buckets that absorbed the entries, and is
+     distinguishable from a render or matcher failure that loses them. Without it, zero links and
+     zero everything look identical, and a fifth silent `continue` added later would be invisible.
+     This is the same shape as the cited + uncited = 103 identity the direct layer already carries:
+     the population is pinned, not the outcome, so an honest zero stays honest and a LOST entry
+     cannot hide inside it. */
+  const currencyRegistered = Object.values(CURRENCY_MAPPINGS).reduce((n, es) => n + es.length, 0);
+  const currencyAccounted = currencyRefusedNoOrigin.length + currencyUnknownSource.length
+    + currencyDemoted.length + currencyLinks;
+  if (currencyAccounted !== currencyRegistered) {
+    throw new Error(`currency accounting does not balance: ${currencyRegistered} registered but `
+      + `${currencyAccounted} accounted (refusedNoOrigin=${currencyRefusedNoOrigin.length} `
+      + `unknownSource=${currencyUnknownSource.length} demoted=${currencyDemoted.length} `
+      + `rendered=${currencyLinks}) — an entry was lost by a silent drop`);
+  }
+  if (currencyUnknownSource.length) {
+    console.error(`[refresh] currency: ${currencyUnknownSource.length} ledger entr(ies) name a source key `
+      + `absent from CURRENCY_SOURCES — a rename or deletion, not a policy demotion:`);
+    currencyUnknownSource.forEach(u => console.error(`[refresh]   UNKNOWN  ${u.predictionId}: ${u.source}`));
+  }
+  if (currencyRefusedNoOrigin.length) {
+    console.error(`[refresh] currency: ${currencyRefusedNoOrigin.length} of ${currencyRegistered} registered `
+      + `entr(ies) refused — their prediction carries no reviewed origin evidence for a currency link to `
+      + `refresh. Expected while ${PREDICTIONS.length - Object.keys(embeds).length} of ${PREDICTIONS.length} `
+      + `predictions are honestly uncited; reported so the ledger's reach is visible rather than implied.`);
   }
   if (currencyDemoted.length) {
     const emptied = currencyDemoted.filter(d => d.emptied);
@@ -2558,6 +2613,11 @@ async function main(){
         links: currencyLinks,
         sources: new Set(Object.values(currency).flat().map(c => c.key)).size,
         withoutCurrency: PREDICTIONS.length - Object.keys(currency).length,
+        /* The ledger's reach, so `links: 0` is explained rather than merely observed.
+           registered === refusedNoOrigin + unknownSource + demoted + links, asserted above. */
+        registered: currencyRegistered,
+        refusedNoOrigin: currencyRefusedNoOrigin.length,
+        unknownSource: currencyUnknownSource.length,
         demoted: currencyDemoted.length,
         demotedEmptied: currencyDemoted.filter(d => d.emptied).length,
         maxAgeDays: CURRENCY_MAX_AGE_DAYS,
