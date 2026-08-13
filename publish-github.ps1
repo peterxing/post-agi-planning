@@ -242,10 +242,10 @@ $fromDeploy = @(
   # accepts — and how precision is computed — without moving any hash either side can quote.
   # Publishing the gate while withholding its logic makes the gate's pin unfalsifiable.
   'month-estimates.js',
-  # publish-github.ps1 publishes ITSELF. Four tracked verifiers (verify-archive-corpus,
-  # verify-deploy-surface, verify-interlock, verify-performance) read this file as their
+  # publish-github.ps1 publishes ITSELF. Three tracked verifiers (verify-deploy-surface,
+  # verify-interlock, verify-performance) read this file as their
   # SUBJECT and assert things about its allow-list and its forbidden pattern. While it was
-  # unpublished those four gates were pinned to a subject nobody could fetch — readable in
+  # unpublished those gates were pinned to a subject nobody could fetch — readable in
   # full from the mirror, and silent on whether they pass. Worse, the CLOSURE GATE above,
   # which guarantees the published set is closed, lived in the one file outside that set:
   # the guarantor was the least falsifiable thing in the tree. Publishing it is safe because

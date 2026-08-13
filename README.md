@@ -83,8 +83,13 @@ index.html ──loads──> styles.css + app.js
   approximating.
 - **`news-evidence.js`** is the reviewed news ledger. Each entry binds a prediction to one article
   with its publisher, published date, date provenance, verbatim quote and text hash.
-- **`currency-evidence.js`** / **`currency-build-ledger.js`** / **`currency-harvest.js`** maintain a
-  secondary layer of *newer* references. A currency link must be **strictly later** (day precision)
+- **`currency-evidence.js`** is the reviewed currency ledger — the published half of a
+  secondary layer of *newer* references. It is fed by two **operator-local** tools,
+  `currency-harvest.js` and `currency-build-ledger.js`, which are deliberately *not* in this
+  repository: each reads `currency-candidates.json`, a generated review intermediate, so
+  publishing them would put a file here whose input nobody could fetch. They discover and stage
+  candidates; only a human-reviewed entry ever reaches `currency-evidence.js`, which is published
+  in full. A currency link must be **strictly later** (day precision)
   than the origin evidence it claims to refresh; one that is not is withheld and reported, because a
   same-day link cannot demonstrate anything. With origin evidence now always inside the 14-day
   window, this layer is legitimately empty and is reported as inert rather than as verified.
