@@ -1644,7 +1644,11 @@ async function main(){
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
   const prevEmbeds = (prev && prev.embeds) || {};
   const prevSearches = (prev && prev.search) || {};
-  let historicalTimeline = [];
+  /* X RETIREMENT 2026-08-13, RESIDUE CLEARED 2026-08-14. `historicalTimeline` and `optionalReposts`
+     were left declared-and-emptied here, and their `.length` was still read into the operator counts
+     — a permanent 0 reported in the shape of a measurement. Found by sweeping for the class after a
+     collaborator charged the third instance of it in this file; emptying a collection is not
+     retiring it, because every downstream read still looks live. */
 
   // Load the live (daily-revised) prediction set, expanded to ONE matcher per event.
   const PREDICTIONS = buildPredictions();
@@ -1728,13 +1732,12 @@ async function main(){
   };
 
   assertNoXIngestFiles();
-  const optionalReposts = [];
 
   // X RETIREMENT 2026-08-13 - this merged the verified archive corpus by its original source ID.
   // `timeline` is empty BY CONSTRUCTION (see the retirement note above it), so this loop is a no-op
   // retained only to keep the downstream shape unchanged. Nothing is read and nothing reaches the map.
   const byId = new Map();
-  for (const it of [...timeline, ...optionalReposts]) {
+  for (const it of timeline) {
     if (!it || isNaN(it.created.getTime())) continue;
     const ex = byId.get(it.id);
     const hasRicherRepostProvenance = it.kind === 'repost'
@@ -1751,7 +1754,6 @@ async function main(){
 
   const counts = {
     entries: timeline.length,
-    history: historicalTimeline.length,
     posts: 0,
     reposts: 0,
     authored: 0,
@@ -1772,7 +1774,6 @@ async function main(){
           : null;
     if (corpusKey) counts[corpusKey]++;
   }
-  counts.reposts += optionalReposts.length;
   const newest = all.length ? fmtDate(all[0].created) : '(none)';
   const oldest = all.length ? fmtDate(all[all.length - 1].created) : '(none)';
   console.error(`[refresh] archive-verified=${counts.entries}; authored/quote/reply=${counts.authored}/${counts.quotes}/${counts.replies}; reposts=${counts.reposts}; unique status corpus=${counts.uniques}; span ${oldest} -> ${newest}; eligible(<=${MAX_AGE_DAYS}d) ${counts.eligible}; past-week ${counts.pastWeek}.`);
@@ -2363,10 +2364,16 @@ async function main(){
      the import twice already. A prediction with no embed is no longer automatically a defect: it is a
      defect only if it is ALSO not recorded as uncited. Totality is preserved in full by the gate below,
      which still requires EVERY prediction to be accounted for; what changes is that "accounted for" now
-     has two honest outcomes instead of one. */
-  const missingCoverage = [];
+     has two honest outcomes instead of one.
+     COMPLETED 2026-08-14, AFTER SITTING HALF-DONE FOR A DAY. I emptied the collection instead of deleting
+     the check, which is not a retirement: it left a guard occupying the shape of one of the eighteen
+     contributors to `mappingIntegrityErrors` — the array whose emptiness IS `coverageComplete` and whose
+     contents are thrown below — while being structurally incapable of ever contributing to it. Two
+     operator-diagnostic fields then published that permanent emptiness under two different names, so
+     `signals-debug.json` asserted "nothing is missing" by construction rather than by measurement. Both
+     are deleted with it. A superseded check must be REMOVED, not emptied, because an emptied check still
+     reads as a live term to everyone downstream — including the next person to audit this file. */
   const extraCoverage = [...currentCoveredIds].filter(id => !predictionIds.has(id));
-  if (missingCoverage.length) mappingIntegrityErrors.push(`missing direct coverage: ${missingCoverage.join(', ')}`);
   if (Object.keys(searches).length) mappingIntegrityErrors.push('prediction search fallbacks must be empty');
   if (extraCoverage.length) mappingIntegrityErrors.push(`coverage references unknown predictions: ${extraCoverage.join(', ')}`);
   for (const prediction of PREDICTIONS) {
@@ -2797,8 +2804,6 @@ async function main(){
     sourceQuality: sourceQualityTally,
     evidenceTypes: evidenceTypeTally,
     unapprovedCandidateCounts,
-    missingDirect: missingCoverage,
-    missingCoverage,
     mappingIntegrityErrors,
     maxPostReuseObserved,
     reuseDistribution,

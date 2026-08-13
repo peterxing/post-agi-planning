@@ -1538,6 +1538,8 @@ function hasCompleteSignalCoverage(data){
     && data.coverage.cited === directIds.length
     && data.coverage.searches === 0
     && data.coverage.total === expected.length
+    // ...and the SURVIVORS: a drop must not render as the authored population (see verify-perpred.js).
+    && data.coverage.kept === expected.length && data.coverage.dropped === 0
     && Number(media.news || owners.news || 0) === directIds.length
     && data.source === 'news-verified'
     && data.sourceStatus

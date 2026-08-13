@@ -253,6 +253,15 @@ const SHOT = process.argv[3] || null;
           && signals.coverage.cited === Object.keys(embeds).length
           && signals.coverage.searches === 0
           && signals.coverage.total === expectedKeys.length
+          /* GC seq-147 §2. `total` is the REGISTERED count while `expectedKeys` is an unfiltered
+             recount of the same file, so under a dropped entry both are the pre-drop number and
+             the line above cannot separate them — a term narrowed to the offline-fallback and
+             read-skew cases only. The loss is published directly, so it is asserted directly here
+             rather than inferred. This gate is the cross-file twin of verify-direct-coverage.js:
+             fixing the instance there and not the class here is the same partial-subject error
+             both trees keep committing. */
+          && signals.coverage.kept === expectedKeys.length
+          && signals.coverage.dropped === 0
           /* X RETIREMENT 2026-08-13 — these required 24 sticky @peterxing mappings and 10 authored
              ones to be PRESENT. Asserted absent rather than compared: a retired floor compared
              numerically is the 'x < null is x < 0' trap, where a missing floor silently satisfies
