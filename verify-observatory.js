@@ -67,6 +67,8 @@ const artefactCited = Number(required(
   signals.coverage && signals.coverage.cited, 'coverage.cited', isCount));
 const artefactUncited = Number(required(
   signals.uncited && signals.uncited.count, 'uncited.count', isCount));
+const artefactContext = Number(required(
+  signals.context && signals.context.count, 'context.count', isCount));
 const artefactReality = required(signals.reality, 'reality', Array.isArray).length;
 const expectedChanged = predictions.years.reduce(
   (sum, year) => sum + year.events.filter(event => event.revisedAt === predictions.updated.slice(0, 10)).length,
@@ -190,8 +192,13 @@ function requestStatus(pathname) {
         horizonCards:document.querySelectorAll('#horizonBody .horizon-item').length,
         reality:document.querySelectorAll('#signalsGrid .observation-card').length,
         chapters:document.querySelectorAll('#chapters .chapter').length,
-        evidenceCards:document.querySelectorAll('#timelineBody .tl-signal:not(.tl-currency), #horizonBody .tl-signal:not(.tl-currency)').length,
+        evidenceCards:document.querySelectorAll('#timelineBody .tl-signal:not(.tl-currency):not(.tl-context), #horizonBody .tl-signal:not(.tl-currency):not(.tl-context)').length,
         currencyCards:document.querySelectorAll('#timelineBody .tl-signal.tl-currency, #horizonBody .tl-signal.tl-currency').length,
+        contextCards:document.querySelectorAll('#timelineBody .tl-signal.tl-context, #horizonBody .tl-signal.tl-context').length,
+        contextAged:[...document.querySelectorAll('#timelineBody .tl-signal.tl-context, #horizonBody .tl-signal.tl-context')]
+          .filter(card => /\d+\s+days?\s+old|months?\s+old|years?\s+old/i.test(card.textContent || '')).length,
+        contextLabelled:[...document.querySelectorAll('#timelineBody .tl-signal.tl-context summary, #horizonBody .tl-signal.tl-context summary')]
+          .filter(summary => /Dated background/i.test(summary.textContent || '')).length,
         evidenceUnavailable:document.querySelectorAll('#timelineBody .tl-signal-unavailable, #horizonBody .tl-signal-unavailable').length,
         predictionSearches:document.querySelectorAll('.tl-signal-search').length,
         /* X RETIREMENT 2026-08-13 - INVERTED. This called a search chip INVALID unless its href was
@@ -206,11 +213,11 @@ function requestStatus(pathname) {
         xScripts:[...document.querySelectorAll('script[src]')].filter(script =>
           /twitter\.com|x\.com/i.test(script.src)).length,
         uncitedCards:document.querySelectorAll('#timelineBody .tl-signal-uncited, #horizonBody .tl-signal-uncited').length,
-        peterEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
-        newsEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /News evidence/.test(summary.textContent)).length,
-        externalEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
-        scenarioEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /scenario source/i.test(summary.textContent)).length,
-        leadingEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency) summary')].filter(summary => /leading indicator/i.test(summary.textContent)).length,
+        peterEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency):not(.tl-context) summary')].filter(summary => /Peter Xing|Peter wrote|Peter reposted/.test(summary.textContent)).length,
+        newsEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency):not(.tl-context) summary')].filter(summary => /News evidence/.test(summary.textContent)).length,
+        externalEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency):not(.tl-context) summary')].filter(summary => /External evidence/.test(summary.textContent)).length,
+        scenarioEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency):not(.tl-context) summary')].filter(summary => /scenario source/i.test(summary.textContent)).length,
+        leadingEvidence:[...document.querySelectorAll('.tl-signal:not(.tl-currency):not(.tl-context) summary')].filter(summary => /leading indicator/i.test(summary.textContent)).length,
         evidenceDashboard:{
           cited:document.getElementById('evidenceCitedStat')?.textContent.trim(),
           uncited:document.getElementById('evidenceUncitedStat')?.textContent.trim(),
@@ -306,18 +313,27 @@ function requestStatus(pathname) {
       state.chapterBodies === 13 && state.collapsedChapters,
       JSON.stringify({ bodies:state.chapterBodies }));
     /* X retirement (2026-08-13). A prediction is no longer required to carry a card; it is
-       required to be ACCOUNTED FOR. Both populations are pinned to the artefact AND to each
-       other, so a cited card quietly degrading into an uncited notice still fails. */
-    check(results, 'every prediction is accounted for as cited or uncited',
+       required to be ACCOUNTED FOR. Every population is pinned to the artefact AND to the others,
+       so a cited card quietly degrading into an uncited notice still fails.
+       THIRD CHANNEL 2026-08-17: context cards are counted separately and excluded from the cited
+       selectors, so a citation demoted to dated background is visible here as a change in BOTH
+       counts rather than cancelling out inside one. */
+    check(results, 'every prediction is accounted for as cited, context or uncited',
       state.evidenceCards === artefactCited
       && state.uncitedCards === artefactUncited
-      && state.evidenceCards + state.uncitedCards === expectedEvents + expectedHorizon
+      && state.contextCards === artefactContext
+      && state.evidenceCards + state.contextCards + state.uncitedCards === expectedEvents + expectedHorizon
       && state.predictionSearches === 0
       && state.evidenceUnavailable === 0,
       JSON.stringify({ cited:state.evidenceCards, expectedCited:artefactCited,
+        context:state.contextCards, expectedContext:artefactContext,
         uncited:state.uncitedCards, expectedUncited:artefactUncited,
         total:expectedEvents + expectedHorizon,
         unavailable:state.evidenceUnavailable, searches:state.predictionSearches }));
+    /* A context card that does not SHOW its age is indistinguishable from a current citation. */
+    check(results, 'every context card states its age and is labelled dated background',
+      state.contextCards === state.contextAged && state.contextCards === state.contextLabelled,
+      JSON.stringify({ cards:state.contextCards, aged:state.contextAged, labelled:state.contextLabelled }));
     if (state.evidenceCards > 0) {
       /* X retirement (2026-08-13). Retired labels are asserted ABSENT rather than counted into
          a total: 'peter + external === cards' is satisfied trivially once both are zero and the

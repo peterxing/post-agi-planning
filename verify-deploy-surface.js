@@ -84,6 +84,21 @@ const ALLOWED_EGRESS_HOSTS = new Set([
   'www.federalreserve.gov', 'www.iea.org', 'www.imf.org', 'www.microsoft.com', 'www.nasa.gov',
   'www.nature.com', 'www.nih.gov', 'www.nist.gov', 'www.science.org', 'www.technologyreview.com',
   'www.theverge.com', 'www.who.int',
+  /* REVIEWED EDIT 2026-08-17 — declared for the 2026-08-15 currency-harvest feed widening, which
+     added the feeds but never declared their hosts and left the surface verifier failing closed for
+     two days. That is the allow-list working as designed, not a defect in it. Every host below is a
+     peer-reviewed journal, a primary news organisation, or a first-party government/agency source,
+     which is the same bar the evidence contract already applies to a citation; none is an aggregator,
+     syndicator, press-release mill or preprint server. Declared as DISCOVERY egress only: reaching a
+     feed here never makes its contents admissible, which is still decided per-article by the fetch,
+     quote-match and source-quality gates. */
+  // peer-reviewed journals
+  'www.cell.com', 'www.thelancet.com', 'www.nejm.org', 'www.pnas.org', 'journals.plos.org',
+  'elifesciences.org', 'iopscience.iop.org',
+  // primary news organisations
+  'www.wired.com', 'feeds.npr.org', 'www.theguardian.com', 'feeds.bbci.co.uk', 'rss.nytimes.com',
+  // first-party government, agency and institutional sources
+  'www.sec.gov', 'www.darpa.mil', 'www.energy.gov', 'www.planetary.org',
   /* NEGATIVE fixtures. These exist so the news verifier can PROVE it rejects an aggregator, a
      shortener, a press-release mill and a fabricated URL. They are named in order to be refused. */
   'bit.ly', 'example.org', 'example-not-reviewed.test', 'news.google.com', 'www.prnewswire.com',

@@ -26,6 +26,9 @@ function requiredCount(value, fieldPath) {
 }
 const artefactCited = requiredCount(signals.coverage && signals.coverage.cited, 'coverage.cited');
 const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 'uncited.count');
+/* Context may legitimately be zero, but the FIELD must exist: deriving an expectation from an absent
+   field is how a channel goes unchecked. An artefact without it is refused like any other. */
+const artefactContext = requiredCount(signals.context && signals.context.count, 'context.count');
 
 (async () => {
   const url = process.argv[2] || 'http://127.0.0.1:8787/';
@@ -41,7 +44,12 @@ const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 
     const sep = url.includes('?') ? '&' : '?';
     await page.goto(url + sep + 'scoutTheme=' + th, { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(2800);
-    const cards = await page.$$eval('.tl-signal:not(.tl-currency)', els => els.length).catch(() => 0);
+    /* THE THIRD CHANNEL (2026-08-17). `.tl-signal:not(.tl-currency)` used to mean "a cited card"
+       because cited and currency were the only two kinds. Context cards are also `.tl-signal`, so
+       they were counted as cited and the accounting read 6/4. Each channel is now selected by its own
+       class, so a cited card silently becoming a context card fails here rather than balancing out. */
+    const cards = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context)', els => els.length).catch(() => 0);
+    const contextCards = await page.$$eval('.tl-signal.tl-context', els => els.length).catch(() => 0);
     const currencyCards = await page.$$eval('.tl-signal.tl-currency', els => els.length).catch(() => 0);
     const searches = await page.$$eval('.tl-signal-search', els => els.length).catch(() => 0);
     const unavailable = await page.$$eval('.tl-signal-unavailable', els => els.length).catch(() => 0);
@@ -53,8 +61,11 @@ const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 
       app:!!document.querySelector('script[src="app.js"]'),
       styles:!!document.querySelector('link[href="styles.css"]'),
     })).catch(() => ({ app:false, styles:false }));
-    const dates = await page.$$eval('.tl-signal:not(.tl-currency) .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
-    const mislabelledHistorical = await page.$$eval('.tl-signal:not(.tl-currency)', els => els.filter(card => {
+    const dates = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context) .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
+    const contextDates = await page.$$eval('.tl-signal.tl-context .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
+    /* A context card must SHOW its age, or it is indistinguishable from a current citation. */
+    const contextAgeShown = contextDates.every(text => /\d+\s+days?\s+old|months?\s+old|years?\s+old/i.test(text));
+    const mislabelledHistorical = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context)', els => els.filter(card => {
       const date = card.querySelector('.tl-signal-date')?.textContent.trim() || '';
       const label = card.querySelector('summary')?.textContent || '';
       return /\b20(1\d|2[0-3])$/.test(date)
@@ -80,18 +91,21 @@ const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 
        the artefact exactly, and together they must account for EVERY rendered prediction.
        Checking only the total would let a cited card silently become an uncited notice. */
     const citedExact = cards === artefactCited;
+    const contextExact = contextCards === artefactContext;
     const uncitedExact = uncitedCards === uncitedCount;
-    const totalityExact = (cards + uncitedCards) === expected;
-    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${artefactCited} uncited=${uncitedCards}/${uncitedCount} totality=${cards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
+    const totalityExact = (cards + contextCards + uncitedCards) === expected;
+    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${artefactCited} context=${contextCards}/${artefactContext} uncited=${uncitedCards}/${uncitedCount} totality=${cards + contextCards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} contextAgeShown=${contextAgeShown} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
     console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
+    console.log(`[${th}] contextDates=${JSON.stringify(contextDates)}`);
     console.log(`[${th}] stamp="${stamp}"`);
     if (errs.length) errs.forEach(e => console.log('   ' + e));
     issues += errs.length + searches + unavailable
       + Number(!citedExact) + Number(!uncitedExact) + Number(!totalityExact)
+      + Number(!contextExact) + Number(!contextAgeShown)
       + mislabelledHistorical.length + Number(!sourceHonest) + Number(!assetsValid) + Number(!currencyExact);
     await ctx.close();
   }
   await browser.close();
   if (issues > 0) { console.log(`RESULT: FAIL (${issues} issue(s))`); process.exit(1); }
-  console.log('RESULT: PASS — zero console errors, complete evidence accounting (cited + uncited = every prediction), zero searches, and honest historical labels.');
+  console.log('RESULT: PASS — zero console errors, complete evidence accounting (cited + context + uncited = every prediction, each in exactly one channel), every context card showing its true age, zero searches, and honest historical labels.');
 })();

@@ -59,8 +59,25 @@ const SHOT = process.argv[3] || null;
          the totality can never be satisfied by moving a prediction into two populations. */
       const uncitedItems = (signals.uncited && signals.uncited.items) || {};
       const uncitedKeys = new Set(Object.keys(uncitedItems));
-      const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key) && !uncitedKeys.has(key));
-      const doubleCountedKeys = expectedKeys.filter(key => coveredKeys.has(key) && uncitedKeys.has(key));
+      /* THE THIRD CHANNEL (2026-08-17). Context carries a live-verified article that is genuinely
+         supporting but published outside the currency window. It is a distinct population from both
+         cited and uncited, and every pairing is charged as a double-count, so totality can never be
+         satisfied by moving a prediction into two of the three. */
+      const contextItems = (signals.context && signals.context.items) || {};
+      const contextKeys = new Set(Object.keys(contextItems));
+      const missingKeys = expectedKeys.filter(key => !coveredKeys.has(key) && !uncitedKeys.has(key) && !contextKeys.has(key));
+      const doubleCountedKeys = expectedKeys.filter(key =>
+        (coveredKeys.has(key) && uncitedKeys.has(key))
+        || (coveredKeys.has(key) && contextKeys.has(key))
+        || (contextKeys.has(key) && uncitedKeys.has(key)));
+      const extraContextKeys = [...contextKeys].filter(key => !expectedKeys.includes(key));
+      /* A context entry that cannot state its own age would render as though it were current. */
+      const unexplainedContext = Object.keys(contextItems).filter(k => {
+        const r = contextItems[k] || {};
+        return !r.url || !/^https:\/\//i.test(String(r.url)) || !r.publisher || !r.headline || !r.quote
+          || !r.publishedAt || isNaN(new Date(r.publishedAt).getTime())
+          || !Number.isFinite(Number(r.ageDays)) || !r.ageBucket || !r.publishedAtSource;
+      });
       const extraKeys = [...coveredKeys].filter(key => !expectedKeys.includes(key));
       const extraUncitedKeys = [...uncitedKeys].filter(key => !expectedKeys.includes(key));
       /* Every uncited record must state WHY, or the uncited population becomes a dumping ground. */
@@ -106,14 +123,20 @@ const SHOT = process.argv[3] || null;
          card may NEVER satisfy this check — it is supplementary, never a prediction's evidence.
 
          RENDERED TOTALITY. A prediction without a qualifying source is not blank: it renders an
-         explicit uncited notice. So the DOM rule is an EXCLUSIVE OR — exactly one of the two must
-         be present. Accepting "either" alone would let a double render pass; requiring the card
-         alone would fail every honestly uncited prediction. This is the strongest check here,
-         because it proves the PAGE accounts for every prediction, not merely the artefact. */
+         explicit uncited notice, or — when a genuinely supporting article exists outside the window —
+         a dated-background context card. So the DOM rule is EXACTLY ONE OF THREE. Accepting "any"
+         alone would let a double render pass; requiring the cited card alone would fail every
+         honestly uncited prediction. This is the strongest check here, because it proves the PAGE
+         accounts for every prediction, not merely the artefact.
+         Context is excluded from originCard explicitly (2026-08-17): `.tl-signal:not(.tl-currency)`
+         matched a context card, so a cited card demoted to background would have satisfied the
+         "origin" arm and the substitution would have been invisible here. */
       const originCard = node => node.querySelector(
-        '.event-body > .tl-signal:not(.tl-currency), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency)');
+        '.event-body > .tl-signal:not(.tl-currency):not(.tl-context), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency):not(.tl-context)');
+      const contextCard = node => node.querySelector('.tl-signal.tl-context');
       const uncitedNotice = node => node.querySelector('.tl-signal-uncited');
-      const accountedFor = node => !!originCard(node) !== !!uncitedNotice(node);
+      const accountedFor = node =>
+        (!!originCard(node) + !!contextCard(node) + !!uncitedNotice(node)) === 1;
       const eventCoverage = eventNodes.length > 0 && eventNodes.every(accountedFor);
       const unaccountedEvents = eventNodes
         .map((node, i) => (accountedFor(node) ? null : (node.id || ('#' + i))))
@@ -242,7 +265,10 @@ const SHOT = process.argv[3] || null;
           .map(k => k + ' -> ' + [...rowsPerSource[k]].join(' + ')),
         extraUncitedKeys,
         unexplainedUncited,
+        extraContextKeys,
+        unexplainedContext,
         citedCount: Object.keys(embeds).length,
+        contextCount: contextKeys.size,
         uncitedCount: uncitedKeys.size,
         expectedCount: expectedKeys.length,
         eventCoverage,
@@ -301,7 +327,8 @@ const SHOT = process.argv[3] || null;
       exactCoverage: !stats.missingKeys.length && !stats.extraKeys.length
         && !stats.doubleCountedKeys.length && !stats.extraUncitedKeys.length
         && !stats.unexplainedUncited.length
-        && (stats.citedCount + stats.uncitedCount) === stats.expectedCount,
+        && !stats.extraContextKeys.length && !stats.unexplainedContext.length
+        && (stats.citedCount + stats.contextCount + stats.uncitedCount) === stats.expectedCount,
       renderedCoverage: stats.eventCoverage && stats.horizonCoverage,
       horizonSchema: stats.horizonSchema && stats.horizonCaveats,
       methods: !stats.badMethods.length,
@@ -326,9 +353,11 @@ const SHOT = process.argv[3] || null;
     console.log(`[${theme}] events=${stats.eventCount}/${stats.expectedEventCount} horizon=${stats.horizonCount}/${stats.expectedHorizonCount} evidence=${stats.evidenceItems} direct=${stats.cards} currency=${stats.currencyCards} searches=${stats.chips} source=${stats.source} fresh=${stats.sourceFresh} methods=${JSON.stringify(stats.methodCounts)} maxReuse=${stats.maxReuse} missing=${stats.missingKeys.length} extra=${stats.extraKeys.length} errs=${errors.length} -> ${ok ? 'OK' : 'FAIL'}`);
     if (!ok) console.log('   CHECKS:', JSON.stringify(checks));
     if (errors.length) console.log('   ERRORS:', errors.slice(0, 4).join(' | '));
-    console.log(`   accounting: cited=${stats.citedCount} + uncited=${stats.uncitedCount} = ${stats.citedCount + stats.uncitedCount} of ${stats.expectedCount}`);
-    if (stats.missingKeys.length) console.log('   MISSING (neither cited nor uncited):', stats.missingKeys.slice(0, 12).join(', '));
-    if (stats.doubleCountedKeys.length) console.log('   DOUBLE-COUNTED (cited AND uncited):', stats.doubleCountedKeys.slice(0, 12).join(', '));
+    console.log(`   accounting: cited=${stats.citedCount} + context=${stats.contextCount} + uncited=${stats.uncitedCount} = ${stats.citedCount + stats.contextCount + stats.uncitedCount} of ${stats.expectedCount}`);
+    if (stats.missingKeys.length) console.log('   MISSING (in none of cited/context/uncited):', stats.missingKeys.slice(0, 12).join(', '));
+    if (stats.doubleCountedKeys.length) console.log('   DOUBLE-COUNTED (in more than one channel):', stats.doubleCountedKeys.slice(0, 12).join(', '));
+    if (stats.extraContextKeys.length) console.log('   CONTEXT FOR UNKNOWN PREDICTION:', stats.extraContextKeys.slice(0, 12).join(', '));
+    if (stats.unexplainedContext.length) console.log('   CONTEXT WITHOUT AGE/PROVENANCE:', stats.unexplainedContext.slice(0, 12).join(', '));
     if (stats.unaccountedEvents.length) console.log('   RENDERED WITHOUT EXACTLY ONE EVIDENCE STATE:', stats.unaccountedEvents.slice(0, 12).join(', '));
     if (stats.realityMalformed.length) console.log('   MALFORMED REALITY SIGNALS:', stats.realityMalformed.slice(0, 6).join(' | '));
     if (stats.sourceRowFanOut.length) console.log('   NOTE one article, multiple ledger rows (reuse counted by article):', stats.sourceRowFanOut.slice(0, 4).join(' | '));

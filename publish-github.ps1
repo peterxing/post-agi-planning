@@ -65,7 +65,17 @@ $newsVerifier = Join-Path $Deploy 'verify-news-evidence.js'
 $currencyVerifier = Join-Path $Deploy 'verify-currency.js'
 $surfaceVerifier = Join-Path $Deploy 'verify-deploy-surface.js'
 $interlockVerifier = Join-Path $Deploy 'verify-interlock.js'
-if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier) -or -not (Test-Path $interlockVerifier)) {
+# THE BACKFILL GATE WAS ABSENT FROM THIS LIST AND THAT IS WHY IT IS BEING ADDED.
+# run-gates.ps1 DERIVES its suite from package.json, so verify:backfill was picked up there
+# automatically. This chain does not derive -- it names five verifiers by hand -- so the standing
+# half of the news-mapping instruction was enforced in the suite an operator runs and ABSENT from
+# the script that actually publishes. A gate registered in verify-interlock.js's lock-ordering
+# roster is not thereby a gate in the publish path; those are two different lists and only one of
+# them stops a bad artifact reaching production.
+# This is the caller-level form of "a battery that passes is not a battery that covers": the gate
+# passed its own controls for its whole life while covering no publish.
+$backfillVerifier = Join-Path $Deploy 'verify-backfill.js'
+if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier) -or -not (Test-Path $interlockVerifier) -or -not (Test-Path $backfillVerifier)) {
   Write-Error 'publish-github: evidence preflight verifier is missing; publication aborted.'
   exit 7
 }
@@ -106,11 +116,28 @@ if ($coverageExit -eq 0) {
   } else {
     $interlockExit = $null
   }
+  # THE BACKFILL GATE TAKES NO 70/71 EXEMPTION, UNLIKE news AND currency ABOVE.
+  # Those two earn their exemptions because an inert optional layer is a truthful state that
+  # should not block an otherwise-verified publish. The backfill gate is different in kind:
+  #   70 = --propose never ran, so the standing "map every unmapped prediction" instruction was
+  #        NOT EXECUTED on this run. That is the instruction being skipped, not an optional layer
+  #        aging out.
+  #   71 = a reviewed verdict has been lost to feed rotation, i.e. banked provenance debt.
+  # Both mean the owner instruction is unsatisfied, so both block. ANY non-zero blocks, and no
+  # per-code permission is granted anywhere in this chain -- a distinct code must stay diagnostic
+  # (WHICH problem) and never become permissive (WHETHER to proceed).
+  if ($interlockExit -eq 0) {
+    & node $backfillVerifier
+    $backfillExit = $LASTEXITCODE
+  } else {
+    $backfillExit = $null
+  }
 } else {
   $newsExit = $null
   $currencyExit = $null
   $surfaceExit = $null
   $interlockExit = $null
+  $backfillExit = $null
 }
 Pop-Location
 # Exit 70 from the currency verifier is PASSED BUT INERT: nothing failed, and nothing was
@@ -152,7 +179,7 @@ if ($newsInert) {
 # never found wanting, and erasing the CATCH-UP that a deferred run obliges the next one to take.
 $gates = [ordered]@{
   coverage = $coverageExit; news     = $newsExit;     currency = $currencyExit
-  surface  = $surfaceExit;  interlock = $interlockExit
+  surface  = $surfaceExit;  interlock = $interlockExit; backfill = $backfillExit
 }
 $render = (($gates.GetEnumerator() | ForEach-Object {
   '{0}={1}' -f $_.Key, $(if ($null -eq $_.Value) { 'skipped' } else { $_.Value })

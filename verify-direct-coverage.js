@@ -197,9 +197,12 @@ if (searches === null) {
    NOT relaxed: a prediction that is neither cited nor recorded as uncited is still a hard failure, and
    every uncited record is validated for shape below so the channel cannot become a silent catch-all. */
 const uncitedItems = (signals.uncited && typeof signals.uncited.items === 'object' && signals.uncited.items) || {};
-const missing = expectedIds.filter(id => !embeds[id] && !uncitedItems[id]);
+/* Hoisted above `missing` so the totality test spans all THREE channels. A prediction whose only
+   record is a context entry is accounted for, not missing. */
+const contextItemsForTotality = (signals.context && typeof signals.context.items === 'object' && signals.context.items) || {};
+const missing = expectedIds.filter(id => !embeds[id] && !uncitedItems[id] && !contextItemsForTotality[id]);
 const extra = actualIds.filter(id => !expected.has(id));
-if (missing.length) problems.push(`predictions neither cited nor recorded as uncited: ${missing.join(', ')}`);
+if (missing.length) problems.push(`predictions neither cited, contextualised nor recorded as uncited: ${missing.join(', ')}`);
 if (!signals.uncited || Number(signals.uncited.windowDays) !== Number(ratchet.currencyMaxAgeDays)) {
   problems.push(`signals.uncited.windowDays (${signals.uncited?.windowDays}) must equal the registered currencyMaxAgeDays (${ratchet.currencyMaxAgeDays})`);
 }
@@ -216,6 +219,58 @@ for (const [id, item] of Object.entries(uncitedItems)) {
     problems.push(`${id}: uncited record is incomplete or does not state the window searched`);
   }
 }
+/* PER-CITATION WINDOW. Added 2026-08-17 after two citations were found published at 15.4d and 17.4d
+   while every gate reported PASS. The check above tests `newestItemAt`, which is the MOST RECENT cited
+   source: it is structurally incapable of detecting a citation that has aged out, because the newest
+   one is the last to age. So the window is asserted on EVERY cited embed, using the same rounding the
+   builder and the currency layer use. An out-of-window article is not a cited citation; it belongs in
+   the context channel carrying its true age. */
+for (const [id, embed] of Object.entries(embeds)) {
+  const published = Date.parse(embed.articleDate || (embed.provenance && embed.provenance.publishedAt) || '');
+  if (!Number.isFinite(published)) {
+    problems.push(`${id}: cited embed has no parsable publication date, so its currency cannot be checked`);
+    continue;
+  }
+  const ageDays = (Date.parse(signals.sourceFetchedAt) - published) / 864e5;
+  if (Math.round(ageDays) > Number(ratchet.currencyMaxAgeDays)) {
+    problems.push(`${id}: cited source is ${Math.round(ageDays)}d old, outside the `
+      + `${ratchet.currencyMaxAgeDays}-day window — an aged-out article must move to the context channel, not stay cited`);
+  }
+}
+
+/* THE CONTEXT CHANNEL. Same relevance and verification bar as cited; only the recency ceiling differs.
+   Every entry must be able to state its own age where a reader can see it, must be genuinely out of
+   window (an in-window article belongs in the cited channel), and must never collide with either of
+   the other two channels. */
+const contextItems = contextItemsForTotality;
+if (signals.context && Number(signals.context.windowDays) !== Number(ratchet.currencyMaxAgeDays)) {
+  problems.push(`signals.context.windowDays (${signals.context.windowDays}) must equal the registered currencyMaxAgeDays (${ratchet.currencyMaxAgeDays})`);
+}
+if (signals.context && Number(signals.context.count) !== Object.keys(contextItems).length) {
+  problems.push('signals.context.count disagrees with the number of context records');
+}
+for (const [id, item] of Object.entries(contextItems)) {
+  if (!expected.has(id)) { problems.push(`context record for unknown prediction ${id}`); continue; }
+  if (embeds[id]) problems.push(`${id}: recorded as context while also carrying a cited embed`);
+  if (uncitedItems[id]) problems.push(`${id}: recorded as context while also recorded as uncited`);
+  const published = Date.parse(item && item.publishedAt || '');
+  if (!item || !/^https:\/\//i.test(String(item.url || '')) || !item.publisher || !item.headline
+      || !item.quote || !Number.isFinite(published) || !item.publishedAtSource
+      || !Number.isFinite(Number(item.ageDays)) || !item.ageBucket) {
+    problems.push(`${id}: context record is incomplete — it must carry an absolute url, publisher, `
+      + 'headline, verbatim quote, true publishedAt, publishedAtSource, ageDays and ageBucket');
+    continue;
+  }
+  const ageDays = (Date.parse(signals.sourceFetchedAt) - published) / 864e5;
+  if (Math.round(ageDays) <= Number(ratchet.currencyMaxAgeDays)) {
+    problems.push(`${id}: context record is only ${Math.round(ageDays)}d old, inside the `
+      + `${ratchet.currencyMaxAgeDays}-day window — an in-window article belongs in the cited channel`);
+  }
+  if (Math.abs(Number(item.ageDays) - Math.round(ageDays)) > 1) {
+    problems.push(`${id}: context record claims ageDays ${item.ageDays} but its publishedAt implies ${Math.round(ageDays)}`);
+  }
+}
+
 if (extra.length) problems.push(`extra direct mappings: ${extra.join(', ')}`);
 
 /* X RETIREMENT 2026-08-13 - this block validated the sticky @peterxing approvals ledger: its floors,
@@ -369,7 +424,9 @@ if (!Number.isInteger(coverage.kept) || !Number.isInteger(coverage.dropped)) {
 }
 if (coverage.complete !== true
     || coverage.cited !== actualIds.length
-    || (Number(coverage.cited) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length
+    || (Number(coverage.cited) + Number(coverage.context ?? -1) + Number(signals.uncited?.count ?? -1)) !== expectedIds.length
+    || Number(coverage.context ?? -1) !== Object.keys(contextItems).length
+    || Number(coverage.uncited ?? -1) !== Object.keys(uncitedItems).length
     || coverage.searches !== 0
     || coverage.total !== expectedIds.length
     || coverage.uniqueSources !== usesByPost.size
@@ -413,6 +470,10 @@ if (peterAuthorshipCounts.authored !== 0 || peterAuthorshipCounts.reposted !== 0
 
 console.log(`Coverage: ${actualIds.length}/${expectedIds.length} direct; searches: ${searches ? Object.keys(searches).length : 0}`);
 console.log(`Unique sources: ${usesByPost.size}; maximum reviewed reuse: ${maxReuse}; distribution: ${JSON.stringify(reuseDistribution)}`);
+console.log(`Context: ${Object.keys(contextItems).length} prediction(s) carry dated background outside the ${ratchet.currencyMaxAgeDays}-day window`
+  + (Object.keys(contextItems).length
+    ? ` (${Object.entries(contextItems).map(([id, i]) => `${id} ${i.ageDays}d`).join(', ')})`
+    : '') + '.');
 console.log(`Uncited: ${Object.keys(uncitedItems).length} prediction(s) with no qualifying source inside the ${ratchet.currencyMaxAgeDays}-day window.`);
 if (problems.length) {
   console.log(`RESULT: FAIL (${problems.length} problem(s))`);
@@ -421,6 +482,8 @@ if (problems.length) {
 }
 console.log(`Evidence owners: ${JSON.stringify(ownerCounts)}; source quality: ${JSON.stringify(qualityCounts)}`);
 console.log(`Evidence medium: ${mediumCounts.x} X statuses; ${mediumCounts.news} live-verified news articles.`);
-console.log(`RESULT: PASS \u2014 all ${expectedIds.length} predictions accounted for: ${actualIds.length} carry a `
-  + `live-verified news source and ${Object.keys(uncitedItems).length} are explicitly recorded as having no `
-  + `qualifying source inside the ${ratchet.currencyMaxAgeDays}-day window. No X evidence remains.`);
+console.log(`RESULT: PASS \u2014 all ${expectedIds.length} predictions accounted for in exactly one channel: `
+  + `${actualIds.length} cited to a live-verified news source inside the ${ratchet.currencyMaxAgeDays}-day window, `
+  + `${Object.keys(contextItems).length} carrying live-verified dated background outside it, and `
+  + `${Object.keys(uncitedItems).length} explicitly recorded as having no qualifying source. `
+  + `Zero double-counted, zero missing. No X evidence remains.`);

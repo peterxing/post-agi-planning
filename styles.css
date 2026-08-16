@@ -1394,6 +1394,29 @@ button { color: inherit; }
   color: var(--cp-text-soft);
 }
 
+/* ---- Dated background (signals.context) -------------------------------------------------------
+   An article that passed every relevance and source-quality bar but was published OUTSIDE the
+   currency window. It must be legible as background rather than as current evidence, so it takes
+   the muted border-strong edge of the recorded-absence card rather than the accent edge that marks
+   a live citation, and its age is always visible in the summary row. Colour is never the only cue:
+   the summary text itself says "Dated background" and states the age in words. */
+.tl-signal.tl-context { border-left: 3px solid var(--cp-border-strong); }
+.tl-context .tl-signal-method {
+  color: var(--cp-text-soft);
+  text-transform: none;
+  letter-spacing: .02em;
+}
+.tl-context-note {
+  margin: 0 0 9px;
+  padding: 8px 10px;
+  border: 1px dashed var(--cp-border);
+  border-radius: 0.5rem;
+  background: var(--cp-bg-elevated);
+  color: var(--cp-text-soft);
+  font-size: .74rem;
+  line-height: 1.45;
+}
+
 /* ---- Retired-medium record --------------------------------------------------------------------
    A stored record whose medium was retired. It must NOT render as a working citation, so it keeps
    the warning edge rather than the accent one. */

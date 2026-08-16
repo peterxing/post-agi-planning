@@ -486,6 +486,7 @@ let currencySignals = {};
    rather than hidden, because a prediction that silently shows nothing is indistinguishable from a
    prediction nobody looked at. */
 let uncitedSignals = {};
+let contextSignals = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -628,17 +629,11 @@ function currencyCard(entry){
             : age <= 92 ? 'this quarter'
               : `${Math.round(age / 30)} months ago`;
   /* A peer-reviewed paper and a company blog post are not the same kind of claim, and the
-     reader is entitled to see which one they are looking at. */
-  const QUALITY = {
-    'peer-reviewed-journal': 'Peer-reviewed journal',
-    'primary-news-organization': 'Primary news organisation',
-    'established-technology-press': 'Established technology press',
-    'named-expert-analysis': 'Named expert analysis',
-    'official-ai-lab': 'Frontier lab, first-party',
-    'industry-primary-source': 'Industry primary source',
-    'government': 'Government source',
-  };
-  const quality = QUALITY[entry.sourceQuality] || 'Verified publication';
+     reader is entitled to see which one they are looking at. Shared with the context card via
+     qualityLabel() — this map used to be duplicated here and was missing two values the ledger
+     actually emits ('intergovernmental-organization', 'original-researcher'), which would have
+     rendered as the generic "Verified publication" and silently erased the distinction. */
+  const quality = qualityLabel(entry.sourceQuality);
   const provenance = entry.provenance
     ? `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(entry.provenance)}</div>` : '';
   const rationale = entry.rationale
@@ -722,9 +717,12 @@ function timingHtml(e, year){
 }
 function predictionEvidence(key, match, title){
   if (!signalCoverageReady) return evidenceUnavailable();
-  /* An accounted-for prediction is EITHER cited OR explicitly recorded as uncited. Only a prediction
-     that is neither - which the build treats as a hard failure - reaches the unavailable state. */
+  /* An accounted-for prediction is cited, OR carries dated background, OR is explicitly recorded as
+     uncited. Only a prediction in none of the three - which the build treats as a hard failure -
+     reaches the unavailable state. The order matters: a context entry is checked BEFORE the uncited
+     record so an aged-out but genuine article is shown as background rather than reported as absent. */
   if (!directSignals[key]) {
+    if (contextSignals[key]) return contextCard(contextSignals[key]);
     const record = uncitedSignals[key];
     return record ? uncitedCard(record) : evidenceUnavailable();
   }
@@ -773,6 +771,68 @@ function uncitedCard(record){
       <p class="tl-uncited-note">The prediction is unchanged. Nothing older, adjacent or unreviewed
       has been substituted to fill this space.</p>
     </div>`;
+}
+
+/* CONTEXT EVIDENCE — dated background, never styled or worded as current evidence. The article
+   passed the identical relevance and source-quality bars and was live-fetched and quote-checked
+   exactly like a cited source, but it was published outside the currency window. Its age is shown
+   in the summary row so a 200-day-old article cannot be mistaken for a 3-day-old one; an entry that
+   cannot state its own age does not render at all. Full rationale: refresh-signals.js. */
+function contextCard(entry){
+  const publisher = htmlText(entry.publisher || entry.publisherHost || 'Publisher');
+  const headline = htmlText(entry.headline || '');
+  const byline = entry.byline ? ` &middot; by ${htmlText(entry.byline)}` : '';
+  const url = safeHttpUrl(entry.url) || '';
+  const published = entry.publishedAt ? new Date(entry.publishedAt) : null;
+  const age = Number(entry.ageDays);
+  if (!published || isNaN(published.getTime()) || !Number.isFinite(age)) return evidenceUnavailable();
+  const dateText = formatUtcDate(published);
+  const ageText = age <= 92 ? `${age} days old`
+    : age <= 365 ? `${Math.round(age / 30)} months old`
+      : `${(age / 365).toFixed(1)} years old`;
+  const rationale = entry.mappingRationale
+    ? `<div class="tl-signal-maps"><b>Evidence relevance:</b> ${htmlText(entry.mappingRationale)}</div>` : '';
+  const link = url
+    ? `<a class="tl-signal-link" href="${htmlText(url)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
+    : '';
+  return `
+    <details class="tl-signal tl-context" data-kind="context" data-evidence-medium="context" data-age-bucket="${htmlText(entry.ageBucket || '')}" data-published-utc="${htmlText(published.toISOString().slice(0, 10))}">
+      <summary>
+        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
+        <span class="tl-signal-summary-text">
+          <strong>Dated background &mdash; ${publisher}, ${htmlText(dateText)}</strong>
+          ${headline}${byline}
+        </span>
+        <span class="tl-signal-method tl-context-age">${ageText}</span>
+      </summary>
+      <div class="tl-signal-detail">
+        <div class="tl-context-note">${htmlText(entry.statement || '')} Shown as context, not as current
+        evidence; fetched and quote-checked live at publication like every other source here.</div>
+        <div class="tl-signal-maps"><b>Source type:</b> ${htmlText(qualityLabel(entry.sourceQuality))}${entry.publisherHost ? ` &middot; ${htmlText(entry.publisherHost)}` : ''}</div>
+        ${entry.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(entry.maps)}</div>` : ''}
+        ${rationale}
+        ${entry.quote ? `<blockquote class="tl-signal-quote">${htmlText(entry.quote)}</blockquote>` : ''}
+        <div class="tl-signal-foot">
+          <span class="tl-signal-date">Published ${htmlText(dateText)} &middot; ${ageText}</span>
+          <span class="tl-signal-actions">${link}</span>
+        </div>
+      </div>
+    </details>`;
+}
+/* A source type the UI cannot NAME is one the reader cannot judge, and a generic default silently
+   erases the peer-reviewed / first-party-lab / independent-press distinction. */
+function qualityLabel(value){
+  return {
+    'peer-reviewed-journal': 'Peer-reviewed journal',
+    'primary-news-organization': 'Primary news organisation',
+    'established-technology-press': 'Established technology press',
+    'named-expert-analysis': 'Named expert analysis',
+    'official-ai-lab': 'Frontier lab, first-party',
+    'industry-primary-source': 'Industry primary source',
+    'intergovernmental-organization': 'Intergovernmental body, first-party',
+    'government': 'Government source',
+    'original-researcher': 'Original researcher',
+  }[value] || 'Verified publication';
 }
 
 function branchForEvent(title){
@@ -1455,11 +1515,26 @@ function hasCompleteSignalCoverage(data){
   const uncited = data.uncited && typeof data.uncited === 'object' ? data.uncited : null;
   const uncitedItems = uncited && uncited.items && typeof uncited.items === 'object' ? uncited.items : {};
   const uncitedIds = Object.keys(uncitedItems);
+  /* THE THIRD CHANNEL (2026-08-17): the partition is cited | context | uncited, with no gap and no
+     overlap. Context may be empty, but a present entry must be well-formed — one that cannot state
+     its own age would render as though it were current evidence. Rationale: verify-direct-coverage.js. */
+  const context = data.context && typeof data.context === 'object' ? data.context : null;
+  const contextItems = context && context.items && typeof context.items === 'object' ? context.items : {};
+  const contextIds = Object.keys(contextItems);
   const expectedSet = new Set(expected);
   if (directIds.some(id => !expectedSet.has(id)) || uncitedIds.some(id => !expectedSet.has(id))) return false;
+  if (contextIds.some(id => !expectedSet.has(id))) return false;
   if (directIds.some(id => uncitedItems[id])) return false;
-  if (expected.some(id => !data.embeds[id] && !uncitedItems[id])) return false;
-  if (directIds.length + uncitedIds.length !== expected.length) return false;
+  if (contextIds.some(id => uncitedItems[id] || data.embeds[id])) return false;
+  if (expected.some(id => !data.embeds[id] && !uncitedItems[id] && !contextItems[id])) return false;
+  if (directIds.length + contextIds.length + uncitedIds.length !== expected.length) return false;
+  const contextValid = contextIds.every(id => {
+    const r = contextItems[id];
+    return r && typeof r.url === 'string' && /^https:\/\//i.test(r.url)
+      && r.publisher && r.headline && r.quote && r.publishedAtSource && r.ageBucket
+      && !isNaN(new Date(r.publishedAt).getTime()) && Number.isFinite(Number(r.ageDays));
+  });
+  if (!contextValid) return false;
   const windowDays = Number(uncited && uncited.windowDays);
   if (!Number.isInteger(windowDays) || windowDays <= 0) return false;
   if (Number(uncited && uncited.count) !== uncitedIds.length) return false;
@@ -1604,6 +1679,7 @@ function hasCompleteSignalCoverage(data){
       signalCoverageReady = hasCompleteSignalCoverage(d);
       directSignals = signalCoverageReady ? d.embeds : {};
       uncitedSignals = signalCoverageReady && d.uncited && d.uncited.items ? d.uncited.items : {};
+      contextSignals = signalCoverageReady && d.context && d.context.items ? d.context.items : {};
       /* The currency layer is additive and independent: it is only ever shown next to an
          origin card, so it is gated on the same coverage check. If the bundle is degraded
          we show nothing rather than implying a reference we cannot stand behind. */
@@ -1631,9 +1707,12 @@ function hasCompleteSignalCoverage(data){
             Both numbers are shown because concealing either would flatter the forecast. */
          const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'source unrecognised';
          const uncitedCount = Number(d.uncited && d.uncited.count) || 0;
+         const contextCount = Number(d.context && d.context.count) || 0;
          const windowDays = Number(d.uncited && d.uncited.windowDays) || 0;
          const windowText = windowDays ? ` · ${windowDays}-day currency window` : '';
+         const contextText = contextCount ? `${contextCount} with dated background · ` : '';
          stamp.textContent = `Prediction evidence · ${d.coverage.cited} of ${d.coverage.total} cited · `
+           + contextText
            + `${uncitedCount} searched with no qualifying source · zero search fallbacks · `
            + `${sourceLabel}${windowText} · checked `
            + formatUtcDate(dt);
@@ -1645,6 +1724,7 @@ function hasCompleteSignalCoverage(data){
       signalCoverageReady = false;
       directSignals = {};
       uncitedSignals = {};
+      contextSignals = {};
       currencySignals = {};
       renderTimeline();
       renderHorizon();

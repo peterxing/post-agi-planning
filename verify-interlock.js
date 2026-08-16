@@ -82,6 +82,18 @@ const guarded = [
   'verify-observatory.js', 'verify-performance.js', 'verify-direct-coverage.js',
 
   'verify-deploy-surface.js', 'verify-currency.js',
+  // Registered 2026-08-15 with the news-gap backfill. Both claim the tree before reading
+  // predictions.json/signals.json through news-backfill.js's roster().
+  //
+  // DECLARED LIMIT OF THIS LIST, because it should not be inferred from the fact that it is
+  // long: it is a ONE-WAY roster. It proves every name here calls guard() before its first
+  // protected read; it CANNOT notice a new guarded-worthy entry point that was never added to
+  // it. verify-backfill.js was such a file for the length of one commit, and nothing here
+  // would have gone red. The gate would have stayed green while covering strictly less, which
+  // is the failure mode a count cannot show you and only a two-way roster can. The reverse
+  // direction — enumerating every top-level .js that reads a PROTECTED file and requiring it to
+  // appear here — is NOT implemented and is named as open rather than left to be discovered.
+  'verify-backfill.js', 'news-backfill.js',
 ];
 /* X retirement (2026-08-13). These entry points were removed with the X evidence pipeline.
    They are DECLARED rather than merely deleted from the list above, because a bare deletion

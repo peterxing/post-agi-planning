@@ -533,10 +533,16 @@ async function main() {
 
   // ---- STRUCTURAL: the currency layer must not disturb the evidence layer ---------------
   const uncitedItems = (signals.uncited && signals.uncited.items) || {};
-  const both = [...ids].filter(id => embeds[id] && uncitedItems[id]);
-  const neither = [...ids].filter(id => !embeds[id] && !uncitedItems[id]);
+  /* THE THIRD CHANNEL (2026-08-17). This check predates the context channel and read the partition
+     as a two-way split, so a prediction carrying live-verified dated background counted as accounted
+     for by NEITHER and failed the run. The partition is cited | context | uncited; overlap is still
+     a hard failure in every pairing, which is what the union below cannot see on its own. */
+  const contextItems = (signals.context && signals.context.items) || {};
+  const both = [...ids].filter(id =>
+    (embeds[id] && uncitedItems[id]) || (embeds[id] && contextItems[id]) || (contextItems[id] && uncitedItems[id]));
+  const neither = [...ids].filter(id => !embeds[id] && !uncitedItems[id] && !contextItems[id]);
   if (both.length || neither.length) {
-    fail(`evidence accounting broke: ${both.length} prediction(s) both cited and uncited, `
+    fail(`evidence accounting broke: ${both.length} prediction(s) in more than one channel, `
       + `${neither.length} accounted for by neither`);
   } else {
     ok(`all ${ids.size} predictions accounted for  ${Object.keys(embeds).length} cited, `
@@ -594,11 +600,19 @@ async function main() {
 
   // ---- SOURCE QUALITY ------------------------------------------------------------------
   /* Read the labels the UI can actually render straight out of app.js, so this gate tracks
-     the real renderer rather than a copy of it that could drift out of step. */
+     the real renderer rather than a copy of it that could drift out of step.
+     ANCHOR MOVED 2026-08-17: this used to read `const QUALITY = {` inside currencyCard(). That map
+     was DUPLICATED — the currency copy was missing 'intergovernmental-organization' and
+     'original-researcher', which the ledger emits — so this gate was verifying one of two copies
+     and could pass while the other rendered the generic default. Both call sites now share
+     qualityLabel(), so the anchor is the single renderer and the drift it guards is now impossible
+     by construction rather than merely detected. */
   const APP_QUALITY_LABELS = (() => {
     const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
-    const block = app.slice(app.indexOf('const QUALITY = {'));
-    const body = block.slice(0, block.indexOf('};'));
+    const start = app.indexOf('function qualityLabel(');
+    if (start === -1) return new Set();
+    const block = app.slice(start);
+    const body = block.slice(0, block.indexOf('}[value]'));
     return new Set([...body.matchAll(/'([a-z-]+)'\s*:/g)].map(m => m[1]));
   })();
   if (APP_QUALITY_LABELS.size === 0) fail('could not read the currency source-quality label map out of app.js');

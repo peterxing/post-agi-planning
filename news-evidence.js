@@ -134,20 +134,9 @@ const NEWS_SOURCES = {
     quote: "From 2 August 2026, the European Commission’s AI Office, together with national authorities, will begin enforcing the Artificial Intelligence (AI) Act.",
     textSha256: "48cda069c6afe2e42f715ee6d96b89eab7e1dbc34aaffd1f9ad7ed29e8df889e",
   },
-  "arxiv-persuasive-intent-disclosure": {
-    url: "https://arxiv.org/abs/2608.11794",
-    resolvedUrl: "https://arxiv.org/abs/2608.11794",
-    publisher: "arXiv.org",
-    publisherHost: "arxiv.org",
-    author: null,
-    headline: "Toward Meaningful Transparency for AI Chatbots: Disclosing Persuasive Intent Reduces Persuasion",
-    publishedAt: "2026-08-12T00:00:00.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-13",
-    sourceQuality: "original-researcher",
-    quote: "While current rules emphasize what a system is, our results show why the regulation of persuasive AI must also address what the system is trying to do.",
-    textSha256: "b48b8c0d4f6336e30b51442250bbdfbc217b00d0a718dcc90831892167c1cf2f",
-  },
+  /* REMOVED 2026-08-17 — the arXiv preprint source record for the mapping deleted below. See the
+     REJECTED_HOSTS note: arxiv.org is no longer exempt, so this row could not be fetched-and-verified
+     under the current bar even if it were still referenced. */
   "techreview-ai-for-science-reasoning": {
     url: "https://www.technologyreview.com/2026/08/10/1141384/ai-agents-for-science/",
     resolvedUrl: "https://www.technologyreview.com/2026/08/10/1141384/ai-agents-for-science/",
@@ -161,6 +150,54 @@ const NEWS_SOURCES = {
     sourceQuality: "primary-news-organization",
     quote: "Instead, the acceleration of science will come about thanks to another approach: AI agents.",
     textSha256: "6feebcca8e6ceb873d58dcd8ae9028e798be537365da4e218ded3af073012161",
+  },
+  /* CONTEXT-CHANNEL SOURCES, promoted 2026-08-17 from the reviewed verdicts in
+     news-backfill-review.js. These are deliberately OUT of the 14-day window, so refresh-signals.js
+     emits them as CONTEXT (dated background carrying their true age) and never as CITED. The
+     relevance bar they cleared is the SAME one the cited channel uses; only the recency ceiling was
+     lifted. Each was live-fetched on 2026-08-17 and its publisher, headline, date and quote were
+     read off the fetched page by verifyNewsSource(). */
+  "ars-orbital-datacenter-constraints-1": {
+    url: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+    resolvedUrl: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Eric Berger",
+    headline: "How hard is it to build orbital data centers, actually?",
+    publishedAt: "2026-07-15T11:00:09.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-17",
+    sourceQuality: "primary-news-organization",
+    quote: "The spacecraft is due to launch in October and, if successful, will demonstrate the ability to radiate heat efficiently and run useful workloads for customers, Johnston said.",
+    textSha256: "a2decd2e64052479bc0e9c6a647fff54a847d230cb63649be05c3b0054969762",
+  },
+  "ars-orbital-datacenter-constraints-2": {
+    url: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+    resolvedUrl: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Eric Berger",
+    headline: "How hard is it to build orbital data centers, actually?",
+    publishedAt: "2026-07-15T11:00:09.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-17",
+    sourceQuality: "primary-news-organization",
+    quote: "The six radiators on the International Space Station, which use ammonia as a coolant, have a combined mass of just over 6 metric tons.",
+    textSha256: "a2decd2e64052479bc0e9c6a647fff54a847d230cb63649be05c3b0054969762",
+  },
+  "nature-noninvasive-mi-bci": {
+    url: "https://www.nature.com/articles/s41467-026-75435-5",
+    resolvedUrl: "https://www.nature.com/articles/s41467-026-75435-5",
+    publisher: "Nature",
+    publisherHost: "nature.com",
+    author: "Wang, Hanwen",
+    headline: "Sensory-guided human-machine joint learning accelerates the acquisition of motor imagery brain computer interface control - Nature Communications",
+    publishedAt: "2026-07-15T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-17",
+    sourceQuality: "peer-reviewed-journal",
+    quote: "In contrast, non-invasive BCIs based on electroencephalography (EEG) offer a safe and more accessible alternative with potential applicability to a wide population.",
+    textSha256: "52bf33ed7d00e5cd7cd73f4ff0bf8e559de5875f180956f4e0bf138d1ff198ae",
   },
 };
 
@@ -215,15 +252,15 @@ const NEWS_GROUPS = [
     rationale: "The European Commission records the AI Office and national authorities beginning enforcement of the AI Act, evidencing the EU half of the prediction. It concerns transparency obligations and does not evidence US practice or cyber, bio and autonomy release thresholds.",
     reviewedAt: "2026-08-13",
   },
-  {
-    source: "arxiv-persuasive-intent-disclosure",
-    ids: ["2033-3"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "controlled-experiment",
-    reuseFamily: "ai-persuasion-controls",
-    rationale: "A preregistered 1,500-participant experiment finds intent disclosure roughly halves chatbot persuasion and concludes that regulation must address what a system is trying to do, directly evidencing the disclosure-rule mechanism in the prediction. It does not evidence capability limits or taxes.",
-    reviewedAt: "2026-08-13",
-  },
+  /* REMOVED 2026-08-17 — arxiv-persuasive-intent-disclosure (https://arxiv.org/abs/2608.11794)
+     was a live cited source for 2033-3. It is an unreviewed arXiv preprint, which the evidence bar
+     has always called "a claim, not a finding", and it was admissible only because arxiv.org had
+     been exempted from REJECTED_HOSTS on the grounds that removing it would invalidate this very
+     mapping. The exemption is withdrawn and the mapping goes with it. A search for a peer-reviewed
+     or reported version of the same result found none, so nothing is substituted: 2033-3 returns to
+     the uncited channel with an honest record rather than keeping a citation that does not meet the
+     bar. Its sourceQuality was 'original-researcher', which renders as authoritative provenance on
+     an unreviewed abstract — a false provenance claim, not merely a wrong field. */
   {
     source: "techreview-ai-for-science-reasoning",
     ids: ["2037-0"],
@@ -232,6 +269,37 @@ const NEWS_GROUPS = [
     reuseFamily: "ai-science-acceleration",
     rationale: "A named MIT Technology Review analysis argues the acceleration of science will come through AI agents rather than AlphaFold-style data models. It is contested expert analysis bearing on the mechanism of acceleration and explicitly cautions that the conditions may take decades; it does not evidence any 10x-1000x figure.",
     reviewedAt: "2026-08-13",
+  },
+  /* CONTEXT-CHANNEL GROUPS, promoted 2026-08-17. The verdicts and their reasoning are recorded in
+     news-backfill-review.js; repeated here in the rationale so the ledger is auditable on its own.
+     Each of these is OUT of the 14-day window and therefore renders as dated background, labelled
+     with its true age, never as current evidence. */
+  {
+    source: "ars-orbital-datacenter-constraints-1",
+    ids: ["2026-8"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-engineering-constraint",
+    reuseFamily: "orbital-compute-constraints",
+    rationale: "The prediction thresholds on orbital compute remaining demonstrator-scale through 2026 with no operator disclosing utility-scale power and cooling. This reported analysis describes the next flight as a 450 kg satellite with 8 kW of generation that has yet to demonstrate efficient heat rejection or customer workloads — demonstrator scale, stated by the operator. It evidences the state of the art; it does not evidence that the 2026 outcome has occurred.",
+    reviewedAt: "2026-08-17",
+  },
+  {
+    source: "ars-orbital-datacenter-constraints-2",
+    ids: ["2039-4"],
+    evidenceType: "scenario",
+    evidenceBasis: "reported-engineering-constraint",
+    reuseFamily: "orbital-compute-constraints",
+    rationale: "The prediction names 1 MW of disclosed electrical power with MATCHED RADIATORS sustained for 90 days. The same reported analysis quantifies the radiator side of that coupling — the ISS needs six ammonia radiators massing over 6 tonnes — which is the constraint that makes the threshold hard. It is a scenario source for the engineering constraint, never evidence the threshold has been met. Second and final use of this article: a third mapping was refused on the reuse ceiling.",
+    reviewedAt: "2026-08-17",
+  },
+  {
+    source: "nature-noninvasive-mi-bci",
+    ids: ["horizon-non-invasive-neural-symbiosis"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "peer-reviewed-result",
+    reuseFamily: "non-invasive-bci",
+    rationale: "The horizon item is about GENUINELY non-invasive interfaces as a separate, lower-risk path. This peer-reviewed Nature Communications study is on scalp-recorded EEG motor-imagery BCI and states directly that non-invasive EEG BCIs are the safer, more accessible alternative. The disambiguation guard holds: EEG is scalp-recorded, so this is not an implanted or endovascular interface. It evidences the path's viability, not its arrival.",
+    reviewedAt: "2026-08-17",
   },
 ];
 
@@ -295,6 +363,32 @@ const REJECTED_HOSTS = new Map([
   ['prweb.com', 'press-release mill'],
   ['medium.com', 'open publishing platform'],
   ['substack.com', 'open publishing platform'],
+  /*
+   * Preprint servers whose posting is a claim rather than a finding. This rule was declared
+   * in the evidence policy and enforced NOWHERE — classifyHost accepted all four — so it was
+   * a guard made of prose, which protects only for as long as someone remembers to read it.
+   * It is code now because the news backfill asks the machine, not a reader, whether a source
+   * qualifies.
+   *
+   * arxiv.org WAS deliberately absent, and that exemption is withdrawn on 2026-08-17. The
+   * recorded reason was that arxiv.org is "a live cited source in this very file", so adding
+   * it "would retroactively invalidate published evidence". That is the argument running
+   * backwards: it admits the host BECAUSE something inadmissible was already admitted, which
+   * is precisely how a bar gets crossed without anyone deciding to cross it. If published
+   * evidence does not meet the bar, invalidating it is the CORRECT outcome and not a cost to
+   * be avoided. The governing test is whether the record carries peer review or editorial
+   * responsibility, never whether its host happens to be enumerated here, and an arXiv v1
+   * abstract carries neither. The single mapping that depended on this exemption
+   * (arxiv-persuasive-intent-disclosure -> 2033-3) is removed in the same change rather than
+   * grandfathered, so the ledger and the rule agree instead of the rule bending to the ledger.
+   * A preprint remains a legitimate DISCOVERY channel: use one to FIND the reviewed paper or
+   * the reported story and cite THAT. If neither exists, the prediction stays uncited.
+   */
+  ['arxiv.org', 'preprint server — a claim, not a finding'],
+  ['biorxiv.org', 'preprint server — a claim, not a finding'],
+  ['medrxiv.org', 'preprint server — a claim, not a finding'],
+  ['ssrn.com', 'preprint server — a claim, not a finding'],
+  ['researchgate.net', 'preprint server — a claim, not a finding'],
   ['blogspot.com', 'open publishing platform'],
   ['wordpress.com', 'open publishing platform'],
   ['linkedin.com', 'open publishing platform'],

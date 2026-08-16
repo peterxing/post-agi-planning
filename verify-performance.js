@@ -104,9 +104,42 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  *     measured, so its age is legible without re-deriving it.
  * Four figures here were the second kind. They are gone, and the runs print them instead.
  */
+/*
+ * RE-BASELINE 2026-08-17 — app.js 135,000 -> 143,000. This is the explicit justification the
+ * paragraph above requires, and it is a re-baseline for a NAMED FEATURE rather than for drift.
+ *
+ * WHAT GREW AND WHY: the evidence layer gained a third published channel. Until today a prediction
+ * was either CITED or UNCITED, and a reviewed citation that aged past the 14-day currency window
+ * silently stayed cited — the only age check on the cited channel was `newestItemAt`, which reads
+ * the MOST RECENT citation and is therefore structurally incapable of detecting an aged-out one.
+ * Two were found live at 15d and 17d. Such an article is neither current evidence nor nothing, so it
+ * is now published as CONTEXT: dated background carrying its true publishedAt, age in days and age
+ * bucket, rendered so a reader can tell a 200-day-old source from a 3-day-old one without clicking.
+ * That is contextCard(), the shared qualityLabel(), and the third arm of hasCompleteSignalCoverage()
+ * — approximately 5.6 KB of function bodies, not of commentary. It was trimmed first: the long-form
+ * rationale for the channel lives in refresh-signals.js and verify-direct-coverage.js, which do not
+ * ship to the browser, and the QUALITY map duplicated in currencyCard() was folded into
+ * qualityLabel() (which also fixed two ledger values that rendered as the generic "Verified
+ * publication"). What remains is the feature itself.
+ *
+ * WHY NOT HOLD THE LINE: app.js entered this run at 134,726 b — 274 b of headroom, 0.20%, an order
+ * of magnitude below the ~2% DESIGN margin this block declares. The budget was already outside its
+ * own stated design, so ANY real feature would have crossed it. Holding 135,000 would not have
+ * bounded growth; it would have blocked a correctness fix and left aged-out citations published as
+ * current. 143,000 restores a real margin (currently ~1.8%) rather than clearing today's number by a
+ * hair and failing again tomorrow.
+ *
+ * WHAT STILL BOUNDS GROWTH: the 'static shell' ceiling is UNCHANGED at 375,000 and remains the
+ * binding constraint on the sum — index 150,000 + app 143,000 + styles 95,000 = 388,000 exceeds it,
+ * so the three per-file ceilings cannot all be spent. The OUTCOME budgets this proxy stands in for
+ * were all measured healthy on the run that triggered this: first load 127,043/300,000, evidence UI
+ * 746/3,000 ms, DOM interactive 61/1,000 ms, rendered DOM 4,690/6,550. Per this file's own rule
+ * those are dated measurements of a moving quantity, recorded here as a record of this decision;
+ * every run recomputes and prints them, so do not read them as current state.
+ */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 135000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 143000 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 95000 },
   { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 375000 },
 ];

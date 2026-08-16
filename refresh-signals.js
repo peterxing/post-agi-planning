@@ -2067,10 +2067,30 @@ async function main(){
   }
 
   // Build exactly one reviewed direct embed per prediction.
-  const embeds = {}; const searches = {}; const chosen = {}; const uncited = {};
+  const embeds = {}; const searches = {}; const chosen = {}; const uncited = {}; const context = {};
+  /* CONTEXT CHANNEL (added 2026-08-17). The 14-day window governs which CHANNEL an article may enter;
+     it never governs whether the article was worth finding. Before today the window was enforced on
+     currency links and on signals.newestItemAt only — that is, on the NEWEST cited source, a term that
+     can never detect an aged-out one — so a reviewed citation silently stayed CITED as it aged past the
+     ceiling. Two were found at 15.4d and 17.4d on this run. They are not discarded: a genuinely
+     supporting, live-verified, non-preprint article that is merely out of window is exactly what the
+     CONTEXT channel is for, and it is published as dated background carrying its true age. The
+     relevance, anti-adjacency, disambiguation and source-quality bars are IDENTICAL to the cited
+     channel; only the recency ceiling differs. */
+  const BUILD_NOW = Date.now();
+  const ageBucketOf = days => {
+    if (days <= 14) return '<=14d';
+    if (days <= 30) return '15-30d';
+    if (days <= 90) return '31-90d';
+    if (days <= 365) return '91-365d';
+    return '>1yr';
+  };
   /* X RETIREMENT 2026-08-13 - refusals raised by the retired-medium branches inside the loop below.
      mappingIntegrityErrors does not exist yet at that point, so they are collected here and merged. */
   const retiredMediumRefusals = [];
+  /* Fatal defects raised inside the loop below, merged into mappingIntegrityErrors with the refusals
+     above for the same reason: that array does not exist yet at this point. */
+  const buildFatal = [];
   for (const p of PREDICTIONS) {
     const c = picks[p.id];
     if (!c) {
@@ -2084,6 +2104,67 @@ async function main(){
           if (newsText.length > 220) newsText = newsText.slice(0, 217) + '\u2026';
           const articleKey = newsSourceKey(article.resolvedUrl);
           const newsReuse = newsUsesByArticle[articleKey] || 1;
+          /* THE WINDOW SPLIT. Enforced HERE, at the producer, so an aged-out citation cannot be
+             built and then rely on a downstream gate to notice. Same rounding semantics as every
+             other age comparison in this tree: Math.round(ageDays) > ceiling. */
+          const newsAgeDays = (BUILD_NOW - Date.parse(article.publishedAt)) / 864e5;
+          if (!Number.isFinite(newsAgeDays)) {
+            buildFatal.push(`${p.id}: news source ${newsMapping.source} has an unusable `
+              + `publishedAt (${article.publishedAt}); an entry whose age cannot be computed is not publishable`);
+            continue;
+          }
+          if (Math.round(newsAgeDays) > CURRENCY_MAX_AGE_DAYS) {
+            context[p.id] = {
+              id: `news:${newsMapping.source}`,
+              sourceKey: articleKey,
+              channel: 'context',
+              kind: 'news',
+              evidenceOwner: 'news',
+              evidenceMedium: 'news',
+              publisher: article.publisher,
+              publisherHost: article.publisherHost,
+              byline: article.author || null,
+              headline: article.headline,
+              quote: article.quote,
+              text: newsText,
+              url: article.resolvedUrl,
+              articleDate: article.publishedAt,
+              publishedAt: article.publishedAt,
+              publishedAtSource: article.publishedAtSource,
+              ageDays: Math.round(newsAgeDays),
+              ageBucket: ageBucketOf(Math.round(newsAgeDays)),
+              windowDays: CURRENCY_MAX_AGE_DAYS,
+              date: fmtDate(new Date(article.publishedAt)),
+              sourceQuality: article.sourceQuality,
+              evidenceType: newsMapping.evidenceType,
+              mappingRationale: newsMapping.rationale,
+              reuseFamily: newsMapping.reuseFamily,
+              matchMethod: 'reviewed-news',
+              reviewed: true,
+              reviewedAt: newsMapping.reviewedAt,
+              lastVerifiedAt: newsMapping.lastVerifiedAt,
+              maps: p.maps,
+              provenance: {
+                evidenceOwner: 'news',
+                publisher: article.publisher,
+                publisherHost: article.publisherHost,
+                byline: article.author || null,
+                publishedAt: article.publishedAt,
+                publishedAtSource: article.publishedAtSource,
+                retrievedAt: article.retrievedAt,
+                sourceQuality: article.sourceQuality,
+                verifiedThrough: 'live-fetch+quote-match',
+                sourceChain: ['live-fetch', 'metadata-extract', 'quote-match'],
+                lastVerifiedAt: newsMapping.lastVerifiedAt,
+                textSha256: article.textSha256,
+              },
+              statement: `Dated background: the most recent authoritative source found for this `
+                + `prediction was published ${Math.round(newsAgeDays)} days ago, outside the `
+                + `${CURRENCY_MAX_AGE_DAYS}-day currency window. It is shown as context, not as current evidence.`,
+            };
+            chosen[p.id] = `context [${newsMapping.source} ${Math.round(newsAgeDays)}d outside the ${CURRENCY_MAX_AGE_DAYS}-day window]`;
+            continue;
+          }
           embeds[p.id] = {
             id: `news:${newsMapping.source}`,
             /* The identity every reuse count, ceiling and uniqueness check must group on. The ledger
@@ -2354,6 +2435,7 @@ async function main(){
      long before this channel exists. Their refusals are carried here so a reinstated X mapping fails
      as a NAMED retirement breach rather than only as a generic "unaccounted prediction". */
   if (retiredMediumRefusals.length) mappingIntegrityErrors.push(...retiredMediumRefusals);
+  if (buildFatal.length) mappingIntegrityErrors.push(...buildFatal);
   if (invalidReuse.length) {
     mappingIntegrityErrors.push(`invalid reviewed reuse: ${invalidReuse.map(item => item.postId).join(', ')}`);
   }
@@ -2455,10 +2537,34 @@ async function main(){
      which is the failure this file exists to prevent. So the requirement is restated, not relaxed:
      every prediction must be ACCOUNTED FOR — either cited, or explicitly recorded as uncited with
      the window that was searched. A silent gap is still a build failure. */
-  const accountedIds = new Set([...currentCoveredIds, ...Object.keys(uncited)]);
+  const accountedIds = new Set([...currentCoveredIds, ...Object.keys(context), ...Object.keys(uncited)]);
   const unaccounted = PREDICTIONS.filter(p => !accountedIds.has(p.id)).map(p => p.id);
   if (unaccounted.length) {
-    mappingIntegrityErrors.push(`predictions neither cited nor recorded as uncited: ${unaccounted.join(", ")}`);
+    mappingIntegrityErrors.push(`predictions neither cited, contextualised nor recorded as uncited: ${unaccounted.join(", ")}`);
+  }
+  /* THE PARTITION MUST NOT OVERLAP, IN EITHER DIRECTION. A set union hides a double-count: an id
+     present in two channels raises accountedIds by one and the totality check still passes. So the
+     three channels are checked pairwise for intersection as well as for coverage. */
+  const inTwo = [];
+  for (const id of currentCoveredIds) {
+    if (context[id]) inTwo.push(`${id}: cited and context`);
+    if (uncited[id]) inTwo.push(`${id}: cited and uncited`);
+  }
+  for (const id of Object.keys(context)) {
+    if (uncited[id]) inTwo.push(`${id}: context and uncited`);
+  }
+  if (inTwo.length) {
+    mappingIntegrityErrors.push(`predictions counted in more than one evidence channel: ${inTwo.join('; ')}`);
+  }
+  /* Every context entry must be able to state its own age, publisher and quote, or it must not
+     render at all — a context card that cannot show how old it is would read as current evidence. */
+  for (const [id, entry] of Object.entries(context)) {
+    if (!entry.url || !/^https:\/\//i.test(entry.url) || !entry.publisher || !entry.headline
+        || !entry.quote || !entry.publishedAt || !Number.isFinite(Number(entry.ageDays))
+        || !entry.ageBucket || !entry.publishedAtSource) {
+      mappingIntegrityErrors.push(`${id}: context entry is incomplete (needs url, publisher, headline, `
+        + `verbatim quote, publishedAt, publishedAtSource, ageDays and ageBucket)`);
+    }
   }
   /* THE DENOMINATOR IS THE REGISTERED POPULATION, NOT THE SURVIVING ONE, AND THE DROP IS OBSERVED
      DIRECTLY. Both operands of the old `accountedIds.size === PREDICTIONS.length` descend from
@@ -2718,8 +2824,20 @@ async function main(){
       count: Object.keys(uncited).length,
       items: uncited,
     },
+    /* THE CONTEXT CHANNEL. An article that is genuinely supporting and live-verified but published
+       outside the currency window is neither current evidence nor nothing. Publishing it as dated
+       background — with its true publishedAt, its real age in days and its age bucket — keeps the
+       reader able to tell a 3-day-old source from a 200-day-old one without clicking, which is the
+       whole reason this is a separate channel rather than a lenient cited card. */
+    context: {
+      windowDays: CURRENCY_MAX_AGE_DAYS,
+      count: Object.keys(context).length,
+      items: context,
+    },
     coverage: {
       cited: Object.keys(embeds).length,
+      context: Object.keys(context).length,
+      uncited: Object.keys(uncited).length,
       searches: Object.keys(searches).length,
       // The REGISTERED count. A survivor count published as `total` reads as "103 that exist"
       // when it may mean "103 that survived"; those differ exactly when something went wrong.
@@ -2796,7 +2914,7 @@ async function main(){
     searchFallbacks: Object.keys(searches).length,
     coverageComplete,
     directCoverageComplete: coverageComplete
-      && (Object.keys(embeds).length + Object.keys(uncited).length) === registeredTotal,
+      && (Object.keys(embeds).length + Object.keys(context).length + Object.keys(uncited).length) === registeredTotal,
     reviewedApprovals: Object.keys(evidenceApprovals).length,
     reviewedExternalMappings: Object.keys(EXTERNAL_MAPPINGS).length,
     evidenceOwners: ownerTally,
