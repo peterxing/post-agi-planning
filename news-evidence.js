@@ -199,6 +199,39 @@ const NEWS_SOURCES = {
     quote: "In contrast, non-invasive BCIs based on electroencephalography (EEG) offer a safe and more accessible alternative with potential applicability to a wide population.",
     textSha256: "52bf33ed7d00e5cd7cd73f4ff0bf8e559de5875f180956f4e0bf138d1ff198ae",
   },
+  /* IN-WINDOW SOURCES reviewed 2026-08-17 from that day's proposal pass. Both are inside the
+     14-day currency window at review time, so they enter the CITED channel rather than CONTEXT.
+     Publisher, headline, date, quote and text hash were read off the live fetched page. IEEE
+     Spectrum exposes no extractable byline on either page, so author is null rather than a name
+     typed from the visible page — an inferred byline would be a fabricated provenance field. */
+  "ieee-common-earth-chip-bottlenecks": {
+    url: "https://spectrum.ieee.org/rare-earth-metals-in-semiconductors",
+    resolvedUrl: "https://spectrum.ieee.org/rare-earth-metals-in-semiconductors",
+    publisher: "IEEE Spectrum",
+    publisherHost: "ieee.org",
+    author: null,
+    headline: "Could Rethinking Rare Earths Shield Chips From Geopolitics?",
+    publishedAt: "2026-08-15T13:00:01.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-17",
+    sourceQuality: "primary-news-organization",
+    quote: "The goal of the project is to eliminate supply chain bottlenecks in the manufacturing of silicon chips.",
+    textSha256: "b0195a2d1d47deb1abf8b1e3e091248ae5ce6902fef17393a5a6a640b3b0fa8b",
+  },
+  "ieee-persona-humanoid-welding": {
+    url: "https://spectrum.ieee.org/persona-ai-humanoid-robot-welding",
+    resolvedUrl: "https://spectrum.ieee.org/persona-ai-humanoid-robot-welding",
+    publisher: "IEEE Spectrum",
+    publisherHost: "ieee.org",
+    author: null,
+    headline: "Inside Persona’s Bold Bet On Humanoid Welders In Shipyards",
+    publishedAt: "2026-08-17T15:33:42.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-17",
+    sourceQuality: "primary-news-organization",
+    quote: "These are the same environments with the same sorts of potential applications that basically every other humanoid robotics company is attempting to make economically viable, and despite an ever more exhaustive number of demonstrations, so far none have succeeded at any sort of useful scale.",
+    textSha256: "0e441d70fd87f0847123c3cf70eecf13577b9dc1a35303f249178ad7a29237ad",
+  },
 };
 
 /*
@@ -299,6 +332,28 @@ const NEWS_GROUPS = [
     evidenceBasis: "peer-reviewed-result",
     reuseFamily: "non-invasive-bci",
     rationale: "The horizon item is about GENUINELY non-invasive interfaces as a separate, lower-risk path. This peer-reviewed Nature Communications study is on scalp-recorded EEG motor-imagery BCI and states directly that non-invasive EEG BCIs are the safer, more accessible alternative. The disambiguation guard holds: EEG is scalp-recorded, so this is not an implanted or endovascular interface. It evidences the path's viability, not its arrival.",
+    reviewedAt: "2026-08-17",
+  },
+  /* IN-WINDOW GROUPS reviewed 2026-08-17. Both articles were published inside the 14-day window,
+     so these are CITED rather than CONTEXT. Each rationale states what the article evidences AND
+     what it does not, because a prediction that names several facets is not evidenced by a source
+     that speaks to one of them. */
+  {
+    source: "ieee-common-earth-chip-bottlenecks",
+    ids: ["2030-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-production-constraint",
+    reuseFamily: "semiconductor-supply-constraints",
+    rationale: "The prediction claims the binding constraint on AI-driven growth shifts from ideas to PHYSICAL production, energy and robotics. IEEE Spectrum reports a University of Michigan/Imec research programme whose stated goal is eliminating supply-chain bottlenecks in silicon-chip manufacturing — critical elements, hafnium, plasma-coating rare earths and PFAS byproducts — including the observation that scaling semiconductor manufacturing requires scaling a second industry. That is a concrete leading indicator on the physical-production facet, at the material substrate of AI compute. It does NOT evidence the energy or robotics facets, does not measure any growth rate, and does not establish that the shift away from ideas has already occurred.",
+    reviewedAt: "2026-08-17",
+  },
+  {
+    source: "ieee-persona-humanoid-welding",
+    ids: ["2026-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-deployment-state",
+    reuseFamily: "humanoid-industrial-deployment",
+    rationale: "The prediction is two-sided: humanoids move onto live factory lines in the thousands BUT remain far short of general physical labor. This reported IEEE Spectrum account of Persona AI's shipyard-welding programme, with named industrial partners, evidences the second half directly and in the industry's own terms — every humanoid company is attempting to make the same environments economically viable and, despite an ever-growing number of demonstrations, none has succeeded at any useful scale, which is why Persona deliberately narrowed to a single robot-friendly skilled task. It also evidences the entry of humanoids into economically valuable industrial work. It does NOT evidence that thousands of humanoids are on live factory lines: the article reports a customer-scale ambition of hundreds of robots per location, and an ambition is not deployed capacity. This mapping stands on its own positive case for 2026-3 and is not a relocation of the separately rejected 2032-1 proposal.",
     reviewedAt: "2026-08-17",
   },
 ];

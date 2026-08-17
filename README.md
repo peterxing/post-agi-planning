@@ -6,14 +6,17 @@ post-superintelligence horizon, and is published at [peterxing.com](https://pete
 
 ## Evidence contract
 
-Every prediction is evidenced only by **authoritative news and research published inside a 14-day
-currency window**. A prediction with no qualifying source in that window is published as an explicit
-**uncited** record carrying its reason and search statement — never left blank, never padded with a
-weaker source, and never backfilled with an older one to improve the ratio.
+Every prediction is accounted for in exactly one of three channels. A **cited** prediction carries
+authoritative news or research published inside a 14-day **currency window**. Where nothing qualifies
+inside that window, a **context** entry may carry the most recent genuinely-supporting article found at
+any age — held to the identical relevance bar, verified by the same live fetch and verbatim quote, and
+rendered with its true publication date and age so dated background can never be read as current
+evidence. Everything else is published as an explicit **uncited** record carrying its reason and search
+statement — never left blank, never padded with a weaker source, never stretched to improve the ratio.
 
-Today that is **7 cited and 96 uncited of 103**, drawn from 6 distinct publishers. Those numbers are
-generated rather than asserted: the page renders them from `signals.json`, so they cannot drift from
-what actually shipped.
+Today that is **6 cited, 5 carrying dated background and 92 uncited of 103**, drawn from 6 distinct
+publishers. Those numbers are generated rather than asserted: the page renders them from
+`signals.json`, so they cannot drift from what actually shipped.
 
 A citation must clear all of the following, at review time **and** again at publish time:
 
