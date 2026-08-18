@@ -287,6 +287,31 @@ $fromDeploy = @(
   # accepts — and how precision is computed — without moving any hash either side can quote.
   # Publishing the gate while withholding its logic makes the gate's pin unfalsifiable.
   'month-estimates.js',
+  # BROWSER DISCOVERY CHANNEL (2026-08-18). Published as a set because the closure gate above is
+  # exactly the property that matters here: verify-browse-evidence.js is the executable proof that
+  # the browser channel adds REACH without lowering the evidence bar, and a proof whose subject
+  # (browse-evidence.js, browse-transport.js) or whose imported thresholds (currency-match.js)
+  # lived outside the published set would be unfalsifiable from the mirror — the same defect this
+  # list already records for month-estimates.js and publish-github.ps1. browse-transport.js is
+  # additionally REQUIRED for closure: refresh-signals.js imports it to re-read any reviewed source
+  # that declares transport 'browser'. The generated proposal file is NOT here and never can be —
+  # it is a review intermediate, declared as a runtime output in the forbidden pattern below.
+  # BROWSER TRANSPORT (2026-08-18). REQUIRED for closure: refresh-signals.js imports it to re-read
+  # any reviewed source that declares transport 'browser', so the published build would otherwise
+  # import a module nobody can fetch. Its only relative dependency is news-evidence.js, which is
+  # already published, so publishing it keeps the graph closed.
+  #
+  # THE DISCOVERY TOOL AND ITS PROOF ARE DELIBERATELY *NOT* HERE, AND THE CLOSURE GATE IS WHY.
+  # browse-evidence.js imports currency-match.js, which READS currency-candidates.json and
+  # currency-review.json — generated review intermediates that cannot be published (the candidates
+  # file alone is ~1.1 MB of unreviewed harvest). Publishing the tool would therefore either break
+  # closure or force a data channel into the mirror whose input nobody could fetch, which is the
+  # exact defect this gate exists to prevent. verify-browse-evidence.js stays local WITH its
+  # subject: a proof published without the thing it proves is unfalsifiable from the mirror, which
+  # is the same argument that put month-estimates.js and publish-github.ps1 ON this list. This
+  # matches the existing treatment of currency-harvest.js, currency-build-ledger.js and
+  # news-backfill.js, and README.md states the arrangement and its reason.
+  'browse-transport.js',
   # publish-github.ps1 publishes ITSELF. Three tracked verifiers (verify-deploy-surface,
   # verify-interlock, verify-performance) read this file as their
   # SUBJECT and assert things about its allow-list and its forbidden pattern. While it was
@@ -335,7 +360,7 @@ foreach ($f in $fromSite)   { $sweepTargets += ,@($f, $Site) }
 # "permitted to publish", so the exclusion must never spell the name out. One list, one meaning.
 # This comment does not spell it either: the first rewrite of these lines quoted the offending
 # literal while explaining it, and re-tripped the same gate from the prose describing the trap.
-$forbiddenPattern = '(?i)(^|/)\.env(\.(?!example)[^/]*)?$|x-activity|x-status-corpus|x-wayback|x-external-account|timeline-raw|signals-debug|x-debug|evidence-approvals|(^|/)\.pipeline\.lock$|cloudflared\.exe|(^|/)url\.txt$|\.log$|node_modules|(^|/)\.vercel(/|$)|publish-credentials\.ps1'
+$forbiddenPattern = '(?i)(^|/)\.env(\.(?!example)[^/]*)?$|x-activity|x-status-corpus|x-wayback|x-external-account|timeline-raw|signals-debug|x-debug|evidence-approvals|browse-evidence-proposals|(^|/)\.pipeline\.lock$|cloudflared\.exe|(^|/)url\.txt$|\.log$|node_modules|(^|/)\.vercel(/|$)|publish-credentials\.ps1'
 
 foreach ($pair in $sweepTargets) {
   $f = $pair[0]; $root = $pair[1]

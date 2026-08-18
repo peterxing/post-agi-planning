@@ -2017,6 +2017,37 @@ async function main(){
   const newsVerified = new Map();
   const newsIntegrityErrors = [];
   const knownPredictionIds = new Set(PREDICTIONS.map(p => p.id));
+  /* BROWSER TRANSPORT — OPENED ONLY IF A REVIEWED ROW DECLARES IT, AND FAIL-CLOSED IF IT CANNOT
+     OPEN. A reviewed row may declare transport:'browser' for a publisher that refuses a plain GET
+     (news-evidence.js NEWS_TRANSPORTS). Two properties matter here and neither is the default:
+
+     1. The ordinary path acquires NO browser dependency. With no browser-declared row this opens
+        nothing, so a build on a host with no browser behaves exactly as it did before.
+     2. If a row DOES declare it and the browser cannot be launched, this refuses. It does not fall
+        back to a plain fetch: that would re-read a source declared to fail that transport and then
+        report the failure as though the article had moved or gone, which is a false statement about
+        the publisher rather than an honest statement about this machine. */
+  const browserDeclaredIds = Object.entries(NEWS_MAPPINGS)
+    .filter(([id]) => newsEligibleIds.has(id))
+    .filter(([, mapping]) => {
+      const article = NEWS_SOURCES[mapping.source];
+      return article && String(article.transport || 'https').toLowerCase() === 'browser';
+    })
+    .map(([id]) => id);
+  let browserSession = null;
+  let browserTransport = null;
+  if (browserDeclaredIds.length) {
+    try {
+      browserSession = await require('./browse-transport.js').openBrowser();
+      browserTransport = require('./browse-transport.js').createTransport(browserSession.context);
+    } catch (error) {
+      throw new Error(`${browserDeclaredIds.length} reviewed news source(s) declare transport "browser" `
+        + `(${browserDeclaredIds.join(', ')}) but the browser could not be opened `
+        + `(${String(error.message || error).split('\n')[0]}); refusing to verify them with a transport `
+        + 'they are declared to fail');
+    }
+  }
+  try {
   for (const [predictionId, mapping] of Object.entries(NEWS_MAPPINGS)) {
     if (!knownPredictionIds.has(predictionId)) {
       newsIntegrityErrors.push(`news mapping references unknown prediction ${predictionId}`);
@@ -2042,12 +2073,15 @@ async function main(){
       throw new Error(`news mapping ${predictionId} names source ${mapping.source}, which is absent `
         + 'from NEWS_SOURCES - refusing to drop a reviewed mapping silently');
     }
-    const check = await verifyNewsSource(mapping.source, article);
+    const check = await verifyNewsSource(mapping.source, article, { browserTransport });
     if (check.problems.length) {
       newsIntegrityErrors.push(...check.problems);
       continue;
     }
-    newsVerified.set(predictionId, { mapping, article });
+    newsVerified.set(predictionId, { mapping, article, transport: check.transport || 'https' });
+  }
+  } finally {
+    if (browserSession) await browserSession.close();
   }
   /* X RETIREMENT 2026-08-13 / A17 - a SOURCE is an article, not a ledger row. Two reviewed rows may
      quote different sentences of the same piece; that is legitimate reuse and it is declared through
@@ -2099,7 +2133,13 @@ async function main(){
       if (!mapping || !external) {
         const news = newsVerified.get(p.id);
         if (news) {
-          const { mapping: newsMapping, article } = news;
+          const { mapping: newsMapping, article, transport: newsTransport } = news;
+          /* PROVENANCE MUST NAME THE TRANSPORT THAT ACTUALLY READ THE PAGE. A browser-verified
+             source recorded as 'live-fetch' would be a false provenance claim in the one field a
+             reader has for judging how the citation was obtained — and it would be indistinguishable
+             from the ordinary path in the artefact, so nobody could audit the new channel's reach. */
+          const verifiedThrough = newsTransport === 'browser' ? 'browser-render+quote-match' : 'live-fetch+quote-match';
+          const readStep = newsTransport === 'browser' ? 'browser-render' : 'live-fetch';
           let newsText = cleanText(article.quote);
           if (newsText.length > 220) newsText = newsText.slice(0, 217) + '\u2026';
           const articleKey = newsSourceKey(article.resolvedUrl);
@@ -2153,8 +2193,8 @@ async function main(){
                 publishedAtSource: article.publishedAtSource,
                 retrievedAt: article.retrievedAt,
                 sourceQuality: article.sourceQuality,
-                verifiedThrough: 'live-fetch+quote-match',
-                sourceChain: ['live-fetch', 'metadata-extract', 'quote-match'],
+                verifiedThrough,
+                sourceChain: [readStep, 'metadata-extract', 'quote-match'],
                 lastVerifiedAt: newsMapping.lastVerifiedAt,
                 textSha256: article.textSha256,
               },
@@ -2194,8 +2234,8 @@ async function main(){
               publishedAtSource: article.publishedAtSource,
               retrievedAt: article.retrievedAt,
               sourceQuality: article.sourceQuality,
-              verifiedThrough: 'live-fetch+quote-match',
-              sourceChain: ['live-fetch', 'metadata-extract', 'quote-match'],
+              verifiedThrough,
+              sourceChain: [readStep, 'metadata-extract', 'quote-match'],
               lastVerifiedAt: newsMapping.lastVerifiedAt,
               textSha256: article.textSha256,
             },
@@ -2502,9 +2542,10 @@ async function main(){
           || !provenance.publishedAt
           || !provenance.retrievedAt
           || !provenance.textSha256
-          || provenance.verifiedThrough !== 'live-fetch+quote-match'
+          || !['live-fetch+quote-match', 'browser-render+quote-match'].includes(provenance.verifiedThrough)
           || !Array.isArray(provenance.sourceChain)
           || !provenance.sourceChain.includes('quote-match')
+          || !(provenance.sourceChain.includes('live-fetch') || provenance.sourceChain.includes('browser-render'))
           || !embed.headline || !embed.quote || !embed.publisher
           || !['direct', 'scenario', 'leading-indicator'].includes(embed.evidenceType)
           || !embed.mappingRationale) {

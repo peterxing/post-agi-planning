@@ -184,6 +184,33 @@ afterwards. A prediction whose binding no longer holds becomes **uncited** until
 is reviewed for its new wording — it must never keep a citation that was approved against different
 text.
 
+## Browser discovery for uncited predictions
+
+An uncited record is only honest if the search behind it was real. Feeds and a plain HTTPS GET do
+not reach publishers who have no feed for the section or who refuse non-browser clients, so before
+reporting an absence, look the way a reader looks:
+
+```powershell
+npm run browse:report                       # which predictions carry no reviewed mapping
+npm run browse -- --limit=12 --searches=6   # browse publishers' own search pages; propose only
+```
+
+Rules that make this reach rather than dilution:
+
+1. **Proposals are not evidence.** `browse-evidence.js` writes `browse-evidence-proposals.json` and
+   nothing else. Promotion into `news-evidence.js` is a reviewed human act, and every gate is
+   re-applied at publish time.
+2. **Never relax a gate to close the gap.** GATE 1, GATE 2, the threshold, the source-quality bar,
+   the verbatim quote and the text hash are imported. If the honest reach is small, the small number
+   is the true one and the residue stays uncited.
+3. **Respect the 365-day discovery ceiling.** Site search reaches whole archives; the gates were
+   built for recent pools. A decade-old article is never "the most recent authoritative source found".
+4. **Prefer the cheap transport.** Propose `transport: "browser"` only when a plain fetch genuinely
+   cannot read the page, so the build acquires no browser dependency it does not need.
+5. **Review each proposal on the merits** — does the article actually evidence *this* prediction? —
+   then write the ledger row with its rationale, and let `npm run verify:browse`, `npm run verify:news`
+   and `npm run refresh` re-prove it.
+
 ## Daily revision rules
 
 1. **Ground every change.** Base edits on the latest news and research you can verify online: primary

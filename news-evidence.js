@@ -389,6 +389,15 @@ const NEWS_QUALITY_CLASSES = new Set([
   'original-researcher',
 ]);
 
+/* The transports a reviewed row may declare for its live re-read. 'https' is the plain GET every
+   existing row uses and remains the default, so an undeclared row behaves exactly as before.
+   'browser' routes the read through browse-transport.js for publishers that refuse a non-browser
+   client. This is an ENUMERATION rather than a free string because the value selects executable
+   behaviour at publish time: a typo that fell through to a default would verify a browser-only
+   source with the transport it is declared to fail, and report the resulting failure as if the
+   article had gone. */
+const NEWS_TRANSPORTS = new Set(['https', 'browser']);
+
 /*
  * Hosts that can never be primary news provenance: aggregators and syndicated
  * republishers, press-release mills, SEO/AI content farms and link shorteners.
@@ -1015,9 +1024,34 @@ async function verifyNewsSource(key, source, options = {}) {
     problems.push(`${label}: supporting quote is too short to be probative`);
   }
 
-  const fetched = await fetchArticle(source.url);
+  /* TRANSPORT SELECTION — DECLARED PER SOURCE, NEVER INFERRED FROM A FAILURE.
+     Some publishers refuse a plain GET: they answer an interstitial challenge, or they ship a
+     shell and render the article in JavaScript. Those articles were unusable as evidence, and the
+     absence looked exactly like "no qualifying source exists". A reviewed row may now declare
+     transport: 'browser' and be read through browse-transport.js instead.
+
+     The declaration is a REVIEW ACT, not a retry. This deliberately does NOT fetch, notice a
+     failure and then reach for a browser: an automatic escalation would make every flaky network
+     error, paywall and geo-block silently change how a citation is obtained, and nobody would be
+     able to say from the ledger which transport verified what. For the same reason a row that
+     declares 'browser' when no browser transport was supplied FAILS rather than falling back to
+     the plain fetch it is known to fail — a fallback would turn a stated capability requirement
+     into an unexplained verification failure. */
+  const declaredTransport = String((source && source.transport) || 'https').toLowerCase();
+  if (!NEWS_TRANSPORTS.has(declaredTransport)) {
+    problems.push(`${label}: unknown transport "${declaredTransport}"; declare one of ${[...NEWS_TRANSPORTS].join(', ')}`);
+    return { problems, fetched: null };
+  }
+  if (declaredTransport === 'browser' && typeof options.browserTransport !== 'function') {
+    problems.push(`${label}: declares transport "browser" but no browser transport was supplied; `
+      + 'refusing to substitute a plain fetch this source is declared to fail');
+    return { problems, fetched: null };
+  }
+  const transport = declaredTransport === 'browser' ? options.browserTransport : fetchArticle;
+
+  const fetched = await transport(source.url);
   if (!fetched.ok) {
-    problems.push(`${label}: live fetch failed (${fetched.reason})`);
+    problems.push(`${label}: live ${declaredTransport} read failed (${fetched.reason})`);
     return { problems, fetched };
   }
   const extracted = extractArticle(fetched.body, fetched.finalUrl);
@@ -1043,7 +1077,7 @@ async function verifyNewsSource(key, source, options = {}) {
   if (drifted && options.requireStableText) {
     problems.push(`${label}: article main text changed since review`);
   }
-  return { problems, fetched, extracted, textDrift: drifted };
+  return { problems, fetched, extracted, textDrift: drifted, transport: declaredTransport };
 }
 
 module.exports = {
@@ -1051,6 +1085,7 @@ module.exports = {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
   NEWS_QUALITY_CLASSES,
+  NEWS_TRANSPORTS,
   REJECTED_HOSTS,
   canonicalUrl,
   classifyHost,

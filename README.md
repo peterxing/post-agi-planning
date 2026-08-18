@@ -30,6 +30,47 @@ A citation must clear all of the following, at review time **and** again at publ
 `refresh-signals.js` exits nonzero and leaves the last complete `signals.json` untouched if any of
 this fails. Prediction search fallbacks are forbidden: `signals.search` must remain empty.
 
+## Browser discovery (2026-08-18)
+
+An uncited record used to say *"No authoritative source published in the last 14 days was found."*
+That reads as a statement about the world, and it was partly a statement about the **transport**:
+discovery reached publishers only through a fixed feed harvest, and every candidate was read with a
+plain HTTPS GET. A publisher with no feed for the relevant section, or one that refuses non-browser
+clients, was never seen — not judged and rejected, simply unreachable.
+
+> if you can't match any news sources or x posts, try using computer use to scrape the information
+> through browsing. include this in the daily automations
+
+`browse-evidence.js` closes that gap by looking the way a reader looks — a real browser, on the
+publishers' own on-site search pages — and `browse-transport.js` renders a candidate so a
+JavaScript-only or challenge-walled article can be read at all. What it deliberately does **not**
+do is make anything new admissible:
+
+| Unchanged (imported whole) | Changed |
+| --- | --- |
+| GATE 1 curated subject + GATE 2 distinctive term, at `DEFAULT_MIN_SCORE` | what can be **reached** |
+| source-quality gate, extraction chain, verbatim quote, text hash | how a page is **read** |
+| the 14-day currency window, enforced at the producer | nothing |
+| promotion into `news-evidence.js` stays a **human act** | nothing |
+
+- **It cannot publish.** It writes proposals; nothing in the build reads that file. `verify-browse-evidence.js`
+  asserts this rather than describing it.
+- **It cannot admit the archive.** A publisher's site search reaches fifteen years of reporting,
+  where the imported gates were built to rank a pool of *recent* feed items. Measured on the first
+  working run: a 2011 primer on corporate valuation cleared both gates for a 2026 trillion-dollar
+  valuation prediction. A **365-day discovery ceiling** now bounds the channel. It is a tightening,
+  never a widening, and it is not the currency window — the context channel legitimately carries
+  older background, but its published sentence is *"the most recent authoritative source found"*,
+  and an article from the previous decade cannot make that sentence true.
+- **Transport is declared, per source, and fails closed.** A reviewed row may declare
+  `transport: "browser"`; anything else takes the ordinary fetch. The build opens a browser **only**
+  if such a row exists, and refuses to verify one with a plain fetch it is declared to fail.
+  Provenance then records `browser-render+quote-match`, so a browser-read citation is never
+  indistinguishable from a fetched one.
+- **The search surface is first-party.** Publishers' own search pages, every host already on the
+  egress allow-list. Never a web search engine: its results page is exactly the aggregator hop the
+  source-quality gate exists to refuse.
+
 ## X retirement (2026-08-13)
 
 This site previously required exactly one reviewed **direct X (Twitter) evidence card** per
@@ -73,7 +114,10 @@ index.html ──loads──> styles.css + app.js
                               |
                   refresh-signals.js ──> news-evidence.js      (reviewed news ledger)
                                      ├──> currency-evidence.js (currency ledger)
+                                     ├──> browse-transport.js  (browser re-read, if declared)
                                      └──> evidence-families.js (declared reuse families)
+
+browse-evidence.js ──browses──> publishers' own search pages ──> proposals ──human review──> news-evidence.js
 ```
 
 - **`predictions.json`** contains the probabilistic 2026–2040 forecast and the undated horizon.
@@ -99,6 +143,19 @@ index.html ──loads──> styles.css + app.js
 - **`evidence-families.js`** declares the only families within which reuse is compatible. A **source**
   is the resolved article URL, never the ledger row name: two reviewed rows quoting different
   sentences of one article are one source used twice.
+- **`browse-evidence.js`** is the browser discovery channel described above. It runs against the
+  predictions carrying **no** reviewed mapping, emits proposals only, and refuses (exit 6) rather
+  than reporting an empty success. Like `currency-harvest.js` and `currency-build-ledger.js` it is
+  **operator-local and deliberately not in this repository**: it imports `currency-match.js`, which
+  reads `currency-candidates.json` — a generated review intermediate — so publishing it would put a
+  file here whose input nobody could fetch. `verify-browse-evidence.js`, the executable proof that
+  the channel cannot lower the bar, stays local **with its subject**, because a proof published
+  without the thing it proves is unfalsifiable from the mirror.
+- **`browse-transport.js`** *is* published, because `refresh-signals.js` imports it: it is the
+  browser read itself, shaped as a drop-in for the plain fetch so discovery and publish-time
+  re-verification cannot diverge. Its published behaviour is gated from the published set —
+  `verify-news-evidence.js` refuses an unknown `transport`, and `verify-deploy-surface.js` holds
+  every host it names to the egress allow-list.
 - **`evidence-floors.json`** is a committed, public-safe monotonic ratchet. Environment variables may
   tighten a gate but can never loosen one, and lowering a registered value is a reviewed manual edit.
 - **`pipeline-lock.js`** is a crash-safe advisory lock. Guarded entry points claim the tree before
@@ -134,8 +191,16 @@ npm run verify:matcher
 npm run verify:coverage
 npm run verify:news
 npm run verify:currency
+npm run verify:browse
 npm run verify:surface
 npm run serve
+```
+
+Browser discovery is run on demand (and daily), never as part of the build:
+
+```powershell
+npm run browse:report                                  # which predictions carry no mapping
+npm run browse -- --limit=12 --searches=6              # propose, for review only
 ```
 
 In a second terminal, against the local server:

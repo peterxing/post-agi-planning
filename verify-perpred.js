@@ -175,7 +175,7 @@ const SHOT = process.argv[3] || null;
             && !!provenance.retrievedAt
             && !!provenance.sourceQuality
             && !!provenance.textSha256
-            && provenance.verifiedThrough === 'live-fetch+quote-match'
+            && ['live-fetch+quote-match', 'browser-render+quote-match'].includes(provenance.verifiedThrough)
             && Array.isArray(provenance.sourceChain)
             && provenance.sourceChain.includes('quote-match')
             && !!e.headline && !!e.quote && !!e.publisher

@@ -39,6 +39,7 @@ const {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
   NEWS_QUALITY_CLASSES,
+  NEWS_TRANSPORTS,
   classifyHost,
   extractArticle,
   fetchArticle,
@@ -127,6 +128,16 @@ function auditLedger({ sources, mappings, ceiling, predictionIds, peterApprovals
     if (!uses.length) problems.push(`${key}: unused news source`);
     if (!NEWS_QUALITY_CLASSES.has(source.sourceQuality)) {
       problems.push(`${key}: invalid source-quality class`);
+    }
+    /* TRANSPORT IS A LEDGER FIELD, SO IT IS VALIDATED WHERE LEDGER FIELDS ARE VALIDATED. A row may
+       declare transport 'browser' for a publisher that refuses a plain GET (news-evidence.js
+       NEWS_TRANSPORTS). An undeclared row means 'https' and is unchanged. A row declaring anything
+       else is refused HERE, in a gate that already runs every day, rather than only in the
+       browser-channel verifier — a typo would otherwise select executable behaviour at publish time
+       and be discovered as a mysterious verification failure against the live publisher. */
+    const declaredTransport = String(source.transport || 'https').toLowerCase();
+    if (!NEWS_TRANSPORTS.has(declaredTransport)) {
+      problems.push(`${key}: unknown transport "${declaredTransport}"; declare one of ${[...NEWS_TRANSPORTS].join(', ')}`);
     }
     const gate = classifyHost(source.resolvedUrl || source.url || '');
     if (!gate.ok) problems.push(`${key}: ${gate.reason}`);

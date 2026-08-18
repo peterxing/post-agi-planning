@@ -346,9 +346,10 @@ for (const predictionId of expectedIds) {
         || provenance.sourceQuality !== article?.sourceQuality
         || provenance.retrievedAt !== article?.retrievedAt
         || provenance.textSha256 !== article?.textSha256
-        || provenance.verifiedThrough !== 'live-fetch+quote-match'
+        || !['live-fetch+quote-match', 'browser-render+quote-match'].includes(provenance.verifiedThrough)
         || !Array.isArray(provenance.sourceChain)
         || !provenance.sourceChain.includes('quote-match')
+        || !(provenance.sourceChain.includes('live-fetch') || provenance.sourceChain.includes('browser-render'))
         || signal.headline !== article?.headline
         || signal.quote !== article?.quote
         || !['direct', 'scenario', 'leading-indicator'].includes(signal.evidenceType)) {
