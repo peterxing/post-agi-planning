@@ -216,6 +216,30 @@ function admissibleSubject(subject) {
 }
 
 /*
+ * A SUBJECT MUST MATCH AT A WORD BOUNDARY, NOT MID-WORD.
+ *
+ * MEASURED 2026-08-24 while ranking the harvest against the unmatched predictions. Plain substring
+ * matching produced these, each scoring a TITLE match:
+ *   "valuation"    matched "Green synthesis of silver nanoparticles ... and eVALUATION ..."
+ *                  -> a nanoparticle paper scored against trillion-dollar AI valuations
+ *   "election"     matched "UV photodamage ... the evolutionary sELECTION of thymine ..."
+ *                  -> a photochemistry paper scored against AI becoming a national election issue
+ *   "polarization" matched "... reprograms macrophage POLARIZATION ..."   (a real word, wrong sense)
+ * The first two are pure substring accidents and are fixed here. The third is polysemy, which a
+ * boundary rule cannot see and which the human review step exists to catch.
+ *
+ * THE END OF THE PHRASE IS DELIBERATELY LEFT OPEN. Several curated subjects are intentional
+ * prefixes — "orbital data cent" is written that way to match both "center" and "centre", and
+ * "dexter" to match "dexterity". Requiring a trailing boundary would silently break those, turning
+ * a fix for one class of false positive into a new class of false negative. Only the START of the
+ * match is constrained, which is exactly where the observed defect lives.
+ */
+function subjectPattern(needle) {
+  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^a-z0-9])${escaped}`, 'i');
+}
+
+/*
  * Score a candidate against one prediction's curated subjects. Returns null when the
  * candidate matches no subject at all — inadmissible at any score.
  */
@@ -228,11 +252,11 @@ function subjectScore(predictionId, title, summary) {
   let value = 0;
   for (const subject of subjects) {
     if (!admissibleSubject(subject)) continue;
-    const needle = subject.toLowerCase();
-    const inTitle = lowerTitle.includes(needle);
-    const inBody = lowerBody.includes(needle);
+    const pattern = subjectPattern(subject.toLowerCase());
+    const inTitle = pattern.test(lowerTitle);
+    const inBody = pattern.test(lowerBody);
     if (!inBody) continue;
-    const words = needle.split(/\s+/).length;
+    const words = subject.toLowerCase().split(/\s+/).length;
     // Multi-word subjects are much harder to collide with, and a title match means the
     // article is about the subject rather than mentioning it in passing.
     const weight = (words >= 2 ? 4 + words : 3) * (inTitle ? 2 : 1);

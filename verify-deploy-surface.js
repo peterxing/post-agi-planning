@@ -99,6 +99,14 @@ const ALLOWED_EGRESS_HOSTS = new Set([
   'www.wired.com', 'feeds.npr.org', 'www.theguardian.com', 'feeds.bbci.co.uk', 'rss.nytimes.com',
   // first-party government, agency and institutional sources
   'www.sec.gov', 'www.darpa.mil', 'www.energy.gov', 'www.planetary.org',
+  /* REVIEWED EDIT 2026-08-24 — declared for evidence promoted while closing the uncited channel at
+     the site owner's instruction ("match it to the closest news article you can find online that
+     points towards that trajectory"). CNBC is a primary news organisation with named editorial
+     responsibility, which is the same bar every other publisher on this list meets; it is not an
+     aggregator, syndicator, press-release mill or preprint server. Declared because two reviewed
+     citations resolve there — AI-lab federal lobbying disclosures and the US–China intergovernmental
+     AI talks — and an undeclared host fails this gate closed, which is the gate working. */
+  'www.cnbc.com',
   /* NEGATIVE fixtures. These exist so the news verifier can PROVE it rejects an aggregator, a
      shortener, a press-release mill and a fabricated URL. They are named in order to be refused. */
   'bit.ly', 'example.org', 'example-not-reviewed.test', 'news.google.com', 'www.prnewswire.com',
