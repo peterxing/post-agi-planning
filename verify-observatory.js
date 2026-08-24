@@ -88,11 +88,32 @@ const expectedManaged = predictions.years.reduce(
   (sum, year) => sum + year.events.filter(event => /^managed branch:/i.test(event.t)).length,
   0
 );
-const expectedRestored = predictions.years.reduce(
-  (sum, year) => sum + year.events.filter(event =>
-    event.d === 'governance' && Number.isFinite(event.prob) && event.prob >= 60 && event.prob < 80).length,
-  0
-);
+/* THE DEEP-LINK FIXTURE MUST FOLLOW THE DATA, NOT PIN A NUMBER THE FORECAST IS ALLOWED TO CHANGE.
+   This check loads ?fd=governance&fp=high#<event> and asserts the filters survive the load. It used
+   to hard-code #event-2031-4, which sat at prob 76 and so fell inside the 'high' band (60-79) that
+   app.js probabilityBand() defines. On 2026-08-24 that prediction was legitimately recalibrated to 82,
+   moving it into 'very-high'. app.js then did exactly the right thing: revealHashTarget() sees the
+   target hidden by the restored filters and calls resetForecastFilters(), because a deep link must
+   never land a reader on an invisible anchor. The check failed reporting domain 'all' — a CORRECT
+   app behaviour indistinguishable, to the old fixture, from a broken filter restore.
+   So the target is now DERIVED: pick a governance event that is actually inside the band being
+   filtered for. A recalibration moves the chosen event instead of breaking the check, and the check
+   keeps testing the thing it exists to test. Sorted by id so the pick is stable across runs. */
+const restoredBandEvents = predictions.years.flatMap(year =>
+  year.events
+    .map((event, index) => ({ id:`event-${year.year}-${index}`, event }))
+    .filter(row => row.event.d === 'governance'
+      && Number.isFinite(row.event.prob)
+      && row.event.prob >= 60
+      && row.event.prob < 80));
+const expectedRestored = restoredBandEvents.length;
+if (!expectedRestored) {
+  console.error('verify-observatory: no governance prediction sits in the 60-79 band, so the '
+    + 'filter-restore deep-link fixture has nothing to target. Choose a different band rather than '
+    + 'deleting the check.');
+  process.exit(1);
+}
+const restoreTargetId = restoredBandEvents.map(row => row.id).sort()[0];
 
 const profiles = [
   { name:'desktop-dark', theme:'dark', width:1440, height:1000, collapsedYears:10 },
@@ -517,7 +538,67 @@ function requestStatus(pathname) {
       && simulatedFast.hero === 70
       && /strongest simulated pressure/i.test(simulatedFast.interpretation),
       JSON.stringify(simulatedFast));
+    /* THE MAP MUST MOVE, NOT JUST THE NUMBERS UNDER IT.
+       A reader reported that "changing the assumptions aren't changing the visual, only changes the
+       % on the text callout below it", and they were right: the branches encoded probability only
+       as stroke width and opacity, so driving a slider to its maximum moved a branch by 0.62px and
+       left one branch bit-identical. Every simulator assertion above passed throughout, because all
+       of them read TEXT - the cards, the hero, the interpretation. A chart that had silently stopped
+       drawing its data would still have passed them all.
+       THE MEASUREMENT, recorded here because app.js points at it and must not carry it to the
+       browser. Probability was encoded ONLY as stroke width (2 + value/16) and opacity
+       (.34 + value/150). Driving the capability slider from baseline to maximum moved the branches:
+         managed     3.13px -> 2.94px   (0.19px thinner, opacity 0.46 -> 0.44)
+         default     4.81px -> 5.38px   (0.57px thicker, opacity 0.64 -> 0.70)
+         ungoverned  4.63px -> 5.25px   (0.62px thicker, opacity 0.62 -> 0.69)
+         handoff     3.75px -> 3.75px   (NO CHANGE AT ALL - capability does not feed handoff)
+       Stroke width compresses the whole 5-95% range into a few pixels, so a realistic 5-15 point
+       move is a fraction of a pixel: the map was live in principle and static to a reader. Drawing
+       the value as a proportional fill along the path makes a 9-point move 9% of the path length.
+       So this measures the DRAWN GEOMETRY, before and after, and requires a change large enough for
+       a human to see. The threshold is in SVG user units on a 720-unit-wide viewBox: 8 units is
+       roughly a percentage point of a branch's length and comfortably above the sub-pixel change
+       that shipped. */
+    const branchGeometry = () => page.evaluate(() => {
+      const read = {};
+      for (const key of ['managed', 'handoff', 'default', 'ungoverned']) {
+        const fill = document.getElementById('sim-path-' + key);
+        const group = document.getElementById('sim-branch-' + key);
+        if (!fill || !group || typeof fill.getTotalLength !== 'function') return null;
+        const total = fill.getTotalLength();
+        const drawn = Number.parseFloat(String(fill.style.strokeDasharray || '').split(/[ ,]+/)[0]);
+        if (!Number.isFinite(drawn) || !(total > 0)) return null;
+        read[key] = {
+          drawn,
+          share:drawn / total,
+          stat:Number.parseInt(document.getElementById('sim-card-' + key).textContent, 10),
+          leading:group.classList.contains('is-leading'),
+        };
+      }
+      return read;
+    });
+    const fastGeometry = await branchGeometry();
     await page.locator('[data-sim-preset="baseline"]').click();
+    await page.waitForTimeout(profile.reduced ? 20 : 420);
+    const baselineGeometry = await branchGeometry();
+    const geometryMoved = fastGeometry && baselineGeometry
+      ? Object.keys(baselineGeometry).map(key => Math.abs(fastGeometry[key].drawn - baselineGeometry[key].drawn))
+      : [];
+    const largestMove = geometryMoved.length ? Math.max(...geometryMoved) : 0;
+    /* The drawn length must also BE the number, not merely correlate with it. A fill that moves but
+       no longer tracks its own statistic is a chart that lies more convincingly than one that is
+       frozen, so every branch is checked against the percentage it claims to draw. */
+    const tracksItsOwnNumber = baselineGeometry
+      && Object.values(baselineGeometry).every(branch => Math.abs(branch.share * 100 - branch.stat) < 1.5);
+    check(results, 'assumption changes move the branch map, not only the text',
+      Boolean(fastGeometry) && Boolean(baselineGeometry)
+      && largestMove >= 8
+      && tracksItsOwnNumber
+      && Object.values(baselineGeometry).filter(branch => branch.leading).length === 1,
+      fastGeometry && baselineGeometry
+        ? `largest drawn-length move ${largestMove.toFixed(1)} SVG units; tracksStat=${tracksItsOwnNumber}`
+        : 'PROBE DID NOT RUN: branch fill geometry is missing — the map no longer draws probability '
+          + 'as a proportional fill, so a reader cannot see an assumption change at all');
 
     const firstChapter = page.locator('#chapters .chapter').first();
     const firstChapterToggle = firstChapter.locator('.ch-head');
@@ -690,7 +771,7 @@ function requestStatus(pathname) {
     await route.continue();
   });
   const restoreSeparator = URL.includes('?') ? '&' : '?';
-  await restorePage.goto(`${URL}${restoreSeparator}scoutTheme=light&fd=governance&fp=high#event-2031-4`, {
+  await restorePage.goto(`${URL}${restoreSeparator}scoutTheme=light&fd=governance&fp=high#${restoreTargetId}`, {
     waitUntil:'networkidle',
     timeout:45000,
   });
@@ -700,26 +781,27 @@ function requestStatus(pathname) {
     { timeout:5000 }
   );
   await restorePage.waitForTimeout(700);
-  const restored = await restorePage.evaluate(() => ({
+  const restored = await restorePage.evaluate(targetId => ({
     domain:document.querySelector('[data-domain][aria-pressed="true"]')?.dataset.domain,
     probability:document.getElementById('probabilityFilter')?.value,
     visible:document.querySelectorAll('#timelineBody .event:not([hidden])').length,
-    targetVisible:!document.getElementById('event-2031-4')?.hidden,
-    yearExpanded:!document.getElementById('year-2031')?.classList.contains('is-collapsed'),
+    targetVisible:!document.getElementById(targetId)?.hidden,
+    yearExpanded:!document.getElementById('year-' + targetId.split('-')[1])?.classList.contains('is-collapsed'),
     activeId:document.activeElement?.id,
     scrollY:window.scrollY,
-  }));
+  }), restoreTargetId);
   if (restored.domain !== 'governance'
       || restored.probability !== 'high'
       || restored.visible !== expectedRestored
       || !restored.targetVisible
       || !restored.yearExpanded
-      || restored.activeId !== 'event-2031-4'
+      || restored.activeId !== restoreTargetId
       || restored.scrollY < 500) {
     failures++;
-    console.log(`  FAIL filter and deep-link state restores on load · ${JSON.stringify(restored)}`);
+    console.log(`  FAIL filter and deep-link state restores on load · target=${restoreTargetId} `
+      + `expectedVisible=${expectedRestored} · ${JSON.stringify(restored)}`);
   } else {
-    console.log('[restore-state] 1/1 checks passed');
+    console.log(`[restore-state] 1/1 checks passed (target ${restoreTargetId}, ${expectedRestored} in band)`);
   }
   await restoreContext.close();
 

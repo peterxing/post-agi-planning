@@ -632,16 +632,33 @@ button { color: inherit; }
   stroke-width: 2;
   stroke-linecap: round;
 }
+/* THE BRANCH IS DRAWN TWICE: a faint TRACK showing the route exists, and a FILL whose drawn length
+   is the probability. Both read --branch-width/--branch-opacity from their shared group, so a
+   route can never be filled to a different weight than the track it runs along. */
 .sim-branch {
+  fill: none;
+  stroke: var(--cp-border-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--branch-width, 3);
+  opacity: .3;
+}
+.sim-branch-fill {
   fill: none;
   stroke: var(--cp-accent);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: var(--branch-width);
-  opacity: var(--branch-opacity);
+  stroke-width: var(--branch-width, 3);
+  opacity: var(--branch-opacity, .6);
 }
 .sim-branch.default { stroke-dasharray: 1 0; }
 .sim-branch.ungoverned { stroke-dasharray: 7 6; }
+/* The leading outcome is marked categorically, because a lead changing hands is a discrete event
+   that a proportional width cannot express. */
+.sim-branch-group.is-leading .sim-branch-fill {
+  opacity: 1;
+  filter: drop-shadow(0 0 6px var(--cp-highlight));
+}
 .sim-node-ring {
   fill: var(--cp-surface);
   stroke: var(--cp-accent);
@@ -1008,6 +1025,12 @@ button { color: inherit; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .sim-branch { transition: stroke-width .28s ease, opacity .28s ease; }
+  /* The fill length carries the quantity, so it is the one thing that must animate: watching a
+     branch grow or retreat is what makes an assumption change legible as a change. */
+  .sim-branch-fill {
+    transition: stroke-width .28s ease, opacity .28s ease, stroke-dasharray .38s ease;
+  }
+  .sim-node-ring { transition: r .3s ease; }
   .simulator-map.simulator-ready .sim-branch,
   .simulator-map.simulator-ready .sim-trunk {
     stroke-dasharray: 900;

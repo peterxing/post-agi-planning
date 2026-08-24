@@ -137,9 +137,45 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * those are dated measurements of a moving quantity, recorded here as a record of this decision;
  * every run recomputes and prints them, so do not read them as current state.
  */
+/*
+ * RE-BASELINE 2026-08-24 — app.js 143,000 -> 145,000. Explicit justification, for a NAMED FEATURE
+ * rather than for drift, following the 2026-08-17 precedent immediately above.
+ *
+ * WHAT GREW AND WHY: a reader reported that "changing the assumptions aren't changing the visual,
+ * only changes the % on the text callout below it". They were right, and it was a real defect, not a
+ * taste complaint: the branch map encoded probability ONLY as stroke width and opacity, so driving a
+ * slider from baseline to maximum moved a branch by at most 0.62px and left the handoff branch
+ * bit-identical. The chart was live in principle and static to a human. Probability is now drawn as a
+ * proportional fill ALONG each branch, so a 9-point move is 9% of the path length, with endpoint
+ * nodes that scale and a categorical highlight on the leading branch. That is shared geometry, a
+ * fill path per branch, node scaling and the leader mark — function bodies and SVG structure.
+ *
+ * TRIMMED FIRST, per the precedent's own rule that what remains must be the feature. The change
+ * landed at 144,714 b. The long-form measured rationale was moved to verify-observatory.js, which
+ * holds the probe that guards this behaviour and does NOT ship to the browser; three shipped comment
+ * blocks were condensed to their operative sentence; and the retired medium's logo constant was
+ * DELETED — it had been dead code since the X retirement, referenced nowhere in the tree, and
+ * shipping it kept retired vocabulary in the published payload. Those recovered 1,768 b and brought
+ * the file to 142,946 b, which is UNDER the old ceiling.
+ *
+ * SO WHY MOVE THE CEILING AT ALL: because 142,946 clears 143,000 by 54 b — 0.04%, two orders of
+ * magnitude below the ~2% design margin this file declares, and precisely the "clears today's number
+ * by a hair and fails again tomorrow" state the 2026-08-17 block set the ceiling to escape. Holding
+ * 143,000 would not bound growth; it would guarantee that the next one-line edit fails the gate and
+ * invites exactly the reflexive number-raising this file exists to prevent. 145,000 restores a real
+ * margin. It is deliberately +2,000 and not more: the feature is already paid for by the trim.
+ *
+ * WHAT STILL BOUNDS GROWTH: the 'static shell' ceiling is UNCHANGED at 375,000 and remains the
+ * binding constraint on the sum — index 150,000 + app 145,000 + styles 95,000 = 390,000 exceeds it,
+ * so the three per-file ceilings still cannot all be spent. The OUTCOME budgets this proxy stands in
+ * for were all measured healthy on the run that triggered this: first load 134,356/300,000, evidence
+ * UI 752/3,000 ms, DOM interactive 60/1,000 ms. Per this file's own rule those are dated measurements
+ * of a moving quantity, recorded as a record of this decision; every run recomputes and prints them,
+ * so do not read them as current state.
+ */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 143000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 145000 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 95000 },
   { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 375000 },
 ];

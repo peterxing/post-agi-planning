@@ -151,10 +151,30 @@ function formatSimulatorAssumption(value){
   if (value === 0) return 'Baseline';
   return (value > 0 ? '+' : '−') + Math.abs(value);
 }
+/* Probability is drawn ALONG each branch as a proportional fill, because encoding it only as stroke
+   width compressed the whole 5-95% range into a few pixels and a realistic assumption change moved a
+   branch by a fraction of a pixel — live in principle, static to a reader. Width, opacity, endpoint
+   size and the leading-branch highlight reinforce the fill; the fill carries the quantity. Geometry
+   is declared once and shared by track and fill so the two can never trace different routes. The
+   measured before/after that prompted this is in verify-observatory.js, which does not ship. */
+const simulatorBranchGeometry = [
+  { key:'managed', variant:'managed', d:'M274 168 C322 128 352 78 412 76' },
+  { key:'handoff', variant:'managed', d:'M428 75 C500 72 558 66 642 65' },
+  { key:'default', variant:'default', d:'M274 170 C330 170 362 170 412 170 C500 170 558 170 650 170' },
+  { key:'ungoverned', variant:'ungoverned', d:'M274 172 C324 214 356 266 412 270 C500 276 560 280 650 282' },
+];
+/* Endpoint nodes grow with the outcome they terminate, so the landmarks move too. */
+const simulatorNodeScale = {
+  agi:{ id:'sim-node-agi', base:8, range:6 },
+  default:{ id:'sim-node-default', base:7, range:6 },
+  ungoverned:{ id:'sim-node-ungoverned', base:7, range:6 },
+  handoff:{ id:'sim-node-handoff', base:6, range:6 },
+};
 function simulatorBranchStyle(value){
+  const share = clampNumber(value, 0, 100) / 100;
   return {
-    width:(2 + value / 16).toFixed(2),
-    opacity:(.34 + value / 150).toFixed(2),
+    width:(1.5 + share * 8).toFixed(2),
+    opacity:(.22 + share * .74).toFixed(2),
   };
 }
 function animateSimulatorValue(element, next, animate){
@@ -177,12 +197,28 @@ function animateSimulatorValue(element, next, animate){
   }
   requestAnimationFrame(frame);
 }
-function setSimulatorBranch(id, value){
-  const path = document.getElementById(id);
-  if (!path) return;
+function setSimulatorBranch(key, value){
+  const group = document.getElementById('sim-branch-' + key);
+  const fill = document.getElementById('sim-path-' + key);
+  if (!group || !fill) return;
   const style = simulatorBranchStyle(value);
-  path.style.setProperty('--branch-width', style.width);
-  path.style.setProperty('--branch-opacity', style.opacity);
+  group.style.setProperty('--branch-width', style.width);
+  group.style.setProperty('--branch-opacity', style.opacity);
+  /* Filled length is the quantity. getTotalLength() is geometry not layout, so it is correct before
+     first paint and inside a hidden route, where a bounding-box read would be 0 and draw it empty. */
+  const total = typeof fill.getTotalLength === 'function' ? fill.getTotalLength() : 0;
+  if (total > 0) {
+    const filled = total * clampNumber(value, 0, 100) / 100;
+    fill.style.strokeDasharray = `${filled.toFixed(2)} ${(total - filled + 1).toFixed(2)}`;
+  }
+  group.setAttribute('data-probability', String(value));
+}
+function setSimulatorNode(key, value){
+  const scale = simulatorNodeScale[key];
+  if (!scale) return;
+  const node = document.getElementById(scale.id);
+  if (!node) return;
+  node.setAttribute('r', (scale.base + clampNumber(value, 0, 100) / 100 * scale.range).toFixed(2));
 }
 function updateProbabilitySimulator(animate = true){
   if (!probabilitySimulatorState.anchors) return;
@@ -201,15 +237,24 @@ function updateProbabilitySimulator(animate = true){
     const row = document.querySelector(`[data-simulator-outcome="${key}"]`);
     if (row) row.setAttribute('aria-label', `${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${value} percent.`);
   });
-  setSimulatorBranch('sim-path-managed', values.managed);
-  setSimulatorBranch('sim-path-handoff', values.handoff);
-  setSimulatorBranch('sim-path-default', values.default);
-  setSimulatorBranch('sim-path-ungoverned', values.ungoverned);
+  setSimulatorBranch('managed', values.managed);
+  setSimulatorBranch('handoff', values.handoff);
+  setSimulatorBranch('default', values.default);
+  setSimulatorBranch('ungoverned', values.ungoverned);
+  Object.keys(simulatorNodeScale).forEach(key => setSimulatorNode(key, values[key]));
   const branches = [
     ['Managed pause', values.managed],
     ['Default-path superintelligence', values.default],
     ['Ungoverned takeoff', values.ungoverned],
   ].sort((a, b) => b[1] - a[1]);
+  /* Which branch leads is categorical, so it gets a categorical mark: proportional encodings alone
+     cannot show a lead CHANGING HANDS, which is the most decisive thing these assumptions can do. */
+  const leaders = { 'Managed pause':'managed', 'Default-path superintelligence':'default', 'Ungoverned takeoff':'ungoverned' };
+  const leadingKey = leaders[branches[0][0]];
+  simulatorBranchGeometry.forEach(branch => {
+    document.getElementById('sim-branch-' + branch.key)
+      ?.classList.toggle('is-leading', branch.key === leadingKey);
+  });
   const isBaseline = Object.values(assumptions).every(value => value === 0);
   document.getElementById('simulatorInterpretation').textContent = isBaseline
     ? `Published baseline: AGI ${values.agi}%, managed pause ${values.managed}%, default path ${values.default}%, ungoverned takeoff ${values.ungoverned}%, managed handoff ${values.handoff}%.`
@@ -278,16 +323,17 @@ function renderProbabilitySimulator(years, branchRange){
       <text class="sim-year" x="420" y="322" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'}</text>
       <text class="sim-year" x="650" y="322" text-anchor="middle">2040</text>
       <path class="sim-trunk" d="M52 170 C92 170 116 170 146 170 M164 170 C205 170 232 170 266 170"/>
-      <path id="sim-path-managed" class="sim-branch managed" d="M274 168 C322 128 352 78 412 76"/>
-      <path id="sim-path-handoff" class="sim-branch managed" d="M428 75 C500 72 558 66 642 65"/>
-      <path id="sim-path-default" class="sim-branch default" d="M274 170 C330 170 362 170 412 170 C500 170 558 170 650 170"/>
-      <path id="sim-path-ungoverned" class="sim-branch ungoverned" d="M274 172 C324 214 356 266 412 270 C500 276 560 280 650 282"/>
+      ${simulatorBranchGeometry.map(branch => `
+      <g id="sim-branch-${branch.key}" class="sim-branch-group ${branch.variant}">
+        <path class="sim-branch ${branch.variant}" d="${branch.d}"/>
+        <path id="sim-path-${branch.key}" class="sim-branch-fill ${branch.variant}" d="${branch.d}"/>
+      </g>`).join('')}
       <g class="sim-node">
         <circle class="sim-node-ring" cx="43" cy="170" r="9"/><circle class="sim-node-core" cx="43" cy="170" r="3"/>
         <text class="sim-sublabel" x="43" y="194" text-anchor="middle">NOW</text>
       </g>
       <g class="sim-node">
-        <circle class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
+        <circle id="sim-node-agi" class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
         <text class="sim-label" x="155" y="132" text-anchor="middle">HUMAN-LEVEL AGI</text>
         <text class="sim-sublabel" x="155" y="147" text-anchor="middle">END OF 2026</text>
       </g>
@@ -299,17 +345,17 @@ function renderProbabilitySimulator(years, branchRange){
         <text class="sim-sublabel" x="420" y="52" text-anchor="middle">FRONTIER TRAINING · 2029</text>
       </g>
       <g class="sim-node">
-        <circle class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
+        <circle id="sim-node-handoff" class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
         <text class="sim-label" x="650" y="36" text-anchor="middle">MANAGED HANDOFF</text>
         <text class="sim-sublabel" x="650" y="52" text-anchor="middle">2040</text>
       </g>
       <g class="sim-node">
-        <circle class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
+        <circle id="sim-node-default" class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
         <text class="sim-label" x="420" y="140" text-anchor="middle">DEFAULT PATH</text>
         <text class="sim-sublabel" x="420" y="156" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
       </g>
       <g class="sim-node">
-        <circle class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
+        <circle id="sim-node-ungoverned" class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
         <text class="sim-label" x="420" y="240" text-anchor="middle">UNGOVERNED TAKEOFF</text>
         <text class="sim-sublabel" x="420" y="256" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
       </g>
@@ -471,14 +517,12 @@ function probabilityBand(probability){
   return 'low';
 }
 
-/* ---------- @peterxing X signals mapped to predictions ---------- */
+/* ---------- Live-verified news evidence mapped to predictions ---------- */
 const NEWS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H5a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1zm2 3v4h9V7zm0 6v1.5h9V13zm0 3.5V18h9v-1.5zM19 9h1.5a.5.5 0 0 1 .5.5V18a1 1 0 0 1-2 0z"/></svg>';
-const X_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
-/* Inline fallback. The live site overrides this from signals.json (regenerated hourly from verified
-   X activity and matched to each prediction). We keep NO embedded posts inline, so if signals.json
-   is unavailable the UI reports unavailable evidence rather than fabricating or searching. */
-/* Renamed from xSignals: these are direct evidence records, and the medium is news. Keeping the old
-   name would have left the render layer describing itself in the retired medium's vocabulary. */
+/* Inline fallback. The live site overrides this from signals.json. No evidence is embedded inline,
+   so if signals.json is unavailable the UI reports unavailable evidence rather than fabricating or
+   searching. The retired medium's logo constant was deleted here rather than left unreferenced: it
+   was dead code, and shipping it kept retired vocabulary in the published payload. */
 let directSignals = {};
 let currencySignals = {};
 /* The 96 predictions with no qualifying in-window source. This is a MEASUREMENT, not a gap: each
