@@ -174,6 +174,7 @@ const PROOF_FEEDS = [
    entry means this list went stale. */
 const PROOF_ROSTER = [
   'aggregator, shortener and press-release mill rejected before fetch',
+  'an apostrophe in a headline or publisher is not read as a delimiter',
   'reuse ceiling holds against an over-ceiling ledger',
   'fabricated / non-existent article fails closed',
   'real authoritative article verifies end to end',
@@ -188,6 +189,7 @@ const PROOF_ROSTER = [
    results cannot make that mistake; one written by hand always can. */
 const PROOF_CAPABILITY = {
   'aggregator, shortener and press-release mill rejected before fetch': 'aggregators',
+  'an apostrophe in a headline or publisher is not read as a delimiter': 'metadata truncation',
   'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
   'fabricated / non-existent article fails closed': 'fabrication',
   'real authoritative article verifies end to end': 'live retrieval',
@@ -235,6 +237,25 @@ async function runProofs(log) {
   record('aggregator, shortener and press-release mill rejected before fetch',
     !aggregator.ok && !shortener.ok && !releaseMill.ok,
     `${aggregator.reason}; ${shortener.reason}; ${releaseMill.reason}`);
+
+  /* Proof 4b: an apostrophe in a headline is not a delimiter. This is a REGRESSION PROOF, pinned to
+     the two live articles it was measured on. The meta-attribute pattern excluded both quote
+     characters regardless of which one opened the value, so a straight apostrophe inside a
+     double-quoted attribute ended the capture early and the apostrophe itself matched as the closing
+     delimiter. The match SUCCEEDED, so nothing failed: it silently stored a truncated headline,
+     published it to readers as the article's title, and would then have compared one truncation
+     against another forever and reported "unchanged". Offline, so it always runs. */
+  const APOS = String.fromCharCode(39);
+  const QUOTE = String.fromCharCode(34);
+  const truncationCase = `<html><head><meta property=${QUOTE}og:title${QUOTE} `
+    + `content=${QUOTE}Ukraine${APOS}s one-time test used fully autonomous drones${QUOTE}>`
+    + `<meta property=${QUOTE}og:site_name${QUOTE} content=${QUOTE}Shaping Europe${APOS}s digital future${QUOTE}>`
+    + `</head><body><p>${'body '.repeat(120)}</p></body></html>`;
+  const extractedCase = extractArticle(truncationCase, 'https://arstechnica.com/ai/2026/06/story/');
+  record('an apostrophe in a headline or publisher is not read as a delimiter',
+    extractedCase.headline === `Ukraine${APOS}s one-time test used fully autonomous drones`
+    && extractedCase.publisher === `Shaping Europe${APOS}s digital future`,
+    `headline=${JSON.stringify(extractedCase.headline)} publisher=${JSON.stringify(extractedCase.publisher)}`);
 
   // Proof 5: the reuse ceiling holds, exercised through the real audit function.
   const syntheticSources = {

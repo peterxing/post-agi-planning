@@ -64,6 +64,122 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024;
  * honest gap is the intended behaviour, not a defect to be filled.
  */
 const NEWS_SOURCES = {
+"ars-coding-agents-burnout-limits": {
+    url: "https://arstechnica.com/information-technology/2026/01/10-things-i-learned-from-burning-myself-out-with-ai-coding-agents/",
+    resolvedUrl: "https://arstechnica.com/information-technology/2026/01/10-things-i-learned-from-burning-myself-out-with-ai-coding-agents/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Benj Edwards",
+    headline: "10 things I learned from burning myself out with AI coding agents",
+    publishedAt: "2026-01-19T12:00:45.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "Even with that impression, though, I know these are hobby projects, and the limitations of coding agents lead me to believe that veteran software developers probably shouldn’t fear losing their jobs to these tools any time soon.",
+    textSha256: "72dec099aa537b94a2e6a42cb101f0a2b0ee637c934aead263c7d690736dbe80",
+  },
+  "ars-anthropic-ai-welfare-researcher": {
+    url: "https://arstechnica.com/ai/2024/11/anthropic-hires-its-first-ai-welfare-researcher/",
+    resolvedUrl: "https://arstechnica.com/ai/2024/11/anthropic-hires-its-first-ai-welfare-researcher/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Benj Edwards",
+    headline: "Anthropic hires its first “AI welfare” researcher",
+    publishedAt: "2024-11-11T15:51:54.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "Titled “Taking AI Welfare Seriously,” the paper warns that AI models could soon develop consciousness or agency—traits that some might consider requirements for moral consideration.",
+    textSha256: "231f1a5a64931ec8be6c41f90b2ce691ed15f0479b98b48406df9075508443f4",
+  },
+  "techreview-ai-lie-detection": {
+    url: "https://www.technologyreview.com/2024/07/05/1094703/ai-lie-detectors-are-better-than-humans-at-spotting-lies/",
+    resolvedUrl: "https://www.technologyreview.com/2024/07/05/1094703/ai-lie-detectors-are-better-than-humans-at-spotting-lies/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Jessica Hamzelou",
+    headline: "AI lie detectors are better than humans at spotting lies",
+    publishedAt: "2024-07-05T09:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "AI-based lie detection systems could one day be used to help us sift fact from fake news, evaluate claims, and potentially even spot fibs and exaggerations in job applications.",
+    textSha256: "364e63b778f231beb9bf0b89a816916ade886ef455c6c0c1e17276a9c299bfd8",
+  },
+  /* PROMOTED 2026-08-24 — reviewed from the browser-discovery sweep. Each was found by browsing the
+     publisher's own site search, judged on the merits against its specific prediction, then re-fetched
+     live and quote-checked before being written here. All five are outside the 14-day window and
+     therefore render as dated CONTEXT with their true age, never as current evidence. */
+"techreview-bci-trials-taking-off": {
+    url: "https://www.technologyreview.com/2026/06/19/1139270/brain-computer-interface-trials-are-taking-off/",
+    resolvedUrl: "https://www.technologyreview.com/2026/06/19/1139270/brain-computer-interface-trials-are-taking-off/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Jessica Hamzelou",
+    headline: "Brain-computer interface trials are taking off",
+    publishedAt: "2026-06-19T09:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "He has now spent almost three years using a brain-computer interface (BCI) that enables him to “speak,” surf the web, and perform his job as a climate activist, largely independently.",
+    textSha256: "30170e5c7fbba96ef291ed5344a07285373855715e4120e30a408a594fecf7be",
+  },
+  "ars-deepseek-export-controls-chips": {
+    url: "https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips/",
+    resolvedUrl: "https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Samuel Axon",
+    headline: "Facing US export controls, China's DeepSeek plans to make its own chips",
+    publishedAt: "2026-07-07T16:14:53.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "Huawei controls about half of the data center chip market there, and DeepSeek isn’t the only one trying to enter; Chinese tech giants like Alibaba and Baidu have been making moves, too.",
+    textSha256: "5709998886b94c0dcb56d83a6b5286f896899a083f665a3e5922f019068020be",
+  },
+  "techreview-openai-automated-researcher": {
+    url: "https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/",
+    resolvedUrl: "https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Will Douglas Heaven",
+    headline: "OpenAI is throwing everything into building a fully automated researcher",
+    publishedAt: "2026-03-20T11:57:16.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "The AI intern will be the precursor to a fully automated multi-agent research system that the company plans to debut in 2028.",
+    textSha256: "85c4f28aa9b80db3aa471b0e19c571a6cf5194397aafc84b66b1e78610697c0f",
+  },
+  "ars-ukraine-autonomous-drone-strike": {
+    url: "https://arstechnica.com/ai/2026/06/ukraines-one-time-test-used-fully-autonomous-drones-to-kill-russian-soldiers/",
+    resolvedUrl: "https://arstechnica.com/ai/2026/06/ukraines-one-time-test-used-fully-autonomous-drones-to-kill-russian-soldiers/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Jeremy Hsu",
+    headline: "Ukraine's one-time test used fully autonomous drones to kill Russian soldiers",
+    publishedAt: "2026-06-12T18:03:29.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "But Kokhanovskyy told New Scientist that human-piloted drones sent to check out the aftermath found “a couple” of dead Russian soldiers, which led to the conclusion that the fully autonomous drones had killed them.",
+    textSha256: "df60e79a18fa5fcf0138a5e700b58c9bb215d9d1a8549808322d74ff25896136",
+  },
+  "techreview-mechanistic-interpretability-breakthrough": {
+    url: "https://www.technologyreview.com/2026/01/12/1130003/mechanistic-interpretability-ai-research-models-2026-breakthrough-technologies/",
+    resolvedUrl: "https://www.technologyreview.com/2026/01/12/1130003/mechanistic-interpretability-ai-research-models-2026-breakthrough-technologies/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Will Douglas Heaven",
+    headline: "Mechanistic interpretability: 10 Breakthrough Technologies 2026",
+    publishedAt: "2026-01-12T11:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-24",
+    sourceQuality: "primary-news-organization",
+    quote: "One approach, known as mechanistic interpretability , aims to map the key features and the pathways between them across an entire model.",
+    textSha256: "64dce5c8ae7a5a313f7c3dc749d8a964d07aae2e8f05be7cdeaeec18a4628ccd",
+  },
   "nature-ai-datacentre-energy-1": {
     url: "https://www.nature.com/articles/d41586-026-02451-2",
     resolvedUrl: "https://www.nature.com/articles/d41586-026-02451-2",
@@ -286,6 +402,78 @@ const NEWS_SOURCES = {
  * and the evidence type, and every entry is manually reviewed.
  */
 const NEWS_GROUPS = [
+{
+    source: "ars-coding-agents-burnout-limits",
+    ids: ["2027-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-practitioner-limits",
+    reuseFamily: "ai-software-production",
+    rationale: "A named Ars Technica journalist reports sustained hands-on use of AI coding agents and concludes their present limitations mean veteran developers should not expect to be replaced soon. It evidences the current state of end-to-end AI software production and, on its face, that the prediction has NOT yet occurred; it is not evidence that it will.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "ars-anthropic-ai-welfare-researcher",
+    ids: ["2035-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-corporate-practice",
+    reuseFamily: "ai-welfare-status",
+    rationale: "Records a frontier lab creating a dedicated AI-welfare research role alongside a paper arguing models may warrant moral consideration — the earliest corporate-governance foothold the prediction extends. It evidences the question entering a company’s own governance; it does not evidence any legal status, compensation regime or mainstream law.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "techreview-ai-lie-detection",
+    ids: ["2037-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-research-result",
+    reuseFamily: "ai-deception-detection",
+    rationale: "Reports research finding AI lie-detection outperforming humans and names evaluating claims as a prospective use — the capability the prediction expects to become credible enough for limited legal and political use. It reports a study and its prospects; it does not evidence any legal or political adoption.",
+    reviewedAt: "2026-08-24",
+  },
+{
+    source: "techreview-bci-trials-taking-off",
+    ids: ["2026-7"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-clinical-milestone",
+    reuseFamily: "bci-home-use",
+    rationale: "Reports a single participant using an intracortical BCI for speech and computer control for almost three years, largely independently — the multi-year home-use regime the prediction thresholds on. It does not state the 3,800-hour figure, does not report a peer-reviewed hour count, and says nothing about Neuralink PRIME-family trial posture.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "ars-deepseek-export-controls-chips",
+    ids: ["2028-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-market-concentration",
+    reuseFamily: "compute-geopolitics",
+    rationale: "Reports one firm holding about half of China’s data-centre chip market with a handful of named Chinese giants contesting the rest, under US export controls — concentration of frontier AI capability around a few companies and state policy. It evidences the Chinese half and the export-control lever; it does not evidence US corporate concentration or any named head of state or party leader exercising that control.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "techreview-openai-automated-researcher",
+    ids: ["2030-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "stated-lab-roadmap",
+    reuseFamily: "ai-rd-automation",
+    rationale: "Records a frontier lab stating a roadmap to a fully automated multi-agent research system by 2028, which is the trajectory the 2030 prediction extrapolates. It is a stated corporate plan reported by a named journalist, not a demonstrated capability, and it does not evidence that frontier AI R&D has been automated.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "ars-ukraine-autonomous-drone-strike",
+    ids: ["2034-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-battlefield-use",
+    reuseFamily: "autonomous-weapons-governance",
+    rationale: "Reports a battlefield use of fully autonomous drones resulting in deaths — the concrete development that treaty pressure on autonomous strategic weapons responds to. It evidences the pressure, NOT the prediction: no treaty, negotiation or constraint on military AI R&D is reported here.",
+    reviewedAt: "2026-08-24",
+  },
+  {
+    source: "techreview-mechanistic-interpretability-breakthrough",
+    ids: ["2035-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-research-programme",
+    reuseFamily: "mechanistic-interpretability",
+    rationale: "A named technology review records mechanistic interpretability as an active research programme aiming to map features and pathways across a whole model — the capability the prediction expects to mature into a practical tool. It does not evidence deception detection in deployed systems or routine use for tracing model decisions.",
+    reviewedAt: "2026-08-24",
+  },
   {
     source: "nature-ai-datacentre-energy-1",
     ids: ["2027-5"],
@@ -788,16 +976,34 @@ function collapse(value) {
   return decodeEntities(value).replace(/\s+/g, ' ').trim();
 }
 
+/* AN APOSTROPHE IS NOT A DELIMITER, AND TREATING IT AS ONE TRUNCATED REAL HEADLINES.
+   MEASURED on two live articles during an evidence sweep:
+     content="Ukraine's one-time test used fully autonomous drones to kill Russian soldiers"
+       was extracted as        -> "Ukraine"
+     content="Facing US export controls, China's DeepSeek plans to make its own chips"
+       was extracted as        -> "Facing US export controls, China"
+   The class [^"']* excludes BOTH quote characters regardless of which one opened the attribute, so
+   a straight apostrophe inside a double-quoted value ended the capture and the following ["'] then
+   matched that same apostrophe as if it were the closing delimiter. The match SUCCEEDS, which is
+   why this never surfaced as an error: it silently produced a shorter, wrong headline.
+
+   This is a correctness bug in the evidence path, not a cosmetic one. The extracted headline is
+   published beside the citation, and it is also the value the publish-time drift check compares
+   against - so a truncated capture would be stored, rendered to readers as the article's title, and
+   then confirmed "unchanged" forever by comparing one truncation against another.
+
+   The delimiter is now captured and closed against ITSELF via a backreference, so only the quote
+   character that opened the attribute can close it. */
 function metaContent(html, names) {
   for (const name of names) {
     const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const patterns = [
-      new RegExp(`<meta[^>]+(?:property|name|itemprop)\\s*=\\s*["']${escaped}["'][^>]*?content\\s*=\\s*["']([^"']*)["']`, 'i'),
-      new RegExp(`<meta[^>]+content\\s*=\\s*["']([^"']*)["'][^>]*?(?:property|name|itemprop)\\s*=\\s*["']${escaped}["']`, 'i'),
+      { rx:new RegExp(`<meta[^>]+(?:property|name|itemprop)\\s*=\\s*["']${escaped}["'][^>]*?content\\s*=\\s*(["'])((?:(?!\\1)[\\s\\S])*)\\1`, 'i'), group:2 },
+      { rx:new RegExp(`<meta[^>]+content\\s*=\\s*(["'])((?:(?!\\1)[\\s\\S])*)\\1[^>]*?(?:property|name|itemprop)\\s*=\\s*["']${escaped}["']`, 'i'), group:2 },
     ];
     for (const pattern of patterns) {
-      const match = html.match(pattern);
-      if (match && collapse(match[1])) return collapse(match[1]);
+      const match = html.match(pattern.rx);
+      if (match && collapse(match[pattern.group])) return collapse(match[pattern.group]);
     }
   }
   return '';
