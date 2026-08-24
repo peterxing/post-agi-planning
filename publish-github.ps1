@@ -321,7 +321,20 @@ $fromDeploy = @(
   # the guarantor was the least falsifiable thing in the tree. Publishing it is safe because
   # token resolution now lives in publish-credentials.ps1, which stays off this list.
   'publish-github.ps1',
-  'launch.ps1','watchdog.ps1','REVISE-PREDICTIONS.md'
+  'launch.ps1','watchdog.ps1','REVISE-PREDICTIONS.md',
+  # DAILY-RUN.md is the scheduled workflow's operational contract. It is mirrored for the same
+  # reason every gate here is: a contract nobody can fetch is a contract nobody can check. It moved
+  # out of the scheduler's prompt field on 2026-08-24 precisely because that field is not
+  # version-controlled, not diffable and not mirrored, so a change to how the daily run behaves left
+  # no trace anywhere. It is documentation, never executed, and the deploy surface allow-list keeps
+  # it off the public site exactly as it keeps REVISE-PREDICTIONS.md off it.
+  'DAILY-RUN.md','AUTHOR-RUN.md',
+  # run-gates.ps1 is mirrored because both scheduled contracts now INVOKE it as their gate runner.
+  # It is the thing that decides whether the suite passed, so leaving it unpublished would put the
+  # arbiter of every publication outside the published set — the same defect this list already
+  # records for month-estimates.js and publish-github.ps1. It also carries the exit-code semantics
+  # (0 PASS / 70 INERT / 75 DEFERRED) that the contracts depend on being correct.
+  'run-gates.ps1'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')
