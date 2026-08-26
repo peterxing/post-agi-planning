@@ -107,6 +107,14 @@ const ALLOWED_EGRESS_HOSTS = new Set([
      citations resolve there — AI-lab federal lobbying disclosures and the US–China intergovernmental
      AI talks — and an undeclared host fails this gate closed, which is the gate working. */
   'www.cnbc.com',
+  /* REVIEWED EDIT 2026-08-25 — declared because deepmind.google, already on this list, CANONICALISES
+     to blog.google: the Gemini Robotics ER 2 announcement fetched from deepmind.google resolves to
+     blog.google, so the reviewed citation records that host and an undeclared one fails this gate
+     closed. It is the same first-party publisher under its canonical name, not a new organisation
+     and not an aggregator, syndicator, press-release mill or preprint server. Declaring the host
+     never makes its contents admissible; that stays with the per-article fetch, quote-match and
+     source-quality gates. */
+  'blog.google',
   /* NEGATIVE fixtures. These exist so the news verifier can PROVE it rejects an aggregator, a
      shortener, a press-release mill and a fabricated URL. They are named in order to be refused. */
   'bit.ly', 'example.org', 'example-not-reviewed.test', 'news.google.com', 'www.prnewswire.com',
