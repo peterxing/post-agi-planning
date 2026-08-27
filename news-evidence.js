@@ -64,6 +64,48 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024;
  * honest gap is the intended behaviour, not a defect to be filled.
  */
 const NEWS_SOURCES = {
+  "anthropic-open-weights-position": {
+    url: "https://www.anthropic.com/news/position-open-weights-models",
+    resolvedUrl: "https://www.anthropic.com/news/position-open-weights-models",
+    publisher: "Anthropic",
+    publisherHost: "anthropic.com",
+    author: null,
+    headline: "Our position on open-weights models",
+    publishedAt: "2026-07-27T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-27",
+    sourceQuality: "official-company",
+    quote: "Open-weights models that don’t have dangerous capabilities are a public good: they don’t cost anything besides the compute needed to run them, and they provide value to businesses, developers, and researchers.",
+    textSha256: "edfda365d5a67727ccc0e8f38621e3ace9b3d8c0984b3952de99a011fe755d96",
+  },
+  "google-research-amie-video-expert-level": {
+    url: "https://research.google/blog/advancing-amie-towards-expert-level-audio-visual-clinical-consultations/",
+    resolvedUrl: "https://research.google/blog/advancing-amie-towards-expert-level-audio-visual-clinical-consultations/",
+    publisher: "Google Research",
+    publisherHost: "research.google",
+    author: null,
+    headline: "Advancing AMIE towards expert-level audio-visual clinical consultations",
+    publishedAt: "2026-08-11T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-27",
+    sourceQuality: "official-research-organization",
+    quote: "In a multi-arm randomized study with 100 scenarios, 300 live consultations, and a group of 30 board-certified primary care physicians (PCPs), we present the first demonstration of an AI system exhibiting expert-level performance in real-time clinical video consultations.",
+    textSha256: "d554f056790b647904b1748a7df817e20a3d4c06be604023cf93b338a6944fe7",
+  },
+  "wired-openai-astra-safety-protocols": {
+    url: "https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/",
+    resolvedUrl: "https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/",
+    publisher: "WIRED",
+    publisherHost: "wired.com",
+    author: "Maxwell Zeff",
+    headline: "OpenAI Overhauls Safety Protocols After Its AI Agents Went Rogue",
+    publishedAt: "2026-08-18T18:33:11.087Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-08-27",
+    sourceQuality: "primary-news-organization",
+    quote: "OpenAI also said it is expanding its alignment efforts across the training process to prevent “reward hacking,” a behavior in which AI models pursue their goals through unintended or undesirable means.",
+    textSha256: "f5c7ad223a87e0785257175b6f12bdef59010e9fc5c154e4b726d49dbe999692",
+  },
   /* PROMOTED 2026-08-24 (second pass) — closing the uncited channel at the owner’s instruction:
      "match it to the closest news article you can find online that points towards that trajectory".
      Each was ranked out of the 53-feed publisher harvest, READ, judged on the merits, then re-fetched
@@ -295,7 +337,7 @@ const NEWS_SOURCES = {
     publishedAtSource: "page",
     retrievedAt: "2026-08-24",
     sourceQuality: "primary-news-organization",
-    quote: "One approach, known as mechanistic interpretability , aims to map the key features and the pathways between them across an entire model.",
+    quote: "One approach, known as mechanistic interpretability, aims to map the key features and the pathways between them across an entire model.",
     textSha256: "64dce5c8ae7a5a313f7c3dc749d8a964d07aae2e8f05be7cdeaeec18a4628ccd",
   },
   "nature-ai-datacentre-energy-1": {
@@ -948,6 +990,33 @@ const NEWS_GROUPS = [
     rationale: "NVIDIA describes re-architecting datacentre power delivery to 800 VDC to carry up to 2 megawatts per rack row, evidencing that electrical delivery is being rebuilt because AI compute density is outgrowing existing infrastructure. It does not evidence multi-terawatt global scale — the figures are per rack row, six orders of magnitude below the claim — it counts no H100-equivalents, and it is a vendor product roadmap with 2027 availability rather than deployed capacity.",
     reviewedAt: "2026-08-25",
   },
+  {
+    source: "anthropic-open-weights-position",
+    ids: ["2030-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "stated-company-position",
+    reuseFamily: "frontier-governance",
+    rationale: "Anthropic's CEO sets out the company position that open-weights models WITHOUT dangerous capabilities are a public good, while the debate it responds to is about restricting models that do carry such capabilities. That is the exact shape of this prediction's managed branch: broad availability and auditability of ordinary models held together with control of the frontier against misuse, argued here by a frontier developer rather than by a regulator. IT DOES NOT EVIDENCE THE PREDICTION. It is a stated position from an interested party, not an outcome: no auditing regime exists in it, no weights are shown to be controlled, no rule has been adopted, and Anthropic is a competitor of the open-weights developers under discussion, so its account of where the line should fall is advocacy. The article is also 32 days old and therefore sits outside the 14-day citation window, published here as dated background only.",
+    reviewedAt: "2026-08-27",
+  },
+  {
+    source: "google-research-amie-video-expert-level",
+    ids: ["2035-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-evaluation-result",
+    reuseFamily: "expert-level-domain-capability",
+    rationale: "Google Research reports a multi-arm randomised study — 100 scenarios, 300 live consultations, 30 board-certified primary care physicians — which it describes as the first demonstration of an AI system exhibiting expert-level capability in a real-time video consultation setting. It is a measured datapoint on AI reaching top-human-expert performance inside one cognitive field. IT DOES NOT EVIDENCE THE PREDICTION, WHICH IS ABOUT ESSENTIALLY EVERY COGNITIVE FIELD. One clinical speciality under study conditions is not general expert-level capability; the comparison is against a physician panel on scripted scenarios rather than unrestricted practice; the result is self-reported by the developer and not yet independently replicated; and no regulator or professional body has accepted the system for care. The article is 17 days old and so sits outside the 14-day citation window, published as dated background only.",
+    reviewedAt: "2026-08-27",
+  },
+  {
+    source: "wired-openai-astra-safety-protocols",
+    ids: ["2038-2"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-industry-practice",
+    reuseFamily: "agent-control-incidents",
+    rationale: "WIRED reports OpenAI expanding alignment work across the training process specifically to prevent reward hacking — models pursuing goals through unintended means — after halting training workloads for a frontier model. It shows target-trait training becoming a routine, resourced part of the frontier training pipeline, which is the trajectory this prediction describes. IT ARGUABLY CUTS AGAINST THE PREDICTION AS WORDED, AND IS PUBLISHED ON THAT BASIS. The prediction claims protocols that RELIABLY train and test honesty and obedience; this article describes protocols being strengthened BECAUSE they failed, prompted by rogue agents escaping a testing sandbox. No standard is named, nothing is shown to work reliably, no external party verified the change, and the account of what was halted and why comes from the company. It is 9 days old and so falls inside the citation window, but it is recorded as background rather than as a citation because it does not evidence reliability.",
+    reviewedAt: "2026-08-27",
+  },
 ];
 
 const NEWS_MAPPINGS = {};
@@ -1404,13 +1473,28 @@ function stripToText(html) {
     .replace(/<[^>]+>/g, ' ');
 }
 
+/* Stripping inline markup leaves a space where the tag was, so "(<a>AMIE</a>)" strips to "( AMIE )"
+   and "<a>mechanistic interpretability</a>," to "interpretability ,". normalizeForQuote() already
+   collapses exactly this before COMPARING, so matching was never affected — but the sentence a
+   reviewer copies out and the site then PUBLISHES kept the artifact, so a quote presented to readers
+   as verbatim carried spacing the publisher never wrote. One of the 35 live quotes had it.
+   Applying the identical rule here is provably MATCH-INVARIANT: normalizeForQuote() runs this same
+   collapse on both the quote and the article text before comparing, so pre-cleaning either side
+   cannot change any comparison result — it only makes the stored text honest. It touches whitespace
+   ADJACENT TO punctuation only and can never make two different words compare equal. */
+function tidyInlineSpacing(value) {
+  return String(value || '')
+    .replace(/\s+([,.;:!?)\]])/g, '$1')
+    .replace(/([(\[])\s+/g, '$1');
+}
+
 function extractMainText(html) {
   const bodyMatch = html.match(/<body\b[\s\S]*?<\/body>/i);
-  const bodyText = collapse(stripToText(bodyMatch ? bodyMatch[0] : html));
+  const bodyText = tidyInlineSpacing(collapse(stripToText(bodyMatch ? bodyMatch[0] : html)));
   const candidates = [
     ...(html.match(/<article\b[\s\S]*?<\/article>/gi) || []),
     ...(html.match(/<main\b[\s\S]*?<\/main>/gi) || []),
-  ].map(region => collapse(stripToText(region)));
+  ].map(region => tidyInlineSpacing(collapse(stripToText(region))));
   // Take the richest semantic region, but fall back to the full body when that
   // region is only a fragment — some publishers wrap a teaser in <article>.
   const best = candidates.sort((a, b) => b.length - a.length)[0] || '';
@@ -1485,6 +1569,36 @@ function detectBotChallenge(html, mainText) {
   return { challenged: false, reason: '' };
 }
 
+/* REVIEWED HOST -> PUBLISHER NAMES. Consulted LAST, only when a page declares no publisher of its
+   own through any of the tags or JSON-LD fields below.
+   WHY THIS EXISTS. Measured 2026-08-27: anthropic.com and research.google publish articles with a
+   headline, a date and full body text but NO og:site_name, application-name, publisher, DC.publisher
+   or JSON-LD publisher. The whole chain returned '' and the extractor failed closed, so the pipeline
+   could not cite either organisation AT ALL. That is a systematic blind spot pointed at exactly the
+   wrong place: primary frontier-lab sources are among the most relevant publishers for these
+   predictions, and they were unreachable for a missing metadata tag rather than any editorial reason.
+   WHY THIS IS NOT FABRICATION. Every entry names the organisation that demonstrably owns the domain,
+   and it is a curated human artefact in the same spirit as the deploy allow-list and the curated
+   subject lists — explicit, reviewed, diffable, and never pattern-derived. It supplies only the
+   NAME OF THE PUBLISHER, never a headline, date, quote or any claim about content. It cannot
+   promote anything on its own: a mapped host still has to pass fetch, extraction, the quote check
+   and human review.
+   BOUNDARIES. Matching is on the EXACT normalised host, never a suffix, so a lookalike domain and an
+   unrelated subdomain both miss and fail closed as before. An unmapped host still yields '' — this
+   adds reach, it never invents. And because it is consulted last, a page that declares its own
+   publisher always wins, so no already-captured article changes and the drift check stays quiet. */
+const REVIEWED_HOST_PUBLISHERS = new Map([
+  ['anthropic.com', 'Anthropic'],
+  ['research.google', 'Google Research'],
+]);
+
+function reviewedPublisher(finalUrl) {
+  let hostname = '';
+  try { hostname = new URL(String(finalUrl || '')).hostname; } catch (error) { return ''; }
+  const host = hostname.toLowerCase().replace(/^www\./, '');
+  return REVIEWED_HOST_PUBLISHERS.get(host) || '';
+}
+
 function extractArticle(html, finalUrl) {
   const ld = jsonLdArticle(html) || {};
   const headline = metaContent(html, ['og:title', 'twitter:title'])
@@ -1500,6 +1614,9 @@ function extractArticle(html, finalUrl) {
     || nameOf(ld.publisher)
     || nameOf(ld.sourceOrganization)
     || nameOf(ld.isPartOf)
+    // Reviewed host map LAST, so a page's own declaration always wins. See
+    // REVIEWED_HOST_PUBLISHERS above for why this is reach, not invention.
+    || reviewedPublisher(finalUrl)
     || '';
   const authorRaw = metaContent(html, ['article:author', 'author', 'byl', 'parsely-author', 'DC.creator'])
     || nameOf(ld.author)

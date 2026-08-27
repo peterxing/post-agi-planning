@@ -175,6 +175,8 @@ const PROOF_FEEDS = [
 const PROOF_ROSTER = [
   'aggregator, shortener and press-release mill rejected before fetch',
   'an apostrophe in a headline or publisher is not read as a delimiter',
+  'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
+  'inline-spacing tidy cannot change any quote comparison',
   'reuse ceiling holds against an over-ceiling ledger',
   'fabricated / non-existent article fails closed',
   'real authoritative article verifies end to end',
@@ -190,6 +192,8 @@ const PROOF_ROSTER = [
 const PROOF_CAPABILITY = {
   'aggregator, shortener and press-release mill rejected before fetch': 'aggregators',
   'an apostrophe in a headline or publisher is not read as a delimiter': 'metadata truncation',
+  'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents': 'publisher attribution',
+  'inline-spacing tidy cannot change any quote comparison': 'quote fidelity',
   'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
   'fabricated / non-existent article fails closed': 'fabrication',
   'real authoritative article verifies end to end': 'live retrieval',
@@ -256,6 +260,54 @@ async function runProofs(log) {
     extractedCase.headline === `Ukraine${APOS}s one-time test used fully autonomous drones`
     && extractedCase.publisher === `Shaping Europe${APOS}s digital future`,
     `headline=${JSON.stringify(extractedCase.headline)} publisher=${JSON.stringify(extractedCase.publisher)}`);
+
+  /* Proof 4c: the reviewed host->publisher map ADDS REACH WITHOUT INVENTING. Measured 2026-08-27:
+     anthropic.com and research.google serve a headline, a date and full body text but declare no
+     publisher through any tag or JSON-LD field, so the whole chain returned '' and the extractor
+     failed closed — the pipeline could not cite either lab for a missing metadata tag rather than
+     any editorial reason. The map is the fix, and these three assertions are what keep it honest:
+     it must fill the gap, it must NEVER override a page that names itself, and an unmapped host
+     must still yield '' so nothing is ever attributed to a publisher that did not publish it.
+     The override case is the one that matters most — a map consulted too early would silently
+     restamp real publishers and quietly rewrite already-captured evidence. Offline, so it always
+     runs. */
+  const bare = `<html><head><meta property=${QUOTE}og:title${QUOTE} content=${QUOTE}Our position on `
+    + `open-weights models${QUOTE}></head><body><p>${'body '.repeat(120)}</p></body></html>`;
+  const mapped = extractArticle(bare, 'https://www.anthropic.com/news/position-open-weights-models');
+  /* The unmapped case deliberately reuses an ALREADY-DECLARED host rather than a synthetic one.
+     A made-up hostname here reads as an undeclared egress target to verify-deploy-surface.js — which
+     caught exactly that and refused the run — and inventing a domain to prove we do not invent
+     publishers would be its own small dishonesty. arstechnica.com is declared, is real, and is
+     absent from REVIEWED_HOST_PUBLISHERS, which is precisely the condition under test. Nothing here
+     is fetched; these are offline string inputs to the extractor. */
+  const unmapped = extractArticle(bare, 'https://arstechnica.com/ai/2026/08/story/');
+  const declares = `<html><head><meta property=${QUOTE}og:title${QUOTE} content=${QUOTE}Story${QUOTE}>`
+    + `<meta property=${QUOTE}og:site_name${QUOTE} content=${QUOTE}Anthropic Newsroom${QUOTE}>`
+    + `</head><body><p>${'body '.repeat(120)}</p></body></html>`;
+  const declared = extractArticle(declares, 'https://www.anthropic.com/news/other');
+  record('the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
+    mapped.publisher === 'Anthropic'
+    && unmapped.publisher === ''
+    && declared.publisher === 'Anthropic Newsroom',
+    `mapped=${JSON.stringify(mapped.publisher)} unmapped=${JSON.stringify(unmapped.publisher)} `
+    + `declared=${JSON.stringify(declared.publisher)}`);
+
+  /* Proof 4d: tidying inline-markup spacing is MATCH-INVARIANT. The extractor leaves "( AMIE )" and
+     "interpretability ," where a publisher wrote neither, and that artifact reached a live published
+     quote. extractMainText() now removes it — but a change to shared extraction is exactly the kind
+     that can silently break every recorded quote at once, so the invariance is PROVEN here rather
+     than argued in a comment: a quote captured WITH the old artifact must still match text cleaned
+     the new way, and vice versa, because normalizeForQuote() collapses the same whitespace on both
+     sides before comparing. If someone later widens tidyInlineSpacing() beyond punctuation-adjacent
+     whitespace, this proof fails and stops the run. Offline, so it always runs. */
+  const artefactText = `In early work, the Explorer ( AMIE ), known as mechanistic interpretability , `
+    + 'aims to map the key features.';
+  const cleanedText = 'In early work, the Explorer (AMIE), known as mechanistic interpretability, '
+    + 'aims to map the key features.';
+  record('inline-spacing tidy cannot change any quote comparison',
+    quotePresent(cleanedText, artefactText) && quotePresent(artefactText, cleanedText)
+    && !quotePresent(cleanedText, 'the Explorer (AMIA), known as mechanistic interpretability'),
+    `artefact<->clean match both ways; a genuinely different word still fails`);
 
   // Proof 5: the reuse ceiling holds, exercised through the real audit function.
   const syntheticSources = {
