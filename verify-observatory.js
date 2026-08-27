@@ -32,6 +32,13 @@ if (declaredKeyframes.length === 0) {
 const observedAnimating = new Set();
 
 const URL = process.argv[2] || 'http://127.0.0.1:8787/';
+/* How long to wait for a render to settle before deciding the page is wrong. This is PATIENCE, not
+   a threshold: every assertion using it is unchanged by its value, and a condition that never
+   becomes true still fails, just later. It is generous on purpose because this suite runs alongside
+   16 other gates and a browser on one machine, and a wait tuned for an idle host produces failures
+   that say "the page is broken" when the truth is "the host was busy". See the RENDER_SETTLE_MS use
+   sites for the measurement that prompted it. */
+const RENDER_SETTLE_MS = 30000;
 /* A12 CLASS (GC seq-115, 2026-08-13). An expectation coerced out of a MISSING field is not an
    expectation: `Number(x) || 0` turns a renamed or deleted operand into a comparison against 0,
    which the DOM then satisfies trivially, and the arm goes on to print the conclusion of a
@@ -174,10 +181,19 @@ function requestStatus(pathname) {
       waitUntil:'networkidle',
       timeout:45000,
     });
+    /* RENDER_SETTLE_MS, not 5s. This wait asserts that the hero count matches the data; the timeout
+       only says how long we are willing to wait for the render, and it is NOT part of the assertion.
+       MEASURED 2026-08-27: this timed out at 5000ms during a full 17-gate run and passed immediately
+       when verify:ui was run alone — the machine was busy, not the page wrong. A gate that fails
+       because the host was loaded is a FALSE NEGATIVE, and false negatives are the most corrosive
+       kind of gate failure: they block a scheduled publication for no reason and teach whoever is on
+       the other end to re-run until green, which is how a real failure eventually gets waved through.
+       Being patient costs a slow run nothing and weakens nothing — if the condition never becomes
+       true this still fails, just later. */
     await page.waitForFunction(
       count => document.getElementById('heroEventCount')?.textContent.trim() === String(count),
       expectedEvents,
-      { timeout:5000 }
+      { timeout:RENDER_SETTLE_MS }
     );
 
     const state = await page.evaluate(() => {
@@ -670,7 +686,7 @@ function requestStatus(pathname) {
       await page.waitForFunction(
         element => element.classList.contains('is-visible'),
         await figure.elementHandle(),
-        { timeout:2000 }
+        { timeout:RENDER_SETTLE_MS }
       );
     }
     const figureMotion = await page.evaluate(() => ({
@@ -764,7 +780,7 @@ function requestStatus(pathname) {
     await page.waitForFunction(() =>
       document.querySelector('#plannerBody .opt')?.getAttribute('aria-checked') === 'true'
       && document.activeElement?.classList.contains('opt'),
-    null, { timeout:1000 });
+    null, { timeout:RENDER_SETTLE_MS });
     check(results, 'planner options are keyboard-operable radios',
       await page.locator('#plannerBody .opt').first().getAttribute('aria-checked') === 'true'
       && await page.evaluate(() => document.activeElement?.classList.contains('opt')));
@@ -822,7 +838,7 @@ function requestStatus(pathname) {
   await restorePage.waitForFunction(
     count => document.querySelectorAll('#timelineBody .event').length === count,
     expectedEvents,
-    { timeout:5000 }
+    { timeout:RENDER_SETTLE_MS }
   );
   await restorePage.waitForTimeout(700);
   const restored = await restorePage.evaluate(targetId => ({
