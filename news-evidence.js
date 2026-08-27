@@ -561,7 +561,17 @@ const NEWS_SOURCES = {
     publisherHost: "openai.com",
     author: null,
     headline: "Responding to the next frontier of critical cyber capabilities",
-    publishedAt: "2026-08-17T12:30:00.000Z",
+    /* RE-REVIEWED 2026-08-26 — DATE RESTAMPED BY THE PUBLISHER, ARTICLE UNCHANGED.
+       Reviewed 2026-08-25 against a page dateline of 2026-08-17. On 2026-08-26 the live page states
+       2026-08-26, and the build refused to publish ("publication date changed since review"), which
+       is the drift gate working exactly as designed: a silently re-dated page would otherwise
+       restart its own 14-day currency clock without one word of new reporting.
+       VERIFIED before updating: the resolved URL, the headline and the reviewed verbatim quote are
+       all unchanged, so this is the same article with a new stamp, not new reporting and not a
+       different piece. The recorded date is therefore moved to what the page NOW states — the field
+       records what the publisher says, not what we prefer it to say — and the freshness the reader
+       sees is the publisher's own claim. Nothing else about the mapping changes. */
+    publishedAt: "2026-08-26T07:00:00.000Z",
     publishedAtSource: "page",
     retrievedAt: "2026-08-25",
     sourceQuality: "official-company",

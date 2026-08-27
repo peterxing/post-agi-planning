@@ -1628,6 +1628,63 @@ function qualifyFamilyPost(text, p){
    does not exist and its existence guard returned [] first. An invariant that rests on a file being
    absent is not an invariant. Restoring any X ingest file must now FAIL the build loudly instead of
    silently re-admitting X data or dying on an undefined symbol. */
+/* ---- @peterxing TRAJECTORY SIGNAL LAYER (2026-08-26) --------------------------------------------
+   Reads the layer built by x-signals.js. This is SUPPLEMENTARY and structurally separate from the
+   evidence channel: it never contributes to cited/context/uncited accounting, never enters
+   `embeds`, and carries no news-provenance fields.
+
+   IT FAILS CLOSED IN BOTH DIRECTIONS. A missing file is a legitimate state (the weekly job has not
+   run yet) and yields no layer at all rather than a half-populated one. But a file that is present
+   and BROKEN — unparseable, mis-shaped, or built against a different prediction set — is an error,
+   because publishing a signal keyed to a prediction that no longer exists would attach Peter's post
+   to the wrong forecast. A STALE file is also refused: predictions are revised daily and evidence
+   bindings are bound to exact prediction text, so a signal built more than 10 days ago may be
+   pointing at wording that has since changed. */
+const X_SIGNALS_PATH = path.join(DIR, 'x-signals.json');
+const X_SIGNALS_MAX_AGE_DAYS = 10;
+function xSignalLayer(livePredictionIds, buildNow){
+  if (!fs.existsSync(X_SIGNALS_PATH)) return {};
+  let payload;
+  try {
+    payload = JSON.parse(fs.readFileSync(X_SIGNALS_PATH, 'utf8').replace(/^\uFEFF/, ''));
+  } catch (error) {
+    throw new Error(`x-signals.json is present but unparseable (${error.message}); refusing to build. `
+      + 'Delete it to publish without the trajectory layer, or rebuild it with x-signals.js.');
+  }
+  if (!payload || typeof payload !== 'object' || !payload.summary || !payload.signals) {
+    throw new Error('x-signals.json is present but mis-shaped (expected { summary, signals }); refusing to build.');
+  }
+  const builtAt = Date.parse(payload.summary.builtAt);
+  if (!Number.isFinite(builtAt)) {
+    throw new Error('x-signals.json declares no usable builtAt; refusing to publish a layer of unknown age.');
+  }
+  const ageDays = (buildNow - builtAt) / 864e5;
+  if (Math.round(ageDays) > X_SIGNALS_MAX_AGE_DAYS) {
+    throw new Error(`x-signals.json was built ${Math.round(ageDays)} days ago, beyond the `
+      + `${X_SIGNALS_MAX_AGE_DAYS}-day ceiling. Prediction text is revised daily and these signals are `
+      + 'matched against it, so a stale layer can attach a post to wording that has since changed. '
+      + 'Re-run x-harvest.js and x-signals.js, or delete the file to publish without the layer.');
+  }
+  /* Keys must resolve to live predictions. A signal for a removed or renumbered prediction is not a
+     cosmetic leftover: `2032-1` means a different forecast after a reorder. */
+  const live = new Set(livePredictionIds);
+  const orphans = Object.keys(payload.signals).filter(id => !live.has(id));
+  if (orphans.length) {
+    throw new Error(`x-signals.json references ${orphans.length} prediction id(s) that no longer exist `
+      + `(${orphans.slice(0, 5).join(', ')}${orphans.length > 5 ? ', …' : ''}). The prediction set changed `
+      + 'since the layer was built; re-run x-signals.js.');
+  }
+  const banned = ['evidenceOwner', 'sourceQuality', 'publisher', 'publisherHost', 'verifiedThrough', 'textSha256'];
+  for (const [id, signal] of Object.entries(payload.signals)) {
+    const carried = banned.filter(field => field in signal);
+    if (carried.length) {
+      throw new Error(`x-signals.json signal ${id} carries news-provenance field(s) ${carried.join(', ')}; `
+        + 'a trajectory signal must never be shaped like a citation.');
+    }
+  }
+  return { xSignals: { summary: payload.summary, items: payload.signals } };
+}
+
 function assertNoXIngestFiles(){
   const retired = ['reposts.json', 'posts.json', 'x-archive.json', 'archive.json', 'timeline.json'];
   const present = retired.filter(name => fs.existsSync(path.join(DIR, name)));
@@ -2925,6 +2982,14 @@ async function main(){
     currency,
     search: {},
     reality,
+    /* @peterxing TRAJECTORY SIGNALS — a SUPPLEMENTARY layer, added 2026-08-26 on the owner's
+       instruction. Deliberately a sibling of `embeds`, never a member of it: an X post carries no
+       editorial responsibility, byline standard or date provenance, so it can never be a citation
+       here. The evidence accounting above is computed WITHOUT this object and is unchanged by it,
+       which is why every X refusal added at the 2026-08-13 retirement still passes.
+       Built by x-signals.js and read from x-signals.json; absent when that file has not been built,
+       so the site degrades to exactly its pre-2026-08-26 behaviour rather than half-rendering. */
+    ...xSignalLayer(PREDICTIONS.map(p => p.id), BUILD_NOW),
   };
 
   const kindTally = {}; const tierTally = {};

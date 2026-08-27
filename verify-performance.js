@@ -105,6 +105,32 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * Four figures here were the second kind. They are gone, and the runs print them instead.
  */
 /*
+ * RE-BASELINE 2026-08-27 — app.js 145,000 -> 148,000. Written in the form this file requires: a
+ * named feature, with the outcome budgets checked BEFORE the ceiling was touched.
+ *
+ * WHAT GREW AND WHY: the @peterxing trajectory-signal layer. X evidence was retired in full on
+ * 2026-08-13 and stays retired; on 2026-08-26 the owner asked for his posts and reposts back as a
+ * SUPPLEMENT ("to indicate the accuracy of its trajectory"). Proximity is not proof, so X did not
+ * re-enter the citation channel — it is rendered as a separate, labelled card appended after the
+ * evidence state, in two visibly distinct tiers (TRACKED, which passed the 253-fixture matcher, and
+ * NEAREST, which is topical proximity only). The cost is xSignalCard(), its state binding, and the
+ * split of predictionEvidence() into body + appendix so the supplement can never replace an
+ * evidence state.
+ *
+ * WHY NOT TRIM INSTEAD: it was trimmed first. The initial implementation ran 1,639 b over; the
+ * renderer was compacted to 1,165 b over before this re-baseline was considered, which is the order
+ * this file prescribes.
+ *
+ * THE OUTCOME BUDGETS THIS PROXY STANDS IN FOR WERE ALL HEALTHY AT THE TIME OF THE RAISE, measured
+ * on the run that failed: rendered DOM 5,956/6,550 (9.07% headroom), first load 164,468/300,000
+ * (45.18%), evidence UI 374 ms/3,000 (87.53%), DOM-interactive 40 ms/1,000 (96.05%). Nothing a
+ * reader experiences moved toward its limit; only the proxy did. Had any outcome budget been tight,
+ * the correct answer would have been to cut the feature, not the ceiling.
+ *
+ * The ~2% design margin is preserved: 148,000 against 146,165 measured leaves 1.24%, and the margin
+ * reporter will WARN on the next growth rather than let it drift silently to the next failure.
+ */
+/*
  * RE-BASELINE 2026-08-17 — app.js 135,000 -> 143,000. This is the explicit justification the
  * paragraph above requires, and it is a re-baseline for a NAMED FEATURE rather than for drift.
  *
@@ -175,7 +201,7 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 145000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 148000 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 95000 },
   { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 375000 },
 ];

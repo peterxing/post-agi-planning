@@ -328,7 +328,22 @@ $fromDeploy = @(
   # version-controlled, not diffable and not mirrored, so a change to how the daily run behaves left
   # no trace anywhere. It is documentation, never executed, and the deploy surface allow-list keeps
   # it off the public site exactly as it keeps REVISE-PREDICTIONS.md off it.
-  'DAILY-RUN.md','AUTHOR-RUN.md',
+  'DAILY-RUN.md','AUTHOR-RUN.md','XSIGNALS-RUN.md',
+  # x-signals.js and verify-x-signals.js are mirrored for the same reason every gate here is: the
+  # verifier is the executable proof that X supplements the forecast WITHOUT becoming evidence, and
+  # a proof whose subject lives outside the published set is unfalsifiable from the mirror. Both
+  # depend only on already-published modules, so the allow-list stays closed under require.
+  # x-harvest.js is DELIBERATELY NOT HERE: it is operator-local, it reads credentials from
+  # pap-secrets, and its output never leaves that directory — the same treatment currency-harvest.js
+  # and browse-evidence.js receive.
+  # x-signals.json IS here, and the distinction matters. It is the CURATED layer, not the raw
+  # harvest: the raw harvest stays in pap-secrets forever. This file publishes nothing new, because
+  # refresh-signals.js folds it into signals.json byte-identically and signals.json is already
+  # mirrored and served — verified equal, all 91 entries, at the time this line was added. It is
+  # listed because the closure check refused the mirror without it: three published files read it,
+  # and a mirrored script whose only data input is unpublished cannot be run or checked by anyone
+  # working from the mirror. That refusal is the check working, not an obstacle to route around.
+  'x-signals.js','verify-x-signals.js','x-signals.json',
   # run-gates.ps1 is mirrored because both scheduled contracts now INVOKE it as their gate runner.
   # It is the thing that decides whether the suite passed, so leaving it unpublished would put the
   # arbiter of every publication outside the published set — the same defect this list already

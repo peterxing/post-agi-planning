@@ -531,6 +531,9 @@ let currencySignals = {};
    prediction nobody looked at. */
 let uncitedSignals = {};
 let contextSignals = {};
+/* @peterxing trajectory signals — SUPPLEMENTARY. Kept in its own binding, never merged into
+   directSignals/contextSignals, so no code path can reach an X post while looking for evidence. */
+let xSignals = {};
 let signalCoverageReady = false;
 const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
 function decodeKnownEntities(value){
@@ -765,6 +768,13 @@ function predictionEvidence(key, match, title){
      uncited. Only a prediction in none of the three - which the build treats as a hard failure -
      reaches the unavailable state. The order matters: a context entry is checked BEFORE the uncited
      record so an aged-out but genuine article is shown as background rather than reported as absent. */
+  return `${predictionEvidenceBody(key)}${xSignalCard(xSignals[key])}`;
+}
+/* THE X SIGNAL IS AN APPENDIX, NEVER A SUBSTITUTE. It is appended AFTER the evidence state and can
+   never replace it: an uncited prediction still says, in full, that a search ran and found nothing.
+   Those are different claims — "no authoritative source supports this" and "here is what Peter has
+   been amplifying about it" — and merging them is exactly what this separation prevents. */
+function predictionEvidenceBody(key){
   if (!directSignals[key]) {
     if (contextSignals[key]) return contextCard(contextSignals[key]);
     const record = uncitedSignals[key];
@@ -788,6 +798,35 @@ function predictionEvidence(key, match, title){
 }
 function evidenceUnavailable(){
   return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
+}
+
+/* @peterxing TRAJECTORY SIGNAL — SUPPLEMENTARY, AND SAID SO IN EVERY RENDERED WORD.
+   Added 2026-08-26 on the owner's instruction to supplement the forecast with his own posts and
+   reposts. It is NOT evidence: an X post carries no editorial responsibility, no byline standard
+   and no publication-date provenance, which is why the citation channel excludes it. The card is
+   visually and verbally distinct from every evidence card, and `tracked` (passed the 253-fixture
+   matcher) is labelled differently from `nearest` (topical proximity only), so proximity can never
+   be read as tracking. Full rationale: x-signals.js. */
+function xSignalCard(signal){
+  const url = signal ? safeHttpUrl(signal.url) : '';
+  if (!url) return '';
+  const label = signal.tier === 'tracked' ? 'Tracked by @peterxing' : 'Closest @peterxing activity';
+  const days = Number(signal.ageDays);
+  const meta = [
+    signal.authorship === 'authored' ? '@peterxing' : `@peterxing reposted @${signal.author || 'unknown'}`,
+    signal.created ? formatUtcDate(new Date(signal.created)) : '',
+    Number.isFinite(days) ? `${days} day${days === 1 ? '' : 's'} ago` : '',
+  ].filter(Boolean).join(' \u00b7 ');
+  return `
+    <details class="tl-xsignal" data-tier="${htmlText(signal.tier || 'nearest')}">
+      <summary><span class="tl-xsignal-summary-text"><strong>${htmlText(label)}</strong>
+        <span class="tl-xsignal-meta">${htmlText(meta)}</span></span></summary>
+      <div class="tl-xsignal-detail">
+        <blockquote class="tl-xsignal-text">${htmlText(signal.text || '')}</blockquote>
+        <p class="tl-xsignal-note">${htmlText(signal.statement || '')}</p>
+        <a class="tl-xsignal-link" href="${htmlText(url)}" target="_blank" rel="noopener">View on X</a>
+      </div>
+    </details>`;
 }
 /* GC seq-95 flagged the exact failure this fixes: routing an uncited prediction through
    evidenceUnavailable() would have printed "temporarily unavailable" - a claim that something is
@@ -1732,6 +1771,10 @@ function hasCompleteSignalCoverage(data){
          origin card, so it is gated on the same coverage check. If the bundle is degraded
          we show nothing rather than implying a reference we cannot stand behind. */
       currencySignals = signalCoverageReady && d.currency ? d.currency : {};
+      /* Gated on the SAME coverage check as every other layer. If the bundle is degraded we show no
+         trajectory signals either — a supplement rendered beside a blanked evidence channel would
+         be the only thing on the card, which is precisely the impression it must never give. */
+      xSignals = signalCoverageReady && d.xSignals && d.xSignals.items ? d.xSignals.items : {};
       renderTimeline();
       renderHorizon();
       requestAnimationFrame(revealHashTarget);
@@ -1774,6 +1817,7 @@ function hasCompleteSignalCoverage(data){
       uncitedSignals = {};
       contextSignals = {};
       currencySignals = {};
+      xSignals = {};
       renderTimeline();
       renderHorizon();
       requestAnimationFrame(revealHashTarget);

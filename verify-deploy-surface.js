@@ -120,12 +120,28 @@ const ALLOWED_EGRESS_HOSTS = new Set([
   'bit.ly', 'example.org', 'example-not-reviewed.test', 'news.google.com', 'www.prnewswire.com',
   // a neutral placeholder used in a usage example
   'host',
+  /* REVIEWED EDIT 2026-08-26 — X PARTIALLY REINSTATED, AS A SUPPLEMENT ONLY.
+     The owner instructed: "use my x api to supplement the prediction evidence based on the posts and
+     reposts from me (@peterxing)". api.x.com therefore moves from RETIRED_EGRESS_HOSTS to this
+     allow-list, because we are deliberately calling it again.
+     WHAT DID *NOT* COME BACK, AND IS STILL REFUSED BELOW: X as an EVIDENCE medium. x.com and
+     twitter.com remain retired as citation hosts; the syndication, oEmbed and widget endpoints
+     remain retired; Wayback discovery remains retired. The reinstated call is one authenticated
+     read of Peter's own timeline, whose output is published in a separate `xSignals` layer that
+     carries no provenance fields and never enters `embeds`. verify-x-signals.js asserts that
+     boundary and every X refusal added on 2026-08-13 still passes unchanged. */
+  'api.x.com',
 ]);
 
 /* Named rather than merely absent, so the failure says WHY. Bare hostnames, so this declaration
    cannot itself trip the scanner that reads https? URLs. */
 const RETIRED_EGRESS_HOSTS = new Map([
-  ['x.com', 'X evidence retired 2026-08-13'],
+  /* x.com and twitter.com stay retired AS EVIDENCE HOSTS. The 2026-08-26 supplement reads Peter's
+     own timeline through api.x.com (declared above) and publishes it as a labelled trajectory
+     layer; it never fetches or cites an x.com article page, so naming x.com in the tree's
+     JavaScript would still mean an X citation was being built. Permalinks rendered by app.js are
+     constructed from a status id, not fetched, and app.js is scanned here like every other file. */
+  ['x.com', 'X evidence retired 2026-08-13; api.x.com is allow-listed for the trajectory-signal supplement only'],
   ['twitter.com', 'X evidence retired 2026-08-13'],
   ['api.twitter.com', 'the X API was retired 2026-08-13'],
   ['api.x.com', 'the X API was retired 2026-08-13'],

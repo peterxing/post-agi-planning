@@ -89,7 +89,12 @@ const EXIT_DEFERRED = 75;
 // share a code. 76 is verify-currency.js's existing EXIT_INSTRUMENT and is unused by every other
 // guarded tool, so adopting it here unifies the vocabulary without redefining any current code.
 const EXIT_INSTRUMENT = 76;
-const PURPOSES = new Set(['scheduled-forecast', 'scheduled-author', 'interactive', 'manual']);
+/* 'scheduled-xsignals' added 2026-08-27 for the weekly @peterxing trajectory-signal job. This
+   enumeration is closed on purpose: an unrecognised purpose throws rather than defaulting, so a
+   scheduled job that names one this file does not know fails at its FIRST command instead of
+   running unlocked. That is exactly what happened here — the workflow was written against a purpose
+   this set did not contain, and the throw is what surfaced it before the job ever ran. */
+const PURPOSES = new Set(['scheduled-forecast', 'scheduled-author', 'scheduled-xsignals', 'interactive', 'manual']);
 
 function nowIso() {
   return new Date().toISOString();

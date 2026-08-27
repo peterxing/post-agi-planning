@@ -227,10 +227,40 @@ function requestStatus(pathname) {
            migration succeeded. No search chip is legitimate now, so the measure becomes "does the
            page reach X at all" - counted across every anchor and every script in the document,
            not only inside chips that no longer exist. */
-        xLinks:[...document.querySelectorAll('a[href]')].filter(link => {
+        /* SPLIT 2026-08-27, WHEN X RETURNED AS A SUPPLEMENT. This probe counted EVERY X anchor in
+           the document, which was exactly right while X was retired outright. The owner has since
+           asked for @peterxing's posts back as a labelled trajectory layer, so a blanket count can
+           no longer distinguish the thing that must never come back — an X post used as EVIDENCE —
+           from the thing that was deliberately added. Counting them together would force a choice
+           between deleting the feature and deleting the assertion.
+           So the invariant is SHARPENED rather than relaxed: X links inside the evidence channel
+           must still be ZERO, and supplement links are counted separately so their presence is
+           measured rather than merely tolerated. */
+        xLinksInEvidence:[...document.querySelectorAll('a[href]')].filter(link => {
+          if (link.closest('.tl-xsignal')) return false;
           try { return /(?:^|\.)(?:x\.com|twitter\.com)$/i.test(new URL(link.href, location.href).hostname); }
           catch { return false; }
         }).length,
+        xSupplementLinks:[...document.querySelectorAll('.tl-xsignal a[href]')].filter(link => {
+          try { return /(?:^|\.)(?:x\.com|twitter\.com)$/i.test(new URL(link.href, location.href).hostname); }
+          catch { return false; }
+        }).length,
+        /* Every supplement card must carry its disclaimer and a tier. A card that lost either would
+           render as an unlabelled quote beside the evidence, which is the failure mode the whole
+           two-channel separation exists to prevent. */
+        xSupplementCards:document.querySelectorAll('.tl-xsignal').length,
+        xSupplementDisclaimed:[...document.querySelectorAll('.tl-xsignal')]
+          .filter(card => /not evidence/i.test(card.textContent)).length,
+        xSupplementTiered:[...document.querySelectorAll('.tl-xsignal')]
+          .filter(card => ['tracked', 'nearest'].includes(card.getAttribute('data-tier'))).length,
+        /* A supplement must never be the ONLY thing under a prediction: it is appended to an
+           evidence state, never a replacement for one. */
+        xSupplementWithoutEvidence:[...document.querySelectorAll('#timelineBody .tl-xsignal, #horizonBody .tl-xsignal')]
+          .filter(card => {
+            const host = card.parentElement;
+            if (!host) return true;
+            return !host.querySelector('.tl-signal, .tl-signal-uncited, .tl-evidence-group, .tl-signal-unavailable');
+          }).length,
         xScripts:[...document.querySelectorAll('script[src]')].filter(script =>
           /twitter\.com|x\.com/i.test(script.src)).length,
         uncitedCards:document.querySelectorAll('#timelineBody .tl-signal-uncited, #horizonBody .tl-signal-uncited').length,
@@ -396,11 +426,25 @@ function requestStatus(pathname) {
       && !/Archive-verified|first-party status|Wayback|archive-discovered/i.test(state.evidenceDashboard.source)
       && /Live-verified sources/i.test(state.evidenceDashboard.source),
       JSON.stringify(state.evidenceDashboard));
-    check(results, 'no X link, X script or X-era evidence card survives on the page',
-      state.xLinks === 0 && state.xScripts === 0 && state.predictionSearches === 0
+    check(results, 'no X link, X script or X-era evidence card survives in the evidence channel',
+      state.xLinksInEvidence === 0 && state.xScripts === 0 && state.predictionSearches === 0
       && state.peterEvidence === 0 && state.externalEvidence === 0,
-      `xLinks=${state.xLinks} xScripts=${state.xScripts} searches=${state.predictionSearches} `
-      + `peter=${state.peterEvidence} external=${state.externalEvidence}`);
+      `xLinksInEvidence=${state.xLinksInEvidence} xScripts=${state.xScripts} `
+      + `searches=${state.predictionSearches} peter=${state.peterEvidence} external=${state.externalEvidence}`);
+    /* The supplement is asserted POSITIVELY as well as bounded. An artefact carrying trajectory
+       signals that render as zero cards is a silent feature outage; every card that does render
+       must state that it is not evidence, declare its tier, and sit beside an evidence state rather
+       than in place of one. */
+    const expectedXSignals = Object.keys((signals.xSignals && signals.xSignals.items) || {}).length;
+    check(results, 'the @peterxing supplement renders as a labelled, disclaimed, non-substituting layer',
+      state.xSupplementCards === state.xSupplementDisclaimed
+      && state.xSupplementCards === state.xSupplementTiered
+      && state.xSupplementWithoutEvidence === 0
+      && state.xSupplementLinks === state.xSupplementCards
+      && (expectedXSignals === 0 || state.xSupplementCards > 0),
+      `cards=${state.xSupplementCards} disclaimed=${state.xSupplementDisclaimed} `
+      + `tiered=${state.xSupplementTiered} orphaned=${state.xSupplementWithoutEvidence} `
+      + `links=${state.xSupplementLinks} artefact=${expectedXSignals}`);
     check(results, 'every uncited prediction states its search instead of a fault',
       state.uncitedCards === expectedUncited && state.evidenceUnavailable === 0,
       `uncitedCards=${state.uncitedCards} expected=${expectedUncited} unavailable=${state.evidenceUnavailable}`);

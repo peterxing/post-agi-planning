@@ -1985,3 +1985,53 @@ button { color: inherit; }
   .horizon-node.active,
   .horizon-item.is-selected { outline: 2px solid currentColor; }
 }
+
+/* @peterxing TRAJECTORY SIGNAL — deliberately NOT styled like an evidence card. It is set apart
+   with a dashed edge and muted surface so a reader scanning the page can see at a glance that it is
+   a different kind of thing from a cited article. Uses only existing --cp-* tokens. */
+.tl-xsignal {
+  margin-top: .5rem;
+  border: 1px dashed var(--cp-border-strong);
+  border-radius: .625rem;
+  background: var(--cp-surface-soft);
+}
+.tl-xsignal > summary {
+  cursor: pointer;
+  padding: .5rem .7rem;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+}
+.tl-xsignal > summary::-webkit-details-marker { display: none; }
+.tl-xsignal-summary-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .4rem;
+  font-size: .8rem;
+}
+.tl-xsignal-summary-text strong { color: var(--cp-text); font-weight: 700; }
+.tl-xsignal[data-tier="nearest"] .tl-xsignal-summary-text strong { color: var(--cp-text-muted); }
+.tl-xsignal-meta {
+  color: var(--cp-text-soft);
+  font-family: Consolas, "Courier New", Courier, monospace;
+  font-size: .72rem;
+}
+.tl-xsignal-detail { padding: 0 .7rem .7rem; }
+.tl-xsignal-text {
+  margin: 0 0 .45rem;
+  padding-left: .6rem;
+  border-left: 2px solid var(--cp-border);
+  color: var(--cp-text-muted);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+.tl-xsignal-note {
+  margin: 0 0 .45rem;
+  color: var(--cp-text-soft);
+  font-size: .74rem;
+  line-height: 1.45;
+}
+.tl-xsignal-link { color: var(--cp-link); font-size: .76rem; text-decoration: none; }
+.tl-xsignal-link:hover { text-decoration: underline; }
