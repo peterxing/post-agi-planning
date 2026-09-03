@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-02T23:43:33.075Z",
-  "note": "4 predictions carry one reviewed item of direct evidence: an authoritative news article fetched and quote-checked at publication, labeled direct, scenario or leading-indicator, and recorded with what it does not establish. 65 predictions have no qualifying source published inside the 14-day window and are recorded as uncited rather than evidenced by something weaker. Reuse is restricted to reviewed compatible concept families; a source cited by more than one prediction is counted once.",
+  "updated": "2026-09-03T01:29:49.155Z",
+  "note": "5 predictions carry one reviewed item of direct evidence: an authoritative news article fetched and quote-checked at publication, labeled direct, scenario or leading-indicator, and recorded with what it does not establish. 64 predictions have no qualifying source published inside the 14-day window and are recorded as uncited rather than evidenced by something weaker. Reuse is restricted to reviewed compatible concept families; a source cited by more than one prediction is counted once.",
   "source": "news-verified",
   "sourceStatus": {
     "mode": "news-verified",
@@ -32,466 +32,459 @@
       "reason": "x-evidence-retired-2026-08-13"
     }
   ],
-  "sourceFetchedAt": "2026-09-02T23:43:07.408Z",
+  "sourceFetchedAt": "2026-09-03T01:29:19.525Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-08-24T14:01:35.000Z",
+  "newestItemAt": "2026-08-31T16:49:11.194Z",
   "uncited": {
     "windowDays": 14,
-    "count": 65,
+    "count": 64,
     "items": {
       "2026-1": {
         "id": "2026-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.066Z",
+        "searchedAt": "2026-09-03T01:29:49.141Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2026-5": {
         "id": "2026-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.142Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2026-6": {
         "id": "2026-6",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.142Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-0": {
         "id": "2027-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.143Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-2": {
         "id": "2027-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.143Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-3": {
         "id": "2027-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.143Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-4": {
         "id": "2027-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.067Z",
+        "searchedAt": "2026-09-03T01:29:49.143Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2028-6": {
         "id": "2028-6",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2028-7": {
         "id": "2028-7",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-0": {
         "id": "2029-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-2": {
         "id": "2029-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-3": {
         "id": "2029-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-5": {
         "id": "2029-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
-        "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
-      },
-      "2029-6": {
-        "id": "2029-6",
-        "reason": "no-qualifying-source-in-window",
-        "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.144Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2030-1": {
         "id": "2030-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2030-2": {
         "id": "2030-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-0": {
         "id": "2031-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-1": {
         "id": "2031-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-2": {
         "id": "2031-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-3": {
         "id": "2031-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.068Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-0": {
         "id": "2032-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.145Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-2": {
         "id": "2032-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-3": {
         "id": "2032-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-4": {
         "id": "2032-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-5": {
         "id": "2032-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-0": {
         "id": "2033-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-1": {
         "id": "2033-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-2": {
         "id": "2033-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-3": {
         "id": "2033-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-4": {
         "id": "2033-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-5": {
         "id": "2033-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-6": {
         "id": "2033-6",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-0": {
         "id": "2034-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-1": {
         "id": "2034-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-3": {
         "id": "2034-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-4": {
         "id": "2034-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-2": {
         "id": "2035-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-3": {
         "id": "2035-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-4": {
         "id": "2035-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-0": {
         "id": "2036-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.146Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-2": {
         "id": "2036-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-3": {
         "id": "2036-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-4": {
         "id": "2036-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-5": {
         "id": "2036-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-6": {
         "id": "2036-6",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-1": {
         "id": "2037-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-2": {
         "id": "2037-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.069Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-4": {
         "id": "2037-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-5": {
         "id": "2037-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-0": {
         "id": "2038-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-1": {
         "id": "2038-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-3": {
         "id": "2038-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-4": {
         "id": "2038-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-5": {
         "id": "2038-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-0": {
         "id": "2039-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-1": {
         "id": "2039-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-2": {
         "id": "2039-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-3": {
         "id": "2039-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-5": {
         "id": "2039-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2040-0": {
         "id": "2040-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2040-1": {
         "id": "2040-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.070Z",
+        "searchedAt": "2026-09-03T01:29:49.147Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-whole-brain-emulation-and-uploading": {
         "id": "horizon-whole-brain-emulation-and-uploading",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.071Z",
+        "searchedAt": "2026-09-03T01:29:49.148Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-kardashev-energy-scaling": {
         "id": "horizon-kardashev-energy-scaling",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.071Z",
+        "searchedAt": "2026-09-03T01:29:49.148Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-transcension-hypothesis": {
         "id": "horizon-transcension-hypothesis",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.071Z",
+        "searchedAt": "2026-09-03T01:29:49.148Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-ruliad-testable-physics": {
         "id": "horizon-ruliad-testable-physics",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-02T23:43:33.071Z",
+        "searchedAt": "2026-09-03T01:29:49.148Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       }
     }
@@ -817,7 +810,7 @@
         "articleDate": "2026-01-19T12:00:45.000Z",
         "publishedAt": "2026-01-19T12:00:45.000Z",
         "publishedAtSource": "page",
-        "ageDays": 226,
+        "ageDays": 227,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "19 Jan 2026",
@@ -848,7 +841,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "72dec099aa537b94a2e6a42cb101f0a2b0ee637c934aead263c7d690736dbe80"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 226 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 227 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2027-5": {
         "id": "news:nature-ai-datacentre-energy-1",
@@ -1167,7 +1160,7 @@
         "articleDate": "2026-05-29T12:00:00.000Z",
         "publishedAt": "2026-05-29T12:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 96,
+        "ageDays": 97,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "29 May 2026",
@@ -1198,7 +1191,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "c76fb921379079e47941c034e282569c33f4f1ad9436e1fab373581e802d92f2"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 96 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 97 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2030-0": {
         "id": "news:techreview-openai-automated-researcher",
@@ -1217,7 +1210,7 @@
         "articleDate": "2026-03-20T11:57:16.000Z",
         "publishedAt": "2026-03-20T11:57:16.000Z",
         "publishedAtSource": "page",
-        "ageDays": 166,
+        "ageDays": 167,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "20 Mar 2026",
@@ -1248,7 +1241,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "85c4f28aa9b80db3aa471b0e19c571a6cf5194397aafc84b66b1e78610697c0f"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 166 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 167 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2030-3": {
         "id": "news:anthropic-open-weights-position",
@@ -1317,7 +1310,7 @@
         "articleDate": "2026-08-15T13:00:01.000Z",
         "publishedAt": "2026-08-15T13:00:01.000Z",
         "publishedAtSource": "page",
-        "ageDays": 18,
+        "ageDays": 19,
         "ageBucket": "15-30d",
         "windowDays": 14,
         "date": "15 Aug 2026",
@@ -1348,7 +1341,7 @@
           "lastVerifiedAt": "2026-08-17",
           "textSha256": "b0195a2d1d47deb1abf8b1e3e091248ae5ce6902fef17393a5a6a640b3b0fa8b"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 18 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 19 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2031-4": {
         "id": "news:wired-openai-agent-sandbox-escapes",
@@ -2067,7 +2060,7 @@
         "articleDate": "2025-12-22T12:00:00.000Z",
         "publishedAt": "2025-12-22T12:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 254,
+        "ageDays": 255,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "22 Dec 2025",
@@ -2098,7 +2091,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "90a73a194cf96f25ccbe435890976308afd23bd77546c27bd943758b9b0b17b2"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 254 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 255 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "horizon-implantable-neural-symbiosis": {
         "id": "news:commsbio-intracortical-bci-decoding",
@@ -2203,35 +2196,35 @@
     }
   },
   "coverage": {
-    "cited": 4,
+    "cited": 5,
     "context": 34,
-    "uncited": 65,
+    "uncited": 64,
     "searches": 0,
     "total": 103,
     "kept": 103,
     "dropped": 0,
     "complete": true,
-    "uniqueSources": 4,
+    "uniqueSources": 5,
     "maxReuse": 1,
     "reuseDistribution": {
-      "1": 4
+      "1": 5
     },
     "byEvidenceOwner": {
-      "news": 4
+      "news": 5
     },
     "byEvidenceMedium": {
       "x": 0,
-      "news": 4
+      "news": 5
     },
     "byPeterAuthorship": {
       "authored": 0,
       "reposted": 0
     },
     "bySourceQuality": {
-      "primary-news-organization": 4
+      "primary-news-organization": 5
     },
     "byEvidenceType": {
-      "leading-indicator": 4
+      "leading-indicator": 5
     },
     "currency": {
       "predictions": 0,
@@ -2368,6 +2361,65 @@
       "maps": "Frontier labs industrialize profession-by-profession training using expert interviews, environments and deployment data",
       "text": "With feelings ranging from fatalism to guilt, the creatives have signed up with some of the booming training agencies, which have contracts with the biggest AI companies including Anthropic and OpenAI, to pass on hard…"
     },
+    "2029-6": {
+      "id": "news:bbc-boe-ai-market-correction-warning",
+      "sourceKey": "https://www.bbc.co.uk/news/articles/c99dym3prl1o",
+      "kind": "news",
+      "activityKind": "news",
+      "authorship": "news",
+      "evidenceOwner": "news",
+      "evidenceMedium": "news",
+      "publisher": "BBC News",
+      "publisherHost": "bbc.co.uk",
+      "byline": null,
+      "headline": "AI could cause global economic downturn, Andrew Bailey warns G20",
+      "quote": "Andrew Bailey said any collapse of growth in the AI sector could lead to a \"future market correction\" that spreads worldwide.",
+      "articleDate": "2026-08-31T16:49:11.194Z",
+      "url": "https://www.bbc.co.uk/news/articles/c99dym3prl1o",
+      "provenance": {
+        "evidenceOwner": "news",
+        "activityKind": "news",
+        "publisher": "BBC News",
+        "publisherHost": "bbc.co.uk",
+        "byline": null,
+        "publishedAt": "2026-08-31T16:49:11.194Z",
+        "publishedAtSource": "page",
+        "retrievedAt": "2026-09-03",
+        "sourceQuality": "primary-news-organization",
+        "verifiedThrough": "live-fetch+quote-match",
+        "sourceChain": [
+          "live-fetch",
+          "metadata-extract",
+          "quote-match"
+        ],
+        "lastVerifiedAt": "2026-09-03",
+        "textSha256": "ebe91374bcc7129fb7071716c4da1d6a79793659b165d2e865234803d177a845"
+      },
+      "recency": "news",
+      "matchMethod": "reviewed-news",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "ai-politics",
+      "reuseFamily": "ai-financial-stability",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "The Governor of the Bank of England, writing in his capacity as chair of the Financial Stability Board, warned G20 finance ministers that artificial intelligence could cause a global economic downturn, and that a collapse of growth in the AI sector could lead to a market correction spreading worldwide, pointing to highly priced stock markets, increased investor borrowing and the concentration of money into a small number of major technology companies. That is a named central-bank and international-watchdog authority treating AI-driven market instability as a systemic financial-stability risk, which is the market-volatility half of this prediction. IT DOES NOT EVIDENCE THE PREDICTION. No AI policy shock has occurred here and none is identified: the article describes a forward-looking warning about a POSSIBLE future correction, not any realised or sustained volatility, and the causal chain it draws runs from AI-sector valuations and leverage rather than from policy. It is also silent on political polarization, which is this prediction's second clause, so at most one of the two stated effects is addressed and neither is shown to have happened.",
+      "sourceQuality": "primary-news-organization",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "governance",
+        "economy",
+        "ai"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-09-03",
+      "lastVerifiedAt": "2026-09-03",
+      "date": "31 Aug 2026",
+      "maps": "AI policy shocks cause sustained market volatility and political polarization",
+      "text": "Andrew Bailey said any collapse of growth in the AI sector could lead to a \"future market correction\" that spreads worldwide."
+    },
     "2030-4": {
       "id": "news:mit-tr-ai-designed-drug-credit",
       "sourceKey": "https://www.technologyreview.com/2026/08/21/1142627/when-ai-designs-a-drug-who-gets-the-credit",
@@ -2493,6 +2545,21 @@
   "search": {},
   "reality": [
     {
+      "tag": "MARKETS",
+      "t": "Andrew Bailey said any collapse of growth in the AI sector could lead to a \"future market correction\" that spreads worldwide.",
+      "kind": "news",
+      "headline": "AI could cause global economic downturn, Andrew Bailey warns G20",
+      "publisher": "BBC News",
+      "publisherHost": "bbc.co.uk",
+      "url": "https://www.bbc.co.uk/news/articles/c99dym3prl1o",
+      "author": null,
+      "recency": "week",
+      "ageDays": 2,
+      "date": "31 Aug 2026",
+      "publishedAt": "2026-08-31T16:49:11.194Z",
+      "publishedAtSource": "page"
+    },
+    {
       "tag": "ABUNDANCE",
       "t": "Combining the elements into a single piece of legislation signals the government’s ambition on AI, but could also heighten the political risk of ge…",
       "kind": "news",
@@ -2551,12 +2618,6 @@
     },
     {
       "tag": "CAPABILITY",
-      "t": "No authoritative source published in the last 14 days matched this theme. Nothing older or unverified has been substituted.",
-      "kind": "none",
-      "recency": "none"
-    },
-    {
-      "tag": "MARKETS",
       "t": "No authoritative source published in the last 14 days matched this theme. Nothing older or unverified has been substituted.",
       "kind": "none",
       "recency": "none"

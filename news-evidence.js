@@ -658,6 +658,20 @@ const NEWS_SOURCES = {
     quote: "Insilico leads a pack of companies using AI to rapidly come up with drug ideas humans might never think of, potentially speeding the race to new cures.",
     textSha256: "336dd909de849d80d2dad8e0b485a6bd23f22dbadf60242054a19a3f34ff7cf5",
   },
+  "bbc-boe-ai-market-correction-warning": {
+    url: "https://www.bbc.co.uk/news/articles/c99dym3prl1o?at_medium=RSS&at_campaign=rss",
+    resolvedUrl: "https://www.bbc.co.uk/news/articles/c99dym3prl1o",
+    publisher: "BBC News",
+    publisherHost: "bbc.co.uk",
+    author: null,
+    headline: "AI could cause global economic downturn, Andrew Bailey warns G20",
+    publishedAt: "2026-08-31T16:49:11.194Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-03",
+    sourceQuality: "primary-news-organization",
+    quote: "Andrew Bailey said any collapse of growth in the AI sector could lead to a \"future market correction\" that spreads worldwide.",
+    textSha256: "ebe91374bcc7129fb7071716c4da1d6a79793659b165d2e865234803d177a845",
+  },
 };
 
 /*
@@ -1026,6 +1040,15 @@ const NEWS_GROUPS = [
     reuseFamily: "agent-control-incidents",
     rationale: "WIRED reports OpenAI expanding alignment work across the training process specifically to prevent reward hacking — models pursuing goals through unintended means — after halting training workloads for a frontier model. It shows target-trait training becoming a routine, resourced part of the frontier training pipeline, which is the trajectory this prediction describes. IT ARGUABLY CUTS AGAINST THE PREDICTION AS WORDED, AND IS PUBLISHED ON THAT BASIS. The prediction claims protocols that RELIABLY train and test honesty and obedience; this article describes protocols being strengthened BECAUSE they failed, prompted by rogue agents escaping a testing sandbox. No standard is named, nothing is shown to work reliably, no external party verified the change, and the account of what was halted and why comes from the company. It is 9 days old and so falls inside the citation window and is published as a current reference; the channel is decided by recency, not by evidential strength, which is why it is typed a leading indicator and why the limits above are stated rather than implied.",
     reviewedAt: "2026-08-27",
+  },
+  {
+    source: "bbc-boe-ai-market-correction-warning",
+    ids: ["2029-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-official-warning",
+    reuseFamily: "ai-financial-stability",
+    rationale: "The Governor of the Bank of England, writing in his capacity as chair of the Financial Stability Board, warned G20 finance ministers that artificial intelligence could cause a global economic downturn, and that a collapse of growth in the AI sector could lead to a market correction spreading worldwide, pointing to highly priced stock markets, increased investor borrowing and the concentration of money into a small number of major technology companies. That is a named central-bank and international-watchdog authority treating AI-driven market instability as a systemic financial-stability risk, which is the market-volatility half of this prediction. IT DOES NOT EVIDENCE THE PREDICTION. No AI policy shock has occurred here and none is identified: the article describes a forward-looking warning about a POSSIBLE future correction, not any realised or sustained volatility, and the causal chain it draws runs from AI-sector valuations and leverage rather than from policy. It is also silent on political polarization, which is this prediction's second clause, so at most one of the two stated effects is addressed and neither is shown to have happened.",
+    reviewedAt: "2026-09-03",
   },
 ];
 

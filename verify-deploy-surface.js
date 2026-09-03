@@ -131,6 +131,16 @@ const ALLOWED_EGRESS_HOSTS = new Set([
      carries no provenance fields and never enters `embeds`. verify-x-signals.js asserts that
      boundary and every X refusal added on 2026-08-13 still passes unchanged. */
   'api.x.com',
+  /* REVIEWED EDIT 2026-09-03 — declared because feeds.bbci.co.uk, already on this list as a DISCOVERY
+     feed, RESOLVES ITS ITEMS to www.bbc.co.uk: the reviewed citation for 2029-6 (the Bank of England
+     governor's warning to the G20, promoted this run) records that article host, and an undeclared
+     host fails this gate closed — which is the gate working, not a defect in it. It is the same
+     first-party publisher already trusted for discovery, under the host where its articles actually
+     live; BBC News is a primary news organisation with named editorial responsibility, which is the
+     same bar every other publisher here meets, and is not an aggregator, syndicator, press-release
+     mill or preprint server. Declaring the host never makes its contents admissible; that stays with
+     the per-article fetch, quote-match and source-quality gates. */
+  'www.bbc.co.uk',
 ]);
 
 /* Named rather than merely absent, so the failure says WHY. Bare hostnames, so this declaration
