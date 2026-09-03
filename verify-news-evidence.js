@@ -175,6 +175,7 @@ const PROOF_FEEDS = [
 const PROOF_ROSTER = [
   'aggregator, shortener and press-release mill rejected before fetch',
   'an apostrophe in a headline or publisher is not read as a delimiter',
+  "a neighbouring post's <time> cannot supply this article's publication date",
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
   'inline-spacing tidy cannot change any quote comparison',
   'reuse ceiling holds against an over-ceiling ledger',
@@ -192,6 +193,7 @@ const PROOF_ROSTER = [
 const PROOF_CAPABILITY = {
   'aggregator, shortener and press-release mill rejected before fetch': 'aggregators',
   'an apostrophe in a headline or publisher is not read as a delimiter': 'metadata truncation',
+  "a neighbouring post's <time> cannot supply this article's publication date": 'date provenance',
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents': 'publisher attribution',
   'inline-spacing tidy cannot change any quote comparison': 'quote fidelity',
   'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
@@ -260,6 +262,40 @@ async function runProofs(log) {
     extractedCase.headline === `Ukraine${APOS}s one-time test used fully autonomous drones`
     && extractedCase.publisher === `Shaping Europe${APOS}s digital future`,
     `headline=${JSON.stringify(extractedCase.headline)} publisher=${JSON.stringify(extractedCase.publisher)}`);
+
+  /* Proof 4b-2: a RAIL <time> is not this article's date. REGRESSION PROOF, pinned to the page it
+     was measured on. openai.com/index/responding-next-frontier-critical-cyber-capabilities carries
+     no article:published_time, no og:published_time and no JSON-LD date, so the chain fell to its
+     <time> fallback — which took the FIRST <time> in the document. OpenAI nests a rail of its other
+     posts INSIDE <article>, so that element belonged to OpenAI's newest post. The recorded date
+     tracked OpenAI's publishing schedule instead of the article: 2026-08-17 -> 2026-08-26 ->
+     2026-09-01 across three runs, on a story whose URL, headline, publisher and reviewed quote
+     never changed, while its own dateline said "August 7, 2026" throughout. Nothing failed loudly;
+     it published a ~27-day-old article as a CITED citation inside a 14-day window and re-armed its
+     own currency clock every time OpenAI posted anything.
+     Both halves are asserted, because a fix that only refused the ambiguous case would evict real
+     evidence: nature.com's ten <time> elements include nine rail items, and the ONE inside
+     <article> is its true date, which must still be read. Offline, so it always runs. */
+  const railCase = `<html><head><title>Story</title></head><body><article>`
+    + `<p>OpenAI August 7, 2026 Security ${'prose '.repeat(120)}</p>`
+    + `<aside><a>Newer post</a><time dateTime=${QUOTE}2026-09-01T13:00${QUOTE}>Sep 1, 2026</time>`
+    + `<a>Another</a><time dateTime=${QUOTE}2026-08-26T00:00${QUOTE}>Aug 26, 2026</time>`
+    + `<a>Older</a><time dateTime=${QUOTE}2026-08-17T05:30${QUOTE}>Aug 17, 2026</time></aside>`
+    + `</article></body></html>`;
+  const railExtracted = extractArticle(railCase, 'https://openai.com/index/story/');
+  const scopedCase = `<html><head><title>Story</title></head><body>`
+    + `<article><time datetime=${QUOTE}2026-08-11${QUOTE}>Aug 11, 2026</time>`
+    + `<p>${'prose '.repeat(120)}</p></article>`
+    + `<aside><time datetime=${QUOTE}2026-09-02${QUOTE}>Sep 2, 2026</time>`
+    + `<time datetime=${QUOTE}2026-08-27${QUOTE}>Aug 27, 2026</time></aside>`
+    + `</body></html>`;
+  const scopedExtracted = extractArticle(scopedCase, 'https://www.nature.com/articles/story');
+  record("a neighbouring post's <time> cannot supply this article's publication date",
+    railExtracted.publishedAt.slice(0, 10) === '2026-08-07'
+    && scopedExtracted.publishedAt.slice(0, 10) === '2026-08-11',
+    `rail=${JSON.stringify(railExtracted.publishedAt)} (must be the 2026-08-07 dateline, not the `
+    + `2026-09-01 rail item); scoped=${JSON.stringify(scopedExtracted.publishedAt)} (must still read `
+    + `the 2026-08-11 date inside <article>)`);
 
   /* Proof 4c: the reviewed host->publisher map ADDS REACH WITHOUT INVENTING. Measured 2026-08-27:
      anthropic.com and research.google serve a headline, a date and full body text but declare no

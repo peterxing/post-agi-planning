@@ -603,22 +603,32 @@ const NEWS_SOURCES = {
     publisherHost: "openai.com",
     author: null,
     headline: "Responding to the next frontier of critical cyber capabilities",
-    /* RE-REVIEWED 2026-08-26 — DATE RESTAMPED BY THE PUBLISHER, ARTICLE UNCHANGED.
-       Reviewed 2026-08-25 against a page dateline of 2026-08-17. On 2026-08-26 the live page states
-       2026-08-26, and the build refused to publish ("publication date changed since review"), which
-       is the drift gate working exactly as designed: a silently re-dated page would otherwise
-       restart its own 14-day currency clock without one word of new reporting.
-       VERIFIED before updating: the resolved URL, the headline and the reviewed verbatim quote are
-       all unchanged, so this is the same article with a new stamp, not new reporting and not a
-       different piece. The recorded date is therefore moved to what the page NOW states — the field
-       records what the publisher says, not what we prefer it to say — and the freshness the reader
-       sees is the publisher's own claim. Nothing else about the mapping changes. */
-    publishedAt: "2026-08-26T07:00:00.000Z",
+    /* RE-REVIEWED 2026-09-03 — THE 2026-08-26 RESTAMP WAS OUR BUG, NOT THE PUBLISHER'S.
+       The note this replaces concluded that OpenAI had re-dated the page and moved the recorded
+       date 2026-08-17 -> 2026-08-26 to follow it. That reasoning was wrong, and the run of
+       2026-09-03 failed the same drift gate a third time with the page now claiming 2026-09-01.
+       MEASURED: this page carries no article:published_time, no og:published_time and no JSON-LD
+       date, so the date chain fell to its <time> fallback, which took the FIRST <time> in the
+       document. OpenAI's rail of other posts sits inside <article>, so that element belonged to
+       OpenAI's newest post, not to this one. The recorded date was tracking OpenAI's publishing
+       schedule: 2026-08-17 -> 2026-08-26 -> 2026-09-01, three different dates for an article
+       whose URL, headline, publisher and reviewed verbatim quote never changed.
+       THE ARTICLE'S OWN DATELINE, rendered at the top of the story and read by
+       renderedPublishedDate(), says "August 7, 2026" and has said so throughout. That is what the
+       publisher shows readers, so that is what is recorded here. extractArticle() was fixed in the
+       same change (see unambiguousTimeDate) so an ambiguous <time> can no longer outrank it.
+       CONSEQUENCE, STATED PLAINLY: at its true date this article is ~27 days old, so it is OUTSIDE
+       the 14-day window and is no longer a CITED citation. It moves to the CONTEXT channel carrying
+       its true age. It was published as CITED under a date that was never real; correcting it costs
+       a cited count and is the only honest option.
+       textSha256 is restamped in the same review: the URL, headline, publisher and the reviewed
+       verbatim quote were all re-verified present on the live page at 2026-09-03. */
+    publishedAt: "2026-08-07T00:00:00.000Z",
     publishedAtSource: "page",
-    retrievedAt: "2026-08-25",
+    retrievedAt: "2026-09-03",
     sourceQuality: "official-company",
     quote: "Previous models, including GPT‑5.6‑Sol, have been evaluated for frontier cyber capabilities and assessed at the High (rather than Critical) threshold.",
-    textSha256: "fa44fdb69646c134c5e7c514fdf333c7ccc3fa9b5aaf4d53fb5886ba249d6fc8",
+    textSha256: "0161dff1a4d5562646ff4080c66ea75791fd5bde99cdc0e129dd026a72b8ac13",
   },
   "deepmind-gemini-robotics-er2-multi-robot": {
     url: "https://deepmind.google/blog/gemini-robotics-er-2-powering-robotics-with-video-understanding-task-orchestration-and-multi-robot-collaboration/",
@@ -1509,6 +1519,64 @@ const RENDERED_DATE_PATTERNS = [
 ];
 
 /*
+ * A <time> ELEMENT IS ONLY THIS ARTICLE'S DATE WHEN THE DOCUMENT HOLDS EXACTLY ONE.
+ *
+ * The date chain used to take the FIRST <time datetime> anywhere in the document. A <time>
+ * element carries no claim about WHICH article it belongs to, and a modern publisher page
+ * surrounds the story with a rail of other posts that each carry their own — so "first in
+ * document order" silently resolves to whatever the publisher most recently posted.
+ *
+ * MEASURED 2026-09-03 on openai.com/index/responding-next-frontier-critical-cyber-capabilities:
+ * the page carries NO article:published_time, NO og:published_time and NO JSON-LD date, so this
+ * fallback decided. Its three <time> elements were Sep 1, Aug 26 and Aug 17 2026 — all of them
+ * neighbouring posts — while the article's own dateline, rendered at the top of the story, reads
+ * "August 7, 2026". The recorded date therefore tracked OpenAI's newest post and moved 2026-08-17
+ * -> 2026-08-26 -> 2026-09-01 across three runs without one word of the article changing. That is
+ * the precise failure the modified_time removal above was written to prevent: an article silently
+ * restarting its own 14-day currency clock. It also mis-channelled the source, publishing a
+ * ~27-day-old article as a CITED citation inside a 14-day window.
+ *
+ * The rule below prefers the <time> scoped to the semantic <article> region, and otherwise accepts
+ * a document-wide <time> only when the whole document agrees — the same "accept an unambiguous
+ * signal, fail closed on an ambiguous one" test renderedPublishedDate() already applies one
+ * function down. It can only ever WITHDRAW a guessed date, never supply a new one.
+ *
+ * SCOPING TO <article> IS LOAD-BEARING AND WAS MEASURED, NOT ASSUMED. nature.com carries TEN
+ * <time> elements (2026-08-11 plus nine rail items running to 2026-09-02), of which exactly ONE
+ * sits inside <article> and is the article's own 2026-08-11; its rendered opening is share-widget
+ * furniture with no dateline at all. A document-wide unambiguity test alone would therefore have
+ * withdrawn a CORRECT date and left that source with none — evicting genuine evidence to fix a
+ * different page. openai.com nests its rail INSIDE <article>, so the scoped test finds three
+ * disagreeing dates there too, correctly declines, and lets the dateline stand.
+ *
+ * VERIFIED AGAINST THE WHOLE REVIEWED LEDGER BEFORE THE CHANGE, exactly as the modified_time
+ * removal was: of 38 reviewed sources, 35 are bit-identical before and after. Exactly ONE source
+ * changes: the OpenAI page above, corrected from a neighbour's 2026-09-01 to its own 2026-08-07.
+ */
+function timeDatesIn(fragment) {
+  const found = new Map();
+  for (const match of String(fragment || '').matchAll(/<time[^>]+datetime\s*=\s*["']([^"']+)["']/gi)) {
+    const raw = collapse(match[1] || '');
+    if (!raw) continue;
+    const parsed = new Date(/\d:\d/.test(raw) ? raw : `${raw} UTC`);
+    if (Number.isNaN(parsed.getTime())) continue;
+    const day = parsed.toISOString().slice(0, 10);
+    if (!found.has(day)) found.set(day, raw);
+  }
+  return found;
+}
+
+function unambiguousTimeDate(html) {
+  const doc = String(html || '');
+  for (const region of (doc.match(/<article\b[\s\S]*?<\/article>/gi) || [])) {
+    const scoped = timeDatesIn(region);
+    if (scoped.size === 1) return [...scoped.values()][0];
+  }
+  const whole = timeDatesIn(doc);
+  return whole.size === 1 ? [...whole.values()][0] : '';
+}
+
+/*
  * Last-resort publication date read from the RENDERED page rather than metadata.
  * Only accepted when the opening of the article yields exactly one distinct
  * date, so an ambiguous page fails closed instead of guessing.
@@ -1643,7 +1711,10 @@ function extractArticle(html, finalUrl) {
     'og:published_time', 'pubdate', 'publish-date', 'DC.date.issued',
   ])
     || collapse(ld.datePublished || ld.dateCreated || '')
-    || collapse((html.match(/<time[^>]+datetime\s*=\s*["']([^"']+)["']/i) || [])[1] || '')
+    // Unambiguous <time> only — see unambiguousTimeDate(). A page whose <time> elements
+    // disagree is a page whose <time> elements belong to different articles, so it falls
+    // through to the dateline the publisher shows the reader instead of guessing.
+    || unambiguousTimeDate(html)
     // Same reasoning as the headline chain: academic-publisher tags appended last so no
     // already-captured date can shift. A date that still cannot be extracted fails closed.
     || metaContent(html, ['citation_publication_date', 'citation_online_date', 'DC.date', 'dcterms.date']);
