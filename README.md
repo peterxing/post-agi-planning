@@ -222,16 +222,53 @@ of `supporting`, `mixed` or `challenging`, `criterion: { id, version, descriptio
 remain unassessed. This is a rendering contract, not an automated assessor or a connected feed;
 no observation records were invented or added in the redesign.
 
-METR's task-horizon evaluations and ClinicalTrials.gov records are identified as potential future
-measurement sources only. Neither is connected. Any integration needs explicit, reviewed
-forecast criteria: human-expert task duration is not all-job automation, and a registry milestone
-is not regulatory approval. No cloud resource, API key, market feed or new schedule was introduced.
+### Connected METR capability instrument
+
+`npm run refresh:metr` collects the primary
+[METR v1.1 YAML](https://metr.org/assets/benchmark_results_1_1.yaml). The existing daily contract
+calls it before `refresh-signals.js`; the latter validates and preserves the independent
+`signals.capabilities.metr` layer on every build. It never adds a news citation, changes news
+accounting/timestamps, edits a forecast or asserts a trajectory verdict.
+
+The unit is **human-expert minutes**, at **50% or 80% task success**, with **95% confidence
+intervals**. Reviewed source: the [official chart implementation](https://metr.org/assets/js/time-horizon-chart.js)
+divides each horizon/interval by 60 to display hours and labels the tooltip "95% CI".
+YAML does not declare a unit, so this is an explicit version-pinned adapter contract, not a
+guessed field. [METR's methodology](https://metr.org/time-horizons/) limits the interpretation
+to primarily self-contained software, ML and cybersecurity tasks. Estimates above 16 hours
+are unreliable with the current task suite. These are neither autonomous runtimes nor proof
+of general AGI or all-job automation.
+
+The normalized payload retains exact source numeric values, model identifiers/release dates,
+scaffolds, task revisions and the response SHA-256. It excludes legacy v1.0 rows from v1.1
+comparisons. The context-only relation to 2026-0 is pinned to its exact text hash and full
+forecast fingerprint; it covers software-task capability, not human review, persistent monitored
+operation or safeguards. No criterion resolving that composite forecast is assigned. All other
+forecasts remain unrelated, and every whole-forecast trajectory remains unassessed.
+
+Source checks and successful 200 fetches have separate timestamps. A 304 advances check/health,
+not source dates or snapshots. Model release is not evaluation/publication time; those dates
+remain null because this dataset does not supply them. HTTP Last-Modified is labelled as a
+file timestamp only. Two successful 200 snapshots are required for site change history;
+304 does not invent one. Task revision or scaffold changes prevent like-for-like comparisons.
+
+The collector uses exact-URL redirect approval, a 256 KiB body limit, 12-second requests,
+conditional ETag/Last-Modified, up to three attempts and persisted Retry-After cooldowns.
+Malformed/version/unit/interval failures never replace last-good data. Collector exit 10 reports
+an unavailable/refused source and atomically saves explicit health plus retained data; daily
+news collection continues. Exit 75 still means interlock deferral and stops the run. Other
+collector errors fail closed. No raw cache, secrets, new served file, cloud resource or scheduler
+was introduced: replay state is the normalized layer already mirrored in signals.json.
+The pinned `yaml` parser and `package-lock.json` support `npm ci` in the source mirror.
+`npm run verify:metr` exercises schema, transport, dates, retention and UI controls.
+
+Collection is daily and source releases are periodic, not real-time. Browser polling still
+retrieves only the latest published artifact. ClinicalTrials.gov remains unconnected.
 
 ### Proposed collection adapters (not enabled)
 
 | Source | Bounded collection proposal | What it could measure | What it cannot establish |
 | --- | --- | --- | --- |
-| METR task-horizon dataset | Conditional GET of the fixed-version public YAML once per day; honour ETag/Last-Modified when supplied. Evaluation releases are irregular, so unchanged data is expected. | Model release, benchmark version, p50/p80 human-expert task-duration estimates, units and confidence intervals. | General AGI, all-job automation or literal continuous autonomous runtime. |
 | ClinicalTrials.gov | Check its version/data timestamp daily, then fetch only curated NCT IDs when the source changes. Deduplicate by NCT ID plus registry update version. | Registered trial phase/status and posted results for the exact intervention under review. | Clinical efficacy from registration alone, or regulatory approval from trial phase. |
 | EIA / BLS / ABS | Select specific series and their actual release calendar first; collection must not outrun publication. EIA requires a separately approved free key; no key or adapter was added. | Geography-specific capacity, electricity demand or employment, with units and revisions kept distinct. | That capacity equals demand, or that an employment movement was caused by AI. |
 
@@ -249,10 +286,10 @@ outage does not change direction, and a missing measurement is unknown, not off-
 reviewed normalized records through the existing `signals.json`/allow-listed pipeline only after its
 gates pass. Raw collection remains operator-local and cannot rewrite authored probabilities.
 
-These adapters are a proposed next phase, not background jobs supplied by this redesign. The present
+These remaining adapters are proposals, not background jobs. The present
 UI can discover a *published* update on its next visible-page check; the time from upstream release
 to reviewed publication remains governed by collection, review and deployment, not the browser
-request duration. No additional scheduling, rate changes or provider access have been enabled.
+request duration. No additional scheduler or paid provider access has been enabled.
 
 The existing UI runner includes the mission tests:
 

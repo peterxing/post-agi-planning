@@ -75,6 +75,8 @@ const ALLOWED_TRAILING_DENIES = new Set(['.env*', '.vercel', '.pipeline.lock']);
 const ALLOWED_EGRESS_HOSTS = new Set([
   // local verification and the two production domains
   '127.0.0.1', 'peterxing.com', 'post-agi-planning.vercel.app',
+  // Reviewed 2026-09-05: first-party benchmark measurements, never news citations.
+  'metr.org',
   // reviewed news + currency publishers (primary reporting, journals, labs, agencies, regulators)
   'arstechnica.com', 'feeds.arstechnica.com', 'arxiv.org', 'rss.arxiv.org', 'bair.berkeley.edu',
   'blogs.nvidia.com', 'deepmind.google', 'digital-strategy.ec.europa.eu', 'huggingface.co',

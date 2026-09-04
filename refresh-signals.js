@@ -36,6 +36,7 @@ if (require.main === module) require('./pipeline-lock').guard('refresh-signals')
 const fs = require('fs');
 const path = require('path');
 const { createHash } = require('crypto');
+const { bindState: bindMetrState } = require('./refresh-metr');
 const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
 const {
   FAMILY_DEFINITIONS,
@@ -1699,7 +1700,9 @@ function assertNoXIngestFiles(){
 
 async function main(){
   let prev = {};
-  try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); } catch(e){}
+  try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  const metr = bindMetrState(prev.capabilities?.metr, JSON.parse(fs.readFileSync(PRED, 'utf8')));
   const prevEmbeds = (prev && prev.embeds) || {};
   const prevSearches = (prev && prev.search) || {};
   /* X RETIREMENT 2026-08-13, RESIDUE CLEARED 2026-08-14. `historicalTimeline` and `optionalReposts`
@@ -2904,6 +2907,7 @@ async function main(){
     return dates.length ? new Date(Math.max(...dates)).toISOString() : null;
   })();
   const out = {
+    capabilities: { metr },
     forecastVersion: {
       schemaVersion: 1,
       sha256: createHash('sha256').update(JSON.stringify(JSON.parse(fs.readFileSync(PRED, 'utf8')))).digest('hex'),

@@ -4650,5 +4650,519 @@
         "statement": "@peterxing’s closest related activity — amplifying @SawyerMerritt. It shares subject matter with this prediction but does not directly track it, and it is not evidence."
       }
     }
+  },
+  "capabilities": {
+    "metr": {
+      "schemaVersion": 1,
+      "sourceUrl": "https://metr.org/assets/benchmark_results_1_1.yaml",
+      "methodologyUrl": "https://metr.org/time-horizons/",
+      "unitReference": "https://metr.org/assets/js/time-horizon-chart.js",
+      "status": "ok",
+      "error": null,
+      "lastCheckedAt": "2026-09-04T23:37:52.693Z",
+      "lastSuccessfulFetchAt": "2026-09-04T23:33:00.169Z",
+      "retryAt": null,
+      "current": {
+        "benchmark": "METR-Horizon-v1.1",
+        "unit": "human-expert minutes",
+        "intervalLevel": 0.95,
+        "longTasksVersion": "799cc9c4b4483a93fc3445623a49ea1bd74fdeb2",
+        "swaaVersion": "f6cc84052e2a79dd540766c8a1b15ff399696371",
+        "excludedLegacy": 3,
+        "records": [
+          {
+            "id": "claude_mythos_preview_early_inspect",
+            "releaseDate": "2026-04-07",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 1044.780145,
+              "ci_low": 508.876789,
+              "ci_high": 3304.261235
+            },
+            "p80": {
+              "estimate": 185.911829,
+              "ci_low": 97.30292,
+              "ci_high": 398.514614
+            }
+          },
+          {
+            "id": "gpt_5_4",
+            "releaseDate": "2026-03-05",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 341.735276,
+              "ci_low": 186.581591,
+              "ci_high": 768.779526
+            },
+            "p80": {
+              "estimate": 53.877851,
+              "ci_low": 23.957027,
+              "ci_high": 108.679232
+            }
+          },
+          {
+            "id": "gemini_3_1_pro",
+            "releaseDate": "2026-02-19",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 384.147435,
+              "ci_low": 233.50073,
+              "ci_high": 694.750898
+            },
+            "p80": {
+              "estimate": 89.801503,
+              "ci_low": 52.025934,
+              "ci_high": 158.618017
+            }
+          },
+          {
+            "id": "claude_opus_4_6_inspect",
+            "releaseDate": "2026-02-05",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 718.80683,
+              "ci_low": 316.685725,
+              "ci_high": 3633.786163
+            },
+            "p80": {
+              "estimate": 69.874587,
+              "ci_low": 27.026521,
+              "ci_high": 170.437873
+            }
+          },
+          {
+            "id": "gpt_5_3_codex",
+            "releaseDate": "2026-02-05",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 349.530732,
+              "ci_low": 194.913134,
+              "ci_high": 816.351994
+            },
+            "p80": {
+              "estimate": 54.739407,
+              "ci_low": 22.361504,
+              "ci_high": 122.058963
+            }
+          },
+          {
+            "id": "gpt_5_2",
+            "releaseDate": "2025-12-11",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 352.249302,
+              "ci_low": 198.067494,
+              "ci_high": 815.177445
+            },
+            "p80": {
+              "estimate": 66.002649,
+              "ci_low": 31.665111,
+              "ci_high": 131.730719
+            }
+          },
+          {
+            "id": "claude_opus_4_5_inspect",
+            "releaseDate": "2025-11-24",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 292.994594,
+              "ci_low": 161.717714,
+              "ci_high": 623.704698
+            },
+            "p80": {
+              "estimate": 49.430584,
+              "ci_low": 20.660485,
+              "ci_high": 104.641318
+            }
+          },
+          {
+            "id": "gpt_5_1_codex_max_inspect",
+            "releaseDate": "2025-11-19",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 223.714694,
+              "ci_low": 134.31077,
+              "ci_high": 396.206723
+            },
+            "p80": {
+              "estimate": 50.632499,
+              "ci_low": 27.30204,
+              "ci_high": 88.365435
+            }
+          },
+          {
+            "id": "gemini_3_pro",
+            "releaseDate": "2025-11-18",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 224.325884,
+              "ci_low": 139.565157,
+              "ci_high": 379.235434
+            },
+            "p80": {
+              "estimate": 54.142849,
+              "ci_low": 25.650451,
+              "ci_high": 103.295501
+            }
+          },
+          {
+            "id": "gpt_5_2025_08_07_inspect",
+            "releaseDate": "2025-08-07",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 203.012577,
+              "ci_low": 112.641357,
+              "ci_high": 405.551565
+            },
+            "p80": {
+              "estimate": 38.312431,
+              "ci_low": 19.184874,
+              "ci_high": 70.093125
+            }
+          },
+          {
+            "id": "claude_4_1_opus_inspect",
+            "releaseDate": "2025-08-05",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 100.472004,
+              "ci_low": 59.272391,
+              "ci_high": 159.451918
+            },
+            "p80": {
+              "estimate": 23.455761,
+              "ci_low": 10.538456,
+              "ci_high": 47.785951
+            }
+          },
+          {
+            "id": "claude_4_opus_inspect",
+            "releaseDate": "2025-05-22",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 100.366123,
+              "ci_low": 59.994073,
+              "ci_high": 163.454074
+            },
+            "p80": {
+              "estimate": 20.429752,
+              "ci_low": 8.483125,
+              "ci_high": 41.937268
+            }
+          },
+          {
+            "id": "o3_inspect",
+            "releaseDate": "2025-04-16",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 119.732634,
+              "ci_low": 74.615398,
+              "ci_high": 190.943818
+            },
+            "p80": {
+              "estimate": 29.981603,
+              "ci_low": 15.127348,
+              "ci_high": 57.823511
+            }
+          },
+          {
+            "id": "claude_3_7_sonnet_inspect",
+            "releaseDate": "2025-02-24",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 60.388937,
+              "ci_low": 33.006168,
+              "ci_high": 104.226017
+            },
+            "p80": {
+              "estimate": 12.09179,
+              "ci_low": 4.575608,
+              "ci_high": 28.889879
+            }
+          },
+          {
+            "id": "o1_inspect",
+            "releaseDate": "2024-12-05",
+            "scaffolds": [
+              "mtb/start_metr_task,triframe_inspect/triframe_agent",
+              "ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",
+              "metr_tasks_swaa/init_solver,generate",
+              "triframe_inspect/triframe_agent"
+            ],
+            "p50": {
+              "estimate": 38.831588,
+              "ci_low": 21.164512,
+              "ci_high": 64.95249
+            },
+            "p80": {
+              "estimate": 7.090121,
+              "ci_low": 3.036033,
+              "ci_high": 16.640636
+            }
+          },
+          {
+            "id": "claude_3_5_sonnet_20241022_inspect",
+            "releaseDate": "2024-10-22",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 20.522872,
+              "ci_low": 10.144026,
+              "ci_high": 40.82028
+            },
+            "p80": {
+              "estimate": 2.595677,
+              "ci_low": 0.89379,
+              "ci_high": 7.363864
+            }
+          },
+          {
+            "id": "o1_preview",
+            "releaseDate": "2024-09-12",
+            "scaffolds": [
+              "duet",
+              null
+            ],
+            "p50": {
+              "estimate": 20.326586,
+              "ci_low": 11.716193,
+              "ci_high": 33.379877
+            },
+            "p80": {
+              "estimate": 4.420545,
+              "ci_low": 2.012646,
+              "ci_high": 8.912444
+            }
+          },
+          {
+            "id": "claude_3_5_sonnet_20240620_inspect",
+            "releaseDate": "2024-06-20",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 11.395377,
+              "ci_low": 5.489734,
+              "ci_high": 22.384214
+            },
+            "p80": {
+              "estimate": 1.671757,
+              "ci_low": 0.57927,
+              "ci_high": 4.573519
+            }
+          },
+          {
+            "id": "gpt_4o_inspect",
+            "releaseDate": "2024-05-13",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 6.991195,
+              "ci_low": 4.001482,
+              "ci_high": 12.905741
+            },
+            "p80": {
+              "estimate": 1.267009,
+              "ci_low": 0.562997,
+              "ci_high": 3.01517
+            }
+          },
+          {
+            "id": "gpt_4_turbo_inspect",
+            "releaseDate": "2024-04-09",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 3.732787,
+              "ci_low": 1.980046,
+              "ci_high": 6.736613
+            },
+            "p80": {
+              "estimate": 0.927933,
+              "ci_low": 0.428277,
+              "ci_high": 2.196806
+            }
+          },
+          {
+            "id": "claude_3_opus_inspect",
+            "releaseDate": "2024-03-04",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 3.952262,
+              "ci_low": 1.706313,
+              "ci_high": 8.76484
+            },
+            "p80": {
+              "estimate": 0.638973,
+              "ci_low": 0.190491,
+              "ci_high": 2.118276
+            }
+          },
+          {
+            "id": "gpt_4_1106_inspect",
+            "releaseDate": "2023-11-06",
+            "scaffolds": [
+              "mtb/start_metr_task,metr_agents/react",
+              "ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react",
+              "re_bench_common/init_solver,use_tools,metr_agents/react",
+              "metr_tasks_swaa/init_solver,generate",
+              "metr_agents/react"
+            ],
+            "p50": {
+              "estimate": 4.044959,
+              "ci_low": 1.866859,
+              "ci_high": 8.443226
+            },
+            "p80": {
+              "estimate": 0.783032,
+              "ci_low": 0.276599,
+              "ci_high": 2.358414
+            }
+          },
+          {
+            "id": "gpt_4",
+            "releaseDate": "2023-03-14",
+            "scaffolds": [
+              "modular-public",
+              null
+            ],
+            "p50": {
+              "estimate": 3.987428,
+              "ci_low": 1.93292,
+              "ci_high": 7.995283
+            },
+            "p80": {
+              "estimate": 0.889561,
+              "ci_low": 0.342984,
+              "ci_high": 2.523746
+            }
+          }
+        ],
+        "sha256": "aae31902b0519a4da73e16643915e5e8aca13cd3315c3aac893ce3d6dfe92ad9",
+        "etag": "\"87470c88ac784af063e5d1bb1c58788b-ssl-df\"",
+        "lastModified": null,
+        "retrievedAt": "2026-09-04T23:33:00.169Z",
+        "publishedAt": null,
+        "measuredAt": null
+      },
+      "previous": null,
+      "changeSummary": "First collection: no site change history yet.",
+      "context": {
+        "id": "2026-0",
+        "textSha256": "88410c0c14200538a49389293abf03e5d3412e0c5eb6f8a804cdb234f0a8cfd8",
+        "forecastSha256": "662a4369b05520d70255c65d8a52da1eee57923ffc0d171d53e3e08c234a568a",
+        "role": "Context only: software-task capability, not human-reviewed workflows, monitored runtime or safeguards. No forecast milestone is assessed."
+      }
+    }
   }
 }

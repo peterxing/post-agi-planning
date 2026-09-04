@@ -94,6 +94,7 @@ const guarded = [
   // direction — enumerating every top-level .js that reads a PROTECTED file and requiring it to
   // appear here — is NOT implemented and is named as open rather than left to be discovered.
   'verify-backfill.js', 'news-backfill.js',
+  'refresh-metr.js', 'verify-metr.js',
 ];
 /* X retirement (2026-08-13). These entry points were removed with the X evidence pipeline.
    They are DECLARED rather than merely deleted from the list above, because a bare deletion

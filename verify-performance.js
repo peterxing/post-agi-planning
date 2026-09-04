@@ -216,9 +216,19 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * Index remains 150000; overflow, accessibility, evidence and content obligations are unchanged.
  * No further automatic raises are authorized. Every run below reports the actual margins.
  */
+/*
+ * APPROVED RE-BASELINE 2026-09-05 (UTC+10) - connected METR capability instrument.
+ * App only: 175000 -> 176500. Decision-time app bytes 172202 -> 175566 (+3364):
+ * scalar/interval rendering, client measurement validation, scoped watch changes and focus safety.
+ * Copy and layout are static HTML; one instrument replaces per-forecast duplication.
+ * Decision-time outcomes: shell 422879/424000, CSS 812/830, DOM 6465/6550,
+ * transfer 203643/300000, interactive 45.8/1000 ms, evidence 536/3000 ms.
+ * Every other ceiling stays unchanged; the shell remains the binding total. Subsequent robustness
+ * edits must fit this allowance. These are approval-time measurements, not permanent assertions.
+ */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 175000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 176500 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 105000 },
   { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 424000 },
 ];

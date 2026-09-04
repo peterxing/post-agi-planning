@@ -40,7 +40,36 @@ Always distinguish in the report: infrastructure failure (retry, then stop havin
 0) EVIDENCE CONTRACT — EVERY PREDICTION ACCOUNTED FOR — HARD DAILY PUBLICATION GATE
 X EVIDENCE IS RETIRED IN FULL, AT THE SITE OWNER'S EXPLICIT INSTRUCTION: "remove all references to x posts and stop using the x api for the predictions - replace and add any references based on the latest news from the last 2 weeks instead". This section REPLACES the former direct-X guarantee. There is no X tier, no Peter-authored tier, no repost tier and no external-X tier. x-archive.js, verify-peter-evidence.js, review-evidence-candidates.js, verify-id.js, harvest-loop.js, evidence-approvals.json and evidence-families.js are DELETED from the tree and removed from the published mirror; never recreate them, never reintroduce an x.com/twitter.com/t.co URL, an oEmbed or syndication call, a status ID, a Wayback/CDX discovery pass, or the X API in any tier or as a "diagnostic". The published payload must contain no X vocabulary.
 Set-Location C:\Users\peterxing\pap-deploy and run, in exactly this order:
+  node refresh-metr.js
   node refresh-signals.js
+
+METR MEASURED CAPABILITY LAYER - SEPARATE FROM NEWS AND EDITORIAL FORECASTS
+- The daily source pass first runs `node refresh-metr.js` under the same interlock. It checks only
+  METR's fixed-version primary YAML with conditional requests, 12-second request/size bounds and
+  at most three attempts. A future Retry-After is persisted and respected; do not bypass it.
+- Collector exit 0 means a valid 200 or conditional 304. Exit 10 means source unavailable or
+  refused schema: this optional measurement layer atomically records the error, retaining every
+  last-good measurement and original source timestamp. Continue the NEWS pipeline normally and
+  publish the explicit METR stale/unavailable state if all gates pass. This is the sole exception
+  to the general infrastructure-stop rule above: it cannot change news accounting or forecasts.
+  Exit 75 is still interlock DEFERRED (no write); stop the entire run. Other failures stop the run.
+- `signals.capabilities.metr` holds the two most recent successful 200 snapshots, checksum,
+  ETag/Last-Modified and independent check/fetch dates. A 304 updates check/health only, not
+  measurement, dataset or successful-fetch dates. A first snapshot has no site-change history.
+  The ordinary producer preserves and validates this layer, including during weekly builds.
+- The reviewed v1.1 unit is HUMAN-EXPERT MINUTES at 50% or 80% task success, with 95% intervals;
+  model release date is NOT evaluation or publication date. Those dates remain unknown where
+  METR does not supply them. HTTP Last-Modified is only a file timestamp. Exclude v1.0 rows from
+  v1.1 comparisons; task-revision or scaffold changes invalidate like-for-like comparisons.
+  Display METR's warning that estimates above 16 hours are unreliable for its current task suite.
+- This is a scoped software/ML/cyber capability instrument, not an AGI meter, runtime measure,
+  all-job automation claim or NEWS context/citation. Its context-only relation to 2026-0 is
+  pinned to exact forecast text; changing that text removes the relation. No composite forecast
+  is resolved, no probability is updated, and no new trajectory verdict is inferred.
+- Run the derived suite including `verify:metr`. Report actual fetch/check times, source revision,
+  source errors and last-good retention separately from news freshness. Collection is daily;
+  METR releases measurements periodically without a guaranteed cadence. Browser five-minute
+  polling reads published artifacts only. No new scheduler or cloud resource is required.
 
 THE CONTRACT IS TOTALITY, NOT COVERAGE. The former gate demanded N/N direct evidence, which is unreachable when evidence must be both genuinely supporting AND published in the last 14 days. Replacing it with "as many as we found" would have been a silent weakening, so it was replaced with a STRICTLY STRONGER property: every prediction must be explicitly ACCOUNTED FOR in exactly one of three channels, and the three channels must partition the prediction set with no gap and no overlap.
 - CITED: the prediction carries a live-verified news citation meeting every bar below.

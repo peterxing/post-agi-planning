@@ -2564,6 +2564,9 @@ function evidenceSnapshot(id, data = publishedSignals){
     // Re-running a search is a freshness change, not a new observation.
     gap:data.uncited.items[id]?.reason || null, currency:data.currency?.[id] || [],
     assessment:data.observations?.items?.[id] || null,
+    ...(data.capabilities?.metr?.context?.id === id && data.capabilities.metr.context.forecastSha256 === forecastFingerprint
+      && data.capabilities.metr.current ? { capability:[data.capabilities.metr.current.records,
+        data.capabilities.metr.current.longTasksVersion, data.capabilities.metr.current.swaaVersion] } : {}),
   });
 }
 function renderedEvidenceSnapshot(id){
@@ -2577,7 +2580,7 @@ function watchStatus(row, saved){
   if (saved.seen === current) return 'No observation change since your saved snapshot.';
   const before = saved.seen ? JSON.parse(saved.seen) : {};
   const after = JSON.parse(current);
-  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment' };
+  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment', capability:'METR measurements' };
   const changed = Object.keys(fields).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => fields[key]);
   return `Observation record changed since your saved snapshot: ${changed.join(', ')}. Inspect the source, dates and limitations before acknowledging.`;
 }
@@ -2630,7 +2633,31 @@ function renderMission(){
   renderWatchlist();
   renderObservationDetail();
   renderObservationHealth();
+  renderMetr();
 }
+function renderMetr(){
+  const m = publishedSignals?.capabilities?.metr, s = m?.current;
+  const select = document.getElementById('metrModel');
+  const value = select.value;
+  const options = s?.records.map(r => `<option value="${htmlText(r.id)}">${htmlText(r.id)}</option>`).join('') || '<option>No measurements loaded</option>';
+  if (select.innerHTML !== options) { select.innerHTML = options; if (s?.records.some(r => r.id === value)) select.value = value; }
+  select.disabled = !s;
+  const r = s?.records.find(r => r.id === select.value);
+  setText('metrStatus', !m || m.status !== 'ok' ? `${m?.error || 'Source unavailable.'} ${s ? 'Last-good measurements retained.' : 'No measurements available.'}`
+    : Date.now() - Date.parse(m.lastCheckedAt) > 36 * 3600000 ? 'Stale source check (over 36 hours).' : 'Source checked; this does not mean a new evaluation.');
+  for (const key of ['p50', 'p80']) {
+    const v = r?.[key];
+    setText(key === 'p50' ? 'metrP50' : 'metrP80', v ? `${v.estimate.toFixed(2)} min (95% CI ${v.ci_low.toFixed(2)}–${v.ci_high.toFixed(2)})` : 'Not recorded');
+  }
+  for (const [id, date] of Object.entries({ metrRelease:r?.releaseDate, metrChecked:m?.lastCheckedAt,
+    metrFetched:m?.lastSuccessfulFetchAt, metrModified:s?.lastModified })) setText(id, recordedTime(date));
+  setText('metrRevision', s ? `${s.benchmark}; SHA-256 ${s.sha256}` : 'Not recorded');
+  setText('metrSetup', r?.scaffolds.join('; ') || 'Not recorded');
+  setText('metrChange', m?.changeSummary || 'No site collection history yet.');
+  setText('metrContext', m?.context?.id === document.getElementById('observationPrediction').value
+    && m.context.forecastSha256 === forecastFingerprint ? m.context.role : '');
+}
+document.getElementById('metrModel').addEventListener('change', renderMetr);
 function validTime(value){
   return typeof value === 'string' && Number.isFinite(Date.parse(value)) && Date.parse(value) <= Date.now() + 300000;
 }
@@ -2731,6 +2758,22 @@ function renderObservationHealth(){
   document.getElementById('applyObservations').hidden = !pendingSignals;
 }
 function validatePublishedBundle(data){
+  const m = data?.capabilities?.metr, s = m?.current;
+  const prior = publishedSignals?.capabilities?.metr;
+  if (prior?.current && (!s || Date.parse(m?.lastCheckedAt) < Date.parse(prior.lastCheckedAt)))
+    throw new Error('Older or missing METR data returned. Last good bundle retained.');
+  if (m && (m.schemaVersion !== 1 || !['ok', 'error', 'unavailable'].includes(m.status)
+    || (m.lastCheckedAt !== null && !validTime(m.lastCheckedAt)) || (m.status === 'ok' && !s)
+    || (s && (s.benchmark !== 'METR-Horizon-v1.1' || s.unit !== 'human-expert minutes'
+    || !validTime(s.retrievedAt) || !validTime(m.lastCheckedAt) || m.lastSuccessfulFetchAt !== s.retrievedAt
+    || Date.parse(m.lastCheckedAt) < Date.parse(s.retrievedAt) || !/^[a-f0-9]{64}$/.test(s.sha256)
+    || s.measuredAt !== null || s.publishedAt !== null
+    || s.intervalLevel !== 0.95 || !Array.isArray(s.records) || !s.records.length || s.records.length > 200
+    || !s.records.every(r => r && typeof r.id === 'string' && validTime(r.releaseDate) && Array.isArray(r.scaffolds)
+      && r.p80?.estimate <= r.p50?.estimate
+      && ['p50', 'p80'].every(k => [r[k]?.estimate, r[k]?.ci_low, r[k]?.ci_high].every(v => Number.isFinite(v) && v > 0)
+        && r[k].ci_low <= r[k].estimate && r[k].estimate <= r[k].ci_high))))))
+    throw new Error('METR measurement schema is invalid. Last good bundle retained.');
   if (!forecastFingerprint || data?.forecastVersion?.schemaVersion !== 1 || data.forecastVersion.sha256 !== forecastFingerprint) {
     throw new Error('Forecast and observation versions do not match. Reload after publication completes; existing data is retained.');
   }
@@ -2760,7 +2803,7 @@ function scheduleObservationRefresh(){
 }
 function canApplyObservations(){
   return document.getElementById('reader').hidden
-    && !document.activeElement?.closest('.prediction-evidence, #observationDetail, #watchlist, #signalsGrid');
+    && !document.activeElement?.closest('.prediction-evidence, #observationDetail, #metrInstrument, #watchlist, #signalsGrid');
 }
 async function refreshPublishedObservations(){
   if (observationController || document.hidden || Date.now() - observationLastAttempt < 15000) return;
@@ -2862,7 +2905,7 @@ document.addEventListener('click', event => {
     read.setAttribute('aria-pressed', 'true');
   }
 });
-document.getElementById('observationPrediction').addEventListener('change', () => renderObservationDetail());
+document.getElementById('observationPrediction').addEventListener('change', () => { renderObservationDetail(); renderMetr(); });
 document.getElementById('observationDetail').addEventListener('toggle', event => {
   if (event.target.matches('.source-inspection') && event.target.open) {
     comparedForecasts.add(document.getElementById('observationPrediction').value);

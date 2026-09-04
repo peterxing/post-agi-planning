@@ -265,13 +265,39 @@ html[data-theme="dark"] {
         <label for="observationPrediction" class="mission-field">Inspect a forecast</label>
         <select id="observationPrediction"><option value="">Loading the forecast...</option></select>
         <div id="observationDetail" class="observation-detail"><p>Measurements are not assumed. Missing assessments will be shown explicitly.</p></div>
+        <section id="metrInstrument" class="metr-instrument" aria-labelledby="metrTitle">
+          <span class="instrument-label">Connected capability instrument / METR</span>
+          <h4 id="metrTitle">How difficult a software task can an agent complete?</h4>
+          <p>Human-expert task duration at a fixed success rate, primarily in software, ML and cybersecurity. This is not the agent's runtime, all-job automation, or an AGI score. No composite forecast is resolved by this benchmark.</p>
+          <p id="metrStatus" role="status">METR measurements not loaded.</p>
+          <label for="metrModel" class="mission-field">Model (METR source identifier)</label>
+          <select id="metrModel" disabled><option>No measurements loaded</option></select>
+          <dl id="metrValues"><dt>50% task success</dt><dd id="metrP50">Not recorded</dd><dt>80% task success</dt><dd id="metrP80">Not recorded</dd></dl>
+          <p><strong>Interpretation limit:</strong> METR warns that estimates above 16 hours (960 human-expert minutes) are unreliable with its current task suite. Intervals describe benchmark uncertainty, not forecast confidence.</p>
+          <p id="metrContext"></p>
+          <p id="metrChange">No site collection history yet.</p>
+          <details class="tracking-method">
+            <summary>Collection dates, setup and limitations</summary>
+            <dl><dt>Model released</dt><dd id="metrRelease">Not recorded</dd>
+              <dt>Source checked</dt><dd id="metrChecked">Not recorded</dd>
+              <dt>Last successful fetch</dt><dd id="metrFetched">Not recorded</dd>
+              <dt>HTTP file modified</dt><dd id="metrModified">Not recorded</dd>
+              <dt>Evaluation / publication dates</dt><dd>Not supplied by this dataset. Model release and HTTP timestamps are not evaluation dates.</dd>
+              <dt>Dataset revision</dt><dd id="metrRevision">Not recorded</dd>
+              <dt>Agent scaffolds</dt><dd id="metrSetup">Not recorded</dd></dl>
+            <p>Checked daily by the existing source-refresh workflow; METR publishes periodically, with no guaranteed cadence. Five-minute browser checks only retrieve the site's published bundle. Stale or failed collection is not evidence of declining capability.</p>
+            <p>Publication lag cannot be calculated: evaluation and dataset publication dates are not supplied.</p>
+            <p>Model selection shows historical reported records, not a continuous trend or this site's change history. Only v1.1 records are shown. Changed task revisions or scaffolds prevent like-for-like comparisons; coverage is incomplete and tasks are cleaner than most real work.</p>
+            <p><a href="https://metr.org/time-horizons/" target="_blank" rel="noopener">METR methodology</a> &middot; <a href="https://metr.org/assets/benchmark_results_1_1.yaml" target="_blank" rel="noopener">Original dataset</a></p>
+          </details>
+        </section>
         <details class="tracking-method">
           <summary>How to read the signals</summary>
           <p><strong>Published forecast:</strong> the author's probability and timing, unchanged by this dashboard or your simulator.</p>
           <p><strong>Assessed trajectory:</strong> supporting, mixed or challenging only when a reviewed, measurable observation is bound to this exact forecast and a defined criterion. Without that, the trajectory is not yet assessed. A recent article, a link count or a repost does not establish progress.</p>
           <p><strong>Freshness:</strong> publication, collection and review dates are separate from the browser's last check. A recent check cannot make an old source new. A bundle older than 36 hours is labelled stale; a source outage is shown separately.</p>
           <p><strong>X supplement:</strong> posts and reposts remain a separate, labelled discussion layer. They do not count as evidence or prove accuracy.</p>
-          <p><strong>Potential measurement sources, not connected feeds:</strong> METR task-horizon evaluations (human-expert task duration, not all-job automation); ClinicalTrials.gov records for specific trial IDs (not proof of regulatory approval). These require explicit criteria and review before they can inform trajectory.</p>
+          <p><strong>Measurements:</strong> the separate METR instrument is connected, but does not assess an entire forecast. ClinicalTrials.gov remains a potential, unconnected source for specific trial IDs, not proof of regulatory approval.</p>
         </details>
       </section>
     </div>

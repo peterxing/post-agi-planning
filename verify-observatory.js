@@ -173,9 +173,10 @@ async function verifyMission(browser){
           fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, file), 'utf8'), `${file} changed`);
       }
       const evidence = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
-      delete evidence.forecastVersion;
-      assert.deepEqual(evidence, JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'signals.json'), 'utf8')),
-        'Binding metadata must not rewrite observations or their timestamps');
+      const originalEvidence = JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'signals.json'), 'utf8'));
+      if (!originalEvidence.forecastVersion) delete evidence.forecastVersion;
+      if (!originalEvidence.capabilities) delete evidence.capabilities;
+      assert.deepEqual(evidence, originalEvidence, 'Additive layers must not rewrite observations or their timestamps');
       console.log('[content-preservation] exact baseline match: forecast/author bytes, all book HTML, chapter text, strategies, portfolio and planner assumptions');
     }
     await page.clock.install();

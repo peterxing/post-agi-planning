@@ -280,6 +280,9 @@ if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: reset failed ($LASTEXITC
 $fromDeploy = @(
   'README.md','package.json','index.html','app.js','styles.css','predictions.json','signals.json','author.json','evidence-floors.json','external-evidence.js','news-evidence.js','currency-evidence.js','currency-subjects.js','currency-text-pins.json',
   'server.js','refresh-signals.js','pipeline-lock.js',
+  # Public-only METR collector and proof; replay state is already in signals.json.
+  # YAML is a pinned operator dependency, not a browser asset.
+  'refresh-metr.js','verify-metr.js','package-lock.json',
   'validate-predictions.js','verify-site.js','verify-signal-matcher.js','verify-perpred.js','verify-reality.js','verify-author.js','verify-observatory.js','verify-performance.js','verify-direct-coverage.js','verify-news-evidence.js','verify-currency.js','verify-deploy-surface.js','verify-interlock.js','evidence-families.js',
   # month-estimates.js is mirrored because validate-predictions.js L10 IMPORTS EXECUTABLE
   # PREDICATES from it (bandForYear, precisionForBand), not merely data. A gate whose

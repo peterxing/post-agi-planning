@@ -11,6 +11,8 @@
   "scripts": {
     "serve": "node server.js",
     "refresh": "node refresh-signals.js",
+    "refresh:metr": "node refresh-metr.js",
+    "verify:metr": "node verify-metr.js",
     "validate": "node validate-predictions.js",
     "verify": "node verify-site.js http://127.0.0.1:8787",
     "verify:matcher": "node verify-signal-matcher.js",
@@ -35,5 +37,8 @@
   },
   "devDependencies": {
     "playwright": "1.61.1"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
   }
 }

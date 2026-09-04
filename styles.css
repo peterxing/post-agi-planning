@@ -2071,7 +2071,9 @@ button:disabled { cursor: not-allowed; color: var(--cp-text-soft); }
 .tracking-method summary, .source-inspection summary { padding: 16px 0; font-weight: 600; cursor: pointer; }
 .tracking-method p, .source-inspection p { margin-bottom: 12px; max-width: 85ch; line-height: 1.7; color: var(--cp-text-soft); }
 .source-inspection blockquote { padding: 16px 20px; margin: 12px 0; border-left: 2px solid var(--cp-accent); background: var(--cp-accent-soft); }
-.source-inspection dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 20px 0; font-size: .84rem; }
+.source-inspection dl, .metr-instrument dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 20px 0; font-size: .84rem; }
+.metr-instrument { margin-top: 24px; padding: 20px; border: 1px solid var(--cp-border); border-radius: 10px; overflow-wrap: anywhere; }
+.metr-instrument p { margin-top: 12px; font-size: .88rem; color: var(--cp-text-soft); }
 .source-inspection dt { color: var(--cp-text-soft); }
 .measured-observation { padding: 16px 0; border-bottom: 1px solid var(--cp-border); }
 .scenario-layout { display: grid; grid-template-columns: minmax(0, .65fr) minmax(0, 1.35fr); gap: 48px; align-items: start; }
@@ -2127,7 +2129,7 @@ button:disabled { cursor: not-allowed; color: var(--cp-text-soft); }
   .mission-card { padding: 20px; }
   .mission-brief { padding: 20px; }
   .section-pad { padding-block: 44px; }
-  .source-inspection dl { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .source-inspection dl, .metr-instrument dl { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .source-inspection dd { margin-bottom: 8px; }
   .event-heading { flex-wrap: wrap; }
   .watch-button { min-height: 40px; }
