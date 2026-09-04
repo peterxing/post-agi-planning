@@ -181,7 +181,89 @@ Both of the tree's external boundaries are **allow-lists**, because both were pr
 Credentials and any private material stay outside the repository and are never served, deployed or
 committed.
 
-## Local use
+## Mission-control workspace
+
+The dashboard records four **planning activities**, a self-reported checklist and a prediction
+watchlist. These are completion records, not a scientific readiness score. Reading is recorded only
+with the reader's explicit confirmation; selecting a preparation step does not mean it was performed.
+The versioned `pap-mission-control:v1` browser-storage record is never sent to a server. Unavailable,
+corrupt or unsupported storage is labelled session-only without overwriting the old record. Reset
+requires confirmation and affects only this workspace's planning data.
+
+The observation desk keeps published probabilities separate from assessed trajectory. News and X
+presence never determine direction. In the absence of a reviewed measurement and criterion, the
+desk says **Trajectory not yet assessed**. A saved forecast retains its original content identity
+and observation snapshot; reused IDs, removed forecasts and changed observations are surfaced
+rather than silently treated as the same forecast.
+
+### Published updates, not real-time upstream ingestion
+
+While visible, the reader checks the existing same-origin JSON artifacts every five minutes, with
+a manual check, a 12-second timeout, cancellation on hiding and exponential backoff capped at
+30 minutes. It retains the last valid bundle on errors and defers applying updates while the reader
+or an evidence control has focus. Updates patch evidence rather than rebuilding timeline or reader
+containers. The displayed request duration measures the browser round trip only, **not** how fresh
+the underlying news is. The daily operator-side collection/review/publication schedule is unchanged.
+
+`signals.forecastVersion = { schemaVersion: 1, sha256 }` binds the bundle to the SHA-256 of
+`JSON.stringify(JSON.parse(predictions.json))`. The producer emits it on every build. The client
+rejects mismatches and older bundles; a changed forecast requires an explicit reload, never a
+silent probability update. The redesign added this binding to the existing artifact without changing
+its source dates, review dates or published timestamp. A browser check cannot advance those dates.
+Both publication and collection must be within 36 hours for the freshness label; article timestamps
+and date-only review records retain their original precision.
+
+An optional future `signals.observations` layer must declare `schemaVersion: 1`,
+`forecastSha256` matching the same fingerprint, and an `items` map of prediction IDs to observation
+arrays. Every observation requires `reviewed: true`, `reviewedBy`, `reviewedAt`, a `direction`
+of `supporting`, `mixed` or `challenging`, `criterion: { id, version, description }`,
+`measurement: { value, unit, observedAt }`, `source: { name, url, publishedAt, fetchedAt }`,
+`rationale` and `limitations`. Conflicting directions display as mixed. Invalid or absent records
+remain unassessed. This is a rendering contract, not an automated assessor or a connected feed;
+no observation records were invented or added in the redesign.
+
+METR's task-horizon evaluations and ClinicalTrials.gov records are identified as potential future
+measurement sources only. Neither is connected. Any integration needs explicit, reviewed
+forecast criteria: human-expert task duration is not all-job automation, and a registry milestone
+is not regulatory approval. No cloud resource, API key, market feed or new schedule was introduced.
+
+### Proposed collection adapters (not enabled)
+
+| Source | Bounded collection proposal | What it could measure | What it cannot establish |
+| --- | --- | --- | --- |
+| METR task-horizon dataset | Conditional GET of the fixed-version public YAML once per day; honour ETag/Last-Modified when supplied. Evaluation releases are irregular, so unchanged data is expected. | Model release, benchmark version, p50/p80 human-expert task-duration estimates, units and confidence intervals. | General AGI, all-job automation or literal continuous autonomous runtime. |
+| ClinicalTrials.gov | Check its version/data timestamp daily, then fetch only curated NCT IDs when the source changes. Deduplicate by NCT ID plus registry update version. | Registered trial phase/status and posted results for the exact intervention under review. | Clinical efficacy from registration alone, or regulatory approval from trial phase. |
+| EIA / BLS / ABS | Select specific series and their actual release calendar first; collection must not outrun publication. EIA requires a separately approved free key; no key or adapter was added. | Geography-specific capacity, electricity demand or employment, with units and revisions kept distinct. | That capacity equals demand, or that an employment movement was caused by AI. |
+
+An adapter should preserve a last-good observation on HTTP errors, honour Retry-After, use bounded
+exponential backoff, and retain source-specific error and last-success timestamps. A 304 response
+advances `checkedAt`, not the measurement's `observedAt` or the publisher's date. Deduplicate news
+by canonical story URL, and measurements by source ID, metric, release/version and observation
+period; syndication and reposts are not independent confirmations.
+
+Before promotion, a reviewer must bind the metric (unit, geography, population and uncertainty) to a
+versioned criterion for an exact prediction fingerprint, explain supporting **and** conflicting
+observations, and state what is still missing. Keep original publication, retrieval, measurement and
+review timestamps separate. A source-specific expected update cadence determines staleness; an
+outage does not change direction, and a missing measurement is unknown, not off-track. Publish the
+reviewed normalized records through the existing `signals.json`/allow-listed pipeline only after its
+gates pass. Raw collection remains operator-local and cannot rewrite authored probabilities.
+
+These adapters are a proposed next phase, not background jobs supplied by this redesign. The present
+UI can discover a *published* update on its next visible-page check; the time from upstream release
+to reviewed publication remains governed by collection, review and deployment, not the browser
+request duration. No additional scheduling, rate changes or provider access have been enabled.
+
+The existing UI runner includes the mission tests:
+
+```powershell
+node verify-observatory.js http://127.0.0.1:8787 --mission-only
+```
+
+Optional `PAP_UI_ARTIFACT_DIR` saves responsive screenshots outside the public tree.
+`PAP_CONTENT_BASELINE` compares immutable-content snapshots during a preserve-content redesign.
+
+## Local commands
 
 ```powershell
 npm install

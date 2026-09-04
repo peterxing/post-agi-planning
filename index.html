@@ -99,6 +99,7 @@ html[data-theme="dark"] {
       <span class="brand-text">The Hitchhiker's Guide to the Singularity<small>Peter Xing · Post-AGI planning</small></span>
     </a>
     <div class="nav-links" id="navLinks">
+      <a href="#mission-control">Dashboard</a>
       <a href="#timeline">Forecast</a>
       <a href="#post-superintelligence">Horizon</a>
       <a href="#engine">Strategies</a>
@@ -129,7 +130,7 @@ html[data-theme="dark"] {
     </div>
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="eyebrow">Forecast observatory · 2026–2040</div>
+        <div class="eyebrow">Your mission control · 2026–2040</div>
         <h1>The Hitchhiker's Guide to the <span class="accent">Singularity</span></h1>
         <p class="hero-tag">A dated civilization forecast, live evidence layer, and practical field guide for navigating the transition from useful agents to superintelligence.</p>
         <p class="hero-quote">The line is the forecast. The branches are uncertainty. The observations are reality pushing back.</p>
@@ -179,6 +180,14 @@ html[data-theme="dark"] {
         <p class="simulator-interpretation" id="simulatorInterpretation" aria-live="polite">The simulator will activate when the forecast model loads.</p>
         <p class="simulator-disclaimer" id="simulatorDisclaimer">Simulation only: adjustments are transparent local heuristics, do not update the published forecast, and are not saved.</p>
       </aside>
+      <aside class="mission-brief" aria-labelledby="missionBriefTitle">
+        <span class="instrument-label">A little clarity. A practical next step.</span>
+        <h2 id="missionBriefTitle">Plan for possibilities,<br>not certainty.</h2>
+        <p>Your forecasts, field guide and preparation notes, in one place. Start anywhere. There is no deadline to complete a quest.</p>
+        <a class="btn btn-primary" href="#mission-control">Open your dashboard <span aria-hidden="true">&rarr;</span></a>
+        <div class="mission-brief-links"><a href="#scenario-lab">Explore a scenario</a><a href="#book">Read the field guide</a></div>
+        <small>Private by design: your planning progress stays in this browser. No account, rankings or streaks.</small>
+      </aside>
     </div>
     <div class="hero-readouts" aria-label="Core forecast anchors">
       <article class="hero-readout">
@@ -204,6 +213,78 @@ html[data-theme="dark"] {
     </div>
   </div>
 </header>
+
+<section class="section-pad mission-section" id="mission-control" aria-labelledby="missionTitle">
+  <div class="wrap">
+    <div class="mission-section-head">
+      <div><div class="eyebrow">01 / Your planning workspace</div><h2 id="missionTitle">Small steps, wider perspective.</h2></div>
+      <div class="mission-storage"><span id="missionStorage" role="status">Checking local storage...</span><button type="button" id="missionReset" class="text-button">Reset my planning data</button></div>
+    </div>
+    <div class="mission-grid">
+      <section class="mission-card quest-panel" aria-labelledby="questTitle">
+        <div class="mission-card-head"><div><span class="instrument-label">Planning quests</span><h3 id="questTitle">Build your field notes</h3></div><strong id="questCount">0 / 4</strong></div>
+        <progress id="questProgress" max="4" value="0" aria-label="Completed planning quests"></progress>
+        <p id="questReward" class="mission-help">Four ways to explore. Completion is not a readiness score.</p>
+        <ol class="quest-list">
+          <li data-quest="scenario-v1"><span class="quest-number">01</span><div><strong>Explore a different future</strong><p>Change an assumption in the scenario lab.</p><a href="#scenario-lab">Try the scenario lab &rarr;</a></div><span class="quest-state">To explore</span></li>
+          <li data-quest="chapter-v1"><span class="quest-number">02</span><div><strong>Read, then reflect</strong><p>Read a full chapter and mark it read in the reader.</p><a href="#book">Choose a chapter &rarr;</a></div><span class="quest-state">To explore</span></li>
+          <li data-quest="evidence-v1"><span class="quest-number">03</span><div><strong>Compare the evidence</strong><p>Inspect two forecasts below, including their gaps, then confirm your comparison.</p><button class="text-button" id="confirmComparison" type="button" disabled>I compared the evidence</button></div><span class="quest-state">To explore</span></li>
+          <li data-quest="action-v1"><span class="quest-number">04</span><div><strong>Choose one preparation action</strong><p>Select a step in your checklist and confirm your intention. Taking action is up to you.</p><a href="#readinessTitle">Choose a practical step &rarr;</a></div><span class="quest-state">To explore</span></li>
+        </ol>
+      </section>
+      <section class="mission-card readiness-panel" aria-labelledby="readinessTitle">
+        <span class="instrument-label">Readiness checklist / self-reported</span><h3 id="readinessTitle" tabindex="-1">Make the plan your own</h3>
+        <p class="mission-help">These are your notes about planning, not a scientific measure of preparedness or a guarantee of outcomes.</p>
+        <div class="readiness-list">
+          <label><input type="checkbox" data-readiness="uncertainty-v1"><span>I have considered more than one possible future.</span></label>
+          <label><input type="checkbox" data-readiness="limits-v1"><span>I can name a limitation in the evidence I read.</span></label>
+          <label><input type="checkbox" data-readiness="conversation-v1"><span>I have discussed my plan with someone I trust.</span></label>
+        </div>
+        <label class="mission-field" for="preparationAction">My next practical step</label>
+        <select id="preparationAction">
+          <option value="">Choose a step from the field guide</option>
+          <option value="first-plan-v1">Create my first plan</option>
+          <option value="capability-v1">Build capability with an AI tool</option>
+          <option value="community-v1">Connect with a community</option>
+          <option value="review-v1">Review my plan across the five futures</option>
+        </select>
+        <label class="action-confirm"><input type="checkbox" id="confirmPreparation" disabled><span>I have chosen this as my next step (not yet completed).</span></label>
+        <p id="readinessCount" class="mission-help" aria-live="polite">0 of 4 planning items recorded.</p>
+        <a href="#moonshot">Open the existing 1000-day planner &rarr;</a>
+      </section>
+      <section class="mission-card watch-panel" aria-labelledby="watchTitle">
+        <div class="mission-card-head"><div><span class="instrument-label">Prediction watchlist</span><h3 id="watchTitle">Keep the questions that matter</h3></div><strong id="watchCount">0 saved</strong></div>
+        <p class="mission-help">Choose any forecast in the observation desk below and save it here. Changes are compared with your last acknowledged snapshot, not scored as accuracy.</p>
+        <ul id="watchlist" class="watch-list"><li class="mission-empty">Nothing saved yet. Inspect a forecast below to start your watchlist.</li></ul>
+      </section>
+      <section class="mission-card observation-panel" id="observations" aria-labelledby="observationTitle">
+        <div class="mission-card-head"><div><span class="instrument-label">Observation desk</span><h3 id="observationTitle">What do we actually know?</h3></div><button id="refreshObservations" type="button" class="btn btn-ghost">Check published updates</button></div>
+        <p class="mission-help">This checks the site's latest published bundle, not upstream news in real time. Source collection and review happen separately in the operator's pipeline.</p>
+        <div class="observation-health" role="status"><strong id="observationFreshness">Published data loading</strong><span id="observationCheck">No browser check completed yet.</span><span id="observationTimes"></span></div>
+        <button id="applyObservations" type="button" class="text-button" hidden>Apply the published update when you are ready</button>
+        <label for="observationPrediction" class="mission-field">Inspect a forecast</label>
+        <select id="observationPrediction"><option value="">Loading the forecast...</option></select>
+        <div id="observationDetail" class="observation-detail"><p>Measurements are not assumed. Missing assessments will be shown explicitly.</p></div>
+        <details class="tracking-method">
+          <summary>How to read the signals</summary>
+          <p><strong>Published forecast:</strong> the author's probability and timing, unchanged by this dashboard or your simulator.</p>
+          <p><strong>Assessed trajectory:</strong> supporting, mixed or challenging only when a reviewed, measurable observation is bound to this exact forecast and a defined criterion. Without that, the trajectory is not yet assessed. A recent article, a link count or a repost does not establish progress.</p>
+          <p><strong>Freshness:</strong> publication, collection and review dates are separate from the browser's last check. A recent check cannot make an old source new. A bundle older than 36 hours is labelled stale; a source outage is shown separately.</p>
+          <p><strong>X supplement:</strong> posts and reposts remain a separate, labelled discussion layer. They do not count as evidence or prove accuracy.</p>
+          <p><strong>Potential measurement sources, not connected feeds:</strong> METR task-horizon evaluations (human-expert task duration, not all-job automation); ClinicalTrials.gov records for specific trial IDs (not proof of regulatory approval). These require explicit criteria and review before they can inform trajectory.</p>
+        </details>
+      </section>
+    </div>
+    <p id="missionAnnouncement" class="sr-only" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="section-pad scenario-section" id="scenario-lab" aria-labelledby="scenarioTitle">
+  <div class="wrap scenario-layout">
+    <div class="section-head"><div class="eyebrow">02 / Scenario lab</div><h2 id="scenarioTitle">Explore, don't extrapolate.</h2><p>Use the existing probability simulator to examine how assumptions change the branches. Your local experiment never changes Peter's published forecast.</p><a href="#timeline">Continue to the forecast atlas &rarr;</a></div>
+    <div id="scenarioInstrument"></div>
+  </div>
+</section>
 
 <hr class="divider-line" />
 <section class="section-pad forecast-section" id="timeline" aria-labelledby="timelineHeading">
@@ -893,6 +974,12 @@ html[data-theme="dark"] {
     </div>
   </div>
 </div>
+
+<dialog id="missionResetDialog" class="mission-dialog" aria-labelledby="missionResetTitle">
+  <h2 id="missionResetTitle">Clear your planning data?</h2>
+  <p>This removes quests, self-reported checklist items and saved forecasts from this browser. The book, forecasts, theme and planner are unchanged.</p>
+  <div><button id="cancelMissionReset" type="button" class="btn btn-ghost" autofocus>Keep my data</button><button id="confirmMissionReset" type="button" class="btn btn-primary">Clear planning data</button></div>
+</dialog>
 
 <div id="bookSource" hidden>
 <article data-idx="0">

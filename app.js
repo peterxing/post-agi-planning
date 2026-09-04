@@ -29,6 +29,7 @@ navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => se
 
 /* ---------- Data-derived observatory instrumentation ---------- */
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+document.getElementById('scenarioInstrument').append(document.querySelector('.probability-simulator'));
 const clampNumber = (value, min, max) => Math.max(min, Math.min(max, value));
 function statedAverage(year){
   const probabilities = year.events.map(event => event.prob).filter(Number.isFinite);
@@ -118,6 +119,8 @@ const probabilitySimulatorState = {
   updateTimer:0,
 };
 let predictionModelState = location.protocol === 'file:' ? 'offline' : 'loading';
+let forecastSnapshot = '';
+let forecastFingerprint = '';
 function simulatorAnchors(years){
   const events = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
   const anchors = {
@@ -763,12 +766,12 @@ function timingHtml(e, year){
     </div>`;
 }
 function predictionEvidence(key, match, title){
-  if (!signalCoverageReady) return evidenceUnavailable();
   /* An accounted-for prediction is cited, OR carries dated background, OR is explicitly recorded as
      uncited. Only a prediction in none of the three - which the build treats as a hard failure -
      reaches the unavailable state. The order matters: a context entry is checked BEFORE the uncited
      record so an aged-out but genuine article is shown as background rather than reported as absent. */
-  return `${predictionEvidenceBody(key)}${xSignalCard(xSignals[key])}`;
+  return `<div class="prediction-evidence" data-evidence-id="${htmlText(key)}">${signalCoverageReady
+    ? predictionEvidenceBody(key) + xSignalCard(xSignals[key]) : evidenceUnavailable()}</div>`;
 }
 /* THE X SIGNAL IS AN APPENDIX, NEVER A SUBSTITUTE. It is appended AFTER the evidence state and can
    never replace it: an uncited prediction still says, in full, that a search ran and found nothing.
@@ -845,15 +848,15 @@ function uncitedCard(record){
   const statement = record.statement
     || `No authoritative source published in ${window} was found for this prediction.`;
   return `
-    <div class="tl-signal-uncited" role="note">
-      <div class="tl-uncited-head">
+    <details class="tl-signal-uncited">
+      <summary class="tl-uncited-head">
         <span class="tl-uncited-mark" aria-hidden="true"></span>
         <strong>No source in ${htmlText(window)}</strong>
-      </div>
+      </summary>
       <p class="tl-uncited-body">${htmlText(statement)}${htmlText(searchedText)}</p>
       <p class="tl-uncited-note">The prediction is unchanged. Nothing older, adjacent or unreviewed
       has been substituted to fill this space.</p>
-    </div>`;
+    </details>`;
 }
 
 /* CONTEXT EVIDENCE — dated background, never styled or worded as current evidence. The article
@@ -1391,7 +1394,7 @@ const predictionsReady = (function loadPredictions(){
   }
   return fetch('predictions.json', { cache:'no-cache' })
     .then(r => r.ok ? r.json() : null)
-    .then(d => {
+    .then(async d => {
       if (!d || !Array.isArray(d.years) || !d.years.length) {
         predictionModelState = 'unavailable';
         setText('heroPredFreshness', 'Forecast data unavailable');
@@ -1409,6 +1412,8 @@ const predictionsReady = (function loadPredictions(){
       }
       clean.sort((a, b) => a.year - b.year);
       timelineData = clean;
+      forecastSnapshot = JSON.stringify(d);
+      forecastFingerprint = await fingerprintForecast(d);
       predictionModelState = 'loaded';
       const revisionDate = String(d.updated || '').slice(0, 10);
       predictionRevision = {
@@ -1489,7 +1494,7 @@ function renderSignalMetadata(data){
   const newestLabel = isNaN(newest.getTime())
     ? 'newest-item time unavailable'
     : formatUtcDateTime(newest);
-  const freshness = data.sourceFresh === true ? 'fresh source' : 'source freshness unverified';
+  const freshness = bundleFreshness(data);
   const sourceQualifier = sourceStatus.mode === 'news-verified'
     ? ' · live-fetched and quote-matched at publish'
     : sourceStatus.mode === 'degraded' || sourceStatus.mode === 'unavailable' ? ' · source degraded' : '';
@@ -1753,82 +1758,52 @@ function hasCompleteSignalCoverage(data){
     .catch(function(){});
 })();
 
-(function loadSignals(){
-  if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
-  Promise.all([
-    predictionsReady,
-    fetch('signals.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : null),
-  ])
-    .then(([, d]) => {
-      if (!d) return;
-      if (Array.isArray(d.reality) && d.reality.length) renderReality(d.reality);
-      renderSignalMetadata(d);
-      signalCoverageReady = hasCompleteSignalCoverage(d);
-      directSignals = signalCoverageReady ? d.embeds : {};
-      uncitedSignals = signalCoverageReady && d.uncited && d.uncited.items ? d.uncited.items : {};
-      contextSignals = signalCoverageReady && d.context && d.context.items ? d.context.items : {};
-      /* The currency layer is additive and independent: it is only ever shown next to an
-         origin card, so it is gated on the same coverage check. If the bundle is degraded
-         we show nothing rather than implying a reference we cannot stand behind. */
-      currencySignals = signalCoverageReady && d.currency ? d.currency : {};
-      /* Gated on the SAME coverage check as every other layer. If the bundle is degraded we show no
-         trajectory signals either — a supplement rendered beside a blanked evidence channel would
-         be the only thing on the card, which is precisely the impression it must never give. */
-      xSignals = signalCoverageReady && d.xSignals && d.xSignals.items ? d.xSignals.items : {};
-      renderTimeline();
-      renderHorizon();
-      requestAnimationFrame(revealHashTarget);
-      const stamp = document.getElementById('sigStamp');
-      if (!signalCoverageReady) {
-        setText('heroSignalFreshness', 'Prediction evidence unavailable');
-        const health = document.getElementById('evidenceSourceHealth');
-        if (health) {
-          health.classList.add('is-degraded');
-          health.innerHTML = '<strong>Evidence bundle unavailable</strong><span>Direct cards are hidden because provenance, source freshness or coverage validation failed.</span>';
-        }
-        if (stamp) {
-          stamp.textContent = 'Evidence bundle unavailable · direct evidence hidden';
-          stamp.hidden = false;
-        }
-      } else if (stamp && d.updated){
-        const dt = new Date(d.updated);
-        if (!isNaN(dt.getTime())){
-         /* The stamp reports the ACCOUNTING, not a coverage score. "7/103 direct" alone invites the
-            reader to see 96 failures; "7 cited, 96 searched and recorded" says what actually happened.
-            Both numbers are shown because concealing either would flatter the forecast. */
-         const sourceLabel = SIGNAL_SOURCE_LABELS[d.source] || 'source unrecognised';
-         const uncitedCount = Number(d.uncited && d.uncited.count) || 0;
-         const contextCount = Number(d.context && d.context.count) || 0;
-         const windowDays = Number(d.uncited && d.uncited.windowDays) || 0;
-         const windowText = windowDays ? ` · ${windowDays}-day currency window` : '';
-         const contextText = contextCount ? `${contextCount} with dated background · ` : '';
-         stamp.textContent = `Prediction evidence · ${d.coverage.cited} of ${d.coverage.total} cited · `
-           + contextText
-           + `${uncitedCount} searched with no qualifying source · zero search fallbacks · `
-           + `${sourceLabel}${windowText} · checked `
-           + formatUtcDate(dt);
-         stamp.hidden = false;
-       }
-      }
-    })
-    .catch(() => {
-      signalCoverageReady = false;
-      directSignals = {};
-      uncitedSignals = {};
-      contextSignals = {};
-      currencySignals = {};
-      xSignals = {};
-      renderTimeline();
-      renderHorizon();
-      requestAnimationFrame(revealHashTarget);
-      setText('heroSignalFreshness', 'Prediction evidence unavailable');
-      const health = document.getElementById('evidenceSourceHealth');
-      if (health) {
-        health.classList.add('is-degraded');
-        health.innerHTML = '<strong>Evidence bundle unavailable</strong><span>signals.json could not be loaded; no fallback match is being implied.</span>';
-      }
+function applySignalBundle(data){
+  validatePublishedBundle(data);
+  const initial = !publishedSignals;
+  const anchor = [...document.querySelectorAll('.event, .horizon-item, .chapter, .section-head')]
+    .find(node => {
+      const rect = node.getBoundingClientRect();
+      return rect.height > 0 && rect.bottom > 68 && rect.top < window.innerHeight;
     });
-})();
+  const anchorTop = anchor?.getBoundingClientRect().top;
+  signalCoverageReady = hasCompleteSignalCoverage(data);
+  directSignals = data.embeds;
+  uncitedSignals = data.uncited.items;
+  contextSignals = data.context.items;
+  currencySignals = signalCoverageReady && data.currency ? data.currency : {};
+  xSignals = data.xSignals?.items || {};
+  publishedSignals = data;
+  if (initial) {
+    renderTimeline();
+    renderHorizon();
+    renderReality(data.reality);
+    requestAnimationFrame(revealHashTarget);
+  } else {
+    // Patch only changed evidence, never the forecast, reader, simulator or year containers.
+    document.querySelectorAll('[data-evidence-id]').forEach(host => {
+      const markup = predictionEvidenceBody(host.dataset.evidenceId) + xSignalCard(xSignals[host.dataset.evidenceId]);
+      if (host.dataset.snapshot === renderedEvidenceSnapshot(host.dataset.evidenceId)) return;
+      const open = [...host.querySelectorAll('details')].map(node => node.open);
+      host.innerHTML = markup;
+      host.querySelectorAll('details').forEach((node, i) => { node.open = Boolean(open[i]); });
+    });
+    renderReality(data.reality);
+  }
+  document.querySelectorAll('[data-evidence-id]').forEach(host => {
+    host.dataset.snapshot = renderedEvidenceSnapshot(host.dataset.evidenceId);
+  });
+  renderSignalMetadata(data);
+  const stamp = document.getElementById('sigStamp');
+  stamp.textContent = `Prediction evidence · ${data.coverage.cited} of ${data.coverage.total} cited · `
+    + `${data.context.count} with dated background · ${data.uncited.count} searched with no qualifying source · `
+    + `zero search fallbacks · ${SIGNAL_SOURCE_LABELS[data.source]} · ${data.uncited.windowDays}-day currency window · bundle published ${formatUtcDateTime(data.updated)}`;
+  stamp.hidden = false;
+  renderMission();
+  if (!initial && anchor?.isConnected && anchorTop != null) {
+    window.scrollBy({ top:anchor.getBoundingClientRect().top - anchorTop, behavior:'instant' });
+  }
+}
 /* X RETIREMENT 2026-08-13. Deleted: loadTwitter() injected the platform.twitter.com widgets.js script
    into the live page and a click handler rendered an X-hosted tweet embed in place. This was the last
    code that made a VISITOR's browser contact X, independently of whether any link remained on screen,
@@ -2362,6 +2337,8 @@ setText('realityMeta', 'Offline baseline · no source loaded · live observation
     const context = chapterContext(chapters[n]);
     rdBody.innerHTML = art.innerHTML + `
       <aside class="reader-context">
+        <button type="button" class="btn btn-ghost" data-read-chapter="${n}">I have read this chapter</button>
+        <p class="mission-help">Self-reported reading progress. Opening a chapter does not complete a quest.</p>
         <span class="instrument-label">Contextual instrument</span>
         <p>${context.note}</p>
         <a href="${context.href}" data-reader-context>${context.label} →</a>
@@ -2477,7 +2454,7 @@ setText('realityMeta', 'Offline baseline · no source loaded · live observation
   window.addEventListener('resize', requestProgress, { passive:true });
   updatePageProgress();
 
-  const linkedSections = [...document.querySelectorAll('#timeline, #post-superintelligence, #engine, #futures, #book, #moonshot, #signals, #author')];
+  const linkedSections = [...document.querySelectorAll('#mission-control, #timeline, #post-superintelligence, #engine, #futures, #book, #moonshot, #signals, #author')];
   if ('IntersectionObserver' in window) {
     const navObserver = new IntersectionObserver(entries => {
       const visible = entries
@@ -2492,5 +2469,458 @@ setText('realityMeta', 'Offline baseline · no source loaded · live observation
     linkedSections.forEach(section => navObserver.observe(section));
   }
 })();
+
+/* ---------- Local planning workspace and published observation refresh ---------- */
+const MISSION_KEY = 'pap-mission-control:v1';
+const questIds = ['scenario-v1', 'chapter-v1', 'evidence-v1', 'action-v1'];
+const readinessIds = ['uncertainty-v1', 'limits-v1', 'conversation-v1'];
+const actionIds = ['first-plan-v1', 'capability-v1', 'community-v1', 'review-v1'];
+const emptyMission = () => ({ version:1, quests:[], readiness:[], action:'', actionConfirmed:false, watchlist:{} });
+let missionStorageMode = 'local';
+let missionStorageMessage = 'Saved on this browser only.';
+let missionState = loadMission();
+let publishedSignals = null;
+let pendingSignals = null;
+let observationController = null;
+let observationTimer = 0;
+let observationFailures = 0;
+let observationLastAttempt = 0;
+let observationLastChecked = '';
+let observationLatency = null;
+let observationError = '';
+const comparedForecasts = new Set();
+function validPredictionId(id){ return /^(?:20\d{2}-\d+|horizon-[a-z0-9-]+)$/.test(id); }
+
+function loadMission(){
+  try {
+    const raw = localStorage.getItem(MISSION_KEY);
+    if (!raw) {
+      localStorage.setItem(MISSION_KEY, JSON.stringify(emptyMission()));
+      return emptyMission();
+    }
+    const data = JSON.parse(raw);
+    if (data?.version !== 1 || !Array.isArray(data.quests) || !Array.isArray(data.readiness)
+      || !data.quests.every(id => questIds.includes(id)) || !data.readiness.every(id => readinessIds.includes(id))
+      || new Set(data.quests).size !== data.quests.length || new Set(data.readiness).size !== data.readiness.length
+      || !['', ...actionIds].includes(data.action) || typeof data.actionConfirmed !== 'boolean'
+      || (data.actionConfirmed && !data.action)
+      || !data.watchlist || Array.isArray(data.watchlist) || typeof data.watchlist !== 'object'
+      || Object.keys(data.watchlist).length > 1000
+      || !Object.entries(data.watchlist).every(([id, row]) => validPredictionId(id) && row
+        && ['title', 'forecast', 'seen'].every(key => typeof row[key] === 'string' && row[key].length < 100000))) {
+      throw new Error('Unsupported or invalid planning data');
+    }
+    for (const row of Object.values(data.watchlist)) {
+      if (row.seen) {
+        const snapshot = JSON.parse(row.seen);
+        if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) throw new Error('Invalid observation snapshot');
+      }
+    }
+    localStorage.setItem(MISSION_KEY, raw);
+    return data;
+  } catch (error) {
+    missionStorageMode = 'session';
+    missionStorageMessage = 'Session only: storage is unavailable or saved data is unreadable. Nothing has been overwritten. Reset to try local saving again.';
+    return emptyMission();
+  }
+}
+function saveMission(){
+  if (missionStorageMode !== 'local') return;
+  try { localStorage.setItem(MISSION_KEY, JSON.stringify(missionState)); }
+  catch (error) {
+    missionStorageMode = 'session';
+    missionStorageMessage = 'Session only: the browser could not save this change. Earlier saved data may remain; reset to retry.';
+  }
+}
+function completeQuest(id){
+  if (!missionState.quests.includes(id)) {
+    missionState.quests.push(id);
+    saveMission();
+    setText('missionAnnouncement', 'Planning quest recorded. This measures completion only.');
+  }
+  renderMission();
+}
+function forecastRecords(){
+  return [
+    ...timelineData.flatMap(year => year.events.map((data, i) => ({
+      id:`${year.year}-${i}`, title:data.t, data, timing:String(year.year), probability:`${data.prob}% stated probability`,
+      href:`#event-${year.year}-${i}`,
+    }))),
+    ...horizonData.items.map(data => ({
+      id:`horizon-${data.id}`, title:data.t, data, timing:'Dependency-gated / undated',
+      probability:`${data.conditionalProb}% conditional plausibility`, href:`#horizon-${data.id}`,
+    })),
+  ];
+}
+function watchButton(id){
+  const saved = Boolean(missionState.watchlist[id]);
+  return `<button type="button" class="watch-button" data-watch="${htmlText(id)}" aria-pressed="${saved}"
+    aria-label="${saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist'}">${saved ? 'Saved' : '+ Watch'}</button>`;
+}
+function evidenceSnapshot(id, data = publishedSignals){
+  if (!data) return '';
+  return JSON.stringify({
+    citation:data.embeds[id] || null, context:data.context.items[id] || null,
+    // Re-running a search is a freshness change, not a new observation.
+    gap:data.uncited.items[id]?.reason || null, currency:data.currency?.[id] || [],
+    assessment:data.observations?.items?.[id] || null,
+  });
+}
+function renderedEvidenceSnapshot(id){
+  return evidenceSnapshot(id) + JSON.stringify(publishedSignals?.xSignals?.items?.[id] || null);
+}
+function watchStatus(row, saved){
+  if (!row) return 'No longer in the current forecast. Kept here so you can remove it.';
+  if (saved.forecast !== JSON.stringify(row.data)) return 'Forecast content changed. Review before acknowledging a new baseline.';
+  if (!publishedSignals) return 'Evidence unavailable; saved snapshot retained.';
+  const current = evidenceSnapshot(row.id);
+  if (saved.seen === current) return 'No observation change since your saved snapshot.';
+  const before = saved.seen ? JSON.parse(saved.seen) : {};
+  const after = JSON.parse(current);
+  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment' };
+  const changed = Object.keys(fields).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => fields[key]);
+  return `Observation record changed since your saved snapshot: ${changed.join(', ')}. Inspect the source, dates and limitations before acknowledging.`;
+}
+function renderWatchlist(){
+  const host = document.getElementById('watchlist');
+  const focus = host.contains(document.activeElement)
+    ? { id:document.activeElement.dataset.watch || document.activeElement.dataset.ack, ack:Boolean(document.activeElement.dataset.ack) } : null;
+  const rows = new Map(forecastRecords().map(row => [row.id, row]));
+  host.innerHTML = Object.entries(missionState.watchlist).map(([id, saved]) => {
+    const row = rows.get(id);
+    return `<li class="watch-item"><div>${row ? `<a href="${row.href}">${htmlText(row.title)}</a>` : `<strong>${htmlText(saved.title)}</strong>`}
+      <p data-watch-status="${htmlText(id)}">${htmlText(watchStatus(row, saved))}</p>
+      <span class="assessment-label">${htmlText(row ? trajectoryFor(id).label : 'Forecast unavailable')}</span></div>
+      <div class="watch-actions">${row ? `<button type="button" class="text-button" data-inspect="${htmlText(id)}">Inspect</button>` : ''}
+      ${row && publishedSignals ? `<button type="button" class="text-button" data-ack="${htmlText(id)}">Acknowledge snapshot</button>` : ''}
+      <button type="button" class="text-button" data-watch="${htmlText(id)}">Remove</button></div></li>`;
+  }).join('') || '<li class="mission-empty">Nothing saved yet. Inspect a forecast below to start your watchlist.</li>';
+  if (focus) {
+    const target = host.querySelector(`[data-${focus.ack ? 'ack' : 'watch'}="${focus.id}"]`);
+    (target || document.getElementById('observationPrediction')).focus({ preventScroll:true });
+  }
+  setText('watchCount', `${Object.keys(missionState.watchlist).length} saved`);
+}
+function renderMission(){
+  setText('missionStorage', missionStorageMessage);
+  document.getElementById('missionStorage').dataset.mode = missionStorageMode;
+  const count = questIds.filter(id => missionState.quests.includes(id)).length;
+  setText('questCount', `${count} / 4`);
+  document.getElementById('questProgress').value = count;
+  setText('questReward', count === 4
+    ? 'Field notes established. You completed four planning activities, not a prediction of your readiness.'
+    : 'Four ways to explore. Completion is not a readiness score.');
+  document.querySelectorAll('[data-quest]').forEach(node => {
+    const done = missionState.quests.includes(node.dataset.quest);
+    node.classList.toggle('is-complete', done);
+    node.querySelector('.quest-state').textContent = done ? 'Recorded' : 'To explore';
+  });
+  document.querySelectorAll('[data-readiness]').forEach(input => { input.checked = missionState.readiness.includes(input.dataset.readiness); });
+  document.getElementById('preparationAction').value = missionState.action;
+  document.getElementById('confirmPreparation').checked = missionState.actionConfirmed;
+  document.getElementById('confirmPreparation').disabled = !missionState.action;
+  document.getElementById('confirmComparison').disabled = comparedForecasts.size < 2;
+  setText('readinessCount', `${missionState.readiness.length + Number(missionState.actionConfirmed)} of 4 planning items recorded.`);
+  document.querySelectorAll('.watch-button').forEach(button => {
+    const saved = Boolean(missionState.watchlist[button.dataset.watch]);
+    button.textContent = saved ? 'Saved' : '+ Watch';
+    button.setAttribute('aria-pressed', String(saved));
+    button.setAttribute('aria-label', saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist');
+  });
+  renderWatchlist();
+  renderObservationDetail();
+  renderObservationHealth();
+}
+function validTime(value){
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) && Date.parse(value) <= Date.now() + 300000;
+}
+function recordedTime(value){
+  if (!value) return 'Not recorded';
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${formatUtcDate(value)} (date only)` : formatUtcDateTime(value) || 'Not recorded';
+}
+async function fingerprintForecast(data){
+  if (!globalThis.crypto?.subtle) return '';
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(data)));
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+function bundleFreshness(data){
+  if (!data || !validTime(data.updated) || !validTime(data.sourceFetchedAt)) return 'Source freshness unavailable';
+  if (['degraded', 'unavailable'].includes(data.sourceStatus?.mode)) return 'Source outage reported';
+  const age = Date.now() - Math.min(Date.parse(data.updated), Date.parse(data.sourceFetchedAt));
+  return age > 36 * 3600000 ? 'Stale published bundle (over 36 hours)' : 'Published bundle within 36 hours';
+}
+function trajectoryFor(id, data = publishedSignals){
+  const unknown = { label:'Trajectory not yet assessed', detail:'Insufficient measured data: no reviewed criterion and measurement are published for this exact forecast.', records:[] };
+  const layer = data?.observations;
+  if (!layer) return unknown;
+  if (layer.schemaVersion !== 1 || layer.forecastSha256 !== forecastFingerprint) {
+    return { ...unknown, detail:'Assessment version does not match this forecast. No direction is inferred.' };
+  }
+  const records = layer.items?.[id];
+  if (!Array.isArray(records) || !records.length) return unknown;
+  const valid = records.every(record => record && record.reviewed === true
+    && typeof record.reviewedBy === 'string' && record.reviewedBy.trim() && validTime(record.reviewedAt)
+    && ['supporting', 'mixed', 'challenging'].includes(record.direction)
+    && typeof record.criterion?.id === 'string' && record.criterion.id
+    && typeof record.criterion.version === 'string' && record.criterion.version
+    && typeof record.criterion.description === 'string' && record.criterion.description
+    && Number.isFinite(record.measurement?.value) && typeof record.measurement.unit === 'string' && record.measurement.unit
+    && validTime(record.measurement.observedAt) && safeHttpUrl(record.source?.url)
+    && !/(?:^|\.)((?:x|twitter)\.com)$/i.test(new URL(record.source.url).hostname)
+    && validTime(record.source.publishedAt) && validTime(record.source.fetchedAt)
+    && typeof record.source.name === 'string' && record.source.name
+    && typeof record.rationale === 'string' && record.rationale
+    && typeof record.limitations === 'string' && record.limitations);
+  if (!valid) return { ...unknown, detail:'A published assessment is incomplete. Treat trajectory as unassessed; the source record is not enough.' };
+  const directions = new Set(records.map(record => record.direction));
+  const direction = directions.size > 1 || directions.has('mixed') ? 'mixed' : records[0].direction;
+  return { label:{ supporting:'Supporting observations', mixed:'Mixed observations', challenging:'Challenging observations' }[direction],
+    detail:'Reviewed direction against the stated criteria, not proof that the target is achieved or a new probability.', records };
+}
+function renderObservationDetail(){
+  const id = document.getElementById('observationPrediction').value;
+  const row = forecastRecords().find(row => row.id === id);
+  const host = document.getElementById('observationDetail');
+  if (!row) {
+    host.innerHTML = '<p class="mission-empty">Choose a prediction to inspect its published probability, sources and unanswered questions.</p>';
+    return;
+  }
+  const assessment = trajectoryFor(id);
+  const source = publishedSignals?.embeds[id] || publishedSignals?.context.items[id];
+  const gap = publishedSignals?.uncited.items[id];
+  const markup = `<div class="observation-forecast"><span class="instrument-label">Author's forecast / unchanged</span>
+    <h4>${htmlText(row.title)}</h4><p>${htmlText(row.probability)} &middot; ${htmlText(row.timing)}</p>
+    <div class="observation-actions"><a href="${row.href}">Open forecast details &rarr;</a>${watchButton(id)}</div></div>
+    <div class="trajectory-state"><strong>${htmlText(assessment.label)}</strong><p>${htmlText(assessment.detail)}</p></div>
+    ${assessment.records.map(record => `<div class="measured-observation"><strong>${htmlText(record.direction)}: ${htmlText(record.criterion.description)}</strong>
+      <p>${record.measurement.value} ${htmlText(record.measurement.unit)} &middot; observed ${htmlText(formatUtcDateTime(record.measurement.observedAt))}</p>
+      <p>${htmlText(record.rationale)}</p><p><strong>Limitations:</strong> ${htmlText(record.limitations)}</p>
+      <a href="${htmlText(safeHttpUrl(record.source.url))}" target="_blank" rel="noopener">${htmlText(record.source.name)}</a>
+      <p>Published ${htmlText(formatUtcDateTime(record.source.publishedAt))} &middot; fetched ${htmlText(formatUtcDateTime(record.source.fetchedAt))}
+      &middot; reviewed ${htmlText(formatUtcDateTime(record.reviewedAt))} by ${htmlText(record.reviewedBy)}</p></div>`).join('')}
+    <details class="source-inspection"><summary>${source ? `${publishedSignals.context.items[id] ? 'Dated background' : 'News in the published citation window'}: ${htmlText(source.publisher)}` : 'Evidence gap / no qualifying source'}</summary>
+      ${source ? `<h4>${htmlText(source.headline)}</h4><blockquote>${htmlText(source.quote)}</blockquote>
+        <p><strong>Relevance and limits:</strong> ${htmlText(source.mappingRationale)}</p>
+        <dl><dt>Article published</dt><dd>${htmlText(recordedTime(source.publishedAt || source.articleDate))}</dd>
+        <dt>Source retrieved</dt><dd>${htmlText(recordedTime(source.provenance?.retrievedAt))}</dd>
+        <dt>Mapping reviewed</dt><dd>${htmlText(recordedTime(source.reviewedAt))}</dd>
+        <dt>Source last verified</dt><dd>${htmlText(recordedTime(source.lastVerifiedAt))}</dd></dl>
+        <a href="${htmlText(safeHttpUrl(source.url))}" target="_blank" rel="noopener">Read the original article &rarr;</a>`
+        : `<p>${htmlText(gap?.statement || 'Published evidence is unavailable. No observation is inferred.')}</p>
+          <p>${gap ? `Search recorded ${htmlText(formatUtcDateTime(gap.searchedAt))}.` : ''}</p>`}
+    </details>`;
+  if (host.dataset.rendered === markup) return;
+  const open = host.querySelector('.source-inspection')?.open;
+  const focusedWatch = host.contains(document.activeElement) && document.activeElement.matches('[data-watch]');
+  host.innerHTML = markup;
+  host.dataset.rendered = markup;
+  host.querySelector('.source-inspection').open = Boolean(open);
+  if (focusedWatch) host.querySelector('[data-watch]').focus({ preventScroll:true });
+}
+function renderObservationHealth(){
+  setText('observationFreshness', observationError
+    ? `Update unavailable. ${publishedSignals ? 'Last good bundle retained.' : 'No evidence bundle loaded.'}`
+    : bundleFreshness(publishedSignals));
+  setText('observationCheck', observationError || (observationLastChecked
+    ? `Browser checked ${formatUtcDateTime(observationLastChecked)}. Round trip ${observationLatency} ms.`
+    : 'No browser check completed yet.'));
+  setText('observationTimes', publishedSignals
+    ? `Bundle published ${formatUtcDateTime(publishedSignals.updated)}. Source collection ${formatUtcDateTime(publishedSignals.sourceFetchedAt)}. `
+      + (pendingSignals ? 'A newer validated bundle is waiting; current details have not changed.' : 'Checks run every 5 minutes while this page is visible; errors back off to 30 minutes.')
+    : 'Publication and collection timestamps will appear only after a valid bundle loads.');
+  document.getElementById('applyObservations').hidden = !pendingSignals;
+}
+function validatePublishedBundle(data){
+  if (!forecastFingerprint || data?.forecastVersion?.schemaVersion !== 1 || data.forecastVersion.sha256 !== forecastFingerprint) {
+    throw new Error('Forecast and observation versions do not match. Reload after publication completes; existing data is retained.');
+  }
+  if (!validTime(data.updated) || !validTime(data.sourceFetchedAt) || !hasCompleteSignalCoverage(data)
+    || !Array.isArray(data.reality) || !data.reality.length || data.reality.length > 100
+    || !data.reality.every(row => row && typeof row.t === 'string' && ['news', 'none'].includes(row.kind)
+      && (row.kind !== 'news' || /^https:\/\//.test(safeHttpUrl(row.url))))
+    || data.context.count !== Object.keys(data.context.items).length) {
+    throw new Error('Published evidence failed timestamp, provenance or coverage validation. No replacement was applied.');
+  }
+  if (publishedSignals && Date.parse(data.updated) < Date.parse(publishedSignals.updated)) {
+    throw new Error('The server returned an older bundle. The newer local snapshot is retained.');
+  }
+}
+async function fetchPublishedJson(file, signal){
+  const response = await fetch(file, { cache:'no-cache', signal });
+  if (!response.ok) throw new Error(`Published data request failed (HTTP ${response.status}).`);
+  if (Number(response.headers.get('content-length')) > 2000000) throw new Error('Published data exceeded the size limit.');
+  const text = await response.text();
+  if (text.length > 2000000) throw new Error('Published data exceeded the size limit.');
+  return JSON.parse(text);
+}
+function scheduleObservationRefresh(){
+  clearTimeout(observationTimer);
+  if (document.hidden || location.protocol === 'file:') return;
+  observationTimer = setTimeout(() => refreshPublishedObservations(), Math.min(1800000, 300000 * 2 ** observationFailures));
+}
+function canApplyObservations(){
+  return document.getElementById('reader').hidden
+    && !document.activeElement?.closest('.prediction-evidence, #observationDetail, #watchlist, #signalsGrid');
+}
+async function refreshPublishedObservations(){
+  if (observationController || document.hidden || Date.now() - observationLastAttempt < 15000) return;
+  observationLastAttempt = Date.now();
+  observationController = new AbortController();
+  const controller = observationController;
+  const timeout = setTimeout(() => controller.abort('timeout'), 12000);
+  const start = performance.now();
+  const button = document.getElementById('refreshObservations');
+  button.disabled = true;
+  button.textContent = 'Checking published data...';
+  try {
+    const forecast = await fetchPublishedJson('predictions.json', controller.signal);
+    if (JSON.stringify(forecast) !== forecastSnapshot) {
+      throw new Error('A different forecast revision is published. Reload to review it; the current forecast and evidence have not been changed.');
+    }
+    const data = await fetchPublishedJson('signals.json', controller.signal);
+    validatePublishedBundle(data);
+    observationLastChecked = new Date().toISOString();
+    observationLatency = Math.round(performance.now() - start);
+    observationError = '';
+    observationFailures = 0;
+    if (JSON.stringify(data) !== JSON.stringify(publishedSignals)) {
+      if (!publishedSignals || canApplyObservations()) {
+        applySignalBundle(data);
+        pendingSignals = null;
+      } else pendingSignals = data;
+    }
+  } catch (error) {
+    if (controller.signal.reason !== 'hidden') {
+      observationFailures++;
+      observationError = controller.signal.aborted ? 'The published-data request timed out. Try again later.' : error.message;
+      if (!publishedSignals) setText('heroSignalFreshness', 'Prediction evidence unavailable');
+    }
+  } finally {
+    clearTimeout(timeout);
+    observationController = null;
+    button.textContent = 'Check published updates';
+    setTimeout(() => { button.disabled = false; }, Math.max(0, 15000 - (Date.now() - observationLastAttempt)));
+    renderObservationHealth();
+    scheduleObservationRefresh();
+  }
+}
+document.getElementById('refreshObservations').addEventListener('click', refreshPublishedObservations);
+document.getElementById('applyObservations').addEventListener('click', () => {
+  if (pendingSignals && canApplyObservations()) {
+    applySignalBundle(pendingSignals);
+    pendingSignals = null;
+    renderObservationHealth();
+  }
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    clearTimeout(observationTimer);
+    observationController?.abort('hidden');
+  } else {
+    renderObservationHealth();
+    if (Date.now() - observationLastAttempt >= 300000) refreshPublishedObservations();
+    else scheduleObservationRefresh();
+  }
+});
+window.addEventListener('pagehide', () => {
+  clearTimeout(observationTimer);
+  observationController?.abort('hidden');
+});
+document.addEventListener('click', event => {
+  const watch = event.target.closest('[data-watch]');
+  const inspect = event.target.closest('[data-inspect]');
+  const ack = event.target.closest('[data-ack]');
+  const read = event.target.closest('[data-read-chapter]');
+  if (watch) {
+    const id = watch.dataset.watch;
+    const row = forecastRecords().find(row => row.id === id);
+    if (missionState.watchlist[id]) delete missionState.watchlist[id];
+    else if (row) missionState.watchlist[id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(id) };
+    else { setText('missionAnnouncement', 'This forecast is no longer available.'); return; }
+    saveMission();
+    renderMission();
+    setText('missionAnnouncement', missionState.watchlist[id] ? 'Forecast saved to your watchlist.' : 'Forecast removed from your watchlist.');
+  }
+  if (inspect) {
+    const select = document.getElementById('observationPrediction');
+    select.value = inspect.dataset.inspect;
+    select.dispatchEvent(new Event('change'));
+    select.scrollIntoView({ block:'center', behavior:motionQuery.matches ? 'instant' : 'smooth' });
+    select.focus({ preventScroll:true });
+  }
+  if (ack) {
+    const row = forecastRecords().find(row => row.id === ack.dataset.ack);
+    if (row && missionState.watchlist[row.id] && publishedSignals) {
+      missionState.watchlist[row.id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(row.id) };
+      saveMission();
+      renderMission();
+    }
+  }
+  if (read && !document.getElementById('reader').hidden) {
+    completeQuest('chapter-v1');
+    read.textContent = 'Reading recorded';
+    read.setAttribute('aria-pressed', 'true');
+  }
+});
+document.getElementById('observationPrediction').addEventListener('change', () => renderObservationDetail());
+document.getElementById('observationDetail').addEventListener('toggle', event => {
+  if (event.target.matches('.source-inspection') && event.target.open) {
+    comparedForecasts.add(document.getElementById('observationPrediction').value);
+    document.getElementById('confirmComparison').disabled = comparedForecasts.size < 2;
+  }
+}, true);
+document.getElementById('confirmComparison').addEventListener('click', () => {
+  if (comparedForecasts.size >= 2) completeQuest('evidence-v1');
+});
+document.querySelector('.probability-simulator').addEventListener('input', () => completeQuest('scenario-v1'));
+document.querySelector('.probability-simulator').addEventListener('click', event => {
+  if (event.target.closest('[data-sim-preset]:not([data-sim-preset="baseline"])') && probabilitySimulatorState.anchors) completeQuest('scenario-v1');
+});
+document.querySelectorAll('[data-readiness]').forEach(input => input.addEventListener('change', () => {
+  missionState.readiness = readinessIds.filter(id => document.querySelector(`[data-readiness="${id}"]`).checked);
+  saveMission();
+  renderMission();
+}));
+document.getElementById('preparationAction').addEventListener('change', event => {
+  missionState.action = event.target.value;
+  missionState.actionConfirmed = false;
+  missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
+  saveMission();
+  renderMission();
+});
+document.getElementById('confirmPreparation').addEventListener('change', event => {
+  missionState.actionConfirmed = Boolean(missionState.action && event.target.checked);
+  missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
+  if (missionState.actionConfirmed) missionState.quests.push('action-v1');
+  saveMission();
+  renderMission();
+});
+const resetDialog = document.getElementById('missionResetDialog');
+document.getElementById('missionReset').addEventListener('click', () => resetDialog.showModal());
+document.getElementById('cancelMissionReset').addEventListener('click', () => resetDialog.close());
+document.getElementById('confirmMissionReset').addEventListener('click', () => {
+  missionState = emptyMission();
+  comparedForecasts.clear();
+  missionStorageMode = 'local';
+  missionStorageMessage = 'Saved on this browser only.';
+  saveMission();
+  renderMission();
+  resetDialog.close();
+  document.getElementById('missionReset').focus();
+  setText('missionAnnouncement', missionStorageMode === 'local' ? 'Planning data cleared.' : 'Session planning data cleared; browser storage could not be cleared.');
+});
+renderMission();
+predictionsReady.then(ready => {
+  const select = document.getElementById('observationPrediction');
+  if (!ready) {
+    select.innerHTML = '<option value="">Forecast unavailable</option>';
+    setText('observationFreshness', 'Forecast unavailable. Observation refresh cannot run.');
+    return;
+  }
+  select.innerHTML = '<option value="">Choose a forecast to inspect</option>' + forecastRecords().map(row =>
+    `<option value="${row.id}">${htmlText(row.timing)} / ${htmlText(row.title)}</option>`).join('');
+  renderMission();
+  refreshPublishedObservations();
+});
 
 /* APP-JS-DONE */

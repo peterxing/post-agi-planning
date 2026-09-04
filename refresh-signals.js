@@ -35,6 +35,7 @@ if (require.main === module) require('./pipeline-lock').guard('refresh-signals')
 
 const fs = require('fs');
 const path = require('path');
+const { createHash } = require('crypto');
 const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
 const {
   FAMILY_DEFINITIONS,
@@ -2903,6 +2904,10 @@ async function main(){
     return dates.length ? new Date(Math.max(...dates)).toISOString() : null;
   })();
   const out = {
+    forecastVersion: {
+      schemaVersion: 1,
+      sha256: createHash('sha256').update(JSON.stringify(JSON.parse(fs.readFileSync(PRED, 'utf8')))).digest('hex'),
+    },
     updated: new Date().toISOString(),
     note,
     source,

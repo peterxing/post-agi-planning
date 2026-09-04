@@ -132,7 +132,7 @@ const SHOT = process.argv[3] || null;
          matched a context card, so a cited card demoted to background would have satisfied the
          "origin" arm and the substitution would have been invisible here. */
       const originCard = node => node.querySelector(
-        '.event-body > .tl-signal:not(.tl-currency):not(.tl-context), .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency):not(.tl-context)');
+        '.event-body > .prediction-evidence > .tl-signal:not(.tl-currency):not(.tl-context), .event-body > .prediction-evidence > .tl-evidence-group > .tl-signal:not(.tl-currency):not(.tl-context)');
       const contextCard = node => node.querySelector('.tl-signal.tl-context');
       const uncitedNotice = node => node.querySelector('.tl-signal-uncited');
       const accountedFor = node =>
@@ -213,7 +213,7 @@ const SHOT = process.argv[3] || null;
         horizonCount: horizonNodes.length,
         expectedHorizonCount: horizonItems.length,
         cards: document.querySelectorAll('#timelineBody .event-body .tl-signal:not(.tl-currency), #horizonBody .horizon-signal .tl-signal:not(.tl-currency)').length,
-        evidenceItems: document.querySelectorAll('#timelineBody .event-body > .tl-signal:not(.tl-currency), #horizonBody .horizon-signal > .tl-signal:not(.tl-currency), #timelineBody .event-body > .tl-evidence-group > .tl-signal:not(.tl-currency), #horizonBody .horizon-signal > .tl-evidence-group > .tl-signal:not(.tl-currency)').length,
+        evidenceItems: document.querySelectorAll('#timelineBody .prediction-evidence > .tl-signal:not(.tl-currency), #horizonBody .prediction-evidence > .tl-signal:not(.tl-currency), #timelineBody .prediction-evidence > .tl-evidence-group > .tl-signal:not(.tl-currency), #horizonBody .prediction-evidence > .tl-evidence-group > .tl-signal:not(.tl-currency)').length,
         /* The additive currency layer, counted separately so it can never be mistaken for
            direct coverage. Every currency card must sit inside an evidence group that also
            contains an origin card — asserted below. */

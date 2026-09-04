@@ -6,6 +6,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const assert = require('node:assert/strict');
 const predictions = require('./predictions.json');
 const signals = require('./signals.json');
 
@@ -153,6 +154,260 @@ function requestStatus(pathname) {
   });
 }
 
+async function verifyMission(browser){
+  const context = await browser.newContext({ viewport:{ width:1440, height:1000 }, reducedMotion:'reduce' });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  try {
+    await page.goto(URL);
+    await page.waitForFunction(() => typeof publishedSignals !== 'undefined' && publishedSignals);
+    if (process.env.PAP_CONTENT_BASELINE) {
+      const baseline = JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'content.json'), 'utf8'));
+      const actual = await page.evaluate(() => ({ sixDs, futures, allocBuckets, chapters, questions,
+        simulatorPresets, simulatorOutcomeLabels, bookSource:document.getElementById('bookSource').innerHTML,
+        author:document.getElementById('author').textContent.replace(/\s+/g, ' ').trim() }));
+      assert.deepEqual(actual, baseline, 'Authored book, strategies, portfolio, planner and author must remain exact');
+      for (const file of ['predictions.json', 'author.json']) {
+        assert.equal(fs.readFileSync(path.join(__dirname, file), 'utf8'),
+          fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, file), 'utf8'), `${file} changed`);
+      }
+      const evidence = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
+      delete evidence.forecastVersion;
+      assert.deepEqual(evidence, JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'signals.json'), 'utf8')),
+        'Binding metadata must not rewrite observations or their timestamps');
+      console.log('[content-preservation] exact baseline match: forecast/author bytes, all book HTML, chapter text, strategies, portfolio and planner assumptions');
+    }
+    await page.clock.install();
+    await page.evaluate(() => { window.sameDataNode = document.querySelector('.event'); });
+    const firstPublishedAt = await page.evaluate(() => publishedSignals.updated);
+    await page.clock.fastForward(16000);
+    await page.locator('#refreshObservations').click();
+    await page.waitForFunction(() => !observationController);
+    assert.equal(await page.evaluate(() => window.sameDataNode === document.querySelector('.event')), true);
+    assert.equal(await page.evaluate(() => publishedSignals.updated), firstPublishedAt);
+    await page.clock.fastForward(16000);
+    const hiddenState = await page.evaluate(async () => {
+      const errorsBefore = observationFailures;
+      const request = refreshPublishedObservations();
+      const controller = observationController;
+      Object.defineProperty(document, 'hidden', { configurable:true, value:true });
+      document.dispatchEvent(new Event('visibilitychange'));
+      await request;
+      const attempt = observationLastAttempt;
+      await refreshPublishedObservations();
+      const state = { aborted:controller.signal.aborted, reason:controller.signal.reason,
+        noHiddenRequest:observationLastAttempt === attempt, noOutage:observationFailures === errorsBefore };
+      delete document.hidden;
+      document.dispatchEvent(new Event('visibilitychange'));
+      return state;
+    });
+    assert.deepEqual(hiddenState, { aborted:true, reason:'hidden', noHiddenRequest:true, noOutage:true });
+    const ids = await page.evaluate(() => forecastRecords().map(row => row.id));
+    assert.equal(ids.length, expectedEvents + expectedHorizon);
+    assert.equal(await page.locator('#questProgress').getAttribute('value'), '0');
+    assert.equal(await page.locator('#confirmPreparation').isDisabled(), true);
+    await page.locator('#observationPrediction').selectOption(ids[0]);
+    assert.match(await page.locator('.trajectory-state').textContent(), /not yet assessed/);
+    await page.locator('#observationDetail .watch-button').click();
+    assert.equal(await page.locator('#watchlist .watch-item').count(), 1);
+    await page.locator('#observationDetail .source-inspection summary').click();
+    await page.locator('#observationPrediction').selectOption(ids[1]);
+    if (!await page.locator('#observationDetail .source-inspection').evaluate(node => node.open)) {
+      await page.locator('#observationDetail .source-inspection summary').click();
+    }
+    await page.waitForFunction(() => !document.getElementById('confirmComparison').disabled);
+    assert.equal(await page.locator('[data-quest="evidence-v1"] .quest-state').textContent(), 'To explore');
+    await page.locator('#confirmComparison').click();
+    await page.locator('[data-sim-preset="fast"]').click();
+    await page.locator('#preparationAction').selectOption('first-plan-v1');
+    assert.equal(await page.locator('[data-quest="action-v1"] .quest-state').textContent(), 'To explore');
+    await page.locator('#confirmPreparation').check();
+    await page.locator('[data-readiness="limits-v1"]').check();
+    await page.locator('#readBookBtn').click();
+    assert.equal(await page.locator('[data-quest="chapter-v1"] .quest-state').textContent(), 'To explore');
+    await page.locator('[data-read-chapter]').click();
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#questCount').textContent(), '4 / 4');
+    await page.reload();
+    await page.waitForFunction(() => publishedSignals);
+    assert.equal(await page.locator('#questCount').textContent(), '4 / 4');
+    assert.equal(await page.locator('#watchlist .watch-item').count(), 1);
+    assert.equal(await page.locator('[data-readiness="limits-v1"]').isChecked(), true);
+    assert.equal(await page.locator('#confirmPreparation').isChecked(), true);
+
+    const semantics = await page.evaluate(() => {
+      const stale = structuredClone(publishedSignals);
+      stale.updated = stale.sourceFetchedAt = new Date(Date.now() - 40 * 3600000).toISOString();
+      const outage = structuredClone(publishedSignals);
+      outage.sourceStatus.mode = 'unavailable';
+      const id = forecastRecords()[0].id;
+      const fixture = {
+        reviewed:true, reviewedBy:'Synthetic test reviewer', reviewedAt:new Date().toISOString(),
+        direction:'supporting', criterion:{ id:'fixture', version:'1', description:'Synthetic criterion, never published' },
+        measurement:{ value:1, unit:'fixture units', observedAt:new Date().toISOString() },
+        source:{ url:Object.values(publishedSignals.embeds)[0].url, name:'Synthetic fixture',
+          publishedAt:new Date().toISOString(), fetchedAt:new Date().toISOString() },
+        rationale:'Synthetic test only', limitations:'Not a real observation',
+      };
+      const bundle = structuredClone(publishedSignals);
+      bundle.observations = { schemaVersion:1, forecastSha256:forecastFingerprint,
+        items:{ [id]:[fixture, { ...fixture, direction:'challenging' }] } };
+      const mixed = trajectoryFor(id, bundle).label;
+      bundle.observations.items[id] = [fixture];
+      const supporting = trajectoryFor(id, bundle).label;
+      bundle.observations.items[id] = [{ ...fixture, direction:'challenging' }];
+      const challenging = trajectoryFor(id, bundle).label;
+      bundle.observations.forecastSha256 = 'wrong';
+      const mismatched = trajectoryFor(id, bundle).label;
+      bundle.observations.forecastSha256 = forecastFingerprint;
+      delete bundle.observations.items[id][0].measurement;
+      const missingMeasurement = trajectoryFor(id, bundle).label;
+      return { stale:bundleFreshness(stale), outage:bundleFreshness(outage), mixed, supporting, challenging,
+        mismatched, missingMeasurement, unknown:trajectoryFor(id).label };
+    });
+    assert.match(semantics.stale, /Stale/);
+    assert.match(semantics.outage, /outage/);
+    assert.match(semantics.mixed, /Mixed/);
+    assert.match(semantics.supporting, /Supporting/);
+    assert.match(semantics.challenging, /Challenging/);
+    for (const name of ['unknown', 'mismatched', 'missingMeasurement']) assert.match(semantics[name], /not yet assessed/);
+
+    const original = await page.evaluate(() => structuredClone(publishedSignals));
+    const revised = structuredClone(original);
+    revised.updated = new Date().toISOString();
+    const changedId = ids[0];
+    const changed = revised.embeds[changedId] || revised.context.items[changedId];
+    if (changed) changed.mappingRationale += ' Synthetic regression fixture; never published.';
+    else revised.uncited.items[changedId].reason += '-synthetic-fixture';
+    await page.route('**/signals.json', route => route.fulfill({ json:revised }));
+    await page.locator('#observationPrediction').selectOption(changedId);
+    await page.evaluate(() => { window.missionEventNode = document.querySelector('.event'); });
+    await page.clock.fastForward(16000);
+    await page.locator('#refreshObservations').click();
+    await page.waitForFunction(updated => publishedSignals.updated === updated, revised.updated);
+    assert.equal(await page.evaluate(() => window.missionEventNode === document.querySelector('.event')), true);
+    assert.equal(await page.locator('#questCount').textContent(), '4 / 4');
+    assert.equal(await page.locator('#confirmPreparation').isChecked(), true);
+    assert.match(await page.locator(`[data-watch-status="${changedId}"]`).textContent(), /changed since/);
+    const changedField = revised.embeds[changedId] ? 'citation details'
+      : revised.context.items[changedId] ? 'dated background' : 'search outcome';
+    assert.ok((await page.locator(`[data-watch-status="${changedId}"]`).textContent()).includes(changedField),
+      'Watchlist must identify which observation field changed');
+    await page.locator(`[data-ack="${changedId}"]`).click();
+    assert.match(await page.locator(`[data-watch-status="${changedId}"]`).textContent(), /No observation change/);
+
+    await page.unroute('**/signals.json');
+    await page.route('**/signals.json', route => route.fulfill({ status:503, body:'Unavailable' }));
+    await page.clock.fastForward(16000);
+    await page.locator('#refreshObservations').click();
+    await page.waitForFunction(() => observationError.includes('503'));
+    assert.match(await page.locator('#observationFreshness').textContent(), /Last good bundle retained/);
+    assert.equal(await page.evaluate(() => publishedSignals.updated), revised.updated);
+    await page.unroute('**/signals.json');
+    await page.route('**/signals.json', route => route.fulfill({ json:{ ...revised, forecastVersion:{ schemaVersion:1, sha256:'wrong' } } }));
+    await page.clock.fastForward(16000);
+    await page.locator('#refreshObservations').click();
+    await page.waitForFunction(() => observationError.includes('versions'));
+    assert.equal(await page.evaluate(() => publishedSignals.updated), revised.updated);
+
+    await page.route('**/predictions.json', route => route.fulfill({ json:{ ...predictions, updated:'2026-09-01T00:00:00.000Z' } }));
+    await page.clock.fastForward(16000);
+    await page.locator('#refreshObservations').click();
+    await page.waitForFunction(() => observationError.includes('different forecast revision'));
+    assert.equal(await page.evaluate(() => publishedSignals.updated), revised.updated);
+    await page.unroute('**/predictions.json');
+    await page.unroute('**/signals.json');
+    const readerUpdate = { ...revised, updated:new Date(Date.now() + 60000).toISOString() };
+    await page.route('**/signals.json', route => route.fulfill({ json:readerUpdate }));
+    await page.locator('#readBookBtn').click();
+    await page.locator('#rdScroll').evaluate(node => { node.scrollTop = 240; });
+    const readerBefore = await page.evaluate(() => ({ scroll:document.getElementById('rdScroll').scrollTop,
+      focus:document.activeElement.id, html:document.getElementById('rdBody').innerHTML }));
+    await page.clock.fastForward(1860000);
+    await page.waitForFunction(() => pendingSignals);
+    const readerAfter = await page.evaluate(() => ({ scroll:document.getElementById('rdScroll').scrollTop,
+      focus:document.activeElement.id, html:document.getElementById('rdBody').innerHTML }));
+    assert.deepEqual(readerAfter, readerBefore);
+    await page.keyboard.press('Escape');
+    await page.locator('#applyObservations').click();
+    assert.equal(await page.evaluate(() => pendingSignals), null);
+
+    const removed = await page.evaluate(() => {
+      const id = '2099-999';
+      missionState.watchlist[id] = { title:'Synthetic removed forecast', forecast:'{}', seen:'' };
+      renderMission();
+      return document.querySelector(`[data-watch-status="${id}"]`).textContent;
+    });
+    assert.match(removed, /No longer/);
+    await page.locator('#missionReset').click();
+    await page.locator('#cancelMissionReset').click();
+    assert.equal(await page.locator('#questCount').textContent(), '4 / 4');
+    await page.locator('#missionReset').click();
+    await page.locator('#confirmMissionReset').click();
+    assert.equal(await page.locator('#questCount').textContent(), '0 / 4');
+    assert.equal(await page.locator('#watchlist .watch-item').count(), 0);
+    await page.reload();
+    await page.waitForFunction(() => publishedSignals);
+    assert.equal(await page.locator('#questCount').textContent(), '0 / 4');
+    assert.equal(await page.locator('#watchlist .watch-item').count(), 0);
+    assert.deepEqual(errors, []);
+    console.log('[mission] quests, real actions, persistence/reset, watchlist, reviewed/unknown/mixed/stale/outage/version states and reader-safe refresh passed');
+  } finally { await context.close(); }
+
+  for (const mode of ['denied', 'corrupt', 'invalid-snapshot', 'array-snapshot', 'null-snapshot']) {
+    const context = await browser.newContext();
+    try {
+      const raw = mode === 'corrupt' ? '{broken' : JSON.stringify({
+        version:1, quests:[], readiness:[], action:'', actionConfirmed:false,
+        watchlist:{ '2026-0':{ title:'Synthetic storage fixture', forecast:'{}',
+          seen:mode === 'array-snapshot' ? '[]' : mode === 'null-snapshot' ? 'null' : '{broken' } },
+      });
+      await context.addInitScript(({ mode, raw }) => {
+        if (mode === 'denied') Object.defineProperty(window, 'localStorage', { get(){ throw new DOMException('Storage denied', 'SecurityError'); } });
+        else localStorage.setItem('pap-mission-control:v1', raw);
+      }, { mode, raw });
+      const page = await context.newPage();
+      await page.goto(URL);
+      await page.waitForFunction(() => publishedSignals);
+      assert.match(await page.locator('#missionStorage').textContent(), /Session only/);
+      await page.locator('[data-readiness="limits-v1"]').check();
+      assert.equal(await page.locator('[data-readiness="limits-v1"]').isChecked(), true);
+      if (mode !== 'denied') assert.equal(await page.evaluate(() => localStorage.getItem('pap-mission-control:v1')), raw);
+    } finally { await context.close(); }
+  }
+  console.log('[mission-storage] denied and corrupt storage are truthful session-only states');
+
+  for (const theme of ['light', 'dark']) for (const width of [1440, 390, 320]) {
+    const context = await browser.newContext({ viewport:{ width, height:1000 }, reducedMotion:'reduce' });
+    try {
+      const page = await context.newPage();
+      await page.goto(`${URL}${URL.includes('?') ? '&' : '?'}scoutTheme=${theme}`);
+      await page.waitForFunction(() => publishedSignals);
+      const geometry = await page.evaluate(() => {
+        const cards = [...document.querySelectorAll('.mission-card')].map(node => node.getBoundingClientRect());
+        return { overflow:document.documentElement.scrollWidth > innerWidth,
+          cards:cards.length, within:cards.every(rect => rect.left >= 0 && rect.right <= innerWidth),
+          overlapping:cards.some((a, i) => cards.slice(i + 1).some(b => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top)) };
+      });
+      assert.equal(geometry.cards, 4);
+      assert.equal(geometry.overflow, false);
+      assert.equal(geometry.within, true);
+      assert.equal(geometry.overlapping, false);
+      if (process.env.PAP_UI_ARTIFACT_DIR && width !== 320) {
+        fs.mkdirSync(process.env.PAP_UI_ARTIFACT_DIR, { recursive:true });
+        await page.screenshot({ path:path.join(process.env.PAP_UI_ARTIFACT_DIR, `hero-${width}-${theme}.png`) });
+        await page.locator('#mission-control').scrollIntoViewIfNeeded();
+        await page.screenshot({ path:path.join(process.env.PAP_UI_ARTIFACT_DIR, `dashboard-${width}-${theme}.png`) });
+        await page.locator('#observationPrediction').selectOption(await page.locator('#observationPrediction option').nth(1).getAttribute('value'));
+        await page.locator('#observations').scrollIntoViewIfNeeded();
+        await page.screenshot({ path:path.join(process.env.PAP_UI_ARTIFACT_DIR, `observations-${width}-${theme}.png`) });
+      }
+    } finally { await context.close(); }
+  }
+  console.log('[mission-layout] non-overlapping cards and no overflow at 1440, 390 and 320px in both themes');
+}
+
 (async () => {
   const malformedStatus = await requestStatus('/%zz');
   const healthyStatus = await requestStatus('/');
@@ -161,6 +416,13 @@ function requestStatus(pathname) {
   }
   const browser = await chromium.launch({ channel:'msedge', headless:true });
   let failures = 0;
+  try { await verifyMission(browser); }
+  catch (error) { await browser.close(); throw error; }
+  if (process.argv.includes('--mission-only')) {
+    await browser.close();
+    console.log('RESULT: PASS - targeted mission-control checks');
+    return;
+  }
 
   for (const profile of profiles) {
     const context = await browser.newContext({
@@ -930,4 +1192,3 @@ function requestStatus(pathname) {
   console.error(error);
   process.exit(1);
 });
-

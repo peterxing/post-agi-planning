@@ -199,12 +199,30 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * of a moving quantity, recorded as a record of this decision; every run recomputes and prints them,
  * so do not read them as current state.
  */
+/*
+ * APPROVED RE-BASELINE 2026-09-05 (UTC+10) - user-requested mission-control redesign.
+ * Named additions: planning quests, self-reported checklist, persistent watchlist, reviewed
+ * observation/fingerprint contract, reader-safe published-data refresh and responsive dashboard.
+ * Decision-time baseline -> implementation bytes: index 131933 -> 141358, app 146165 -> 172202,
+ * CSS 94721 -> 102918; shell 372819 -> 416478 (+43659). These are dated measurements, not current
+ * assertions. We removed 103 redundant Watch controls and 29 unused legacy CSS rules (2927 bytes)
+ * first; saving remains available in the observation desk. Authored content was not trimmed.
+ *
+ * One-time allowances: app 148000 -> 175000, CSS 95000 -> 105000, shell 375000 -> 424000.
+ * CSS rules deliberately increase 750 -> 830 (810 measured): this is a bounded OUTCOME allowance
+ * change, not a proxy reclassification or a claim that every old outcome limit passed.
+ * The decision-time run measured 6404 DOM nodes, 199123 transferred bytes, 92.9 ms interactive
+ * and 1085 ms evidence readiness. Their ceilings remain 6550 / 300000 / 1000 ms / 3000 ms.
+ * Index remains 150000; overflow, accessibility, evidence and content obligations are unchanged.
+ * No further automatic raises are authorized. Every run below reports the actual margins.
+ */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 148000 },
-  { name: 'styles.css', bytes: sizes.styles, ceiling: 95000 },
-  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 375000 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 175000 },
+  { name: 'styles.css', bytes: sizes.styles, ceiling: 105000 },
+  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 424000 },
 ];
+const CSS_RULE_CEILING = 830;
 const DESIGN_MARGIN = 0.02;
 const budgetReport = BUDGETS.map(budget => {
   const headroom = budget.ceiling - budget.bytes;
@@ -285,7 +303,7 @@ if (/git add -A/.test(publisherSource)
   if (appReadyMs > 3000) problems.push(`complete evidence UI exceeds 3 s budget: ${appReadyMs} ms`);
   if (metrics.transferredBytes > 300000) problems.push(`compressed first load exceeds 300 KB budget: ${metrics.transferredBytes}`);
   if (metrics.domNodes > 6550) problems.push(`rendered DOM exceeds 6550-node budget: ${metrics.domNodes}`);
-  if (metrics.cssRules > 750) problems.push(`CSS exceeds 750-rule budget: ${metrics.cssRules}`);
+  if (metrics.cssRules > CSS_RULE_CEILING) problems.push(`CSS exceeds ${CSS_RULE_CEILING}-rule budget: ${metrics.cssRules}`);
   if (metrics.overflowX) problems.push('mobile document has horizontal overflow');
 
   /* The OUTCOME budgets get the same treatment as the proxy ones. Reporting margins for the byte
@@ -300,7 +318,7 @@ if (/git add -A/.test(publisherSource)
     { name: 'evidence UI', value: appReadyMs, ceiling: 3000, unit: 'ms' },
     { name: 'first load', value: metrics.transferredBytes, ceiling: 300000, unit: 'b' },
     { name: 'rendered DOM', value: metrics.domNodes, ceiling: 6550, unit: 'nodes' },
-    { name: 'CSS rules', value: metrics.cssRules, ceiling: 750, unit: 'rules' },
+    { name: 'CSS rules', value: metrics.cssRules, ceiling: CSS_RULE_CEILING, unit: 'rules' },
   ].map(budget => {
     const headroom = budget.ceiling - budget.value;
     return { ...budget, headroom, fraction: headroom / budget.ceiling };
