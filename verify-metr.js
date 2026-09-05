@@ -244,7 +244,7 @@ async function verify() {
   assert.match(producer, /bindMetrState\(prev\.capabilities\?\.metr/);
   assert.match(producer, /capabilities:\s*\{ metr \}/);
   const daily = fs.readFileSync(path.join(__dirname, 'DAILY-RUN.md'), 'utf8');
-  assert.match(daily, /node refresh-metr\.js\r?\n\s+node refresh-signals\.js/);
+  assert.match(daily, /node refresh-metr\.js\r?\n\s+node refresh-reference-points\.js --refresh\r?\n\s+node refresh-signals\.js/);
   if (bundle.capabilities?.metr) {
     validateState(bundle.capabilities.metr);
     assert.deepEqual(bindState(bundle.capabilities.metr, predictions), bundle.capabilities.metr);

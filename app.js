@@ -1171,7 +1171,7 @@ function renderTimeline(){
       const themes = eventThemes(e);
       const probability = Number.isFinite(e.prob) ? `
         <div class="event-probability" aria-label="${e.prob} percent stated probability">
-          <span class="event-probability-track" aria-hidden="true"><i style="--prob:${e.prob}%"></i></span>
+          <span class="event-probability-track" aria-hidden="true" style="--prob:${e.prob}%"></span>
           <span>${e.prob}%</span>
         </div>` : '';
       return `
@@ -1187,6 +1187,7 @@ function renderTimeline(){
             <div class="event-tags">
               ${e.high ? '<span class="tag impact">High impact</span>' : ''}
               ${e.signal ? '<span class="tag">Peter Xing anchor</span>' : ''}
+              ${referenceLink(id)}
             </div>
             ${probability}
             ${timingHtml(e, yr.year)}
@@ -1354,10 +1355,11 @@ function renderHorizon(){
         <h3>${htmlText(item.t)}</h3>
         <a class="deep-link" href="#horizon-${item.id}" aria-label="Link to ${htmlText(item.t)}" title="Link to this horizon item">#</a>
         <div class="horizon-meter" aria-label="${item.conditionalProb} percent conditional plausibility">
-          <span class="horizon-meter-track" aria-hidden="true"><i style="--prob:${item.conditionalProb}%"></i></span>
+          <span class="horizon-meter-track" aria-hidden="true" style="--prob:${item.conditionalProb}%"></span>
           <span>${item.conditionalProb}%</span>
         </div>
         <button type="button" class="horizon-toggle" aria-expanded="${!collapsed}">${collapsed ? 'Open evidence ladder' : 'Collapse evidence ladder'}</button>
+        ${referenceLink(key)}
       </div>
       <div class="horizon-columns">
         <div class="horizon-block"><h4>Dependencies</h4>${horizonList(item.dependencies)}</div>
@@ -1782,10 +1784,9 @@ function applySignalBundle(data){
   } else {
     // Patch only changed evidence, never the forecast, reader, simulator or year containers.
     document.querySelectorAll('[data-evidence-id]').forEach(host => {
-      const markup = predictionEvidenceBody(host.dataset.evidenceId) + xSignalCard(xSignals[host.dataset.evidenceId]);
       if (host.dataset.snapshot === renderedEvidenceSnapshot(host.dataset.evidenceId)) return;
       const open = [...host.querySelectorAll('details')].map(node => node.open);
-      host.innerHTML = markup;
+      host.innerHTML = predictionEvidenceBody(host.dataset.evidenceId) + xSignalCard(xSignals[host.dataset.evidenceId]);
       host.querySelectorAll('details').forEach((node, i) => { node.open = Boolean(open[i]); });
     });
     renderReality(data.reality);
@@ -1794,6 +1795,9 @@ function applySignalBundle(data){
     host.dataset.snapshot = renderedEvidenceSnapshot(host.dataset.evidenceId);
   });
   renderSignalMetadata(data);
+  document.querySelectorAll('[data-reference]').forEach(link => {
+    link.textContent = referenceLabel(link.dataset.reference);
+  });
   const stamp = document.getElementById('sigStamp');
   stamp.textContent = `Prediction evidence · ${data.coverage.cited} of ${data.coverage.total} cited · `
     + `${data.context.count} with dated background · ${data.uncited.count} searched with no qualifying source · `
@@ -2564,13 +2568,14 @@ function evidenceSnapshot(id, data = publishedSignals){
     // Re-running a search is a freshness change, not a new observation.
     gap:data.uncited.items[id]?.reason || null, currency:data.currency?.[id] || [],
     assessment:data.observations?.items?.[id] || null,
+    references:data.referencePoints?.items[id] || null,
     ...(data.capabilities?.metr?.context?.id === id && data.capabilities.metr.context.forecastSha256 === forecastFingerprint
       && data.capabilities.metr.current ? { capability:[data.capabilities.metr.current.records,
         data.capabilities.metr.current.longTasksVersion, data.capabilities.metr.current.swaaVersion] } : {}),
   });
 }
 function renderedEvidenceSnapshot(id){
-  return evidenceSnapshot(id) + JSON.stringify(publishedSignals?.xSignals?.items?.[id] || null);
+  return JSON.stringify([directSignals[id], contextSignals[id], uncitedSignals[id], currencySignals[id], xSignals[id]]);
 }
 function watchStatus(row, saved){
   if (!row) return 'No longer in the current forecast. Kept here so you can remove it.';
@@ -2580,7 +2585,7 @@ function watchStatus(row, saved){
   if (saved.seen === current) return 'No observation change since your saved snapshot.';
   const before = saved.seen ? JSON.parse(saved.seen) : {};
   const after = JSON.parse(current);
-  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment', capability:'METR measurements' };
+  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment', capability:'METR measurements', references:'reviewed reference points' };
   const changed = Object.keys(fields).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => fields[key]);
   return `Observation record changed since your saved snapshot: ${changed.join(', ')}. Inspect the source, dates and limitations before acknowledging.`;
 }
@@ -2593,7 +2598,7 @@ function renderWatchlist(){
     const row = rows.get(id);
     return `<li class="watch-item"><div>${row ? `<a href="${row.href}">${htmlText(row.title)}</a>` : `<strong>${htmlText(saved.title)}</strong>`}
       <p data-watch-status="${htmlText(id)}">${htmlText(watchStatus(row, saved))}</p>
-      <span class="assessment-label">${htmlText(row ? trajectoryFor(id).label : 'Forecast unavailable')}</span></div>
+      <span class="assessment-label">${htmlText(row ? referenceLabel(id) + ' · ' + trajectoryFor(id).label : 'Forecast unavailable')}</span></div>
       <div class="watch-actions">${row ? `<button type="button" class="text-button" data-inspect="${htmlText(id)}">Inspect</button>` : ''}
       ${row && publishedSignals ? `<button type="button" class="text-button" data-ack="${htmlText(id)}">Acknowledge snapshot</button>` : ''}
       <button type="button" class="text-button" data-watch="${htmlText(id)}">Remove</button></div></li>`;
@@ -2704,6 +2709,39 @@ function trajectoryFor(id, data = publishedSignals){
   return { label:{ supporting:'Supporting observations', mixed:'Mixed observations', challenging:'Challenging observations' }[direction],
     detail:'Reviewed direction against the stated criteria, not proof that the target is achieved or a new probability.', records };
 }
+function referenceLabel(id){
+  const rows = publishedSignals?.referencePoints?.items[id];
+  return rows?.length ? `Reference: ${rows[0].relation} / ${rows[0].direction.replaceAll('-', ' ')}` : 'Inspect real-world references';
+}
+function referenceLink(id){
+  return `<button type="button" class="text-button" data-reference="${htmlText(id)}" data-inspect="${htmlText(id)}">${htmlText(referenceLabel(id))}</button>`;
+}
+function referenceDetails(id){
+  const layer = publishedSignals?.referencePoints, rows = layer?.items[id];
+  if (!rows?.length) return `<p class="mission-empty">${htmlText(layer?.gaps[id] || 'Reviewed reference points have not loaded.')}</p>`;
+  return rows.map(row => {
+    const s = layer.sources[row.sourceId], h = s.health;
+    const stale = !h.lastCheckedAt || Date.now() - Date.parse(h.lastCheckedAt) > 7 * 86400000;
+    const uses = Object.values(layer.items).flat().filter(r => r.sourceId === row.sourceId).length;
+    const provenance = s.dateEvidenceUrl || s.revisionIndex?.url;
+    return `<div class="measured-observation" data-reference-detail="${htmlText(id)}">
+      <strong>${htmlText(referenceLabel(id))}</strong><p><strong>Mapped facet:</strong> ${htmlText(row.facet)}</p>
+      <p>${htmlText(row.why)}</p>
+      ${h.status !== 'verified' || stale ? `<p class="mission-help">Last-good reference retained. ${htmlText(h.error || 'Source check overdue (over seven days).')} No forecast direction is inferred from source availability.</p>` : ''}
+      <details class="source-inspection"><summary>Source, excerpt and limits: ${htmlText(s.organization)}</summary>
+        <h4><a href="${htmlText(safeHttpUrl(s.url))}" target="_blank" rel="noopener">${htmlText(s.title)}</a></h4>
+        <blockquote>${htmlText(row.excerpt)}</blockquote>
+        <p><strong>Does not establish:</strong> ${htmlText(row.doesNotEstablish)}</p>
+        ${row.metric ? `<p>Reported value: ${htmlText(row.metric.operator || '')}${row.metric.value}${row.metric.high == null ? '' : `–${row.metric.high}`} ${htmlText(row.metric.unit)}. Coverage: ${htmlText(row.metric.coverage)}</p>` : ''}
+        <p>Publication: ${htmlText(s.publishedAt || (s.publishedPeriod ? `${s.publishedPeriod} (month precision)` : 'not recorded; source date unknown'))}${s.publishedAt ? ` (${Math.max(0, Math.floor((Date.now() - Date.parse(s.publishedAt)) / 86400000))} days old)` : ''}. ${htmlText(s.quality)}. ${Array.isArray(s.pdfPages) ? `PDF pages checked: ${htmlText(s.pdfPages.join(', '))}.` : ''}
+        Reviewed ${htmlText(row.reviewedAt)}. Referenced by ${uses} forecast${uses === 1 ? '' : 's'}; not independent corroboration.</p>
+        ${provenance ? `<p><a href="${htmlText(safeHttpUrl(provenance))}" target="_blank" rel="noopener">${s.revisionIndex ? 'Policy version index' : 'Publication date from the parent report'}</a></p>` : ''}
+        <p>Source retrieved ${htmlText(s.retrievedAt)}. Excerpt last verified ${htmlText(h.lastVerifiedAt || 'never')}.
+        Last source check ${htmlText(h.lastCheckedAt || 'never')}. ${htmlText(h.error || (stale ? 'Source check is stale (over seven days).' : 'Reviewed excerpt still present.'))}</p>
+        <p>Partial reference, not a whole-forecast verdict. Daily source checks do not make an older study new.</p>
+      </details></div>`;
+  }).join('');
+}
 function renderObservationDetail(){
   const id = document.getElementById('observationPrediction').value;
   const row = forecastRecords().find(row => row.id === id);
@@ -2718,6 +2756,7 @@ function renderObservationDetail(){
   const markup = `<div class="observation-forecast"><span class="instrument-label">Author's forecast / unchanged</span>
     <h4>${htmlText(row.title)}</h4><p>${htmlText(row.probability)} &middot; ${htmlText(row.timing)}</p>
     <div class="observation-actions"><a href="${row.href}">Open forecast details &rarr;</a>${watchButton(id)}</div></div>
+    ${referenceDetails(id)}
     <div class="trajectory-state"><strong>${htmlText(assessment.label)}</strong><p>${htmlText(assessment.detail)}</p></div>
     ${assessment.records.map(record => `<div class="measured-observation"><strong>${htmlText(record.direction)}: ${htmlText(record.criterion.description)}</strong>
       <p>${record.measurement.value} ${htmlText(record.measurement.unit)} &middot; observed ${htmlText(formatUtcDateTime(record.measurement.observedAt))}</p>
@@ -2725,7 +2764,7 @@ function renderObservationDetail(){
       <a href="${htmlText(safeHttpUrl(record.source.url))}" target="_blank" rel="noopener">${htmlText(record.source.name)}</a>
       <p>Published ${htmlText(formatUtcDateTime(record.source.publishedAt))} &middot; fetched ${htmlText(formatUtcDateTime(record.source.fetchedAt))}
       &middot; reviewed ${htmlText(formatUtcDateTime(record.reviewedAt))} by ${htmlText(record.reviewedBy)}</p></div>`).join('')}
-    <details class="source-inspection"><summary>${source ? `${publishedSignals.context.items[id] ? 'Dated background' : 'News in the published citation window'}: ${htmlText(source.publisher)}` : 'Evidence gap / no qualifying source'}</summary>
+    <details class="source-inspection"><summary>${source ? `${publishedSignals.context.items[id] ? 'Dated background' : 'News in the published citation window'}: ${htmlText(source.publisher)}` : 'News evidence gap / no qualifying source'}</summary>
       ${source ? `<h4>${htmlText(source.headline)}</h4><blockquote>${htmlText(source.quote)}</blockquote>
         <p><strong>Relevance and limits:</strong> ${htmlText(source.mappingRationale)}</p>
         <dl><dt>Article published</dt><dd>${htmlText(recordedTime(source.publishedAt || source.articleDate))}</dd>
@@ -2737,14 +2776,18 @@ function renderObservationDetail(){
           <p>${gap ? `Search recorded ${htmlText(formatUtcDateTime(gap.searchedAt))}.` : ''}</p>`}
     </details>`;
   if (host.dataset.rendered === markup) return;
-  const open = host.querySelector('.source-inspection')?.open;
+  const open = [...host.querySelectorAll('details')].map(node => node.open);
   const focusedWatch = host.contains(document.activeElement) && document.activeElement.matches('[data-watch]');
   host.innerHTML = markup;
   host.dataset.rendered = markup;
-  host.querySelector('.source-inspection').open = Boolean(open);
+  host.querySelectorAll('details').forEach((node, i) => { node.open = Boolean(open[i]); });
   if (focusedWatch) host.querySelector('[data-watch]').focus({ preventScroll:true });
 }
 function renderObservationHealth(){
+  const coverage = publishedSignals?.referencePoints?.coverage;
+  setText('referenceCoverage', coverage
+    ? `${coverage.mapped}/${coverage.total} forecasts mapped to ${coverage.sources} canonical sources. Reference coverage is separate from news citations and forecast success.`
+    : 'Reference coverage unavailable.');
   setText('observationFreshness', observationError
     ? `Update unavailable. ${publishedSignals ? 'Last good bundle retained.' : 'No evidence bundle loaded.'}`
     : bundleFreshness(publishedSignals));
@@ -2758,6 +2801,38 @@ function renderObservationHealth(){
   document.getElementById('applyObservations').hidden = !pendingSignals;
 }
 function validatePublishedBundle(data){
+  const refs = data?.referencePoints, priorRefs = publishedSignals?.referencePoints;
+  const records = forecastRecords(), ids = new Set(records.map(row => row.id));
+  if (priorRefs && (!refs || Date.parse(refs.updatedAt) < Date.parse(priorRefs.updatedAt)))
+    throw new Error('Older or missing reference roster returned. Last good bundle retained.');
+  if (refs && (refs.schemaVersion !== 1 || refs.forecastSha256 !== forecastFingerprint || !validTime(refs.updatedAt)
+    || !refs.sources || !refs.items || !refs.gaps || refs.coverage?.total !== records.length
+    || refs.coverage.mapped !== Object.keys(refs.items).length
+    || refs.coverage.gaps !== Object.keys(refs.gaps).length
+    || refs.coverage.mapped + refs.coverage.gaps !== refs.coverage.total
+    || refs.coverage.sources !== new Set(Object.values(refs.items).flat().map(r => r.sourceId)).size
+    || refs.coverage.references !== Object.values(refs.items).flat().length
+    || [...Object.keys(refs.items), ...Object.keys(refs.gaps)].some(id => !ids.has(id))
+    || !records.every(row => {
+      const entries = refs.items[row.id];
+      return entries?.length ? !refs.gaps[row.id] && entries.every(r => {
+        const s = refs.sources[r.sourceId], m = r.metric;
+        return r.id === row.id && r.predictionText === row.title && s && /^https:\/\//.test(safeHttpUrl(s.url))
+          && !/(?:^|\.)(?:x|twitter)\.com$/i.test(new URL(s.url).hostname)
+          && ['measured','deployment','policy','trial','precursor','feasibility','constraint','counterevidence','theory'].includes(r.relation)
+          && ['supports-prerequisite','context','challenges'].includes(r.direction)
+          && [r.facet,r.why,r.doesNotEstablish,r.excerpt,s.title,s.organization].every(v => typeof v === 'string' && v.trim())
+          && (m === null || (Number.isFinite(m?.value) && [undefined,'>','<','~'].includes(m.operator)
+            && (m.high === undefined || Number.isFinite(m.high) && m.high >= m.value && !m.operator)
+            && typeof m.unit === 'string' && typeof m.coverage === 'string' && typeof m.evidence === 'string'))
+          && validTime(r.reviewedAt) && validTime(s.retrievedAt) && (s.publishedAt === null || validTime(s.publishedAt))
+          && (!s.publishedPeriod || /^\d{4}-(0[1-9]|1[0-2])$/.test(s.publishedPeriod))
+          && ['verified','unavailable','changed','unverified'].includes(s.health?.status)
+          && /^[a-f0-9]{64}$/.test(s.reviewSha256) && s.health.reviewSha256 === s.reviewSha256
+          && validTime(s.health.lastCheckedAt) && validTime(s.health.lastVerifiedAt)
+          && Date.parse(s.health.lastCheckedAt) >= Date.parse(s.health.lastVerifiedAt);
+      }) : typeof refs.gaps[row.id] === 'string';
+    }))) throw new Error('Reference schema or forecast binding mismatch. Last good bundle retained; revision review is pending.');
   const m = data?.capabilities?.metr, s = m?.current;
   const prior = publishedSignals?.capabilities?.metr;
   if (prior?.current && (!s || Date.parse(m?.lastCheckedAt) < Date.parse(prior.lastCheckedAt)))

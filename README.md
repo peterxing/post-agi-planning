@@ -263,9 +263,79 @@ The pinned `yaml` parser and `package-lock.json` support `npm ci` in the source 
 `npm run verify:metr` exercises schema, transport, dates, retention and UI controls.
 
 Collection is daily and source releases are periodic, not real-time. Browser polling still
-retrieves only the latest published artifact. ClinicalTrials.gov remains unconnected.
+retrieves only the latest published artifact.
 
-### Proposed collection adapters (not enabled)
+### Individually reviewed real-world reference points
+
+`reference-ledger.json` is a public review input, not a generated news match score.
+`npm run refresh:references` checks its canonical sources before the ordinary producer in
+`DAILY-RUN.md`, publishing only the sibling `signals.referencePoints` layer. Every dated and
+undated forecast is individually bound to its exact text AND full content SHA-256. Changing
+wording, probabilities, domains or other forecast content invalidates the old mapping and
+requires renewed review; removed IDs remain explicit review debt rather than silently reused.
+
+Each reference names a specific facet, typed relationship, short exact source excerpt,
+individual relevance explanation and what the source **does not establish**. A deployment,
+trial, theoretical constraint or precursor can be informative without resolving a composite
+forecast. Counterevidence stays challenging. Whole-forecast assessment and the strict
+news cited/context/uncited partition are unchanged; references never enter X or METR records.
+All forecasts expose a lightweight Inspect link; only the selected reference details are
+mounted. The observation desk and watchlist reuse the existing controls and refresh lifecycle.
+
+Sources are deduplicated by canonical URL and explicitly reviewed reuse family/domain/ID;
+at most six separately justified forecast mappings may use one source. The UI discloses
+actual reuse rather than implying independent corroboration. Original publication dates
+retain their precision; unknown dates stay unknown. Older foundational work is not expired
+by a news-window cap and is never relabelled as new because it was checked today.
+
+The collector uses bounded HTTPS requests (15 seconds, 4 MiB decoded response; 8 MiB for PDFs), exact
+approved redirect URLs, conditional ETag/Last-Modified and one retry for transient faults.
+It honours Retry-After. Explicitly declared browser sources reuse the existing first-party
+browser transport (45-second navigation, six-second settle, 4 MiB returned-document cap)
+with pre-navigation exact URL approval; they do not claim conditional HTTP metadata.
+The separately reviewed PRIME `NCT06429735` registry reference uses its exact public
+ClinicalTrials.gov v2 study endpoint, native JSON parsing and protocol/NCT identity checks.
+It records sponsor-submitted study design, not NLM-verified efficacy or completed endpoints.
+This is a specific reference-page/record check, not the proposed general clinical-results adapter.
+When a chapter omits its date, `dateEvidenceUrl` names a separately fetched, explicitly approved
+same-publisher parent report; chapter text is never assigned a guessed publication timestamp.
+Explicitly reviewed official PDFs use pinned `pdf-parse@2.4.5` in a separate worker process, with a
+10-second extraction deadline, 128-page limit, 1 MiB extracted-text limit and no rendering,
+embedded-script evaluation or remote document loading. PDF bytes are never cached or served.
+The Commission's reviewed download reports the unusual media type `/`; that exact source
+declares the exception and still must pass the PDF signature and parser checks. Other sources
+cannot silently change format. The PDF bounds accommodate the measured 4.1 MiB, 101-page UN report;
+HTML/JSON and all browser performance budgets are unchanged.
+Long reports may declare up to 32 specific PDF pages in the reviewed ledger. For the UN report,
+the cover and recommendation's summary/full-discussion pages are checked instead of re-extracting
+all 101 pages on every run. The response is still downloaded under the byte bound; its recorded
+text hash covers the declared pages, not an implied full-document semantic review.
+The current-policy claim is separately bound to the official Anthropic version index, checked
+even after an unchanged PDF response. A changed index produces an explicit last-good warning
+and review debt; an unchanged PDF cannot renew a claim that its policy remains current.
+The PDF helper and locked dependency path are mirrored; operator tooling requires Node 22.13
+or later (the current environment uses Node 22). Run `npm ci` in a fresh mirror checkout.
+Live normalized excerpt and date-provenance checks are required
+before a source first becomes publishable. A 304 changes check time only. Later source
+outage or excerpt drift preserves last-good references and their timestamps/hash with
+explicit unavailable/changed-source warnings; it queues semantic review, not automatic
+acceptance of replacement text. Source checks become stale after seven days; source age,
+review age and transport health are distinct. No whole-source HTML is cached or mirrored.
+
+`refresh-signals.js` deterministically rebuilds the reviewed layer while retaining source
+health, so daily/weekly builds cannot erase a manually reviewed roster. The mirror includes
+the ledger, collector, shared validation and verifier; no new browser-served file is added.
+For initial publication only, `node refresh-reference-points.js --receipts=ABSOLUTE_PATH`
+can replay completed source checks from a complete, exact-ledger receipt bundle. It cannot
+replace an existing layer. This optional operator-local bootstrap artifact is not a dependency
+of daily runs or the mirror: normal collection reproduces receipts from the published ledger,
+and subsequent builds retain them in `signals.json`.
+`verify:references` covers exact dynamic ID coverage, invalidation, canonical/reuse refusals,
+timestamps, source failures/304 and accessible selected UI. `--live` additionally re-fetches
+all approved sources without writing. The existing daily scheduler invokes this contract;
+five-minute browser checks still poll published artifacts, not the upstream web.
+
+### Proposed quantitative adapters (not enabled)
 
 | Source | Bounded collection proposal | What it could measure | What it cannot establish |
 | --- | --- | --- | --- |

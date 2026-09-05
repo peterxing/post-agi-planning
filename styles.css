@@ -1184,7 +1184,8 @@ button { color: inherit; }
   overflow: hidden;
   background: var(--cp-surface-soft);
 }
-.event-probability-track i {
+.event-probability-track::before {
+  content: "";
   display: block;
   width: var(--prob);
   height: 100%;
@@ -1544,7 +1545,7 @@ button { color: inherit; }
   font-size: .64rem;
 }
 .horizon-meter-track { height: 6px; overflow: hidden; border-radius: 6px; background: var(--cp-surface-soft); }
-.horizon-meter-track i { display: block; width: var(--prob); height: 100%; background: var(--cp-accent); }
+.horizon-meter-track::before { content: ""; display: block; width: var(--prob); height: 100%; background: var(--cp-accent); }
 .horizon-columns { gap: 24px; }
 .horizon-block {
   padding: 16px;
@@ -1916,7 +1917,7 @@ button { color: inherit; }
 .event-heading .deep-link { margin-left: auto; }
 .horizon-item-title { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .horizon-item-title h3 { margin: 0; }
-.horizon-item-title .horizon-meter, .horizon-item-title .horizon-toggle { grid-column: 1 / -1; }
+.horizon-item-title .horizon-meter, .horizon-item-title .horizon-toggle, .horizon-item-title .text-button { grid-column: 1 / -1; }
 .year-block.is-filter-empty { opacity: .72; }
 .year-block.is-filter-empty .events { display: block; }
 

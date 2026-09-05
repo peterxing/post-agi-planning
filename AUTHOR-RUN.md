@@ -51,6 +51,18 @@ Update C:\Users\peterxing\pap-deploy\author.json, preserving its schema: {update
 X EVIDENCE IS RETIRED IN FULL at the site owner's instruction. There is no Peter tier, no repost tier and no external-X tier, and the former Peter/authored floors were REMOVED from evidence-floors.json by reviewed manual edit — removed rather than zeroed, because a floor of 0 reads as a SATISFIED gate. Never reinstate one: refresh-signals.js, verify-direct-coverage.js and verify-news-evidence.js all refuse to run if a retired X floor reappears in that file.
 This author job does not rematch prediction evidence and must not alter signals.json, evidence-floors.json, predictions.json, news-evidence.js, currency-evidence.js or currency-text-pins.json. NEVER edit evidence-floors.json down to make a check pass. Read the live registrations from evidence-floors.json rather than hardcoding them: currencyMaxAgeDays (14), currencyLedgerSources and currencyLedgerIdentities. Every prediction must be ACCOUNTED FOR — cited, dated CONTEXT background, or explicitly uncited, exactly one of the three, with zero in more than one and zero in none — against the current dynamic prediction ID set (103 as of 2026-08-13; always compute N, never hardcode it), with zero search fallbacks. If any of these are violated, STOP and do not deploy.
 
+REFERENCE-POINT PRESERVATION GUARD (2026-09-05): Preserve `reference-ledger.json` and the entire
+`signals.referencePoints` layer, including source dates, metric proofs, health and exact forecast/
+review fingerprints. Preserve `signals.capabilities.metr` and all unrelated evidence timestamps.
+This author workflow does NOT collect references, seek new releases, remap forecasts or approve
+changed excerpts; that work belongs to the daily forecasting contract. Run the derived
+`verify:references` gate read-only as part of the normal suite before any author-only publication.
+It must account for every current ID, validate source/metric proof receipts and bindings, and
+retain explicit last-good source warnings rather than silently presenting an outage as progress.
+Missing, never-verified or invalidated mappings block publication: report the exact IDs/source
+failure and leave remediation to the forecasting workflow. Do not erase the layer or loosen its
+gate to publish a biography change. An availability check is never renewed scientific approval.
+
 DERIVE THE GATE LIST; DO NOT REMEMBER IT. Before copying ANY file to pap-site or deploying, run every gate package.json defines — `validate`, `verify`, and every `verify:*` — from C:\Users\peterxing\pap-deploy. A HARDCODED LIST GOES STALE SILENTLY AND THAT IS EXACTLY HOW A GUARD STOPS GUARDING: this contract previously named eight gates by hand, and when `verify:browse` was added on 2026-08-18 this fail-closed deployment guard simply never ran it — no error, no warning, just an assertion that quietly stopped being checked before every deploy. The inverse failure is also real and is why the old list carried a warning: `npm run` exits 1 on a script that does not exist, so naming a removed gate (verify:archive, verify:peter, verify:external, all deleted with the X pipeline) aborts the guard before it can guard anything. Deriving from package.json fixes both directions at once. Use the helper that already does this rather than reimplementing it:
   powershell -ExecutionPolicy Bypass -File C:\Users\peterxing\pap-deploy\run-gates.ps1
 If a gate must be skipped for a stated reason, name it and its reason in the report; never skip one silently and never delete one to make a run pass.

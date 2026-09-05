@@ -37,6 +37,7 @@ const fs = require('fs');
 const path = require('path');
 const { createHash } = require('crypto');
 const { bindState: bindMetrState } = require('./refresh-metr');
+const { buildReferencePoints } = require('./reference-points');
 const { CURRENCY_SOURCES, CURRENCY_MAPPINGS } = require('./currency-evidence');
 const {
   FAMILY_DEFINITIONS,
@@ -1703,6 +1704,9 @@ async function main(){
   try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8').replace(/^\uFEFF/, '')); }
   catch (error) { if (error.code !== 'ENOENT') throw error; }
   const metr = bindMetrState(prev.capabilities?.metr, JSON.parse(fs.readFileSync(PRED, 'utf8')));
+  const referencePoints = buildReferencePoints(
+    JSON.parse(fs.readFileSync(path.join(DIR, 'reference-ledger.json'), 'utf8')),
+    JSON.parse(fs.readFileSync(PRED, 'utf8')), prev.referencePoints);
   const prevEmbeds = (prev && prev.embeds) || {};
   const prevSearches = (prev && prev.search) || {};
   /* X RETIREMENT 2026-08-13, RESIDUE CLEARED 2026-08-14. `historicalTimeline` and `optionalReposts`
@@ -2907,6 +2911,7 @@ async function main(){
     return dates.length ? new Date(Math.max(...dates)).toISOString() : null;
   })();
   const out = {
+    referencePoints,
     capabilities: { metr },
     forecastVersion: {
       schemaVersion: 1,

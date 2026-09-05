@@ -226,11 +226,29 @@ const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.
  * Every other ceiling stays unchanged; the shell remains the binding total. Subsequent robustness
  * edits must fit this allowance. These are approval-time measurements, not permanent assertions.
  */
+/*
+ * USER-APPROVED RE-BASELINE 2026-09-05 (UTC+10) - individual real-world reference roster.
+ * App 176500 -> 183000; static shell 424000 -> 431000. No other allowance changes.
+ * Decision-time measured bytes: app 175838 -> 181804 (+5966), HTML 144244 -> 144363 (+119),
+ * CSS 103186 -> 103261 (+75), shell 423268 -> 429428 (+6160). These are historical decision
+ * measurements, not assertions about later builds. The cost is accessible per-forecast inspection,
+ * selected source/facet/excerpt/limits rendering, watch changes and fail-closed reference validation.
+ * Before requesting this change, 103 decorative DOM children became equivalent CSS pseudo-elements,
+ * funding 103 lightweight reference controls without increasing repeated DOM. Only the selected
+ * reference details mount. Existing styles/inspection/persistence are reused, and timeline snapshots
+ * no longer duplicate unrelated reference/METR records or construct unchanged evidence markup.
+ * Maintained code, comments and authored content are not minified or removed to meet a proxy.
+ * This deliberately exceeds the OLD source-byte proxies; it is not a claim that they passed.
+ * CSS remains 105000 and 830 rules; HTML 150000, transfer 300000, DOM 6550, interactive 1000 ms,
+ * evidence readiness 3000 ms and all overflow/accessibility/evidence/content requirements remain.
+ * Final full-roster outcomes are measured below, not projected from the earlier seven-source preview.
+ * No further automatic increases are authorized.
+ */
 const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
-  { name: 'app.js', bytes: sizes.app, ceiling: 176500 },
+  { name: 'app.js', bytes: sizes.app, ceiling: 183000 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 105000 },
-  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 424000 },
+  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 431000 },
 ];
 const CSS_RULE_CEILING = 830;
 const DESIGN_MARGIN = 0.02;

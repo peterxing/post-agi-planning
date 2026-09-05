@@ -75,6 +75,11 @@ $interlockVerifier = Join-Path $Deploy 'verify-interlock.js'
 # This is the caller-level form of "a battery that passes is not a battery that covers": the gate
 # passed its own controls for its whole life while covering no publish.
 $backfillVerifier = Join-Path $Deploy 'verify-backfill.js'
+$referencesVerifier = Join-Path $Deploy 'verify-reference-points.js'
+if (-not (Test-Path $referencesVerifier)) {
+  Write-Error 'publish-github: reviewed reference verifier is missing; publication aborted.'
+  exit 7
+}
 if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier) -or -not (Test-Path $interlockVerifier) -or -not (Test-Path $backfillVerifier)) {
   Write-Error 'publish-github: evidence preflight verifier is missing; publication aborted.'
   exit 7
@@ -139,6 +144,11 @@ if ($coverageExit -eq 0) {
   $interlockExit = $null
   $backfillExit = $null
 }
+$referencesExit = $null
+if ($backfillExit -eq 0) {
+  & node $referencesVerifier --no-ui
+  $referencesExit = $LASTEXITCODE
+}
 Pop-Location
 # Exit 70 from the currency verifier is PASSED BUT INERT: nothing failed, and nothing was
 # verified on one or more axes. That is a legitimate, truthful state and it must NOT block
@@ -180,6 +190,7 @@ if ($newsInert) {
 $gates = [ordered]@{
   coverage = $coverageExit; news     = $newsExit;     currency = $currencyExit
   surface  = $surfaceExit;  interlock = $interlockExit; backfill = $backfillExit
+  references = $referencesExit
 }
 $render = (($gates.GetEnumerator() | ForEach-Object {
   '{0}={1}' -f $_.Key, $(if ($null -eq $_.Value) { 'skipped' } else { $_.Value })
@@ -283,6 +294,9 @@ $fromDeploy = @(
   # Public-only METR collector and proof; replay state is already in signals.json.
   # YAML is a pinned operator dependency, not a browser asset.
   'refresh-metr.js','verify-metr.js','package-lock.json',
+  # Individually reviewed public references, their deterministic producer and verifier.
+  # Full source pages are not cached in the mirror; normalized excerpts retain provenance.
+  'reference-ledger.json','reference-points.js','reference-pdf.js','refresh-reference-points.js','verify-reference-points.js',
   'validate-predictions.js','verify-site.js','verify-signal-matcher.js','verify-perpred.js','verify-reality.js','verify-author.js','verify-observatory.js','verify-performance.js','verify-direct-coverage.js','verify-news-evidence.js','verify-currency.js','verify-deploy-surface.js','verify-interlock.js','evidence-families.js',
   # month-estimates.js is mirrored because validate-predictions.js L10 IMPORTS EXECUTABLE
   # PREDICATES from it (bandForYear, precisionForBand), not merely data. A gate whose

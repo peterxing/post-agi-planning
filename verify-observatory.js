@@ -176,6 +176,7 @@ async function verifyMission(browser){
       const originalEvidence = JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'signals.json'), 'utf8'));
       if (!originalEvidence.forecastVersion) delete evidence.forecastVersion;
       if (!originalEvidence.capabilities) delete evidence.capabilities;
+      if (!originalEvidence.referencePoints) delete evidence.referencePoints;
       assert.deepEqual(evidence, originalEvidence, 'Additive layers must not rewrite observations or their timestamps');
       console.log('[content-preservation] exact baseline match: forecast/author bytes, all book HTML, chapter text, strategies, portfolio and planner assumptions');
     }
@@ -212,10 +213,10 @@ async function verifyMission(browser){
     assert.match(await page.locator('.trajectory-state').textContent(), /not yet assessed/);
     await page.locator('#observationDetail .watch-button').click();
     assert.equal(await page.locator('#watchlist .watch-item').count(), 1);
-    await page.locator('#observationDetail .source-inspection summary').click();
+    await page.locator('#observationDetail > .source-inspection summary').click();
     await page.locator('#observationPrediction').selectOption(ids[1]);
-    if (!await page.locator('#observationDetail .source-inspection').evaluate(node => node.open)) {
-      await page.locator('#observationDetail .source-inspection summary').click();
+    if (!await page.locator('#observationDetail > .source-inspection').evaluate(node => node.open)) {
+      await page.locator('#observationDetail > .source-inspection summary').click();
     }
     await page.waitForFunction(() => !document.getElementById('confirmComparison').disabled);
     assert.equal(await page.locator('[data-quest="evidence-v1"] .quest-state').textContent(), 'To explore');

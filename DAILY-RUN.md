@@ -41,6 +41,7 @@ Always distinguish in the report: infrastructure failure (retry, then stop havin
 X EVIDENCE IS RETIRED IN FULL, AT THE SITE OWNER'S EXPLICIT INSTRUCTION: "remove all references to x posts and stop using the x api for the predictions - replace and add any references based on the latest news from the last 2 weeks instead". This section REPLACES the former direct-X guarantee. There is no X tier, no Peter-authored tier, no repost tier and no external-X tier. x-archive.js, verify-peter-evidence.js, review-evidence-candidates.js, verify-id.js, harvest-loop.js, evidence-approvals.json and evidence-families.js are DELETED from the tree and removed from the published mirror; never recreate them, never reintroduce an x.com/twitter.com/t.co URL, an oEmbed or syndication call, a status ID, a Wayback/CDX discovery pass, or the X API in any tier or as a "diagnostic". The published payload must contain no X vocabulary.
 Set-Location C:\Users\peterxing\pap-deploy and run, in exactly this order:
   node refresh-metr.js
+  node refresh-reference-points.js --refresh
   node refresh-signals.js
 
 METR MEASURED CAPABILITY LAYER - SEPARATE FROM NEWS AND EDITORIAL FORECASTS
@@ -50,7 +51,7 @@ METR MEASURED CAPABILITY LAYER - SEPARATE FROM NEWS AND EDITORIAL FORECASTS
 - Collector exit 0 means a valid 200 or conditional 304. Exit 10 means source unavailable or
   refused schema: this optional measurement layer atomically records the error, retaining every
   last-good measurement and original source timestamp. Continue the NEWS pipeline normally and
-  publish the explicit METR stale/unavailable state if all gates pass. This is the sole exception
+  publish the explicit METR stale/unavailable state if all gates pass. This is an explicit exception
   to the general infrastructure-stop rule above: it cannot change news accounting or forecasts.
   Exit 75 is still interlock DEFERRED (no write); stop the entire run. Other failures stop the run.
 - `signals.capabilities.metr` holds the two most recent successful 200 snapshots, checksum,
@@ -70,6 +71,80 @@ METR MEASURED CAPABILITY LAYER - SEPARATE FROM NEWS AND EDITORIAL FORECASTS
   source errors and last-good retention separately from news freshness. Collection is daily;
   METR releases measurements periodically without a guaranteed cadence. Browser five-minute
   polling reads published artifacts only. No new scheduler or cloud resource is required.
+
+REVIEWED REFERENCE POINTS - A COMPLETE, SEPARATE PREREQUISITE ROSTER
+- Before the ordinary producer, run `node refresh-reference-points.js --refresh`. The reviewed
+  `reference-ledger.json` binds each individual dated/horizon ID to its exact full forecast
+  content and text fingerprints, a canonical primary source, a narrowly mapped facet,
+  relation/direction, exact excerpt, bespoke relevance and explicit limitations. This sibling
+  `signals.referencePoints` channel does NOT change NEWS cited/context/uncited counts, X,
+  measured METR records, source dates or author probabilities.
+- Audit ALL current IDs dynamically, not a fixed 103. A changed, removed or renumbered forecast
+  invalidates its old mapping and queues renewed review. Missing or never-verified references
+  return collector exit 2 and block publication; identify every gap by ID, acquire a defensible
+  source and review it individually. Do not fill gaps with generic AI articles or forced positive
+  evidence. Real prerequisites, constraints, trials, deployments, policies and theoretical
+  proposals are useful when labelled precisely. Registration is not efficacy, a proposal is not
+  enacted policy, a company claim is not independent replication, and a precursor is not the
+  forecast being achieved. Existing whole-forecast assessment requirements are unchanged.
+- Re-fetch each canonical source at most once per daily pass, with conditional ETag/Last-Modified,
+  15-second total request bounds, a 4 MiB decompressed-body ceiling and exact reviewed redirect
+  URLs. A source explicitly reviewed for `browser` uses the existing first-party browser transport:
+  45-second navigation plus a bounded six-second settle, a 4 MiB returned-document cap and
+  pre-navigation URL approval. Browser reads do not invent ETags or conditional responses.
+  The PRIME reference is the specifically reviewed public ClinicalTrials.gov v2 NCT study
+  endpoint, parsed as JSON and validated against its NCT identity, protocol fields and actual
+  first-post date. Sponsor-submitted registered endpoints are not completed outcomes.
+  `dateEvidenceUrl`, where declared, is the same-publisher parent report supplying a chapter's
+  publication date; fetch and verify that exact page as well, without inventing a chapter date.
+  Only transient HTTPS faults get one short bounded retry; persist/honour Retry-After. No external
+  client-side calls, new scheduler, account or paid source is introduced.
+- Verify the selected excerpt and publication-date evidence against the actual fetched HTML,
+  including text across inline tags. A 304 advances the source check only. Source retrieval,
+  publication, mapping review, excerpt verification and layer update times remain separate.
+  Missing publication dates stay null with original precision, never replaced with fetch time.
+  Foundational literature has NO 14/365-day age cap here; retain its real age and explain why its
+  specific mechanism is more relevant than a newer tangential story.
+- Source outage/changed excerpt preserves the last-good reviewed mapping, source dates and
+  verification hash with a visible unavailable/changed warning. This reference-layer health
+  exception, like METR's, may publish if prior source verification exists and all gates pass;
+  it cannot justify dropping NEWS evidence, changing probabilities or declaring capability decline.
+  A changed/missing excerpt queues actual semantic re-review; never auto-approve new text by
+  overlap score. If an alternative source supersedes it, record a new reviewed source decision,
+  not an invented fresh timestamp on the old source. Unchecked sources become visibly stale
+  after seven days; study age is a different concept.
+- Review canonical deduplication and the explicitly declared reuse family/domain/ID policy.
+  Each source may serve at most six individually justified mappings; repeated rationales are
+  refused. Display actual reused-source counts, not independent corroboration counts.
+  Keep each excerpt short and avoid publishing large cumulative extracts from one source.
+- The full producer deterministically rebuilds this layer from the ledger and preserves its
+  source health on daily AND weekly builds. Run derived `verify:references` before publication
+  and report mapped/total IDs, canonical source count, relation mix, invalidations/gaps and source
+  warnings independently from the unchanged news partition. `--live` rechecks all excerpts
+  without writing. A new discovery is a candidate until a reviewer grounds its meaning, scope,
+  dates and limitations in the source; this contract authorizes review, never automatic approval.
+- Every daily forecasting run must also make a bounded newest-vintage review for routine
+  statistics in the roster, especially monthly employment, annual company revenue and annual
+  robot stock/density. Consult the publisher's latest-release page/calendar and compare the
+  SAME definition, geography, denominator and reporting period; do not change annual stock
+  into installations, annual revenue into quarterly sales, or employment into labor-force
+  participation just to obtain a newer number. Record the actual release and measurement
+  period. If no newer compatible release is available, retain the explicitly dated baseline
+  and report that result without calling it newly measured. Foundational theory and controlled
+  experiments need not be replaced merely because they are old.
+- Fixed policy PDFs are not proof of continued policy currency. The RSP reference declares
+  its official Anthropic version index; the collector checks the index even after a PDF 304.
+  A superseding/unreadable version queues renewed review and preserves the dated last-good
+  reference with a visible warning. Treat other fixed-vintage claims as true only as of their
+  recorded review, and inspect their official current-version/release pages during maintenance.
+- When a better direct source, missing metric proof, changed excerpt or forecast invalidation
+  is found, review the affected ID's meaning and limitations before updating its ledger row.
+  New records must pass a fresh full-content receipt; an earlier 304 cannot approve a changed
+  review. Source availability is not renewed scientific approval. If the editorial stage changes
+  any forecast, renew affected mappings and re-run the reference collector before the FINAL
+  signals producer and publication gates. Never edit forecast content merely to make a match.
+- Exit 75 remains full-run DEFERRED. Unexpected errors stop the run. During a preserve-content
+  feature run, do not invoke the editorial forecast rewrite just to rebuild references.
 
 THE CONTRACT IS TOTALITY, NOT COVERAGE. The former gate demanded N/N direct evidence, which is unreachable when evidence must be both genuinely supporting AND published in the last 14 days. Replacing it with "as many as we found" would have been a silent weakening, so it was replaced with a STRICTLY STRONGER property: every prediction must be explicitly ACCOUNTED FOR in exactly one of three channels, and the three channels must partition the prediction set with no gap and no overlap.
 - CITED: the prediction carries a live-verified news citation meeting every bar below.

@@ -95,6 +95,7 @@ const guarded = [
   // appear here — is NOT implemented and is named as open rather than left to be discovered.
   'verify-backfill.js', 'news-backfill.js',
   'refresh-metr.js', 'verify-metr.js',
+  'refresh-reference-points.js', 'verify-reference-points.js',
 ];
 /* X retirement (2026-08-13). These entry points were removed with the X evidence pipeline.
    They are DECLARED rather than merely deleted from the list above, because a bare deletion

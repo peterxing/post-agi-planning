@@ -15,6 +15,11 @@ $coverageVerifier = Join-Path $source 'verify-direct-coverage.js'
 $newsVerifier = Join-Path $source 'verify-news-evidence.js'
 $currencyVerifier = Join-Path $source 'verify-currency.js'
 $surfaceVerifier = Join-Path $source 'verify-deploy-surface.js'
+$referencesVerifier = Join-Path $source 'verify-reference-points.js'
+if (-not (Test-Path $referencesVerifier)) {
+  Write-Error 'Reviewed reference verifier is missing; deployment aborted.'
+  exit 6
+}
 if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -not (Test-Path $currencyVerifier) -or -not (Test-Path $surfaceVerifier)) {
   Write-Error 'Evidence preflight verifier is missing; deployment aborted.'
   exit 6
@@ -65,6 +70,19 @@ if ($currencyExit -ne 0 -and $currencyExit -ne 70) {
 & node $surfaceVerifier
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'Public deploy surface is not fail-closed; deployment aborted.'
+  exit 6
+}
+
+# References are separate from NEWS, but their complete reviewed roster also gates every deploy.
+# This is read-only: author runs do not start a second reference collector.
+& node $referencesVerifier --no-ui
+$referencesExit = $LASTEXITCODE
+if ($referencesExit -eq 75) {
+  Write-Warning 'Reference verification deferred by the interlock; deployment stopped.'
+  exit 75
+}
+if ($referencesExit -ne 0) {
+  Write-Error 'Reviewed reference coverage or source receipts are invalid; deployment aborted.'
   exit 6
 }
 

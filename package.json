@@ -6,13 +6,15 @@
   "homepage": "https://peterxing.com",
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13.0"
   },
   "scripts": {
     "serve": "node server.js",
     "refresh": "node refresh-signals.js",
     "refresh:metr": "node refresh-metr.js",
     "verify:metr": "node verify-metr.js",
+    "refresh:references": "node refresh-reference-points.js --refresh",
+    "verify:references": "node verify-reference-points.js",
     "validate": "node validate-predictions.js",
     "verify": "node verify-site.js http://127.0.0.1:8787",
     "verify:matcher": "node verify-signal-matcher.js",
@@ -39,6 +41,7 @@
     "playwright": "1.61.1"
   },
   "dependencies": {
+    "pdf-parse": "2.4.5",
     "yaml": "2.9.0"
   }
 }

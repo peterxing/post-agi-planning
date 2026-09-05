@@ -77,6 +77,23 @@ const ALLOWED_EGRESS_HOSTS = new Set([
   '127.0.0.1', 'peterxing.com', 'post-agi-planning.vercel.app',
   // Reviewed 2026-09-05: first-party benchmark measurements, never news citations.
   'metr.org',
+  // Reviewed reference instruments and primary publications, not new browser egress.
+  'clinicaltrials.gov', 'www.figure.ai', 'www.starcloud.com', 'behavior.stanford.edu',
+  'pmc.ncbi.nlm.nih.gov', 'www.cdc.gov', 'news.microsoft.com', 'ifr.org',
+  'news.utexas.edu', 'flywire.ai', 'www.caltech.edu', 'www.energyinst.org',
+  'writings.stephenwolfram.com',
+  // Individually fetched and reviewed for the complete 2026-09-05 reference roster.
+  // These are reference publishers, not automatic NEWS admission or live metric adapters.
+  'apfc.org', 'bidenwhitehouse.archives.gov', 'citizens-initiative.europa.eu',
+  'developer.nvidia.com', 'ec.europa.eu', 'eur-lex.europa.eu', 'group.softbank',
+  'hai.stanford.edu', 'insilico.com', 'lastexam.ai', 'mrclmb.ac.uk',
+  'nvidianews.nvidia.com', 'pfd.alaska.gov', 'theaipi.org', 'www.cnas.org',
+  'www.coe.int', 'www.gov.uk', 'www.govinfo.gov', 'www.ilo.org', 'www.iza.org',
+  'www.judiciary.uk', 'www.mfat.govt.nz', 'www.nber.org', 'www.oecd.org',
+  'www.ons.gov.uk', 'www.pewresearch.org', 'www.salesforce.com',
+  'www.stlouisfed.org', 'www.un.org',
+  // Exact RSP PDF linked by Anthropic's official policy index; no general CDN discovery.
+  'cdn.sanity.io',
   // reviewed news + currency publishers (primary reporting, journals, labs, agencies, regulators)
   'arstechnica.com', 'feeds.arstechnica.com', 'arxiv.org', 'rss.arxiv.org', 'bair.berkeley.edu',
   'blogs.nvidia.com', 'deepmind.google', 'digital-strategy.ec.europa.eu', 'huggingface.co',
@@ -167,7 +184,7 @@ function assertEgressHosts() {
   const scanned = [];
   let filesRead = 0;
   for (const name of fs.readdirSync(DIR)) {
-    if (!name.endsWith('.js')) continue;
+    if (!name.endsWith('.js') && name !== 'reference-ledger.json') continue;
     if (!fs.statSync(path.join(DIR, name)).isFile()) continue;
     const text = fs.readFileSync(path.join(DIR, name), 'utf8');
     filesRead++;
@@ -196,8 +213,8 @@ function assertEgressHosts() {
     }
   }
   notes.push(`Egress allow-list: ${new Set(scanned.map(([h]) => h)).size} distinct host(s) named across `
-    + `${filesRead} JavaScript file(s), all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) `
-    + 'explicitly refused. DECLARED LIMIT: .js only — hosts named in .ps1, .json, .html or .css are '
+    + `${filesRead} JavaScript/reviewed-ledger file(s), all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) `
+    + 'explicitly refused. DECLARED LIMIT: .js and reference-ledger.json only — hosts in other .json, .ps1, .html or .css are '
     + 'outside this sweep.');
 }
 
