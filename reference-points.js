@@ -16,7 +16,7 @@ const reviewHash = rows => sha(JSON.stringify([...rows].sort((a, b) => a.id.loca
 function canonical(url) {
   const value = new URL(url);
   need(value.protocol === 'https:' && !value.username && !value.password && !value.port, 'source must be public HTTPS');
-  need(!/(^|\.)(x\.com|twitter\.com|localhost)$/.test(value.hostname)
+  need(!/(^|\.)(x\.com|twitter\.com|twimg\.com|t\.co|localhost)$/.test(value.hostname)
     && !/^\d+(?:\.\d+){3}$/.test(value.hostname), 'source is not an approved reference publisher');
   return normalizeUrl(value.href);
 }

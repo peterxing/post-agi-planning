@@ -173,7 +173,6 @@ const RETIRED_EGRESS_HOSTS = new Map([
   ['x.com', 'X evidence retired 2026-08-13; api.x.com is allow-listed for the trajectory-signal supplement only'],
   ['twitter.com', 'X evidence retired 2026-08-13'],
   ['api.twitter.com', 'the X API was retired 2026-08-13'],
-  ['api.x.com', 'the X API was retired 2026-08-13'],
   ['cdn.syndication.twimg.com', 'the X syndication API was retired 2026-08-13'],
   ['publish.twitter.com', 'the X oEmbed endpoint was retired 2026-08-13'],
   ['platform.twitter.com', 'the X widget script was retired 2026-08-13'],
@@ -207,6 +206,8 @@ function assertEgressHosts() {
     seen.add(`${host}|${file}`);
     if (RETIRED_EGRESS_HOSTS.has(host)) {
       problems.push(`${file} names the retired host ${host} — ${RETIRED_EGRESS_HOSTS.get(host)}`);
+    } else if (host === 'api.x.com' && file !== 'x-harvest.js') {
+      problems.push(`${file} names api.x.com outside the weekly activity harvester`);
     } else if (!ALLOWED_EGRESS_HOSTS.has(host)) {
       problems.push(`${file} names undeclared network host ${host}; egress is an allow-list, so add it `
         + 'to ALLOWED_EGRESS_HOSTS as a reviewed edit or remove the call');

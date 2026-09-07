@@ -28,7 +28,10 @@ const fs = require('fs');
 const path = require('path');
 
 const xs = require('./x-signals.js');
+const { assertCompleteHarvest } = require('./x-harvest-contract.js');
 const { detectConcepts, qualifyPost } = require('./refresh-signals.js');
+const { classifyHost } = require('./news-evidence.js');
+const { canonical, validatePublishedReferences } = require('./reference-points.js');
 
 const failures = [];
 const notes = [];
@@ -86,6 +89,85 @@ check('the published evidence accounting is unaffected by the X layer', () => {
       `${id}: an X trajectory signal reached signals.embeds`);
     assert.ok(embed.evidenceOwner !== 'peterxing' && embed.evidenceOwner !== 'external',
       `${id}: a retired X evidence owner reappeared in the evidence channel`);
+  }
+});
+
+function assertEvidenceIsolation(signals) {
+  const urlFields = new Set(['url', 'urls', 'resolvedUrl', 'finalUrl', 'canonicalUrl', 'dateEvidenceUrl']);
+  const visit = (value, key) => {
+    if (typeof value === 'string' && urlFields.has(key)) {
+      assert.ok(!/(^|\.)(x\.com|twitter\.com|twimg\.com|t\.co)$/.test(new URL(value).hostname),
+        'X source URL reached NEWS or referencePoints');
+    } else if (Array.isArray(value)) {
+      for (const item of value) visit(item, key);
+    } else if (value && typeof value === 'object') {
+      assert.notStrictEqual(value.channel, 'x-trajectory-signal', 'X trajectory record reached evidence');
+      assert.ok(!['peterxing', 'external'].includes(value.evidenceOwner), 'X evidence owner returned');
+      for (const [field, item] of Object.entries(value)) visit(item, field);
+    }
+  };
+  for (const field of ['embeds', 'context', 'uncited', 'referencePoints']) visit(signals[field]);
+  assert.strictEqual(Number(signals.coverage?.byEvidenceMedium?.x || 0), 0);
+  assert.strictEqual(Number(signals.coverage?.byEvidenceOwner?.peterxing || 0), 0);
+}
+
+check('NEWS and reviewed references coexist with X without requiring nonempty optional channels', () => {
+  const signals = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
+  const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8'));
+  validatePublishedReferences(signals.referencePoints, predictions, { requireComplete:true });
+  assertEvidenceIsolation(signals);
+  const withoutX = structuredClone(signals);
+  delete withoutX.xSignals;
+  assertEvidenceIsolation(withoutX);
+  for (const field of ['embeds', 'context', 'uncited', 'referencePoints', 'coverage'])
+    assert.deepStrictEqual(signals[field], withoutX[field]);
+  for (const field of ['embeds', 'context', 'uncited', 'referencePoints']) {
+    const crossed = structuredClone(signals);
+    crossed[field] = { injected: { channel:'x-trajectory-signal' } };
+    assert.throws(() => assertEvidenceIsolation(crossed), /X trajectory/);
+    crossed[field] = { injected: { url:['https:', '', 'x.com', 'synthetic-refusal'].join('/') } };
+    assert.throws(() => assertEvidenceIsolation(crossed), /X source URL/);
+  }
+  assert.doesNotThrow(() => assertEvidenceIsolation({ embeds:{ fixture:{
+    url:'https://example.org/independent-report',
+    quote:`Independent reporting can mention X or ${['https:', '', 'x.com'].join('/')} without citing it as its source.`,
+  } }, xSignals:{ items:{ fixture:{
+    channel:'x-trajectory-signal', url:['https:', '', 'x.com', 'synthetic-activity'].join('/'),
+  } } } }));
+  assert.doesNotThrow(() => assertEvidenceIsolation({ embeds:{}, context:{ items:{} }, uncited:{ items:{} } }));
+});
+
+check('X sources are refused by the NEWS and reference source gates', () => {
+  for (const host of ['x.com', 'api.x.com', 'twitter.com', 'mobile.twitter.com', 't.co', 'cdn.syndication.twimg.com']) {
+    const url = ['https:', '', host, 'synthetic-refusal'].join('/');
+    assert.strictEqual(classifyHost(url).ok, false, `${host} is admissible as NEWS`);
+    assert.throws(() => canonical(url), /not an approved reference publisher/);
+  }
+});
+
+check('daily and author contracts preserve X without a whole-payload ban or collection step', () => {
+  for (const file of ['DAILY-RUN.md', 'AUTHOR-RUN.md', 'README.md']) {
+    const source = fs.readFileSync(path.join(__dirname, file), 'utf8').replace(/\s+/g, ' ');
+    assert.match(source, /Only the weekly workflow collects X/i, `${file} does not assign collection ownership`);
+    assert.match(source, /daily and author workflows preserve/i, `${file} omits preservation`);
+    assert.match(source, /referencePoints/, `${file} omits reference isolation`);
+    assert.ok(!/published payload (?:must contain no|contains ZERO) X vocabulary/i.test(source),
+      `${file} restores the whole-payload ban`);
+    assert.ok(!/Assert ZERO occurrences of x\.com/i.test(source), `${file} restores the live blanket scan`);
+    assert.ok(!/Surviving references to X[\s\S]*retirement itself/.test(source),
+      `${file} incorrectly permits only historical mentions`);
+  }
+  for (const file of ['DAILY-RUN.md', 'AUTHOR-RUN.md']) {
+    const source = fs.readFileSync(path.join(__dirname, file), 'utf8');
+    assert.ok(!/^\s*(?:node\s+x-(?:harvest|signals)\.js|npm\s+run\s+x:(?:harvest|signals))\b/m.test(source),
+      `${file} instructs a second X collector`);
+  }
+  for (const file of ['refresh-signals.js', 'refresh-metr.js', 'refresh-reference-points.js']) {
+    const source = executableSource(file);
+    assert.ok(!/\brequire\(['"]\.\/x-harvest(?:\.js)?['"]\)/.test(source),
+      `${file} imports X collection`);
+    assert.ok(!/\b(?:spawn|exec|execFile)(?:Sync)?\s*\([^;]*x-(?:harvest|signals)/s.test(source),
+      `${file} launches X collection or rebuilding`);
   }
 });
 
@@ -250,7 +332,38 @@ check('capability limits are recorded rather than hidden', () => {
     'the reason likes and bookmarks are absent is not stated');
 });
 
+check('empty and partial harvests are refused by the shared contract and mirrored builder', () => {
+  const complete = {
+    items: [{}],
+    caps: {
+      partial: false,
+      timelinePageFailures: [],
+      recentSearchAvailable: true,
+      timelineComplete: false,
+    },
+  };
+  // Exhausting the configured page budget is distinct from failing one of those pages.
+  assert.doesNotThrow(() => assertCompleteHarvest(complete));
+  assert.throws(() => assertCompleteHarvest({ ...complete, items: [] }), /0 items/);
+  assert.throws(() => assertCompleteHarvest({ items: [{}] }), /completeness is unrecorded/);
+  assert.throws(() => assertCompleteHarvest({
+    ...complete, caps: { ...complete.caps, partial: true },
+  }), /PARTIAL/);
+  assert.throws(() => assertCompleteHarvest({
+    ...complete,
+    caps: { ...complete.caps, timelinePageFailures: [{ page: 2, status: 429 }] },
+  }), /p2:HTTP 429/);
+  assert.throws(() => assertCompleteHarvest({
+    ...complete,
+    caps: { ...complete.caps, recentSearchAvailable: false, recentSearchNote: 'HTTP 503' },
+  }), /authored-post search unavailable: HTTP 503/);
+  const builder = executableSource('x-signals.js');
+  assert.ok(builder.includes('assertCompleteHarvest(payload);'),
+    'the trajectory builder does not independently refuse a partial cache');
+});
+
 for (const note of notes) console.log(note);
+console.log('LIMIT operator cache-write wiring belongs to the separate local verify:xharvest gate; it is not examined here.');
 for (const failure of failures) console.error(failure);
 if (failures.length) {
   console.error(`RESULT: FAIL (${failures.length} of ${failures.length + notes.length} X-layer assertions)`);

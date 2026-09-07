@@ -139,8 +139,17 @@ try {
     $failed = @(); $faulted = @(); $inertGates = @(); $deferredGates = @()
 
     foreach ($g in $planned) {
-        $out  = & npm run $g 2>&1 | Out-String
-        $code = $LASTEXITCODE
+        $savedErrorActionPreference = $ErrorActionPreference
+        try {
+            # Windows PowerShell turns native stderr into ErrorRecords. Capture the
+            # diagnostic and classify the process exit, rather than aborting the runner.
+            $ErrorActionPreference = 'Continue'
+            $out = & npm run $g 2>&1 | Out-String
+            $code = $LASTEXITCODE
+        }
+        finally {
+            $ErrorActionPreference = $savedErrorActionPreference
+        }
 
         # An invocation fault is identified by npm's own diagnostic, NOT by the
         # exit code -- the exit code cannot distinguish it from a real failure.

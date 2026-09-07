@@ -174,6 +174,7 @@ const PROOF_FEEDS = [
    entry means this list went stale. */
 const PROOF_ROSTER = [
   'aggregator, shortener and press-release mill rejected before fetch',
+  'X source redirects are refused while independent reporting may mention X',
   'an apostrophe in a headline or publisher is not read as a delimiter',
   "a neighbouring post's <time> cannot supply this article's publication date",
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
@@ -192,6 +193,7 @@ const PROOF_ROSTER = [
    results cannot make that mistake; one written by hand always can. */
 const PROOF_CAPABILITY = {
   'aggregator, shortener and press-release mill rejected before fetch': 'aggregators',
+  'X source redirects are refused while independent reporting may mention X': 'X source isolation',
   'an apostrophe in a headline or publisher is not read as a delimiter': 'metadata truncation',
   "a neighbouring post's <time> cannot supply this article's publication date": 'date provenance',
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents': 'publisher attribution',
@@ -243,6 +245,24 @@ async function runProofs(log) {
   record('aggregator, shortener and press-release mill rejected before fetch',
     !aggregator.ok && !shortener.ok && !releaseMill.ok,
     `${aggregator.reason}; ${shortener.reason}; ${releaseMill.reason}`);
+
+  let refusedRedirects = 0;
+  for (const host of ['x.com', 'api.x.com', 'twitter.com', 'mobile.twitter.com', 't.co', 'cdn.syndication.twimg.com']) {
+    let calls = 0;
+    const target = ['https:', '', host, 'synthetic-refusal'].join('/');
+    const result = await fetchArticle('https://example.org/source', { requestImpl:async () => {
+      calls++;
+      return { ok:true, status:302, headers:{ location:target }, body:'' };
+    } });
+    if (!result.ok && result.finalUrl === target && calls === 1 && /rejected source/.test(result.reason))
+      refusedRedirects++;
+  }
+  const report = await fetchArticle('https://example.org/independent-report', { requestImpl:async () => ({
+    ok:true, status:200, headers:{}, body:'Independent reporting about X, Twitter and reposting.',
+  }) });
+  record('X source redirects are refused while independent reporting may mention X',
+    refusedRedirects === 6 && report.ok && report.body.includes('Twitter'),
+    `${refusedRedirects}/6 redirected hosts refused before contact; independent body text retained`);
 
   /* Proof 4b: an apostrophe in a headline is not a delimiter. This is a REGRESSION PROOF, pinned to
      the two live articles it was measured on. The meta-attribute pattern excluded both quote
@@ -652,7 +672,7 @@ async function runBrowserProof(baseUrl, log) {
   }
   const state = mappingIds.length
     ? `${mappingIds.length} reviewed news mapping(s) are live, quoted and unchanged`
-    : 'no prediction currently needs the news tier — every prediction still has reviewed X evidence';
+    : 'no NEWS mapping was checked; this establishes no reviewed evidence';
   /* Assembled from the proofs that actually ran and passed, never written by hand. */
   const proven = proofs.results
     .filter(proof => proof.passed && PROOF_CAPABILITY[proof.name])

@@ -60,6 +60,35 @@ param(
 # with 'Continue' and judge every git command by its exit code ($LASTEXITCODE).
 $ErrorActionPreference = 'Continue'
 
+function ConvertTo-PublicPackage {
+  param([string]$Source, [string[]]$AllowList)
+  $manifest = Get-Content -LiteralPath $Source -Raw | ConvertFrom-Json
+  # These commands depend on deliberately unpublished operator tools, not missing dependencies.
+  $operatorOnly = @{
+    'browse' = 'browse-evidence.js'
+    'browse:report' = 'browse-evidence.js'
+    'verify:browse' = 'verify-browse-evidence.js'
+    'x:harvest' = 'x-harvest.js'
+    'verify:backfill' = 'verify-backfill.js'
+    'verify:xharvest' = 'verify-x-harvest.js'
+  }
+  foreach ($entry in @($manifest.scripts.PSObject.Properties)) {
+    if ($entry.Value -notmatch '^node\s+([A-Za-z0-9_.-]+\.js)(?:\s|$)') {
+      throw "Unreviewed package script shape: $($entry.Name)"
+    }
+    $target = $Matches[1]
+    if ($operatorOnly.ContainsKey($entry.Name)) {
+      if ($operatorOnly[$entry.Name] -ne $target -or $AllowList -contains $target) {
+        throw "Operator-only script policy differs from the curated file set: $($entry.Name)"
+      }
+      $manifest.scripts.PSObject.Properties.Remove($entry.Name)
+    } elseif ($AllowList -notcontains $target) {
+      throw "Package script $($entry.Name) names an unpublished target: $target"
+    }
+  }
+  return $manifest
+}
+
 $coverageVerifier = Join-Path $Deploy 'verify-direct-coverage.js'
 $newsVerifier = Join-Path $Deploy 'verify-news-evidence.js'
 $currencyVerifier = Join-Path $Deploy 'verify-currency.js'
@@ -360,7 +389,7 @@ $fromDeploy = @(
   # listed because the closure check refused the mirror without it: three published files read it,
   # and a mirrored script whose only data input is unpublished cannot be run or checked by anyone
   # working from the mirror. That refusal is the check working, not an obstacle to route around.
-  'x-signals.js','verify-x-signals.js','x-signals.json',
+  'x-signals.js','verify-x-signals.js','x-signals.json','x-harvest-contract.js',
   # run-gates.ps1 is mirrored because both scheduled contracts now INVOKE it as their gate runner.
   # It is the thing that decides whether the suite passed, so leaving it unpublished would put the
   # arbiter of every publication outside the published set — the same defect this list already
@@ -429,6 +458,12 @@ if ($closureHoles) {
   Write-Error "publish-github: ALLOW-LIST NOT CLOSED UNDER require — a published file imports a module that is not published, so the published gate cannot be verified from the published set: $(($closureHoles | Sort-Object -Unique) -join '; ')"
   exit 3
 }
+try {
+  $mirrorPackage = ConvertTo-PublicPackage -Source (Join-Path $Deploy 'package.json') -AllowList $publicAllowlist
+} catch {
+  Write-Error "publish-github: package script closure refused: $($_.Exception.Message)"
+  exit 3
+}
 
 # Bump each copied file's mtime so git always re-stats it. Without this, when the
 # new file has the SAME byte size as the committed one (common: signals.json keeps
@@ -452,6 +487,11 @@ foreach ($f in $fromSite) {
   Copy-Item $p $d -Force
   (Get-Item $d).LastWriteTime = $touch
 }
+$packageDestination = Join-Path $Clone 'package.json'
+$packageText = ($mirrorPackage | ConvertTo-Json -Depth 20) + "`n"
+[System.IO.File]::WriteAllText($packageDestination, $packageText, (New-Object System.Text.UTF8Encoding($false)))
+(Get-Item $packageDestination).LastWriteTime = $touch
+Write-Host 'publish-github: mirror package exposes only curated script targets; operator-only commands remain in the local suite.'
 
 # X RETIREMENT 2026-08-13 - files this publisher USED to carry and no longer approves. The copy
 # step above only ever ADDS, so a withdrawn file stays tracked in the mirror forever and trips the

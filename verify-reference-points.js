@@ -120,6 +120,17 @@ async function unit() {
     calls++; return new Response(null, { status:302, headers:{ location:'https://example-not-reviewed.test/private' } });
   } }), /outside the reviewed/);
   assert.equal(calls, 1);
+  for (const host of ['x.com', 'api.x.com', 'twitter.com', 'mobile.twitter.com', 't.co', 'cdn.syndication.twimg.com']) {
+    const target = ['https:', '', host, 'synthetic-refusal'].join('/');
+    let requests = 0;
+    await assert.rejects(() => fetchReference({ ...source, urls:[...source.urls, target] }, {
+      fetchImpl:async () => {
+        requests++;
+        return new Response(null, { status:302, headers:{ location:target } });
+      },
+    }), /not an approved public HTTPS/);
+    assert.equal(requests, 1, 'An X redirect must be refused before contact, even if accidentally listed');
+  }
   const insecure = await refreshSource(source, fixture.mappings, { fetchImpl:async () =>
     new Response(null, { status:302, headers:{ location:'http://example.org/reference' } }) });
   assert.match(insecure.health.error, /not an approved public HTTPS/);

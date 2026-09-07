@@ -71,37 +71,56 @@ do is make anything new admissible:
   egress allow-list. Never a web search engine: its results page is exactly the aggregator hop the
   source-quality gate exists to refuse.
 
-## X retirement (2026-08-13)
+## X evidence retirement and separate supplement
 
 This site previously required exactly one reviewed **direct X (Twitter) evidence card** per
 prediction, sourced from @peterxing's posts and reposts plus authoritative external X statuses, and
-backed by a private Wayback/first-party/oEmbed archive corpus. **That contract is retired in full**,
+backed by a private Wayback/first-party/oEmbed archive corpus. **That evidence contract is retired**,
 at the site owner's instruction:
 
 > remove all references to x posts and stop using the x api for the predictions — replace and add any
 > references based on the latest news from the last 2 weeks instead
+
+On August 26 the owner separately authorized `signals.xSignals`: labelled trajectory activity,
+not evidence. NEWS (`signals.embeds`, `signals.context`, `signals.uncited` and evidence accounting)
+and `signals.referencePoints` remain X-free. The supplement's post links, activity dates and UI are
+allowed; their presence does not approve a citation or a forecast. Only the weekly workflow collects
+X under `XSIGNALS-RUN.md`; daily and author workflows preserve the supplement without recollecting,
+rebuilding or advancing its timestamps. A failed weekly harvest retains the previous valid snapshot.
+Invalid or stale bindings still fail their existing guards. Verify channel isolation, not a blanket
+text ban across the runtime payload or frontend.
 
 | Retired | Replaced by |
 | --- | --- |
 | `x-archive.js` — Wayback CDX discovery, first-party hydration, oEmbed cross-check | `news-evidence.js` — the reviewed, live-verified news ledger |
 | `verify-peter-evidence.js`, `verify-archive-corpus.js`, `verify-external-evidence.js` | `verify-news-evidence.js`, `verify-currency.js` |
 | `verify-id.js` — a live `cdn.syndication.twimg.com` call | deleted; network egress is now an allow-list (below) |
-| `evidence-approvals.json` (sticky X ledger) and the `external-evidence.js` X statuses | asserted **empty**; a non-empty ledger fails publication |
+| `evidence-approvals.json` (sticky X ledger) and the `external-evidence.js` X statuses | retired evidence input remains absent/empty; reinstatement fails publication |
 | `peterTotal` / `peterAuthored` / `maxReuse` floors in `evidence-floors.json` | removed rather than zeroed — a floor of 0 reads as a *satisfied* gate |
-| X API credentials and the private `pap-secrets` corpus | the build no longer names or opens that directory at all |
+| Private X evidence/archive corpus | never recreated; weekly-only activity collection uses its separate private cache, never shipped |
 
-**The retirement is enforced by inversion, not by deletion.** Reinstating X is what fails now:
+**The evidence retirement is enforced by inversion, not by deletion.** Reinstating X as evidence fails:
 
 - `assertNoXIngestFiles()` fails the build if any retired X ingest file reappears — the previous
   invariant rested on a file's *absence*, which is not enforcement;
-- the coverage, per-prediction and observatory verifiers assert **zero** X links, **zero**
-  `from:peterxing` requirements and **zero** X-owned embeds;
+- the coverage, per-prediction and observatory verifiers assert **zero** X links in NEWS, **zero**
+  `from:peterxing` evidence requirements and **zero** X-owned embeds;
 - any embed claiming `evidenceOwner: "peterxing"` or `"external"` is rejected **by name**, so a
   reinstatement fails as a reinstatement rather than as a generic schema error;
-- the retired X hosts are listed explicitly in the egress allow-list and refused with a reason.
+- retired syndication, widget, oEmbed and archive hosts are refused; `api.x.com` is permitted only
+  for the weekly activity harvester, not NEWS or reference collection.
 
-Surviving references to X in this repository record the retirement itself. That is the intended end
-state: state what went, and state what replaced it.
+`verify:xsignals` guards the separate supplement, including partial-cache refusal and its
+coexistence with X-free NEWS and reviewed references. Daily and author publication use that same gate.
+The pure `x-harvest-contract.js` is mirrored with the builder; the authenticated collector remains
+operator-local. `verify:xharvest` separately checks the local collector's shared-function binding and
+validation-before-write ordering without collecting activity. It is included by the derived local
+suite, not shipped as a proof over a missing private operator tool. The mirrored verifier explicitly
+does not claim that operator wiring was examined.
+The publisher generates the mirror's `package.json` without the explicitly operator-only browsing,
+backfill and X-harvest commands. The local manifest retains those gates. Every remaining mirror
+script must target a curated file; an unknown missing target fails publication rather than being
+silently dropped.
 
 ## How it works
 

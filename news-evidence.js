@@ -1167,6 +1167,9 @@ const NEWS_TRANSPORTS = new Set(['https', 'browser']);
  * Matching is on the registrable host, so subdomains are covered.
  */
 const REJECTED_HOSTS = new Map([
+  ['x.com', 'retired X evidence host; trajectory activity is a separate channel'],
+  ['twitter.com', 'retired X evidence host; trajectory activity is a separate channel'],
+  ['twimg.com', 'retired X syndication host'],
   ['news.google.com', 'aggregator'],
   ['news.yahoo.com', 'aggregator'],
   ['finance.yahoo.com', 'aggregator'],
@@ -1429,7 +1432,7 @@ function requestOnce(url) {
  * recorded rather than the input URL, and so a redirect into an aggregator or
  * shortener is caught rather than silently followed.
  */
-async function fetchArticle(url) {
+async function fetchArticle(url, { requestImpl = requestOnce } = {}) {
   const redirects = [];
   let current = url;
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
@@ -1437,7 +1440,7 @@ async function fetchArticle(url) {
     if (!gate.ok) {
       return { ok: false, finalUrl: current, redirects, reason: `rejected source: ${gate.reason}` };
     }
-    const response = await requestOnce(current);
+    const response = await requestImpl(current);
     if (!response.ok) return { ok: false, finalUrl: current, redirects, reason: response.reason, code: response.code };
     const status = Number(response.status);
     if (status >= 300 && status < 400 && response.headers.location) {

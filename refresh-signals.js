@@ -1652,7 +1652,7 @@ function xSignalLayer(livePredictionIds, buildNow){
     payload = JSON.parse(fs.readFileSync(X_SIGNALS_PATH, 'utf8').replace(/^\uFEFF/, ''));
   } catch (error) {
     throw new Error(`x-signals.json is present but unparseable (${error.message}); refusing to build. `
-      + 'Delete it to publish without the trajectory layer, or rebuild it with x-signals.js.');
+      + 'Preserve the published site and refer repair to the weekly X workflow; daily/author runs must not recollect or delete it.');
   }
   if (!payload || typeof payload !== 'object' || !payload.summary || !payload.signals) {
     throw new Error('x-signals.json is present but mis-shaped (expected { summary, signals }); refusing to build.');
@@ -1666,7 +1666,7 @@ function xSignalLayer(livePredictionIds, buildNow){
     throw new Error(`x-signals.json was built ${Math.round(ageDays)} days ago, beyond the `
       + `${X_SIGNALS_MAX_AGE_DAYS}-day ceiling. Prediction text is revised daily and these signals are `
       + 'matched against it, so a stale layer can attach a post to wording that has since changed. '
-      + 'Re-run x-harvest.js and x-signals.js, or delete the file to publish without the layer.');
+      + 'Refer source refresh to the weekly X workflow; daily/author runs must preserve the snapshot and stop publication.');
   }
   /* Keys must resolve to live predictions. A signal for a removed or renumbered prediction is not a
      cosmetic leftover: `2032-1` means a different forecast after a reorder. */
@@ -1675,7 +1675,7 @@ function xSignalLayer(livePredictionIds, buildNow){
   if (orphans.length) {
     throw new Error(`x-signals.json references ${orphans.length} prediction id(s) that no longer exist `
       + `(${orphans.slice(0, 5).join(', ')}${orphans.length > 5 ? ', …' : ''}). The prediction set changed `
-      + 'since the layer was built; re-run x-signals.js.');
+      + 'since the layer was built; the weekly X workflow must review and rebuild its bindings.');
   }
   const banned = ['evidenceOwner', 'sourceQuality', 'publisher', 'publisherHost', 'verifiedThrough', 'textSha256'];
   for (const [id, signal] of Object.entries(payload.signals)) {

@@ -1,47 +1,42 @@
 {
-  "name": "post-agi-planning",
-  "version": "2.1.0",
-  "private": true,
-  "description": "REHOBOAM-style Post-AGI Planning timeline (2026-2040) with hourly @peterxing reality signals.",
-  "homepage": "https://peterxing.com",
-  "license": "MIT",
-  "engines": {
-    "node": ">=22.13.0"
-  },
-  "scripts": {
-    "serve": "node server.js",
-    "refresh": "node refresh-signals.js",
-    "refresh:metr": "node refresh-metr.js",
-    "verify:metr": "node verify-metr.js",
-    "refresh:references": "node refresh-reference-points.js --refresh",
-    "verify:references": "node verify-reference-points.js",
-    "validate": "node validate-predictions.js",
-    "verify": "node verify-site.js http://127.0.0.1:8787",
-    "verify:matcher": "node verify-signal-matcher.js",
-    "browse": "node browse-evidence.js --propose",
-    "browse:report": "node browse-evidence.js --report",
-    "verify:browse": "node verify-browse-evidence.js",
-    "verify:xsignals": "node verify-x-signals.js",
-    "x:harvest": "node x-harvest.js",
-    "x:signals": "node x-signals.js --write",
-    "verify:predictions": "node verify-perpred.js http://127.0.0.1:8787",
-    "verify:reality": "node verify-reality.js http://127.0.0.1:8787",
-    "verify:author": "node verify-author.js http://127.0.0.1:8787",
-    "verify:ui": "node verify-observatory.js http://127.0.0.1:8787",
-    "verify:performance": "node verify-performance.js http://127.0.0.1:8787",
-    "verify:coverage": "node verify-direct-coverage.js",
-    "verify:news": "node verify-news-evidence.js",
-    "verify:currency": "node verify-currency.js",
-    "verify:backfill": "node verify-backfill.js",
-    "verify:surface": "node verify-deploy-surface.js",
-    "verify:surface:live": "node verify-deploy-surface.js --live",
-    "verify:interlock": "node verify-interlock.js http://127.0.0.1:8787"
-  },
-  "devDependencies": {
-    "playwright": "1.61.1"
-  },
-  "dependencies": {
-    "pdf-parse": "2.4.5",
-    "yaml": "2.9.0"
-  }
+    "name":  "post-agi-planning",
+    "version":  "2.1.0",
+    "private":  true,
+    "description":  "REHOBOAM-style Post-AGI Planning timeline (2026-2040) with hourly @peterxing reality signals.",
+    "homepage":  "https://peterxing.com",
+    "license":  "MIT",
+    "engines":  {
+                    "node":  "\u003e=22.13.0"
+                },
+    "scripts":  {
+                    "serve":  "node server.js",
+                    "refresh":  "node refresh-signals.js",
+                    "refresh:metr":  "node refresh-metr.js",
+                    "verify:metr":  "node verify-metr.js",
+                    "refresh:references":  "node refresh-reference-points.js --refresh",
+                    "verify:references":  "node verify-reference-points.js",
+                    "validate":  "node validate-predictions.js",
+                    "verify":  "node verify-site.js http://127.0.0.1:8787",
+                    "verify:matcher":  "node verify-signal-matcher.js",
+                    "verify:xsignals":  "node verify-x-signals.js",
+                    "x:signals":  "node x-signals.js --write",
+                    "verify:predictions":  "node verify-perpred.js http://127.0.0.1:8787",
+                    "verify:reality":  "node verify-reality.js http://127.0.0.1:8787",
+                    "verify:author":  "node verify-author.js http://127.0.0.1:8787",
+                    "verify:ui":  "node verify-observatory.js http://127.0.0.1:8787",
+                    "verify:performance":  "node verify-performance.js http://127.0.0.1:8787",
+                    "verify:coverage":  "node verify-direct-coverage.js",
+                    "verify:news":  "node verify-news-evidence.js",
+                    "verify:currency":  "node verify-currency.js",
+                    "verify:surface":  "node verify-deploy-surface.js",
+                    "verify:surface:live":  "node verify-deploy-surface.js --live",
+                    "verify:interlock":  "node verify-interlock.js http://127.0.0.1:8787"
+                },
+    "devDependencies":  {
+                            "playwright":  "1.61.1"
+                        },
+    "dependencies":  {
+                         "pdf-parse":  "2.4.5",
+                         "yaml":  "2.9.0"
+                     }
 }

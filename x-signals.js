@@ -38,6 +38,7 @@ if (require.main === module) require('./pipeline-lock').guard('x-signals', { pur
 const fs = require('fs');
 const path = require('path');
 const { detectConcepts, deriveEventTerms, qualifyPost } = require('./refresh-signals.js');
+const { assertCompleteHarvest } = require('./x-harvest-contract.js');
 
 const SECRET_DIR = 'C:/Users/peterxing/pap-secrets';
 const CACHE = path.join(SECRET_DIR, 'x-signal-cache.json');
@@ -192,8 +193,10 @@ function loadHarvest() {
     process.exit(6);
   }
   const payload = JSON.parse(fs.readFileSync(CACHE, 'utf8'));
-  if (!Array.isArray(payload.items) || !payload.items.length) {
-    console.error('x-signals: harvest contains no items. REFUSING rather than publishing an empty layer.');
+  try {
+    assertCompleteHarvest(payload);
+  } catch (error) {
+    console.error(`x-signals: ${error.message} No trajectory layer was written.`);
     process.exit(6);
   }
   return payload;

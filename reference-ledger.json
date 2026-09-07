@@ -1070,19 +1070,19 @@
         }
       ]
     },
-    "ref-80061a66c1fc": {
-      "url": "https://ifr.org/ifr-press-releases/news/global-robot-density-in-factories-doubled-in-seven-years",
+    "ref-9c5b9fb39a11": {
+      "url": "https://ifr.org/ifr-press-releases/news/robot-density-surges-in-europe-asia-and-americas",
       "urls": [
-        "https://ifr.org/ifr-press-releases/news/global-robot-density-in-factories-doubled-in-seven-years"
+        "https://ifr.org/ifr-press-releases/news/robot-density-surges-in-europe-asia-and-americas"
       ],
-      "title": "Global Robot Density in Factories Doubled in Seven Years",
+      "title": "Robot Density Surges in Europe, Asia, and Americas",
       "organization": "International Federation of Robotics",
       "quality": "official-research",
       "transport": "https",
       "format": "html",
-      "publishedAt": "2024-11-20",
-      "dateEvidence": "Frankfurt, Nov 20, 2024",
-      "retrievedAt": "2026-09-05T00:36:28.3772756Z",
+      "publishedAt": "2026-04-08",
+      "dateEvidence": "Frankfurt, Apr 08, 2026",
+      "retrievedAt": "2026-09-07T02:08:26.947Z",
       "reuse": [
         {
           "family": "manufacturing-industrial-robot-installed-density",
@@ -2997,25 +2997,25 @@
     },
     {
       "id": "2031-1",
-      "sourceId": "ref-80061a66c1fc",
+      "sourceId": "ref-9c5b9fb39a11",
       "predictionText": "AI performs about one third of cognitive labor and robots about one tenth of physical labor in a leading economy",
       "predictionSha256": "0652fb973669821703efbeb4d3e0a98e385989de2f16b7b2d766c1920fa5792d",
       "predictionTextSha256": "edcfa575cb2ce3a2af93e8a6931422dde10b8754c33353782d46f8ca8686f227",
       "domain": "economic",
-      "excerpt": "Robot density in the United States reached 295 units in 2023. The country ranks tenth in the world.",
+      "excerpt": "The United States ranks 8th worldwide with 307 units per 10,000 employees.",
       "relation": "measured",
       "direction": "context",
       "facet": "Installed industrial-robot density as a physical-automation baseline in a leading economy",
-      "why": "IFR's industry statistics identify 295 operational industrial robots per 10,000 manufacturing employees in the United States in 2023. This is a concrete installed-capital baseline for physical automation rather than a projection of humanoid deployment.",
-      "doesNotEstablish": "Robot counts per employee cannot be converted into physical-labor shares without utilization, task-time and productivity data. Manufacturing excludes much physical work in services, construction and agriculture. The source does not measure cognitive labor performed by AI.",
+      "why": "IFR's World Robotics 2025 statistics, reported in its April 8, 2026 release, identify 307 operational industrial robots per 10,000 manufacturing employees in the United States in 2024. This is a concrete installed-capital baseline for physical automation rather than a projection of humanoid deployment.",
+      "doesNotEstablish": "Robot counts per employee cannot be converted into physical-labor shares without utilization, task-time and productivity data. Manufacturing excludes much physical work in services, construction and agriculture. The source does not measure cognitive labor performed by AI. The published definition is compatible with the earlier baseline, but an unrevised US employment-denominator time series is not established; no growth-rate claim is inferred.",
       "metric": {
-        "value": 295,
+        "value": 307,
         "unit": "operational industrial robots per 10,000 manufacturing employees",
-        "coverage": "United States, 2023; IFR World Robotics 2024 statistics",
-        "evidence": "Robot density in the United States reached 295 units in 2023. The country ranks tenth in the world."
+        "coverage": "United States, 2024; IFR World Robotics 2025 statistics reported April 8, 2026",
+        "evidence": "The United States ranks 8th worldwide with 307 units per 10,000 employees."
       },
       "reuseFamily": "manufacturing-industrial-robot-installed-density",
-      "reviewedAt": "2026-09-05T00:38:20.8351962Z",
+      "reviewedAt": "2026-09-07",
       "reviewedBy": "Agent review under user authorization"
     },
     {

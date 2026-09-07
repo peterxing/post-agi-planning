@@ -889,7 +889,7 @@ async function main() {
        ceiling is checked whether or not it reached signals.json; calling that total
        "published" made the line read "11 published link(s)" on a run where zero were
        published. The noun must match the number it is attached to. */
-    ok(`refresh relation enforced  ${originChecked.total} ledger entr${originChecked.total === 1 ? 'y' : 'ies'} within the ceiling postdate the X evidence they refresh (${originChecked.published} of them live-published); ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
+    ok(`refresh relation enforced  ${originChecked.total} ledger entr${originChecked.total === 1 ? 'y' : 'ies'} within the ceiling postdate the origin evidence they refresh (${originChecked.published} of them live-published); ${originChecked.dayPrecision} carry a day-precision origin and so must clear a strictly later day; thinnest margin ${originChecked.thinnestDays.toFixed(1)}d`);
   } else {
     /* The pin was taught to announce its own inertness and this check was not, in the same
        file and the same commit — the instance was fixed and the class was not swept. A

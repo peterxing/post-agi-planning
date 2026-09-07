@@ -28,10 +28,10 @@ if (-not (Test-Path $coverageVerifier) -or -not (Test-Path $newsVerifier) -or -n
 # X RETIREMENT 2026-08-13 — the coverage gate now measures verified-news coverage; the archive,
 # Peter and external X gates are removed with the evidence they verified.
 if ($LASTEXITCODE -ne 0) {
-  Write-Error 'Direct X evidence coverage is incomplete; deployment aborted.'
+  Write-Error 'NEWS evidence accounting is incomplete; deployment aborted.'
   exit 6
 }
-# Tier-3 news mappings must re-resolve and still carry their exact reviewed quote at deploy time.
+# NEWS mappings must re-resolve and still carry their exact reviewed quote at deploy time.
 & node $newsVerifier
 if ($LASTEXITCODE -ne 0) {
   Write-Error 'Verified news evidence validation failed; deployment aborted.'
