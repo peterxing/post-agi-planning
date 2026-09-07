@@ -76,7 +76,7 @@ check(!fs.existsSync(path.join(SITE, LOCK_NAME)),
   'a .pipeline.lock is present in the production bundle directory');
 
 // Every guarded entry point must claim the tree before it reads protected files.
-const guarded = [
+const allGuarded = [
   'refresh-signals.js', 'validate-predictions.js', 'verify-site.js',
   'verify-signal-matcher.js', 'verify-perpred.js', 'verify-reality.js', 'verify-author.js',
   'verify-observatory.js', 'verify-performance.js', 'verify-direct-coverage.js',
@@ -97,7 +97,22 @@ const guarded = [
   'refresh-metr.js', 'verify-metr.js',
   'refresh-reference-points.js', 'verify-reference-points.js',
   'verify-x-harvest.js',
+  'build-game.js','verify-game-content.js','verify-game.js','verify-game-performance.js',
 ];
+const manifest = JSON.parse(readOr(path.join(DIR,'package.json')));
+const mirrorScope = manifest.publicationScope === 'curated-mirror';
+check(!manifest.publicationScope || mirrorScope, 'package publication scope is not recognized');
+const operatorGuards = new Set(['verify-backfill.js','news-backfill.js','verify-x-harvest.js']);
+const operatorCommands = ['browse','browse:report','verify:browse','x:harvest','verify:backfill','verify:xharvest'];
+if (mirrorScope) {
+  for (const name of operatorCommands) check(!Object.hasOwn(manifest.scripts,name), `curated mirror retained operator command ${name}`);
+  for (const file of [...operatorGuards,'x-harvest.js']) check(!fs.existsSync(path.join(DIR,file)), `curated mirror contains operator-only file ${file}`);
+  check(fs.existsSync(path.join(DIR,'x-harvest-contract.js')), 'curated mirror lacks the shared pure X contract');
+  notes.push('Curated-mirror scope: published guard subjects only; operator-local guard wiring is not claimed.');
+} else {
+  for (const name of operatorCommands) check(Object.hasOwn(manifest.scripts,name), `operator source lost required local command ${name}`);
+}
+const guarded = allGuarded.filter(file => !mirrorScope || !operatorGuards.has(file));
 /* X retirement (2026-08-13). These entry points were removed with the X evidence pipeline.
    They are DECLARED rather than merely deleted from the list above, because a bare deletion
    is indistinguishable from an oversight: if one of these files ever returns it must fail
@@ -325,7 +340,7 @@ check(!fs.existsSync(SANDBOX), 'a normal exit must release the implicit lock');
   notes.push(`lock safety constants ratchet one way only: orphan ${ORPHAN_MINUTES}m floor, stale 90m floor, heartbeat 60s ceiling`);
 
   // 8. The live server must refuse the lock file.
-  const base = process.argv[2];
+  const base = process.env.PAP_SITE_URL || process.argv[2];
   if (base) {
     const status = await new Promise(resolve => {
       http.get(`${base}/${LOCK_NAME}`, response => {

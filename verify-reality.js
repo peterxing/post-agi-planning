@@ -2,7 +2,7 @@
 if (require.main === module) require('./pipeline-lock').guard('verify:reality');
 
 const { chromium } = require('playwright');
-const URL = process.argv[2] || 'http://127.0.0.1:8787/';
+const URL = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787/';
 const SHOT = process.argv[3] || null;
 
 // X retirement (2026-08-13): Reality Signals link to reviewed news articles, never to x.com.

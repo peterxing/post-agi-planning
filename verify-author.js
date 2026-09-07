@@ -11,7 +11,7 @@ if (require.main === module) require('./pipeline-lock').guard('verify:author');
    and at a moment nobody chooses. A verifier must not be able to disappear between runs. */
 const { chromium } = require('playwright');
 
-const BASE = process.argv[2] || 'http://127.0.0.1:8787';
+const BASE = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787';
 
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge' });

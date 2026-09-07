@@ -11,6 +11,30 @@ The project already uses this pattern for `REVISE-PREDICTIONS.md`, which the run
 
 Change it by editing this file in a reviewed change, exactly like any other gate.
 
+## Additive campaign preservation and rebuild
+
+The owner-approved `/game` campaign is additive. After authorized canonical-data work and before
+the derived suite, run `node build-game.js --write` under the same normal pipeline owner.
+It regenerates the complete book/tool projection from current canonical source without changing
+forecasts, probabilities, author data, NEWS, reference receipts, METR or weekly X.
+Do not automatically invent or approve gameplay adaptations for changed/new forecast records.
+A valid GAME-only adaptation gap emits exact pending IDs and pauses new campaigns while retaining
+the current original-content archive. It does not relax any NEWS partition/provenance/freshness
+or reference coverage/review-integrity gate; those existing failures still block publication.
+Broken game builds, schemas, imports, vendor hashes or budgets also block publication.
+
+The precise eleven additional served files and unchanged game/root budgets are in
+`game-policy.json`; `three.webgpu.min.js` replaces, not supplements, `three.module.min.js`.
+This explicit approval is the sole extension to the historical eight-file surface described below.
+No wildcard surface, new browser origin, collector, schedule or paid service is authorized.
+Use `run-gates.ps1 -IsolatedPreview` for the derived suite so the runner owns and cleans up its
+loopback preview; do not stop another owner's existing preview. Ordinary scheduled runs keep the
+default real both-domain live-surface checks. `-CandidateSurface` is an explicitly labeled
+pre-publication candidate check, not a production verdict, and never replaces the real postflight.
+The first campaign launch additionally requires complete current mapping and full gameplay proof;
+its helpers are invoked with `-RequireGameReady`. Later valid gameplay-only gaps may pause the game,
+but never excuse an invalid underlying forecast/reference/NEWS bundle.
+
 ---
 Daily auto-evolution of The Hitchhiker's Guide to the Singularity / Post-AGI Planning site. Every run must: (A) refresh the live-verified news evidence layer; (B) keep EVERY individual dated prediction and Post-Superintelligence Horizon item ACCOUNTED FOR — each one either carries a live-verified news citation or is explicitly recorded as having no qualifying source inside the currency window; (C) reassess the dated 2026–2040 forecast without daily wording churn; (D) maintain the undated, dependency-gated horizon; (E) refresh Reality Signals; (F) preserve Chapter 07's thesis and the current visual system; and (G) publish the same secret-free result to peterxing.com, post-agi-planning.vercel.app, and github.com/peterxing/post-agi-planning. Work autonomously. Never fabricate a source, ID, URL, text, author, publisher, byline, date, quote, provenance, mapping, metric, event, freshness claim, clinical result, engineering demonstration, or theoretical validation.
 
@@ -281,7 +305,7 @@ Confirm http://127.0.0.1:8787 responds; otherwise run:
 If dependencies are genuinely missing, restore existing dependencies only; do not add tools merely for this run.
 
 DERIVE THE GATE LIST; DO NOT REMEMBER IT. Run every gate package.json defines — `validate`, `verify`, and every `verify:*` — and require PASS. A HARDCODED LIST GOES STALE SILENTLY, WHICH IS HOW A GUARD STOPS GUARDING WITHOUT ANYONE NOTICING: this contract used to name thirteen gates by hand, and when `verify:browse` was added on 2026-08-18 neither scheduled workflow ran it — no error, no warning, an assertion that simply stopped being checked before every publish. The opposite failure is also real and is why the old list carried a warning: `npm run` exits 1 on a script that does not exist, so naming a removed gate (verify:archive, verify:peter, verify:external, review:candidates — all deleted with the X pipeline) turns a healthy run red for a reason that has nothing to do with the site. Deriving from package.json fixes both directions at once. Use the helper that already does exactly this, rather than reimplementing the derivation:
-  powershell -ExecutionPolicy Bypass -File C:\Users\peterxing\pap-deploy\run-gates.ps1
+  powershell -ExecutionPolicy Bypass -File C:\Users\peterxing\pap-deploy\run-gates.ps1 -IsolatedPreview
 It enumerates from package.json, distinguishes a gate that FAILED from a gate that did not RUN, and reports each exit code as itself. If a gate must be skipped for a stated reason, name it and its reason in the report; never skip one silently, never delete one, and never weaken one to make a run pass. The live browser gates need the local server up first (see above). For reference, the gates defined at the time of writing were:
   validate, verify, verify:matcher, verify:browse, verify:coverage, verify:news, verify:currency,
   verify:surface, verify:interlock, verify:predictions, verify:reality, verify:author, verify:ui,

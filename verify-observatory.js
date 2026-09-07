@@ -32,7 +32,7 @@ if (declaredKeyframes.length === 0) {
 }
 const observedAnimating = new Set();
 
-const URL = process.argv[2] || 'http://127.0.0.1:8787/';
+const URL = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787/';
 /* How long to wait for a render to settle before deciding the page is wrong. This is PATIENCE, not
    a threshold: every assertion using it is unchanged by its value, and a condition that never
    becomes true still fails, just later. It is generous on purpose because this suite runs alongside

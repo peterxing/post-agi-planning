@@ -55,11 +55,19 @@ node pipeline-lock.js acquire --owner=$env:PAP_PIPELINE_OWNER --purpose=schedule
 npm run x:harvest          # authenticated read of @peterxing's timeline -> pap-secrets (private)
 npm run x:signals          # match against predictions -> x-signals.json
 node refresh-signals.js    # folds the layer into signals.json
-powershell -File .\run-gates.ps1
+node build-game.js --write # canonical game projection only; never rewrites evidence or gameplay rules
+powershell -File .\run-gates.ps1 -IsolatedPreview
 ```
 
 Then publish via `pap-site\deploy.ps1` and mirror via `publish-github.ps1`, exactly as the daily run
 does. Release the lock at the end, on success, failure and abort alike.
+
+The game reads the preserved `signals.xSignals` supplement; it neither collects X nor treats it
+as NEWS, a reference point, a measurement or a game score. Preserve the exact approved game files
+and budgets in `game-policy.json`. Valid gameplay-only mapping gaps pause new campaigns; every
+existing NEWS/reference/X integrity guard still applies. Do not invent replacement gameplay
+bindings to bypass review. The isolated gate preview belongs only to its runner; existing previews
+must not be terminated.
 
 ## Rules that came out of building this
 

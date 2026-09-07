@@ -10,6 +10,10 @@
                 },
     "scripts":  {
                     "serve":  "node server.js",
+                    "build:game":  "node build-game.js --write",
+                    "verify:game-content":  "node verify-game-content.js",
+                    "verify:game":  "node verify-game.js",
+                    "verify:game-performance":  "node verify-game-performance.js",
                     "refresh":  "node refresh-signals.js",
                     "refresh:metr":  "node refresh-metr.js",
                     "verify:metr":  "node verify-metr.js",
@@ -33,10 +37,19 @@
                     "verify:interlock":  "node verify-interlock.js http://127.0.0.1:8787"
                 },
     "devDependencies":  {
+                            "acorn":  "8.15.0",
+                            "parse5":  "8.0.0",
                             "playwright":  "1.61.1"
                         },
     "dependencies":  {
                          "pdf-parse":  "2.4.5",
+                         "three":  "0.180.0",
                          "yaml":  "2.9.0"
-                     }
+                     },
+    "overrides":  {
+                      "parse5":  {
+                                     "entities":  "6.0.1"
+                                 }
+                  },
+    "publicationScope":  "curated-mirror"
 }

@@ -12,7 +12,7 @@ const { SOURCE, BENCHMARK, normalize, validateState, emptyState, changes, bindSt
 async function verifyUI(bundle) {
   const { chromium } = require('playwright');
   const browser = await chromium.launch({ channel:'msedge', headless:true });
-  const url = process.argv.find(value => /^https?:/.test(value)) || 'http://127.0.0.1:8787/';
+  const url = process.env.PAP_SITE_URL || process.argv.find(value => /^https?:/.test(value)) || 'http://127.0.0.1:8787/';
   const display = v => `${v.estimate.toFixed(2)} min (95% CI ${v.ci_low.toFixed(2)}–${v.ci_high.toFixed(2)})`;
   try {
     for (const theme of ['light', 'dark']) for (const width of [1440, 390, 320]) {

@@ -9,6 +9,24 @@ behaves leaves a trace.
 
 Change it by editing this file in a reviewed change, exactly like any other gate.
 
+## Additive campaign guard
+
+After authorized author-only changes, run `node build-game.js --write` under the same pipeline
+owner before the derived suite. It refreshes the canonical book/tool/author binding without
+editing forecasts, probabilities, evidence timestamps, reviewed references, METR or weekly X.
+Do not change game balance, automatically approve new adaptations or turn source health into
+game progress. A valid GAME-only mapping gap pauses new campaigns with exact named review gaps;
+it does not excuse any pre-existing NEWS/reference/forecast integrity or coverage failure.
+Genuine game build/runtime/import/license/budget errors remain publishing failures.
+
+The owner-approved eleven-file game extension is enumerated in `game-policy.json`. It is the
+only authorized addition to the historical eight-file surface below; the old Three renderer is
+not an extra served file. No wildcard, extra origin, schedule or collector is authorized.
+Use `run-gates.ps1 -IsolatedPreview` so only the runner's own loopback preview is stopped.
+Keep the default real both-domain surface assertions for ordinary runs and after publication.
+The initial game launch requires `-RequireGameReady` and complete current campaign coverage;
+a later gameplay-only pause cannot weaken NEWS/reference gates.
+
 ---
 Daily refresh of the “About the Author” section on The Hitchhiker's Guide to the Singularity / Post-AGI Planning site (peterxing.com + post-agi-planning.vercel.app). This workflow runs once daily. Its author-content job is to keep the bottom-of-page About section current with Peter Xing's LinkedIn profile and latest real talks. It also acts as a FAIL-CLOSED deployment guard: it must never redeploy a site whose prediction evidence has regressed below complete accounting — every prediction cited by a live-verified news article or explicitly recorded as having no qualifying source in the window. Work autonomously; never fabricate a talk, venue, date, URL, biography claim, publisher, byline, quote, provenance or evidence mapping.
 
@@ -64,7 +82,7 @@ failure and leave remediation to the forecasting workflow. Do not erase the laye
 gate to publish a biography change. An availability check is never renewed scientific approval.
 
 DERIVE THE GATE LIST; DO NOT REMEMBER IT. Before copying ANY file to pap-site or deploying, run every gate package.json defines — `validate`, `verify`, and every `verify:*` — from C:\Users\peterxing\pap-deploy. A HARDCODED LIST GOES STALE SILENTLY AND THAT IS EXACTLY HOW A GUARD STOPS GUARDING: this contract previously named eight gates by hand, and when `verify:browse` was added on 2026-08-18 this fail-closed deployment guard simply never ran it — no error, no warning, just an assertion that quietly stopped being checked before every deploy. The inverse failure is also real and is why the old list carried a warning: `npm run` exits 1 on a script that does not exist, so naming a removed gate (verify:archive, verify:peter, verify:external, all deleted with the X pipeline) aborts the guard before it can guard anything. Deriving from package.json fixes both directions at once. Use the helper that already does this rather than reimplementing it:
-  powershell -ExecutionPolicy Bypass -File C:\Users\peterxing\pap-deploy\run-gates.ps1
+  powershell -ExecutionPolicy Bypass -File C:\Users\peterxing\pap-deploy\run-gates.ps1 -IsolatedPreview
 If a gate must be skipped for a stated reason, name it and its reason in the report; never skip one silently and never delete one to make a run pass.
 
 Require all PASS. The checks are dynamic and must establish:

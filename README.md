@@ -121,6 +121,10 @@ The publisher generates the mirror's `package.json` without the explicitly opera
 backfill and X-harvest commands. The local manifest retains those gates. Every remaining mirror
 script must target a curated file; an unknown missing target fails publication rather than being
 silently dropped.
+The generated package declares `publicationScope: "curated-mirror"`. The interlock proof uses that
+explicit scope to verify every published guard while refusing private operator files/commands;
+it does not claim to inspect absent operator wiring. The local package must retain all operator
+commands and cannot impersonate this generated scope.
 
 ## How it works
 
@@ -390,6 +394,42 @@ Optional `PAP_UI_ARTIFACT_DIR` saves responsive screenshots outside the public t
 `PAP_CONTENT_BASELINE` compares immutable-content snapshots during a preserve-content redesign.
 
 ## Local commands
+
+### Coalition campaign
+
+`/game` is an additive thirteen-mission exploration-and-strategy campaign across seven original
+procedural districts. It loads the pinned Three.js 0.180.0 WebGPU renderer only after Start, uses
+genuine WebGL2 compatibility when needed, and offers the same decision/travel progression without
+3D. The actual initialized backend is displayed. No accounts, analytics, audio, pointer lock or
+external game assets are required.
+
+Game resources and endings are fictional, not financial advice, a preparedness score or an AGI
+assessment. Every forecast has a reviewed connection to an implemented station/task/choice, with
+explicit limits on what is not simulated. The original thirteen book entries, source forecasts,
+tool assumptions and evidence remain independently inspectable and unchanged.
+
+`build-game.js` derives the book/tool projection and source bindings; `game-map.json` is the
+individually reviewed adaptation, not an automatically generated narrative. All live source
+details come from canonical `signals.json`, with NEWS, referencePoints, METR and weekly X kept
+separate. A gameplay-only mapping gap pauses new campaigns without relaxing any existing evidence
+or reference integrity requirement.
+
+The game-owned save is `pap-branch-campaign:v1`. Unsupported/corrupt/quota-denied storage is
+explicitly session-only without overwriting the old record. Forecast, book, tool, mapping and
+rule identities bind progress; reset never clears the original mission-control/watchlist key.
+Root budgets stay unchanged; the exact game files, pinned vendor/license hashes and whole-set
+budgets are declared in `game-policy.json`. The previous WebGL-only renderer is not an extra asset.
+
+Use `node build-game.js --write`, then the dynamically derived
+`powershell -File .\run-gates.ps1 -IsolatedPreview`. The runner owns and cleans up only its own
+loopback process. `-CandidateSurface` explicitly checks that candidate, not production; actual
+both-domain surface/runtime checks still follow deployment and the Git mirror rebuild.
+Initial campaign publication uses the approved helpers' `-RequireGameReady` switch.
+No dependency restoration is needed during ordinary data-only runs.
+
+Three.js and the build parsers parse5/Acorn use MIT licenses; the pinned entities parser dependency
+uses BSD-2-Clause. `THREE-LICENSE.txt` preserves Three's complete upstream notice. Build-only parser
+packages and their notices are not browser assets.
 
 ```powershell
 npm install

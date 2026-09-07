@@ -268,7 +268,7 @@ async function unit() {
 
 async function ui(bundle, predictions) {
   const { chromium } = require('playwright');
-  const base = process.argv.find(arg => /^https?:/.test(arg)) || 'http://127.0.0.1:8787/';
+  const base = process.env.PAP_SITE_URL || process.argv.find(arg => /^https?:/.test(arg)) || 'http://127.0.0.1:8787/';
   const records = roster(predictions);
   const browser = await chromium.launch({ channel:'msedge', headless:true });
   try {
@@ -378,7 +378,8 @@ async function main() {
     'Ordinary producer must deterministically retain all mappings and source health');
   if (process.env.PAP_CONTENT_BASELINE) {
     const original = JSON.parse(fs.readFileSync(path.join(process.env.PAP_CONTENT_BASELINE, 'signals.json'), 'utf8'));
-    const actual = structuredClone(bundle); delete actual.referencePoints;
+    const actual = structuredClone(bundle);
+    if (!Object.hasOwn(original, 'referencePoints')) delete actual.referencePoints;
     assert.deepEqual(actual, original, 'NEWS, X, METR and all original evidence timestamps must be byte-value equivalent');
   }
   console.log(`Reviewed roster PASS: ${JSON.stringify(bundle.referencePoints.coverage)}; whole-forecast verdicts remain independent.`);

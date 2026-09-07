@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "approvedFeature": "Additive coalition campaign with WebGPU-first Three.js and WebGL2 compatibility",
+  "publicFiles": [
+    "game.html",
+    "game.css",
+    "game-entry.js",
+    "game-core.mjs",
+    "game-data.mjs",
+    "game-ui.mjs",
+    "game-world.mjs",
+    "game-content.json",
+    "three.webgpu.min.js",
+    "three.core.min.js",
+    "THREE-LICENSE.txt"
+  ],
+  "canonicalDataFiles": ["predictions.json", "signals.json", "author.json"],
+  "maintainedFiles": ["game.html", "game.css", "game-entry.js", "game-core.mjs", "game-data.mjs", "game-ui.mjs", "game-world.mjs"],
+  "sourceOnlyFiles": ["build-game.js", "game-source.js", "game-map.json", "game-policy.json", "verify-game-content.js", "verify-game.js", "verify-game-performance.js"],
+  "vendor": {
+    "package": "three",
+    "version": "0.180.0",
+    "license": "MIT",
+    "files": {
+      "three.webgpu.min.js": {
+        "packagePath": "build/three.webgpu.min.js",
+        "bytes": 579780,
+        "gzip6Bytes": 160183,
+        "sha256": "4164104213767dcf6933f86096a8f25d93b95723dab2cf420e2cb3209067698f",
+        "nonNetworkLiterals": ["https://www.shadertoy.com/view/WtyXRy"]
+      },
+      "three.core.min.js": {
+        "packagePath": "build/three.core.min.js",
+        "bytes": 381124,
+        "gzip6Bytes": 101305,
+        "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+        "nonNetworkLiterals": ["http://www.w3.org/1999/xhtml"]
+      },
+      "THREE-LICENSE.txt": {
+        "packagePath": "LICENSE",
+        "bytes": 1081,
+        "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+        "nonNetworkLiterals": []
+      }
+    },
+    "retiredBeforeFirstPublication": ["three.module.min.js"],
+    "boundary": "Only exact hash-pinned non-network namespace/shader-attribution literals are exempt from URL-origin checks. No general host grant, vendor-wide exemption or new browser origin."
+  },
+  "dependencyPins": {"three":"0.180.0", "parse5":"8.0.0", "acorn":"8.15.0", "entities":"6.0.1"},
+  "byteCeilings": {
+    "game.html": 12000,
+    "game.css": 32000,
+    "game-entry.js": 10000,
+    "game-core.mjs": 45000,
+    "game-data.mjs": 36000,
+    "game-ui.mjs": 64000,
+    "game-world.mjs": 72000,
+    "game-content.json": 420000
+  },
+  "budgets": {
+    "maintainedAggregateBytes": 250000,
+    "landingDecodedBytes": 55000,
+    "landingTransferredBytes": 25000,
+    "wholeDeclaredDecodedBytes": 2400000,
+    "wholeDeclaredGzip6Bytes": 600000,
+    "coldTransferredBytes": 650000,
+    "interactiveMs": 1000,
+    "desktopStartMs": 3500,
+    "mobileStartMs": 6000,
+    "decisionResponseP95Ms": 100,
+    "desktopFrameP95Ms": 33.4,
+    "mobileFrameP95Ms": 50,
+    "domNodes": 1800,
+    "cssRules": 220,
+    "desktopDrawCalls": 180,
+    "mobileDrawCalls": 100,
+    "desktopTriangles": 250000,
+    "mobileTriangles": 100000,
+    "desktopDpr": 1.5,
+    "mobileDpr": 1,
+    "desktopRenderPixels": 2000000,
+    "mobileRenderPixels": 700000,
+    "geometries": 180,
+    "materials": 120,
+    "textures": 8,
+    "jsHeapBytes": 104857600,
+    "tenCycleHeapGrowthBytes": 8388608,
+    "saveBytes": 65536,
+    "renderers": 1,
+    "afterExitLoops": 0,
+    "afterExitCanvases": 0,
+    "afterExitRequests": 0
+  },
+  "accounting": "Charge all eleven declared game files plus all three canonical JSON files once, regardless of caching or delayed opening. Also measure actual cold transfer through startup, first reference inspection and first full chapter. Unknown assets cannot escape accounting.",
+  "root": {
+    "newHtmlBytes": 160,
+    "appBytes": 183000,
+    "stylesBytes": 105000,
+    "indexBytes": 150000,
+    "shellBytes": 431000,
+    "cssRules": 830,
+    "domNodes": 6550,
+    "transferredBytes": 300000,
+    "interactiveMs": 1000,
+    "evidenceReadyMs": 3000,
+    "gameRequestsBeforeEntry": 0
+  },
+  "mappingGapPolicy": {
+    "newCampaigns": "paused pending explicit gameplay review",
+    "ordinarySitePublication": "may continue only when every pre-existing integrity gate still passes",
+    "openCampaigns": "remain explicitly bound to their already-validated older snapshot",
+    "initialLaunch": "requires complete current gameplay mapping and a fully playable campaign",
+    "neverReclassify": ["NEWS partition/provenance/freshness faults", "reference coverage/review/hash faults", "forecast schema faults", "build/runtime/import/license faults", "performance regressions"]
+  }
+}

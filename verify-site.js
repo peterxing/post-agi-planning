@@ -31,7 +31,7 @@ const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 
 const artefactContext = requiredCount(signals.context && signals.context.count, 'context.count');
 
 (async () => {
-  const url = process.argv[2] || 'http://127.0.0.1:8787/';
+  const url = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787/';
   const themes = ['dark', 'light'];
   let issues = 0;
   const browser = await chromium.launch({ channel: 'msedge', headless: true });

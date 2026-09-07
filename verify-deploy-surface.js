@@ -33,10 +33,12 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const http = require('http');
+const { createHash } = require('crypto');
 
 const DIR = __dirname;
 const SITE = 'C:\\Users\\peterxing\\pap-site';
 const IGNORE_FILE = path.join(SITE, '.vercelignore');
+const GAME_POLICY = JSON.parse(fs.readFileSync(path.join(DIR,'game-policy.json'),'utf8'));
 
 const PRODUCTION = ['https://peterxing.com', 'https://post-agi-planning.vercel.app'];
 
@@ -50,6 +52,17 @@ const PUBLIC_SURFACE = [
   'author.json',
   'vercel.json',
   'LICENSE',
+  'game.html',
+  'game.css',
+  'game-entry.js',
+  'game-core.mjs',
+  'game-data.mjs',
+  'game-ui.mjs',
+  'game-world.mjs',
+  'game-content.json',
+  'three.webgpu.min.js',
+  'three.core.min.js',
+  'THREE-LICENSE.txt',
 ];
 
 // Uploaded so Vercel can read it as configuration, but consumed rather than
@@ -183,11 +196,16 @@ function assertEgressHosts() {
   const scanned = [];
   let filesRead = 0;
   for (const name of fs.readdirSync(DIR)) {
-    if (!name.endsWith('.js') && name !== 'reference-ledger.json') continue;
+    if (!name.endsWith('.js') && !name.endsWith('.mjs') && name !== 'reference-ledger.json') continue;
     if (!fs.statSync(path.join(DIR, name)).isFile()) continue;
     const text = fs.readFileSync(path.join(DIR, name), 'utf8');
     filesRead++;
+    const vendor = GAME_POLICY.vendor.files[name];
+    const pinnedVendor = vendor && createHash('sha256').update(fs.readFileSync(path.join(DIR,name))).digest('hex') === vendor.sha256;
+    if (vendor && !pinnedVendor) problems.push(`${name} differs from its exact approved vendor hash; no URL exception applies.`);
     for (const match of text.matchAll(/https?:\/\/([A-Za-z0-9.\-]+)/g)) {
+      if (pinnedVendor && vendor.nonNetworkLiterals.some(literal => text.startsWith(literal,match.index) &&
+        /[\s"'`\\]/.test(text[match.index+literal.length] || ''))) continue;
       scanned.push([match[1].toLowerCase(), name]);
     }
   }
@@ -215,7 +233,7 @@ function assertEgressHosts() {
   }
   notes.push(`Egress allow-list: ${new Set(scanned.map(([h]) => h)).size} distinct host(s) named across `
     + `${filesRead} JavaScript/reviewed-ledger file(s), all declared; ${RETIRED_EGRESS_HOSTS.size} retired host(s) `
-    + 'explicitly refused. DECLARED LIMIT: .js and reference-ledger.json only — hosts in other .json, .ps1, .html or .css are '
+    + 'explicitly refused. DECLARED LIMIT: .js, .mjs and reference-ledger.json only — hosts in other .json, .ps1, .html or .css are '
     + 'outside this sweep.');
 }
 
@@ -251,7 +269,7 @@ function rootFiles(dir) {
 function publisherAllowlist() {
   const text = safeRead(path.join(DIR, 'publish-github.ps1'));
   const names = new Set();
-  for (const m of text.matchAll(/'([A-Za-z0-9._-]+\.(?:js|json|md|ps1|html|css)|LICENSE|\.gitignore|\.env\.example|\.vercelignore|_headers)'/g)) {
+  for (const m of text.matchAll(/'([A-Za-z0-9._-]+\.(?:js|mjs|json|md|ps1|html|css)|THREE-LICENSE\.txt|LICENSE|\.gitignore|\.env\.example|\.vercelignore|_headers)'/g)) {
     names.add(m[1]);
   }
   return [...names];
@@ -398,7 +416,7 @@ async function assertLive(base) {
   for (const { name, status } of statuses) {
     if (served.has(name)) {
       // vercel.json sets cleanUrls, so /index.html legitimately redirects to /.
-      const ok = name === 'index.html' ? (status === 200 || status === 301 || status === 308) : status === 200;
+      const ok = ['index.html','game.html'].includes(name) ? (status === 200 || status === 301 || status === 308) : status === 200;
       if (!ok) problems.push(`${base}/${name} must be served but returned ${status || 'no response'}`);
       else confirmedServed++;
     } else if (status === 200) {

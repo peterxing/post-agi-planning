@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Coalition Campaign | The Hitchhiker's Guide to the Singularity</title>
+  <meta name="description" content="Explore a changing 3D settlement, navigate consequential decisions, and examine the original Post-AGI Planning book and forecasts.">
+  <link rel="icon" href="data:,">
+  <script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("scoutTheme");
+    const theme =
+      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+  </script>
+  <style>
+  :root {
+    color-scheme: light;
+    --cp-bg: #f7f4ef;
+    --cp-bg-elevated: #fcfbf8;
+    --cp-surface: #ffffff;
+    --cp-surface-soft: #f5f5f5;
+    --cp-border: #dedede;
+    --cp-border-strong: #919191;
+    --cp-text: #242424;
+    --cp-text-muted: #5c5c5c;
+    --cp-text-soft: #6f6f6f;
+    --cp-accent: #b11f4b;
+    --cp-accent-hover: #9a1a41;
+    --cp-accent-soft: rgba(177, 31, 75, 0.08);
+    --cp-accent-fg: #ffffff;
+    --cp-success: #16a34a;
+    --cp-danger: #dc2626;
+    --cp-warning: #f59e0b;
+    --cp-link: #0078d4;
+    --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+    --cp-overlay: rgba(255, 255, 255, 0.8);
+    --cp-panel: rgba(255, 255, 255, 0.86);
+    --cp-panel-strong: rgba(255, 255, 255, 0.96);
+    --cp-sheen: rgba(255, 255, 255, 0.55);
+    --cp-highlight: rgba(177, 31, 75, 0.12);
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --cp-bg: #3d3b3a;
+    --cp-bg-elevated: #343231;
+    --cp-surface: #292929;
+    --cp-surface-soft: #2e2e2e;
+    --cp-border: #474747;
+    --cp-border-strong: #5f5f5f;
+    --cp-text: #dedede;
+    --cp-text-muted: #919191;
+    --cp-text-soft: #b0b0b0;
+    --cp-accent: #fd8ea1;
+    --cp-accent-hover: #fb7b91;
+    --cp-accent-soft: rgba(253, 142, 161, 0.14);
+    --cp-accent-fg: #1a1a1a;
+    --cp-success: #4ade80;
+    --cp-danger: #f87171;
+    --cp-warning: #fbbf24;
+    --cp-link: #4da6ff;
+    --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+    --cp-overlay: rgba(41, 41, 41, 0.88);
+    --cp-panel: rgba(41, 41, 41, 0.72);
+    --cp-panel-strong: rgba(41, 41, 41, 0.96);
+    --cp-sheen: rgba(255, 255, 255, 0.04);
+    --cp-highlight: rgba(253, 142, 161, 0.12);
+  }
+  </style>
+  <link rel="stylesheet" href="/game.css">
+  <script src="/game-entry.js" defer></script>
+</head>
+<body>
+  <a class="game-skip" href="#gameMain">Skip to campaign controls</a>
+  <main id="gameLanding" class="game-landing">
+    <nav class="landing-nav" aria-label="Return to the original website">
+      <a href="/">Post-AGI Planning</a>
+      <a href="/#book">Read the original book</a>
+      <button type="button" id="landingTheme" class="quiet">Change theme</button>
+    </nav>
+    <div class="landing-grid" id="gameMain" tabindex="-1">
+      <section class="landing-story">
+        <p class="eyebrow">An exploration-and-strategy campaign</p>
+        <h1>Build the<br><span class="accent">better branch.</span></h1>
+        <p class="landing-lead">A settlement at the edge of a transition. Seven districts. Thirteen missions. More than one future worth preparing for.</p>
+        <p>Lead a planning coalition through a navigable 3D world. Connect infrastructure, protect the human floor, negotiate access, and decide how much control to retain as capability grows.</p>
+        <div class="landing-principles">
+          <span>Explore freely</span><span>Operate world systems</span><span>Live with your tradeoffs</span>
+        </div>
+        <p class="source-note">Based on Peter Xing's original book, forecasts and planning tools. Gameplay is a fictional illustration, not an economic forecast, an AGI assessment, financial advice or a measure of your preparedness. Authored probabilities never change when you play.</p>
+      </section>
+      <section class="landing-start" aria-labelledby="startTitle">
+        <p class="eyebrow">Your coalition briefing</p>
+        <h2 id="startTitle">Choose the pressure.<br>Not the outcome.</h2>
+        <label class="field-label" for="campaignProfile">Fictional stress profile</label>
+        <select id="campaignProfile">
+          <option value="balanced">Uneven transition</option>
+          <option value="accelerated">Accelerated pressure</option>
+          <option value="managed">Managed coordination</option>
+          <option value="bottleneck">Physical bottlenecks</option>
+        </select>
+        <p id="profileDescription" class="muted">Capability, institutions and physical capacity advance at different rates.</p>
+        <label class="field-label" for="campaignRenderer">3D renderer</label>
+        <select id="campaignRenderer">
+          <option value="auto">WebGPU first, with WebGL2 fallback</option>
+          <option value="webgl">WebGL2 compatibility</option>
+        </select>
+        <label class="check-row"><input id="campaignReduced" type="checkbox"> Reduced motion and discrete travel</label>
+        <button class="primary start-button" id="startGame" type="button">Enter the 3D campaign</button>
+        <div class="button-row">
+          <button id="resumeGame" type="button">Resume saved campaign</button>
+          <button id="startAccessible" type="button">Accessible decision mode</button>
+        </div>
+        <button id="cancelGameLoad" type="button" class="quiet" hidden>Cancel loading</button>
+        <p id="gameLoadStatus" class="status-message" role="status">The 3D engine loads only when you choose to enter. No account, tracking, audio or pointer lock.</p>
+        <details>
+          <summary>Controls, saves and source boundaries</summary>
+          <p>Walk with WASD or the arrow keys; drag to orbit, Q/E to turn, and Enter to interact near a station. Touch controls and an equivalent district travel list are available. Escape pauses or closes a panel.</p>
+          <p>Progress is saved on this browser only. Storage failures are labeled session-only. The campaign never writes to your existing planning checklist or watchlist. The complete book and individually mapped forecasts remain accessible through the field archive.</p>
+          <p><a href="/THREE-LICENSE.txt">Three.js MIT license</a>. Scene geometry and campaign mechanics are original. All resource values are illustrative.</p>
+        </details>
+      </section>
+    </div>
+    <footer class="landing-footer"><a href="/#observationPrediction">Observation desk</a><a href="/#portfolioBuilder">Original portfolio tool</a><a href="/#plannerBody">Original planner</a><a href="/#author">About Peter Xing</a></footer>
+  </main>
+  <section id="gameStage" class="game-stage" aria-label="Coalition campaign" hidden>
+    <div id="gameSceneHost" class="game-scene"></div>
+    <div id="gameInterface"></div>
+  </section>
+  <div id="gameAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

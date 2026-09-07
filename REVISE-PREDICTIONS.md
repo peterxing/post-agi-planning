@@ -11,6 +11,17 @@ hours update signals only and leave the forecast unchanged.
 
 ## X retirement (2026-08-13)
 
+### Additive game adaptation boundary
+
+After an authorized forecast/book revision, regenerate `game-content.json` with
+`node build-game.js --write` under the existing pipeline owner before the derived gate suite.
+Do not rewrite original forecasts to satisfy a game mapping, and do not invent replacement game
+mechanics or change probabilities/balance to bypass review. A valid changed/new record without a
+current reviewed gameplay binding produces an exact named gameplay gap and pauses new campaigns.
+Original content remains available. All pre-existing NEWS/reference coverage, source, provenance
+and version gates remain mandatory; a game-only pause cannot excuse their failure.
+Preserve the exact eleven-file runtime extension and all budgets in `game-policy.json`.
+
 **This file previously ordered the next reviser to preserve a direct-X evidence contract. It does
 not any more, and reinstating one is now a publication failure.** The site owner's instruction:
 

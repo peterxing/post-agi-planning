@@ -8,6 +8,39 @@
   Cache-Control: public, max-age=300, must-revalidate
 /styles.css
   Cache-Control: public, max-age=300, must-revalidate
+/game-content.json
+  Cache-Control: no-store, max-age=0, must-revalidate
+/game
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-arwyHKkKW1oMYYMrlFEjx1/kCK3heVd6+i6GI7i3A/w='; style-src 'self' 'sha256-e7J2pPASbjzPbCoDGl8V8muCJ8QWWotrOR2+GNIHoQc='; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'; worker-src 'none'; media-src 'none'
+/game.html
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-arwyHKkKW1oMYYMrlFEjx1/kCK3heVd6+i6GI7i3A/w='; style-src 'self' 'sha256-e7J2pPASbjzPbCoDGl8V8muCJ8QWWotrOR2+GNIHoQc='; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'; worker-src 'none'; media-src 'none'
+/game.css
+  Cache-Control: public, max-age=300, must-revalidate
+/game-entry.js
+  Cache-Control: public, max-age=300, must-revalidate
+/game-core.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/game-data.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/game-ui.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/game-world.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/three.webgpu.min.js
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/three.core.min.js
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+/THREE-LICENSE.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

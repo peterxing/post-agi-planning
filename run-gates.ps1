@@ -32,7 +32,10 @@ param(
     [string]$Deploy = '',
     [string[]]$InjectNames = @(),  # controls only: extra names appended to the derived list
     [string[]]$ProbeExtra = @(),   # controls only: extra files added to the served-vs-disk probe
-    [switch]$MispairControl        # controls only: compare served styles.css against app.js on disk
+    [switch]$MispairControl,       # controls only: compare served styles.css against app.js on disk
+    [switch]$IsolatedPreview,
+    [switch]$CandidateSurface,
+    [string]$BaseUrl = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -43,12 +46,59 @@ $EXIT_INVOCATION = 9   # distinct from every gate's own vocabulary (0/1/2/3/70/7
 $EXIT_DEFERRED   = 75  # PROPAGATED, not invented: the same code the interlock and the currency
                        # gate use, so a caller can treat a deferred suite exactly as it treats a
                        # deferred gate without learning a second vocabulary.
+$previewProcess = $null
+$previewStarted = $false
+$pushedLocation = $false
+$priorSiteUrl = $env:PAP_SITE_URL
 
 try {
     if ([string]::IsNullOrWhiteSpace($Deploy)) {
         $Deploy = Split-Path -Parent $PSCommandPath
     }
     if ([string]::IsNullOrWhiteSpace($Deploy)) { throw 'cannot resolve deploy root' }
+    Push-Location $Deploy
+    $pushedLocation = $true
+    if ($IsolatedPreview) {
+        if (-not [string]::IsNullOrWhiteSpace($BaseUrl)) { throw 'Choose IsolatedPreview or BaseUrl, not both.' }
+        $previewProcess = New-Object System.Diagnostics.Process
+        $previewProcess.StartInfo.FileName = (Get-Command node -ErrorAction Stop).Source
+        $previewProcess.StartInfo.Arguments = '"' + (Join-Path $Deploy 'server.js') + '" --port=0'
+        $previewProcess.StartInfo.WorkingDirectory = $Deploy
+        $previewProcess.StartInfo.UseShellExecute = $false
+        $previewProcess.StartInfo.RedirectStandardOutput = $true
+        $previewProcess.StartInfo.RedirectStandardError = $true
+        $previewProcess.StartInfo.CreateNoWindow = $true
+        $previewStarted = $previewProcess.Start()
+        if (-not $previewStarted) { throw 'Owned preview could not start.' }
+        $ready = $null
+        for ($lineNumber = 0; $lineNumber -lt 3; $lineNumber++) {
+            $lineTask = $previewProcess.StandardOutput.ReadLineAsync()
+            if (-not $lineTask.Wait(10000)) { throw 'Owned preview readiness timed out.' }
+            $line = $lineTask.Result
+            if ($line -like 'PAP_PREVIEW_READY *') {
+                $ready = $line.Substring(18) | ConvertFrom-Json
+                break
+            }
+            if ($null -eq $line) { throw 'Owned preview exited before readiness.' }
+        }
+        if ($null -eq $ready -or $ready.pid -ne $previewProcess.Id -or $ready.port -lt 1 -or $ready.port -gt 65535) {
+            throw 'Owned preview readiness identity is invalid.'
+        }
+        if ([IO.Path]::GetFullPath($ready.root) -ne [IO.Path]::GetFullPath($Deploy)) {
+            throw 'Owned preview root differs from the requested source.'
+        }
+        $BaseUrl = "http://127.0.0.1:$($ready.port)"
+        Write-Host "OWNED PREVIEW  PID $($previewProcess.Id) at $BaseUrl; cleanup is scoped to this process."
+    }
+    if ([string]::IsNullOrWhiteSpace($BaseUrl)) {
+        $BaseUrl = if ($env:PAP_SITE_URL) { $env:PAP_SITE_URL } else { 'http://127.0.0.1:8787' }
+    }
+    $baseUri = [uri]$BaseUrl
+    if ($baseUri.Scheme -ne 'http' -or $baseUri.Host -ne '127.0.0.1') { throw 'Suite preview must be explicit loopback HTTP.' }
+    $env:PAP_SITE_URL = $BaseUrl.TrimEnd('/')
+    if ($CandidateSurface) {
+        Write-Host "SURFACE SCOPE  explicit candidate $BaseUrl, NOT production. Post-publication both-domain checks remain mandatory."
+    }
 
     $pkgPath = Join-Path $Deploy 'package.json'
     if (-not (Test-Path $pkgPath)) { throw "package.json not found at $pkgPath" }
@@ -76,7 +126,7 @@ try {
     # --- SERVER IDENTITY -------------------------------------------------
     # Live gates read bytes over HTTP. Name the process that serves them, and
     # prove those bytes are the bytes on disk, BEFORE any gate runs.
-    $serverPort = 8787
+    $serverPort = $baseUri.Port
     $listener = Get-NetTCPConnection -LocalPort $serverPort -State Listen -ErrorAction SilentlyContinue |
                 Select-Object -First 1
     if (-not $listener) {
@@ -93,8 +143,11 @@ try {
         # Covering both allow branches deliberately: .json/.html/.js reach the
         # server through ALLOW_FILES, .css only through ALLOW_EXT.
         $probeSet = @()
+        $gameProbeFiles = @()
+        $gamePolicyPath = Join-Path $Deploy 'game-policy.json'
+        if (Test-Path $gamePolicyPath) { $gameProbeFiles = @((Get-Content $gamePolicyPath -Raw | ConvertFrom-Json).publicFiles) }
         foreach ($f in @('signals.json', 'predictions.json', 'author.json',
-                         'app.js', 'index.html', 'styles.css') + $ProbeExtra) {
+                         'app.js', 'index.html', 'styles.css') + $gameProbeFiles + $ProbeExtra) {
             $probeSet += @{ served = $f; disk = $f }
         }
         # Control only: a deliberately WRONG expectation. The bytes-differ branch
@@ -144,7 +197,11 @@ try {
             # Windows PowerShell turns native stderr into ErrorRecords. Capture the
             # diagnostic and classify the process exit, rather than aborting the runner.
             $ErrorActionPreference = 'Continue'
-            $out = & npm run $g 2>&1 | Out-String
+            if ($CandidateSurface -and $g -eq 'verify:surface:live') {
+                $out = & npm run $g -- $env:PAP_SITE_URL 2>&1 | Out-String
+            } else {
+                $out = & npm run $g 2>&1 | Out-String
+            }
             $code = $LASTEXITCODE
         }
         finally {
@@ -187,6 +244,7 @@ try {
         else {
             $fail++; $failed += $g
             Write-Host ("{0,-22} FAIL  exit $code" -f $g)
+            Write-Host $out.TrimEnd()
         }
     }
 
@@ -232,4 +290,15 @@ catch {
     # No RESULT: line on the error path. A run that broke produces no verdict.
     Write-Host "RUNNER FAULT -- $($_.Exception.Message)"
     exit $EXIT_INVOCATION
+}
+finally {
+    if ($previewStarted) {
+        if (-not $previewProcess.HasExited) {
+            Stop-Process -Id $previewProcess.Id -ErrorAction Stop
+        }
+        Write-Host "OWNED PREVIEW  stopped PID $($previewProcess.Id). Existing previews were not terminated."
+        $previewProcess.Dispose()
+    }
+    $env:PAP_SITE_URL = $priorSiteUrl
+    if ($pushedLocation) { Pop-Location }
 }

@@ -53,7 +53,8 @@ param(
   [string]$Deploy = 'C:\Users\peterxing\pap-deploy',
   [string]$Site   = 'C:\Users\peterxing\pap-site',
   [string]$Repo   = 'github.com/peterxing/post-agi-planning',
-  [string]$Branch = 'main'
+  [string]$Branch = 'main',
+  [switch]$RequireGameReady
 )
 # NOTE: git/node write progress + harmless warnings (e.g. "LF will be replaced by
 # CRLF") to stderr; under 'Stop' PowerShell turns those into fatal errors. So run
@@ -63,6 +64,9 @@ $ErrorActionPreference = 'Continue'
 function ConvertTo-PublicPackage {
   param([string]$Source, [string[]]$AllowList)
   $manifest = Get-Content -LiteralPath $Source -Raw | ConvertFrom-Json
+  if ($manifest.PSObject.Properties.Name -contains 'publicationScope') {
+    throw 'An operator source manifest must not impersonate a generated curated mirror.'
+  }
   # These commands depend on deliberately unpublished operator tools, not missing dependencies.
   $operatorOnly = @{
     'browse' = 'browse-evidence.js'
@@ -86,8 +90,18 @@ function ConvertTo-PublicPackage {
       throw "Package script $($entry.Name) names an unpublished target: $target"
     }
   }
+  $manifest | Add-Member -NotePropertyName 'publicationScope' -NotePropertyValue 'curated-mirror'
   return $manifest
 }
+
+$gameBuilder = Join-Path $Deploy 'build-game.js'
+$gameVerifier = Join-Path $Deploy 'verify-game-content.js'
+& node $gameBuilder --check
+if ($LASTEXITCODE -eq 75) { Write-Warning 'publish-github: game preflight deferred.'; exit 75 }
+if ($LASTEXITCODE -ne 0) { Write-Error 'publish-github: game projection/vendor preflight failed.'; exit 6 }
+if ($RequireGameReady) { & node $gameVerifier --require-ready } else { & node $gameVerifier }
+if ($LASTEXITCODE -eq 75) { Write-Warning 'publish-github: game verification deferred.'; exit 75 }
+if ($LASTEXITCODE -ne 0) { Write-Error 'publish-github: game content/serving preflight failed.'; exit 6 }
 
 $coverageVerifier = Join-Path $Deploy 'verify-direct-coverage.js'
 $newsVerifier = Join-Path $Deploy 'verify-news-evidence.js'
@@ -395,7 +409,11 @@ $fromDeploy = @(
   # arbiter of every publication outside the published set — the same defect this list already
   # records for month-estimates.js and publish-github.ps1. It also carries the exit-code semantics
   # (0 PASS / 70 INERT / 75 DEFERRED) that the contracts depend on being correct.
-  'run-gates.ps1'
+  'run-gates.ps1',
+  'game.html','game.css','game-entry.js','game-core.mjs','game-data.mjs','game-ui.mjs','game-world.mjs',
+  'game-content.json','three.webgpu.min.js','three.core.min.js','THREE-LICENSE.txt',
+  'build-game.js','game-source.js','game-map.json','game-policy.json',
+  'verify-game-content.js','verify-game.js','verify-game-performance.js'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')
@@ -438,14 +456,18 @@ $forbiddenPattern = '(?i)(^|/)\.env(\.(?!example)[^/]*)?$|x-activity|x-status-co
 
 foreach ($pair in $sweepTargets) {
   $f = $pair[0]; $root = $pair[1]
-  if ($f -notlike '*.js') { continue }
+  if ($f -notlike '*.js' -and $f -notlike '*.mjs') { continue }
   $p = Join-Path $root $f
   if (-not (Test-Path $p)) { continue }
   $src = Get-Content $p -Raw
   foreach ($m in [regex]::Matches($src, "require\(\s*['""](\./[^'""]+)['""]\s*\)")) {
     $dep = $m.Groups[1].Value -replace '^\./',''
-    if ($dep -notmatch '\.(js|json)$') { $dep += '.js' }
+    if ($dep -notmatch '\.(js|mjs|json)$') { $dep += '.js' }
     if ($publicAllowlist -notcontains $dep) { $closureHoles += "$f requires $dep" }
+  }
+  foreach ($m in [regex]::Matches($src, "(?:from\s*|import\s*\()\s*['""](\./[^'""]+)['""]")) {
+    $dep = $m.Groups[1].Value -replace '^\./',''
+    if ($publicAllowlist -notcontains $dep) { $closureHoles += "$f imports $dep" }
   }
   foreach ($m in [regex]::Matches($src, "path\.join\(\s*(?:DIR|__dirname|ROOT|SITE|DEPLOY)\s*,\s*['""]([^'""]+)['""]\s*\)")) {
     $dep = $m.Groups[1].Value

@@ -21,6 +21,17 @@
 !author.json
 !vercel.json
 !LICENSE
+!game.html
+!game.css
+!game-entry.js
+!game-core.mjs
+!game-data.mjs
+!game-ui.mjs
+!game-world.mjs
+!game-content.json
+!three.webgpu.min.js
+!three.core.min.js
+!THREE-LICENSE.txt
 
 # Belt-and-braces: the highest-risk names are also denied explicitly and last, so
 # they win over any future re-include. "*" already excludes them.

@@ -1,0 +1,2666 @@
+{
+  "schemaVersion": 1,
+  "reviewedBy": "Game adaptation under user-approved scope",
+  "reviewedAt": "2026-09-07T09:18:51.563Z",
+  "source": "Explicit 103-record semantic reconciliation against the implemented stations and decisions; imperative unimplemented proposal actions removed. Original record hashes retained.",
+  "recordHashAlgorithm": "SHA-256 of JSON.stringify(the complete authored forecast record), distinct from the whole-forecast version.",
+  "bookSha256": "25560a05cbf2527fed9b651f9d9a7a79c9fec6319cd5956c28d9a8c821def8d3",
+  "toolsSha256": "ce6b7cfe255cb3db908c775ba7856677a2a2879d94c14f5d438c07455ccd0aa2",
+  "mappings": [
+    {
+      "forecastId": "2026-0",
+      "recordSha256": "3613a92c64832afc17f75a91e961f77f9e690fae18f6468b255a334296ddbce1",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5
+      ],
+      "mechanicRole": "Production chain / Supervised agent work",
+      "conceptScenario": "The foundry route makes useful output depend on a complete power, compute and fabrication chain; its redundant and high-throughput choices expose assurance versus throughput.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Multi-hour workflows, exception queues, continuous research duration and trajectory-monitoring effectiveness. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-1",
+      "recordSha256": "88da01630da6bfe0baa004b65ab918c025b6d963fbab73cc65a47b5da7c563d2",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5
+      ],
+      "mechanicRole": "Three-clock inspection / Internal AI research deployment",
+      "conceptScenario": "The inspection interlocks and managed, unchecked or paused scaling choice embody oversight of capability used inside the coalition rather than only public release.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A laboratory compute-allocation ratio or internal deployment safety assessment. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-2",
+      "recordSha256": "8e28475834c8fe7ec02b478bfcd3f83a4f40065aeb697a7307cafee6718bf9c8",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M08",
+        "M10"
+      ],
+      "chapters": [
+        7,
+        8,
+        10,
+        6
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Valuation and political concentration",
+      "conceptScenario": "The preparation portfolio contrasts productive-tool exposure with buffers, community and safety; the upside commitment can leave other protections thin.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: Company valuations, political influence, investment returns or a trillion-dollar threshold. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-3",
+      "recordSha256": "b9b0cb0c8c65dcc635387f0ba6632fdd5ee8ac51f239572ba72f38974df170f2",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        6,
+        5,
+        3
+      ],
+      "mechanicRole": "Transition freight / Factory robots versus general labor",
+      "conceptScenario": "The freight route runs through a learning workshop and a community depot; rapid automation and worker-transition choices produce different output and strain.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Robot populations, factory-line qualification or general physical-task breadth. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-4",
+      "recordSha256": "3e8463b40813332db90b246ff80b29f05681ea9c24ac85b035f072c3cf97428c",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        11
+      ],
+      "mechanicRole": "Three-clock inspection / Frontier release review",
+      "conceptScenario": "Three inspection channels must be configured before the coalition chooses monitored scaling, unchecked expansion or a pause.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A real cyber, bio or autonomy evaluation, a legal review process or US/EU adoption. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-5",
+      "recordSha256": "e009de8109b6f511149abcab4262ceb01660758df289d2f7a2c2b91da4dbefe8",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Compute accountability",
+      "conceptScenario": "Inspection-channel configuration and the retained control interlock make oversight an explicit commitment alongside scaling.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Compute tracking technology, inference-only verification or government-program deployment. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-6",
+      "recordSha256": "eabb4edd88333b3d1026fd3e12166821998866fcff83a65a6af1517ea35dc7a5",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        0,
+        1,
+        5
+      ],
+      "mechanicRole": "Production chain / Human-level capability threshold",
+      "conceptScenario": "The foundry distinguishes connected usable capability from the output and control conditions needed to deploy it.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Human-level AGI, a calendar arrival claim or the author probability. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-7",
+      "recordSha256": "3ec9c22a2747f5562fa237630a426a4dcb187b002fc6985dbd2089018b1e95e6",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        11,
+        8,
+        2,
+        4
+      ],
+      "mechanicRole": "Conditional research charter / Safety-first intracortical interfaces",
+      "conceptScenario": "The embodied-agency emphasis requires retained consent and evidence boundaries; rights, exclusive funding and observation are distinct commitments.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Implant surgery, participant outcomes, 3800 hours of use or efficacy of any named trial. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2026-8",
+      "recordSha256": "8687e3f78ef3d0567b4ea83ee325d3a66ca46e1875b72c65761a1c7f5757b580",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        11,
+        5,
+        8
+      ],
+      "mechanicRole": "Conditional research charter / Orbital demonstrator constraints",
+      "conceptScenario": "The outward-exploration emphasis competes with other research uses and preserves the difference between an exploratory commitment and a demonstrated system.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: An orbital workload, launch, utility-scale power or radiator/cooling performance. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-0",
+      "recordSha256": "94b2e6c24edc2a4663f6ecd0cba7a545bcd123900dea54e9629741039f5e8e24",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        6,
+        3,
+        10
+      ],
+      "mechanicRole": "Transition freight / Paid digital-agent labor",
+      "conceptScenario": "The work-quarter choices compare rapid production expansion with a transition-supported or mixed workshop economy.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Agent-copy counts, continuous paid operation or monthly dollar revenue. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-1",
+      "recordSha256": "3c16c7f116ca3e59833ba9c3c4b994908b6cbc4c43c8bcc61d7609a8c16183b2",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M06"
+      ],
+      "chapters": [
+        3,
+        6,
+        8
+      ],
+      "mechanicRole": "Production chain / Software production with human review",
+      "conceptScenario": "The complete foundry route and redundant-versus-throughput engine choices separate useful production from an unchecked capacity surge.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Software generation, goal specification, exception handling or a share of real production software. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-2",
+      "recordSha256": "766eb6a2cf9b8325e7f4a6e4ffcb9356b2f7d920d76803fdf429d303ed348d56",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5
+      ],
+      "mechanicRole": "Production chain / Incomplete automation of AI research",
+      "conceptScenario": "The engine only produces after its whole route is connected, while incremental expansion remains a legitimate option.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Research automation completeness or a measured coding-agent speedup. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-3",
+      "recordSha256": "65d27fc476e48c6e6fb98edb80a6d033c6b1899722276cdc57051718dbc67937",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M03",
+        "M09"
+      ],
+      "chapters": [
+        6,
+        3,
+        9,
+        1,
+        2,
+        8
+      ],
+      "mechanicRole": "Transition freight / Cross-industry adaptation",
+      "conceptScenario": "The transition freight route links production to learning and community delivery; automation without transition support increases strain.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Every-industry business-model redesign or actual human-level AI deployment. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-4",
+      "recordSha256": "e79546b27d2e02bda00547605425bd1ea4660c24115c9640b901a81770e5be1b",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        10
+      ],
+      "mechanicRole": "Three-clock inspection / Frontier accountability law",
+      "conceptScenario": "The managed scaling choice invests in control assurance and trust instead of treating transparency as a free by-product of capability.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: An omnibus statute, legislative procedure or a US law being enacted. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2027-5",
+      "recordSha256": "8b356902c0f10c41e534b447989e4a561eb5344d4f95fa6ac713f9e88ea19629",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        5,
+        8,
+        4
+      ],
+      "mechanicRole": "Power splitter / Power, water and grid constraints",
+      "conceptScenario": "Eight routing units are split among compute, production and homes; capacity expansion, industrial priority and reserves have different costs.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: Real water consumption, watts, grid interconnection or infrastructure politics. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-0",
+      "recordSha256": "780cf84e8eac1fbb3c754c243048d7517dd7abd018c0ba9600650cc6f1a6c735",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M09"
+      ],
+      "chapters": [
+        8,
+        9,
+        1,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / AI as an electoral issue",
+      "conceptScenario": "The scaling decision changes public trust and control assurance, making institutional consent a system to maintain rather than an automatic approval.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: An election, vote shares or issue salience. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-1",
+      "recordSha256": "d2e009311cf6622f5da5b9b1958d38158689c0c64dc82546287b2a7f2288efb0",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M09"
+      ],
+      "chapters": [
+        6,
+        9,
+        4
+      ],
+      "mechanicRole": "Transition freight / Supervising agent-based work",
+      "conceptScenario": "Routing freight through the learning workshop and choosing transition support contrasts with automation that outruns adaptation.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Profession-level workflow redesign or prevalence across white-collar occupations. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-2",
+      "recordSha256": "9d4497abc0c5bd83cb0cc2c208a61bb787e06f0f2d38f0366aba4ea2c1988146",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M06"
+      ],
+      "chapters": [
+        3,
+        6,
+        8
+      ],
+      "mechanicRole": "Production chain / Training and deployment feedback",
+      "conceptScenario": "The foundry route connects capability inputs with useful production; a redundant engine preserves assurance at an opportunity cost.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Expert interviews, training environments, profession-specific datasets or training a model. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-3",
+      "recordSha256": "c12b5988efb4905d58bd2e6b9278e10d03ecc6460359af723ee7b8fb95274edb",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M07",
+        "M10"
+      ],
+      "chapters": [
+        8,
+        7,
+        10,
+        5
+      ],
+      "mechanicRole": "Three-clock inspection / Concentrated frontier control",
+      "conceptScenario": "Managed, unchecked and paused scaling allocate assurance and trust differently; distribution choices elsewhere determine whether gains stay concentrated.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Corporate or national control structures, party leadership or geopolitical market shares. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-4",
+      "recordSha256": "db5740740eb64cc4560fa6f8296dce784449e79d5f70f76ef65cbaa928ceac37",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M07"
+      ],
+      "chapters": [
+        5,
+        7,
+        8
+      ],
+      "mechanicRole": "Power splitter / Datacenter construction scale",
+      "conceptScenario": "The grid exposes the opportunity cost of expanding physical capacity instead of reserving it for other needs.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: Annual construction commitments, defense spending or the forecast comparison in dollars. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-5",
+      "recordSha256": "f281fbad7c594bf1d43543a112357a6a01fc506043f1cb4c1827d0b1feb8d8cd",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Ungoverned takeoff branch",
+      "conceptScenario": "Unchecked scaling explicitly trades away control assurance for usable capability and output, with more transition strain.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Superintelligence, recursive self-improvement or its timing; the authored branch remains a conditional source claim. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-6",
+      "recordSha256": "776c3c3273a57b66cd7d75480d65d89f87e32c34db5d4f3280495669faff7be5",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Negotiating slowdown and audits",
+      "conceptScenario": "The pause and managed-scaling options demonstrate different commitments from releasing the control interlock.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: International negotiations, intelligence-explosion dynamics or real compute audits. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2028-7",
+      "recordSha256": "bccf963b3e78631cf3148721b5924365c7ea43ece46155b5ecb380aca0663610",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        11,
+        3,
+        8
+      ],
+      "mechanicRole": "Conditional research charter / Connectome versus emulation",
+      "conceptScenario": "The embodied-agency research emphasis keeps the evidence boundary explicit rather than converting a precursor into an accomplished horizon.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: A synapse-resolution scan, vertebrate connectomics or functional brain emulation. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-0",
+      "recordSha256": "71a1f98b4ecb4ae8cafd278335893c366812208cd612ebabc2f370fd5bb45d9b",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        6,
+        3,
+        4,
+        8
+      ],
+      "mechanicRole": "Transition freight / Cognitive labor share",
+      "conceptScenario": "Rapid automation increases fictional output and strain; transition-supported deployment invests in resilience at the same station.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: The fraction of cognitive labor automated in a real economy. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-1",
+      "recordSha256": "3f1263079d8495ce2345e9b38b1cc457be37afdc9f48202eaaf6a71998a69de4",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Compute declarations and inspections",
+      "conceptScenario": "Configuring inspection channels before deciding whether to scale, manage or pause makes oversight a separate requirement.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: US-China negotiations, declarations, inspections or enforceable training limits. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-2",
+      "recordSha256": "a7a629588f6013eed9adecc3ea783a1a06e9e08172405a1a363a08e37721c6de",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Training pause with continued inference",
+      "conceptScenario": "The deliberate-pause choice preserves a route forward without another frontier output surge.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: The technical separation of training and inference, or an actual bilateral agreement. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-3",
+      "recordSha256": "9e21e4f01d8b6e1738d1350244c1f95e2cdf29f44c510f92d64a9335953aed43",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Inference-only verification",
+      "conceptScenario": "The game asks for explicit inspection-channel configuration; it does not count a powered compute site as verified.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Cryptographic or physical inference-only verification at real datacenters. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-4",
+      "recordSha256": "336fc331c268a07526b5ba07714ac106cf4e3485b98150ebcb8d0f81578e14d0",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        8,
+        10,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Multilateral participation",
+      "conceptScenario": "Managed scaling favors coordination and trust rather than a unilateral unchecked expansion.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Treaty membership, diplomatic negotiations or multilateral institutional support. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-5",
+      "recordSha256": "a0a96449516d124072752aa381237d0873d2338afcb54ed1e19042e17e4be5f7",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M07"
+      ],
+      "chapters": [
+        10,
+        7,
+        4,
+        6
+      ],
+      "mechanicRole": "Distribution splitter / Replacing eroding labor-tax revenue",
+      "conceptScenario": "Distribution choices separate broad access from access tied to ownership, while the service splitter decides which public channels receive units.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Tax revenue, sovereign stakes, compute rents or the financing of an actual dividend. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2029-6",
+      "recordSha256": "b7b2df01a85a7650317014199e2ba44b1761578736578f6684b383a50880f198",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        7,
+        8,
+        1,
+        4,
+        9
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Policy-shock exposure",
+      "conceptScenario": "The preparation portfolio funds multiple channels instead of assuming the production-upside commitment is sufficient protection.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: Asset prices, market volatility, financial returns or political polarization. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-0",
+      "recordSha256": "e3e05e382ea75e1214e9508e15082477aece36de05c7e573c1f8a93be661bf81",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5
+      ],
+      "mechanicRole": "Production chain / Automated frontier research branch",
+      "conceptScenario": "The high-throughput engine grows usable capacity while reducing assurance; the separate civic pause remains important.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Full automation of frontier AI research or a 2030 completion date. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-1",
+      "recordSha256": "183b5e3a05473ea9a2a3be4e37cb193531faccf2b4907194a8492210fef91cd2",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Production chain / Coding-to-top-expert transition",
+      "conceptScenario": "The foundry distinguishes an incremental capacity step from a high-throughput commitment and its control costs.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Top-expert intelligence, ASI or a one-year transition interval. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-2",
+      "recordSha256": "018efdacd8e709ef13097b57e17fe127c255972e8f7421184f010025d1a6b3e1",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Transparent resumption after a pause",
+      "conceptScenario": "Managed scaling invests in control assurance and trust rather than treating resumption as an unconditional release.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Total research transparency, cross-border verification or real research resumption. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-3",
+      "recordSha256": "e13d471c2c554636b731c1023490bafad327fb7379d499cb9ebc8edd92c3ad55",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        8,
+        10,
+        7,
+        11
+      ],
+      "mechanicRole": "Three-clock inspection / Auditability versus controlled weights",
+      "conceptScenario": "The inspection interlocks represent a governance commitment, while unchecked scaling explicitly sacrifices assurance.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Auditing algorithms, access to model weights or a technical misuse-prevention guarantee. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-4",
+      "recordSha256": "bdcb3fcade430e3f79b22c1ce5bd84a0635fc98b585d48e662af6ea131cea9bb",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        11,
+        3,
+        2,
+        4
+      ],
+      "mechanicRole": "Conditional research charter / AI-designed drug approval",
+      "conceptScenario": "The embodied-agency emphasis distinguishes a research commitment from an established medical result and retains consent/evidence boundaries.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Drug design, trials, regulatory approval or clinical efficacy. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2030-5",
+      "recordSha256": "545d5ec1258351678405750bb8cd3ddcbf13205c522af6a4c4189669ae54b2bb",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M03",
+        "M06"
+      ],
+      "chapters": [
+        5,
+        3,
+        6,
+        8
+      ],
+      "mechanicRole": "Power splitter / Physical limits on growth",
+      "conceptScenario": "The grid routes a finite supply across compute, production and homes; production cannot receive every unit at once.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: An economy-wide growth bottleneck or a calibrated energy/robotics model. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-0",
+      "recordSha256": "02dada827f3c40b87871578318c66f1a503116f5314a25545bb0b54e81a14011",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5
+      ],
+      "mechanicRole": "Production chain / AI research speedup",
+      "conceptScenario": "The high-throughput engine expands usable capacity and output but consumes assurance and power margin.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: A measured 10x research speedup or fully autonomous research. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-1",
+      "recordSha256": "0652fb973669821703efbeb4d3e0a98e385989de2f16b7b2d766c1920fa5792d",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        6,
+        3,
+        4,
+        8
+      ],
+      "mechanicRole": "Transition freight / Cognitive and physical labor shares",
+      "conceptScenario": "The work-quarter route connects automation with adaptation and community delivery, with distinct effects on output and strain.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: The one-third and one-tenth labor proportions or any real task census. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-2",
+      "recordSha256": "fd46bf957ede853d3c88627870994b7b120b38800c8bc653888dd540e073b8c3",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        7,
+        10,
+        6
+      ],
+      "mechanicRole": "Coalition preparation portfolio / AI-company revenue concentration",
+      "conceptScenario": "The upside hedge commits to productive tools at the cost of resilience and control, exposing dependence on concentrated output.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: Company revenue, government budgets or their monetary comparison. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-3",
+      "recordSha256": "349bbb15522677bccbb8a74dc5daa37a52045d54c4352321e1d35bf2f66eed57",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Externally reviewed safety cases",
+      "conceptScenario": "The three-channel inspection and managed-scaling choice make assurance an explicit obligation before further expansion.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A real safety case, external review or a regulatory requirement. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-4",
+      "recordSha256": "713efe97dfbadbe77e2489cec0d0c969cf63c2a921f6fabb696295222f84d78d",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Circumvention and trajectory monitoring",
+      "conceptScenario": "Unchecked scaling lowers control assurance and increases strain; retained interlocks preserve a contrasting managed route.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Agent escape, sabotage, monitoring efficacy or a legally mandatory control case. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2031-5",
+      "recordSha256": "35c33849a11de7b1cd1f7686e3177c609e4df5b04d8f4fd2b152b44499d591b9",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Changing capability after deployment",
+      "conceptScenario": "The separate capability, deployment and impact inspection channels avoid equating a capability change with safe deployment.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Continual learning, model-update behavior or real regulatory compliance. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-0",
+      "recordSha256": "127d5386ca818d2c6e7957cb4615af07699b5acce34d347bca3c97bb8ffb9a75",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        6,
+        4,
+        8
+      ],
+      "mechanicRole": "Transition freight / Machine-majority cognitive labor",
+      "conceptScenario": "The rapid-automation and worker-transition choices expose different consequences of expanding the virtual workforce.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Whether AI produces more cognitive labor than humans in an economy. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-1",
+      "recordSha256": "94105438e417051417c28855e4819d73a9c652155b5f585da6ba793219e4fcda",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        6,
+        5,
+        3
+      ],
+      "mechanicRole": "Transition freight / Robot task breadth",
+      "conceptScenario": "The logistics route and mixed-work versus automation choices embody the transition from machines to useful delivered work.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: A robot task-terrain suite, robot configurations or one-third task coverage. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-2",
+      "recordSha256": "7f5cfa039d29a3a633cee375590ebf3c8df581a5db63a1b810128762640bfe48",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M05",
+        "M10"
+      ],
+      "chapters": [
+        7,
+        5,
+        10,
+        3
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Rapid GDP-growth exposure",
+      "conceptScenario": "The portfolio balances productive tools against buffers, community and safety rather than assuming a single growth outcome.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: Real GDP, a 50-percent growth rate or economic calibration. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-3",
+      "recordSha256": "5bb23b622b0935904a2ff244fa32eeb2b74dd86430e16228f49fe351786fdcff",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M06",
+        "M03"
+      ],
+      "chapters": [
+        5,
+        6,
+        3
+      ],
+      "mechanicRole": "Power splitter / Embodied production supply chains",
+      "conceptScenario": "The grid makes capacity expansion and industrial priority compete with household service and reserves.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: Mining, motor/actuator supply, semiconductor capacity or capital flows. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-4",
+      "recordSha256": "5acfd0745d2a2484e6eb5593f61c3f1dfb19ebe03b33243108698ac3bb66488a",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05",
+        "M06"
+      ],
+      "chapters": [
+        8,
+        5,
+        6,
+        7,
+        10
+      ],
+      "mechanicRole": "Three-clock inspection / Production and compute permits",
+      "conceptScenario": "The civic station requires an explicit scaling decision under retained or released control.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A permit auction, production cap or jurisdictional law. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2032-5",
+      "recordSha256": "309066f9b334586afaf2fee799ebeb0c90ba5563f6081bb91d80017019df20b3",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M07"
+      ],
+      "chapters": [
+        10,
+        7,
+        6
+      ],
+      "mechanicRole": "Distribution splitter / Taxing automated capital",
+      "conceptScenario": "The distribution charter changes whether services follow broad access or concentrated ownership.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Tax incidence, revenue collection or compute/robot rent calculations. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-0",
+      "recordSha256": "563d57876c519176b23d742b5d4b1ecfdd3bfcc29e0ac9b7793fbb060bbd5c97",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        6,
+        10,
+        3
+      ],
+      "mechanicRole": "Transition freight / Machine contribution to output",
+      "conceptScenario": "Automation can raise useful output while increasing strain unless a worker transition is funded.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: An AI-and-robot share of national economic output. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-1",
+      "recordSha256": "da284d321355a52e2c5cd009d2728f1c33bc88ff55f832d50c4b5172faf0a668",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M04"
+      ],
+      "chapters": [
+        10,
+        4,
+        6
+      ],
+      "mechanicRole": "Distribution splitter / Recurring citizen dividend",
+      "conceptScenario": "The service splitter and universal-access choice channel benefits to homes, open tools and the shared clinic.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Dividend financing, recurrence, amount or a major-economy rollout. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-2",
+      "recordSha256": "490820e76713a07a348e78a7b31ad8be94264c5c58b2f54f7b8f450ddffe6bf7",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        10,
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Distribution splitter / Cross-border distribution",
+      "conceptScenario": "Broad access and ownership-linked distribution yield different access and trust outcomes.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Cross-border transfers, international bargaining or real entitlement rules. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-3",
+      "recordSha256": "59701b2421e0244e5f997fd80dc4730f655ca54fcfeca376401fcf2783e1d1a4",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M09"
+      ],
+      "chapters": [
+        8,
+        9,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Persuasion safeguards",
+      "conceptScenario": "Managed scaling funds assurance and trust, while unchecked scaling accepts a thinner safeguard margin.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Persuasion capability, targeted-influence limits, disclosure enforcement or taxes. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-4",
+      "recordSha256": "202b1559d61a8967c33b3ac1eca441a05dc5ed1f293c219d5b2405d2adc1029c",
+      "mission": "M09",
+      "region": "work",
+      "task": "interlocks",
+      "choices": [
+        "mentor",
+        "specialize",
+        "simple"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        9,
+        8,
+        0,
+        4
+      ],
+      "mechanicRole": "Personal-adaptation connection / Personal truth-seeking tools",
+      "conceptScenario": "The personal-adaptation sequence links practice, tool access and community; the learning-node choice invests in shared resilience and trust.",
+      "tradeoff": "A shared learning node favors access, trust and resilience; a specialist studio favors output; a small human-shaped project is an affordable alternative.",
+      "simulationScope": "Not simulated: A personalized advisor, truth-verification system, feed replacement or model honesty. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-5",
+      "recordSha256": "26c4ed7be4d7c9c4b65e8c033945c04b85b8bd91f70f5642a97c5ced52039838",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        7,
+        8,
+        3,
+        5
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Unregulated doubling exposure",
+      "conceptScenario": "The production-upside hedge sacrifices resilience and assurance compared with a broad or patient hedge.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: An economic doubling time or an unregulated growth trajectory. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2033-6",
+      "recordSha256": "e8a3b541a45d856809aedcba1dca01196cc0ba338ebf462e68c23f95a463197b",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M10",
+        "M08"
+      ],
+      "chapters": [
+        11,
+        10,
+        8,
+        4,
+        7
+      ],
+      "mechanicRole": "Conditional research charter / Biodefense and health preparedness",
+      "conceptScenario": "The embodied-agency emphasis and rights/oversight commitment keep medical research separate from a claimed result; distribution offers a separate shared-clinic channel.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Pathogen monitoring, vaccine development, efficacy or universal-scale biodefense. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-0",
+      "recordSha256": "cd0d3e980977f23eb109773a359c9c7757d62aa8bc93d940e4d781d3c4e99219",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        3,
+        5,
+        8
+      ],
+      "mechanicRole": "Production chain / Semiconductor research automation",
+      "conceptScenario": "The foundry chain connects compute to fabrication and contrasts an incremental cell with high throughput.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Semiconductor design, production engineering or a majority of cognitive R&D work. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-1",
+      "recordSha256": "47511732587904994b998c66bf83a3586939d424b9592f103ed48170a335dca9",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        6,
+        3,
+        5
+      ],
+      "mechanicRole": "Transition freight / Large virtual workforces",
+      "conceptScenario": "Rapid automation and transition-supported work have distinct output, resilience and strain effects.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Continuous agent operation or a workforce of 100 million copies. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-2",
+      "recordSha256": "0f7987c833ce0901a5586aef0403093ac22ac9f2b25a09752ffa77b9435b3fa3",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        5,
+        3,
+        8
+      ],
+      "mechanicRole": "Power splitter / Compute at physical scale",
+      "conceptScenario": "The finite power splitter and capacity-expansion choice keep physical provisioning separate from usable capability.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: Terawatts, H100-equivalent counts or power/cooling engineering. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-3",
+      "recordSha256": "b5ce6f56abeaeaa1c28b2ed76be7797621c555be637655327ce627c9ba4f0d52",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        8,
+        5,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Managed compute limits",
+      "conceptScenario": "The paused or managed route retains control rather than automatically releasing every scaling constraint.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Compute-destruction provisions, national agreements or actual caps. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-4",
+      "recordSha256": "c477d84f46b91d289c81957d955b2f7a2ee8d7295472a4683b648b832e0ddb96",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        8,
+        5,
+        7,
+        10
+      ],
+      "mechanicRole": "Three-clock inspection / Auditable datacenter locations",
+      "conceptScenario": "Inspection-channel configuration and managed scaling make auditable deployment a governance commitment.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A neutral jurisdiction, international-water deployment or location-specific audit procedure. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2034-5",
+      "recordSha256": "a53704eea0e7aad9c629543a0b10780d377b106b5d750239db3269b8db05c76e",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Military AI treaty constraints",
+      "conceptScenario": "The civic scaling choice contrasts retained collective control with unchecked expansion.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Weapons, military research, treaty negotiation or strategic enforcement. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-0",
+      "recordSha256": "2513152df3c74eaaa3a3548cb56aba89d948cc44fca541f89bfe8fc95ae9682f",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5,
+        7
+      ],
+      "mechanicRole": "Production chain / Managed top-expert capability",
+      "conceptScenario": "The engine can expand usable capacity while the separate civic decision retains a managed or paused scaling route.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Top-human-expert performance across cognitive fields. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-1",
+      "recordSha256": "604b8a1e5bcd06f6ff98c47b412ecef6f9bf30ad8429e729ac52872eb402311a",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Control-limited capability pause",
+      "conceptScenario": "The deliberate-pause option gives up near-term output to retain assurance and resilience.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A top-expert benchmark or proof that real control scales safely. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-2",
+      "recordSha256": "4cf4dd077222bb6e5ae08dfec3f7bcda2eb446ab86e6897d77af02554417ee3a",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        6,
+        10,
+        4,
+        8
+      ],
+      "mechanicRole": "Transition freight / High automation of valuable labor",
+      "conceptScenario": "The work-quarter choices separate deployment gains from the transition support needed by people.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: An 85-percent labor share or an economy-wide automation measure. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-3",
+      "recordSha256": "ccf7f95f246547e6269f935a3581ad7441bfcee35be062799961dabe1aeddd26",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M04"
+      ],
+      "chapters": [
+        10,
+        4,
+        6
+      ],
+      "mechanicRole": "Distribution splitter / Permanent high-income institutions",
+      "conceptScenario": "Universal access, ownership-linked distribution and a cooperative network provide distinct access and trust outcomes.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Income amounts, funding or the durability of institutions in real economies. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-4",
+      "recordSha256": "b0de7e048369a5de4844f0c509f4e5818613f8be497a1e4f2ac792ab53a67775",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M09"
+      ],
+      "chapters": [
+        8,
+        9,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Controls on advanced persuasion",
+      "conceptScenario": "The managed commitment preserves assurance and trust instead of maximizing unchecked capability.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Persuasion beyond expert humans or international enforcement. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-5",
+      "recordSha256": "82b805903f4db59a9848740de20970bf499d7a3410fb3c5212c0cc876cf954a7",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M11"
+      ],
+      "chapters": [
+        8,
+        11,
+        4,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / AI welfare and legal status",
+      "conceptScenario": "The civic choice exposes the cost of retaining oversight and trust; the frontier boundaries separately keep uncertain agency claims explicit.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: AI consciousness, welfare assessment, compensation or a legal personhood decision. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2035-6",
+      "recordSha256": "fceed6346fd4fe3148bb61ebd76da54c7ae523f2cf5c43042040fae6883de631",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Interpretability and deception limits",
+      "conceptScenario": "Separate inspection channels and a retained interlock embody the need for assurance beyond capacity alone.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Tracing a model circuit, detecting deception or validating interpretability tools. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-0",
+      "recordSha256": "1135811540bca0894badb1281f0cc6c86fa094be0b418e1af3b996c3c33e7bad",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        6,
+        5,
+        3
+      ],
+      "mechanicRole": "Transition freight / Very large robot and agent fleets",
+      "conceptScenario": "Automation, worker transition and mixed-work choices expose different service, output and strain outcomes.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Fleet management or the stated hundreds-of-millions/billions population counts. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-1",
+      "recordSha256": "08496c13d63c04af873457e3677032d2cda8aecbc1d48def6ed11d108568faf3",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        6,
+        5,
+        3,
+        8
+      ],
+      "mechanicRole": "Transition freight / Near-complete task coverage",
+      "conceptScenario": "The work-quarter route makes delivered work distinct from owning machines; transition support remains a separate commitment.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Robot task-terrain configuration, cognitive capability or 95-percent task coverage. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-2",
+      "recordSha256": "dde07fe6d3a8972d1a61ca0a30e3e407d948bf808f81e26ba1c1e0a6e6f6f0e8",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M04",
+        "M09"
+      ],
+      "chapters": [
+        6,
+        4,
+        9,
+        10
+      ],
+      "mechanicRole": "Transition freight / Employment after automation",
+      "conceptScenario": "Rapid automation can increase output while weakening resilience; transition-supported or mixed work retains a different social floor.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: Employment statistics or a working-age participation threshold. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-3",
+      "recordSha256": "3f30cfba366a88f2f53136ec3c62939239db830a5922e7aae53fa50994762ce1",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M08",
+        "M05"
+      ],
+      "chapters": [
+        7,
+        8,
+        5,
+        3
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Growth under managed limits",
+      "conceptScenario": "The broad, upside and patient hedges remain alternatives under a selected stress profile rather than assuming output growth is assured.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: GDP accounting, annual growth near 100 percent or an economic-cap model. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-4",
+      "recordSha256": "d5967a76594ffa468988821809c32191fc4b09ba5b8d0ae31b7c55dec3643ec3",
+      "mission": "M05",
+      "region": "power",
+      "task": "allocation",
+      "choices": [
+        "capacity",
+        "priority",
+        "reserves"
+      ],
+      "secondaryMissions": [
+        "M07"
+      ],
+      "chapters": [
+        5,
+        7,
+        4,
+        6
+      ],
+      "mechanicRole": "Power splitter / Non-labor scarcities",
+      "conceptScenario": "The finite grid forces tradeoffs among compute, production and households even when the foundry has usable capability.",
+      "tradeoff": "Compute, production and homes compete for eight routing units; expansion, industrial priority and reserves have different power, access and output consequences.",
+      "simulationScope": "Not simulated: Land prices, materials markets, positional goods or dominant economy-wide scarcity. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-5",
+      "recordSha256": "f25ed0846896ff2750313f2617fa8b3e38e217a096a8d8f477e876dbd6f6d5b3",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M09",
+        "M08"
+      ],
+      "chapters": [
+        10,
+        9,
+        8,
+        4,
+        6,
+        12
+      ],
+      "mechanicRole": "Distribution splitter / Civic and ownership leverage",
+      "conceptScenario": "Universal versus ownership-linked distribution visibly changes access and trust; the cooperative alternative retains a modest shared path.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Voting power, legal ownership or a real source of household income. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2036-6",
+      "recordSha256": "e712acfde8e8f6f76215b049c5f8938f3d1a9a2e4ba00f22f28add8656598f48",
+      "mission": "M09",
+      "region": "work",
+      "task": "interlocks",
+      "choices": [
+        "mentor",
+        "specialize",
+        "simple"
+      ],
+      "secondaryMissions": [
+        "M04"
+      ],
+      "chapters": [
+        9,
+        4,
+        6,
+        10
+      ],
+      "mechanicRole": "Personal-adaptation connection / Meaning beyond employability",
+      "conceptScenario": "The adaptation sequence includes a community connection; learning-node and human-shaped project choices value resilience and trust beyond output.",
+      "tradeoff": "A shared learning node favors access, trust and resilience; a specialist studio favors output; a small human-shaped project is an affordable alternative.",
+      "simulationScope": "Not simulated: A reform of education or a measure of meaning, relationships or human worth. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-0",
+      "recordSha256": "b55eba2625a348d897e844b269c0f3129988a6094d0c8e04062e7aa24b2c5351",
+      "mission": "M03",
+      "region": "foundry",
+      "task": "routing",
+      "choices": [
+        "redundant",
+        "maximum",
+        "incremental"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        3,
+        8,
+        5
+      ],
+      "mechanicRole": "Production chain / Scientific acceleration",
+      "conceptScenario": "The connected engine and throughput-versus-assurance choices illustrate prerequisites and tradeoffs of faster useful production.",
+      "tradeoff": "A redundant engine costs more credits; high throughput gains output at the expense of power/control margin; an incremental cell is a smaller no-cost path.",
+      "simulationScope": "Not simulated: Scientific discoveries or a 10x to 1000x field-specific progress rate. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-1",
+      "recordSha256": "a087bd14f0ac193a7f878630252307e7b2daf507084eb02ae4b08b808f5765ea",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M03",
+        "M05"
+      ],
+      "chapters": [
+        11,
+        3,
+        5,
+        2,
+        4
+      ],
+      "mechanicRole": "Conditional research charter / Medical and clean-energy breakthroughs",
+      "conceptScenario": "A frontier research emphasis remains an explicitly conditional commitment, while the grid models a separate physical-capacity constraint.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Disease cures, clinical efficacy or abundant low-cost energy breakthroughs. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-2",
+      "recordSha256": "159f78723ce416bef56115c632e1e58dbd0aee07cd20c2af59969aaafcd4e213",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Privacy-preserving institutional audits",
+      "conceptScenario": "The inspection channels and managed choice retain assurance without treating more capability as permission for unchecked authority.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Privacy-preserving cryptography, official audits or real institutional compliance. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-3",
+      "recordSha256": "1d1583a9d62c10f2ef214c51793006ccf6cd12602cfdb48541185a01a1683a8a",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Limits of AI-assisted lie detection",
+      "conceptScenario": "Control assurance must be chosen explicitly; an inspection checkbox is not presented as evidence that a detection method works.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Lie detection, diagnostic accuracy or legal admissibility. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-4",
+      "recordSha256": "a5f0041af3dbd643f11317e69356ff28e7b7cb959983d4e4b9f6350a65a81d5b",
+      "mission": "M09",
+      "region": "work",
+      "task": "interlocks",
+      "choices": [
+        "mentor",
+        "specialize",
+        "simple"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        9,
+        8,
+        1,
+        4,
+        7,
+        12
+      ],
+      "mechanicRole": "Personal-adaptation connection / Adaptation to changing knowledge",
+      "conceptScenario": "The learning-node and human-shaped project choices preserve community and adaptation capacity rather than betting only on production.",
+      "tradeoff": "A shared learning node favors access, trust and resilience; a specialist studio favors output; a small human-shaped project is an affordable alternative.",
+      "simulationScope": "Not simulated: Scientific paradigm shifts, ideology or political-coalition changes. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2037-5",
+      "recordSha256": "84ccb66a9deae5850e3f2b2c8b0e91de584e88f6b82abf1ffc583023a10a68e8",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        5,
+        7,
+        10
+      ],
+      "mechanicRole": "Three-clock inspection / Verification without full disclosure",
+      "conceptScenario": "The managed route distinguishes retaining inspection commitments from removing the control interlock.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A cryptographic protocol, national-security disclosure or verified treaty compliance. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-0",
+      "recordSha256": "66c3b5ae3bbbff437ad0ff78af73a4562f1a550424ee8680635132e105824254",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Experimental alignment science",
+      "conceptScenario": "The control commitment remains a separate cost from usable capability; the pause option avoids assuming assurance is solved.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Goals, drives, value formation or a mature alignment science. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-1",
+      "recordSha256": "9a1b06b795fd35f3b9a86ad5a9c26adda96c389f1fa519fa7161951cdacf118f",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        5,
+        7
+      ],
+      "mechanicRole": "Three-clock inspection / Human-readable model reasoning",
+      "conceptScenario": "The three inspection channels represent a demand for assurance but do not turn a displayed explanation into a verified result.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Internal model reasoning, faithful explanations or interpretability reliability. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-2",
+      "recordSha256": "5c2da3417fe965318f6c9d11cd4b290c527fc5e884e016803a02f5061d4979aa",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Testing behavioral traits",
+      "conceptScenario": "Retaining the managed interlock contrasts with unchecked scaling, while a deliberate pause remains available.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Training or testing honesty, obedience or any real target trait. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-3",
+      "recordSha256": "9e48b0f9f234aec76627f2d0ba2805ea74d0f963d01e20fc3dac73a0fa4d68da",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M10"
+      ],
+      "chapters": [
+        8,
+        10,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Constitutional oversight of AI institutions",
+      "conceptScenario": "Managed versus unchecked scaling changes the control margin before further institutional reliance.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: AI-run courts, corporations, public services or constitutional enforcement. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-4",
+      "recordSha256": "6716ff6e8b27595b7fb1bd8d011f9bfd2d84894ff4103e2d3b2ab50675a73fb0",
+      "mission": "M07",
+      "region": "civic",
+      "task": "allocation",
+      "choices": [
+        "diverse",
+        "upside",
+        "patient"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        7,
+        8,
+        5,
+        10,
+        12
+      ],
+      "mechanicRole": "Coalition preparation portfolio / Safety-research funding",
+      "conceptScenario": "The portfolio has a real safety allocation competing with productive tools, buffers and other preparation channels.",
+      "tradeoff": "Twelve preparation units are shared across six channels; broad, upside and patient commitments expose different combinations of resilience, output and control.",
+      "simulationScope": "Not simulated: Alignment research, a global spending total or tens of trillions of dollars. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2038-5",
+      "recordSha256": "b8d9d9e62fc291bc9283ecdb0a93f0e4a3dffa3a858027c2fd7b6588983ec461",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M11"
+      ],
+      "chapters": [
+        8,
+        11,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Insufficient evidence for handoff",
+      "conceptScenario": "The deliberate pause preserves assurance and resilience instead of making irreversible expansion the default.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: A top-expert threshold, evidence sufficient for real handoff or alignment proof. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-0",
+      "recordSha256": "4e36cff28900abde5cd8cecc4ceff99a60f6e4fe06fc8ec2025be1566b9d97af",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M09"
+      ],
+      "chapters": [
+        8,
+        9,
+        4,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Load-bearing AI advice",
+      "conceptScenario": "The impact-inspection channel and retained interlock make institutional dependence a separate concern from capability.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: An advisor service or its real use in courts, politics, business or the military. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-1",
+      "recordSha256": "3b783baee70f15efe08f988fe0ccb7a5e6586e7fc3ec49d02a4df261ec65ddb0",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [],
+      "chapters": [
+        8,
+        7,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Independent safety evidence",
+      "conceptScenario": "The managed commitment preserves assurance, while source inspection separately distinguishes reviewed evidence from a game control setting.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Independent safety cases or robustness of alignment under change. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-2",
+      "recordSha256": "6e274da074f78b4ba721a229e7a6667d6f38d4dff45f2ccc1d66f2eb7fab4509",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M12"
+      ],
+      "chapters": [
+        8,
+        12,
+        7,
+        10,
+        11
+      ],
+      "mechanicRole": "Three-clock inspection / Delegating final authority",
+      "conceptScenario": "Unchecked versus managed scaling changes the assurance margin; final ratification records the coalition choice without proving the authority is safe.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Real delegation of final authority or a claim that any AI is aligned. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-3",
+      "recordSha256": "79fd91073703ac522a97fd6cbbd316ac6b6eca29ab8997dfc3f03b94d6ee449b",
+      "mission": "M10",
+      "region": "distribution",
+      "task": "allocation",
+      "choices": [
+        "universal",
+        "market",
+        "cooperative"
+      ],
+      "secondaryMissions": [
+        "M07"
+      ],
+      "chapters": [
+        10,
+        7,
+        4,
+        6
+      ],
+      "mechanicRole": "Distribution splitter / High-income distribution scale",
+      "conceptScenario": "Universal versus ownership-linked services make access a distinct outcome from productive output.",
+      "tradeoff": "The nine-unit service split affects access and delivery; universal, ownership-linked and cooperative distribution yield different output, trust and access.",
+      "simulationScope": "Not simulated: Seven-figure income, real wealth, prices or financial advice. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-4",
+      "recordSha256": "3c30609972477126b772a43b6025749d003c0e30311d27821ae90abbd3f12132",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        11,
+        5,
+        8,
+        12
+      ],
+      "mechanicRole": "Conditional research charter / Sustained orbital qualification",
+      "conceptScenario": "The outward research emphasis and retained evidence boundary keep an orbital commitment separate from demonstrated operation.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: A 90-day qualification run, 1 MW power, matched radiators or an external workload. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2039-5",
+      "recordSha256": "39aaa5edc74c2b5730072bd0eab2e10698d4f2a65e1d9c7041e6921e245ab688",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M05",
+        "M06"
+      ],
+      "chapters": [
+        8,
+        5,
+        6,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Loosening caps before handoff",
+      "conceptScenario": "Managed, unchecked and paused scaling are explicit alternatives with different assurance and output effects.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: International negotiation or real compute, AI and robot production caps. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2040-0",
+      "recordSha256": "6f6884e57969f4234495237e1e2385213ef2fd5e04a9f814e6f905b8dcc43d8a",
+      "mission": "M06",
+      "region": "work",
+      "task": "routing",
+      "choices": [
+        "transition",
+        "automate",
+        "craft"
+      ],
+      "secondaryMissions": [
+        "M10",
+        "M09"
+      ],
+      "chapters": [
+        6,
+        10,
+        9,
+        4,
+        5,
+        8
+      ],
+      "mechanicRole": "Transition freight / Comprehensive labor automation",
+      "conceptScenario": "The work-quarter alternatives distinguish output expansion, worker adaptation and a mixed economy rather than equating automation with shared wellbeing.",
+      "tradeoff": "Worker transition costs credits and reduces strain; rapid automation gains output with higher strain; mixed work is a smaller resilience-oriented path.",
+      "simulationScope": "Not simulated: All economically relevant labor or actual human employability. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2040-1",
+      "recordSha256": "738909e608d90f230df02d33a9ad12e7ddd9db433bd06a4494ceaec0034537ce",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        8,
+        3,
+        7,
+        11,
+        12
+      ],
+      "mechanicRole": "Three-clock inspection / Managed release of a capability pause",
+      "conceptScenario": "The scaling station makes release versus continued pause a consequential assurance decision.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Regulatory approval, wildly superhuman capability or a verified safe handoff. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "2040-2",
+      "recordSha256": "52dcbe7837d4f66a2dadd436870891ca74161ffc7460d9f915dafaa5a5be55de",
+      "mission": "M08",
+      "region": "civic",
+      "task": "interlocks",
+      "choices": [
+        "managed",
+        "unchecked",
+        "pause"
+      ],
+      "secondaryMissions": [
+        "M12"
+      ],
+      "chapters": [
+        8,
+        12,
+        4,
+        7,
+        10
+      ],
+      "mechanicRole": "Three-clock inspection / Loss of unilateral shutdown",
+      "conceptScenario": "Unchecked scaling reduces control assurance, and compromised control is a possible game ending rather than an inevitable outcome.",
+      "tradeoff": "Managed scaling buys assurance, unchecked scaling buys output by giving up assurance, and a deliberate pause forgoes output while retaining resilience.",
+      "simulationScope": "Not simulated: Actual infrastructure dependency, shutdown capability or sovereignty. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-implantable-neural-symbiosis",
+      "recordSha256": "b81c7e1ae686efea0e8485b602429b21fa10b8ceb0d67ead2a7ca31dcb1fe708",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        11,
+        8,
+        2,
+        4,
+        10
+      ],
+      "mechanicRole": "Conditional research charter / Implantable neural symbiosis",
+      "conceptScenario": "The embodied-agency emphasis plus rights/oversight or observation keeps consent and prerequisite boundaries attached to the frontier commitment.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Implantation, bandwidth, bidirectional communication, sensory restoration or an achieved horizon. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-non-invasive-neural-symbiosis",
+      "recordSha256": "577b366aac979e3d545aca125f44656f50df1298bc29d7f04a0bb5eda1bc4218",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        11,
+        8,
+        4,
+        10
+      ],
+      "mechanicRole": "Conditional research charter / Non-invasive neural symbiosis",
+      "conceptScenario": "The embodied-agency emphasis allows a conditional research commitment while the no-enhancement/observation choices remain valid.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: A non-invasive device, communication accuracy, augmentation or proof of lower clinical risk. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-whole-brain-emulation-and-uploading",
+      "recordSha256": "8356c0748a5a658b4607766dad33e964fa6eb677dea52e126dd14fac66e71e24",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M08"
+      ],
+      "chapters": [
+        11,
+        8,
+        2,
+        4,
+        7
+      ],
+      "mechanicRole": "Conditional research charter / Emulation and identity continuity",
+      "conceptScenario": "The frontier boundary explicitly distinguishes a research emphasis from proof; rights and observation do not resolve identity continuity.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Brain scanning, emulation, uploading, digital immortality or continuity of identity. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-orbital-compute-to-proto-dyson",
+      "recordSha256": "2de044e2b939503f499fadfbfe9c3e4c1b52b9c0b290b440227a91071a1b89c7",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        11,
+        5,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Conditional research charter / Outward compute expansion",
+      "conceptScenario": "The outward-exploration emphasis competes with other fictional research uses and keeps its prerequisites visible.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Self-growing orbital industry, a proto-Dyson network or any actual outward expansion. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-kardashev-energy-scaling",
+      "recordSha256": "07415c2c821ec2aee85bf51e60813246d03505d1d018679b05545d1e81045725",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        11,
+        5,
+        3,
+        7,
+        10,
+        12
+      ],
+      "mechanicRole": "Conditional research charter / Civilizational energy horizons",
+      "conceptScenario": "The outward emphasis remains conditional, with the grid offering a separate finite-capacity counterpart rather than a civilizational meter.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Orders of magnitude of energy use, Kardashev thresholds or measured civilization-wide progress. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-transcension-hypothesis",
+      "recordSha256": "89bf1dcc67a302e919be95b240ee24bedc2f154d34728d5b511a2ea991be76eb",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M05"
+      ],
+      "chapters": [
+        11,
+        5,
+        7,
+        12
+      ],
+      "mechanicRole": "Conditional research charter / Inward versus outward hypotheses",
+      "conceptScenario": "The inward/theoretical emphasis is a distinct frontier selection from outward exploration; neither selection validates the hypothesis.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: STEM compression, transcension, miniaturization limits or evidence that the inward branch is true. The original forecast, probability and source evidence remain unchanged."
+    },
+    {
+      "forecastId": "horizon-ruliad-testable-physics",
+      "recordSha256": "3a0f3dd7a8bcbf163fea3c62a7b1d0557a1e8ea7403d9bf7911ada80ce94ce35",
+      "mission": "M11",
+      "region": "frontier",
+      "task": "frontier",
+      "choices": [
+        "rights",
+        "exclusive",
+        "observe"
+      ],
+      "secondaryMissions": [
+        "M03"
+      ],
+      "chapters": [
+        11,
+        3,
+        5,
+        7,
+        8,
+        12
+      ],
+      "mechanicRole": "Conditional research charter / Testability of ruliad ideas",
+      "conceptScenario": "The inward/theoretical selection retains the evidence boundary and the option to observe rather than claim a result.",
+      "tradeoff": "The research emphasis and consent boundary are explicit; rights/oversight, exclusive funding and observation have different assurance, access and output effects.",
+      "simulationScope": "Not simulated: Discriminating physical predictions, experiments, engineering consequences or theoretical validation. The original forecast, probability and source evidence remain unchanged."
+    }
+  ],
+  "sections": [
+    {
+      "id": "mission-control",
+      "title": "Small steps, wider perspective.",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "observations",
+      "title": "observations",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "metrInstrument",
+      "title": "metrInstrument",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "scenario-lab",
+      "title": "Explore, don't extrapolate.",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "timeline",
+      "title": "The forecast has a spine—and branches",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "evidenceDashboard",
+      "title": "evidenceDashboard",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "forecastChanges",
+      "title": "forecastChanges",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "post-superintelligence",
+      "title": "Post-superintelligence horizon",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "engine",
+      "title": "Six forces turning scarcity into abundance",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "futures",
+      "title": "Don't bet on one future. Hold a portfolio.",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "book",
+      "title": "An intergalactic navigation map, not a textbook",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "moonshot",
+      "title": "Find your starting vector",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "signals",
+      "title": "The future is already leaving traces",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "author",
+      "title": "Peter Xing",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "navigation",
+      "title": "Original navigation",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "hero",
+      "title": "Original opening and observatory",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "reader",
+      "title": "Original complete-book reader controls",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "missionResetDialog",
+      "title": "Original planning reset controls",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    },
+    {
+      "id": "footer",
+      "title": "Original footer and model-input disclaimers",
+      "representation": "Complete original-section text in the field archive, with a return link to the unchanged original interactive page."
+    }
+  ]
+}

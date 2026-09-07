@@ -8,7 +8,7 @@ const path = require('path');
 const { chromium } = require('playwright');
 const predictions = require('./predictions.json');
 
-const URL = process.argv[2] || 'http://127.0.0.1:8787/';
+const URL = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787/';
 const files = {
   index: path.join(__dirname, 'index.html'),
   app: path.join(__dirname, 'app.js'),

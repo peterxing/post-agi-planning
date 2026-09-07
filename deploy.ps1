@@ -6,10 +6,21 @@
 #   2) vercel login                 # browser auth to YOUR Vercel account
 #   3) cd C:\Users\peterxing\pap-site ; vercel link   # pick/create the project (e.g. post-agi-planning)
 # After that, this script (and the daily workflow) can redeploy with zero prompts.
+[CmdletBinding()]
+param([switch]$RequireGameReady)
 $ErrorActionPreference = 'Stop'
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $source = 'C:\Users\peterxing\pap-deploy'
 Set-Location $dir
+
+$gameBuilder = Join-Path $source 'build-game.js'
+$gameVerifier = Join-Path $source 'verify-game-content.js'
+& node $gameBuilder --check
+if ($LASTEXITCODE -eq 75) { Write-Warning 'Game preflight deferred by the interlock.'; exit 75 }
+if ($LASTEXITCODE -ne 0) { Write-Error 'Game projection/vendor preflight failed; deployment aborted.'; exit 6 }
+if ($RequireGameReady) { & node $gameVerifier --require-ready } else { & node $gameVerifier }
+if ($LASTEXITCODE -eq 75) { Write-Warning 'Game verification deferred by the interlock.'; exit 75 }
+if ($LASTEXITCODE -ne 0) { Write-Error 'Game content/serving preflight failed; deployment aborted.'; exit 6 }
 
 $coverageVerifier = Join-Path $source 'verify-direct-coverage.js'
 $newsVerifier = Join-Path $source 'verify-news-evidence.js'
@@ -93,7 +104,18 @@ $runtimeFiles = @(
   'styles.css',
   'predictions.json',
   'signals.json',
-  'author.json'
+  'author.json',
+  'game.html',
+  'game.css',
+  'game-entry.js',
+  'game-core.mjs',
+  'game-data.mjs',
+  'game-ui.mjs',
+  'game-world.mjs',
+  'game-content.json',
+  'three.webgpu.min.js',
+  'three.core.min.js',
+  'THREE-LICENSE.txt'
 )
 # The advisory interlock is local coordination state only: never deployed, never served.
 if ($runtimeFiles -contains '.pipeline.lock') {
