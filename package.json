@@ -28,6 +28,7 @@
                     "verify:reality":  "node verify-reality.js http://127.0.0.1:8787",
                     "verify:author":  "node verify-author.js http://127.0.0.1:8787",
                     "verify:ui":  "node verify-observatory.js http://127.0.0.1:8787",
+                    "verify:ai-timeline":  "node verify-ai-timeline.js",
                     "verify:performance":  "node verify-performance.js http://127.0.0.1:8787",
                     "verify:coverage":  "node verify-direct-coverage.js",
                     "verify:news":  "node verify-news-evidence.js",

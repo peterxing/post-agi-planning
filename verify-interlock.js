@@ -20,7 +20,7 @@ const http = require('http');
 const { spawnSync, spawn } = require('child_process');
 
 const DIR = __dirname;
-const SITE = 'C:\\Users\\peterxing\\pap-site';
+const SITE = (process.env.PAP_SITE_CONFIG_DIR || 'C:\\Users\\peterxing\\pap-site');
 const LOCK_NAME = '.pipeline.lock';
 const SANDBOX = path.join(os.tmpdir(), `pap-interlock-${process.pid}.lock`);
 const problems = [];
@@ -98,6 +98,7 @@ const allGuarded = [
   'refresh-reference-points.js', 'verify-reference-points.js',
   'verify-x-harvest.js',
   'build-game.js','verify-game-content.js','verify-game.js','verify-game-performance.js',
+  'verify-ai-timeline.js',
 ];
 const manifest = JSON.parse(readOr(path.join(DIR,'package.json')));
 const mirrorScope = manifest.publicationScope === 'curated-mirror';

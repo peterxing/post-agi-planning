@@ -340,6 +340,15 @@ const NEWS_SOURCES = {
     quote: "One approach, known as mechanistic interpretability, aims to map the key features and the pathways between them across an entire model.",
     textSha256: "64dce5c8ae7a5a313f7c3dc749d8a964d07aae2e8f05be7cdeaeec18a4628ccd",
   },
+  /* REPLACED 2026-09-21, under the user's 2026-09-19 two-reference authorization.
+     These two historical rows and their original review groups below are retained verbatim
+     for audit, but are no longer active sources. On 2026-09-13 ordinary public HTTPS and
+     browser access to this single Nature URL supplied a teaser and access options without
+     either reviewed quote. The separate academic-date precision fix restored August 11;
+     it did not restore the quotes. This is a public-full-text availability replacement,
+     not a finding that the old facts were refuted, nor a recency-driven substitution.
+     The replacements are older, explicitly dated trade-press context, each bound to one
+     forecast. They do not establish the complete forecasts or change their probabilities.
   "nature-ai-datacentre-energy-1": {
     url: "https://www.nature.com/articles/d41586-026-02451-2",
     resolvedUrl: "https://www.nature.com/articles/d41586-026-02451-2",
@@ -367,6 +376,35 @@ const NEWS_SOURCES = {
     sourceQuality: "peer-reviewed-journal",
     quote: "Five technology companies — Amazon, Alphabet, Microsoft, Meta and Oracle — are expected to spend a total of more than US$600 billion on AI infrastructure this year; a decade ago, the same five companies spent less than $40 billion.",
     textSha256: "23c2444a17ff1f9701968950f2a3f36684d4867b8f79a97b9d6f105e31331c89",
+  },
+  */
+  "constructiondive-datacentre-power-political-delays": {
+    url: "https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157/",
+    resolvedUrl: "https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157/",
+    publisher: "Construction Dive",
+    publisherHost: "constructiondive.com",
+    author: "Sebastian Obando",
+    headline: "What’s stalling data center projects? Public opposition and power access lead delays.",
+    publishedAt: "2026-04-22T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-21T22:56:50.086Z",
+    sourceQuality: "primary-news-organization",
+    quote: "The projects’ need for huge amounts of power has created obstacles to build and increased prices. Meanwhile, communities and political groups have opposed the projects, leading to delays or abandonments.",
+    textSha256: "40bf3e0f48f355e7abc1714eeaa80479bea91b2d9499f0695ef9e639fe743fee",
+  },
+  "constructiondive-saline-datacentre-project-financing": {
+    url: "https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972/",
+    resolvedUrl: "https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972/",
+    publisher: "Construction Dive",
+    publisherHost: "constructiondive.com",
+    author: "Sebastian Obando",
+    headline: "Walbridge breaks ground on $16B Stargate data center",
+    publishedAt: "2026-06-04T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-21T22:56:51.858Z",
+    sourceQuality: "primary-news-organization",
+    quote: "In April, Related Digital announced financing had been secured for the $16 billion data center campus project, according to a news release.",
+    textSha256: "443f8abd9448d97189e8cc8ef2c562df7e95292d8e2251cc7458fe6a660f675a",
   },
   "challenger-ai-labour-market": {
     url: "https://www.challengergray.com/blog/challenger-report-layoffs-fall-hiring-picks-up-ai-leads-for-fifth-straight-month/",
@@ -714,6 +752,20 @@ const NEWS_SOURCES = {
     quote: "It requires stronger evidence of aligned behavior, safeguards that keep pace with capability, and a willingness to slow down when those protections are not sufficient.",
     textSha256: "7f59a6ec68bb7316df7b015e22a4bf2aaedef25d0ff3e4f7b0f2149bca09dd9c",
   },
+  "guardian-astra-release-contested-agi-claim": {
+    url: "https://www.theguardian.com/technology/2026/sep/03/openai-artificial-general-intelligence-astra-release",
+    resolvedUrl: "https://www.theguardian.com/technology/2026/sep/03/openai-artificial-general-intelligence-astra-release",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: null,
+    headline: "OpenAI hails ‘new era of artificial general intelligence’ with Astra model release",
+    publishedAt: "2026-09-03T18:24:42.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-12T23:01:39.806Z",
+    sourceQuality: "primary-news-organization",
+    quote: "The president of OpenAI, Greg Brockman, has claimed the world has entered a new era of artificial general intelligence after the release of his company’s latest model, Astra, which it described as the “world’s most intelligent and aligned model”.",
+    textSha256: "4c92fb8782fa764f045966b1ebc0b6951c31df7c0d9d422fa22b6a3f86c319b7",
+  },
 };
 
 /*
@@ -893,6 +945,8 @@ const NEWS_GROUPS = [
     rationale: "A named technology review records mechanistic interpretability as an active research programme aiming to map features and pathways across a whole model — the capability the prediction expects to mature into a practical tool. It does not evidence deception detection in deployed systems or routine use for tracing model decisions.",
     reviewedAt: "2026-08-24",
   },
+  /* Historical 2026-08-13 reviews, retired from the active ledger on 2026-09-21
+     solely for the public-text availability reason recorded with the old sources above.
   {
     source: "nature-ai-datacentre-energy-1",
     ids: ["2027-5"],
@@ -910,6 +964,27 @@ const NEWS_GROUPS = [
     reuseFamily: "datacentre-energy",
     rationale: "The same Nature analysis records the five largest technology firms committing more than US$600 billion to AI infrastructure this year against under $40 billion a decade ago, evidencing the scale of annual datacentre commitments. It makes no comparison to any defence budget.",
     reviewedAt: "2026-08-13",
+  },
+  */
+  {
+    source: "constructiondive-datacentre-power-political-delays",
+    ids: ["2027-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-infrastructure-constraint",
+    reuseFamily: "datacentre-energy",
+    rationale: "Construction Dive reports concrete power-access, utility-timing and political/permitting obstacles to data center construction, with named developer interviews and an attributed cancellation count. This bears directly on the power/grid and political-constraint facets of the forecast. It does not measure water scarcity, establish a worldwide ranking of constraints, or resolve the 2027 forecast.",
+    reviewedAt: "2026-09-21T22:56:50.086Z",
+    lastVerifiedAt: "2026-09-21T22:56:50.086Z",
+  },
+  {
+    source: "constructiondive-saline-datacentre-project-financing",
+    ids: ["2028-4"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-project-financing",
+    reuseFamily: "datacentre-energy",
+    rationale: "In its June 4, 2026 report, Construction Dive attributes financing for one $16 billion Saline data center campus to Related Digital's April announcement and construction underway on all three halls to Oracle. These are reported company financing/progress claims, not independently audited expenditures or a statement of progress today. This is a project-level capital-commitment leading indicator tied to an identified construction project, not a broad AI-capex total. The announced campus value is not an audited construction-only cost breakdown; it may cover costs beyond buildings. The source does not provide annual aggregate construction commitments, a comparable US defense-budget figure, or evidence that the 2028 threshold has been crossed. No annualization, summation with other announcements, or probability change is inferred.",
+    reviewedAt: "2026-09-21T22:56:51.858Z",
+    lastVerifiedAt: "2026-09-21T22:56:51.858Z",
   },
   {
     source: "challenger-ai-labour-market",
@@ -1118,6 +1193,16 @@ const NEWS_GROUPS = [
     reuseFamily: "frontier-safety-cases",
     rationale: "OpenAI publishes, ahead of releasing a model at a named cybersecurity capability level, an account of the critical-capability thresholds and safeguards it applied, including pausing and later restarting a large frontier RL run once new safety and security requirements were in place. Publishing a capability-and-safeguard argument before deployment is the practical form a safety case takes, so this is a concrete precursor to the regime the prediction describes. IT DOES NOT EVIDENCE THE PREDICTION. This is ONE lab's FIRST-PARTY account of its own model, not the 'multiple independent safety cases' the prediction requires — nothing here is externally reviewed or independently reproduced. It also provides no evidence that frontier AIs remain aligned UNDER CHANGE: the document is explicit that safeguards must keep pace with capability and that risks remain, which is a statement of intent and residual risk rather than of demonstrated durable alignment.",
     reviewedAt: "2026-09-03",
+  },
+  {
+    source: "guardian-astra-release-contested-agi-claim",
+    ids: ["2026-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-release-and-attributed-company-claim",
+    reuseFamily: "contested-human-level-agi-release",
+    rationale: "The Guardian reports the actual release of Astra and attributes an AGI-era claim to OpenAI president Greg Brockman. This bears directly on the forecast subject and the shipping facet, not generic AI adjacency. IT DOES NOT ESTABLISH GENUINE HUMAN-LEVEL AGI: the article describes AGI as a fuzzy threshold, reports differing definitions, and quotes OpenAI CEO Sam Altman calling it poorly defined and an irrelevant marketing term. Capability and benchmark assertions are company claims, not an independently reproduced cross-domain human-level evaluation. The cyber incidents discussed involved other models, not Astra. This is a narrowly scoped release/claim indicator with explicit uncertainty, not independent AGI confirmation, an on-track verdict, a resolved forecast or a reason to change its probability. A release and an AGI label cannot establish the genuine-capability threshold.",
+    reviewedAt: "2026-09-12T12:57:00.966Z",
+    lastVerifiedAt: "2026-09-12T23:01:39.806Z",
   },
 ];
 
@@ -1694,6 +1779,16 @@ function renderedPublishedDate(mainText) {
   return found.size === 1 ? [...found][0] : '';
 }
 
+function academicPublishedDate(html) {
+  for (const name of ['citation_publication_date', 'citation_online_date', 'DC.date', 'dcterms.date']) {
+    const raw = metaContent(html, [name]);
+    // An issue month is not a publication day; Date would silently fill in the first.
+    const numericDay = /\b(?:\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{4})(?=\b|T)/.test(raw);
+    if (numericDay || renderedPublishedDate(raw)) return raw;
+  }
+  return '';
+}
+
 /*
  * BOT-CHALLENGE / INTERSTITIAL DETECTION.
  *
@@ -1812,7 +1907,7 @@ function extractArticle(html, finalUrl) {
     || unambiguousTimeDate(html)
     // Same reasoning as the headline chain: academic-publisher tags appended last so no
     // already-captured date can shift. A date that still cannot be extracted fails closed.
-    || metaContent(html, ['citation_publication_date', 'citation_online_date', 'DC.date', 'dcterms.date']);
+    || academicPublishedDate(html);
   const mainText = extractMainText(html);
   let publishedAt = '';
   if (publishedRaw) {

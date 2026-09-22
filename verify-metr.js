@@ -22,6 +22,7 @@ async function verifyUI(bundle) {
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
         await page.goto(`${url}${url.includes('?') ? '&' : '?'}scoutTheme=${theme}`);
+        await page.evaluate(() => openExplore('#metrInstrument'));
         await page.waitForFunction(() => publishedSignals);
         const source = bundle.capabilities?.metr;
         if (source?.current) {
@@ -40,7 +41,9 @@ async function verifyUI(bundle) {
           if (theme === 'light' && width === 1440) {
             await page.locator('#observationPrediction').selectOption('2026-0');
             assert.match(await page.locator('#metrContext').textContent(), /Context only/);
-            assert.match(await page.locator('.trajectory-state').textContent(), /not yet assessed/);
+            await page.locator('#observationDetail .forecast-dossier > summary').click();
+            await page.waitForSelector('[data-forecast-dossier="2026-0"]');
+            assert.match(await page.locator('[data-forecast-dossier="2026-0"]').textContent(), /not yet assessed/);
             await page.locator('#observationDetail [data-watch]').click();
             const unrelatedId = await page.evaluate(() => forecastRecords().find(r => r.id !== '2026-0').id);
             const beforeOther = await page.evaluate(id => evidenceSnapshot(id), unrelatedId);
@@ -88,6 +91,7 @@ async function verifyUI(bundle) {
             await page.route('**/signals.json', route => route.fulfill({ json:{ ...bundle,
               capabilities:{ metr:emptyState() } } }));
             await page.reload();
+            await page.evaluate(() => openExplore('#metrInstrument'));
             await page.waitForFunction(() => publishedSignals);
             assert.equal(await page.locator('#metrModel').isDisabled(), true);
             assert.match(await page.locator('#metrStatus').textContent(), /No measurements/);

@@ -19,6 +19,8 @@
  *               5. the reuse ceiling holds.
  *             With a browser URL it also proves the UI renders news honestly as
  *             news, and that the page's own coverage validator accepts it.
+ *             --academic-dates-only runs the offline date regressions alone;
+ *             its focused result is not a full NEWS or publication verdict.
  *
  * News can never satisfy the Peter floors, and it can never displace a reviewed
  * X mapping. Both of those are asserted here, not assumed.
@@ -177,6 +179,7 @@ const PROOF_ROSTER = [
   'X source redirects are refused while independent reporting may mention X',
   'an apostrophe in a headline or publisher is not read as a delimiter',
   "a neighbouring post's <time> cannot supply this article's publication date",
+  'academic publication dates require an explicit calendar day',
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
   'inline-spacing tidy cannot change any quote comparison',
   'reuse ceiling holds against an over-ceiling ledger',
@@ -196,6 +199,7 @@ const PROOF_CAPABILITY = {
   'X source redirects are refused while independent reporting may mention X': 'X source isolation',
   'an apostrophe in a headline or publisher is not read as a delimiter': 'metadata truncation',
   "a neighbouring post's <time> cannot supply this article's publication date": 'date provenance',
+  'academic publication dates require an explicit calendar day': 'academic date precision',
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents': 'publisher attribution',
   'inline-spacing tidy cannot change any quote comparison': 'quote fidelity',
   'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
@@ -204,6 +208,76 @@ const PROOF_CAPABILITY = {
   'quote drift fails closed': 'quote drift',
   'headline drift fails closed': 'headline drift',
 };
+
+function academicDateProofs() {
+  // Historical fixture inputs must survive retirement of the active source rows.
+  const url = "https://www.nature.com/articles/d41586-026-02451-2";
+  const originalQuotes = [
+    "The world’s data centres used about 485 terawatt-hours of electricity last year, similar to that used by Germany, and the International Energy Agency expects that to double by 2030.",
+    "Five technology companies — Amazon, Alphabet, Microsoft, Meta and Oracle — are expected to spend a total of more than US$600 billion on AI infrastructure this year; a decade ago, the same five companies spent less than $40 billion.",
+  ];
+  const page = (head, body = '<p>Undated fixture text.</p>') =>
+    `<html><head><title>Date fixture</title>${head}</head><body><article>${body}</article></body></html>`;
+  const meta = (name, value) => `<meta name="${name}" content="${value}">`;
+  const precise = '2026-08-11T00:00:00.000Z';
+  const coarseTag = meta('citation_publication_date', '2026/08');
+  // Reduced from the captured Nature response: issue month, precise online/DC date, and a nested rail.
+  const captured = page(coarseTag + meta('citation_online_date', '2026/08/11')
+    + meta('dc.date', '2026-08-11')
+    + '<script type="application/ld+json">{"@type":"WebPage","mainEntity":'
+    + '{"@type":"NewsArticle","headline":"Date fixture","datePublished":"2026-08-11T00:00:00Z"}}</script>',
+    '<header><time datetime="2026-08-11">11 August 2026</time></header>'
+    + '<p class="article__teaser">Only the opening teaser is available.</p>'
+    + '<div data-test="entitlement-box-main">Access through your institution</div>'
+    + '<aside><time datetime="2026-09-10">Related one</time>'
+    + '<time datetime="2026-09-08">Related two</time></aside>');
+  const cases = [
+    { name: 'captured issue month yields to precise online date', html: captured, expected: precise },
+    { name: 'removing captured coarse tag preserves the date', html: captured.replace(coarseTag, ''), expected: precise },
+    { name: 'precise publication date keeps precedence over online date',
+      html: page(meta('citation_publication_date', '2026/08/10') + meta('citation_online_date', '2026/08/11')),
+      expected: '2026-08-10T00:00:00.000Z' },
+    { name: 'primary timestamp keeps precedence and timezone',
+      html: page(meta('article:published_time', '2026-08-11T01:00:00+10:00') + meta('citation_online_date', '2026/08/11')),
+      expected: '2026-08-10T15:00:00.000Z' },
+    { name: 'coarse publication and online values yield to precise DC date',
+      html: page(coarseTag + meta('citation_online_date', '2026') + meta('DC.date', '2026-08-11')),
+      expected: precise },
+    { name: 'coarse DC date yields to precise dcterms date',
+      html: page(meta('DC.date', 'August 2026') + meta('dcterms.date', '11 August 2026')),
+      expected: precise },
+    { name: 'modified date cannot replace an unknown publication day',
+      html: page(coarseTag + meta('article:modified_time', '2026-09-13T00:00:00Z')), expected: '' },
+    { name: 'disagreeing rail dates cannot replace an unknown publication day',
+      html: page(coarseTag, '<aside><time datetime="2026-09-10">Related one</time>'
+        + '<time datetime="2026-09-08">Related two</time></aside><p>Undated fixture text.</p>'), expected: '' },
+    { name: 'article-scoped precise time still outranks the issue month',
+      html: page(coarseTag, '<time datetime="2026-08-11">11 August 2026</time><p>Article text.</p>'),
+      expected: precise },
+  ];
+  for (const field of ['citation_publication_date', 'citation_online_date', 'DC.date', 'dcterms.date']) {
+    for (const partial of ['2026', '2026/08', '2026-08', '08/2026', 'August 2026']) {
+      cases.push({ name: `${field} ${partial} has no publication day`, html: page(meta(field, partial)), expected: '' });
+    }
+  }
+  for (const full of ['2026/08/11', '2026-08-11', 'August 11, 2026', '11 August 2026']) {
+    cases.push({ name: `precise academic date ${full} is preserved`,
+      html: page(meta('citation_publication_date', full)), expected: precise });
+  }
+  const results = cases.map(test => {
+    const actual = extractArticle(test.html, url).publishedAt;
+    return { name: test.name, passed: actual === test.expected, detail: `actual=${JSON.stringify(actual)} expected=${JSON.stringify(test.expected)}` };
+  });
+  const withCoarse = extractArticle(captured, url);
+  const withoutCoarse = extractArticle(captured.replace(coarseTag, ''), url);
+  results.push({
+    name: 'date correction neither changes preview text nor supplies missing reviewed quotes',
+    passed: withCoarse.textSha256 === withoutCoarse.textSha256
+      && originalQuotes.every(quote => !quotePresent(withCoarse.mainText, quote)),
+    detail: 'Both historical reviewed quotes remain absent from the reduced captured teaser.',
+  });
+  return results;
+}
 
 async function discoverProofArticle() {
   for (const feed of PROOF_FEEDS) {
@@ -316,6 +390,12 @@ async function runProofs(log) {
     `rail=${JSON.stringify(railExtracted.publishedAt)} (must be the 2026-08-07 dateline, not the `
     + `2026-09-01 rail item); scoped=${JSON.stringify(scopedExtracted.publishedAt)} (must still read `
     + `the 2026-08-11 date inside <article>)`);
+
+  const academicDates = academicDateProofs();
+  record('academic publication dates require an explicit calendar day',
+    academicDates.every(result => result.passed),
+    `${academicDates.filter(result => result.passed).length}/${academicDates.length} offline controls`
+      + academicDates.filter(result => !result.passed).map(result => `; ${result.name}: ${result.detail}`).join(''));
 
   /* Proof 4c: the reviewed host->publisher map ADDS REACH WITHOUT INVENTING. Measured 2026-08-27:
      anthropic.com and research.google serve a headline, a date and full body text but declare no
@@ -580,6 +660,14 @@ async function runBrowserProof(baseUrl, log) {
 /* ------------------------------------------------------------------ *
  * Main
  * ------------------------------------------------------------------ */
+
+if (process.argv.includes('--academic-dates-only')) {
+  const results = academicDateProofs();
+  for (const result of results) console.log(`${result.passed ? 'PASS' : 'FAIL'} ${result.name} - ${result.detail}`);
+  const passed = results.every(result => result.passed);
+  console.log(`FOCUSED RESULT: ${passed ? 'PASS' : 'FAIL'} - academic dates only; no source retrieval or full NEWS verdict.`);
+  process.exit(passed ? 0 : 1);
+}
 
 (async () => {
   const lines = [];

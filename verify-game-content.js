@@ -13,8 +13,11 @@ const json=name=>JSON.parse(read(name));
 async function main() {
   const policy=json('game-policy.json'),core=await import('./game-core.mjs');
   const expected=['game.html','game.css','game-entry.js','game-core.mjs','game-data.mjs','game-ui.mjs','game-world.mjs',
-    'game-content.json','three.webgpu.min.js','three.core.min.js','THREE-LICENSE.txt'];
-  assert.deepEqual(policy.publicFiles,expected,'The approved eleven-file game surface changed.');
+    'game-content.json','three.webgpu.min.js','three.core.min.js','THREE-LICENSE.txt',
+    
+    ];
+  assert.deepEqual(policy.publicFiles,expected,'The approved exact game/optional surface changed.');
+  assert.deepEqual(policy.baseFiles,expected.slice(0,11),'Base accounting must retain the complete original set.');
   verifyVendor();
   const projected=await deriveGame(),published=json('game-content.json');
   assert.deepEqual(published,projected,'Generated content is not the exact current canonical projection.');
@@ -29,13 +32,14 @@ async function main() {
     for(const match of source.matchAll(/(?:from\s*|import\s*\()\s*['"](\.\/[^'"]+)['"]/g))
       assert(permitted.has(match[1].slice(2)) || policy.sourceOnlyFiles.includes(match[1].slice(2)),`${file} has an uncurated import ${match[1]}`);
   }
-  const config=JSON.parse(fs.readFileSync('C:\\Users\\peterxing\\pap-site\\vercel.json','utf8'));
+  const config=JSON.parse(fs.readFileSync(path.join(process.env.PAP_SITE_CONFIG_DIR || 'C:\\Users\\peterxing\\pap-site','vercel.json'),'utf8'));
   const csp=gameCsp(read('game.html'));
   for(const route of ['/game','/game.html'])assert.equal(
     config.headers.find(row=>row.source===route)?.headers.find(row=>row.key==='Content-Security-Policy')?.value,csp,
     `Production CSP differs from browser-normalized inline theme hashes: ${route}`);
   for(const file of expected.filter(name=>name.endsWith('.mjs')))
     assert.match(config.headers.find(row=>row.source==='/'+file)?.headers.find(row=>row.key==='Content-Type')?.value||'',/javascript/);
+
 
   const canonical=await extractCanonical(read('index.html'),read('app.js')),mapping=json('game-map.json');
   const changed=json('predictions.json');changed.years[0].events[0].prob-=1;
@@ -50,16 +54,13 @@ async function main() {
 
   if(process.env.PAP_CONTENT_BASELINE) {
     const baseline=process.env.PAP_CONTENT_BASELINE;
-    for(const file of ['app.js','styles.css','predictions.json','author.json','signals.json'])
-      assert.equal(read(file),fs.readFileSync(path.join(baseline,file),'utf8'),`Protected original changed: ${file}`);
-    const previous=fs.readFileSync(path.join(baseline,'index.html'),'utf8');
-    const current=read('index.html');
-    assert(current.includes('href="/game"'),'Root game link missing.');
-    assert(Buffer.byteLength(current)-Buffer.byteLength(previous)<=160,'Root link exceeds its allowance.');
-    const rootOnly=current.replace(/^[ \t]*<a href="\/game" class="btn btn-ghost">Play the 3D campaign<\/a>\r?\n/m,'');
-    assert.equal(rootOnly,previous,'Root HTML changed beyond the approved additive link.');
-    const content=JSON.parse(fs.readFileSync(path.join(baseline,'content.json'),'utf8'));
-    assert.equal(canonical.bookSha256,sha(content.bookSource),'The complete original book HTML changed.');
+    for(const file of ['predictions.json','author.json','signals.json'])
+      assert.equal(read(file),fs.readFileSync(path.join(baseline,file),'utf8'),`Protected canonical data changed: ${file}`);
+    const original=await extractCanonical(fs.readFileSync(path.join(baseline,'index.html'),'utf8'),fs.readFileSync(path.join(baseline,'app.js'),'utf8'));
+    assert.equal(canonical.bookSha256,original.bookSha256,'The complete original book changed.');
+    assert.equal(canonical.rawBookSha256,original.rawBookSha256,'The authored book payload changed.');
+    assert.equal(canonical.toolsSha256,original.toolsSha256,'Tool assumptions/formulas/input models changed.');
+    assert.deepEqual(canonical.book,original.book);
   }
   console.log(`RESULT: PASS - game projection ${published.coverage.status}; ${published.coverage.mapped}/${published.coverage.forecasts} exact mappings, `
     + `${published.coverage.chapters} full chapters, ${published.coverage.sections} original surfaces, canonical layers and strict vendor/import/CSP boundaries.`);

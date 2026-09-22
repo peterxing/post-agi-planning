@@ -395,6 +395,61 @@ Optional `PAP_UI_ARTIFACT_DIR` saves responsive screenshots outside the public t
 
 ## Local commands
 
+### AI scenarios and actual events
+
+`/ai-timeline` (also `ai-timeline.html`) is an independent, self-contained companion to the
+existing site, linked from the homepage and footer. It compares original summaries of
+[AI 2027](https://ai-2027.com/) and [AI 2040](https://ai-2040.com/) with a curated public-source
+event record. AI 2040's Plan A remains a **policy recommendation**, not a competing unconditional
+prediction. Scenario alternatives remain explicitly conditional.
+
+The embedded `timelineData` JSON is the only data source for this page. Its snapshot was reviewed
+on **22 September 2026**, with the latest precisely dated included event on **18 September 2026**.
+This is not a live feed or exhaustive news archive. Each event has a primary source, its own date,
+one or more individually explained checkpoint mappings, and an explicit limitation. Source dates
+are separate from event dates; revisions, effective dates, undated guidance, and month-only dates
+retain their meaning. Company announcements are not independently replicated results, and
+investment agreements are not installed capacity. Historical METR findings link to their later
+update through the same checkpoint rather than being presented as current estimates.
+
+The comparison, chronological event view, source library, topic/search/year filters, ordering,
+scenario alternatives, and selected evidence dialog can be addressed through URL parameters.
+The page uses no external assets, analytics, storage, or background requests and opens directly
+as a local HTML file. Source links require internet access. It does not read or alter
+`predictions.json`, `signals.json`, author data, existing evidence accounting, or scheduled collection.
+
+To revise the snapshot, edit the embedded source, event, and checkpoint records together after
+reading the primary sources; do not advance `reviewedAt` merely because the page was opened.
+Run `node verify-ai-timeline.js` for data, date, source-link, accessibility/interaction, responsive,
+and serving checks. Optional `PAP_UI_ARTIFACT_DIR` saves screenshots outside the public tree.
+The page is included explicitly in the existing local-server and deployment allow-lists; the
+verification script is mirrored as tooling, never served. No deployment is performed by the test.
+
+### Reader-first guide and chronological NEWS
+
+The homepage keeps **The Hitchhiker's Guide To The Singularity** identity and uses four reading
+destinations: Timeline, Read the guide, Explore and About. The timeline advances from 2026 by
+article publication date, never by the year of a related forecast. Forecasts retain their exact
+authored text, estimates and timing basis; dependency-gated horizons and earlier source background
+remain separate. `news-timeline.js` is an explicit same-origin, intent-loaded runtime asset, not
+a second news ledger. It projects only reviewed `signals.embeds` and `signals.context.items`;
+reference points, METR and X keep their distinct meanings in progressively opened dossiers.
+
+Explore initializes the original simulator, portfolio, planner, field notes and watchlist on intent.
+Their canonical literals, formulas, input models and saved keys are unchanged. The complete
+13-entry book remains verbatim; its 70,914-byte outer UTF-8 payload and parser-normalized 70,170
+inner characters describe different units, not different authored content. The real game extractor
+checks both book and tool identities. The separate AI 2027 / AI 2040 companion retains its own
+reviewed snapshot and is linked from Explore and the footer, never merged into canonical NEWS.
+
+The approved root aggregate is 432,000 source bytes; other per-file, transfer, timing and base-game
+limits remain unchanged. Performance checks charge the complete restored tools, the intent-loaded
+NEWS module, all declared base-game assets and the separate companion without hiding code in data.
+The publisher refuses non-repositories, dirty/staged/untracked/ignored mirror work, wrong branches
+or remotes, and unpublished/diverged commits. It fetches and fast-forwards only a clean expected
+checkout. A failed validation leaves files and the index intact; it never resets, stashes, cleans
+or recursively deletes a mirror directory.
+
 ### Coalition campaign
 
 `/game` is an additive thirteen-mission exploration-and-strategy campaign across seven original
@@ -402,6 +457,21 @@ procedural districts. It loads the pinned Three.js 0.180.0 WebGPU renderer only 
 genuine WebGL2 compatibility when needed, and offers the same decision/travel progression without
 3D. The actual initialized backend is displayed. No accounts, analytics, audio, pointer lock or
 external game assets are required.
+
+The user deferred the unpublished cinematic extension on 23 September 2026. Its full candidate,
+policies, tests, six material JPEGs and license were hash-preserved outside serving and mirror
+closure before staging this release. The active game is the already-published base feature set,
+not a silently enabled or partially tested HD mode. None of the seven parked assets is served.
+Historical cinematic failures and later candidate receipts remain part of that preserved record.
+
+`game-policy.json` accounts for the eleven base files and canonical JSON inputs. All base
+performance limits remain, including the 6,000 ms cold-mobile startup limit. The only base-runtime
+correctness backport awaits the existing graphics module after validated bundle/resume decisions
+and checks cancellation before mounting provisional campaign DOM. Failed imports remain errors.
+Accessible and read-only entry do not import graphics. `verify-game.js --startup` retains
+mixed/invalid/import-failure/cancel-data/cancel-import and late-completion checks; the full default
+suite still proves campaign controls, save compatibility, native GPU loss/recovery and cleanup.
+`verify-game-performance.js` runs both actual base-GPU profiles and complete lifecycle accounting.
 
 Game resources and endings are fictional, not financial advice, a preparedness score or an AGI
 assessment. Every forecast has a reviewed connection to an implemented station/task/choice, with

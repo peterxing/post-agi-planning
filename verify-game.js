@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 const BASE = (process.env.PAP_SITE_URL || process.argv.find(value=>/^https?:\/\//.test(value)) || 'http://127.0.0.1:8787').replace(/\/$/,'');
 const ROOT = __dirname;
 const selections = new Set(process.argv.slice(2).filter(value=>value.startsWith('--')));
-for(const flag of selections)assert(['--unit','--smoke','--campaign','--storage','--refresh','--loss'].includes(flag),`Unknown game test selector: ${flag}`);
+if(require.main===module)for(const flag of selections)assert(['--unit','--smoke','--campaign','--storage','--refresh','--loss','--startup'].includes(flag),`Unknown game test selector: ${flag}`);
 const selected = name => selections.size===0 || selections.has('--'+name);
 const screenshots = process.env.PAP_GAME_SCREENSHOTS || '';
 const read = name => JSON.parse(fs.readFileSync(path.join(ROOT,name),'utf8'));
@@ -62,6 +62,7 @@ function deriveTraces(core) {
 }
 
 async function unit(core) {
+
   const {validateBundle}=await import('./game-data.mjs');
   const inputs={predictions:read('predictions.json'),signals:read('signals.json'),author:read('author.json'),content:read('game-content.json')};
   const bundle=await validateBundle(inputs);
@@ -85,6 +86,83 @@ async function unit(core) {
   assert.throws(()=>core.dispatch(open,{type:'choose',mission:'M12',choice:'share'}),/prerequisites/);
   console.log(`Game unit: ${bundle.rows.length} source identities, invalid/mixed channel refusals, ${Object.keys(traces).length} reachable/replayed endings.`);
   return traces;
+}
+
+
+
+async function startupCases(browser) {
+  const optional=new Set(["game-cinematic-brick-albedo-1k.jpg","game-cinematic-brick-normal-1k.jpg","game-cinematic-brick-roughness-1k.jpg","game-cinematic-concrete-albedo-1k.jpg","game-cinematic-concrete-normal-1k.jpg","game-cinematic-concrete-roughness-1k.jpg","GAME-CINEMATIC-LICENSES.txt"]);
+  for(const scenario of ['accessible','mixed','invalid','import-failure','cancel-data','cancel-import']){
+    const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage(),requests=[],errors=[];
+    await context.addInitScript(()=>{
+      window.startupAdapters=0;
+      if(navigator.gpu){
+        const request=navigator.gpu.requestAdapter.bind(navigator.gpu);
+        navigator.gpu.requestAdapter=(...args)=>{window.startupAdapters++;return request(...args);};
+      }
+    });
+    page.on('request',request=>requests.push(new URL(request.url()).pathname.slice(1)));
+    page.on('pageerror',error=>errors.push(error.message));
+    let release,held=false,delivered=false;
+    const pending=new Promise(resolve=>{release=resolve;});
+    try{
+      if(['mixed','invalid'].includes(scenario)){
+        const signals=read('signals.json');
+        if(scenario==='mixed')signals.forecastVersion.sha256='0'.repeat(64);
+        else signals.context.count++;
+        await page.route('**/signals.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(signals)}));
+      }
+      if(scenario==='import-failure')await page.route('**/game-world.mjs',route=>route.abort('failed'));
+      if(scenario.startsWith('cancel-')){
+        const file=scenario==='cancel-data'?'signals.json':'game-world.mjs';
+        await page.route('**/'+file,async route=>{
+          if(held){await route.continue();return;}
+          held=true;await pending;
+          await route.fulfill({status:200,contentType:file.endsWith('.json')?'application/json':'text/javascript',
+            body:fs.readFileSync(path.join(ROOT,file))});
+          delivered=true;
+        });
+      }
+      await page.goto(BASE+'/game');
+      await page.evaluate(()=>localStorage.setItem('pap-mission-control:v1','startup foreign sentinel'));
+      assert(!requests.some(name=>/^(?:three\.|game-(?:world|core|data|ui))/.test(name)),'Landing fetched campaign/graphics early.');
+      await page.click(scenario==='accessible'?'#startAccessible':'#startGame');
+      if(scenario.startsWith('cancel-')){
+        await page.waitForFunction(()=>!document.getElementById('cancelGameLoad').hidden);
+        await expectHeld();
+        await page.click('#cancelGameLoad');
+        await page.click('#startAccessible');await ready(page);
+        await page.click('#gameTravel');await page.locator('#gameDialog [data-travel="commons"]').click();
+        await page.locator('#stationSelection').selectOption('2');await page.click('#commitStationWork');
+        await page.locator('[data-choice="open"]').click();await page.locator('[data-choice="open"]').click();
+        const before=await snapshot(page);release();
+        for(let i=0;i<50&&!delivered;i++)await page.waitForTimeout(20);
+        assert(delivered,'Held response was never delivered to exercise the late-completion path.');
+        await page.waitForTimeout(100);
+        const after=await snapshot(page);assert.deepEqual(after.state,before.state);
+        assert.equal(after.backend.backend,'accessible','Late 3D completion replaced the newer accessible session.');
+        await page.click('#gamePause');await page.click('#exitCampaign');
+      } else if(scenario==='accessible'){
+        await ready(page);assert.equal((await snapshot(page)).backend.backend,'accessible');
+        assert(!requests.some(name=>name==='game-world.mjs'||name.startsWith('three.')),'Accessible mode imported graphics.');
+        await page.click('#gamePause');await page.click('#exitCampaign');
+      } else {
+        await page.waitForFunction(()=>document.getElementById('gameLoadStatus').classList.contains('error'));
+        assert.equal(await snapshot(page),null,'Invalid data or import failure started a campaign.');
+        assert.equal(await page.evaluate(()=>localStorage.getItem('pap-branch-campaign:v1')),null,'Failed startup wrote progress.');
+      }
+      assert.equal(await page.evaluate(()=>window.startupAdapters),0,'Renderer acquisition crossed the validation/cancellation barrier.');
+      assert.equal(await page.locator('canvas').count(),0);
+      assert(!requests.some(name=>optional.has(name)),'Startup requested optional assets without quality consent.');
+      assert.equal(await page.evaluate(()=>localStorage.getItem('pap-mission-control:v1')),'startup foreign sentinel');
+      assert.deepEqual(errors,[],'Startup left an unhandled exception.');
+      console.log(`Game startup ${scenario}: validated-data barrier, no renderer on failure/cancel, no optional requests, owned save preserved.`);
+    }finally{release();await context.close();}
+    async function expectHeld(){
+      for(let i=0;i<100&&!held;i++)await page.waitForTimeout(20);
+      assert(held,'Required pending import/data request was not exercised.');
+    }
+  }
 }
 
 async function enter(page,{mode='3d',profile='balanced',resume=false}={}) {
@@ -299,6 +377,8 @@ async function lossCases(browser) {
   console.log(`Game rendering: actual ${originalBackend} loss retains choices, explicit WebGL2 recovery, hidden-tab pause and no-graphics accessible fallback.`);
 }
 
+
+
 async function main() {
   const core=await import('./game-core.mjs');
   const traces=await unit(core);
@@ -310,6 +390,7 @@ async function main() {
     if(selected('storage'))await storageCases(browser);
     if(selected('refresh'))await refreshCases(browser,core);
     if(selected('loss'))await lossCases(browser);
+    if(selected('startup'))await startupCases(browser);
   } finally {await browser.close();}
   console.log('RESULT: PASS - selected game behavior checks completed.');
 }

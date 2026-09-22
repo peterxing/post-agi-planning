@@ -14,9 +14,42 @@
     "three.core.min.js",
     "THREE-LICENSE.txt"
   ],
-  "canonicalDataFiles": ["predictions.json", "signals.json", "author.json"],
-  "maintainedFiles": ["game.html", "game.css", "game-entry.js", "game-core.mjs", "game-data.mjs", "game-ui.mjs", "game-world.mjs"],
-  "sourceOnlyFiles": ["build-game.js", "game-source.js", "game-map.json", "game-policy.json", "verify-game-content.js", "verify-game.js", "verify-game-performance.js"],
+  "baseFiles": [
+    "game.html",
+    "game.css",
+    "game-entry.js",
+    "game-core.mjs",
+    "game-data.mjs",
+    "game-ui.mjs",
+    "game-world.mjs",
+    "game-content.json",
+    "three.webgpu.min.js",
+    "three.core.min.js",
+    "THREE-LICENSE.txt"
+  ],
+  "canonicalDataFiles": [
+    "predictions.json",
+    "signals.json",
+    "author.json"
+  ],
+  "maintainedFiles": [
+    "game.html",
+    "game.css",
+    "game-entry.js",
+    "game-core.mjs",
+    "game-data.mjs",
+    "game-ui.mjs",
+    "game-world.mjs"
+  ],
+  "sourceOnlyFiles": [
+    "build-game.js",
+    "game-source.js",
+    "game-map.json",
+    "game-policy.json",
+    "verify-game-content.js",
+    "verify-game.js",
+    "verify-game-performance.js"
+  ],
   "vendor": {
     "package": "three",
     "version": "0.180.0",
@@ -27,14 +60,18 @@
         "bytes": 579780,
         "gzip6Bytes": 160183,
         "sha256": "4164104213767dcf6933f86096a8f25d93b95723dab2cf420e2cb3209067698f",
-        "nonNetworkLiterals": ["https://www.shadertoy.com/view/WtyXRy"]
+        "nonNetworkLiterals": [
+          "https://www.shadertoy.com/view/WtyXRy"
+        ]
       },
       "three.core.min.js": {
         "packagePath": "build/three.core.min.js",
         "bytes": 381124,
         "gzip6Bytes": 101305,
         "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
-        "nonNetworkLiterals": ["http://www.w3.org/1999/xhtml"]
+        "nonNetworkLiterals": [
+          "http://www.w3.org/1999/xhtml"
+        ]
       },
       "THREE-LICENSE.txt": {
         "packagePath": "LICENSE",
@@ -43,10 +80,17 @@
         "nonNetworkLiterals": []
       }
     },
-    "retiredBeforeFirstPublication": ["three.module.min.js"],
+    "retiredBeforeFirstPublication": [
+      "three.module.min.js"
+    ],
     "boundary": "Only exact hash-pinned non-network namespace/shader-attribution literals are exempt from URL-origin checks. No general host grant, vendor-wide exemption or new browser origin."
   },
-  "dependencyPins": {"three":"0.180.0", "parse5":"8.0.0", "acorn":"8.15.0", "entities":"6.0.1"},
+  "dependencyPins": {
+    "three": "0.180.0",
+    "parse5": "8.0.0",
+    "acorn": "8.15.0",
+    "entities": "6.0.1"
+  },
   "byteCeilings": {
     "game.html": 12000,
     "game.css": 32000,
@@ -91,13 +135,13 @@
     "afterExitCanvases": 0,
     "afterExitRequests": 0
   },
-  "accounting": "Charge all eleven declared game files plus all three canonical JSON files once, regardless of caching or delayed opening. Also measure actual cold transfer through startup, first reference inspection and first full chapter. Unknown assets cannot escape accounting.",
+  "accounting": "Charge every declared base-game runtime asset and all three canonical JSON inputs once. Reader, companion and NEWS-module budgets are separate and also measured cumulatively. The unpublished cinematic candidate and all optional resources are preserved outside this active release.",
   "root": {
     "newHtmlBytes": 160,
     "appBytes": 183000,
     "stylesBytes": 105000,
     "indexBytes": 150000,
-    "shellBytes": 431000,
+    "shellBytes": 432000,
     "cssRules": 830,
     "domNodes": 6550,
     "transferredBytes": 300000,
@@ -110,6 +154,12 @@
     "ordinarySitePublication": "may continue only when every pre-existing integrity gate still passes",
     "openCampaigns": "remain explicitly bound to their already-validated older snapshot",
     "initialLaunch": "requires complete current gameplay mapping and a fully playable campaign",
-    "neverReclassify": ["NEWS partition/provenance/freshness faults", "reference coverage/review/hash faults", "forecast schema faults", "build/runtime/import/license faults", "performance regressions"]
+    "neverReclassify": [
+      "NEWS partition/provenance/freshness faults",
+      "reference coverage/review/hash faults",
+      "forecast schema faults",
+      "build/runtime/import/license faults",
+      "performance regressions"
+    ]
   }
 }

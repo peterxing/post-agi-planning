@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-09",
+  "updated": "2026-09-22",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -29,67 +29,53 @@
   ],
   "talks": [
     {
-      "title": "AI Will Run Entire Companies Autonomously",
+      "title": "AI will be Running Entire Companies Autonomously says Peter Xing",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=K2e_ywxwqKM",
       "blurb": "On OpenAI's &quot;Level 5&quot; — Peter maps the scenarios where AI runs entire companies autonomously."
     },
     {
-      "title": "Prepare for AGI",
+      "title": "Prepare for AGI says Peter Xing: Microsoft Data &amp; AI Specialist",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=oBJ38mxmnko",
       "blurb": "A Microsoft Data &amp; AI specialist's case for planning now — hope for the best, prepare for the worst."
     },
     {
-      "title": "OpenClaw and the Rise of AI Agents",
+      "title": "OpenClaw and the Rise of AI Agents | Peter Xing with Mic Mann | Exponential Africa",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=P91DZjE5nw0",
       "blurb": "With Mic Mann on why AI agents are the next execution layer — software that doesn't just assist but plans, decides and acts."
     },
     {
-      "title": "AI Agents Will Run Your Workday by 2027",
+      "title": "Peter Xing says AI Agents Will Run Your Workday by 2027!",
       "venue": "Exponential Africa (Singularity South Africa)",
       "year": "2026",
       "url": "https://www.youtube.com/watch?v=6YbEO5Lqm_c",
       "blurb": "How autonomous AI agents reshape every workflow — and how to stay augmented, not automated."
     },
     {
-      "title": "Microsoft Masterclass",
-      "venue": "Australian Software Engineering Week (ASEW), UTS",
+      "title": "ASEW 25 Day 4",
+      "venue": "Australian Software Engineering Week (ASEW), online",
       "year": "2025",
       "url": "https://www.youtube.com/watch?v=wolNeYAd6YY",
-      "blurb": "Peter's two-hour Microsoft masterclass opens Day 4 of Australian Software Engineering Week at UTS."
+      "blurb": "Peter's Microsoft Masterclass on Day 4 of the online Australian Software Engineering Week program, supported by UTS."
     },
     {
-      "title": "From Large Language Models to Learning Companions",
+      "title": "Panel: From Large Language Models to Learning Companions",
       "venue": "GRAILE (Global Research Alliance for AI in Learning and Education)",
       "year": "2025",
       "url": "https://www.youtube.com/watch?v=O5Uj7InErAs",
       "blurb": "Panel on whether polished AI answers build real learning — or quietly offload students' critical thinking."
     },
     {
-      "title": "Academia &amp; Research Panel: Advancing AI Knowledge",
+      "title": "Academia &amp; Research Panel | Advancing AI Knowledge | NextGen AI 2025",
       "venue": "NextGen AI Conference 2025",
       "year": "2025",
       "url": "https://www.youtube.com/watch?v=N_Zn-I5i8hs",
-      "blurb": "With University of Melbourne AI researchers on turning frontier research into applied practice."
-    },
-    {
-      "title": "Preparing for a Post-AGI World in Your Next 18 Months",
-      "venue": "Exponential Africa (Singularity South Africa)",
-      "year": "2025",
-      "url": "https://www.youtube.com/watch?v=ex92otN02eA",
-      "blurb": "A practical 18-month playbook for individuals and organisations to get ready before superintelligence arrives."
-    },
-    {
-      "title": "AGI for Everyone: Empowering Individuals with AI",
-      "venue": "Exponential Africa (Singularity South Africa)",
-      "year": "2025",
-      "url": "https://www.youtube.com/watch?v=p22wV3MiHtM",
-      "blurb": "How accessible AGI can empower individuals — not just institutions — to think, create and solve at scale."
+      "blurb": "With Ran Sun and Kirsty Purcell on advancing AI knowledge across research and industry."
     }
   ]
 }

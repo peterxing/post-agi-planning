@@ -34,8 +34,8 @@
        allow-list is present/staged     -> TERMINAL. A human reconciles the tree with the
                                            allow-list. NEVER retry past this: it is the
                                            fail-closed deploy-surface gate.
-    4  git push failed                  -> re-run
-    5  git clone/fetch/reset/add failed -> re-run (git transport; stages nothing, decides nothing)
+    4  git push failed                  -> reconcile the retained local commit; never reset it
+    5  git clone/fetch/fast-forward/add failed -> re-run (git transport; stages nothing, decides nothing)
     6  EVIDENCE: a gate ran and rejected the site -> a human fixes the evidence; re-running
                                            changes nothing
     7  INSTRUMENT: a preflight verifier is absent -> restore the gate. The chain never ran, so
@@ -307,22 +307,133 @@ if (-not $tok) { Write-Error 'publish-github: no GitHub token (set GH_PUBLISH_TO
 $cloneUrl = "https://$Repo.git"
 $pushUrl  = "https://x-access-token:$tok@$Repo.git"
 
-# 1) Ensure a current clone (tokenless remote in config).
-if (-not (Test-Path (Join-Path $Clone '.git'))) {
-  if (Test-Path $Clone) { Remove-Item -Recurse -Force $Clone }
-  git clone --quiet $cloneUrl $Clone 2>&1 | Out-Null
-  if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: clone failed ($LASTEXITCODE)"; exit 5 }
+function Invoke-PublishMirrorGit {
+  param([string]$Checkout, [string[]]$GitArguments)
+  $previousPreference = $ErrorActionPreference
+  try {
+    $ErrorActionPreference = 'Continue'
+    $executable = (Get-Command git -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+    $output = @(& $executable --no-optional-locks -C $Checkout @GitArguments 2>&1)
+    $code = $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $previousPreference
+  }
+  if ($code -ne 0) {
+    throw "Mirror git $($GitArguments[0]) failed ($code). Existing files and index are preserved."
+  }
+  return @($output | ForEach-Object { [string]$_ })
+}
+
+function Assert-PublishMirrorClean {
+  param([string]$Checkout, [string]$ExpectedRemote, [string]$ExpectedBranch)
+  if (-not [System.IO.Path]::IsPathRooted($Checkout)) { throw 'Mirror path must be absolute.' }
+  $fullPath = [System.IO.Path]::GetFullPath($Checkout).TrimEnd('\', '/')
+  if ($fullPath -eq [System.IO.Path]::GetPathRoot($fullPath).TrimEnd('\', '/') -or
+      $fullPath -eq [Environment]::GetFolderPath('UserProfile').TrimEnd('\', '/')) {
+    throw 'A filesystem root or user home cannot be a mirror checkout.'
+  }
+  if (-not (Test-Path -LiteralPath $fullPath -PathType Container) -or
+      -not (Test-Path -LiteralPath (Join-Path $fullPath '.git') -PathType Container)) {
+    throw 'Existing mirror path is not an ordinary Git checkout. Nothing was deleted.'
+  }
+  if ((Get-Item -LiteralPath $fullPath).Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+    throw 'Mirror checkout must not be a redirected filesystem path.'
+  }
+  $top = ((Invoke-PublishMirrorGit $fullPath @('rev-parse','--show-toplevel')) -join "`n").Trim()
+  if ([System.IO.Path]::GetFullPath($top).TrimEnd('\', '/') -ne $fullPath) {
+    throw 'Mirror path is not its repository root.'
+  }
+  $branch = ((Invoke-PublishMirrorGit $fullPath @('symbolic-ref','--short','HEAD')) -join "`n").Trim()
+  if ($branch -ne $ExpectedBranch) { throw 'Mirror branch differs from the expected publication branch. No checkout was attempted.' }
+  $remotes = @(Invoke-PublishMirrorGit $fullPath @('remote','get-url','--all','origin'))
+  if ($remotes.Count -ne 1 -or $remotes[0].Trim() -ne $ExpectedRemote) {
+    throw 'Mirror origin differs from the expected tokenless remote. No remote was rewritten.'
+  }
+  $pushRemotes = @(Invoke-PublishMirrorGit $fullPath @('remote','get-url','--push','--all','origin'))
+  if ($pushRemotes.Count -ne 1 -or $pushRemotes[0].Trim() -ne $ExpectedRemote) {
+    throw 'Mirror push origin differs from the expected tokenless remote.'
+  }
+  $changes = @(Invoke-PublishMirrorGit $fullPath @('status','--porcelain=v1','--untracked-files=all','--ignored=matching'))
+  if ($changes.Count) {
+    throw 'Mirror has tracked, staged, untracked or ignored work. Preserve it and reconcile manually; publication refused.'
+  }
+  foreach ($operation in @('MERGE_HEAD','CHERRY_PICK_HEAD','REVERT_HEAD','rebase-merge','rebase-apply','sequencer','index.lock')) {
+    $operationPath = ((Invoke-PublishMirrorGit $fullPath @('rev-parse','--git-path',$operation)) -join "`n").Trim()
+    if (-not [System.IO.Path]::IsPathRooted($operationPath)) { $operationPath = Join-Path $fullPath $operationPath }
+    if (Test-Path -LiteralPath $operationPath) { throw 'Mirror has an active Git operation. No operation was aborted.' }
+  }
+}
+
+function Initialize-PublishMirror {
+  param([string]$Checkout, [string]$ExpectedRemote, [string]$ExpectedBranch)
+  if (-not [System.IO.Path]::IsPathRooted($Checkout)) { throw 'Mirror path must be absolute.' }
+  $fullPath = [System.IO.Path]::GetFullPath($Checkout).TrimEnd('\', '/')
+  if ($fullPath -eq [System.IO.Path]::GetPathRoot($fullPath).TrimEnd('\', '/') -or
+      $fullPath -eq [Environment]::GetFolderPath('UserProfile').TrimEnd('\', '/')) {
+    throw 'A filesystem root or user home cannot be a mirror checkout.'
+  }
+  if (-not (Test-Path -LiteralPath $fullPath)) {
+    $parent = Split-Path -Parent $fullPath
+    if (-not (Test-Path -LiteralPath $parent -PathType Container)) { throw 'Mirror parent directory does not exist.' }
+    Invoke-PublishMirrorGit $parent @('clone','--quiet','--single-branch','--branch',$ExpectedBranch,'--',$ExpectedRemote,$fullPath) | Out-Null
+  }
+  Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
+  $tracking = "refs/remotes/origin/$ExpectedBranch"
+  $counts = (((Invoke-PublishMirrorGit $fullPath @('rev-list','--left-right','--count',"HEAD...$tracking")) -join ' ').Trim() -split '\s+')
+  if ($counts.Count -ne 2 -or [int]$counts[0] -ne 0) {
+    throw 'Mirror contains unpublished local commits or diverges from origin. No reset was attempted.'
+  }
+  Invoke-PublishMirrorGit $fullPath @('fetch','--quiet','--no-tags','origin',"refs/heads/${ExpectedBranch}:$tracking") | Out-Null
+  Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
+  $counts = (((Invoke-PublishMirrorGit $fullPath @('rev-list','--left-right','--count',"HEAD...$tracking")) -join ' ').Trim() -split '\s+')
+  if ($counts.Count -ne 2 -or [int]$counts[0] -ne 0) {
+    throw 'Fetched origin is not a fast-forward of the mirror. Local commits and working data are preserved.'
+  }
+  if ([int]$counts[1] -gt 0) {
+    Invoke-PublishMirrorGit $fullPath @('merge','--ff-only','--no-edit',$tracking) | Out-Null
+  }
+  Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
+  Invoke-PublishMirrorGit $fullPath @('config','core.autocrlf','false') | Out-Null
+  Invoke-PublishMirrorGit $fullPath @('config','core.safecrlf','false') | Out-Null
+}
+
+function Assert-PublishMirrorSurface {
+  param(
+    [string]$Checkout,
+    [string[]]$PublicAllowlist,
+    [string[]]$CopiedAllowlist,
+    [string[]]$RetiredPaths,
+    [string]$ForbiddenPattern,
+    [switch]$Staged
+  )
+  if ($Staged) {
+    $paths = @(Invoke-PublishMirrorGit $Checkout @('diff','--cached','--name-only'))
+    $unexpected = @($paths | Where-Object { $_ -notin $CopiedAllowlist -and $_ -notin $RetiredPaths })
+    $notDeleted = @(Invoke-PublishMirrorGit $Checkout @('diff','--cached','--name-only','--diff-filter=d'))
+    $forbidden = @($notDeleted | Where-Object { $_ -match $ForbiddenPattern })
+    if ($unexpected.Count -or $forbidden.Count) {
+      throw 'Non-allow-listed or forbidden mirror content is staged. The worktree and index are retained for diagnosis.'
+    }
+    return
+  }
+  $paths = @(
+    @(Invoke-PublishMirrorGit $Checkout @('ls-files'))
+    @(Invoke-PublishMirrorGit $Checkout @('ls-files','--others','--exclude-standard'))
+    @(Invoke-PublishMirrorGit $Checkout @('ls-files','--others','--ignored','--exclude-standard'))
+  )
+  if (@($paths | Where-Object { $_ -notin $PublicAllowlist }).Count) {
+    throw 'Mirror contains non-allow-listed tracked, untracked or ignored paths. Nothing was discarded.'
+  }
+}
+
+# 1) Preserve all existing work; only a clean expected checkout may fast-forward.
+try {
+  Initialize-PublishMirror -Checkout $Clone -ExpectedRemote $cloneUrl -ExpectedBranch $Branch
+} catch {
+  Write-Error "publish-github: safe mirror preparation refused: $($_.Exception.Message)"
+  exit 5
 }
 Set-Location $Clone
-git remote set-url origin $cloneUrl 2>&1 | Out-Null
-# Silence the LF/CRLF rewrite warning (content is generated with LF).
-git config core.autocrlf false 2>&1 | Out-Null
-git config core.safecrlf false 2>&1 | Out-Null
-git fetch --quiet origin $Branch 2>&1 | Out-Null
-if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: fetch failed ($LASTEXITCODE)"; exit 5 }
-git checkout --quiet $Branch 2>&1 | Out-Null
-git reset --hard --quiet "origin/$Branch" 2>&1 | Out-Null
-if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: reset failed ($LASTEXITCODE)"; exit 5 }
 
 # 2) Copy the curated PUBLIC allow-list (explicit names only — never wildcards).
 # X RETIREMENT 2026-08-13 - verify-id.js was REMOVED from this list because the file itself was
@@ -412,8 +523,12 @@ $fromDeploy = @(
   'run-gates.ps1',
   'game.html','game.css','game-entry.js','game-core.mjs','game-data.mjs','game-ui.mjs','game-world.mjs',
   'game-content.json','three.webgpu.min.js','three.core.min.js','THREE-LICENSE.txt',
+  
+  
+  
   'build-game.js','game-source.js','game-map.json','game-policy.json',
   'verify-game-content.js','verify-game.js','verify-game-performance.js'
+  'ai-timeline.html', 'news-timeline.js','verify-ai-timeline.js'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')
@@ -490,10 +605,16 @@ try {
 # Bump each copied file's mtime so git always re-stats it. Without this, when the
 # new file has the SAME byte size as the committed one (common: signals.json keeps
 # the same structure hour-to-hour, only timestamps/text change) and Copy-Item lands
-# the mtime in the same second as the preceding `git reset --hard`, git's stat-cache
+# the mtime in the same second as the preceding fast-forward checkout, git's stat-cache
 # trusts the cached blob, explicit staging sees no change, and a real update is silently
 # skipped. A future mtime forces a content re-hash; identical content still yields no
 # diff, so unchanged files never create spurious commits.
+try {
+  Assert-PublishMirrorClean -Checkout $Clone -ExpectedRemote $cloneUrl -ExpectedBranch $Branch
+} catch {
+  Write-Error "publish-github: mirror changed before the curated copy: $($_.Exception.Message)"
+  exit 5
+}
 $touch = (Get-Date).AddSeconds(5)
 foreach ($f in $fromDeploy) {
   $p = Join-Path $Deploy $f
@@ -542,29 +663,20 @@ if ($stillTracked) {
 }
 
 # 3) Fail closed on any path outside the explicit public allow-list, then stage only copied paths.
-$tracked = @(git ls-files)
-$untracked = @(git ls-files --others --exclude-standard)
-$ignoredUntracked = @(git ls-files --others --ignored --exclude-standard)
-$unexpectedTracked = $tracked | Where-Object { $_ -notin $publicAllowlist }
-$unexpectedUntracked = $untracked | Where-Object { $_ -notin $publicAllowlist }
-$unexpectedIgnored = $ignoredUntracked | Where-Object { $_ -notin $publicAllowlist }
-if ($unexpectedTracked -or $unexpectedUntracked -or $unexpectedIgnored) {
-  Write-Error "publish-github: repository contains non-allow-listed paths (tracked: $($unexpectedTracked -join ', '); untracked: $($unexpectedUntracked -join ', '); ignored: $($unexpectedIgnored -join ', '))."
+try {
+  Assert-PublishMirrorSurface -Checkout $Clone -PublicAllowlist $publicAllowlist
+} catch {
+  Write-Error "publish-github: $($_.Exception.Message)"
   exit 3
 }
 git add -- $copiedAllowlist 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Error "publish-github: explicit staging failed ($LASTEXITCODE)"; exit 5 }
 $staged = @(git diff --cached --name-only)
-$unexpectedStaged = $staged | Where-Object { $_ -notin $copiedAllowlist -and $_ -notin $retiredFromMirror }
-# A DELETION is the opposite of a publication. evidence-approvals.json is now matched by
-# $forbiddenPattern precisely so it can never be published, and removing it from the mirror is how
-# that is enforced - so testing the forbidden pattern against a staged deletion would abort the
-# very act that satisfies it. Only paths staged for ADDITION or MODIFICATION are tested.
-$stagedNotDeleted = @(git diff --cached --name-only --diff-filter=d)
-$forbidden = $stagedNotDeleted | Where-Object { $_ -match $forbiddenPattern }
-if ($unexpectedStaged -or $forbidden) {
-  git reset --hard --quiet "origin/$Branch" 2>&1 | Out-Null
-  Write-Error "publish-github: non-allow-listed or forbidden file staged, aborted: $(@($unexpectedStaged + $forbidden) -join ', ')"; exit 3
+try {
+  Assert-PublishMirrorSurface -Checkout $Clone -CopiedAllowlist $copiedAllowlist -RetiredPaths $retiredFromMirror -ForbiddenPattern $forbiddenPattern -Staged
+} catch {
+  Write-Error "publish-github: $($_.Exception.Message)"
+  exit 3
 }
 
 # 4) Commit + push only when there is a real change.
@@ -621,6 +733,10 @@ git -c user.name='Peter Xing' -c user.email='peterxing@users.noreply.github.com'
   -m $subject `
   -m $body `
   -m "Co-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>" 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "publish-github: commit failed ($LASTEXITCODE); staged work is preserved and no push was attempted."
+  exit 5
+}
 
 $out = (git push $pushUrl "HEAD:$Branch" 2>&1 | Out-String)
 $code = $LASTEXITCODE

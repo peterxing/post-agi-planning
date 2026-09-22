@@ -105,6 +105,7 @@ $runtimeFiles = @(
   'predictions.json',
   'signals.json',
   'author.json',
+  'ai-timeline.html', 'news-timeline.js',
   'game.html',
   'game.css',
   'game-entry.js',

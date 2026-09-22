@@ -5,7 +5,7 @@ const zlib = require('zlib');
 const { createHash } = require('crypto');
 
 const DIR = __dirname;
-const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8' };
+const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8' };
 
 // Default-deny: the public site only needs these files + static image/style assets. Everything else
 // (server-side scripts x-*.js / refresh-signals.js / server.js, *.ps1, *.md, debug/raw JSON, etc.) is
@@ -29,6 +29,14 @@ const ALLOW_FILES = new Set([
   'three.webgpu.min.js',
   'three.core.min.js',
   'THREE-LICENSE.txt',
+  
+  
+  
+  
+  
+  
+  
+  'ai-timeline.html', 'news-timeline.js',
 ]);
 const ALLOW_EXT = new Set([]);
 const COMPRESS_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt']);
@@ -55,6 +63,7 @@ return http.createServer((req, res) => {
   url = url.replace(/\/{2,}/g, '/');
   if (url === '/' || url === '') url = '/index.html';
   if (url === '/game') url = '/game.html';
+  if (url === '/ai-timeline') url = '/ai-timeline.html';
   const rel = path.normalize(url).replace(/^(\.\.[\/\\])+/, '');
   let file = path.join(DIR, rel);
   // Security: never serve dotfiles (.env, .git, ...) or anything outside DIR.
@@ -72,7 +81,7 @@ return http.createServer((req, res) => {
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); res.end('Not found'); return; }
     const headers = {
-      'Content-Type': base === 'LICENSE' ? 'text/plain; charset=utf-8' : types[path.extname(file)] || 'application/octet-stream',
+      'Content-Type': base === 'LICENSE' ? 'text/plain; charset=utf-8' : base === 'news-timeline.js' ? 'application/javascript; charset=utf-8' : types[path.extname(file)] || 'application/octet-stream',
       'Cache-Control': ext === '.json' ? 'no-store, max-age=0, must-revalidate' : 'public, max-age=0, must-revalidate',
       'Vary': 'Accept-Encoding',
       'X-Content-Type-Options': 'nosniff',

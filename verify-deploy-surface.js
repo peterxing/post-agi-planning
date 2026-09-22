@@ -36,7 +36,7 @@ const http = require('http');
 const { createHash } = require('crypto');
 
 const DIR = __dirname;
-const SITE = 'C:\\Users\\peterxing\\pap-site';
+const SITE = (process.env.PAP_SITE_CONFIG_DIR || 'C:\\Users\\peterxing\\pap-site');
 const IGNORE_FILE = path.join(SITE, '.vercelignore');
 const GAME_POLICY = JSON.parse(fs.readFileSync(path.join(DIR,'game-policy.json'),'utf8'));
 
@@ -63,6 +63,14 @@ const PUBLIC_SURFACE = [
   'three.webgpu.min.js',
   'three.core.min.js',
   'THREE-LICENSE.txt',
+  
+  
+  
+  
+  
+  
+  
+  'ai-timeline.html', 'news-timeline.js',
 ];
 
 // Uploaded so Vercel can read it as configuration, but consumed rather than
@@ -173,6 +181,8 @@ const ALLOWED_EGRESS_HOSTS = new Set([
      mill or preprint server. Declaring the host never makes its contents admissible; that stays with
      the per-article fetch, quote-match and source-quality gates. */
   'www.bbc.co.uk',
+  // Reviewed 2026-09-22: the two user-approved, publicly verified Nature replacements.
+  'www.constructiondive.com',
 ]);
 
 /* Named rather than merely absent, so the failure says WHY. Bare hostnames, so this declaration
@@ -382,6 +392,23 @@ function head(url) {
   });
 }
 
+async function companionSurface(base, expectedHash, fetchImpl = fetch) {
+  const file = new URL('/ai-timeline.html', base);
+  const canonical = new URL('/ai-timeline', base);
+  let response = await fetchImpl(file.href, { redirect:'manual', cache:'no-store', signal:AbortSignal.timeout(20000) });
+  if ([301,308].includes(response.status)) {
+    const location = response.headers.get('location');
+    if (!location || new URL(location, file).href !== canonical.href) throw new Error('Companion redirect is not the exact same-origin approved route.');
+    response = await fetchImpl(canonical.href, { redirect:'error', cache:'no-store', signal:AbortSignal.timeout(20000) });
+  }
+  if (response.status !== 200 || !/text\/html/i.test(response.headers.get('content-type') || ''))
+    throw new Error('Companion canonical route did not serve HTML with HTTP 200.');
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length > 180000 || createHash('sha256').update(bytes).digest('hex') !== expectedHash)
+    throw new Error('Companion canonical bytes differ from the reviewed source.');
+  return true;
+}
+
 async function pool(items, size, worker) {
   const results = new Array(items.length);
   let index = 0;
@@ -390,6 +417,7 @@ async function pool(items, size, worker) {
       const i = index++;
       results[i] = await worker(items[i]);
     }
+
   }));
   /* Completeness here is true BY CONSTRUCTION — pre-sized array, every index claimed exactly once,
      Promise.all propagating any rejection — so no caller need check it. That is precisely why this
@@ -416,7 +444,11 @@ async function assertLive(base) {
   for (const { name, status } of statuses) {
     if (served.has(name)) {
       // vercel.json sets cleanUrls, so /index.html legitimately redirects to /.
-      const ok = ['index.html','game.html'].includes(name) ? (status === 200 || status === 301 || status === 308) : status === 200;
+      let ok = ['index.html','game.html'].includes(name) ? (status === 200 || status === 301 || status === 308) : status === 200;
+      if (name === 'ai-timeline.html') {
+        try { ok = await companionSurface(base, createHash('sha256').update(fs.readFileSync(path.join(DIR, name))).digest('hex')); }
+        catch (error) { ok = false; problems.push(`${base}/${name}: ${error.message}`); }
+      }
       if (!ok) problems.push(`${base}/${name} must be served but returned ${status || 'no response'}`);
       else confirmedServed++;
     } else if (status === 200) {

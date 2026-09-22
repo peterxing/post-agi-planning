@@ -9,9 +9,11 @@ const ROOT=__dirname;
 const BASE=(process.env.PAP_SITE_URL || process.argv.find(value=>/^https?:\/\//.test(value)) || 'http://127.0.0.1:8787').replace(/\/$/,'');
 const policy=JSON.parse(fs.readFileSync(path.join(ROOT,'game-policy.json'),'utf8'));
 const b=policy.budgets;
+const selectors=process.argv.slice(2).filter(value=>value.startsWith('--'));
+assert(selectors.length===0,'The complete active base-game profile has no optional selector.');
 
 async function main() {
-  const names=[...policy.publicFiles,...policy.canonicalDataFiles];
+  const names=[...policy.baseFiles,...policy.canonicalDataFiles];
   const assets=names.map(name=>{
     const bytes=fs.readFileSync(path.join(ROOT,name));
     if(policy.byteCeilings[name])assert(bytes.length<=policy.byteCeilings[name],`${name} exceeds its per-file budget.`);
@@ -39,6 +41,14 @@ async function main() {
         let requests=0;
         window.fetch=(...args)=>{requests++;return originalFetch(...args).finally(()=>requests--);};
         window.pendingGameRequests=()=>requests;
+        window.baseStartupStages=[];
+        document.addEventListener('DOMContentLoaded',()=>{
+          let previous='';
+          new MutationObserver(()=>{
+            const text=document.querySelector('.game-brand small')?.textContent;
+            if(text&&text!==previous){window.baseStartupStages.push({text,at:performance.now()});previous=text;}
+          }).observe(document.body,{childList:true,subtree:true,characterData:true});
+        });
       });
       const page=await context.newPage(),session=await context.newCDPSession(page);
       if(mobile) {
@@ -54,11 +64,21 @@ async function main() {
       assert(landing.interactive<=b.interactiveMs,`Game landing interactive ${landing.interactive} exceeds budget.`);
       assert(landing.transfer<=b.landingTransferredBytes,`Game landing transfer ${landing.transfer} exceeds budget.`);
       assert(!landing.requests.some(url=>/\/(?:three\.|game-(?:world|core|data|ui))/.test(url)),'Renderer/campaign was fetched before Start.');
-      const start=Date.now();
+      const start=Date.now(),monotonicStart=performance.now();
+      const browserStart=await page.evaluate(()=>performance.now());
       await page.locator('#startGame').click();
       await page.evaluate(async()=>{window.readGamePerformance=(await import('/game-ui.mjs')).getCampaignSnapshot;});
       await page.waitForFunction(()=>Boolean(window.readGamePerformance?.()?.backend.renderedFrames));
       const startup=Date.now()-start;
+      const startupPhases=await page.evaluate(()=>({stages:window.baseStartupStages,
+        resources:performance.getEntriesByType('resource').map(r=>({name:r.name,start:r.startTime,end:r.responseEnd,transfer:r.transferSize})),
+        metrics:window.readGamePerformance().backend}));
+      const startupDiagnostic={profile:mobile?'mobile 4x CPU / 4Mbps / 150ms RTT':'desktop',startup,
+        monotonicMs:performance.now()-monotonicStart,browserStart,...startupPhases};
+      if(startup>(mobile?b.mobileStartMs:b.desktopStartMs)){
+        console.log(JSON.stringify(startupDiagnostic,null,2));
+        if(process.env.PAP_GAME_PERFORMANCE_RECEIPT)fs.writeFileSync(process.env.PAP_GAME_PERFORMANCE_RECEIPT+'.startup-failure.json',JSON.stringify(startupDiagnostic,null,2)+'\n');
+      }
       assert(startup<=(mobile?b.mobileStartMs:b.desktopStartMs),`Start to controllable 3D ${startup} ms exceeds ${mobile?'mobile':'desktop'} budget.`);
       if(mobile) {
         await session.send('Emulation.setCPUThrottlingRate',{rate:1});
@@ -127,11 +147,13 @@ async function main() {
         assert.equal(await page.evaluate(()=>window.pendingGameRequests()),0);
       }
       reports.push({profile:mobile?'390px touch / startup 4x CPU, 4Mbps, 150ms RTT; frame samples unthrottled':'1440px desktop',
-        landing,startup,metrics,dom,transfer,heap,responseP95,cycleGrowth});
+        landing,startup,startupDiagnostic,metrics,dom,transfer,heap,responseP95,cycleGrowth});
       await context.close();
     }
   } finally {await browser.close();}
-  console.log(JSON.stringify({declaredAssets:assets,decoded,gzip,maintained,reports},null,2));
-  console.log('RESULT: PASS - whole declared assets and measured cold entry/render/archive/resource outcomes fit unchanged game limits.');
+  const result={declaredBaseAssets:assets,decoded,gzip,maintained,reports};
+  if(process.env.PAP_GAME_PERFORMANCE_RECEIPT)fs.writeFileSync(process.env.PAP_GAME_PERFORMANCE_RECEIPT,JSON.stringify(result,null,2)+'\n');
+  console.log(JSON.stringify(result,null,2));
+  console.log('RESULT: PASS - complete active base-game assets, real rendering, lifecycle and unchanged performance limits.');
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1;});

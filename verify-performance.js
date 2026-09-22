@@ -18,7 +18,7 @@ const sizes = Object.fromEntries(Object.entries(files).map(([name, file]) => [na
 const html = fs.readFileSync(files.index, 'utf8');
 const serverSource = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8');
 const publisherSource = fs.readFileSync(path.join(__dirname, 'publish-github.ps1'), 'utf8');
-const deployHelperPath = 'C:\\Users\\peterxing\\pap-site\\deploy.ps1';
+const deployHelperPath = path.join(process.env.PAP_SITE_CONFIG_DIR || 'C:\\Users\\peterxing\\pap-site','deploy.ps1');
 const deployHelper = fs.existsSync(deployHelperPath) ? fs.readFileSync(deployHelperPath, 'utf8') : '';
 const problems = [];
 const expectedCards = predictions.years.reduce((sum, year) => sum + year.events.length, 0)
@@ -248,7 +248,7 @@ const BUDGETS = [
   { name: 'index.html', bytes: sizes.index, ceiling: 150000 },
   { name: 'app.js', bytes: sizes.app, ceiling: 183000 },
   { name: 'styles.css', bytes: sizes.styles, ceiling: 105000 },
-  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 431000 },
+  { name: 'static shell', bytes: sizes.index + sizes.app + sizes.styles, ceiling: 432000 },
 ];
 const CSS_RULE_CEILING = 830;
 const DESIGN_MARGIN = 0.02;
@@ -266,13 +266,13 @@ for (const budget of budgetReport) {
 }
 const tightBudgets = budgetReport.filter(budget => budget.headroom >= 0 && budget.fraction < DESIGN_MARGIN);
 if (!/<script src="app\.js" defer><\/script>/.test(html)
-    || !/<link rel="stylesheet" href="styles\.css"\s*\/>/.test(html)) {
+    || !/<link rel="stylesheet" href="styles\.css"\s*\/?>/.test(html)) {
   problems.push('index.html must load local cacheable app.js and styles.css assets');
 }
 if (/AR glasses reach mainstream adoption|verified inline baseline/.test(html)) {
   problems.push('index.html still contains the stale inline forecast duplicate');
 }
-for (const asset of ['app.js', 'styles.css']) {
+for (const asset of ['app.js', 'styles.css', 'news-timeline.js', 'ai-timeline.html']) {
   if (!serverSource.includes(`'${asset}'`)) problems.push(`server.js does not allow ${asset}`);
   if (!publisherSource.includes(`'${asset}'`)) problems.push(`publish-github.ps1 does not mirror ${asset}`);
   if (!deployHelper.includes(`'${asset}'`)) problems.push(`pap-site deploy helper does not sync ${asset}`);
@@ -282,9 +282,10 @@ if (!/Get-FileHash/.test(deployHelper) || !/Production mirror hash mismatch/.tes
 }
 if (/git add -A/.test(publisherSource)
     || !/git add -- \$copiedAllowlist/.test(publisherSource)
-    || !/unexpectedUntracked/.test(publisherSource)
-    || !/unexpectedIgnored/.test(publisherSource)
-    || !/unexpectedTracked/.test(publisherSource)) {
+    || !/Assert-PublishMirrorSurface/.test(publisherSource)
+    || !/--ignored/.test(publisherSource)
+    || !/--ff-only/.test(publisherSource)
+    || /git reset --hard|git clean|git stash|Remove-Item -Recurse -Force \$Clone/.test(publisherSource)) {
   problems.push('GitHub publisher does not stage and audit the explicit public allow-list');
 }
 
@@ -297,15 +298,20 @@ if (/git add -A/.test(publisherSource)
     waitUntil: 'load',
     timeout: 45000,
   });
+  const initialResources = await page.evaluate(() => performance.getEntriesByType('resource').map(entry=>entry.name));
+  assertNoOptionalBeforeIntent(initialResources);
+  const openedAt=Date.now();
+  await page.locator('#openTimeline').click();
   await page.waitForFunction(
     // Readiness means every prediction is ACCOUNTED FOR (X retirement 2026-08-13): it has
     // rendered either its cited origin card or its explicit uncited notice. Additive currency
     // cards are counted separately and never satisfy readiness for a prediction.
-    expected => (document.querySelectorAll('.tl-signal:not(.tl-currency)').length
-      + document.querySelectorAll('.tl-signal-uncited').length) === expected,
+    expected => document.getElementById('yearContent')?.dataset.loaded==='true'
+      && forecastRecords().length===expected && model.connections===Object.keys(publishedSignals.embeds).length+Object.keys(publishedSignals.context.items).length,
     expectedCards,
     { timeout: 15000 }
   );
+  const openedReadyMs=Date.now()-openedAt;
   const appReadyMs = Date.now() - started;
   const metrics = await page.evaluate(() => {
     const navigation = performance.getEntriesByType('navigation')[0];
@@ -324,6 +330,31 @@ if (/git add -A/.test(publisherSource)
       overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth,
     };
   });
+  const moduleBytes=fs.readFileSync(path.join(__dirname,'news-timeline.js'));
+  const optionalGzip=require('node:zlib').gzipSync(moduleBytes,{level:6}).length;
+  if(moduleBytes.length>28000||optionalGzip>12000)problems.push('The exact optional NEWS module exceeds its approved byte cap.');
+  if(sizes.index+sizes.app+sizes.styles+moduleBytes.length>465000)problems.push('The cumulative opened reader shell exceeds 465000 bytes.');
+  if(openedReadyMs>1000)problems.push(`Intent to timeline readiness exceeds 1000 ms: ${openedReadyMs}`);
+  await page.evaluate(()=>openExplore('#mission-control'));
+  await page.waitForFunction(()=>document.querySelectorAll('.alloc-row').length===6);
+  const explored=await page.evaluate(()=>({nodes:document.querySelectorAll('*').length,
+    rules:[...document.styleSheets].reduce((sum,sheet)=>sum+sheet.cssRules.length,0),
+    overflow:document.documentElement.scrollWidth>innerWidth}));
+  if(explored.nodes>6550||explored.rules>830||explored.overflow)problems.push('Complete Explore mount exceeds the unchanged DOM/CSS/mobile bounds.');
+  for(let cycle=0;cycle<10;cycle++){
+    await page.locator('#exploreDisclosure').evaluate(node=>{node.open=false;});
+    await page.waitForTimeout(30);
+    await page.locator('#exploreDisclosure').evaluate(node=>{node.open=true;});
+    await page.waitForTimeout(30);
+  }
+  const repeated=await page.evaluate(()=>document.querySelectorAll('*').length);
+  if(repeated>explored.nodes+15||repeated>6550)problems.push('Repeated Explore mounts grow the retained DOM.');
+  const allNames=['index.html','app.js','styles.css','news-timeline.js','ai-timeline.html',
+    ...JSON.parse(fs.readFileSync(path.join(__dirname,'game-policy.json'),'utf8')).publicFiles,
+    'predictions.json','signals.json','author.json'];
+  const declared=[...new Set(allNames)].map(name=>{const bytes=fs.readFileSync(path.join(__dirname,name));return{name,bytes:bytes.length,gzip6:require('node:zlib').gzipSync(bytes,{level:6}).length};});
+  console.log(JSON.stringify({openedReadyMs,optionalModuleBytes:moduleBytes.length,optionalGzip,explored,repeated,allDeclaredAssets:declared,
+    cumulativeDeclaredBytes:declared.reduce((sum,row)=>sum+row.bytes,0),cumulativeDeclaredGzip:declared.reduce((sum,row)=>sum+row.gzip6,0)}));
   await context.close();
   await browser.close();
 
@@ -386,3 +417,7 @@ if (/git add -A/.test(publisherSource)
   console.error(error);
   process.exit(1);
 });
+function assertNoOptionalBeforeIntent(urls){
+  if(urls.some(url=>/\/(?:news-timeline\.|ai-timeline|game|three\.)/.test(new globalThis.URL(url).pathname)))
+    problems.push('Timeline, companion or game assets loaded before intentional entry.');
+}

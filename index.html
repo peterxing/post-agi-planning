@@ -1,148 +1,221 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The Hitchhiker's Guide to the Singularity — Peter Xing</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22none%22 stroke=%22%23b11f4b%22 stroke-width=%222.5%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23b11f4b%22/%3E%3C/svg%3E" />
-<meta name="description" content="An interactive civilization-forecast system (2026–2040), undated post-superintelligence horizon, and living book for navigating the arrival of superintelligence. By Peter Xing." />
-<script>
-  (() => {
-    const param = new URLSearchParams(window.location.search).get("scoutTheme");
-    const theme =
-      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    document.documentElement.setAttribute("data-theme", theme);
-  })();
-</script>
-<script>
-  (() => {
-    if (new URLSearchParams(window.location.search).has("scoutTheme")) return;
-    try {
-      const stored = localStorage.getItem("pap-theme");
-      if (stored === "dark" || stored === "light") {
-        document.documentElement.setAttribute("data-theme", stored);
-      }
-    } catch (e) {}
-  })();
-</script>
-<style>
-
-:root {
-  color-scheme: light;
-  --cp-bg: #f7f4ef;
-  --cp-bg-elevated: #fcfbf8;
-  --cp-surface: #ffffff;
-  --cp-surface-soft: #f5f5f5;
-  --cp-border: #dedede;
-  --cp-border-strong: #919191;
-  --cp-text: #242424;
-  --cp-text-muted: #5c5c5c;
-  --cp-text-soft: #6f6f6f;
-  --cp-accent: #b11f4b;
-  --cp-accent-hover: #9a1a41;
-  --cp-accent-soft: rgba(177, 31, 75, 0.08);
-  --cp-accent-fg: #ffffff;
-  --cp-success: #16a34a;
-  --cp-danger: #dc2626;
-  --cp-warning: #f59e0b;
-  --cp-link: #0078d4;
-  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
-  --cp-overlay: rgba(255, 255, 255, 0.8);
-  --cp-panel: rgba(255, 255, 255, 0.86);
-  --cp-panel-strong: rgba(255, 255, 255, 0.96);
-  --cp-sheen: rgba(255, 255, 255, 0.55);
-  --cp-highlight: rgba(177, 31, 75, 0.12);
-}
-html[data-theme="dark"] {
-  color-scheme: dark;
-  --cp-bg: #3d3b3a;
-  --cp-bg-elevated: #343231;
-  --cp-surface: #292929;
-  --cp-surface-soft: #2e2e2e;
-  --cp-border: #474747;
-  --cp-border-strong: #5f5f5f;
-  --cp-text: #dedede;
-  --cp-text-muted: #919191;
-  --cp-text-soft: #b0b0b0;
-  --cp-accent: #fd8ea1;
-  --cp-accent-hover: #fb7b91;
-  --cp-accent-soft: rgba(253, 142, 161, 0.14);
-  --cp-accent-fg: #1a1a1a;
-  --cp-success: #4ade80;
-  --cp-danger: #f87171;
-  --cp-warning: #fbbf24;
-  --cp-link: #4da6ff;
-  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
-  --cp-overlay: rgba(41, 41, 41, 0.88);
-  --cp-panel: rgba(41, 41, 41, 0.72);
-  --cp-panel-strong: rgba(41, 41, 41, 0.96);
-  --cp-sheen: rgba(255, 255, 255, 0.04);
-  --cp-highlight: rgba(253, 142, 161, 0.12);
-}
-</style>
-<link rel="stylesheet" href="styles.css" />
-<script src="app.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Hitchhiker’s Guide To The Singularity</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2212%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%223%22 fill=%22currentColor%22/%3E%3C/svg%3E">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <script>
+    (() => {
+      if (new URLSearchParams(location.search).has('scoutTheme')) return;
+      try {
+        const saved = localStorage.getItem('pap-theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch { /* The system theme remains available without storage. */ }
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-<a class="skip-link" href="#timeline">Skip to the dated forecast</a>
-<div class="page-progress" aria-hidden="true"><span id="pageProgress"></span></div>
-<div class="content">
-
-<nav class="nav" aria-label="Primary navigation">
-  <div class="nav-inner">
-    <a class="brand" href="#top" style="color:var(--cp-text)">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/>
-        <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
-        <path d="M16 2 L16 11 M16 21 L16 30 M2 16 L11 16 M21 16 L30 16" stroke="var(--cp-accent)" stroke-width="1.2" opacity="0.6"/>
-      </svg>
-      <span class="brand-text">The Hitchhiker's Guide to the Singularity<small>Peter Xing · Post-AGI planning</small></span>
-    </a>
-    <div class="nav-links" id="navLinks">
-      <a href="#mission-control">Dashboard</a>
-      <a href="#timeline">Forecast</a>
-      <a href="#post-superintelligence">Horizon</a>
-      <a href="#engine">Strategies</a>
-      <a href="#book">Chapters</a>
-      <a href="#moonshot">Plan</a>
-      <a href="#signals">Signals</a>
-      <a href="#author">Author</a>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
-        <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
-      </button>
-      <button class="nav-toggle-btn" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  <a class="skip" href="#timeline">Skip to the timeline</a>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="wordmark" href="#top" aria-label="The Hitchhiker’s Guide To The Singularity — home">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <circle cx="22" cy="22" r="17" fill="none" stroke="var(--cp-accent)"/>
+          <ellipse cx="22" cy="22" rx="6" ry="21" fill="none" stroke="var(--cp-accent)" transform="rotate(42 22 22)"/>
+          <circle cx="22" cy="22" r="3" fill="var(--cp-accent)"/>
+        </svg>
+        <span>The Hitchhiker’s Guide<br><strong>To The Singularity</strong></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="#timeline">Timeline</a>
+        <a href="#book">Read the guide</a>
+        <a href="#explore">Explore</a>
+        <a href="#author">About</a>
+      </nav>
+      <button class="theme-button" id="themeToggle" type="button" aria-label="Switch colour theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 5a7 7 0 0 1 0 14z" fill="currentColor"/></svg>
       </button>
     </div>
-  </div>
-</nav>
+  </header>
 
-<a id="top"></a>
-<header class="hero">
-  <div class="wrap">
-    <div class="hero-dateline mono">
-      <span>Forecast coordinate <strong id="heroCoordinate">2026</strong></span>
-      <span id="heroPredFreshness">Loading forecast revision…</span>
-      <span id="heroSignalFreshness">Loading observational layer…</span>
-    </div>
-    <div class="hero-grid">
+  <main id="top">
+    <header class="hero wrap" aria-labelledby="heroTitle">
       <div class="hero-copy">
-        <div class="eyebrow">Your mission control · 2026–2040</div>
-        <h1>The Hitchhiker's Guide to the <span class="accent">Singularity</span></h1>
-        <p class="hero-tag">A dated civilization forecast, live evidence layer, and practical field guide for navigating the transition from useful agents to superintelligence.</p>
-        <p class="hero-quote">The line is the forecast. The branches are uncertainty. The observations are reality pushing back.</p>
-        <div class="hero-cta">
-          <a href="#timeline" class="btn btn-primary">Enter the dated forecast
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-          <a href="#post-superintelligence" class="btn btn-ghost">Inspect the undated horizon</a>
-          <a href="/game" class="btn btn-ghost">Play the 3D campaign</a>
-        </div>
+        <p class="eyebrow">A field guide by Peter Xing</p>
+        <h1 id="heroTitle">The future is<br>still <em>unwritten.</em></h1>
+        <p class="hero-deck">A journey through artificial general intelligence, superintelligence, and the human choices in between.</p>
+        <a class="primary-action" href="#timeline">Explore the timeline <span aria-hidden="true">↗</span></a>
+        <p class="hero-footnote">What’s reported. What’s forecast.<br>A clearer view of the difference.</p>
       </div>
-      <aside class="forecast-lens probability-simulator" aria-labelledby="probabilitySimulatorTitle">
+      <figure class="hero-art">
+        <svg viewBox="0 0 540 550" role="img" aria-labelledby="artTitle artDescription">
+          <title id="artTitle">The human at the horizon</title>
+          <desc id="artDescription">An original illustration of a human profile meeting a network of machine connections, above an energy-grid horizon. This is conceptual artwork, not a photograph of a reported event.</desc>
+          <defs>
+            <linearGradient id="artLight" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--cp-accent)" stop-opacity=".04"/>
+              <stop offset="1" stop-color="var(--cp-accent)" stop-opacity=".24"/>
+            </linearGradient>
+            <pattern id="artLines" width="9" height="9" patternUnits="userSpaceOnUse">
+              <path d="M0 9 9 0" fill="none" stroke="var(--cp-border-strong)" stroke-width=".55" opacity=".4"/>
+            </pattern>
+            <clipPath id="artDisc"><circle cx="280" cy="236" r="184"/></clipPath>
+          </defs>
+          <path d="M48 474H503M72 451H481M100 427H456" stroke="var(--cp-border-strong)" stroke-width=".7" fill="none"/>
+          <path d="m174 407-62 94m112-94-23 94m72-94 14 94m35-94 53 94m-4-94 92 94" stroke="var(--cp-border-strong)" stroke-width=".7" fill="none"/>
+          <circle cx="280" cy="236" r="217" fill="none" stroke="var(--cp-border)" stroke-dasharray="2 7"/>
+          <circle cx="280" cy="236" r="184" fill="url(#artLight)" stroke="var(--cp-accent)" stroke-width="1"/>
+          <g clip-path="url(#artDisc)">
+            <path d="M281 50H470V427H281Z" fill="url(#artLines)"/>
+            <path d="M286 52v367M324 60v350M365 69v332M405 98v267M446 153v160" stroke="var(--cp-border-strong)" stroke-width=".6"/>
+            <path d="M112 131h356M99 178h369M97 225h371M102 272h366M122 319h334M165 366h252" stroke="var(--cp-border-strong)" stroke-width=".6"/>
+            <path d="M199 429c16-28 20-58 9-82-17-13-30-22-33-46-14-1-24-10-21-20l14-28c-8-36 5-71 36-90 35-22 86-16 109 13 30 37 25 86 4 115-21 29-25 58-11 87l17 51Z" fill="var(--cp-bg)" stroke="var(--cp-text)" stroke-width="1.5"/>
+            <path d="M189 240c7-4 15-4 23-1m-36 44 23 2m-14 34c12 1 24-3 33-10" fill="none" stroke="var(--cp-text)" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M234 164c-14 40-12 76 8 109s25 91 8 136" fill="none" stroke="var(--cp-border-strong)" stroke-width=".8"/>
+            <path d="M265 153c-13 49-9 84 13 121s21 87 13 130" fill="none" stroke="var(--cp-border-strong)" stroke-width=".8"/>
+            <path d="m260 209 58-33 49 43 40-39 35 68-67 39-52-41-42 60" fill="none" stroke="var(--cp-accent)" stroke-width="1.6"/>
+            <path d="m318 176 5 70 44-27 8 68 32-107m-84 66 119 2m-67 39 32 47" fill="none" stroke="var(--cp-accent)" stroke-width=".8"/>
+            <g fill="var(--cp-bg)" stroke="var(--cp-accent)" stroke-width="1.5">
+              <circle cx="260" cy="209" r="6"/><circle cx="318" cy="176" r="8"/><circle cx="367" cy="219" r="5"/>
+              <circle cx="407" cy="180" r="6"/><circle cx="442" cy="248" r="8"/><circle cx="375" cy="287" r="7"/>
+              <circle cx="323" cy="246" r="9"/><circle cx="281" cy="306" r="5"/><circle cx="407" cy="334" r="5"/>
+            </g>
+            <circle cx="323" cy="246" r="3.5" fill="var(--cp-accent)"/>
+          </g>
+          <ellipse cx="280" cy="236" rx="232" ry="67" transform="rotate(-29 280 236)" fill="none" stroke="var(--cp-accent)" stroke-width=".8"/>
+          <circle cx="78" cy="349" r="5" fill="var(--cp-accent)"/>
+          <circle cx="458" cy="106" r="6" fill="var(--cp-bg)" stroke="var(--cp-accent)" stroke-width="1.5"/>
+          <path d="M40 80h25m-12-12v25M457 429h20m-10-10v20" fill="none" stroke="var(--cp-accent)" stroke-width=".9"/>
+          <path d="M274 492h12m-6-6v12" stroke="var(--cp-accent)" stroke-width="1.5"/>
+        </svg>
+        <figcaption><span class="mono">FIG. 01</span> Human ambition. Machine intelligence. An open horizon.</figcaption>
+      </figure>
+    </header>
+
+    <section class="reading-key wrap" aria-label="How to read this guide">
+      <p><strong>AGI</strong> Broad, human-level capability across tasks.</p>
+      <p><strong>ASI</strong> Intelligence beyond human capability.</p>
+      <p class="reading-key-note">Neither a model launch nor a news headline establishes that a threshold has been crossed.</p>
+    </section>
+
+    <section class="timeline-section wrap" id="timeline" aria-labelledby="timelineTitle">
+      <div class="section-heading">
+        <div><p class="eyebrow">01 / Follow the evidence</p><h2 id="timelineTitle">A timeline,<br><em>not a prophecy.</em></h2></div>
+        <p>Begin in 2026. Read the reporting in publication order, then explore the forecasts it informs. Connections are not confirmations.</p>
+      </div>
+      <button id="openTimeline" class="text-button" type="button">Start reading from 2026 <span aria-hidden="true">↗</span></button>
+      <div class="timeline-toolbar" hidden>
+        <div class="year-navigation"><button type="button" data-year-step="-1" aria-label="Previous timeline year">←</button><nav id="yearRail" class="year-rail" aria-label="Timeline years"></nav><button type="button" data-year-step="1" aria-label="Next timeline year">→</button></div>
+        <label class="topic-search"><span>Find a theme</span><input data-reader-search type="search" placeholder="Robotics, energy, governance…" maxlength="120"><button id="newsReset" type="button" class="text-button">Reset</button></label>
+      </div>
+      <p class="record-status" id="recordStatus" role="status">The curated record loads when you choose to read. No game or graphics pack starts with it.</p>
+      <details class="record-info" id="recordInfo" hidden><summary>About this record</summary><p id="recordDates"></p><button id="refreshRecord" class="text-button" type="button">Check published updates</button></details>
+      <div id="yearContent" class="year-content" aria-live="off"></div>
+      <p id="timelineAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
+      <details class="earlier-background" id="earlierBackground">
+        <summary>Earlier background &amp; undated sources</summary>
+        <p>Context outside the main 2026-onward chronology. Original publication dates and reviewed connections are retained.</p>
+        <div id="earlierStories"></div>
+      </details>
+    </section>
+
+    <section class="beyond-section" id="post-superintelligence" aria-labelledby="beyondTitle">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">02 / Beyond the timeline</p><h2 id="beyondTitle">Some futures<br>don’t have a date.</h2></div>
+          <p>Dependency-gated horizons are possibilities to examine, not events assigned an invented year.</p>
+        </div>
+        <div class="horizon-reading" id="horizonReading"></div>
+      </div>
+    </section>
+
+    <section class="guide-section wrap" id="book" aria-labelledby="guideTitle">
+      <div class="section-heading">
+        <div><p class="eyebrow">03 / Read the guide</p><h2 id="guideTitle">Make room for<br>the bigger questions.</h2></div>
+        <p>Explore Peter’s original chapters, from the capability frontier to the choices that remain ours.</p>
+      </div>
+      <div id="chapterPreview" class="chapter-preview"></div>
+    </section>
+
+    <aside class="explore-section wrap" id="explore" aria-labelledby="exploreTitle">
+      <details class="explore-disclosure" id="exploreDisclosure">
+        <summary><span><span class="eyebrow">An optional detour</span><strong id="exploreTitle">Explore, experiment, plan.</strong></span><span class="explore-arrow" aria-hidden="true">↗</span></summary>
+        <div class="explore-content" id="exploreContents">
+          <p>Choose an instrument, try an assumption, or keep a field note. These tools are optional; none changes the published forecast.</p>
+          <p id="exploreStatus" class="record-status" role="status">Tools initialize only when you choose to explore.</p>
+          <nav class="explore-nav" aria-label="Explore instruments"><a href="#scenario-lab">Scenario lab</a><a href="#mission-control">Field notes &amp; watchlist</a><a href="#futures">Portfolio</a><a href="#moonshot">1000-day planner</a><a href="#observations">Source desk</a><a href="#atlasSearch">Find a forecast</a></nav>
+          <p class="game-entry"><a href="/game" target="_blank" rel="noopener noreferrer">Play the 3D campaign ↗</a><span>Opens the campaign on this site in a new tab, preserving this domain’s saves. No game or graphics pack is downloaded by the reading page.</span></p>
+          <p class="comparison-entry"><a href="/ai-timeline.html">Compare AI 2027 and AI 2040 timelines ↗</a><span>A separate, curated companion comparison. Its source record and dates are not merged into this guide’s reviewed NEWS.</span></p>
+          <!-- BEGIN ORIGINAL EXPLORE TOOLS -->
+<section class="section-pad scenario-section" id="scenario-lab" aria-labelledby="scenarioTitle">
+  <div class="wrap scenario-layout">
+    <div class="section-head"><div class="eyebrow">02 / Scenario lab</div><h2 id="scenarioTitle">Explore, don't extrapolate.</h2><p>Use the existing probability simulator to examine how assumptions change the branches. Your local experiment never changes Peter's published forecast.</p><a href="#timeline">Continue to the forecast atlas &rarr;</a></div>
+    <div id="scenarioInstrument"><aside class="forecast-lens probability-simulator" aria-labelledby="probabilitySimulatorTitle">
         <div class="forecast-lens-head">
           <div>
             <span class="instrument-label">Probability simulator / local scenario lab</span>
@@ -180,40 +253,9 @@ html[data-theme="dark"] {
         </div>
         <p class="simulator-interpretation" id="simulatorInterpretation" aria-live="polite">The simulator will activate when the forecast model loads.</p>
         <p class="simulator-disclaimer" id="simulatorDisclaimer">Simulation only: adjustments are transparent local heuristics, do not update the published forecast, and are not saved.</p>
-      </aside>
-      <aside class="mission-brief" aria-labelledby="missionBriefTitle">
-        <span class="instrument-label">A little clarity. A practical next step.</span>
-        <h2 id="missionBriefTitle">Plan for possibilities,<br>not certainty.</h2>
-        <p>Your forecasts, field guide and preparation notes, in one place. Start anywhere. There is no deadline to complete a quest.</p>
-        <a class="btn btn-primary" href="#mission-control">Open your dashboard <span aria-hidden="true">&rarr;</span></a>
-        <div class="mission-brief-links"><a href="#scenario-lab">Explore a scenario</a><a href="#book">Read the field guide</a></div>
-        <small>Private by design: your planning progress stays in this browser. No account, rankings or streaks.</small>
-      </aside>
-    </div>
-    <div class="hero-readouts" aria-label="Core forecast anchors">
-      <article class="hero-readout">
-        <span class="instrument-label">Current position</span>
-        <strong id="heroCurrentPosition">2026</strong>
-        <p id="heroCurrentContext">Inside the first forecast year</p>
-      </article>
-      <article class="hero-readout">
-        <span class="instrument-label">Peter’s AGI anchor</span>
-        <strong id="heroAgiProbability">—</strong>
-        <p>Genuine human-level AGI by end of 2026</p>
-      </article>
-      <article class="hero-readout">
-        <span class="instrument-label">Faster branch</span>
-        <strong id="heroBranchWindow">—</strong>
-        <p>First superintelligent systems can emerge</p>
-      </article>
-      <article class="hero-readout">
-        <span class="instrument-label">Forecast field</span>
-        <strong id="heroEventCount">—</strong>
-        <p><span id="heroYearCount">—</span> years · six domains · <span id="heroHorizonCount">—</span> horizon gates</p>
-      </article>
-    </div>
+      </aside></div>
   </div>
-</header>
+</section>
 
 <section class="section-pad mission-section" id="mission-control" aria-labelledby="missionTitle">
   <div class="wrap">
@@ -307,125 +349,9 @@ html[data-theme="dark"] {
   </div>
 </section>
 
-<section class="section-pad scenario-section" id="scenario-lab" aria-labelledby="scenarioTitle">
-  <div class="wrap scenario-layout">
-    <div class="section-head"><div class="eyebrow">02 / Scenario lab</div><h2 id="scenarioTitle">Explore, don't extrapolate.</h2><p>Use the existing probability simulator to examine how assumptions change the branches. Your local experiment never changes Peter's published forecast.</p><a href="#timeline">Continue to the forecast atlas &rarr;</a></div>
-    <div id="scenarioInstrument"></div>
-  </div>
-</section>
+<section id="evidenceDashboard" aria-labelledby="evidenceDashboardTitle"><h3 id="evidenceDashboardTitle">What this record contains</h3><div id="sourceOverview"></div></section>
 
-<hr class="divider-line" />
-<section class="section-pad forecast-section" id="timeline" aria-labelledby="timelineHeading">
-  <div class="wrap">
-    <div class="section-lede">
-      <div class="section-head">
-        <div class="eyebrow">Dated field · Forecast engine</div>
-        <h2 id="timelineHeading">The forecast has a spine—and branches</h2>
-      </div>
-      <div class="section-prose">
-        <p>The dated predictions are organized by year, domain, impact, probability, and branch. Evidence is drawn only from authoritative news and research published inside the currency window, fetched live and quote-checked at publication. Where no qualifying source exists, the prediction says so and records the window searched. Search-only fallbacks are prohibited and nothing older or adjacent is substituted.</p>
-        <div class="forecast-stamps">
-          <div class="sig-stamp" id="predStamp" hidden></div>
-          <div class="sig-stamp" id="sigStamp" hidden></div>
-        </div>
-      </div>
-    </div>
-
-    <section class="evidence-dashboard" id="evidenceDashboard" aria-labelledby="evidenceDashboardTitle">
-      <div>
-        <div class="evidence-dashboard-head">
-          <div>
-            <span class="instrument-label">Evidence ledger / publication strength</span>
-            <h3 id="evidenceDashboardTitle">See what the forecast rests on</h3>
-          </div>
-          <p>Each cited prediction carries one live-verified source: fetched at review and again at publication, with a verbatim quote and a checksum of the article text. Predictions with no qualifying source in the window are shown as searched and uncited rather than left blank.</p>
-        </div>
-        <div class="evidence-stat-grid" aria-label="Evidence coverage summary">
-          <div class="evidence-stat"><span>Cited in window</span><strong id="evidenceCitedStat">—</strong></div>
-          <div class="evidence-stat"><span>Searched, no source</span><strong id="evidenceUncitedStat">—</strong></div>
-          <div class="evidence-stat"><span>Unique articles</span><strong id="evidenceArticlesStat">—</strong></div>
-          <div class="evidence-stat"><span>Publishers</span><strong id="evidencePublishersStat">—</strong></div>
-          <div class="evidence-stat"><span>Currency window</span><strong id="evidenceWindowStat">—</strong></div>
-          <div class="evidence-stat"><span>Newest source</span><strong id="evidenceNewestStat">—</strong></div>
-        </div>
-      </div>
-      <div class="evidence-composition">
-        <div class="composition-row">
-          <span>Cited in the currency window</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidenceCitedBar"></i></span>
-          <strong id="evidenceCitedShare">—</strong>
-        </div>
-        <div class="composition-row external">
-          <span>Searched, no qualifying source</span>
-          <span class="composition-track" aria-hidden="true"><i id="evidenceUncitedBar"></i></span>
-          <strong id="evidenceUncitedShare">—</strong>
-        </div>
-        <div class="evidence-type-row" id="evidenceTypeMix" aria-label="Evidence type mix">
-          <span>Loading evidence types…</span>
-        </div>
-        <div class="source-health" id="evidenceSourceHealth" role="status" aria-live="polite">
-          <strong>Checking observation source…</strong>
-          <span>Source freshness and degradation state will appear here.</span>
-        </div>
-      </div>
-    </section>
-
-    <figure class="turning-points editorial-figure" data-editorial-figure="agi-route" tabindex="0" aria-labelledby="turningPointsTitle">
-      <div class="turning-points-head">
-        <div>
-          <span class="instrument-label">Key turning points / forecast route</span>
-          <h3 id="turningPointsTitle">What changes next?</h3>
-        </div>
-        <p>Follow the transitions that change the planning problem—not every year on the calendar.</p>
-      </div>
-      <svg class="editorial-svg turning-route-svg" viewBox="0 0 1160 260" role="img" aria-labelledby="turningRouteSvgTitle turningRouteSvgDesc">
-        <title id="turningRouteSvgTitle">Route from human-level AGI to the undated post-superintelligence horizon</title>
-        <desc id="turningRouteSvgDesc">A one-way route begins with human-level AGI in 2026, spreads across industries in 2027, branches toward superintelligence in 2028 to 2030, crosses cognitive and physical automation thresholds, reaches the 2040 endpoint, then opens into an undated horizon.</desc>
-        <path class="figure-draw route-spine" d="M54 126 C140 126 174 126 240 126 S350 126 418 126 C468 126 482 82 536 82 M418 126 C468 126 482 170 536 170 M548 82 C622 82 648 126 716 126 S844 126 910 126 S1026 126 1090 126"/>
-        <g class="figure-reveal figure-stage-1">
-          <circle class="figure-node" cx="54" cy="126" r="20"/>
-          <circle class="figure-node-core" cx="54" cy="126" r="7"/>
-          <path class="figure-detail" d="M43 116h22M43 126h22M43 136h22M44 115v22M54 115v22M64 115v22"/>
-          <text class="figure-label" x="54" y="82" text-anchor="middle">2026 · AGI</text>
-          <text class="figure-small" x="54" y="166" text-anchor="middle">human-level capability</text>
-        </g>
-        <g class="figure-reveal figure-stage-2">
-          <rect class="figure-node" x="218" y="104" width="44" height="44" rx="8"/>
-          <path class="figure-detail" d="M226 113h10v10h-10zM243 113h10v10h-10zM226 130h10v10h-10zM243 130h10v10h-10z"/>
-          <text class="figure-label" x="240" y="82" text-anchor="middle">2027 · disruption</text>
-          <text class="figure-small" x="240" y="166" text-anchor="middle">every major industry</text>
-        </g>
-        <g class="figure-reveal figure-stage-3">
-          <rect class="figure-gate" x="404" y="112" width="28" height="28" rx="5" transform="rotate(45 418 126)"/>
-          <text class="figure-label" x="418" y="82" text-anchor="middle">2028–30 · branch</text>
-          <text class="figure-small" x="418" y="166" text-anchor="middle">managed / default / ungoverned</text>
-          <circle class="figure-node" cx="542" cy="82" r="14"/>
-          <circle class="figure-node" cx="542" cy="170" r="14"/>
-        </g>
-        <g class="figure-reveal figure-stage-4">
-          <rect class="figure-node" x="692" y="102" width="48" height="48" rx="10"/>
-          <path class="figure-detail" d="M702 137v-18M714 137v-29M726 137v-38"/>
-          <text class="figure-label" x="716" y="82" text-anchor="middle">automation</text>
-          <text class="figure-small" x="716" y="166" text-anchor="middle">cognitive + physical thresholds</text>
-        </g>
-        <g class="figure-reveal figure-stage-5">
-          <path class="figure-gate" d="M892 148v-44h36v44M902 148v-28h16v28"/>
-          <text class="figure-label" x="910" y="82" text-anchor="middle">2040 · endpoint</text>
-          <text class="figure-small" x="910" y="166" text-anchor="middle">automation + handoff fork</text>
-        </g>
-        <g class="figure-reveal figure-stage-6">
-          <circle class="figure-orbit" cx="1090" cy="126" r="34"/>
-          <circle class="figure-orbit" cx="1090" cy="126" r="19"/>
-          <circle class="figure-node-core" cx="1090" cy="126" r="5"/>
-          <text class="figure-label" x="1090" y="74" text-anchor="middle">undated horizon</text>
-          <text class="figure-small" x="1090" y="178" text-anchor="middle">dependency-gated possibilities</text>
-        </g>
-      </svg>
-      <nav class="turning-points-links" id="turningPointsRoute" aria-label="Key forecast turning points"></nav>
-      <figcaption>Select a turning point to jump directly to the prediction or horizon evidence that supports it.</figcaption>
-    </figure>
-
-    <section class="revision-panel" id="forecastChanges" aria-labelledby="forecastChangesTitle">
+<section class="revision-panel" id="forecastChanges" aria-labelledby="forecastChangesTitle">
       <div>
         <span class="instrument-label">Latest revision / what moved</span>
         <h3 id="forecastChangesTitle">What changed since the prior forecast?</h3>
@@ -434,7 +360,7 @@ html[data-theme="dark"] {
       <div class="revision-links" id="forecastChangeLinks" aria-live="polite"></div>
     </section>
 
-    <section class="forecast-finder" aria-labelledby="forecastFinderTitle">
+<div class="advanced-forecast-finder"><section class="forecast-finder" aria-labelledby="forecastFinderTitle">
       <div class="forecast-finder-top">
         <div class="atlas-search">
           <label id="forecastFinderTitle" for="atlasSearch">Search predictions, horizon and chapters</label>
@@ -484,13 +410,10 @@ html[data-theme="dark"] {
         </div>
       </div>
       <div class="filter-summary">
-        <span id="filterResultCount" aria-live="polite">Loading 96 predictions…</span>
+        <span id="filterResultCount" aria-live="polite">Forecast records load with the published snapshot.</span>
         <span>Filter state is preserved in the shareable URL.</span>
       </div>
-    </section>
-
-    <div class="timeline-toolbar" aria-label="Forecast controls">
-      <div class="timeline-controls" role="group" aria-label="Filter predictions by domain">
+    </section><div class="timeline-controls" role="group" aria-label="Filter predictions by domain">
         <span class="filter-label">Domain</span>
         <button type="button" class="chip active" data-domain="all" aria-pressed="true">All <span class="filter-count" data-domain-count="all">—</span></button>
         <button type="button" class="chip" data-domain="individual" aria-pressed="false">Individual <span class="filter-count" data-domain-count="individual">—</span></button>
@@ -500,257 +423,9 @@ html[data-theme="dark"] {
         <button type="button" class="chip" data-domain="geopolitical" aria-pressed="false">Geopolitical <span class="filter-count" data-domain-count="geopolitical">—</span></button>
         <button type="button" class="chip" data-domain="governance" aria-pressed="false">Governance <span class="filter-count" data-domain-count="governance">—</span></button>
       </div>
-      <button type="button" class="overlay-toggle" id="overlayToggle" aria-pressed="true">
-        <span class="switch on" id="overlaySwitch" aria-hidden="true"></span>
-        <span>Evidence visible</span>
-      </button>
-    </div>
+    <button type="button" class="overlay-toggle" id="overlayToggle" aria-pressed="true"><span class="switch on" id="overlaySwitch" aria-hidden="true"></span><span>Evidence visible</span></button>
+    <div id="catalogueResults"></div></div>
 
-    <div class="branch-key" aria-label="Branch notation">
-      <span><i class="branch-mark baseline"></i>Shared forecast</span>
-      <span><i class="branch-mark managed"></i>Managed branch</span>
-      <span><i class="branch-mark default"></i>Default branch</span>
-      <span><i class="branch-mark ungoverned"></i>Ungoverned / race branch</span>
-    </div>
-
-    <div class="timeline" id="timelineAtlas">
-      <div class="tl-spine"></div>
-      <div id="timelineBody"></div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider-line" />
-<section class="section-pad" id="post-superintelligence">
-  <div class="wrap">
-    <div class="section-lede">
-      <div class="section-head">
-        <div class="eyebrow">Beyond calendar time · Dependency field</div>
-        <h2 id="horizonTitle">Post-superintelligence horizon</h2>
-      </div>
-      <div class="section-prose">
-        <p id="horizonSummary">Undated possibilities whose plausibility depends on aligned superintelligence and explicit technical prerequisites—not calendar promises.</p>
-      </div>
-    </div>
-    <div class="horizon-note"><strong>How to read this section:</strong> conditional plausibility is conditional on aligned superintelligence and every listed dependency; it is not a probability by 2040. Outward proto-Dyson expansion and inward Transcension are potentially mutually exclusive branches.</div>
-    <div class="horizon-field" aria-label="Interactive dependency map">
-      <div class="horizon-gate">
-        <span class="instrument-label">Gate 00 · required condition</span>
-        <strong>Aligned superintelligence</strong>
-        <p>No node below receives a calendar date. Select a possibility to inspect its complete evidence ladder.</p>
-      </div>
-      <div class="horizon-map" id="horizonMap"></div>
-    </div>
-    <div class="horizon-figure-intro">
-      <span class="instrument-label">Illustrated horizon / what each claim would require</span>
-      <h3>Four fields beyond the calendar forecast</h3>
-      <p>These figures separate plausible mechanisms from familiar science-fiction shorthand. Each path remains conditional on the gates shown below.</p>
-    </div>
-    <div class="editorial-figure-grid" id="horizonFigures">
-      <figure class="editorial-figure figure-neural" data-editorial-figure="neural-interfaces" tabindex="0" aria-labelledby="neuralFigureHeading">
-        <div class="figure-copy">
-          <span class="instrument-label">Neural symbiosis / two distinct routes</span>
-          <h3 id="neuralFigureHeading">Implanted bandwidth versus genuinely non-invasive access</h3>
-          <p>Both paths aim at communication and augmentation, but they carry different signal, safety and evidence burdens.</p>
-        </div>
-        <div class="editorial-art">
-          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="neuralSvgTitle neuralSvgDesc">
-            <title id="neuralSvgTitle">Implantable and non-invasive neural-interface pathways</title>
-            <desc id="neuralSvgDesc">An implanted electrode array sends a high-bandwidth signal to an AI decoding core. A separate external sensing array sends a lower-bandwidth signal to the same core. Both pass through a clinical evidence gate.</desc>
-            <path class="figure-draw figure-outline" d="M72 230c-28-24-38-62-27-99 12-43 53-73 98-70 48 3 86 42 89 90 2 34-14 64-39 84"/>
-            <path class="figure-draw figure-outline" d="M370 230c-25-23-39-57-34-91 7-48 47-84 95-83 49 1 89 39 94 88 3 35-11 66-37 89"/>
-            <g class="figure-reveal figure-stage-1">
-              <rect class="figure-gate" x="116" y="103" width="54" height="42" rx="8"/>
-              <path class="figure-detail" d="M124 111h38M124 121h38M124 131h38M132 105v38M144 105v38M156 105v38"/>
-              <text class="figure-label" x="143" y="88" text-anchor="middle">IMPLANTED ARRAY</text>
-              <text class="figure-small" x="143" y="165" text-anchor="middle">surgery · chronic hardware</text>
-            </g>
-            <g class="figure-reveal figure-stage-2">
-              <path class="figure-orbit" d="M376 116c16-38 82-52 123-10"/>
-              <path class="figure-orbit" d="M383 127c22-26 72-33 106-7"/>
-              <circle class="figure-node" cx="395" cy="112" r="6"/>
-              <circle class="figure-node" cx="480" cy="105" r="6"/>
-              <text class="figure-label" x="438" y="82" text-anchor="middle">EXTERNAL SENSING</text>
-              <text class="figure-small" x="438" y="165" text-anchor="middle">EEG · MEG · optical · ultrasound</text>
-            </g>
-            <path class="figure-draw figure-signal neural-signal-1" d="M171 124 C220 124 224 150 258 150"/>
-            <path class="figure-draw figure-signal neural-signal-2" d="M394 124 C345 124 336 150 302 150"/>
-            <g class="figure-reveal figure-stage-3">
-              <path class="figure-gate" d="M280 116l36 21v42l-36 21-36-21v-42z"/>
-              <circle class="figure-node-core" cx="280" cy="158" r="8"/>
-              <text class="figure-label" x="280" y="224" text-anchor="middle">AI DECODING CORE</text>
-            </g>
-            <path class="figure-draw" d="M280 200v24c0 20 0 26 0 39"/>
-            <g class="figure-reveal figure-stage-4">
-              <rect class="figure-gate" x="216" y="260" width="128" height="28" rx="8"/>
-              <text class="figure-small" x="280" y="278" text-anchor="middle">CLINICAL EVIDENCE GATE</text>
-            </g>
-          </svg>
-        </div>
-        <ul class="figure-semantic">
-          <li><strong>Implantable:</strong> higher bandwidth potential; surgery, durability and cybersecurity risks.</li>
-          <li><strong>Non-invasive:</strong> lower procedural risk; current systems do not match implanted bandwidth.</li>
-          <li><strong>Shared gate:</strong> reproducible patient outcomes, consent, safety and home use.</li>
-        </ul>
-        <figcaption>Endovascular systems are minimally invasive—not non-invasive—and peripheral muscle interfaces are not BCIs.</figcaption>
-      </figure>
-
-      <figure class="editorial-figure figure-orbital" data-editorial-figure="orbital-compute" tabindex="0" aria-labelledby="orbitalFigureHeading">
-        <div class="figure-copy">
-          <span class="instrument-label">Orbital compute / outward infrastructure</span>
-          <h3 id="orbitalFigureHeading">From a sustained orbital workload to a proto-Dyson trajectory</h3>
-          <p>The sequence only advances when each stage proves power, cooling, manufacturing and controlled expansion.</p>
-        </div>
-        <div class="editorial-art">
-          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="orbitalSvgTitle orbitalSvgDesc">
-            <title id="orbitalSvgTitle">Orbital data centres growing into autonomous solar-compute infrastructure</title>
-            <desc id="orbitalSvgDesc">A launch from Earth reaches an orbital compute module, then off-world manufacturing, then autonomous solar collectors. The final arc is labelled proto-Dyson trajectory, not a completed Dyson swarm.</desc>
-            <circle class="figure-outline" cx="55" cy="290" r="92"/>
-            <path class="figure-draw figure-orbit" d="M34 244 C118 126 254 72 492 56"/>
-            <g class="figure-reveal figure-stage-1">
-              <path class="figure-detail" d="M72 220l18-28 18 28-18 12zM90 192v-28"/>
-              <text class="figure-label" x="90" y="250" text-anchor="middle">LAUNCH</text>
-            </g>
-            <g class="figure-reveal figure-stage-2">
-              <rect class="figure-gate" x="164" y="128" width="72" height="48" rx="8"/>
-              <path class="figure-detail" d="M175 139h50M175 151h50M175 163h50"/>
-              <path class="figure-detail" d="M164 152h-28M236 152h28M136 140v24M264 140v24"/>
-              <text class="figure-label" x="200" y="113" text-anchor="middle">ORBITAL COMPUTE</text>
-              <text class="figure-small" x="200" y="194" text-anchor="middle">sustained MW-class telemetry</text>
-            </g>
-            <g class="figure-reveal figure-stage-3">
-              <path class="figure-gate" d="M310 112h72v54h-72zM322 112V94h48v18M324 129h14v25h-14zM354 129h14v25h-14z"/>
-              <text class="figure-label" x="346" y="80" text-anchor="middle">OFF-WORLD FACTORY</text>
-              <text class="figure-small" x="346" y="184" text-anchor="middle">mining · refining · self-repair</text>
-            </g>
-            <g class="figure-reveal figure-stage-4">
-              <circle class="figure-node-core" cx="486" cy="74" r="13"/>
-              <path class="figure-detail" d="M463 74h-33M509 74h33M486 51V24M486 97v28"/>
-              <rect class="figure-gate" x="420" y="46" width="38" height="56" rx="4"/>
-              <rect class="figure-gate" x="514" y="46" width="38" height="56" rx="4"/>
-              <text class="figure-label" x="486" y="148" text-anchor="middle">AUTONOMOUS COLLECTORS</text>
-              <text class="figure-small" x="486" y="164" text-anchor="middle">measured power · bounded growth</text>
-            </g>
-            <path class="figure-draw figure-signal orbital-signal" d="M399 200 C452 214 500 215 536 194"/>
-            <text class="figure-label" x="468" y="226" text-anchor="middle">PROTO-DYSON TRAJECTORY</text>
-            <text class="figure-small" x="468" y="242" text-anchor="middle">not a completed swarm</text>
-          </svg>
-        </div>
-        <ul class="figure-semantic">
-          <li><strong>Stage 1:</strong> sustained orbital compute publishes power, radiator and workload telemetry.</li>
-          <li><strong>Stage 2:</strong> robotic factories build useful structures from off-world material.</li>
-          <li><strong>Stage 3:</strong> audited solar capture expands by measured orders of magnitude.</li>
-        </ul>
-        <figcaption>A payload, edge satellite, filing or small cluster is not a hyperscale data centre or Dyson swarm.</figcaption>
-      </figure>
-
-      <figure class="editorial-figure figure-connectome" data-editorial-figure="connectome-emulation" tabindex="0" aria-labelledby="connectomeFigureHeading">
-        <div class="figure-copy">
-          <span class="instrument-label">Whole-brain emulation / identity fork</span>
-          <h3 id="connectomeFigureHeading">A connectome is the first layer—not a person</h3>
-          <p>Structural mapping must acquire dynamics, reproduce novel behavior and still confront the continuity problem.</p>
-        </div>
-        <div class="editorial-art">
-          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="connectomeSvgTitle connectomeSvgDesc">
-            <title id="connectomeSvgTitle">Connectome-to-emulation pipeline ending in an identity-continuity fork</title>
-            <desc id="connectomeSvgDesc">A neural network map feeds layered dynamic-state models and a validated behavioral emulation. The output then branches between continuity of the original person and a separate digital copy, showing the unresolved identity question.</desc>
-            <g class="connectome-network">
-              <path class="figure-draw connectome-edge" d="M54 88L112 58L154 105L122 160L63 154L54 88M112 58L122 160M54 88L154 105M63 154L154 105"/>
-              <circle class="figure-reveal figure-node" cx="54" cy="88" r="8"/>
-              <circle class="figure-reveal figure-node" cx="112" cy="58" r="8"/>
-              <circle class="figure-reveal figure-node" cx="154" cy="105" r="8"/>
-              <circle class="figure-reveal figure-node" cx="122" cy="160" r="8"/>
-              <circle class="figure-reveal figure-node" cx="63" cy="154" r="8"/>
-              <text class="figure-label" x="104" y="204" text-anchor="middle">CONNECTOME</text>
-              <text class="figure-small" x="104" y="220" text-anchor="middle">structure + measured error</text>
-            </g>
-            <path class="figure-draw" d="M168 112H218"/>
-            <g class="figure-reveal figure-stage-2">
-              <rect class="figure-gate" x="220" y="62" width="112" height="34" rx="7"/>
-              <rect class="figure-gate" x="228" y="105" width="112" height="34" rx="7"/>
-              <rect class="figure-gate" x="236" y="148" width="112" height="34" rx="7"/>
-              <text class="figure-small" x="276" y="83" text-anchor="middle">biochemistry</text>
-              <text class="figure-small" x="284" y="126" text-anchor="middle">plasticity + dynamics</text>
-              <text class="figure-small" x="292" y="169" text-anchor="middle">novel behavior tests</text>
-              <text class="figure-label" x="284" y="220" text-anchor="middle">FUNCTIONAL EMULATION</text>
-            </g>
-            <path class="figure-draw" d="M350 122 C390 122 394 78 426 78 M350 122 C390 122 394 174 426 174"/>
-            <g class="figure-reveal figure-stage-3">
-              <circle class="figure-orbit" cx="462" cy="78" r="34"/>
-              <circle class="figure-node-core" cx="462" cy="78" r="6"/>
-              <text class="figure-label" x="462" y="132" text-anchor="middle">CONTINUITY?</text>
-              <circle class="figure-orbit" cx="462" cy="174" r="34"/>
-              <circle class="figure-node-core" cx="448" cy="174" r="5"/>
-              <circle class="figure-node-core" cx="476" cy="174" r="5"/>
-              <text class="figure-label" x="462" y="228" text-anchor="middle">COPY?</text>
-            </g>
-            <rect class="figure-gate figure-reveal figure-stage-4" x="402" y="252" width="120" height="28" rx="8"/>
-            <text class="figure-small" x="462" y="270" text-anchor="middle">IDENTITY UNRESOLVED</text>
-          </svg>
-        </div>
-        <ul class="figure-semantic">
-          <li><strong>Map:</strong> whole-brain structure with quantified error is necessary but insufficient.</li>
-          <li><strong>Emulate:</strong> dynamic state must predict previously unrecorded behavior.</li>
-          <li><strong>Fork:</strong> a functional copy does not establish subjective identity continuity.</li>
-        </ul>
-        <figcaption>A chatbot or digital replica trained on personal data is not a whole-brain upload.</figcaption>
-      </figure>
-
-      <figure class="editorial-figure figure-civilization" data-editorial-figure="outward-inward" tabindex="0" aria-labelledby="civilizationFigureHeading">
-        <div class="figure-copy">
-          <span class="instrument-label">Civilizational direction / mutually exclusive candidates</span>
-          <h3 id="civilizationFigureHeading">Outward energy scaling versus inward compression</h3>
-          <p>Kardashev growth and Transcension are different hypotheses. Ruliad research remains a separate testability question.</p>
-        </div>
-        <div class="editorial-art">
-          <svg class="editorial-svg" viewBox="0 0 560 300" role="img" aria-labelledby="civilizationSvgTitle civilizationSvgDesc">
-            <title id="civilizationSvgTitle">Kardashev outward scaling contrasted with Transcension and a separate ruliad branch</title>
-            <desc id="civilizationSvgDesc">Aligned superintelligence sits at a central gate. One branch expands outward through larger energy-capture rings. A mutually exclusive branch compresses inward through denser computational rings. A separate dashed branch points toward ruliad-derived testable physics.</desc>
-            <g class="figure-reveal figure-stage-1">
-              <path class="figure-gate" d="M280 112l38 22v44l-38 22-38-22v-44z"/>
-              <circle class="figure-node-core" cx="280" cy="156" r="7"/>
-              <text class="figure-label" x="280" y="224" text-anchor="middle">ALIGNED SI GATE</text>
-            </g>
-            <path class="figure-draw outward-branch" d="M310 136 C362 100 386 70 438 66"/>
-            <g class="figure-reveal figure-stage-2">
-              <circle class="figure-orbit outward-ring-1" cx="466" cy="66" r="20"/>
-              <circle class="figure-orbit outward-ring-2" cx="466" cy="66" r="38"/>
-              <circle class="figure-orbit outward-ring-3" cx="466" cy="66" r="57"/>
-              <circle class="figure-node-core" cx="466" cy="66" r="6"/>
-              <text class="figure-label" x="466" y="142" text-anchor="middle">KARDASHEV / OUTWARD</text>
-              <text class="figure-small" x="466" y="157" text-anchor="middle">audited energy capture</text>
-            </g>
-            <path class="figure-draw inward-branch" d="M310 176 C360 212 392 238 438 240"/>
-            <g class="figure-reveal figure-stage-3">
-              <circle class="figure-orbit inward-ring-1" cx="466" cy="240" r="54"/>
-              <circle class="figure-orbit inward-ring-2" cx="466" cy="240" r="34"/>
-              <circle class="figure-orbit inward-ring-3" cx="466" cy="240" r="16"/>
-              <circle class="figure-node-core" cx="466" cy="240" r="5"/>
-              <text class="figure-label" x="466" y="178" text-anchor="middle">TRANSCENSION / INWARD</text>
-              <text class="figure-small" x="466" y="193" text-anchor="middle">speculative density + miniaturization</text>
-            </g>
-            <path class="figure-draw ruliad-branch" d="M248 156 C202 156 174 156 126 156" stroke-dasharray="7 6"/>
-            <g class="figure-reveal figure-stage-4">
-              <path class="figure-gate" d="M78 110h70v92H78zM94 126h38M94 142h38M94 158h38"/>
-              <circle class="figure-node-core" cx="113" cy="182" r="5"/>
-              <text class="figure-label" x="113" y="88" text-anchor="middle">RULIAD</text>
-              <text class="figure-small" x="113" y="220" text-anchor="middle">separate branch · testable predictions only</text>
-            </g>
-          </svg>
-        </div>
-        <ul class="figure-semantic">
-          <li><strong>Outward:</strong> classify measured energy capture; do not assume inevitable Type I or II progress.</li>
-          <li><strong>Inward:</strong> Transcension proposes extreme compression but has no empirical confirmation.</li>
-          <li><strong>Separate:</strong> ruliad work matters only if it yields discriminating, reproducible physical tests.</li>
-        </ul>
-        <figcaption>Outward expansion and inward Transcension may be mutually exclusive; neither is a dated forecast.</figcaption>
-      </figure>
-    </div>
-    <div class="horizon-grid" id="horizonBody"></div>
-  </div>
-</section>
-
-<hr class="divider-line" />
 <section class="section-pad" id="engine">
   <div class="wrap">
     <div class="section-head">
@@ -783,7 +458,6 @@ html[data-theme="dark"] {
   </div>
 </section>
 
-<hr class="divider-line" />
 <section class="section-pad" id="futures">
   <div class="wrap">
     <div class="section-head">
@@ -819,35 +493,6 @@ html[data-theme="dark"] {
   </div>
 </section>
 
-<hr class="divider-line" />
-<section class="section-pad" id="book">
-  <div class="wrap">
-    <div class="book-hero">
-      <div>
-        <div class="eyebrow">Living Book · by Peter Xing</div>
-        <h2 style="font-size:clamp(1.9rem,4vw,2.9rem);margin-bottom:16px">An intergalactic navigation map, not a textbook</h2>
-        <p style="color:var(--cp-text-muted);font-size:1.05rem;margin-bottom:10px">Each chapter is a star system. Pick a route through the singularity — follow capability if you want to know <em>when</em>, abundance if you want to know <em>how to thrive</em>, or risk if you want to know <em>what could go wrong</em>.</p>
-        <div class="routekey">
-          <span><i style="background:var(--cp-accent)"></i> Capability route</span>
-          <span><i style="background:var(--cp-accent)"></i> Abundance route</span>
-          <span><i style="background:var(--cp-accent)"></i> Risk route</span>
-        </div>
-        <button class="btn btn-primary read-btn" id="readBookBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Read the full book
-        </button>
-      </div>
-      <div class="card chapter-map-card" style="padding:0;overflow:hidden">
-        <div class="chapter-map-head"><span class="instrument-label">Route map / select a system</span><span>Capability · Abundance · Risk</span></div>
-        <svg id="starmap" viewBox="0 0 420 300" style="width:100%;display:block"></svg>
-      </div>
-    </div>
-
-    <div id="chapters"></div>
-  </div>
-</section>
-
-<hr class="divider-line" />
 <section class="section-pad" id="moonshot">
   <div class="wrap">
     <div class="section-head">
@@ -870,146 +515,32 @@ html[data-theme="dark"] {
   </div>
 </section>
 
-<hr class="divider-line" />
-<section class="section-pad" id="signals">
-  <div class="wrap">
-    <div class="section-lede">
-      <div class="section-head">
-        <div class="eyebrow">Reality Signals · Observational layer</div>
-        <h2>The future is already leaving traces</h2>
-      </div>
-      <div class="section-prose">
-        <p>These are not predictions. They are dated observations drawn from the same live-verified published sources as the forecast evidence &mdash; each one attributed to its publisher and its publication date &mdash; indicating which capabilities, constraints and branches are loading now. Where a domain has no qualifying observation inside the currency window, it is left blank and counted rather than filled.</p>
-        <div class="signal-station" id="realityMeta" aria-live="polite">Awaiting live observation metadata…</div>
-      </div>
-    </div>
-    <div class="observations-grid" id="signalsGrid"></div>
-  </div>
-</section>
+<section id="signals"><div class="section-head"><h2>Reporting in the published record</h2><p>These source observations are separate from forecasts. Their publication and collection dates remain visible; a recent browser check does not make them new.</p></div><p id="realityMeta" role="status">Published observations are not loaded.</p><div id="signalsGrid"></div></section>
 
-<hr class="divider-line" />
-
-<section class="section-pad" id="author">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">About the Author · Refreshed daily</div>
-      <h2 id="authorName">Peter Xing</h2>
-      <p id="authorHeadline">Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.</p>
-    </div>
-    <div class="author-layout">
-      <div class="author-bio" id="authorBio">
-        <p>Peter is a Cloud &amp; AI Platforms Lead for Public Sector &amp; Education at Microsoft, focusing on Azure including the Microsoft IQ stack and access to frontier AI models from OpenAI, Anthropic and SpaceXAI via Foundry, Fabric, Databricks and GitHub. Peter helps key stakeholders prioritise AI use cases that have the biggest impact for their organisation, and identifies opportunities to resource and accelerate projects via Microsoft's capabilities and partner ecosystem — from business &amp; solution envisioning, to proof of concepts, pilots and production.</p>
-        <p>Peter is also a Singularity Group &amp; TEDx speaker, and previously worked as a Global Director on emerging technology initiatives at KPMG and Deloitte to help organisations navigate and flourish in these unprecedented times of accelerating change and disruption.</p>
-        <p>Peter co-founded Transhumanism Australia, a venture studio and community in partnership with academic research institutions that works on accelerating projects for the global transhumanism movement with initiatives like Transhuman Coin and investing in startup founders in partnership with WAVIA (formerly SingularityU Australia). He is the author of the upcoming book, “The Hitchhiker's Guide to the Singularity” to help everyone prepare for our superintelligent AI future.</p>
-        <a class="author-link" id="authorLink" href="https://www.linkedin.com/in/peter-xing/" target="_blank" rel="noopener">View LinkedIn profile →</a>
-      </div>
-      <aside class="card author-side">
-        <h4>At a glance</h4>
-        <ul class="author-roles" id="authorRoles">
-          <li><strong>Microsoft</strong><span>Cloud &amp; AI Platforms Lead · Public Sector &amp; Education</span></li>
-          <li><strong>Singularity University</strong><span>Expert Faculty · Transhumanism &amp; Emerging Tech</span></li>
-          <li><strong>Transhumanism Australia</strong><span>Co-founder</span></li>
-          <li><strong>Formerly KPMG &amp; Deloitte</strong><span>Emerging Technology &amp; Innovation</span></li>
-        </ul>
-      </aside>
-    </div>
-    <div class="author-talks">
-      <div class="eyebrow" style="margin-bottom:16px">Recent &amp; featured talks</div>
-      <div class="grid grid-2" id="authorTalks">
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=K2e_ywxwqKM" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
-          <h5>AI Will Run Entire Companies Autonomously</h5>
-          <p>On OpenAI's &quot;Level 5&quot; — Peter maps the scenarios where AI runs entire companies autonomously.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=oBJ38mxmnko" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
-          <h5>Prepare for AGI</h5>
-          <p>A Microsoft Data &amp; AI specialist's case for planning now — hope for the best, prepare for the worst.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=P91DZjE5nw0" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
-          <h5>OpenClaw and the Rise of AI Agents</h5>
-          <p>With Mic Mann on why AI agents are the next execution layer — software that doesn't just assist but plans, decides and acts.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=6YbEO5Lqm_c" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2026</span>
-          <h5>AI Agents Will Run Your Workday by 2027</h5>
-          <p>How autonomous AI agents reshape every workflow — and how to stay augmented, not automated.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=wolNeYAd6YY" target="_blank" rel="noopener">
-          <span class="talk-venue">Australian Software Engineering Week (ASEW), UTS · 2025</span>
-          <h5>Microsoft Masterclass</h5>
-          <p>Peter's two-hour Microsoft masterclass opens Day 4 of Australian Software Engineering Week at UTS.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=O5Uj7InErAs" target="_blank" rel="noopener">
-          <span class="talk-venue">GRAILE (Global Research Alliance for AI in Learning and Education) · 2025</span>
-          <h5>From Large Language Models to Learning Companions</h5>
-          <p>Panel on whether polished AI answers build real learning — or quietly offload students' critical thinking.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=N_Zn-I5i8hs" target="_blank" rel="noopener">
-          <span class="talk-venue">NextGen AI Conference 2025 · 2025</span>
-          <h5>Academia &amp; Research Panel: Advancing AI Knowledge</h5>
-          <p>With University of Melbourne AI researchers on turning frontier research into applied practice.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=ex92otN02eA" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>
-          <h5>Preparing for a Post-AGI World in Your Next 18 Months</h5>
-          <p>A practical 18-month playbook for individuals and organisations to get ready before superintelligence arrives.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-        <a class="card author-talk" href="https://www.youtube.com/watch?v=p22wV3MiHtM" target="_blank" rel="noopener">
-          <span class="talk-venue">Exponential Africa (Singularity South Africa) · 2025</span>
-          <h5>AGI for Everyone: Empowering Individuals with AI</h5>
-          <p>How accessible AGI can empower individuals — not just institutions — to think, create and solve at scale.</p>
-          <span class="talk-go">Watch / listen →</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider-line" />
-<div class="reader" id="reader" hidden role="dialog" aria-modal="true" aria-label="Book reader">
-  <div class="reader-rail"><div id="rdBar"></div></div>
-  <div class="reader-topbar">
-    <div class="reader-brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/></svg>
-      <span>The Hitchhiker's Guide to the Singularity</span>
-    </div>
-    <div class="reader-progress" id="rdProgress">CH 1 / 13</div>
-    <button class="reader-close" id="rdClose" aria-label="Close reader">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="reader-main">
-    <aside class="reader-toc" aria-label="Book chapters">
-      <span class="instrument-label">Reading route</span>
-      <nav id="rdToc"></nav>
-    </aside>
-    <div class="reader-scroll" id="rdScroll">
-      <article class="reader-article" id="rdBody"></article>
-      <div class="reader-foot">
-        <button id="rdPrev"><span><span class="rd-dir">Previous</span><span id="rdPrevT"></span></span></button>
-        <button id="rdNext" style="text-align:right"><span style="text-align:right;display:block"><span class="rd-dir">Next</span><span id="rdNextT"></span></span></button>
-      </div>
-    </div>
-  </div>
-</div>
+<details class="alternate-reading-map"><summary>Explore the original chapter map</summary><svg id="starmap" viewBox="0 0 420 300" role="group" aria-label="Original chapter navigation map"></svg></details>
 
 <dialog id="missionResetDialog" class="mission-dialog" aria-labelledby="missionResetTitle">
   <h2 id="missionResetTitle">Clear your planning data?</h2>
   <p>This removes quests, self-reported checklist items and saved forecasts from this browser. The book, forecasts, theme and planner are unchanged.</p>
   <div><button id="cancelMissionReset" type="button" class="btn btn-ghost" autofocus>Keep my data</button><button id="confirmMissionReset" type="button" class="btn btn-primary">Clear planning data</button></div>
 </dialog>
+<!-- END ORIGINAL EXPLORE TOOLS -->
+        </div>
+      </details>
+    </aside>
 
-<div id="bookSource" hidden>
+    <section id="author" aria-label="About Peter Xing"><footer class="site-footer wrap">
+      <div><p class="eyebrow">About the author</p><h2>Peter Xing</h2><p id="authorIntroduction">Futurist, keynote speaker and technologist.</p><a id="authorProfile" href="https://www.linkedin.com/in/peter-xing/" target="_blank" rel="noopener noreferrer">About Peter <span aria-hidden="true">↗</span></a><details class="author-details"><summary>Biography &amp; appearances</summary><div id="authorDetails"></div></details></div>
+      <div class="footer-note"><p>The Hitchhiker’s Guide<br><strong>To The Singularity</strong></p><p>Forecasts are estimates. Sources are a curated record.<br>The future is still a question worth asking.</p><p><a href="ai-timeline.html">AI 2027 / AI 2040 companion timeline ↗</a></p><p class="prototype-note" id="prototypeScope">Reported sources and authored forecasts remain separate.</p></div>
+    </footer></section>
+  </main>
+  <dialog class="reader-dialog" id="reader" aria-labelledby="readerTitle">
+    <div class="reader-toolbar"><h2 id="readerTitle">Read the guide</h2><button id="closeReader" type="button" class="text-button">Close <span aria-hidden="true">×</span></button></div>
+    <details class="reader-contents"><summary>Contents <span id="rdProgress"></span></summary><nav id="rdToc" aria-label="Book chapters"></nav></details>
+    <article id="rdBody" class="reader-page"></article>
+    <nav class="reader-chapter-navigation" aria-label="Previous or next chapter"><button id="rdPrev" class="text-button" type="button">← Previous chapter</button><button id="rdNext" class="text-button" type="button">Next chapter →</button></nav>
+  </dialog>
+  <div id="bookSource" hidden>
 <article data-idx="0">
 <div class="reader-eyebrow">Front Matter</div>
 <span class="reader-route" style="color:var(--cp-link);border-color:var(--cp-link)">Capability route</span>
@@ -1321,49 +852,5 @@ html[data-theme="dark"] {
 <p class="signoff">// The map ends. The road begins. Don't Panic.</p>
 </article>
 </div>
-
-<footer class="footer">
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <a class="brand" href="#top" style="color:var(--cp-text);margin-bottom:14px">
-          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <circle cx="16" cy="16" r="14" stroke="var(--cp-accent)" stroke-width="1.5"/>
-            <circle cx="16" cy="16" r="5" fill="var(--cp-accent)"/>
-          </svg>
-          <span class="brand-text">The Hitchhiker's Guide to the Singularity<small>Peter Xing · Post-AGI planning</small></span>
-        </a>
-        <p style="color:var(--cp-text-muted);font-size:0.9rem;max-width:340px;margin-top:8px">A living book and realtime planning model for the arrival of superintelligence. Build toward abundance instead of panic.</p>
-      </div>
-      <div>
-        <h4>Navigate</h4>
-        <ul>
-          <li><a href="#timeline">Forecast timeline</a></li>
-          <li><a href="#engine">Abundance engine</a></li>
-          <li><a href="#futures">Five futures</a></li>
-          <li><a href="#book">Chapters</a></li>
-          <li><a href="#moonshot">1000-day plan</a></li>
-          <li><a href="#author">About the author</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Model inputs</h4>
-        <ul>
-          <li>Probabilistic forecasting research</li>
-          <li>AI Futures and AI 2040 scenarios</li>
-          <li>Peter Xing's stated forecast anchors</li>
-          <li>Verified X API observation layer</li>
-          <li>Dependency-gated horizon evidence</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-note">
-      Forecast probabilities and branch assumptions are maintained in the public prediction model; every prediction links to reviewed direct evidence with explicit Peter, external or verified-news provenance. Written and maintained by <strong style="color:var(--cp-text)">Peter Xing</strong>.
-      <div class="disclaimer">// Probabilities are planning estimates, not promises. Observations are evidence to inspect, not proof that a prediction is true. Nothing here is financial, medical or safety advice. The future remains a branch you help choose.</div>
-    </div>
-  </div>
-</footer>
-
-</div><!-- /content -->
 </body>
 </html>

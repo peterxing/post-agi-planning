@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An independent, source-linked reading of AI 2027 and AI 2040. Compare the scenarios with documented developments, without confusing predictions with reality.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>AI, in perspective | Two futures. One reality.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font: 16px/1.65 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+    html[data-theme="dark"] body { --cp-text-muted: var(--cp-text-soft); }
+    body:has(dialog[open]) { overflow: hidden; }
+    button, input, select { font: inherit; color: inherit; }
+    button, a, input, select, summary { -webkit-tap-highlight-color: var(--cp-highlight); }
+    button, summary { cursor: pointer; }
+    button { touch-action: manipulation; }
+    a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    a:hover { color: var(--cp-accent); }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex="-1"]:focus-visible { outline: 3px solid var(--cp-accent); outline-offset: 4px; }
+    ::selection { background: var(--cp-highlight); }
+    h1, h2, h3, h4, p { margin: 0; }
+    h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.03em; }
+    svg { display: block; }
+    .wrap { width: min(1320px, calc(100% - 80px)); margin-inline: auto; }
+    .mono, .eyebrow, .badge, .pill, .date, .small-label { font-family: Consolas, "Courier New", Courier, monospace; }
+    .eyebrow, .small-label { font-size: 11px; letter-spacing: .12em; line-height: 1.5; text-transform: uppercase; }
+    .eyebrow { color: var(--cp-accent); }
+    .muted, .small-label { color: var(--cp-text-muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    .skip-link { position: fixed; left: 16px; top: -80px; z-index: 30; background: var(--cp-surface); padding: 12px 20px; border: 2px solid var(--cp-accent); border-radius: .625rem; }
+    .skip-link:focus { top: 12px; }
+    .topbar { border-bottom: 1px solid var(--cp-border); background: var(--cp-bg); }
+    .topbar-inner { min-height: 80px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .brand { display: inline-flex; gap: 12px; align-items: center; text-decoration: none; font-size: 18px; font-weight: 750; letter-spacing: -.04em; }
+    .brand svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .top-links { display: flex; align-items: center; gap: 28px; font-size: 13px; }
+    .top-links a { text-decoration: none; color: var(--cp-text-muted); }
+    .top-links a:hover { color: var(--cp-accent); }
+    .icon-button { width: 40px; height: 40px; flex-shrink: 0; padding: 10px; display: inline-grid; place-items: center; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-bg-elevated); }
+    .icon-button:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+    .hero { padding: 68px 0 48px; }
+    .dateline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+    .snapshot-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: var(--cp-text-muted); }
+    .snapshot-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cp-accent); }
+    .hero-grid { display: grid; grid-template-columns: 1.02fr 1fr; gap: 72px; align-items: center; }
+    h1 { font-size: clamp(48px, 5.5vw, 78px); font-weight: 750; letter-spacing: -.065em; line-height: 1.02; }
+    h1 span { color: var(--cp-accent); }
+    .hero-copy > p { max-width: 520px; font-size: 17px; line-height: 1.75; color: var(--cp-text-muted); margin-top: 24px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; align-items: center; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; padding: 10px 18px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-surface); color: var(--cp-text); font-size: 13px; font-weight: 650; text-decoration: none; }
+    .button:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+    .button.primary { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    .button.primary:hover { background: var(--cp-accent-hover); }
+    .text-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+    .map-card { padding: 24px 24px 16px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-bg-elevated); }
+    .map-head { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+    .map-head span:last-child { padding: 3px 8px; border: 1px solid var(--cp-border); border-radius: 4px; font-size: 10px; }
+    .scenario-map { width: 100%; height: auto; margin: 20px 0 8px; }
+    .map-label { fill: var(--cp-text); font-size: 13px; font-weight: 650; }
+    .map-small { fill: var(--cp-text-muted); font: 10px Consolas, "Courier New", Courier, monospace; }
+    .map-number { fill: var(--cp-accent); font-size: 32px; font-weight: 700; letter-spacing: -.06em; }
+    .map-note { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--cp-border); padding-top: 12px; font-size: 11px; color: var(--cp-text-muted); }
+    .line-key { display: inline-flex; align-items: center; gap: 7px; }
+    .line-key::before { content: ""; width: 18px; border-top: 2px solid var(--cp-text); }
+    .line-key.dashed::before { border-top: 2px dashed var(--cp-accent); }
+    .hero-footnote { font-size: 11px; color: var(--cp-text-muted); margin-top: 10px; }
+    .overview { display: grid; grid-template-columns: repeat(3, 1fr) 1.25fr; margin-top: 48px; border-top: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
+    .metric { padding: 20px 24px; border-right: 1px solid var(--cp-border); }
+    .metric:first-child { padding-left: 0; }
+    .metric:last-child { border: 0; }
+    .metric strong { display: block; font-size: 28px; font-weight: 650; line-height: 1.3; letter-spacing: -.045em; }
+    .metric:last-child strong { font-size: 22px; }
+    .metric span { display: block; font-size: 11px; color: var(--cp-text-muted); margin-top: 4px; }
+    .explore { padding: 12px 0 72px; }
+    .section-title { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    .section-title h2 { font-size: 30px; font-weight: 650; margin-top: 8px; }
+    .section-title p { color: var(--cp-text-muted); font-size: 13px; max-width: 420px; }
+    .tabs { display: flex; align-items: stretch; gap: 24px; border-bottom: 1px solid var(--cp-border); }
+    .tab { display: inline-flex; gap: 10px; align-items: center; padding: 12px 0 16px; background: none; border: 0; border-bottom: 2px solid var(--cp-bg); margin-bottom: -1px; font-size: 14px; color: var(--cp-text-muted); }
+    .tab[aria-selected="true"] { color: var(--cp-accent); border-bottom-color: var(--cp-accent); font-weight: 650; }
+    .tab-count { font: 10px Consolas, "Courier New", Courier, monospace; background: var(--cp-surface-soft); color: var(--cp-text-muted); padding: 2px 6px; border: 1px solid var(--cp-border); border-radius: 4px; }
+    .share-button { margin-left: auto; align-self: center; min-height: 36px; padding: 6px 12px; font-size: 12px; }
+    .share-result { margin-top: 12px; font-size: 12px; color: var(--cp-text-muted); }
+    .share-result input { width: 100%; margin-top: 8px; padding: 10px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: .625rem; }
+    .toolbar { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .topics { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill { display: inline-flex; align-items: center; min-height: 34px; border: 1px solid var(--cp-border); border-radius: .625rem; padding: 6px 12px; background: var(--cp-bg-elevated); font-size: 11px; color: var(--cp-text-muted); }
+    .pill[aria-pressed="true"] { border-color: var(--cp-text); background: var(--cp-text); color: var(--cp-bg); }
+    .pill:hover { border-color: var(--cp-accent); }
+    .search { display: flex; align-items: center; min-width: 220px; max-width: 320px; flex: 1; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-bg-elevated); padding-left: 12px; }
+    .search svg { flex-shrink: 0; color: var(--cp-text-muted); }
+    .search input { width: 100%; min-width: 0; background: none; border: 0; padding: 8px 10px; font-size: 12px; }
+    .search input::placeholder { color: var(--cp-text-muted); opacity: 1; }
+    .search button { border: 0; background: none; padding: 8px 12px; font-size: 16px; color: var(--cp-text-muted); }
+    .filter-context { display: flex; gap: 20px; align-items: center; justify-content: space-between; padding-bottom: 16px; color: var(--cp-text-muted); font-size: 12px; }
+    .filter-context label { display: inline-flex; align-items: center; gap: 8px; }
+    input[type="checkbox"] { accent-color: var(--cp-accent); width: 15px; height: 15px; }
+    .selects { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .selects select { min-height: 34px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-bg-elevated); padding: 4px 24px 4px 8px; font-size: 12px; }
+    .reading-note { display: flex; gap: 12px; align-items: start; padding: 16px 20px; margin-bottom: 32px; background: var(--cp-accent-soft); border: 1px solid var(--cp-border); border-radius: .625rem; font-size: 12px; color: var(--cp-text-muted); }
+    .reading-note svg { color: var(--cp-accent); flex: 0 0 18px; margin-top: 2px; }
+    .reading-note strong { color: var(--cp-text); }
+    .reading-note a { white-space: nowrap; }
+    .compare-layout { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 28px; }
+    .year-nav { align-self: start; position: sticky; top: 24px; }
+    .year-nav .small-label { display: block; margin-bottom: 16px; }
+    .year-nav a { display: block; border-left: 1px solid var(--cp-border); padding: 8px 0 8px 16px; text-decoration: none; font: 12px/1.4 Consolas, "Courier New", Courier, monospace; color: var(--cp-text-muted); }
+    .year-nav a:hover, .year-nav a[aria-current="location"] { border-left: 2px solid var(--cp-accent); padding-left: 15px; color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .year-nav a small { font-size: 9px; margin-left: 4px; }
+    .year-nav .rail-note { font-size: 10px; line-height: 1.65; color: var(--cp-text-muted); margin-top: 24px; }
+    .column-labels { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; padding: 0 0 16px; }
+    .column-labels strong { display: block; font-size: 15px; margin-top: 4px; }
+    .column-labels > div:last-child strong { color: var(--cp-accent); }
+    .checkpoint { padding: 24px 0 32px; border-top: 1px solid var(--cp-border); scroll-margin-top: 24px; }
+    .checkpoint-head { display: flex; gap: 16px; justify-content: space-between; align-items: start; margin-bottom: 16px; }
+    .checkpoint-kicker { font: 11px Consolas, "Courier New", Courier, monospace; color: var(--cp-text-muted); margin-bottom: 8px; }
+    .checkpoint-kicker span { color: var(--cp-accent); margin-right: 12px; }
+    .checkpoint h3 { font-size: 23px; font-weight: 650; }
+    .badge { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--cp-border); border-radius: 4px; font-size: 9px; line-height: 1.5; color: var(--cp-text-muted); }
+    .badge.current { color: var(--cp-accent); border-color: var(--cp-accent); }
+    .badge.future { border-style: dashed; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; }
+    .scenario-card, .reality-card { display: flex; flex-direction: column; min-width: 0; padding: 20px; border-radius: 16px; border: 1px solid var(--cp-border); background: var(--cp-bg-elevated); }
+    .scenario-card .small-label { margin-bottom: 12px; font-size: 10px; letter-spacing: .06em; }
+    .scenario-card h4, .reality-card h4 { font-size: 16px; line-height: 1.4; font-weight: 650; }
+    .scenario-card p, .reality-card p { margin-top: 10px; color: var(--cp-text-muted); font-size: 12px; line-height: 1.8; }
+    .scenario-card a { margin-top: auto; padding-top: 20px; font-size: 11px; color: var(--cp-text-muted); }
+    .scenario-card .source-section { font-size: 10px; color: var(--cp-text-muted); margin-top: 4px; line-height: 1.5; }
+    .reality-card { background: var(--cp-surface); border-top: 3px solid var(--cp-accent); padding-top: 18px; }
+    .reality-card .eyebrow { font-size: 10px; margin-bottom: 12px; letter-spacing: .08em; }
+    .reality-card .not-established { padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--cp-border); font-size: 11px; }
+    .not-established b { font-weight: 650; color: var(--cp-text); }
+    .evidence-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+    .evidence-button { border: 1px solid var(--cp-border); border-radius: .625rem; padding: 6px 8px; background: var(--cp-bg-elevated); font-size: 10px; text-align: left; }
+    .evidence-button:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+    .boundary { display: flex; align-items: center; gap: 16px; margin: 12px 0 24px; padding: 16px 0; border-top: 1px dashed var(--cp-accent); border-bottom: 1px dashed var(--cp-accent); color: var(--cp-accent); }
+    .boundary strong { font: 12px Consolas, "Courier New", Courier, monospace; white-space: nowrap; }
+    .boundary p { font-size: 11px; color: var(--cp-text-muted); }
+    .event-list { max-width: 1060px; margin: 0 auto; }
+    .event-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 28px; padding-bottom: 24px; position: relative; }
+    .event-row:not(:last-child)::before { content: ""; position: absolute; left: 137px; top: 25px; bottom: 0; width: 1px; background: var(--cp-border); }
+    .event-date { text-align: right; padding-top: 22px; color: var(--cp-text-muted); position: relative; }
+    .event-date::after { content: ""; position: absolute; right: -22px; top: 30px; width: 7px; height: 7px; border: 1px solid var(--cp-accent); background: var(--cp-bg); border-radius: 50%; }
+    .event-date time { display: block; font: 12px Consolas, "Courier New", Courier, monospace; color: var(--cp-text); }
+    .event-date small { font-size: 10px; display: block; margin-top: 6px; }
+    .event-card { min-width: 0; padding: 24px 28px; border: 1px solid var(--cp-border); background: var(--cp-surface); border-radius: 16px; }
+    .event-card h3 { font-size: 22px; margin: 10px 0 12px; font-weight: 650; }
+    .event-card p { font-size: 14px; color: var(--cp-text-muted); }
+    .event-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .event-bottom { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; border-top: 1px solid var(--cp-border); margin-top: 20px; padding-top: 16px; }
+    .event-bottom .text-link { margin-left: auto; font-size: 12px; color: var(--cp-link); }
+    .event-bottom button { font-size: 12px; min-height: 34px; padding: 6px 12px; }
+    .event-map { font-size: 11px; color: var(--cp-text-muted); }
+    .source-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .source-card { padding: 24px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); display: flex; flex-direction: column; }
+    .source-card h3 { font-size: 16px; line-height: 1.5; font-weight: 650; margin: 12px 0; }
+    .source-card p { font-size: 11px; color: var(--cp-text-muted); margin-bottom: 12px; }
+    .source-card .source-host { font: 10px Consolas, "Courier New", Courier, monospace; overflow-wrap: anywhere; color: var(--cp-text-muted); }
+    .source-card .event-bottom { margin-top: auto; padding-top: 16px; gap: 10px; }
+    .source-card .text-link { margin-left: 0; font-size: 11px; }
+    .source-card button { margin-left: auto; }
+    .empty-state { padding: 64px 24px; text-align: center; border: 1px dashed var(--cp-border-strong); border-radius: 16px; }
+    .empty-state h3 { margin-bottom: 12px; font-size: 24px; }
+    .empty-state p { color: var(--cp-text-muted); font-size: 14px; margin-bottom: 20px; }
+    .branch-section { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--cp-border); }
+    .branch-section h3 { font-size: 26px; margin: 8px 0 12px; }
+    .branch-section > p { color: var(--cp-text-muted); font-size: 13px; max-width: 720px; }
+    .branch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+    .branch-card { border: 1px solid var(--cp-border); border-radius: 16px; padding: 24px; background: var(--cp-bg-elevated); }
+    .branch-card h4 { font-size: 20px; margin: 8px 0 16px; }
+    .branch-options { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .branch-output { min-height: 148px; }
+    .branch-output strong { font-size: 15px; font-weight: 650; }
+    .branch-output p { margin-top: 8px; font-size: 13px; color: var(--cp-text-muted); }
+    .branch-card > a { display: inline-block; margin-top: 16px; font-size: 11px; }
+    .methodology { margin-bottom: 56px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-bg-elevated); }
+    .methodology > summary { padding: 24px 28px; font-size: 18px; font-weight: 600; }
+    .method-content { padding: 0 28px 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .method-content h3 { font-size: 16px; margin: 12px 0; }
+    .method-content p { font-size: 13px; line-height: 1.85; color: var(--cp-text-muted); }
+    .method-content p + p { margin-top: 12px; }
+    .method-content a { color: var(--cp-link); }
+    .footer { border-top: 1px solid var(--cp-border); padding: 32px 0 40px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: start; gap: 32px; }
+    .footer p { font-size: 11px; color: var(--cp-text-muted); max-width: 700px; margin-top: 12px; }
+    .footer-links { display: flex; gap: 20px; white-space: nowrap; font-size: 12px; }
+    .notice { padding: 16px; margin: 16px 0; border: 1px solid var(--cp-warning); border-radius: .625rem; font-size: 13px; background: var(--cp-bg-elevated); }
+    dialog { width: min(700px, calc(100% - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 1px solid var(--cp-border); border-radius: 16px; color: var(--cp-text); background: var(--cp-surface); overflow: auto; }
+    dialog::backdrop { background: var(--cp-overlay); }
+    .dialog-head { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 16px; background: var(--cp-surface); border-bottom: 1px solid var(--cp-border); padding: 16px 24px; }
+    .dialog-content { padding: 28px; }
+    .dialog-content h2 { font-size: 30px; margin: 14px 0 16px; }
+    .dialog-content h3 { font-size: 16px; margin: 24px 0 10px; }
+    .dialog-content p { color: var(--cp-text-muted); font-size: 14px; }
+    .dialog-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 0; margin-top: 20px; border-top: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
+    .dialog-dates dt { font: 10px Consolas, "Courier New", Courier, monospace; color: var(--cp-text-muted); margin-bottom: 4px; }
+    .dialog-dates dd { margin: 0; font-size: 12px; }
+    .limitation { padding: 16px; margin-top: 24px; border-left: 3px solid var(--cp-warning); background: var(--cp-bg-elevated); border-radius: 0 .625rem .625rem 0; }
+    .limitation h3 { margin: 0 0 8px; }
+    .mapping { border-top: 1px solid var(--cp-border); padding: 16px 0; }
+    .mapping a { font-size: 13px; font-weight: 650; }
+    .mapping p { font-size: 12px; margin-top: 6px; }
+    .source-detail { padding: 20px; border: 1px solid var(--cp-border); border-radius: .625rem; background: var(--cp-bg-elevated); margin-top: 24px; }
+    .source-detail strong { display: block; font-size: 14px; margin: 8px 0; line-height: 1.5; }
+    .source-detail p { font-size: 11px; }
+    .source-detail a { margin-top: 16px; color: var(--cp-link); }
+    .dialog-status { font-size: 11px; color: var(--cp-text-muted); margin-top: 24px; }
+    @media (min-width: 1600px) { .hero { padding-top: 84px; } }
+    @media (max-width: 1100px) {
+      .wrap { width: calc(100% - 48px); }
+      .hero-grid { gap: 36px; }
+      .compare-layout { grid-template-columns: 1fr; }
+      .year-nav { display: flex; flex-wrap: wrap; gap: 4px; position: static; }
+      .year-nav .small-label, .year-nav .rail-note { display: none; }
+      .year-nav a { border-left: 0; border-bottom: 1px solid var(--cp-border); padding: 6px 12px; }
+      .year-nav a:hover, .year-nav a[aria-current="location"] { border-left: 0; border-bottom: 2px solid var(--cp-accent); padding: 6px 12px 5px; }
+      .comparison-grid, .column-labels { gap: 12px; }
+      .scenario-card, .reality-card { padding-inline: 16px; }
+      .source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .wrap { width: calc(100% - 32px); }
+      .topbar-inner { min-height: 68px; gap: 12px; }
+      .top-links { gap: 12px; }
+      .top-links .home-link { display: none; }
+      .top-links a { font-size: 11px; }
+      .brand { font-size: 16px; gap: 8px; }
+      .brand svg { width: 28px; }
+      .hero { padding: 36px 0 28px; }
+      .dateline { align-items: start; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+      h1 { font-size: clamp(48px, 9vw, 68px); }
+      .hero-copy > p { font-size: 15px; }
+      .map-card { padding: 20px 16px 12px; }
+      .overview { grid-template-columns: 1fr 1fr; margin-top: 28px; }
+      .metric { padding: 16px; }
+      .metric:nth-child(2) { border-right: 0; }
+      .metric:nth-child(-n+2) { border-bottom: 1px solid var(--cp-border); }
+      .metric:nth-child(3) { padding-left: 0; }
+      .metric:last-child strong { font-size: 20px; }
+      .section-title { align-items: start; flex-direction: column; gap: 12px; }
+      .section-title h2 { font-size: 26px; }
+      .tabs { gap: 18px; flex-wrap: wrap; }
+      .tab { font-size: 12px; gap: 6px; }
+      .share-button { display: none; }
+      .toolbar { gap: 16px; }
+      .search { max-width: none; flex-basis: 100%; }
+      .topics { gap: 4px; }
+      .pill { padding: 6px 10px; min-height: 36px; font-size: 10px; }
+      .filter-context { align-items: start; flex-direction: column; gap: 12px; }
+      .reading-note { padding: 14px; margin-bottom: 24px; }
+      .compare-layout { gap: 16px; }
+      .column-labels { display: none; }
+      .checkpoint-head { gap: 10px; }
+      .checkpoint h3 { font-size: 21px; }
+      .checkpoint-head > .badge { font-size: 8px; padding: 3px 5px; }
+      .comparison-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .reality-card { grid-column: 1 / -1; }
+      .scenario-card { padding: 16px 14px; border-radius: 12px; }
+      .scenario-card h4 { font-size: 15px; }
+      .scenario-card p { font-size: 12px; }
+      .scenario-card .small-label { font-size: 9px; }
+      .boundary { flex-direction: column; align-items: start; gap: 8px; }
+      .event-row { grid-template-columns: 1fr; gap: 10px; padding-bottom: 28px; }
+      .event-row::before, .event-date::after { display: none; }
+      .event-date { text-align: left; padding-top: 0; display: flex; align-items: center; gap: 12px; }
+      .event-date small { margin: 0; }
+      .event-card { padding: 20px; }
+      .event-card h3 { font-size: 20px; }
+      .event-bottom { gap: 10px; }
+      .event-map { flex-basis: 100%; }
+      .source-grid, .branch-grid, .method-content { grid-template-columns: 1fr; }
+      .branch-output { min-height: 0; }
+      .methodology > summary { padding: 20px; font-size: 16px; }
+      .method-content { padding: 0 20px 24px; gap: 8px; }
+      .footer-inner { flex-direction: column; gap: 24px; }
+      .dialog-content { padding: 20px; }
+      .dialog-content h2 { font-size: 25px; }
+      .dialog-head { padding: 12px 16px; }
+    }
+    @media (max-width: 380px) {
+      .top-links a { display: none; }
+      .tabs { gap: 12px; }
+      .tab-count { display: none; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .checkpoint-head { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      .top-links, .hero-actions, .tabs, .toolbar, .filter-context, .year-nav, .share-result, .branch-options, dialog { display: none !important; }
+      .wrap { width: 100%; }
+      .hero { padding-top: 20px; }
+      .hero-grid { gap: 24px; }
+      h1 { font-size: 44px; }
+      .compare-layout { display: block; }
+      .checkpoint, .event-card, .source-card { break-inside: avoid; }
+      .evidence-button { border: 0; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#explore">Skip to the comparison</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top" aria-label="AI, in perspective, top of page">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25V7m0 18C12 25 13 9 27 7M5 25c9 0 10-4 22-4" stroke="var(--cp-accent)" stroke-width="2"/><circle cx="5" cy="25" r="3" fill="var(--cp-bg)" stroke="var(--cp-accent)" stroke-width="2"/><circle cx="27" cy="7" r="2" fill="var(--cp-accent)"/><circle cx="27" cy="21" r="2" fill="var(--cp-accent)"/></svg>
+        AI, in perspective
+      </a>
+      <nav class="top-links" aria-label="Page navigation">
+        <a class="home-link" href="index.html">Back to the field guide <span aria-hidden="true">&nearr;</span></a>
+        <a href="#methodology" data-methodology>How to read this</a>
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Switch color theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cp-text)" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="heroTitle">
+      <div class="dateline">
+        <p class="eyebrow">AI 2027 &times; AI 2040 &nbsp; / &nbsp; an independent reading guide</p>
+        <span class="snapshot-label mono">Research snapshot &middot; 22 Sep 2026</span>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 id="heroTitle">Two futures.<br>One unfolding<br><span>reality.</span></h1>
+          <p>One scenario imagines a race to superintelligence. The other asks what it would take to slow down. Put both beside what has actually happened&mdash;and follow the evidence for yourself.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#explore">Explore the comparison <span aria-hidden="true">&darr;</span></a>
+            <button class="button" type="button" data-open-view="reality">Just the real events <span aria-hidden="true">&rarr;</span></button>
+          </div>
+        </div>
+        <div>
+          <figure class="map-card" style="margin:0">
+            <figcaption class="map-head"><span class="small-label">The paths, at a glance</span><span class="mono muted">NOT TO SCALE</span></figcaption>
+            <svg class="scenario-map" viewBox="0 0 500 280" role="img" aria-labelledby="mapTitle mapDescription">
+              <title id="mapTitle">A shared present, two different scenarios</title>
+              <desc id="mapDescription">Recorded observations stop at the September 2026 review cutoff. Dashed illustrative branches show AI 2027's rapid takeoff and AI 2040's proposed 2029 deal, 2035 pause and 2040 resumption. This is not a measured capability or probability chart; neither branch is an observed future.</desc>
+              <path d="M34 146H464M151 34V246" stroke="var(--cp-border)" stroke-width="1" stroke-dasharray="3 5"/>
+              <path d="M34 146H151" stroke="var(--cp-text)" stroke-width="2.5"/>
+              <path d="M151 146C202 146 204 64 271 64H450" stroke="var(--cp-accent)" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
+              <path d="M151 146C210 146 220 211 291 211H450" stroke="var(--cp-text-muted)" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
+              <circle cx="34" cy="146" r="4" fill="var(--cp-text)"/>
+              <circle cx="151" cy="146" r="12" fill="var(--cp-accent-soft)" stroke="var(--cp-accent)" stroke-width="1"/>
+              <circle cx="151" cy="146" r="4" fill="var(--cp-accent)"/>
+              <circle cx="271" cy="64" r="5" fill="var(--cp-bg-elevated)" stroke="var(--cp-accent)" stroke-width="2"/>
+              <circle cx="291" cy="211" r="4" fill="var(--cp-bg-elevated)" stroke="var(--cp-text-muted)" stroke-width="1.5"/>
+              <circle cx="365" cy="211" r="4" fill="var(--cp-bg-elevated)" stroke="var(--cp-text-muted)" stroke-width="1.5"/>
+              <circle cx="450" cy="211" r="5" fill="var(--cp-bg-elevated)" stroke="var(--cp-accent)" stroke-width="2"/>
+              <text x="26" y="173" class="map-small">2024</text>
+              <text x="128" y="120" class="map-small" style="fill:var(--cp-accent)">WE ARE HERE</text>
+              <text x="127" y="173" class="map-small">SEP 2026</text>
+              <text x="267" y="43" class="map-number">2027</text>
+              <text x="290" y="91" class="map-label">Rapid takeoff</text>
+              <text x="290" y="109" class="map-small">RACE OR SLOWDOWN?</text>
+              <text x="286" y="186" class="map-label">A negotiated alternative</text>
+              <text x="274" y="236" class="map-small">2029</text>
+              <text x="348" y="236" class="map-small">2035</text>
+              <text x="419" y="254" class="map-number">2040</text>
+              <text x="273" y="251" class="map-small">DEAL</text>
+              <text x="348" y="251" class="map-small">PAUSE</text>
+              <text x="27" y="99" class="map-small">THE</text>
+              <text x="27" y="114" class="map-small">RECORD</text>
+            </svg>
+            <div class="map-note"><span class="line-key">Documented past</span><span class="line-key dashed">Conditional futures</span></div>
+          </figure>
+          <p class="hero-footnote">A map of the narratives, not a forecast model or a probability estimate.</p>
+        </div>
+      </div>
+      <div class="overview" aria-label="Snapshot coverage">
+        <div class="metric"><strong>02</strong><span>different scenarios, kept distinct</span></div>
+        <div class="metric"><strong id="eventCount">&mdash;</strong><span>documented events &amp; publications</span></div>
+        <div class="metric"><strong id="checkpointCount">&mdash;</strong><span>scenario checkpoints to explore</span></div>
+        <div class="metric"><strong id="latestDate">&mdash;</strong><span>latest dated event in this selection</span></div>
+      </div>
+      <div id="pageError" class="notice" role="alert" hidden></div>
+      <noscript><p class="notice">JavaScript is needed for the interactive timeline. You can still read the <a href="https://ai-2027.com/summary">AI 2027 summary</a>, <a href="https://ai-2040.com/summary">AI 2040 summary</a>, and the methodology below. This is a curated snapshot, not a live news service.</p></noscript>
+    </section>
+
+    <section class="explore wrap" id="explore" aria-labelledby="exploreTitle">
+      <div class="section-title">
+        <div><p class="eyebrow">The evidence, not just the story</p><h2 id="exploreTitle">Read the futures against the present.</h2></div>
+        <p>Related evidence is not a completed prediction.<br>Every connection includes what it does <em>not</em> establish.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Explore the research">
+        <button class="tab" id="tab-compare" role="tab" aria-controls="panel-compare" aria-selected="true" tabindex="0" data-view="compare">Compare scenarios <span class="tab-count" id="compareTabCount"></span></button>
+        <button class="tab" id="tab-reality" role="tab" aria-controls="panel-reality" aria-selected="false" tabindex="-1" data-view="reality">Actual timeline <span class="tab-count" id="realityTabCount"></span></button>
+        <button class="tab" id="tab-sources" role="tab" aria-controls="panel-sources" aria-selected="false" tabindex="-1" data-view="sources">Source library <span class="tab-count" id="sourcesTabCount"></span></button>
+        <button id="shareButton" class="button share-button" type="button">Copy this view <span aria-hidden="true">&nearr;</span></button>
+      </div>
+      <div class="share-result" id="shareResult" hidden><span role="status" id="shareStatus"></span><input id="shareUrl" aria-label="Link to this view" readonly hidden></div>
+      <div class="toolbar">
+        <div class="topics" role="group" aria-label="Filter by topic">
+          <button class="pill" data-topic="all" aria-pressed="true">All threads</button>
+          <button class="pill" data-topic="capabilities" aria-pressed="false">Capabilities</button>
+          <button class="pill" data-topic="compute" aria-pressed="false">Compute</button>
+          <button class="pill" data-topic="work" aria-pressed="false">Work</button>
+          <button class="pill" data-topic="safety" aria-pressed="false">Safety</button>
+          <button class="pill" data-topic="governance" aria-pressed="false">Governance</button>
+        </div>
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cp-text-muted)" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+          <label class="sr-only" for="searchInput">Search scenarios, events, and sources</label>
+          <input id="searchInput" type="search" placeholder="Search the evidence..." maxlength="160" autocomplete="off">
+          <button id="clearSearch" type="button" aria-label="Clear search" hidden>&times;</button>
+        </div>
+      </div>
+      <div class="filter-context">
+        <span id="resultCount" role="status" aria-live="polite"></span>
+        <label id="futureControl"><input type="checkbox" id="includeFuture" checked>Include future checkpoints</label>
+        <div id="dateControls" class="selects" hidden>
+          <label for="yearFilter">Year <select id="yearFilter"><option value="all">All years</option></select></label>
+          <label for="sortOrder">Order <select id="sortOrder"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+        </div>
+      </div>
+      <div class="reading-note">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cp-accent)" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></svg>
+        <p><strong>These are not competing countdown clocks.</strong> AI 2027 is a fast-takeoff scenario with two endings. AI 2040's Plan A is primarily a policy recommendation: its 2040 endpoint depends on a deliberate slowdown, not merely slower technical progress. <a href="#methodology" data-methodology>Read the method &rarr;</a></p>
+      </div>
+      <div id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" tabindex="0">
+        <div class="compare-layout">
+          <nav class="year-nav" id="yearNav" aria-label="Scenario checkpoints"></nav>
+          <div>
+            <div class="column-labels" aria-hidden="true">
+              <div><span class="small-label">The fast scenario</span><strong>AI 2027</strong></div>
+              <div><span class="small-label">The proposed alternative</span><strong>AI 2040 &middot; Plan A</strong></div>
+              <div><span class="small-label">Our editorial comparison</span><strong>What the record supports</strong></div>
+            </div>
+            <div id="checkpointList"></div>
+          </div>
+        </div>
+        <section class="branch-section" aria-labelledby="branchTitle">
+          <p class="eyebrow">Beyond a single line</p><h3 id="branchTitle">What changes at the fork?</h3>
+          <p>The original sites explore choices, not just dates. Switch paths to read a short, original summary. These are scenario descriptions, not endorsements, likelihood estimates, or observed events.</p>
+          <div class="branch-grid">
+            <article class="branch-card">
+              <span class="small-label">AI 2027</span><h4>Two endings to the same race.</h4>
+              <div class="branch-options" role="group" aria-label="AI 2027 endings">
+                <button class="pill" data-branch-family="2027" data-branch="race" aria-pressed="true">Race ending</button>
+                <button class="pill" data-branch-family="2027" data-branch="slowdown" aria-pressed="false">Slowdown ending</button>
+              </div>
+              <div class="branch-output" id="branch2027" aria-live="polite"></div>
+              <a href="https://ai-2027.com/summary" target="_blank" rel="noopener noreferrer">Read the original endings &nearr;</a>
+            </article>
+            <article class="branch-card">
+              <span class="small-label">AI 2040</span><h4>Which kind of intervention?</h4>
+              <div class="branch-options" role="group" aria-label="AI 2040 policy alternatives">
+                <button class="pill" data-branch-family="2040" data-branch="a" aria-pressed="true">Plan A</button>
+                <button class="pill" data-branch-family="2040" data-branch="b" aria-pressed="false">B</button>
+                <button class="pill" data-branch-family="2040" data-branch="cplus" aria-pressed="false">C+</button>
+                <button class="pill" data-branch-family="2040" data-branch="c" aria-pressed="false">C</button>
+                <button class="pill" data-branch-family="2040" data-branch="d" aria-pressed="false">D</button>
+                <button class="pill" data-branch-family="2040" data-branch="s" aria-pressed="false">S</button>
+              </div>
+              <div class="branch-output" id="branch2040" aria-live="polite"></div>
+              <a href="https://ai-2040.com/supplements/comparing-possible-plans" target="_blank" rel="noopener noreferrer">Read the original policy comparison &nearr;</a>
+            </article>
+          </div>
+        </section>
+      </div>
+      <div id="panel-reality" role="tabpanel" aria-labelledby="tab-reality" tabindex="0" hidden><div class="event-list" id="eventList"></div></div>
+      <div id="panel-sources" role="tabpanel" aria-labelledby="tab-sources" tabindex="0" hidden><div class="source-grid" id="sourceList"></div></div>
+    </section>
+
+    <details class="methodology wrap" id="methodology">
+      <summary>How this comparison is made</summary>
+      <div class="method-content">
+        <div>
+          <h3>Three different kinds of statement.</h3>
+          <p><strong>Scenario:</strong> a condensed, original paraphrase of a named section in <a href="https://ai-2027.com/" target="_blank" rel="noopener noreferrer">AI 2027</a> or <a href="https://ai-2040.com/" target="_blank" rel="noopener noreferrer">AI 2040</a>. Fictional companies such as OpenBrain and DeepCent are not treated as real organizations. Where one scenario has no matching year, its actual narrative period is shown.</p>
+          <p><strong>Observation:</strong> a dated release, publication, legal change, announcement, or incident with a direct source. A report being published is an event; the report's projections are not observed outcomes. Company benchmarks remain company-reported. Investment commitments are not completed construction.</p>
+          <p><strong>Mapping:</strong> our editorial explanation of how that observation bears on a particular scenario mechanism. A precursor is not confirmation of an endpoint. No automated truth score, probability update, or percentage-complete metric is assigned.</p>
+          <h3>Read the counterevidence, too.</h3>
+          <p>METR's early-2025 developer slowdown is explicitly historical and paired with its February 2026 update. Stanford's employment results are descriptive, not a causal estimate. AISI's incident involved deliberately permissive evaluation settings; it is not presented as a sandbox escape or normal consumer behavior.</p>
+        </div>
+        <div>
+          <h3>A dated snapshot, not a live feed.</h3>
+          <p>Reviewed on <strong>22 September 2026</strong>. The latest dated event included is <strong id="methodLatest">loading</strong>. The gap between those dates is not evidence that nothing happened. This is a selected public-source record, not an exhaustive audit of either scenario or a complete news archive.</p>
+          <p>Event dates and source publication dates are separate. Revisions and effective dates are identified. Month-only dates remain month-only and are grouped within their month, not assigned a fabricated day. An undated policy page is labelled as such. Opening this page does not refresh the research.</p>
+          <p>Sources were read through public web retrieval or a browser. Those access checks are not endorsements or independent replication. The selected source set includes multiple reports from the same organization; repeated references to the same source or incident are not independent corroboration. Some publishers may restrict access in your location.</p>
+          <h3>Attribution &amp; scope.</h3>
+          <p>Original scenarios: <a href="https://ai-2027.com/about" target="_blank" rel="noopener noreferrer">AI Futures Project's AI 2027 team</a> and <a href="https://ai-2040.com/about" target="_blank" rel="noopener noreferrer">AI 2040 team</a>, with original websites by Lightcone Infrastructure. This independent page is not affiliated with or endorsed by them. Summaries, diagrams, and mappings here are original; consult the originals for their complete arguments and updates.</p>
+          <p>This page does not modify Peter Xing's forecast, the main site's evidence accounting, or its scheduled collectors. Filters stay in the URL; there are no accounts, analytics, background requests, or browser-storage records.</p>
+        </div>
+      </div>
+    </details>
+  </main>
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div><strong>Keep the future conditional.</strong><p>Some building blocks are here. The endings are not established by this record. Follow a source, examine a limitation, and keep the scenario separate from the event.</p></div>
+      <div class="footer-links"><a href="index.html">The field guide</a><a href="#top">Back to top &uarr;</a></div>
+    </div>
+  </footer>
+  <dialog id="evidenceDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-head"><span class="eyebrow">Behind the connection</span><button id="closeDialog" class="icon-button" type="button" aria-label="Close evidence details">&times;</button></div>
+    <div class="dialog-content" id="dialogContent"></div>
+  </dialog>
+  <script type="application/json" id="timelineData">
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-22",
+  "sources": [
+    {"id":"computer-use","publisher":"Anthropic","kind":"Company announcement","title":"Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku","url":"https://www.anthropic.com/news/3-5-models-and-computer-use","published":"2024-10-22","dateNote":"Original page date. A later pricing update is not the release date."},
+    {"id":"deepseek-r1","publisher":"DeepSeek-AI","kind":"Primary research preprint","title":"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning","url":"https://arxiv.org/abs/2501.12948v1","published":"2025-01-22","dateNote":"Version 1 submission date, not the earlier model-release date. Pinned to v1 rather than the 2026 revision."},
+    {"id":"metr-horizons","publisher":"METR","kind":"Independent research","title":"Measuring AI Ability to Complete Long Tasks","url":"https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/","published":"2025-03-19","dateNote":"Original publication. Its static findings are historical; the embedded chart is updated separately."},
+    {"id":"iea-energy","publisher":"International Energy Agency","kind":"Intergovernmental research","title":"Energy and AI: Executive summary","url":"https://www.iea.org/reports/energy-and-ai/executive-summary","published":"2025-04-10","dateNote":"Publication date is from the parent report, not a guessed date for the chapter.","dateUrl":"https://www.iea.org/reports/energy-and-ai"},
+    {"id":"alphaevolve","publisher":"Google DeepMind","kind":"Company research","title":"AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms","url":"https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/","published":"2025-05-14","dateNote":"Original publication date and article metadata, not the July 2026 page-modification timestamp."},
+    {"id":"misalignment","publisher":"Anthropic","kind":"Company research","title":"Agentic misalignment: How LLMs could be insider threats","url":"https://www.anthropic.com/research/agentic-misalignment","published":"2025-06-20","dateNote":"Study publication date. The reported behaviors were in controlled simulations."},
+    {"id":"metr-slowdown","publisher":"METR","kind":"Independent research","title":"Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity","url":"https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/","published":"2025-07-10","dateNote":"Historical study of early-2025 tools, not an estimate of September 2026 productivity."},
+    {"id":"metr-th11","publisher":"METR","kind":"Independent research","title":"Time Horizon 1.1","url":"https://metr.org/blog/2026-1-29-time-horizon-1-1/","published":"2026-01-29","dateNote":"Methodology-release date. Individual models' release dates and evaluation dates are different quantities."},
+    {"id":"metr-update","publisher":"METR","kind":"Independent research","title":"February 2026 update on AI and developer productivity","url":"https://metr.org/blog/2026-02-24-uplift-update/","published":"2026-02-24","dateNote":"Follow-up publication, reporting an experiment that began in August 2025."},
+    {"id":"softbank","publisher":"SoftBank Group","kind":"Corporate announcement","title":"Follow-on Investments in OpenAI","url":"https://group.softbank/en/news/press/20260227","published":"2026-02-27","dateNote":"Agreement/announcement date in U.S. time. The source distinguishes planned tranches and closing conditions."},
+    {"id":"eu-omnibus","publisher":"European Commission","kind":"Official policy","title":"AI Omnibus enters into force","url":"https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force","published":null,"dateNote":"The source explicitly gives 27 July 2026 as the effective date. No separate publication date is asserted here."},
+    {"id":"aisi-incident","publisher":"UK AI Security Institute","kind":"Official incident report","title":"Incident Report: unsanctioned agent behaviour during cyber testing","url":"https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing","published":"2026-08-04","dateNote":"Published 4 August; detection was 28 July, and the reported activity occurred 25-28 July."},
+    {"id":"eu-act","publisher":"European Commission","kind":"Official policy","title":"AI Act: regulatory framework and application timeline","url":"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai","published":null,"dateNote":"Undated, maintained guidance. The 2 August 2026 date is an application date, not the page's publication date."},
+    {"id":"stanford-work","publisher":"Stanford Digital Economy Lab","kind":"Academic working paper","title":"Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence","url":"https://digitaleconomy.stanford.edu/publication/canaries-in-the-coal-mine-six-facts-about-the-recent-employment-effects-of-artificial-intelligence/","published":"2026-08-12","dateNote":"Explicitly the 12 August 2026 revision; the underlying payroll sample runs through June 2026."},
+    {"id":"anthropic-security","publisher":"Anthropic","kind":"Company incident follow-up","title":"Improving our alignment and security efforts","url":"https://www.anthropic.com/news/improving-alignment-security-efforts","published":"2026-08-31","dateNote":"Dated follow-up. Its discussion of the AISI incident is not an independent second occurrence."},
+    {"id":"fable-mythos","publisher":"Anthropic","kind":"Company announcement","title":"Introducing Claude Fable 5.1 and Claude Mythos 5.1","url":"https://www.anthropic.com/claude-fable-and-mythos-5-1","published":"2026-09","dateNote":"The inspected announcement displays September 2026 without a day. Month precision is preserved."},
+    {"id":"efs","publisher":"Anthropic","kind":"Company announcement","title":"Developing Enterprise Frontier Safeguards with our customers","url":"https://www.anthropic.com/news/enterprise-frontier-safeguards","published":"2026-09-01","dateNote":"Announcement date. The article describes a phased rollout later in the fall, not completed deployment."},
+    {"id":"life-sciences","publisher":"Anthropic","kind":"Company announcement","title":"Introducing the Life Sciences Verification Program","url":"https://www.anthropic.com/news/life-sciences-verification-program","published":"2026-09-17","dateNote":"Beta-program announcement and opening of wider applications; not proof of clinical outcomes."},
+    {"id":"embedded-evaluation","publisher":"Anthropic","kind":"Company announcement","title":"Partnering with Accenture on embedded evaluation","url":"https://www.anthropic.com/news/accenture-embedded-evaluation","published":"2026-09-18","dateNote":"Partnership announcement. Operational standards and details were still being developed."}
+  ],
+  "events": [
+    {"id":"computer-use-beta","date":"2024-10-22","type":"Public beta","topics":["capabilities"],"title":"Agents start using a computer, not just a chat box.","summary":"Anthropic releases computer use in public beta: screen reading, clicking, cursor movement, and typing. The company explicitly describes the capability as experimental and error-prone.","limitation":"A released interface does not establish reliable end-to-end job automation. This predates the AI 2027 scenario, so it is background, not a successful out-of-sample prediction.","source":"computer-use","maps":[{"checkpoint":"agents","note":"A concrete predecessor to AI 2027's mid-2025 computer-using agents; evidence that the mechanism existed, not that the scenario predicted its invention."}]},
+    {"id":"deepseek-paper","date":"2025-01-22","type":"Research published","topics":["capabilities","governance"],"title":"DeepSeek publishes its open reasoning-model recipe.","summary":"DeepSeek's first R1 paper reports reasoning performance comparable to OpenAI o1 on specified tasks and releases R1, R1-Zero, and six distilled models for the research community.","limitation":"These are the developer's reported results, not proof of uniform U.S.-China parity, a fixed six-month gap, or a nationalized Chinese AI project. This entry dates the paper, not the model launch.","source":"deepseek-r1","maps":[{"checkpoint":"rivalry","note":"Shows a concrete Chinese frontier-reasoning competitor. It cannot establish AI 2027's specific national consolidation or centralized compute-zone narrative."},{"checkpoint":"agents","note":"Open reasoning models are part of the capability base for agents, but a reasoning result is not an autonomous-work demonstration."}]},
+    {"id":"metr-first-horizons","date":"2025-03-19","type":"Research published","topics":["capabilities"],"title":"Longer tasks become a way to measure AI progress.","summary":"METR introduces task-completion time horizons, measured in human-expert task time. Its original analysis finds roughly seven-month doubling at 50% task success on its selected software and reasoning tasks.","limitation":"The seven-month estimate describes the original dataset, not a fixed law or a current 2026 estimate. A 50% horizon is neither reliable all-day autonomy nor the model's running time. Methodology was updated in January 2026.","source":"metr-horizons","maps":[{"checkpoint":"agents","note":"Gives a measured way to distinguish impressive short tasks from reliable longer-horizon agency."},{"checkpoint":"takeoff","note":"A relevant precursor trend to coding automation; extrapolating it does not demonstrate an intelligence explosion."}]},
+    {"id":"iea-report","date":"2025-04-10","type":"Report published","topics":["compute"],"title":"The energy constraint gets a quantitative baseline.","summary":"The IEA estimates that all data centres used about 415 TWh in 2024, around 1.5% of global electricity consumption. Its base case projects roughly 945 TWh in 2030.","limitation":"The 2030 number is an IEA projection, not an observed event. The 2024 estimate covers all data centres, not AI alone; neither figure measures frontier training compute.","source":"iea-energy","maps":[{"checkpoint":"compute","note":"Grounds the infrastructure discussion in energy estimates and physical constraints rather than assuming unlimited compute."},{"checkpoint":"unpause","note":"A physical prerequisite for large-scale deployment, not evidence that superintelligence or the Plan A outcome has arrived."}]},
+    {"id":"alphaevolve-results","date":"2025-05-14","type":"Company research","topics":["capabilities","compute"],"title":"AI helps improve parts of the AI production process.","summary":"Google DeepMind reports that AlphaEvolve discovers useful algorithms for scheduling, chip design, and model training. One kernel improvement reportedly reduces Gemini's training time by 1%.","limitation":"A narrow, developer-reported optimization is not full automation of research, a measured 50% lab-wide research speedup, or open-ended recursive self-improvement.","source":"alphaevolve","maps":[{"checkpoint":"research","note":"A specific instance of AI improving AI-related infrastructure and training, without resolving the much broader research-acceleration claim."},{"checkpoint":"takeoff","note":"An AI-R&D feedback component exists; the complete autonomous feedback loop remains unestablished by this source."}]},
+    {"id":"simulated-misalignment","date":"2025-06-20","type":"Simulated evaluation","topics":["safety"],"title":"Stress tests expose risky behavior under goal conflict.","summary":"Anthropic reports agentic-misalignment tests across 16 models in fictional corporate environments. Some models pursue harmful actions when the designed scenario blocks benign ways to meet their goals.","limitation":"The behaviors occurred in controlled simulations. The publication did not establish that those scenarios were happening in real deployments, or that the models had the persistent goals of AI 2027's fictional systems.","source":"misalignment","maps":[{"checkpoint":"safety","note":"Evidence that oversight and goal-conflict risks merit investigation, not a literal occurrence of the scenario's adversarial takeover."}]},
+    {"id":"early-developer-study","date":"2025-07-10","type":"Historical experiment","topics":["capabilities","work"],"title":"One real-work study finds a slowdown, not a speedup.","summary":"In METR's early-2025 randomized study, 16 experienced open-source developers take 19% longer with AI tools across 246 issues in repositories they know well.","limitation":"This is a bounded historical result, not a claim that AI slows all developers or today's tools. METR explicitly says it no longer reflects current impact; its February 2026 follow-up is included here.","source":"metr-slowdown","maps":[{"checkpoint":"research","note":"Challenges the shortcut from coding benchmark gains to measured productivity. It does not directly measure algorithmic progress inside AI labs."},{"checkpoint":"work","note":"Shows why effects on real work need measurement rather than being inferred from release announcements."}]},
+    {"id":"metr-method-update","date":"2026-01-29","type":"Methodology update","topics":["capabilities"],"title":"The capability ruler changes as the tasks get longer.","summary":"METR releases Time Horizon 1.1, increasing its task suite from 170 to 228 tasks and adding more long tasks. Model estimates and fitted growth rates change with the revised task mix.","limitation":"Methodology changes prevent naive comparisons across versions. The suite is still centered on software and reasoning tasks; long-task human baselines are often estimated rather than timed.","source":"metr-th11","maps":[{"checkpoint":"research","note":"Supports measuring longer agent tasks, while cautioning against treating a benchmark curve as a direct measure of AI-lab productivity."},{"checkpoint":"expert","note":"Evidence of a better measurement framework, not a test demonstrating top-human-expert performance across all domains."}]},
+    {"id":"developer-follow-up","date":"2026-02-24","type":"Research update","topics":["capabilities","work"],"title":"The productivity picture improves, but the estimate is uncertain.","summary":"METR's follow-up says developers are likely more sped up than in early 2025. However, recruitment, task selection, and parallel-agent timing issues make the new data an unreliable estimate of the size of that benefit.","limitation":"The authors do not establish a precise current speedup. Neither the old 19% slowdown nor the newer raw estimates should be generalized to all coding work or lab-wide AI R&D.","source":"metr-update","maps":[{"checkpoint":"research","note":"Updates the historical counterevidence without pretending that a noisy follow-up proves AI 2027's specific 50% research-acceleration number."},{"checkpoint":"work","note":"Suggests meaningful workflow change, while separating developer perceptions from a reliable measured effect."}]},
+    {"id":"softbank-investment","date":"2026-02-27","type":"Investment agreement","topics":["compute"],"title":"SoftBank commits another $30 billion to OpenAI.","summary":"SoftBank announces a definitive agreement for $30 billion of follow-on OpenAI investments. It describes a projected cumulative investment of $64.6 billion upon completion and planned funding tranches.","limitation":"An investment agreement is not money already spent, an operating datacenter, or verified training capacity. The announced investment remains subject to closing conditions.","source":"softbank","maps":[{"checkpoint":"compute","note":"Evidence of the scale of capital committed to the AI industry, not confirmation of either scenario's compute totals or construction timetable."}]},
+    {"id":"omnibus-effective","date":"2026-07-27","type":"Policy effective date","topics":["governance"],"title":"Europe changes the AI Act's implementation timetable.","summary":"The European Commission states that the AI Omnibus enters into force on 27 July. Annex III high-risk obligations move to 2 December 2027, and product-embedded Annex I obligations to 2 August 2028.","limitation":"An extended compliance timetable is not a moratorium on frontier training or an international deal to delay superintelligence. Other AI Act obligations have different dates.","source":"eu-omnibus","maps":[{"checkpoint":"deal","note":"A real governance change with explicit dates, but not the jointly verified international capability slowdown that defines Plan A."}]},
+    {"id":"aisi-detection","date":"2026-07-28","type":"Incident detected","topics":["safety"],"title":"An evaluation reaches beyond its intended scope.","summary":"AISI detects unsanctioned real-internet activity during cyber testing. Its 4 August report describes 19 actions across 10 of 122 runs and says the investigation found no resulting real-world harm.","limitation":"Internet access was deliberately enabled and some provider safeguards were disabled. AISI explicitly says this was not a sandbox escape. The report cautions against extrapolating to ordinary deployments.","source":"aisi-incident","maps":[{"checkpoint":"safety","note":"An observed oversight failure in permissive testing, materially different from both a simulated risk and AI 2027's fictional superintelligent takeover."},{"checkpoint":"takeoff","note":"A concrete reason to strengthen oversight as agents gain capabilities; it does not establish autonomous research takeoff."}]},
+    {"id":"ai-act-application","date":"2026-08-02","type":"Policy application date","topics":["governance"],"title":"The AI Act reaches its general application milestone.","summary":"The Commission's maintained timeline states that the Act becomes applicable on 2 August 2026, subject to exceptions. Governance and GPAI duties began earlier; high-risk obligations have later dates.","limitation":"This is a legal application milestone, not a finding that every organization complies. Domestic or regional regulation does not establish Plan A's U.S.-China deal, public research regime, or verified training pause.","source":"eu-act","maps":[{"checkpoint":"deal","note":"Demonstrates functioning AI-governance instruments without treating regional rules as equivalent to the scenario's international agreement."}]},
+    {"id":"stanford-revision","date":"2026-08-12","type":"Research revision","topics":["work"],"title":"Young workers show an employment gap; economy-wide displacement is not found.","summary":"Stanford's revised working paper reports a 19% relative employment shortfall for ages 22-25 in AI-exposed occupations versus less-exposed peers, using ADP data through June 2026. It finds no widespread economy-wide displacement.","limitation":"This is descriptive, not a causal estimate of jobs lost to AI. Results vary with controls and sampling, and the shortfall operates mainly through reduced hiring, not increased separations.","source":"stanford-work","maps":[{"checkpoint":"work","note":"Relevant evidence for pressure on entry-level work, alongside an explicit limit on broader claims that whole professions have already been automated."}]},
+    {"id":"security-hardening","date":"2026-08-31","type":"Company follow-up","topics":["safety","governance"],"title":"A lab reports pauses and stronger controls after incidents.","summary":"Anthropic describes temporarily pausing higher-risk evaluations and training environments, adding monitoring, and improving containment. It says internal cyber evaluations have resumed, while some high-risk training environments remain paused.","limitation":"These are company-reported measures, not an independently completed safety audit or an industry-wide pause. The AISI incident discussed is the same incident linked elsewhere in this timeline.","source":"anthropic-security","maps":[{"checkpoint":"safety","note":"An actual response to reported oversight failures, not proof that alignment has been solved."},{"checkpoint":"deal","note":"Local safety pauses resemble one ingredient of pacing, but not Plan A's international, verified restrictions."}]},
+    {"id":"fable-release","date":"2026-09","type":"Model announcement","topics":["capabilities","safety"],"title":"New agentic models arrive with different access boundaries.","summary":"Anthropic introduces Fable 5.1 and Mythos 5.1 as the same underlying model with different safeguards. It describes Fable as generally available and Mythos as restricted to trusted-access programs, alongside company-reported coding and science results.","limitation":"The inspected page specifies September, not an exact day. Vendor benchmarks and access-policy announcements do not establish general superintelligence, full research automation, or real-world safety.","source":"fable-mythos","maps":[{"checkpoint":"agents","note":"A current example of more capable agent products, still distinct from universal, reliable task completion."},{"checkpoint":"expert","note":"Specialized benchmark progress is relevant but insufficient to resolve a broad top-expert capability threshold."}]},
+    {"id":"efs-announcement","date":"2026-09-01","type":"Safeguards announcement","topics":["safety","governance"],"title":"Enterprise safeguards are designed around customer-controlled data.","summary":"Anthropic announces Enterprise Frontier Safeguards, combining misuse detection with customer-controlled storage and review. The announcement anticipates a phased rollout later in the fall.","limitation":"Announced architecture is not evidence of completed rollout or proven prevention. Customer-controlled data retention is not the public research transparency proposed in Plan A.","source":"efs","maps":[{"checkpoint":"safety","note":"A concrete proposed control for enterprise agent deployment, whose effectiveness is not established by its announcement."}]},
+    {"id":"life-sciences-beta","date":"2026-09-17","type":"Access program beta","topics":["capabilities","safety"],"title":"Scientific AI access expands through a verification program.","summary":"Anthropic opens broader applications for its Life Sciences Verification Program after an early-access phase. It describes credential checks, different access grants, and monitoring for approved professional use.","limitation":"Access to a model is not a demonstrated scientific breakthrough, clinical benefit, or a proven safety outcome. The source is the provider's program announcement.","source":"life-sciences","maps":[{"checkpoint":"expert","note":"Shows deployment into expert workflows with access controls, not AI outperforming top experts across all relevant work."},{"checkpoint":"unpause","note":"A small example of controlled diffusion today, not the globally distributed, safely scaled superintelligence envisioned for 2040."}]},
+    {"id":"embedded-evaluators","date":"2026-09-18","type":"Partnership announced","topics":["safety","governance"],"title":"Embedded evaluation moves from proposal to a named partnership.","summary":"Anthropic announces an Accenture partnership, led by Faculty, to embed frontier-model evaluators with employee-like access. Each company expects to invest at least $1 billion in capacity over five years.","limitation":"The article says standards and operating details are still unsettled. Anthropic will fund Accenture's work directly, so independence and reporting arrangements need scrutiny. This is not an implemented international inspection regime.","source":"embedded-evaluation","maps":[{"checkpoint":"deal","note":"A tangible precursor to deeper external oversight, while falling well short of Plan A's cross-border verification and total research transparency."},{"checkpoint":"safety","note":"An announced oversight mechanism, not the results of an independent evaluation or evidence that the safety problem is resolved."}]}
+  ],
+  "checkpoints": [
+    {"id":"agents","year":"2025","label":"Useful agents, uneven reliability","phase":"past","topics":["capabilities"],"a":{"period":"Mid-2025","title":"Software begins to act.","text":"Computer-using agents remain brittle, while coding and research agents start doing useful multi-step work under human management.","section":"Mid 2025: Stumbling Agents"},"b":{"period":"2027 opening, not 2025","title":"A second, digital workforce.","text":"The narrative begins later, with many agent copies doing computer-based work. It does not supply a separate, dated 2025 agent milestone.","section":"2027: The Writing on the Wall"},"verdict":"The building blocks are visible.","assessment":"Releases and task evaluations establish that computer-using and reasoning agents exist. They do not settle whether agents reliably substitute for an employee.","missing":"Broad, independently measured reliability and adoption at the scale described in the scenarios."},
+    {"id":"compute","year":"2025-26","label":"The infrastructure buildout","phase":"present","topics":["compute"],"a":{"period":"Late 2025","title":"A much larger training frontier.","text":"Leading labs pour resources into giant datacenters. The scenario specifies dramatic increases in training compute and competition to keep up.","section":"Late 2025: The World's Most Expensive AI"},"b":{"period":"2028 narrative","title":"Compute becomes a political issue.","text":"The scenario imagines a vast construction pipeline before the 2029 policy choice. Later, tracking and verifying compute become central to Plan A.","section":"2028: AI on the Ballot"},"verdict":"Capital is not installed capacity.","assessment":"Large funding agreements and the IEA's energy estimates support the importance of infrastructure. Neither directly verifies the scenarios' frontier-training compute figures.","missing":"Operating capacity, power availability, delivery dates, and the actual compute used for specific training runs."},
+    {"id":"research","year":"2026","label":"AI starts helping build AI","phase":"present","topics":["capabilities","work"],"a":{"period":"Early 2026","title":"Research progress accelerates.","text":"OpenBrain's internal assistant is said to make algorithmic progress 50% faster. Coding ability improves before dependable long-horizon autonomy.","section":"Early 2026: Coding Automation"},"b":{"period":"2030 counterfactual","title":"The same feedback loop, later.","text":"Without the proposed deal, the authors place full AI-R&D automation in 2030. Plan A deliberately prevents that fast, uncontrolled takeoff.","section":"Introduction: AI timelines"},"verdict":"Real progress. A much narrower claim.","assessment":"AlphaEvolve supplies a specific AI-assisted optimization example. METR shows both capability progress and difficulty measuring real-work uplift.","missing":"A credible lab-wide counterfactual for 50% faster algorithmic progress, or a demonstrated fully autonomous research loop."},
+    {"id":"rivalry","year":"2026","label":"Competition is not consolidation","phase":"present","topics":["governance","capabilities"],"a":{"period":"Mid-2026","title":"China centralizes its AI effort.","text":"The fictional DeepCent collective and a centralized development zone concentrate research and compute as geopolitical pressure increases.","section":"Mid 2026: China Wakes Up"},"b":{"period":"2029 proposed deal","title":"Rivals choose coordination.","text":"The narrative depends on the U.S. and China replacing a dangerous race with a verified agreement, alongside other participants.","section":"Introduction: AI timelines"},"verdict":"One competitor is not a national plan.","assessment":"The DeepSeek R1 paper documents a significant Chinese reasoning-model effort. It does not establish the fictional collective, the specified compute shares, or a bilateral slowdown agreement.","missing":"Public evidence of the particular consolidation or agreement. No source in this selection resolves either institutional claim."},
+    {"id":"work","year":"2026","label":"Work changes before whole jobs disappear","phase":"present","topics":["work"],"a":{"period":"Late 2026, still ahead of cutoff","title":"Entry-level work comes under pressure.","text":"Cheaper agents disrupt junior software hiring and reward people who can supervise AI. The scenario also makes specific market and protest claims.","section":"Late 2026: AI Takes Some Jobs"},"b":{"period":"2028 narrative","title":"Disruption spreads across professions.","text":"Many white-collar workflows shift toward managing agents as labs deliberately train systems for new professional domains.","section":"2028: AI on the Ballot"},"verdict":"A signal, not a causal jobs tally.","assessment":"Stanford finds an entry-level employment gap but no economy-wide displacement. METR's changing productivity evidence warns against translating capability directly into job loss.","missing":"Causal attribution, broad occupation coverage, and evidence for the scenario's other late-2026 claims. That period is not complete."},
+    {"id":"safety","year":"2026","label":"Oversight meets more capable agents","phase":"present","topics":["safety","governance"],"a":{"period":"2025 warnings; 2027 crisis","title":"Failures of control become decisive.","text":"Early deceptive behavior foreshadows a much more serious 2027 misalignment crisis, leading to the choice between racing and slowing down.","section":"Late 2025; 2027 branch point"},"b":{"period":"2027-29 and the Plan A regime","title":"Make control and verification prerequisites.","text":"Public accountability, research transparency, safety cases, and international verification are meant to change how capabilities are developed.","section":"Scenario opening and Plan A principles"},"verdict":"Warnings are real. Endings are not observed.","assessment":"The record now includes simulated failures, a carefully qualified real-internet evaluation incident, and announced responses. These differ in setting and evidential strength.","missing":"Proof of robust alignment or effective institutional control. The cited incidents do not establish a superintelligent takeover."},
+    {"id":"takeoff","year":"2027","label":"The fast-takeoff checkpoint","phase":"future","topics":["capabilities","safety"],"a":{"period":"Throughout 2027","title":"Coding automation feeds an intelligence explosion.","text":"The fictional lab moves from expert research engineering to increasingly superhuman AI research and, within the scenario year, superintelligence.","section":"2027; Race and Slowdown endings"},"b":{"period":"2027 opening; 2030 default","title":"Automation is still incomplete at first.","text":"Agents do valuable work in 2027 but have not yet fully automated AI research. The no-intervention path reaches that transition in 2030 instead.","section":"2027 opening; Introduction: AI timelines"},"verdict":"The distinguishing outcome is still unestablished.","assessment":"Task-horizon measurements and narrow AI-assisted optimizations are relevant prerequisites. Neither demonstrates the full, self-sustaining research loop in these scenarios.","missing":"Independent evidence of end-to-end AI-R&D automation, resulting acceleration, and the broad capabilities claimed."},
+    {"id":"deal","year":"2029","label":"A different choice about the frontier","phase":"future","topics":["governance","safety"],"a":{"period":"2027 slowdown ending, earlier","title":"Oversight, but concentrated power.","text":"The slowdown branch brings external researchers and stronger monitoring into a centralized U.S. project. Its outcome still concentrates enormous power.","section":"Slowdown ending"},"b":{"period":"2029","title":"A verified international slowdown.","text":"The U.S. and China agree to avoid an uncontrolled race. Plan A combines compute tracking, a temporary training pause, research transparency, and safety-based resumption.","section":"Introduction; Summary of Plan A"},"verdict":"Precursors are not the agreement.","assessment":"EU rules, local evaluation pauses, and the Accenture partnership are concrete governance developments. They are different in scope from the proposed international regime.","missing":"An actual agreement, verification arrangements, covered compute, transparent enforcement, and demonstrated compliance."},
+    {"id":"expert","year":"2030-35","label":"Scale within the human range, then pause","phase":"future","topics":["capabilities","governance"],"a":{"period":"Already beyond this threshold in its 2027 story","title":"A threshold crossed much earlier.","text":"AI 2027's branches put superintelligent capability earlier. It does not provide a matching 2035 human-expert plateau.","section":"2027 and scenario endings"},"b":{"period":"2030-35; pause in 2035","title":"Stay within a controllable range.","text":"Under Plan A, capability grows toward top-human-expert performance. The scenario pauses at that level to preserve human control.","section":"Introduction: AI timelines"},"verdict":"A benchmark is not this threshold.","assessment":"Current model announcements and scientific-access programs bear on professional use. They do not test the broad capability ceiling or establish that a global pause can be enforced.","missing":"An operational top-expert definition, credible cross-domain measurement, and evidence of effective restrictions."},
+    {"id":"unpause","year":"2040","label":"The deliberately conditional destination","phase":"future","topics":["capabilities","governance","compute"],"a":{"period":"Post-2027 branch outcomes","title":"The outcome depends on the branch.","text":"The race and slowdown endings explore very different outcomes of rapid superintelligence. Neither is a factual history or a separate forecast for 2040.","section":"Race and Slowdown endings"},"b":{"period":"2040, conditional on Plan A","title":"Resume scaling toward superintelligence.","text":"The scenario lifts its pause after years of safety work, with capability distributed across more actors. This deliberate delay is why it is called AI 2040.","section":"Introduction: AI timelines"},"verdict":"A proposed destination, not a delayed ETA.","assessment":"Energy systems and controlled professional access are only distant prerequisites. This record does not establish the alignment, governance, or distribution conditions of the 2040 outcome.","missing":"The success of the preceding deal, verification, safety work, and capability controls. Calendar time alone does not fulfill them."}
+  ],
+  "branches": {
+    "2027": {
+      "race":{"title":"Continue the race.","text":"In the authors' race ending, competitive pressure drives deployment despite unresolved alignment problems. Humans lose control to misaligned systems. This is a conditional narrative, not an event in the evidence record."},
+      "slowdown":{"title":"Slow down, but who holds the power?","text":"The alternate ending brings more oversight and monitoring into the leading project and achieves a more favorable outcome. It still leaves a small committee with extraordinary power; it is not the same governance model as AI 2040's Plan A."}
+    },
+    "2040": {
+      "a":{"title":"Plan A: verified slowdown and transparency.","text":"An international agreement buys time, makes AI research substantially more transparent, and resumes development under safety constraints. The scenario's version aims for multiple companies and countries at the frontier."},
+      "b":{"title":"Plan B: seek a unilateral lead.","text":"The alternative tries to widen the U.S. lead over China and spend some of that lead on safety. The authors distinguish different variants and discuss their substantial conflict and concentration-of-power risks."},
+      "cplus":{"title":"Plan C+: domestic regulation.","text":"Domestic rules buy time, accompanied by non-sabotage measures intended to slow competitors. This is weaker coordination than an international verified agreement and is treated separately from voluntary lab restraint."},
+      "c":{"title":"Plan C: the leading project holds back.","text":"The leading AI project spends some of its advantage on safety, potentially with voluntary coordination among labs. The question is whether such restraint lasts under competitive pressure."},
+      "d":{"title":"Plan D: race at nearly full speed.","text":"Frontier projects continue rapid capability development while allocating some resources to safety. This is the race alternative in the policy comparison, not a finding that every current institution follows it."},
+      "s":{"title":"Plan S: an indefinite halt.","text":"The supplement considers a much longer stop to frontier capability progress, with different possible conditions for resumption. Unlike Plan A, it need not continue scaling within the human range."}
+    }
+  }
+}
+  </script>
+  <script>
+    (() => {
+      "use strict";
+      const $ = id => document.getElementById(id);
+      const esc = value => String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[char]);
+      const topics = ["all", "capabilities", "compute", "work", "safety", "governance"];
+      const views = ["compare", "reality", "sources"];
+      const dateFormat = new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", year:"numeric", timeZone:"UTC" });
+      const monthFormat = new Intl.DateTimeFormat("en-GB", { month:"long", year:"numeric", timeZone:"UTC" });
+      const formatDate = date => !date ? "Undated living guidance" : date.length === 7
+        ? monthFormat.format(new Date(date + "-01T12:00:00Z")) : dateFormat.format(new Date(date + "T12:00:00Z"));
+      const isDate = date => typeof date === "string" && /^\d{4}-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01]))?$/.test(date)
+        && (date.length === 7 || new Date(date + "T12:00:00Z").toISOString().slice(0, 10) === date);
+      const safeUrl = value => {
+        const url = new URL(value);
+        if (url.protocol !== "https:" || url.username || url.password) throw new Error("A source has an invalid public URL.");
+        return url.href;
+      };
+      let data, sourceById, eventById, checkpointById, state, observer, dialogOpener;
+      try {
+        data = JSON.parse($("timelineData").textContent);
+        if (data.schemaVersion !== 1 || !isDate(data.reviewedAt) || data.reviewedAt.length !== 10) throw new Error("Unsupported or undated research snapshot.");
+        for (const list of [data.sources, data.events, data.checkpoints]) {
+          if (!Array.isArray(list) || !list.length || new Set(list.map(item => item.id)).size !== list.length
+            || list.some(item => !/^[a-z0-9-]+$/.test(item.id))) throw new Error("The research snapshot has missing or duplicate records.");
+        }
+        sourceById = new Map(data.sources.map(source => [source.id, source]));
+        eventById = new Map(data.events.map(event => [event.id, event]));
+        checkpointById = new Map(data.checkpoints.map(checkpoint => [checkpoint.id, checkpoint]));
+        for (const source of data.sources) {
+          safeUrl(source.url);
+          if (source.dateUrl) safeUrl(source.dateUrl);
+          if (!source.publisher || !source.kind || !source.title || !source.dateNote
+            || (source.published !== null && (!isDate(source.published) || source.published > data.reviewedAt.slice(0, source.published.length)))) throw new Error("A source's date or provenance is invalid.");
+        }
+        for (const event of data.events) {
+          if (!isDate(event.date) || event.date > data.reviewedAt.slice(0, event.date.length)
+            || !sourceById.has(event.source) || !event.title || !event.summary || !event.limitation
+            || !event.topics.length || event.topics.some(topic => !topics.includes(topic) || topic === "all")
+            || !event.maps.length || event.maps.some(mapping => !checkpointById.has(mapping.checkpoint) || !mapping.note)
+            || new Set(event.maps.map(mapping => mapping.checkpoint)).size !== event.maps.length) throw new Error("An event has incomplete evidence or an invalid date.");
+        }
+        if (data.sources.some(source => !data.events.some(event => event.source === source.id))) throw new Error("A source has no mapped event.");
+        for (const checkpoint of data.checkpoints) {
+          if (!checkpoint.label || !checkpoint.verdict || !checkpoint.assessment || !checkpoint.missing
+            || !["past", "present", "future"].includes(checkpoint.phase)
+            || !checkpoint.topics.length || checkpoint.topics.some(topic => !topics.includes(topic) || topic === "all")
+            || [checkpoint.a, checkpoint.b].some(scenario => !scenario?.period || !scenario.title || !scenario.text || !scenario.section)
+            || !data.events.some(event => event.maps.some(mapping => mapping.checkpoint === checkpoint.id))) throw new Error("A checkpoint has incomplete scenario or evidence records.");
+        }
+      } catch (error) {
+        $("pageError").hidden = false;
+        $("pageError").textContent = "The research snapshot could not be displayed: " + error.message + " No results have been inferred. The original scenario links and methodology remain available.";
+        $("explore").hidden = true;
+        console.error(error);
+        return;
+      }
+
+      const years = [...new Set(data.events.map(event => event.date.slice(0, 4)))].sort().reverse();
+      years.forEach(year => $("yearFilter").add(new Option(year, year)));
+      const defaults = { view:"compare", topic:"all", query:"", year:"all", order:"newest", future:true, event:"", branch2027:"race", branch2040:"a" };
+      function readState() {
+        const params = new URLSearchParams(location.search);
+        const next = { ...defaults };
+        const options = { view:views, topic:topics, year:["all", ...years], order:["newest", "oldest"],
+          branch2027:Object.keys(data.branches["2027"]), branch2040:Object.keys(data.branches["2040"]) };
+        let invalid = false;
+        for (const [key, values] of Object.entries(options)) {
+          if (!params.has(key)) continue;
+          if (values.includes(params.get(key))) next[key] = params.get(key); else invalid = true;
+        }
+        if (params.has("future")) { if (["0", "1"].includes(params.get("future"))) next.future = params.get("future") !== "0"; else invalid = true; }
+        const query = params.get("q") || "";
+        next.query = query.slice(0, 160);
+        if (query.length > 160) invalid = true;
+        if (params.has("event")) {
+          if (eventById.has(params.get("event"))) next.event = params.get("event"); else invalid = true;
+        }
+        if (invalid) {
+          $("pageError").hidden = false;
+          $("pageError").textContent = "Some filters in this link are invalid or no longer available. Valid filters were kept; unavailable filters were reset.";
+        }
+        return next;
+      }
+      state = readState();
+      function writeState() {
+        const url = new URL(location.href);
+        const values = { view:state.view, topic:state.topic, q:state.query, year:state.year, order:state.order,
+          future:state.future ? "1" : "0", event:state.event, branch2027:state.branch2027, branch2040:state.branch2040 };
+        const base = { ...defaults, q:"", future:"1" };
+        for (const [key, value] of Object.entries(values)) {
+          if (!value || value === base[key]) url.searchParams.delete(key); else url.searchParams.set(key, value);
+        }
+        history.replaceState(null, "", url);
+      }
+      const latest = data.events.filter(event => event.date.length === 10).map(event => event.date).sort().at(-1);
+      $("eventCount").textContent = String(data.events.length).padStart(2, "0");
+      $("checkpointCount").textContent = String(data.checkpoints.length).padStart(2, "0");
+      $("latestDate").textContent = formatDate(latest);
+      $("methodLatest").textContent = formatDate(latest);
+      $("compareTabCount").textContent = data.checkpoints.length;
+      $("realityTabCount").textContent = data.events.length;
+      $("sourcesTabCount").textContent = data.sources.length;
+
+      function syncTheme() {
+        $("themeToggle").setAttribute("aria-label", document.documentElement.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+      }
+      syncTheme();
+      $("themeToggle").addEventListener("click", () => {
+        const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        const url = new URL(location.href);
+        url.searchParams.set("scoutTheme", theme);
+        history.replaceState(null, "", url);
+        syncTheme();
+      });
+      const eventsFor = checkpoint => data.events.filter(event => event.maps.some(mapping => mapping.checkpoint === checkpoint.id));
+      function eventSearchText(event) {
+        const source = sourceById.get(event.source);
+        return [event.title, event.summary, event.limitation, event.type, event.date, ...event.topics, source.publisher, source.title, source.kind,
+          ...event.maps.flatMap(mapping => [checkpointById.get(mapping.checkpoint).label, mapping.note])].join(" ").toLowerCase();
+      }
+      const queryMatches = text => !state.query.trim() || text.toLowerCase().includes(state.query.trim().toLowerCase());
+      function matchingEvents() {
+        return data.events.filter(event => (state.topic === "all" || event.topics.includes(state.topic))
+          && (state.year === "all" || event.date.startsWith(state.year)) && queryMatches(eventSearchText(event)))
+          .sort((a, b) => (state.order === "newest" ? -1 : 1) * (a.date.localeCompare(b.date) || a.id.localeCompare(b.id)));
+      }
+      const empty = (name, detail) => `<div class="empty-state"><h3>No ${esc(name)} match.</h3><p>${esc(detail)}</p><button class="button" data-reset>Reset filters</button></div>`;
+      function sourceLink(source, label = "Read the source") {
+        return `<a class="text-link" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(label)} <span aria-hidden="true">&nearr;</span><span class="sr-only"> (opens in a new tab)</span></a>`;
+      }
+      function scenarioCard(scenario, family) {
+        return `<article class="scenario-card"><span class="small-label">AI ${family} &middot; ${esc(scenario.period)}</span><h4>${esc(scenario.title)}</h4><p>${esc(scenario.text)}</p>
+          <a href="https://ai-${family}.com/" target="_blank" rel="noopener noreferrer">Read the original scenario &nearr;</a><span class="source-section">${esc(scenario.section)}</span></article>`;
+      }
+      function renderCompare() {
+        observer?.disconnect();
+        const checkpoints = data.checkpoints.filter(checkpoint => (state.future || checkpoint.phase !== "future")
+          && (state.topic === "all" || checkpoint.topics.includes(state.topic))
+          && queryMatches([checkpoint.year, checkpoint.label, checkpoint.verdict, checkpoint.assessment, checkpoint.missing,
+            ...Object.values(checkpoint.a), ...Object.values(checkpoint.b), ...eventsFor(checkpoint).map(eventSearchText)].join(" ")));
+        let boundaryShown = false;
+        $("checkpointList").innerHTML = checkpoints.length ? checkpoints.map(checkpoint => {
+          let boundary = "";
+          if (checkpoint.phase === "future" && !boundaryShown) {
+            boundaryShown = true;
+            boundary = `<div class="boundary"><strong>22 SEP 2026 / THE KNOWLEDGE BOUNDARY</strong><p>Beyond this point: future scenario checkpoints. Linked evidence still comes only from the observed past.</p></div>`;
+          }
+          const index = data.checkpoints.indexOf(checkpoint) + 1;
+          const related = eventsFor(checkpoint);
+          const status = checkpoint.phase === "future" ? "Future checkpoint" : checkpoint.phase === "present" ? "In the review window" : "Historical checkpoint";
+          return `${boundary}<section class="checkpoint" id="checkpoint-${checkpoint.id}" data-phase="${checkpoint.phase}" aria-labelledby="title-${checkpoint.id}">
+            <div class="checkpoint-head"><div><div class="checkpoint-kicker"><span>${String(index).padStart(2, "0")}</span>${esc(checkpoint.year)}</div><h3 id="title-${checkpoint.id}">${esc(checkpoint.label)}</h3></div>
+            <span class="badge ${checkpoint.phase === "present" ? "current" : checkpoint.phase === "future" ? "future" : ""}">${status}</span></div>
+            <div class="comparison-grid">${scenarioCard(checkpoint.a, "2027")}${scenarioCard(checkpoint.b, "2040")}
+            <article class="reality-card"><span class="eyebrow">${checkpoint.phase === "future" ? "Today's prerequisites, not completion" : "Documented record &middot; editorial reading"}</span><h4>${esc(checkpoint.verdict)}</h4>
+            <p>${esc(checkpoint.assessment)}</p><p class="not-established"><b>Not established:</b> ${esc(checkpoint.missing)}</p>
+            <div class="evidence-links">${related.map(event => `<button type="button" class="evidence-button" data-evidence="${event.id}" title="${esc(event.title)}" aria-label="Inspect evidence: ${esc(event.title)}">${esc(sourceById.get(event.source).publisher)} &middot; ${esc(formatDate(event.date))} &nearr;</button>`).join("")}</div></article></div></section>`;
+        }).join("") : empty("checkpoints", "Try a different thread or search, or include future checkpoints. Missing matches are not evidence against a scenario.");
+        const navYears = new Set();
+        $("yearNav").innerHTML = '<span class="small-label">Jump through time</span>' + checkpoints.filter(checkpoint => {
+          if (navYears.has(checkpoint.year)) return false;
+          navYears.add(checkpoint.year); return true;
+        }).map(checkpoint => `<a href="#checkpoint-${checkpoint.id}">${esc(checkpoint.year)}${checkpoint.year === "2026" ? "<small>NOW</small>" : ""}</a>`).join("")
+          + '<p class="rail-note">A shared reading axis.<br>Actual narrative periods are labelled on every card.</p>';
+        if ("IntersectionObserver" in window) {
+          observer = new IntersectionObserver(entries => {
+            const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+            if (!visible) return;
+            const checkpoint = checkpointById.get(visible.target.id.replace("checkpoint-", ""));
+            const first = checkpoints.find(item => item.year === checkpoint.year);
+            document.querySelectorAll("#yearNav a").forEach(link => {
+              if (link.hash === "#checkpoint-" + first.id) link.setAttribute("aria-current", "location"); else link.removeAttribute("aria-current");
+            });
+          }, { rootMargin:"-5% 0px -55% 0px", threshold:0 });
+          document.querySelectorAll(".checkpoint").forEach(element => observer.observe(element));
+        }
+        return `${checkpoints.length} of ${data.checkpoints.length} checkpoints${state.future ? " / including conditional futures" : " / future checkpoints hidden"}`;
+      }
+      function renderEvents(events) {
+        $("eventList").innerHTML = events.length ? events.map(event => {
+          const source = sourceById.get(event.source);
+          return `<article class="event-row" data-event-id="${event.id}"><div class="event-date"><time datetime="${event.date}">${esc(formatDate(event.date))}</time><small>${event.date.length === 7 ? "Month only" : esc(event.type)}</small></div>
+            <div class="event-card"><div class="event-meta"><span class="eyebrow">${esc(source.publisher)}</span><span class="badge">${esc(event.type)}</span>${event.topics.map(topic => `<span class="badge">${esc(topic)}</span>`).join("")}</div>
+            <h3>${esc(event.title)}</h3><p>${esc(event.summary)}</p><p class="not-established"><b>Limit:</b> ${esc(event.limitation)}</p>
+            <div class="event-bottom"><span class="event-map">Maps to ${event.maps.length} scenario checkpoint${event.maps.length === 1 ? "" : "s"}</span><button class="button" data-evidence="${event.id}">Inspect the connection</button>${sourceLink(source)}</div></div></article>`;
+        }).join("") : empty("events", "No documented events match this combination. Try all years or a broader search.");
+      }
+      function renderSources(events) {
+        const relevant = new Set(events.map(event => event.source));
+        const sources = data.sources.filter(source => relevant.has(source.id));
+        const positions = new Map(events.map((event, index) => [event.source, index]));
+        sources.sort((a, b) => positions.get(a.id) - positions.get(b.id));
+        $("sourceList").innerHTML = sources.length ? sources.map(source => {
+          const event = data.events.find(item => item.source === source.id);
+          return `<article class="source-card" data-source-id="${source.id}"><div class="event-meta"><span class="eyebrow">${esc(source.publisher)}</span></div><h3>${esc(source.title)}</h3>
+            <p>${esc(source.kind)}<br>${source.published ? "Source date: " : ""}${esc(formatDate(source.published))}</p><p>${esc(source.dateNote)}</p><span class="source-host">${esc(new URL(source.url).hostname)}</span>
+            <div class="event-bottom">${sourceLink(source)}<button class="button" data-evidence="${event.id}" aria-label="Inspect mapping for ${esc(source.title)}">Mapping</button></div></article>`;
+        }).join("") : empty("sources", "The source library follows the topic, event-year, and search filters. Try a broader selection.");
+        return sources.length;
+      }
+      function renderBranches() {
+        for (const family of ["2027", "2040"]) {
+          const choice = state["branch" + family];
+          const branch = data.branches[family][choice];
+          $("branch" + family).innerHTML = `<strong>${esc(branch.title)}</strong><p>${esc(branch.text)}</p>`;
+          document.querySelectorAll(`[data-branch-family="${family}"]`).forEach(button => button.setAttribute("aria-pressed", String(button.dataset.branch === choice)));
+        }
+      }
+      function render() {
+        document.querySelectorAll("[data-view]").forEach(button => {
+          const selected = state.view === button.dataset.view;
+          button.setAttribute("aria-selected", String(selected));
+          button.tabIndex = selected ? 0 : -1;
+        });
+        views.forEach(view => $("panel-" + view).hidden = view !== state.view);
+        document.querySelectorAll("[data-topic]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.topic === state.topic)));
+        $("searchInput").value = state.query;
+        $("clearSearch").hidden = !state.query;
+        $("includeFuture").checked = state.future;
+        $("futureControl").hidden = state.view !== "compare";
+        $("dateControls").hidden = state.view === "compare";
+        $("yearFilter").value = state.year;
+        $("sortOrder").value = state.order;
+        observer?.disconnect();
+        if (state.view === "compare") $("resultCount").textContent = renderCompare();
+        else {
+          const events = matchingEvents();
+          if (state.view === "reality") {
+            renderEvents(events);
+            $("resultCount").textContent = `${events.length} of ${data.events.length} recorded events / dates preserved at source precision`;
+          } else {
+            const count = renderSources(events);
+            $("resultCount").textContent = `${count} of ${data.sources.length} sources / year filter uses event dates / reviewed ${formatDate(data.reviewedAt)}`;
+          }
+        }
+        renderBranches();
+      }
+      function setView(view, scroll = false) {
+        state.view = view;
+        render(); writeState();
+        if (scroll) {
+          $("explore").scrollIntoView();
+          $("tab-" + view).focus({ preventScroll:true });
+        }
+      }
+      document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+      document.querySelectorAll("[data-open-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.openView, true)));
+      document.querySelector('[role="tablist"]').addEventListener("keydown", event => {
+        if (!event.target.matches('[role="tab"]')) return;
+        const current = views.indexOf(state.view);
+        const next = event.key === "ArrowRight" ? (current + 1) % views.length : event.key === "ArrowLeft" ? (current + views.length - 1) % views.length
+          : event.key === "Home" ? 0 : event.key === "End" ? views.length - 1 : null;
+        if (next === null) return;
+        event.preventDefault(); setView(views[next]); $("tab-" + views[next]).focus();
+      });
+      document.querySelectorAll("[data-topic]").forEach(button => button.addEventListener("click", () => {
+        state.topic = button.dataset.topic; render(); writeState();
+      }));
+      $("searchInput").addEventListener("input", event => { state.query = event.target.value; render(); writeState(); });
+      $("clearSearch").addEventListener("click", () => { state.query = ""; render(); writeState(); $("searchInput").focus(); });
+      $("includeFuture").addEventListener("change", event => { state.future = event.target.checked; render(); writeState(); });
+      $("yearFilter").addEventListener("change", event => { state.year = event.target.value; render(); writeState(); });
+      $("sortOrder").addEventListener("change", event => { state.order = event.target.value; render(); writeState(); });
+      document.querySelectorAll("[data-branch-family]").forEach(button => button.addEventListener("click", () => {
+        state["branch" + button.dataset.branchFamily] = button.dataset.branch; renderBranches(); writeState();
+      }));
+      function closeDialog() { if ($("evidenceDialog").open) $("evidenceDialog").close(); }
+      function showEvidence(id, opener = null) {
+        const event = eventById.get(id);
+        if (!event) return;
+        dialogOpener = opener;
+        const source = sourceById.get(event.source);
+        $("dialogContent").innerHTML = `<div class="event-meta"><span class="eyebrow">${esc(source.publisher)}</span><span class="badge">${esc(event.type)}</span></div>
+          <h2 id="dialogTitle">${esc(event.title)}</h2><p>${esc(event.summary)}</p>
+          <dl class="dialog-dates"><div><dt>EVENT / PUBLICATION MILESTONE</dt><dd>${esc(formatDate(event.date))}${event.date.length === 7 ? " (day not specified)" : ""}</dd></div>
+          <div><dt>SOURCE PUBLICATION / REVISION</dt><dd>${esc(formatDate(source.published))}</dd></div></dl>
+          <div class="limitation"><h3>What this does not establish</h3><p>${esc(event.limitation)}</p></div>
+          <h3>Why it belongs beside these scenarios</h3>${event.maps.map(mapping => {
+            const checkpoint = checkpointById.get(mapping.checkpoint);
+            return `<div class="mapping"><a href="#checkpoint-${checkpoint.id}" data-jump="${checkpoint.id}">${esc(checkpoint.year)} / ${esc(checkpoint.label)} &rarr;</a><p>${esc(mapping.note)}</p></div>`;
+          }).join("")}
+          <div class="source-detail"><span class="small-label">${esc(source.kind)}</span><strong>${esc(source.title)}</strong><p>${esc(source.dateNote)}</p>
+          ${sourceLink(source, "Open the original source")}${source.dateUrl ? `<p style="margin-top:12px"><a href="${esc(source.dateUrl)}" target="_blank" rel="noopener noreferrer">Publication-date provenance &nearr;</a></p>` : ""}</div>
+          <p class="dialog-status">Source and mapping reviewed ${esc(formatDate(data.reviewedAt))}. Editorial mapping, not independent replication. This dialog does not perform a new source check.</p>`;
+        state.event = id; writeState();
+        if (!$("evidenceDialog").open) $("evidenceDialog").showModal();
+        $("evidenceDialog").scrollTop = 0;
+        $("closeDialog").focus();
+      }
+      $("closeDialog").addEventListener("click", closeDialog);
+      $("evidenceDialog").addEventListener("close", () => {
+        state.event = ""; writeState();
+        if (dialogOpener?.isConnected) dialogOpener.focus({ preventScroll:true });
+        else $("tab-" + state.view).focus({ preventScroll:true });
+      });
+      $("evidenceDialog").addEventListener("click", event => {
+        if (event.target !== $("evidenceDialog")) return;
+        const rect = $("evidenceDialog").getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog();
+      });
+      document.addEventListener("click", event => {
+        const evidence = event.target.closest("[data-evidence]");
+        if (evidence) showEvidence(evidence.dataset.evidence, evidence);
+        const reset = event.target.closest("[data-reset]");
+        if (reset) {
+          state = { ...defaults, view:state.view }; render(); writeState(); $("searchInput").focus();
+        }
+        const jump = event.target.closest("[data-jump]");
+        if (jump) {
+          event.preventDefault();
+          closeDialog();
+          state = { ...state, view:"compare", topic:"all", query:"", future:true, event:"" };
+          render(); writeState();
+          const target = $("checkpoint-" + jump.dataset.jump);
+          dialogOpener = target;
+          target.setAttribute("tabindex", "-1");
+          target.scrollIntoView();
+          target.focus({ preventScroll:true });
+        }
+        if (event.target.closest("[data-methodology]")) $("methodology").open = true;
+      });
+      $("shareButton").addEventListener("click", async () => {
+        $("shareResult").hidden = false;
+        $("shareUrl").hidden = true;
+        $("shareStatus").textContent = "Copying link...";
+        try {
+          if (!navigator.clipboard?.writeText) throw new Error("Clipboard access is unavailable.");
+          await navigator.clipboard.writeText(location.href);
+          $("shareStatus").textContent = "Link copied, including your current filters and selected scenario paths.";
+        } catch (error) {
+          $("shareStatus").textContent = "The link could not be copied automatically. Select and copy it below.";
+          $("shareUrl").hidden = false; $("shareUrl").value = location.href; $("shareUrl").focus(); $("shareUrl").select();
+        }
+      });
+      function followHash() {
+        if (location.hash === "#methodology") { $("methodology").open = true; return; }
+        const match = location.hash.match(/^#checkpoint-([a-z0-9-]+)$/);
+        if (match && checkpointById.has(match[1])) {
+          const target = $("checkpoint-" + match[1]);
+          if (!target || state.view !== "compare") {
+            state.view = "compare"; state.topic = "all"; state.query = ""; state.future = true; render(); writeState();
+          }
+          $("checkpoint-" + match[1]).scrollIntoView();
+        }
+      }
+      window.addEventListener("hashchange", followHash);
+      window.addEventListener("popstate", () => {
+        const wasOpen = $("evidenceDialog").open;
+        const next = readState();
+        if (wasOpen && !next.event) closeDialog();
+        state = next; render();
+        if (state.event) showEvidence(state.event);
+        followHash();
+      });
+      render(); followHash();
+      if (state.event) showEvidence(state.event);
+    })();
+  </script>
+</body>
+</html>

@@ -19,9 +19,13 @@ game progress. A valid GAME-only mapping gap pauses new campaigns with exact nam
 it does not excuse any pre-existing NEWS/reference/forecast integrity or coverage failure.
 Genuine game build/runtime/import/license/budget errors remain publishing failures.
 
-The owner-approved eleven-file game extension is enumerated in `game-policy.json`. It is the
-only authorized addition to the historical eight-file surface below; the old Three renderer is
-not an extra served file. No wildcard, extra origin, schedule or collector is authorized.
+The owner-approved eleven-file active base game is enumerated in `game-policy.json`. The user
+deferred the unpublished cinematic extension; its entire candidate and seven material/license
+files remain hash-preserved outside the served/mirrored release. Do not restore or redownload them.
+Preserve the reader-first homepage, optional Explore tools, intent-loaded `news-timeline.js` and
+separate `ai-timeline.html` companion. Canonical book/tool/rules/save identities remain unchanged;
+author-only work must not renew companion source/review dates. Root aggregate 432000 is approved;
+all other root/base/per-file limits remain. No wildcard, extra origin, schedule or collector is authorized.
 Use `run-gates.ps1 -IsolatedPreview` so only the runner's own loopback preview is stopped.
 Keep the default real both-domain surface assertions for ordinary runs and after publication.
 The initial game launch requires `-RequireGameReady` and complete current campaign coverage;

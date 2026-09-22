@@ -79,6 +79,11 @@ export async function startCampaign(options) {
     if(selection!=='new')return {started:false};
   }
   options.signal?.throwIfAborted();
+  if (!readonly && options.mode === '3d') {
+    // A failed or cancelled module load must not leave provisional campaign DOM.
+    await import('./game-world.mjs');
+    options.signal?.throwIfAborted();
+  }
   const runtime=await mountCampaign({...options,bundle,store,state,location,readonly});
   activeRuntime=runtime;
   return {started:true};

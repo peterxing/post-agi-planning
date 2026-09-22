@@ -23,9 +23,14 @@ the current original-content archive. It does not relax any NEWS partition/prove
 or reference coverage/review-integrity gate; those existing failures still block publication.
 Broken game builds, schemas, imports, vendor hashes or budgets also block publication.
 
-The precise eleven additional served files and unchanged game/root budgets are in
-`game-policy.json`; `three.webgpu.min.js` replaces, not supplements, `three.module.min.js`.
-This explicit approval is the sole extension to the historical eight-file surface described below.
+The precise eleven active base game files and unchanged base limits are in `game-policy.json`;
+`three.webgpu.min.js` replaces, not supplements, `three.module.min.js`. The user deferred the
+unpublished cinematic extension; preserve its sealed session archive and do not restore any of
+its seven material/license paths to serving or mirroring. Do not download or regenerate art.
+Preserve the reader-first homepage, intent-loaded `news-timeline.js`, optional Explore tools and
+the separately reviewed `ai-timeline.html` companion. Keep canonical book/tool/rules/save identities
+and NEWS/reference/METR/X channel boundaries unchanged. The approved root aggregate is 432000 bytes;
+all other root/base/per-file limits remain. Companion dates are not renewed by daily collection.
 No wildcard surface, new browser origin, collector, schedule or paid service is authorized.
 Use `run-gates.ps1 -IsolatedPreview` for the derived suite so the runner owns and cleans up its
 loopback preview; do not stop another owner's existing preview. Ordinary scheduled runs keep the

@@ -278,23 +278,26 @@ async function ui(bundle, predictions) {
         const page = await context.newPage(), errors = [];
         page.on('pageerror', error => errors.push(error.message));
         await page.goto(`${base}${base.includes('?') ? '&' : '?'}scoutTheme=${profile.theme}`);
+        await page.evaluate(() => openExplore('#observations'));
         await page.waitForFunction(() => publishedSignals?.referencePoints);
-        assert.equal(await page.locator('[data-reference]').count(), records.length);
+        assert.equal(await page.locator('#observationPrediction option').count(), records.length + 1);
         const inspected = profile.width === 1440 ? records : [records[0], ...records.slice(-7)];
         for (const row of inspected) {
-          const href = row.id.startsWith('horizon-') ? `#${row.id}` : `#event-${row.id}`;
-          await page.evaluate(hash => { location.hash = hash; revealHashTarget(); }, href);
-          await page.locator(`[data-reference="${row.id}"]`).click();
+          await page.locator('#observationPrediction').selectOption(row.id);
+          await page.locator('#observationDetail .forecast-dossier > summary').click();
+          await page.waitForSelector(`[data-forecast-dossier="${row.id}"]`);
           assert.equal(await page.locator('#observationPrediction').inputValue(), row.id);
           const detail = page.locator(`[data-reference-detail="${row.id}"]`);
           assert.equal(await detail.count(), bundle.referencePoints.items[row.id].length);
           assert.match(await detail.first().textContent(), /Does not establish:/);
           const mapping = bundle.referencePoints.items[row.id][0], source = bundle.referencePoints.sources[mapping.sourceId];
           assert.ok((await detail.first().textContent()).includes(mapping.why));
-          assert.equal(await detail.first().locator('h4 > a').getAttribute('href'), source.url);
+          await detail.first().locator('details > summary').click();
+          await page.waitForFunction(id => document.querySelector(`[data-reference-detail="${id}"] a[target="_blank"]`), row.id);
+          assert.equal(await detail.first().locator('a[target="_blank"]').first().getAttribute('href'), source.url);
           if (bundle.uncited.items[row.id])
-            assert.match(await page.locator('#observationDetail > .source-inspection summary').textContent(), /^News evidence gap/);
-          assert.match(await page.locator('.trajectory-state').textContent(), /not yet assessed/);
+            assert.equal(await page.locator(`[data-news-forecast="${row.id}"]`).getAttribute('data-news-channel'), 'uncited');
+          assert.match(await page.locator(`[data-forecast-dossier="${row.id}"]`).textContent(), /not yet assessed/);
         }
         const geometry = await page.evaluate(() => ({
           overflow:document.documentElement.scrollWidth > innerWidth,
@@ -315,7 +318,7 @@ async function ui(bundle, predictions) {
           await page.locator('#observationPrediction').selectOption(id);
           await page.locator('#observationDetail [data-watch]').click();
           const before = await page.evaluate(() => {
-            window.referenceTestEvent = document.querySelector('.event');
+            window.referenceTestEvent = document.querySelector('.forecast-card');
             return JSON.stringify([publishedSignals.embeds, publishedSignals.context, publishedSignals.uncited, publishedSignals.xSignals, publishedSignals.capabilities]);
           });
           const revised = structuredClone(bundle);
@@ -328,7 +331,7 @@ async function ui(bundle, predictions) {
           assert.equal(await page.evaluate(() => document.activeElement.matches('[data-watch]')), true);
           await page.locator('#applyObservations').click();
           assert.match(await page.locator(`[data-watch-status="${id}"]`).textContent(), /reviewed reference points/);
-          assert.equal(await page.evaluate(() => document.querySelector('.event') === window.referenceTestEvent), true);
+          assert.equal(await page.evaluate(() => document.querySelector('.forecast-card') === window.referenceTestEvent), true);
           assert.equal(await page.evaluate(() => JSON.stringify([publishedSignals.embeds, publishedSignals.context, publishedSignals.uncited, publishedSignals.xSignals, publishedSignals.capabilities])), before);
           const refusal = await page.evaluate(data => {
             data.referencePoints.forecastSha256 = '0'.repeat(64);
@@ -336,7 +339,7 @@ async function ui(bundle, predictions) {
             try { applySignalBundle(data); return false; } catch { return publishedSignals === old; }
           }, revised);
           assert.equal(refusal, true);
-          await page.reload(); await page.waitForFunction(() => publishedSignals?.referencePoints);
+          await page.reload(); await page.evaluate(() => openExplore('#observations')); await page.waitForFunction(() => publishedSignals?.referencePoints);
           assert.equal(await page.locator(`[data-watch-status="${id}"]`).count(), 1);
           const unknown = structuredClone(revised);
           const source = Object.values(unknown.referencePoints.sources)[0];
@@ -344,8 +347,12 @@ async function ui(bundle, predictions) {
           const selected = Object.entries(unknown.referencePoints.items).find(([, rows]) => rows.some(r => unknown.referencePoints.sources[r.sourceId] === source))[0];
           await page.evaluate(data => applySignalBundle(data), unknown);
           await page.locator('#observationPrediction').selectOption(selected);
-          assert.match(await page.locator('[data-reference-detail]').textContent(), /source date unknown/);
-          assert.match(await page.locator('[data-reference-detail]').textContent(), /last-good retained/);
+          await page.locator('#observationDetail .forecast-dossier > summary').click();
+          await page.waitForSelector('[data-reference-detail]');
+          await page.locator('[data-reference-detail] details > summary').first().click();
+          await page.waitForSelector('[data-reference-detail] a[target="_blank"]');
+          assert.match(await page.locator('[data-reference-detail]').first().textContent(), /publication date unknown/);
+          assert.match(await page.locator('[data-reference-detail]').first().textContent(), /last-good retained/);
         }
         assert.deepEqual(errors, []);
         console.log(`Reference UI ${profile.width}/${profile.theme}: ${inspected.length} actual links opened, no overflow; DOM ${geometry.rendered}.`);

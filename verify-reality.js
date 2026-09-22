@@ -32,11 +32,12 @@ if (!ALLOWED_LINK_HOSTS.length) {
     page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
     page.on('pageerror', e => errors.push('PAGEERROR ' + e.message));
     await page.goto(URL + '?scoutTheme=' + theme, { waitUntil: 'networkidle', timeout: 30000 });
-    await page.waitForTimeout(1500);
+    await page.evaluate(() => openExplore('#signals'));
+    await page.waitForFunction(() => publishedSignals && document.querySelectorAll('#signalsGrid .living-signal').length);
     const stats = await page.evaluate(({ allowedHosts, retiredHosts }) => {
-      const cards = Array.from(document.querySelectorAll('#signalsGrid .card'));
-      const links = document.querySelectorAll('#signalsGrid a.signal-src-link');
-      const tags = cards.map(c => (c.querySelector('.card-num') || {}).textContent || '');
+      const cards = Array.from(document.querySelectorAll('#signalsGrid .living-signal'));
+      const links = document.querySelectorAll('#signalsGrid a[target="_blank"]');
+      const tags = cards.map(c => c.querySelector('h3')?.textContent || '');
       const srcs = Array.from(links).map(a => a.textContent.trim().slice(0, 40));
       const hrefs = Array.from(links).map(a => a.getAttribute('href'));
       // Default-deny: every signal link must resolve to a DECLARED news publisher over https.

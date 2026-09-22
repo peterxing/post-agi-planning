@@ -64,7 +64,12 @@ does. Release the lock at the end, on success, failure and abort alike.
 
 The game reads the preserved `signals.xSignals` supplement; it neither collects X nor treats it
 as NEWS, a reference point, a measurement or a game score. Preserve the exact approved game files
-and budgets in `game-policy.json`. Valid gameplay-only mapping gaps pause new campaigns; every
+and budgets in `game-policy.json`. Valid gameplay-only mapping gaps pause new campaigns. The user
+deferred the unpublished cinematic extension: its complete candidate and seven optional files
+are preserved outside this release and must not be restored, downloaded or regenerated.
+Preserve the reader-first UI, optional Explore tools and separate AI timeline companion;
+weekly X remains discussion only and cannot change their reviewed source dates or NEWS ledger.
+Canonical book/tool projection, campaign rules and save bindings remain unchanged. Every
 existing NEWS/reference/X integrity guard still applies. Do not invent replacement gameplay
 bindings to bypass review. The isolated gate preview belongs only to its runner; existing previews
 must not be terminated.

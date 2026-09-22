@@ -1299,8 +1299,11 @@ async function main() {
      and this check silently green. */
   const RENDER_ANCHORS = [
     ['function hasCompleteSignalCoverage(', /function\s+hasCompleteSignalCoverage\s*\(/],
-    ['signalCoverageReady = hasCompleteSignalCoverage(', /signalCoverageReady\s*=\s*hasCompleteSignalCoverage\s*\(/],
-    ['currencySignals = signalCoverageReady &&', /currencySignals\s*=\s*signalCoverageReady\s*&&/],
+    ['assertPublishedRecord(signals, predictions, hash', /assertPublishedRecord\s*\(\s*signals\s*,\s*predictions\s*,\s*hash\s*,/],
+    ['validatePublishedBundle(data)', /validatePublishedBundle\s*\(\s*data\s*\)\s*;/],
+    ['const candidate = engine.projectNews(', /const\s+candidate\s*=\s*engine\.projectNews\s*\(/],
+    ['reviewedNewsDossier reads currency by exact forecast', /const\s+currency\s*=\s*data\.currency\?\.\[row\.id\]/],
+    ['currency quality uses the shared renderer', /qualityLabel\s*\(\s*item\.sourceQuality\s*\)/],
   ];
   const appSrc = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
   const anchorLines = [];
@@ -1324,7 +1327,7 @@ async function main() {
   if (!embedIds) shut.push('embeds is absent or empty');
   if (searchIds) shut.push(`${searchIds} search id(s) present`);
   if (shut.length) {
-    fail(`render gate SHUT (${shut.join('; ')}): app.js sets currencySignals = {} on this artefact, so every count in the report below is true of signals.json and FALSE OF THE PAGE — the layer can be perfect in the file and absent for every reader`);
+    fail(`render gate SHUT (${shut.join('; ')}): the reader rejects this artefact before committing its coherent source model, so file counts do not establish a rendered currency layer`);
   }
   if (missingAnchors.length) {
     /* Fail CLOSED. A stale model that keeps returning green is worse than no model at all. */
@@ -1332,7 +1335,7 @@ async function main() {
       ? 'the SHUT verdict above is derived from signals.json alone and stands unaffected'
       : `the artefact conditions (sourceFresh === true, ${searchIds} search id(s), ${embedIds} embed id(s)) do pass, but with the model unreadable that carries NO CLAIM ABOUT THE PAGE`} — re-derive it before its result means anything`);
   } else if (!shut.length) {
-    ok(`render gate is OPEN on its cheapest NECESSARY conditions (sourceFresh === true, 0 search id(s), ${embedIds} embed id(s)) so the signals.json figures below can reach the page — NECESSARY, NOT SUFFICIENT: hasCompleteSignalCoverage() is deliberately not reimplemented here, and verify-site.js / verify-observatory.js are the gates that count rendered cards [constructs located in app.js at ${anchorLines.join(', ')}]`);
+    ok(`render gate is OPEN on its cheapest NECESSARY conditions (sourceFresh === true, 0 search id(s), ${embedIds} embed id(s)) so the signals.json figures can reach exact-forecast progressive dossiers — NECESSARY, NOT SUFFICIENT: the coherent-bundle validator and canonical NEWS projection run before model commitment; verify-site.js / verify-observatory.js exercise rendered records [constructs located in app.js at ${anchorLines.join(', ')}]`);
   }
 
   // ---- REPORT --------------------------------------------------------------------------

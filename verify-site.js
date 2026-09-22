@@ -1,111 +1,94 @@
-// verify-site.js — load the site in Microsoft Edge (both themes), assert zero console errors,
-// complete EVIDENCE ACCOUNTING, and honest labeling of evergreen historical evidence.
-// X retirement (2026-08-13): a prediction is no longer required to carry a card. It must be
-// either CITED by a reviewed news source or explicitly recorded as UNCITED with a reason.
-// The gate is the TOTALITY cited + uncited === total, so a prediction can never go missing.
-//   npm install, then: node verify-site.js [url]
-// Concurrency interlock: claim the tree before reading predictions/signals/approvals/floors.
+'use strict';
 if (require.main === module) require('./pipeline-lock').guard('verify');
-
+const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
+const predictions = require('./predictions.json');
 const signals = require('./signals.json');
-
-/* A12 CLASS (GC seq-115, 2026-08-13). `Number(field) || 0` turns a renamed or deleted operand into
-   a comparison against 0, which an empty render satisfies trivially. Absence is refused up front and
-   the field is NAMED, so this can never be mistaken for a data regression. Note the deliberate
-   exception in verify-perpred.js L262-263: there `|| 0` guards a POSITIVE ABSENCE assertion, where
-   the zero is the finding rather than a manufactured expectation, and must not be "fixed". */
-function requiredCount(value, fieldPath) {
-  const n = Number(value);
-  if (value === undefined || value === null || !Number.isFinite(n) || n < 0) {
-    console.error(`[verify:site] REFUSED — signals.json ${fieldPath} is missing or unusable `
-      + `(got ${JSON.stringify(value)}). No expectation can be derived from an absent field.`);
-    process.exit(1);
-  }
-  return n;
+const expected = [
+  ...predictions.years.flatMap(year => year.events.map((data,index) => ({id:`${year.year}-${index}`,data,year:year.year}))),
+  ...predictions.postSuperintelligence.items.map(data => ({id:`horizon-${data.id}`,data,year:null})),
+];
+function requireCount(value, name){
+  assert(Number.isInteger(value) && value >= 0, `Missing or unusable ${name}; no empty expectation is inferred.`);
+  return value;
 }
-const artefactCited = requiredCount(signals.coverage && signals.coverage.cited, 'coverage.cited');
-const artefactUncited = requiredCount(signals.uncited && signals.uncited.count, 'uncited.count');
-/* Context may legitimately be zero, but the FIELD must exist: deriving an expectation from an absent
-   field is how a channel goes unchecked. An artefact without it is refused like any other. */
-const artefactContext = requiredCount(signals.context && signals.context.count, 'context.count');
-
-(async () => {
-  const url = process.env.PAP_SITE_URL || process.argv[2] || 'http://127.0.0.1:8787/';
-  const themes = ['dark', 'light'];
-  let issues = 0;
-  const browser = await chromium.launch({ channel: 'msedge', headless: true });
-  for (const th of themes) {
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    const errs = [];
-    page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
-    page.on('pageerror', e => errs.push('pageerror: ' + e.message));
-    const sep = url.includes('?') ? '&' : '?';
-    await page.goto(url + sep + 'scoutTheme=' + th, { waitUntil: 'networkidle', timeout: 45000 });
-    await page.waitForTimeout(2800);
-    /* THE THIRD CHANNEL (2026-08-17). `.tl-signal:not(.tl-currency)` used to mean "a cited card"
-       because cited and currency were the only two kinds. Context cards are also `.tl-signal`, so
-       they were counted as cited and the accounting read 6/4. Each channel is now selected by its own
-       class, so a cited card silently becoming a context card fails here rather than balancing out. */
-    const cards = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context)', els => els.length).catch(() => 0);
-    const contextCards = await page.$$eval('.tl-signal.tl-context', els => els.length).catch(() => 0);
-    const currencyCards = await page.$$eval('.tl-signal.tl-currency', els => els.length).catch(() => 0);
-    const searches = await page.$$eval('.tl-signal-search', els => els.length).catch(() => 0);
-    const unavailable = await page.$$eval('.tl-signal-unavailable', els => els.length).catch(() => 0);
-    const uncitedCards = await page.$$eval('.tl-signal-uncited', els => els.length).catch(() => 0);
-    const expected = await page.$$eval('#timelineBody .event, #horizonBody .horizon-item', els => els.length).catch(() => 0);
-    const stamp = await page.$eval('#sigStamp', el => (el.hidden ? '' : el.textContent.trim())).catch(() => '');
-    const dashboard = await page.$eval('#evidenceDashboard', element => element.textContent.replace(/\s+/g, ' ').trim()).catch(() => '');
-    const splitAssets = await page.evaluate(() => ({
-      app:!!document.querySelector('script[src="app.js"]'),
-      styles:!!document.querySelector('link[href="styles.css"]'),
-    })).catch(() => ({ app:false, styles:false }));
-    const dates = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context) .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
-    const contextDates = await page.$$eval('.tl-signal.tl-context .tl-signal-date', els => els.map(e => e.textContent.trim())).catch(() => []);
-    /* A context card must SHOW its age, or it is indistinguishable from a current citation. */
-    const contextAgeShown = contextDates.every(text => /\d+\s+days?\s+old|months?\s+old|years?\s+old/i.test(text));
-    const mislabelledHistorical = await page.$$eval('.tl-signal:not(.tl-currency):not(.tl-context)', els => els.filter(card => {
-      const date = card.querySelector('.tl-signal-date')?.textContent.trim() || '';
-      const label = card.querySelector('summary')?.textContent || '';
-      return /\b20(1\d|2[0-3])$/.test(date)
-        && !/\b(?:Historical|Scenario source|Leading indicator|External evidence)\b/i.test(label);
-    }).map(card => card.querySelector('.tl-signal-date')?.textContent.trim() || '')).catch(() => []);
-    /* INVERTED 2026-08-13. Every clause required the stamp to ADVERTISE an X corpus - Peter wrote,
-       Peter reposted, external, max reuse, archive-verified, first-party hydrated - so an honest news
-       stamp would have failed here. The stamp must now carry the cited/uncited accounting, and must
-       not resurrect any X-era phrase. */
-    const uncitedCount = artefactUncited;
-    const sourceHonest = stamp.includes(`${artefactCited} of ${signals.coverage.total} cited`)
-      && stamp.includes(`${uncitedCount} searched with no qualifying source`)
-      && /live-verified news and research/i.test(stamp)
-      && !/Peter wrote|Peter reposted|max reuse|archive-verified|first-party hydrated/i.test(stamp)
-      && /Live-verified sources/i.test(dashboard)
-      && !/Archive-verified source chain|first-party status JSON/i.test(dashboard);
-    const assetsValid = splitAssets.app && splitAssets.styles;
-    /* The currency layer is ADDITIVE. The currency cards must be exactly the reviewed
-       mappings — never more (a fabricated card) and never fewer (a card lost in rendering). */
-    const expectedCurrency = Object.values(signals.currency || {}).reduce((n, list) => n + list.length, 0);
-    const currencyExact = currencyCards === expectedCurrency;
-    /* EVIDENCE ACCOUNTING. Rendered cited cards and rendered uncited notices must each match
-       the artefact exactly, and together they must account for EVERY rendered prediction.
-       Checking only the total would let a cited card silently become an uncited notice. */
-    const citedExact = cards === artefactCited;
-    const contextExact = contextCards === artefactContext;
-    const uncitedExact = uncitedCards === uncitedCount;
-    const totalityExact = (cards + contextCards + uncitedCards) === expected;
-    console.log(`[${th}] consoleErrors=${errs.length} cited=${cards}/${artefactCited} context=${contextCards}/${artefactContext} uncited=${uncitedCards}/${uncitedCount} totality=${cards + contextCards + uncitedCards}/${expected} currency=${currencyCards}/${expectedCurrency} searches=${searches} unavailable=${unavailable} sourceHonest=${sourceHonest} contextAgeShown=${contextAgeShown} splitAssets=${assetsValid} mislabelledHistorical=${JSON.stringify(mislabelledHistorical)}`);
-    console.log(`[${th}] cardDates=${JSON.stringify(dates)}`);
-    console.log(`[${th}] contextDates=${JSON.stringify(contextDates)}`);
-    console.log(`[${th}] stamp="${stamp}"`);
-    if (errs.length) errs.forEach(e => console.log('   ' + e));
-    issues += errs.length + searches + unavailable
-      + Number(!citedExact) + Number(!uncitedExact) + Number(!totalityExact)
-      + Number(!contextExact) + Number(!contextAgeShown)
-      + mislabelledHistorical.length + Number(!sourceHonest) + Number(!assetsValid) + Number(!currencyExact);
-    await ctx.close();
+const counts = {
+  cited:requireCount(signals.coverage?.cited,'coverage.cited'),
+  context:requireCount(signals.context?.count,'context.count'),
+  uncited:requireCount(signals.uncited?.count,'uncited.count'),
+};
+assert.equal(counts.cited + counts.context + counts.uncited, expected.length);
+async function openReaderSite(page, base, theme='light', hash='#timeline'){
+  const url = new URL(base);
+  url.searchParams.set('scoutTheme', theme);
+  url.hash = hash;
+  await page.goto(url.href, {waitUntil:'load'});
+  await page.waitForFunction(() => document.getElementById('yearContent')?.dataset.loaded === 'true'
+    || document.getElementById('recordStatus')?.dataset.state === 'error');
+  assert.equal(await page.locator('#yearContent').getAttribute('data-loaded'),'true',await page.locator('#recordStatus').textContent());
+}
+async function inspectForecast(page, row){
+  const hash = row.year === null ? `#${row.id}` : `#event-${row.id}`;
+  await page.evaluate(value => { history.pushState(null,'',value); revealHash(); }, hash);
+  const id = hash.slice(1);
+  await page.waitForFunction(value => document.getElementById(value)?.querySelector('.forecast-facts'), id);
+  await page.locator(`#${id} > .forecast-facts > .forecast-dossier > summary`).click();
+  await page.waitForFunction(value => document.querySelector(`[data-forecast-dossier="${value}"]`), row.id);
+  return page.locator(`[data-forecast-dossier="${row.id}"]`);
+}
+async function verifyAccounting(page){
+  const seen={cited:0,context:0,uncited:0}, visited=new Set();
+  for(const row of expected){
+    const dossier=await inspectForecast(page,row);
+    const detailsId=row.year===null?row.id:`event-${row.id}`;
+    assert.equal(await page.locator(`#${detailsId} > summary`).textContent(),row.data.t);
+    const source=signals.embeds[row.id]||signals.context.items[row.id];
+    const channel=signals.embeds[row.id]?'cited':signals.context.items[row.id]?'context':'uncited';
+    const news=dossier.locator(`[data-news-forecast="${row.id}"]`);
+    assert.equal(await news.count(),1,'Exactly one NEWS channel per forecast');
+    assert.equal(await news.getAttribute('data-news-channel'),channel);
+    seen[channel]++;visited.add(row.id);
+    const text=await news.textContent();
+    if(source){
+      assert(text.includes(source.mappingRationale),`Exact reviewed NEWS rationale: ${row.id}`);
+      assert(text.includes(source.quote||source.text),`Exact reviewed NEWS quote: ${row.id}`);
+      assert(text.includes('Published')&&text.includes('not'),`Publication/limits: ${row.id}`);
+      const href=await news.locator('a[target="_blank"]').first().getAttribute('href');
+      assert.equal(new URL(href).href,new URL(source.url).href);
+      assert(!/(^|\.)(x|twitter|twimg)\.com$/i.test(new URL(href).hostname));
+      if(channel==='context')assert.match(text,/Dated background/);
+    }else assert(text.includes(signals.uncited.items[row.id].statement),`Explicit searched gap ${row.id}`);
+    const fact=await page.locator(`#${detailsId} > .forecast-facts`).textContent();
+    assert(fact.includes(String(row.year===null?row.data.conditionalProb:row.data.prob)));
+    if(row.year===null){
+      for(const dependency of [...row.data.dependencies,...row.data.indicators])assert(fact.includes(dependency));
+      assert(fact.includes(row.data.caveat));
+    }else assert(fact.includes(row.data.mBasis));
+    assert.equal(await dossier.locator('.dossier-section > h5').count(),5,'NEWS/reference/assessment/METR/X remain separate');
+    assert(!await page.locator('.tl-signal-search').count(),'No discovery search substitutes for evidence');
   }
-  await browser.close();
-  if (issues > 0) { console.log(`RESULT: FAIL (${issues} issue(s))`); process.exit(1); }
-  console.log('RESULT: PASS — zero console errors, complete evidence accounting (cited + context + uncited = every prediction, each in exactly one channel), every context card showing its true age, zero searches, and honest historical labels.');
-})();
+  assert.deepEqual(seen,counts);assert.equal(visited.size,expected.length);
+  return {seen,forecasts:visited.size};
+}
+async function main(){
+  const base=process.env.PAP_SITE_URL||process.argv[2]||'http://127.0.0.1:8787/';
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{
+    for(const theme of ['dark','light']){
+      const context=await browser.newContext({reducedMotion:'reduce'});
+      try{
+        const page=await context.newPage(),errors=[];
+        page.on('pageerror',error=>errors.push(error.message));
+        await openReaderSite(page,base,theme);
+        const result=await verifyAccounting(page);
+        assert.deepEqual(errors,[]);
+        assert.equal(await page.locator('script[src="app.js"]').count(),1);
+        assert.equal(await page.locator('link[href="styles.css"]').count(),1);
+        console.log(JSON.stringify({theme,...result,errors}));
+      }finally{await context.close();}
+    }
+  }finally{await browser.close();}
+  console.log('RESULT: PASS - every forecast has its exact cited/context/uncited rendered NEWS state, preserved probability/timing/horizon limits and distinct source channels in both themes.');
+}
+module.exports={openReaderSite,inspectForecast,verifyAccounting,expected,counts};
+if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1;});

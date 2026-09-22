@@ -1,110 +1,663 @@
-/* ---------- Theme toggle ---------- */
-const root = document.documentElement;
-const iconSun = document.getElementById('iconSun');
-const iconMoon = document.getElementById('iconMoon');
-function syncThemeIcon(){
-  const dark = root.getAttribute('data-theme') === 'dark';
-  iconSun.style.display = dark ? 'none' : 'block';
-  iconMoon.style.display = dark ? 'block' : 'none';
-  document.getElementById('themeToggle').setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-}
-syncThemeIcon();
-document.getElementById('themeToggle').addEventListener('click', () => {
-  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', next);
-  try { localStorage.setItem('pap-theme', next); } catch(e){}
-  syncThemeIcon();
-});
+const byId = id => document.getElementById(id);
+const yearHost = byId('yearContent');
+const status = byId('recordStatus');
+const search = document.querySelector('[data-reader-search]');
+const dateFormat = new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' });
+const monthFormat = new Intl.DateTimeFormat('en-GB', { month:'long', year:'numeric', timeZone:'UTC' });
+const typeLabels = { direct:'Reporting / observation', 'leading-indicator':'Partial leading indicator', scenario:'Scenario reporting' };
+let engine, model, forecastData, selectedYear = 2026, visibleCount = 6, query = '', request = null, pending = null;
+let refreshTimer = 0, refreshFailures = 0, recordController = null, suppressHashRestore = '';
+const readingPositions = new Map();
 
-/* ---------- Mobile nav ---------- */
-const navLinks = document.getElementById('navLinks');
-const navToggle = document.getElementById('navToggle');
-function setNavOpen(open){
-  navLinks.classList.toggle('open', open);
-  navToggle.setAttribute('aria-expanded', String(open));
-  navToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+function node(tag, className, text){
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text != null) element.textContent = text;
+  return element;
 }
-navToggle.addEventListener('click', () => setNavOpen(!navLinks.classList.contains('open')));
-navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
-
-/* ---------- Data-derived observatory instrumentation ---------- */
-const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-document.getElementById('scenarioInstrument').append(document.querySelector('.probability-simulator'));
-const clampNumber = (value, min, max) => Math.max(min, Math.min(max, value));
-function statedAverage(year){
-  const probabilities = year.events.map(event => event.prob).filter(Number.isFinite);
-  return probabilities.length
-    ? Math.round(probabilities.reduce((sum, value) => sum + value, 0) / probabilities.length)
-    : null;
+function link(text, href, external = false){
+  const element = node('a', '', text);
+  element.href = href;
+  if (external) { element.target = '_blank'; element.rel = 'noopener noreferrer'; }
+  return element;
 }
-function setText(id, value){
-  const element = document.getElementById(id);
-  if (element) element.textContent = value;
+function action(text, handler){
+  const element = node('button', 'text-button', text);
+  element.type = 'button';
+  element.addEventListener('click', handler);
+  return element;
 }
-/* Every date this site renders is a captured or recorded UTC instant, so it must be formatted in
-   UTC. Formatting in the reader's own zone makes a cited source's publication date depend on who
-   is reading it: an article captured at 2026-07-31T20:39:14Z renders as "Aug 1, 2026" east of
-   UTC+4 while the publisher's own page — one click away — says July 31. On a site whose whole
-   claim is that dates are captured from the page and never inferred, that is a correctness bug,
-   not a formatting preference. These helpers exist so the rule is structural rather than
-   remembered at each call site; verify-ui.js fails the build if a bare formatter reappears. */
-function utcInstant(value){
-  const date = value instanceof Date ? value : new Date(value);
-  return isNaN(date.getTime()) ? null : date;
+function recordsFor(data){
+  if (!Array.isArray(data?.years) || !Array.isArray(data?.postSuperintelligence?.items)) throw new Error('Forecast structure is unavailable.');
+  return [
+    ...data.years.flatMap(year => year.events.map((data, index) => ({
+      id:`${year.year}-${index}`, title:data.t, data, timing:String(year.year),
+      probability:`${data.prob}% stated probability`, href:`#event-${year.year}-${index}`,
+    }))),
+    ...data.postSuperintelligence.items.map(data => ({
+      id:`horizon-${data.id}`, title:data.t, data, timing:'Dependency-gated / undated',
+      probability:`${data.conditionalProb}% conditional plausibility`, href:`#horizon-${data.id}`,
+    })),
+  ];
 }
-function formatUtcDate(value){
-  const date = utcInstant(value);
-  return date ? date.toLocaleDateString('en-US', { timeZone:'UTC', day:'numeric', month:'short', year:'numeric' }) : '';
+async function fingerprint(data){
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(data)));
+  return [...new Uint8Array(hash)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
-function formatUtcDateTime(value){
-  const date = utcInstant(value);
-  /* The zone is named because a bare time of day is ambiguous to every reader outside UTC. */
-  return date ? date.toLocaleString('en-US', { timeZone:'UTC', day:'numeric', month:'short', hour:'numeric', minute:'2-digit' }) + ' UTC' : '';
+async function readJson(name, signal){
+  const response = await fetch(name, { cache:'no-cache', signal });
+  if (!response.ok) throw new Error(`${name}: HTTP ${response.status}.`);
+  const text = await response.text();
+  if (text.length > 2000000) throw new Error('Published snapshot exceeds its size limit.');
+  return JSON.parse(text);
 }
-function animateMetric(id, target, suffix){
-  const element = document.getElementById(id);
-  if (!element) return;
-  const token = String((Number(element.dataset.animationToken) || 0) + 1);
-  element.dataset.animationToken = token;
-  if (motionQuery.matches || element.dataset.animated === 'true') {
-    element.textContent = target + suffix;
+function dateLabel(date){
+  return date.at == null ? date.label : dateFormat.format(date.at);
+}
+function sourceId(article){
+  return `article-${encodeURIComponent(article.key)}`;
+}
+function recorded(value){
+  return value ? engine.parsePublishedDate(value).label : 'not recorded';
+}
+function position(){
+  const article = [...document.querySelectorAll('.story, .forecast-card')].find(element => {
+    const bounds = element.getBoundingClientRect();
+    return bounds.bottom > 120 && bounds.top < innerHeight;
+  });
+  const active = document.activeElement;
+  const control = active?.getAttribute('href') || active?.dataset.watch;
+  return { id:article?.id, top:article?.getBoundingClientRect().top, focus:active?.id,
+    focusHost:active?.closest('[id]')?.id, control,
+    open:[...document.querySelectorAll('main details[open][id]')].map(element => element.id) };
+}
+function restore(saved){
+  const apply = () => {
+    for (const id of saved.open) { const element = byId(id); if (element) element.open = true; }
+  };
+  apply();
+  requestAnimationFrame(() => {
+    apply();
+    requestAnimationFrame(() => {
+      const host = byId(saved.focusHost);
+      const control = saved.control && host ? [...host.querySelectorAll('a[href], [data-watch]')]
+        .find(element => element.getAttribute('href') === saved.control || element.dataset.watch === saved.control) : null;
+      (byId(saved.focus) || control)?.focus({ preventScroll:true });
+      if (saved.id && byId(saved.id)) scrollBy({ top:byId(saved.id).getBoundingClientRect().top - saved.top, behavior:'instant' });
+    });
+  });
+}
+function rememberReadingPosition(){
+  if (!model) return;
+  const saved = { selectedYear, visibleCount, query, position:position(), scrollY };
+  readingPositions.set(location.hash, saved);
+}
+function restoreReadingPosition(){
+  const saved = readingPositions.get(location.hash);
+  if (!saved || !model) return false;
+  selectedYear = saved.selectedYear; visibleCount = saved.visibleCount; query = search.value = saved.query;
+  renderYear();
+  scrollTo({ top:saved.scrollY, behavior:'instant' }); restore(saved.position);
+  return true;
+}
+function setRecordStatus(error = ''){
+  observationError = error;
+  status.dataset.state = error ? 'error' : 'ready';
+  if (error) {
+    status.textContent = `${model ? 'Last good record retained.' : 'The published record is unavailable.'} ${error}`;
+    if (exploreSession) renderObservationHealth();
     return;
   }
-  element.dataset.animated = 'true';
+  const count = model.articles.filter(article => article.date.year >= 2026).length;
+  status.textContent = `${count} reports from 2026 onward. A curated record of currently reviewed NEWS, not an exhaustive archive.`;
+  const stale = Date.now() - Math.min(model.updated, model.fetched) > 36 * 3600000;
+  byId('recordDates').textContent = `Snapshot published ${recorded(model.bundle.updated)}. Source collection ${recorded(model.bundle.sourceFetchedAt)}. `
+    + `${stale ? 'The recorded collection is stale. ' : ''}Review and verification dates belong to individual sources; this is not a live feed. Author estimates are not observed outcomes.`;
+  byId('recordInfo').hidden = false;
+}
+async function loadRecord(){
+  if (request) return request;
   const started = performance.now();
-  const duration = 520;
-  function frame(now){
-    if (element.dataset.animationToken !== token) return;
-    const progress = clampNumber((now - started) / duration, 0, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    element.textContent = Math.round(target * eased) + suffix;
-    if (progress < 1) requestAnimationFrame(frame);
+  byId('openTimeline').disabled = true;
+  byId('refreshRecord').disabled = true;
+  status.textContent = model ? 'Checking the published snapshot…' : 'Loading the curated published record…';
+  request = (async () => {
+    const controller = new AbortController();
+    recordController = controller;
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    try {
+      engine ||= await import('./news-timeline.js');
+      const [predictions, signals] = await Promise.all([
+        readJson('predictions.json', controller.signal), readJson('signals.json', controller.signal),
+      ]);
+      const hash = await fingerprint(predictions);
+      assertPublishedRecord(signals, predictions, hash, model?.bundle || null);
+      const candidate = engine.projectNews(recordsFor(predictions), signals, hash);
+      if (model && (candidate.updated < model.updated || candidate.fetched < model.fetched)) throw new Error('An older snapshot was returned.');
+      if (model && hash !== model.fingerprint) throw new Error('A new forecast revision is published. Reload to review it; the current record has not changed.');
+      observationLastChecked = new Date().toISOString();
+      observationLatency = Math.round(performance.now() - started);
+      if (model && JSON.stringify(signals) === JSON.stringify(model.bundle)) {
+        refreshFailures = 0;
+        setRecordStatus();
+      } else if (model && (byId('reader').open || document.activeElement?.closest('.story, .forecast-card, #explore'))) {
+        pending = { candidate, predictions };
+        status.textContent = 'A validated update is ready. Your reading position and current source details are retained.';
+        byId('refreshRecord').textContent = 'Apply the reviewed snapshot';
+        if (exploreSession) renderObservationHealth();
+      } else applyRecord(candidate, predictions);
+    } catch (error) {
+      if (controller.signal.reason !== 'hidden') {
+        refreshFailures++;
+        setRecordStatus(error.name === 'AbortError' ? 'The request timed out. Try again.' : error.message);
+      }
+    } finally {
+      clearTimeout(timeout);
+      byId('openTimeline').disabled = false;
+      byId('refreshRecord').disabled = false;
+      request = null;
+      recordController = null;
+      scheduleRecordCheck();
+    }
+    function scheduleRecordCheck(){
+      clearTimeout(refreshTimer);
+      if (!model || document.hidden) return;
+      refreshTimer = setTimeout(loadRecord, Math.min(1800000, 300000 * 2 ** refreshFailures));
+    }
+    document.addEventListener('visibilitychange', () => {
+      clearTimeout(refreshTimer);
+      if (document.hidden) recordController?.abort('hidden');
+      else { if (model) setRecordStatus(observationError); scheduleRecordCheck(); }
+    });
+    addEventListener('pagehide', () => { clearTimeout(refreshTimer); recordController?.abort('hidden'); });
+  })();
+  return request;
+}
+function applyRecord(candidate, predictions){
+  const saved = position();
+  const prior = model;
+  const newsChanged = !prior || JSON.stringify([prior.bundle.embeds, prior.bundle.context, prior.bundle.uncited])
+    !== JSON.stringify([candidate.bundle.embeds, candidate.bundle.context, candidate.bundle.uncited]);
+  model = candidate; forecastData = predictions; pending = null;
+  refreshFailures = 0;
+  observationLastChecked = new Date().toISOString();
+  updateExploreSnapshot();
+  if (saved.id) {
+    const articles = engine.selectArticles(model.articles, { order:'oldest', query }).filter(article => article.date.year === selectedYear);
+    const index = articles.findIndex(article => sourceId(article) === saved.id);
+    if (index >= 0) visibleCount = Math.ceil((index + 1) / 6) * 6;
   }
-  requestAnimationFrame(frame);
-}
-function forecastCoordinate(date){
-  const year = date.getFullYear();
-  const start = new Date(year, 0, 1);
-  const end = new Date(year + 1, 0, 1);
-  return year + (date - start) / (end - start);
-}
-function fasterBranchRange(years){
-  const anchored = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
-  const ungoverned = anchored.find(event => event.simAnchor === 'ungoverned');
-  const defaultPath = anchored.find(event => event.simAnchor === 'default');
-  if (ungoverned && defaultPath) {
-    return { start:ungoverned.year, end:defaultPath.year, label:`${ungoverned.year}–${defaultPath.year}` };
+  byId('refreshRecord').textContent = 'Check published updates';
+  byId('openTimeline').hidden = true;
+  document.querySelector('.timeline-toolbar').hidden = false;
+  if (!prior) {
+    const rail = byId('yearRail');
+    rail.replaceChildren();
+    for (const year of predictions.years.filter(row => row.year >= 2026)) {
+      const item = link(String(year.year), `#year-${year.year}`);
+      item.dataset.year = String(year.year);
+      rail.append(item);
+    }
   }
-  const match = years.map(year => year.summary).join(' ').match(/\b(20\d{2})\s*[–-]\s*(20\d{2})\b/);
-  if (!match) return null;
-  return { start:Number(match[1]), end:Number(match[2]), label:`${match[1]}–${match[2]}` };
+  if (newsChanged) { renderYear(); renderEarlier(); renderHorizons(); }
+  else document.querySelectorAll('.forecast-dossier[open] [data-forecast-dossier]').forEach(host => {
+    const row = forecastRecords().find(item => item.id === host.dataset.forecastDossier);
+    if (row) host.replaceWith(renderSourceDossier(row));
+  });
+  setRecordStatus();
+  restore(saved);
+  yearHost.dataset.forecastSha256 = candidate.fingerprint;
+  yearHost.dataset.loaded = 'true';
+  if (!saved.id) revealHash();
 }
+function renderProvenance(connection){
+  const details = node('details', 'source-provenance');
+  details.append(node('summary', '', 'Source record & limits'));
+  details.append(node('p', '', `${connection.channel === 'context' ? 'Dated background, not current evidence' : 'Cited in this snapshot, not a freshness claim'}. ${typeLabels[connection.type]}. NEWS source quality: ${qualityLabel(connection.quality)}.`));
+  details.append(node('p', '', `Mapping reviewed: ${recorded(connection.reviewedAt)}. Recorded verification: ${recorded(connection.verifiedAt)}. Retrieved: ${recorded(connection.retrievedAt)}.`));
+  const health = connection.health;
+  details.append(node('p', '', health
+    ? `NEWS health: ${health.status}. Checked ${recorded(health.lastCheckedAt)}; verified ${recorded(health.lastVerifiedAt)}.`
+    : 'Current health is not recorded in this NEWS record. Checks from the separate research-reference layer are not substituted.'));
+  details.append(node('p', '', `Reviewed source text SHA-256: ${connection.textSha256}.`));
+  return details;
+}
+function renderConnection(connection, article){
+  const section = node('section', 'connection');
+  const targetYear = connection.id.startsWith('horizon-') ? 'BEYOND THE TIMELINE' : `${connection.forecast.timing} FORECAST`;
+  section.append(node('p', 'connection-kicker', `${dateLabel(article.date)} REPORT → ${targetYear}`));
+  const heading = node('h6');
+  heading.append(link(connection.forecast.title, connection.forecast.href));
+  section.append(heading);
+  const rationale = node('p', 'connection-rationale');
+  rationale.append(node('strong', '', 'Why this connection matters — and what it does not establish'),
+    document.createTextNode(connection.rationale));
+  section.append(rationale, renderProvenance(connection));
+  return section;
+}
+function renderStory(article){
+  const story = node('article', 'story');
+  story.id = sourceId(article); story.tabIndex = -1;
+  story.dataset.publishedAt = article.date.value || '';
+  const meta = node('p', 'story-meta');
+  const date = node(article.date.value ? 'time' : 'span', '', dateLabel(article.date));
+  if (article.date.value) { date.dateTime = article.date.value; date.title = article.date.label; }
+  meta.append(node('span', 'reported-label', 'Reported'), date, node('span', '', article.publisher));
+  const title = node('h5');
+  title.append(link(article.title, engine.safeSourceUrl(article.url), true));
+  const detail = node('details');
+  detail.name = 'reader-news-connections';
+  detail.id = `connections-${encodeURIComponent(article.key)}`;
+  detail.append(node('summary', '', `How this informs ${article.connections.length === 1 ? 'the forecast' : `${article.connections.length} forecasts`}`));
+  let connectionPage = 0;
+  function connections(){
+    while (detail.children.length > 1) detail.lastElementChild.remove();
+    const selected = article.connections.slice(connectionPage * 6, (connectionPage + 1) * 6);
+    for (const connection of selected) detail.append(renderConnection(connection, article));
+    if (article.connections.length > 6) {
+      const pages = node('nav', 'more-stories');
+      pages.setAttribute('aria-label', 'Forecast connections for this report');
+      const previous = action('← Previous connections', () => { connectionPage--; connections(); detail.querySelector('h6 a').focus(); });
+      const next = action('Next connections →', () => { connectionPage++; connections(); detail.querySelector('h6 a').focus(); });
+      previous.disabled = connectionPage === 0;
+      next.disabled = (connectionPage + 1) * 6 >= article.connections.length;
+      pages.append(previous, next); detail.append(pages);
+    }
+    detail.append(node('p', 'article-note', `Published ${article.date.label}. ${engine.publicationAge(article.date)}. Original article opens in a new tab. A connection is not confirmation and does not change a probability.`));
+  }
+  detail.addEventListener('toggle', () => {
+    story.classList.toggle('story-open', detail.open);
+    if (!detail.open) {
+      while (detail.children.length > 1) detail.lastElementChild.remove();
+      return;
+    }
+    for (const other of document.querySelectorAll('.story > details[open]')) if (other !== detail) other.open = false;
+    connectionPage = 0; connections();
+  });
+  const preview = article.connections.length === 1
+    ? article.connections[0].rationale.match(/^.+?[.!?](?:\s|$)/)?.[0]?.trim()
+    : `One reported article, ${article.connections.length} separately reviewed forecast connections.`;
+  story.append(meta, title);
+  if (preview) story.append(node('p', 'why-preview', preview));
+  story.append(detail);
+  return story;
+}
+function relatedArticles(id){
+  return engine.selectArticles(model.articles, { order:'oldest', forecast:id });
+}
+function renderForecast(row){
+  const details = node('details', 'forecast-card');
+  details.id = row.href.slice(1);
+  details.tabIndex = -1;
+  const summary = node('summary', '', row.title);
+  details.append(summary);
+  details.addEventListener('toggle', () => {
+    if (!details.open || details.dataset.rendered) return;
+    const body = node('div', 'forecast-facts');
+    const probability = node('p');
+    probability.append(node('strong', '', row.id.startsWith('horizon-') ? `${row.data.conditionalProb}% conditional plausibility` : `${row.data.prob}% authored estimate`),
+      document.createTextNode('Peter’s estimate, not an observed outcome or a market price.'));
+    body.append(probability);
+    if (row.id.startsWith('horizon-')) {
+      body.append(node('p', '', 'Dependency-gated / undated'));
+      body.append(node('p', '', `Epistemic status: ${row.data.epistemic}.`));
+      const list = node('ul');
+      for (const dependency of row.data.dependencies || []) list.append(node('li', '', dependency));
+      body.append(list, node('p', '', row.data.caveat));
+      const indicators = node('ul');
+      for (const indicator of row.data.indicators || []) indicators.append(node('li', '', indicator));
+      body.append(node('p', '', 'Leading indicators to watch, not a record of achieved outcomes:'), indicators);
+    } else {
+      const timing = estimatedTiming(row.data, Number(row.timing));
+      body.append(node('p', '', timing ? `Timing estimate: ${timing.label} ${timing.bandText}. Precision: ${timing.precision}.` : 'Estimated timing is not recorded.'));
+      if (timing?.elapsed) body.append(node('p', 'dossier-note', 'The estimated window has elapsed. This does not establish whether the outcome occurred.'));
+      if (row.data.mBasis) body.append(node('p', '', row.data.mBasis));
+    }
+    const related = relatedArticles(row.id), sources = node('ul', 'forecast-sources');
+    body.append(node('p', '', related.length ? 'Read the connected reporting in its actual publication year:' : 'No reviewed NEWS article is currently connected. This is not evidence that the forecast has occurred.'));
+    for (const article of related) {
+      const item = node('li');
+      item.append(link(`${dateLabel(article.date)} · ${article.title}`, `#${sourceId(article)}`));
+      sources.append(item);
+    }
+    body.append(sources, watchControl(row.id), forecastDossierControl(row));
+    details.append(body); details.dataset.rendered = 'true';
+  });
+  return details;
+}
+function renderYear(){
+  if (!model) return;
+  const year = forecastData.years.find(row => row.year === selectedYear);
+  if (!year) return;
+  const heading = node('div', 'year-heading');
+  heading.id = `year-${selectedYear}`; heading.tabIndex = -1;
+  const outlook = node('p');
+  outlook.append(node('strong', 'outlook-label', 'Peter’s outlook for this year'), document.createTextNode(year.summary));
+  heading.append(node('h3', '', String(selectedYear)), outlook);
+  const columns = node('div', 'year-columns');
+  const reports = node('section');
+  reports.append(node('h4', 'column-label', 'The reported record / publication order'));
+  const all = engine.selectArticles(model.articles, { order:'oldest', query }).filter(article => article.date.year === selectedYear);
+  visibleCount = Math.max(6, Math.min(visibleCount, Math.ceil(all.length / 6) * 6 || 6));
+  const visible = all.slice(Math.max(0, visibleCount - 6), visibleCount);
+  let month = '';
+  for (const article of visible) {
+    if (article.date.group !== month) {
+      month = article.date.group;
+      reports.append(node('p', 'month-label', month));
+    }
+    reports.append(renderStory(article));
+  }
+  if (!all.length) reports.append(node('p', 'empty-record', query
+    ? 'No reports match this theme in this year. Clear the search to restore the record.'
+    : 'No reviewed report is published in this year in the loaded record. The milestones shown alongside are forecasts, not future facts.'));
+  if (visibleCount < all.length || visibleCount > 6) {
+    const footer = node('div', 'more-stories');
+    if (visibleCount > 6) footer.append(action('← Previous reports', () => {
+      visibleCount -= 6; renderYear(); byId(`year-${selectedYear}`).focus();
+    }));
+    if (visibleCount < all.length) footer.append(action('Continue through the year →', () => {
+      visibleCount += 6; renderYear();
+      const first = yearHost.querySelector('.story');
+      first.focus({ preventScroll:true }); first.scrollIntoView({ block:'start', behavior:'instant' });
+    }));
+    footer.append(node('span', '', `${Math.max(1, visibleCount - 5)}–${Math.min(visibleCount, all.length)} of ${all.length} reports`));
+    reports.append(footer);
+  }
+  const forecasts = node('aside', 'forecast-reading');
+  forecasts.append(node('h4', 'column-label', `Forecasts for ${selectedYear}`), node('p', '', 'Authored milestones, not a record of what has happened. Open a forecast for its estimate, timing and connected reports.'));
+  for (const row of model.records.filter(row => row.timing === String(selectedYear)
+    && (!query || row.title.toLowerCase().includes(query.toLowerCase())))) forecasts.append(renderForecast(row));
+  if (selectedYear > 2026 && !all.length && !query) {
+    columns.classList.add('forecast-year');
+    const note = node('p', 'empty-record', 'No reviewed reports are dated to this year in the loaded record. These are authored forecasts, not future facts.');
+    columns.append(note, forecasts);
+  } else columns.append(reports, forecasts);
+  yearHost.replaceChildren(heading, columns);
+  for (const item of byId('yearRail').querySelectorAll('a')) {
+    if (item.dataset.year === String(selectedYear)) item.setAttribute('aria-current', 'date');
+    else item.removeAttribute('aria-current');
+  }
+  const years = forecastData.years.filter(item => item.year >= 2026).map(item => item.year);
+  document.querySelector('[data-year-step="-1"]').disabled = selectedYear === years[0];
+  document.querySelector('[data-year-step="1"]').disabled = selectedYear === years.at(-1);
+  const current = byId('yearRail').querySelector('[aria-current="date"]');
+  if (current) {
+    const rail = byId('yearRail'), bounds = current.getBoundingClientRect(), viewport = rail.getBoundingClientRect();
+    if (bounds.left < viewport.left || bounds.right > viewport.right)
+      rail.scrollLeft += bounds.left - viewport.left - (viewport.width - bounds.width) / 2;
+  }
+  byId('timelineAnnouncement').textContent = `${selectedYear}. ${all.length} matching reports, in publication order.`;
+  yearHost.dataset.year = String(selectedYear);
+}
+function renderEarlier(){
+  const host = byId('earlierStories');
+  host.replaceChildren();
+  const render = () => {
+    if (!byId('earlierBackground').open || host.childElementCount) return;
+    for (const article of engine.selectArticles(model.articles, { order:'oldest' }).filter(article => article.date.year < 2026 || !article.date.year))
+      host.append(renderStory(article));
+  };
+  render();
+  byId('earlierBackground').ontoggle = render;
+}
+function renderHorizons(){
+  byId('horizonReading').replaceChildren(...model.records.filter(row => row.id.startsWith('horizon-')).map(renderForecast));
+}
+function refreshPublishedObservations(){ return loadRecord(); }
+function applySignalBundle(data){
+  if (!model || !forecastData) throw new Error('No coherent forecast is loaded.');
+  assertPublishedRecord(data, forecastData, model.fingerprint, model.bundle);
+  const next = engine.projectNews(recordsFor(forecastData), data, model.fingerprint);
+  if (next.updated < model.updated || next.fetched < model.fetched) throw new Error('An older source record cannot replace the current record.');
+  applyRecord(next, forecastData);
+}
+function revealHash(){
+  if (suppressHashRestore === location.href) { suppressHashRestore = ''; return; }
+  const hash = location.hash;
+  if (/^#chapter-\d+$/.test(hash)) { openReader(Number(hash.slice(9))); return; }
+  if (!model) {
+    if (/^#(?:timeline|year-|event-|article-|horizon-|post-superintelligence|news-timeline|signals)/.test(hash)) loadRecord();
+    else {
+      const section = byId(hash.slice(1));
+      if (section && !section.closest('#explore')) {
+        section.tabIndex = -1;
+        section.scrollIntoView({ block:'start', behavior:'instant' });
+        section.focus({ preventScroll:true });
+      }
+    }
+    return;
+  }
+  let target;
+  const year = /^#(?:year-|event-)(\d{4})/.exec(hash);
+  if (year) {
+    if (!forecastData.years.some(row => row.year === Number(year[1]))) {
+      byId('timelineAnnouncement').textContent = 'This timeline year is not present in the current forecast.';
+      return;
+    }
+    selectedYear = Number(year[1]); query = search.value = ''; visibleCount = 6; renderYear();
+    target = byId(hash.slice(1));
+  } else if (hash.startsWith('#article-')) {
+    const article = model.articles.find(item => `#${sourceId(item)}` === hash);
+    if (!article) return;
+    if (article.date.year >= 2026) {
+      selectedYear = article.date.year; query = search.value = '';
+      const articles = engine.selectArticles(model.articles, { order:'oldest' }).filter(item => item.date.year === selectedYear);
+      visibleCount = Math.ceil((articles.indexOf(article) + 1) / 6) * 6; renderYear();
+    } else {
+      byId('earlierBackground').open = true;
+      const host = byId('earlierStories');
+      if (!host.childElementCount) for (const item of engine.selectArticles(model.articles, { order:'oldest' }).filter(item => item.date.year < 2026 || !item.date.year)) host.append(renderStory(item));
+    }
+    target = byId(sourceId(article));
+    target.querySelector('details').open = true;
+  } else if (hash.startsWith('#horizon-')) target = byId(hash.slice(1));
+  else if (hash === '#news-timeline') target = byId('timeline');
+  else target = byId(hash.slice(1));
+  if (target?.closest('#explore')) { revealExploreHash(); return; }
+  if (target) {
+    if (target.tagName === 'DETAILS') target.open = true;
+    if (!target.matches('a, button, input, select, summary')) target.tabIndex = -1;
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ block:'start', behavior:'instant' });
+      target.focus({ preventScroll:true });
+    });
+  }
+}
+byId('openTimeline').addEventListener('click', loadRecord);
+byId('newsReset').addEventListener('click', () => {
+  query = search.value = ''; selectedYear = 2026; visibleCount = 6;
+  renderYear(); search.focus({ preventScroll:true });
+  byId('timelineAnnouncement').textContent = 'Timeline reset to 2026. All themes are shown.';
+});
+document.querySelectorAll('[data-year-step]').forEach(button => button.addEventListener('click', () => {
+  if (!forecastData) return;
+  const years = forecastData.years.filter(year => year.year >= 2026).map(year => year.year);
+  const index = years.indexOf(selectedYear) + Number(button.dataset.yearStep);
+  if (index >= 0 && index < years.length) navigateSection(`#year-${years[index]}`);
+}));
+byId('refreshRecord').addEventListener('click', () => pending ? applyRecord(pending.candidate, pending.predictions) : loadRecord());
+search.addEventListener('input', () => { query = search.value; visibleCount = 6; renderYear(); });
+document.querySelectorAll('a[href="#timeline"]').forEach(element => element.addEventListener('click', () => {
+  if (!model) loadRecord();
+}));
+addEventListener('hashchange', revealHash);
+function navigateSection(hash){
+  rememberReadingPosition();
+  if (location.hash !== hash) history.pushState(null, '', hash);
+  revealHash(); revealExploreHash();
+}
+document.addEventListener('click', event => {
+  const target = event.target.closest('a[href^="#"]');
+  if (!target || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  const hash = target.getAttribute('href');
+  if (/^#chapter-\d+$/.test(hash)) return;
+  event.preventDefault();
+  navigateSection(hash);
+}, true);
+addEventListener('popstate', () => {
+  if (restoreReadingPosition()) suppressHashRestore = location.href;
+  else { revealHash(); revealExploreHash(); suppressHashRestore = location.href; }
+});
+function syncTheme(){
+  byId('themeToggle').setAttribute('aria-label', `Switch to ${document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'} theme`);
+}
+byId('themeToggle').addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('pap-theme', next); }
+  catch { byId('timelineAnnouncement').textContent = 'Theme changed for this visit; browser storage is unavailable.'; }
+  syncTheme();
+});
+syncTheme();
+
+const bookArticles = [...document.querySelectorAll('#bookSource > article[data-idx]')];
+let readerReturnFocus, readerIndex = -1;
+function openReader(index){
+  const source = bookArticles.find(article => Number(article.dataset.idx) === index);
+  if (!source) return;
+  if (!byId('reader').open) readerReturnFocus = document.activeElement;
+  readerIndex = index;
+  byId('readerTitle').textContent = source.querySelector('h1').textContent;
+  const content = node('div', 'reader-canonical');
+  content.append(...[...source.childNodes].map(child => child.cloneNode(true)));
+  const context = node('aside', 'reader-context');
+  const read = action('I have read this chapter', () => {});
+  read.dataset.readChapter = String(index);
+  const progress = node('p', 'mission-help', 'Self-reported reading progress. Opening a chapter does not complete a quest.');
+  progress.setAttribute('role', 'status');
+  const chapter = chapters[index];
+  const destination = /1000-Day/i.test(chapter.title) ? ['#moonshot','Open the 1000-day planner']
+    : /Five Futures/i.test(chapter.title) ? ['#futures','Open the scenario portfolio']
+      : chapter.route === 'Risk' ? ['#post-superintelligence','Inspect the dependency-gated horizon']
+        : chapter.route === 'Capability' ? ['#timeline','Return to the dated forecast'] : ['#engine','Trace the abundance engine'];
+  const related = link(destination[1], destination[0]);
+  related.addEventListener('click', () => byId('reader').close());
+  context.append(read, progress, related);
+  byId('rdBody').replaceChildren(content, context);
+  byId('rdPrev').disabled = index === 0;
+  byId('rdNext').disabled = index === bookArticles.length - 1;
+  byId('rdProgress').textContent = `${index + 1} / ${bookArticles.length}`;
+  byId('rdToc').querySelectorAll('button').forEach((button, i) => {
+    if (i === index) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+  });
+  if (!byId('reader').open) byId('reader').showModal();
+  byId('reader').scrollTop = 0;
+}
+window.openReader = openReader;
+byId('closeReader').addEventListener('click', () => byId('reader').close());
+byId('reader').addEventListener('close', () => readerReturnFocus?.focus({ preventScroll:true }));
+byId('rdPrev').addEventListener('click', () => { if (readerIndex > 0) openReader(readerIndex - 1); });
+byId('rdNext').addEventListener('click', () => { if (readerIndex < bookArticles.length - 1) openReader(readerIndex + 1); });
+byId('reader').addEventListener('keydown', event => {
+  if (event.altKey || event.ctrlKey || event.metaKey || event.target.matches('input,select,textarea')) return;
+  if (event.key === 'ArrowLeft' && readerIndex > 0) { event.preventDefault(); openReader(readerIndex - 1); }
+  if (event.key === 'ArrowRight' && readerIndex < bookArticles.length - 1) { event.preventDefault(); openReader(readerIndex + 1); }
+});
+for (const chapter of bookArticles) {
+  const index = Number(chapter.dataset.idx), item = link('', `#chapter-${index}`);
+  item.append(node('span', '', index === 0 ? 'START HERE' : `CHAPTER ${String(index).padStart(2, '0')}`),
+    node('strong', '', chapter.querySelector('h1').textContent));
+  item.addEventListener('click', event => { event.preventDefault(); openReader(index); });
+  byId('chapterPreview').append(item);
+  byId('rdToc').append(action(chapter.querySelector('h1').textContent, () => openReader(index)));
+}
+function decodeText(text){
+  return String(text).replace(/&(amp|quot|apos|lt|gt);/g, (_, name) => ({ amp:'&', quot:'"', apos:"'", lt:'<', gt:'>' })[name]);
+}
+async function loadAuthor(){
+  try {
+    const data = await readJson('author.json', AbortSignal.timeout(10000));
+    if (typeof data.headline !== 'string' || !Array.isArray(data.bio) || !Array.isArray(data.talks)) throw new Error('Author structure is invalid.');
+    byId('authorIntroduction').textContent = data.headline;
+    const host = byId('authorDetails');
+    for (const paragraph of data.bio) host.append(node('p', '', decodeText(paragraph)));
+    for (const role of data.roles) host.append(node('p', '', `${decodeText(role.org)} — ${decodeText(role.detail)}`));
+    for (const talk of data.talks) {
+      const url = new URL(talk.url);
+      if (url.protocol !== 'https:' || url.username || url.password) throw new Error('An author appearance has an unsafe link.');
+      const paragraph = node('p');
+      paragraph.append(link(`${decodeText(talk.title)} · ${decodeText(talk.venue)} · ${talk.year}`, url.href, true));
+      if (talk.blurb) paragraph.append(node('span', 'author-talk-blurb', decodeText(talk.blurb)));
+      host.append(paragraph);
+    }
+    if (data.updated) host.append(node('p', 'dossier-note', `Author information last updated ${data.updated}.`));
+  } catch (error) {
+    byId('authorDetails').append(node('p', '', `Author details unavailable: ${error.message}`));
+  }
+}
+/* BEGIN RESTORED EXPLORE */
+const sixDs = [
+  ['Digitised', 'Once intelligence is represented as data, it inherits the exponential. Models, weights and tokens replace handcrafted expertise.'],
+  ['Deceptive', 'Early progress looks underwhelming — chatbots that hallucinate — so most people dismiss the curve right before it bends.'],
+  ['Disruptive', 'Cheaper, better AI undercuts incumbents: search, coding, translation, tutoring, diagnosis, design — all reorganised.'],
+  ['Demonetised', 'The marginal cost of intelligence falls toward zero. What cost a salary now costs an API call.'],
+  ['Dematerialised', 'Whole product categories collapse into software — the studio, the office, the call centre, the analyst all fit on a phone.'],
+  ['Democratised', 'Finally, the capability is everywhere and cheap. A teenager with a laptop wields what nations once couldn\'t buy.'],
+];
+
+const futures = [
+  { key:'S1', name:'Disorderly Labour Shock', col:'var(--cp-accent)', prob:'Plausible · near-term', desc:'Capability outruns institutions. Jobs vanish faster than safety nets adapt, and the gains pool at the top before redistribution catches up.',
+    moves:['Hold a cash & skills buffer for 12–18 months','Diversify income away from a single automatable role','Back UBI / distribution politics early','Build local, hard-to-offshore relationships'] },
+  { key:'S2', name:'Fast Abundance', col:'var(--cp-accent)', prob:'Plausible · 2029–2033', desc:'Energy, compute and robotics compound and the dividend actually reaches people. Costs of the essentials fall through the floor.',
+    moves:['Own a slice of productive assets early','Learn to direct AI, not compete with it','Position for a demonetised cost of living','Help build distribution so abundance spreads'] },
+  { key:'S3', name:'The Gentle Singularity', col:'var(--cp-accent)', prob:'Central case', desc:'No single dramatic day — capability seeps into everything gradually. Most people barely notice the threshold being crossed.',
+    moves:['Treat adaptation as a continuous practice','Re-skill on a rolling 6-month cadence','Automate your own life first to feel the curve','Keep optionality; avoid 10-year bets'] },
+  { key:'S4', name:'The Long Horizon', col:'var(--cp-accent)', prob:'Possible · slower', desc:'Bottlenecks — energy build-out, regulation, trust, robotics — stretch timelines into the 2040s. The change is real but unhurried.',
+    moves:['Invest in durable, compounding skills','Don\'t over-rotate on hype cycles','Build institutions and community capacity','Stay solvent and patient'] },
+  { key:'S5', name:'Existential Risk', col:'var(--cp-accent)', prob:'Low probability · high stakes', desc:'Misaligned or weaponised superintelligence threatens catastrophe. Low odds, but the downside is unbounded — so it earns a hedge.',
+    moves:['Support alignment & governance work','Favour resilient, decentralised systems','Avoid single points of catastrophic failure','Treat safety as everyone\'s problem'] },
+  { key:'S6', name:'The Sixth Thread: Human Merger', col:'var(--cp-accent)', prob:'Runs through all five', desc:'Across every branch, the line between human and machine blurs — BCIs, cognitive tools, biological enhancement. We don\'t just witness the change; we become it.',
+    moves:['Stay curious about enhancement, not fearful','Guard agency and identity deliberately','Keep a human core: relationships, meaning, body','Decide your own augmentation boundaries'] },
+];
+
+const allocBuckets = [
+  { name:'Cash & skills buffer',    sub:'Hedges S1 · Disorderly Labour Shock', col:'var(--cp-accent)', def:20 },
+  { name:'Productive assets',       sub:'Hedges S2 · Fast Abundance',           col:'var(--cp-accent)', def:30 },
+  { name:'Adaptive re-skilling',    sub:'Hedges S3 · The Gentle Singularity',   col:'var(--cp-accent)',  def:20 },
+  { name:'Community & local ties',  sub:'Hedges S4 · The Long Horizon',         col:'var(--cp-accent)', def:15 },
+  { name:'Alignment & safety',      sub:'Hedges S5 · Existential Risk',         col:'var(--cp-accent)', def:5  },
+  { name:'Enhancement optionality', sub:'Hedges S6 · The Sixth Thread',         col:'var(--cp-accent)', def:10 },
+];
+
+const questions = [
+  { q:"How soon do you think AI meaningfully changes your daily work?", dim:'urgency',
+    opts:[ ["Already has","a",3],["Within ~2 years","b",3],["3–5 years out","c",2],["Not in my field","d",0] ] },
+  { q:"If your income stopped tomorrow, how long could you sustain yourself?", dim:'survival',
+    opts:[ ["Under a month","a",0],["1–6 months","b",1],["6–18 months","c",2],["18+ months / passive income","d",3] ] },
+  { q:"How are you adapting your skills right now?", dim:'capability',
+    opts:[ ["Not really","a",0],["Reading & watching","b",1],["Using AI tools weekly","c",2],["Building & orchestrating AI daily","d",3] ] },
+  { q:"Do you own anything that produces value while you sleep?", dim:'assets',
+    opts:[ ["No","a",0],["A little savings","b",1],["Some equity / audience / property","c",2],["Diversified productive assets","d",3] ] },
+  { q:"How plugged in are you to a community or network?", dim:'community',
+    opts:[ ["Mostly on my own","a",0],["A few loose ties","b",1],["An active community or two","c",2],["A network I actively build","d",3] ] },
+  { q:"Which future are you actually preparing for?", dim:'portfolio',
+    opts:[ ["None in particular","a",0],["Just the bad one","b",1],["Just the good one","c",1],["A portfolio across all five","d",3] ] },
+];
+
+const chapters = [
+  { idx:'00', route:'Capability', rc:'var(--cp-accent)', title:'How to Use This Book', body:'<p>This is a navigation map, not a manual. Pick a <strong>route</strong> — capability, abundance, or risk — and jump between star systems. It\'s a living document: forecasts update as reality sends new signals.</p>' },
+  { idx:'—', route:'Capability', rc:'var(--cp-accent)', title:'Opening — The Future Stopped Arriving Politely', body:'<p>For decades the future RSVP\'d in advance. Now it just shows up. <strong>When intelligence becomes cheap, every plan changes</strong> — so the task is to build toward abundance instead of bracing for panic.</p>' },
+  { idx:'01', route:'Abundance', rc:'var(--cp-accent)', title:'From Scarcity to Abundance — My Why', body:'<p>Peter\'s origin: from Harbin on the Black Dragon River to Hobart and Sydney, climbing the migrant ladder as hard-won skills — English, travel agencies, taxis, tax advisory — were devalued one by one by software. A hospital bed became the turn toward transhumanism: <strong>if scarcity made us, abundance can remake us.</strong></p>' },
+  { idx:'02', route:'Abundance', rc:'var(--cp-accent)', title:'The Abundance Engine', body:'<p>The <strong>Six Ds</strong> carry every exponential from digitisation to democratisation. The abundance stack — energy, compute, robots, capital, policy, trust — is assembling now: physical AGI and Optimus-class labour, decentralised AI token networks, AGI compressing into 2026–2027, Diamandis\'s "middle of the singularity," Hassabis\'s AGI around 2030. The bottleneck isn\'t intelligence; it\'s <strong>bureaucracy</strong>.</p>' },
+  { idx:'03', route:'Abundance', rc:'var(--cp-accent)', title:'The Human Stack', body:'<p>Four layers to secure, bottom-up: <strong>survival, economic, social, and potential.</strong> The goal is adaptive plans, not bunker fantasies — resilience you can actually live inside.</p>' },
+  { idx:'04', route:'Capability', rc:'var(--cp-accent)', title:'Energy, Compute, Capacity', body:'<p>Energy is the floor of abundance; compute is your access to intelligence. Pair them with productive infrastructure — homes, farms, workshops, community hubs — so the curve produces <strong>things people can touch</strong>, not just charts.</p>' },
+  { idx:'05', route:'Abundance', rc:'var(--cp-accent)', title:'Work After Work', body:'<p>The ladder breaks before the top disappears. Four work identities replace the single career, and — per <em>Alyse\'s View</em> — sometimes the winning move is simply to <strong>keep it simple</strong> and stay human-shaped.</p>' },
+  { idx:'06', route:'Risk', rc:'var(--cp-accent)', title:'Five Futures, One Portfolio', body:'<p>Disorderly labour shock, fast abundance, the gentle singularity, the long horizon, and existential risk — plus a sixth thread, the human merger, running through them all. Don\'t predict one; <strong>hold a portfolio</strong> that pays off across branches.</p>' },
+  { idx:'07', route:'Capability', rc:'var(--cp-accent)', title:'When — Capability, Deployment, Impact', body:'<p>Separate three clocks: when a capability exists, when it\'s deployed, and when it actually hits your life. My call: <strong>human-level capability by end of 2026</strong>, disruptive across every industry through 2027 — so <strong>hope for the best, prepare for the worst.</strong></p>' },
+  { idx:'08', route:'Abundance', rc:'var(--cp-accent)', title:'Your 1000-Day Moonshot Plan', body:'<p>Four phases: <strong>0–30 days</strong> create your first plan, <strong>30–180</strong> build capability, <strong>180–365</strong> own or access productive assets, <strong>365–1000</strong> become a node in the better future.</p>' },
+  { idx:'09', route:'Abundance', rc:'var(--cp-accent)', title:'The Distribution Layer', body:'<p>UBI is the floor, <strong>Universal High Income</strong> is the aspiration, and <strong>Universal Compute</strong> is the leverage — making sure the dividend of abundance reaches people, not just balance sheets.</p>' },
+  { idx:'10', route:'Risk', rc:'var(--cp-accent)', title:'Human Enhancement', body:'<p>Longevity escape velocity, BCIs and cognitive tools move enhancement from fringe to mainstream. The question stops being <em>whether</em> and becomes <strong>how you keep agency and meaning</strong> while you change.</p>' },
+  { idx:'11', route:'Abundance', rc:'var(--cp-accent)', title:'Build the Better Branch', body:'<p>The future isn\'t something that happens to you — it\'s a branch you help select. <strong>Become a node</strong>: build, connect, distribute, and steer toward the abundant timeline on purpose.</p>' },
+];
+
 const simulatorPresets = {
   baseline:{ capability:0, coordination:0, deployment:0 },
   fast:{ capability:18, coordination:-8, deployment:-4 },
   managed:{ capability:4, coordination:18, deployment:0 },
   bottleneck:{ capability:8, coordination:4, deployment:18 },
 };
+
 const simulatorOutcomeLabels = {
   agi:{ title:'Human-level AGI', meta:'End of 2026' },
   managed:{ title:'Managed pause', meta:'Frontier training · 2029' },
@@ -112,617 +665,10 @@ const simulatorOutcomeLabels = {
   ungoverned:{ title:'Ungoverned takeoff', meta:'2028–2030 window' },
   handoff:{ title:'Managed handoff', meta:'Controlled scaling · 2040' },
 };
-const probabilitySimulatorState = {
-  anchors:null,
-  values:null,
-  controlsBound:false,
-  updateTimer:0,
-};
-let predictionModelState = location.protocol === 'file:' ? 'offline' : 'loading';
-let forecastSnapshot = '';
-let forecastFingerprint = '';
-function simulatorAnchors(years){
-  const events = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
-  const anchors = {
-    agi:events.find(event => event.simAnchor === 'agi' && Number.isFinite(event.prob)),
-    managed:events.find(event => event.simAnchor === 'managed' && Number.isFinite(event.prob)),
-    default:events.find(event => event.simAnchor === 'default' && Number.isFinite(event.prob)),
-    ungoverned:events.find(event => event.simAnchor === 'ungoverned' && Number.isFinite(event.prob)),
-    handoff:events.find(event => event.simAnchor === 'handoff' && Number.isFinite(event.prob)),
-  };
-  return Object.values(anchors).every(Boolean) ? anchors : null;
-}
-function simulatedProbabilities(anchors, assumptions){
-  const { capability, coordination, deployment } = assumptions;
-  const round = value => Math.round(clampNumber(value, 5, 95));
-  return {
-    agi:round(anchors.agi.prob + capability * .55),
-    managed:round(anchors.managed.prob - capability * .15 + coordination * .65),
-    default:round(anchors.default.prob + capability * .45 - coordination * .35 - deployment * .08),
-    ungoverned:round(anchors.ungoverned.prob + capability * .5 - coordination * .55),
-    handoff:round(anchors.handoff.prob + coordination * .35 - deployment * .45),
-  };
-}
-function simulatorAssumptions(){
-  return {
-    capability:Number(document.getElementById('simCapability').value),
-    coordination:Number(document.getElementById('simCoordination').value),
-    deployment:Number(document.getElementById('simDeployment').value),
-  };
-}
-function formatSimulatorAssumption(value){
-  if (value === 0) return 'Baseline';
-  return (value > 0 ? '+' : '−') + Math.abs(value);
-}
-/* Probability is drawn ALONG each branch as a proportional fill, because encoding it only as stroke
-   width compressed the whole 5-95% range into a few pixels and a realistic assumption change moved a
-   branch by a fraction of a pixel — live in principle, static to a reader. Width, opacity, endpoint
-   size and the leading-branch highlight reinforce the fill; the fill carries the quantity. Geometry
-   is declared once and shared by track and fill so the two can never trace different routes. The
-   measured before/after that prompted this is in verify-observatory.js, which does not ship. */
-const simulatorBranchGeometry = [
-  { key:'managed', variant:'managed', d:'M274 168 C322 128 352 78 412 76' },
-  { key:'handoff', variant:'managed', d:'M428 75 C500 72 558 66 642 65' },
-  { key:'default', variant:'default', d:'M274 170 C330 170 362 170 412 170 C500 170 558 170 650 170' },
-  { key:'ungoverned', variant:'ungoverned', d:'M274 172 C324 214 356 266 412 270 C500 276 560 280 650 282' },
-];
-/* Endpoint nodes grow with the outcome they terminate, so the landmarks move too. */
-const simulatorNodeScale = {
-  agi:{ id:'sim-node-agi', base:8, range:6 },
-  default:{ id:'sim-node-default', base:7, range:6 },
-  ungoverned:{ id:'sim-node-ungoverned', base:7, range:6 },
-  handoff:{ id:'sim-node-handoff', base:6, range:6 },
-};
-function simulatorBranchStyle(value){
-  const share = clampNumber(value, 0, 100) / 100;
-  return {
-    width:(1.5 + share * 8).toFixed(2),
-    opacity:(.22 + share * .74).toFixed(2),
-  };
-}
-function animateSimulatorValue(element, next, animate){
-  if (!element) return;
-  const previous = Number.parseInt(element.textContent, 10);
-  if (!animate || motionQuery.matches || !Number.isFinite(previous)) {
-    element.textContent = next + '%';
-    return;
-  }
-  const token = String((Number(element.dataset.animationToken) || 0) + 1);
-  element.dataset.animationToken = token;
-  const started = performance.now();
-  const duration = 260;
-  function frame(now){
-    if (element.dataset.animationToken !== token) return;
-    const progress = clampNumber((now - started) / duration, 0, 1);
-    const value = Math.round(previous + (next - previous) * (1 - Math.pow(1 - progress, 3)));
-    element.textContent = value + '%';
-    if (progress < 1) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-function setSimulatorBranch(key, value){
-  const group = document.getElementById('sim-branch-' + key);
-  const fill = document.getElementById('sim-path-' + key);
-  if (!group || !fill) return;
-  const style = simulatorBranchStyle(value);
-  group.style.setProperty('--branch-width', style.width);
-  group.style.setProperty('--branch-opacity', style.opacity);
-  /* Filled length is the quantity. getTotalLength() is geometry not layout, so it is correct before
-     first paint and inside a hidden route, where a bounding-box read would be 0 and draw it empty. */
-  const total = typeof fill.getTotalLength === 'function' ? fill.getTotalLength() : 0;
-  if (total > 0) {
-    const filled = total * clampNumber(value, 0, 100) / 100;
-    fill.style.strokeDasharray = `${filled.toFixed(2)} ${(total - filled + 1).toFixed(2)}`;
-  }
-  group.setAttribute('data-probability', String(value));
-}
-function setSimulatorNode(key, value){
-  const scale = simulatorNodeScale[key];
-  if (!scale) return;
-  const node = document.getElementById(scale.id);
-  if (!node) return;
-  node.setAttribute('r', (scale.base + clampNumber(value, 0, 100) / 100 * scale.range).toFixed(2));
-}
-function updateProbabilitySimulator(animate = true){
-  if (!probabilitySimulatorState.anchors) return;
-  const assumptions = simulatorAssumptions();
-  const values = simulatedProbabilities(probabilitySimulatorState.anchors, assumptions);
-  probabilitySimulatorState.values = values;
-  document.getElementById('simCapabilityOutput').textContent = formatSimulatorAssumption(assumptions.capability);
-  document.getElementById('simCoordinationOutput').textContent = formatSimulatorAssumption(assumptions.coordination);
-  document.getElementById('simDeploymentOutput').textContent = formatSimulatorAssumption(assumptions.deployment);
-  document.getElementById('simCapability').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.capability));
-  document.getElementById('simCoordination').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.coordination));
-  document.getElementById('simDeployment').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.deployment));
-  Object.entries(values).forEach(([key, value]) => {
-    animateSimulatorValue(document.getElementById('sim-card-' + key), value, animate);
-    document.getElementById('sim-rail-' + key)?.style.setProperty('--prob', value + '%');
-    const row = document.querySelector(`[data-simulator-outcome="${key}"]`);
-    if (row) row.setAttribute('aria-label', `${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${value} percent.`);
-  });
-  setSimulatorBranch('managed', values.managed);
-  setSimulatorBranch('handoff', values.handoff);
-  setSimulatorBranch('default', values.default);
-  setSimulatorBranch('ungoverned', values.ungoverned);
-  Object.keys(simulatorNodeScale).forEach(key => setSimulatorNode(key, values[key]));
-  const branches = [
-    ['Managed pause', values.managed],
-    ['Default-path superintelligence', values.default],
-    ['Ungoverned takeoff', values.ungoverned],
-  ].sort((a, b) => b[1] - a[1]);
-  /* Which branch leads is categorical, so it gets a categorical mark: proportional encodings alone
-     cannot show a lead CHANGING HANDS, which is the most decisive thing these assumptions can do. */
-  const leaders = { 'Managed pause':'managed', 'Default-path superintelligence':'default', 'Ungoverned takeoff':'ungoverned' };
-  const leadingKey = leaders[branches[0][0]];
-  simulatorBranchGeometry.forEach(branch => {
-    document.getElementById('sim-branch-' + branch.key)
-      ?.classList.toggle('is-leading', branch.key === leadingKey);
-  });
-  const isBaseline = Object.values(assumptions).every(value => value === 0);
-  document.getElementById('simulatorInterpretation').textContent = isBaseline
-    ? `Published baseline: AGI ${values.agi}%, managed pause ${values.managed}%, default path ${values.default}%, ungoverned takeoff ${values.ungoverned}%, managed handoff ${values.handoff}%.`
-    : `Under these assumptions, ${branches[0][0].toLowerCase()} carries the strongest simulated pressure at ${branches[0][1]}%, while the end-2026 AGI anchor moves to ${values.agi}%.`;
-  const description = document.getElementById('simulatorSvgDesc');
-  if (description) description.textContent =
-    `A branch map from the ${values.agi}% end-2026 AGI anchor to a ${values.managed}% managed pause, ${values.default}% default path, ${values.ungoverned}% ungoverned takeoff and ${values.handoff}% managed handoff.`;
-  document.querySelectorAll('[data-sim-preset]').forEach(button => {
-    const preset = simulatorPresets[button.dataset.simPreset];
-    const active = preset && Object.keys(preset).every(key => preset[key] === assumptions[key]);
-    button.classList.toggle('active', active);
-  });
-  const map = document.getElementById('probabilitySimulatorMap');
-  if (animate && !motionQuery.matches) {
-    map.classList.remove('is-updating');
-    void map.offsetWidth;
-    map.classList.add('is-updating');
-    clearTimeout(probabilitySimulatorState.updateTimer);
-    probabilitySimulatorState.updateTimer = setTimeout(() => map.classList.remove('is-updating'), 380);
-  }
-}
-function bindProbabilitySimulatorControls(){
-  if (probabilitySimulatorState.controlsBound) return;
-  probabilitySimulatorState.controlsBound = true;
-  ['simCapability','simCoordination','simDeployment'].forEach(id => {
-    document.getElementById(id).addEventListener('input', () => updateProbabilitySimulator(true));
-  });
-  document.querySelectorAll('[data-sim-preset]').forEach(button => button.addEventListener('click', () => {
-    const preset = simulatorPresets[button.dataset.simPreset];
-    if (!preset) return;
-    document.getElementById('simCapability').value = preset.capability;
-    document.getElementById('simCoordination').value = preset.coordination;
-    document.getElementById('simDeployment').value = preset.deployment;
-    updateProbabilitySimulator(true);
-  }));
-}
-function renderProbabilitySimulator(years, branchRange){
-  const host = document.getElementById('probabilitySimulatorMap');
-  const grid = document.getElementById('simulatorProbabilityGrid');
-  if (!host || !grid) return;
-  const anchors = simulatorAnchors(years);
-  probabilitySimulatorState.anchors = anchors;
-  bindProbabilitySimulatorControls();
-  const controls = ['simCapability','simCoordination','simDeployment'].map(id => document.getElementById(id));
-  controls.forEach(control => { control.disabled = !anchors; });
-  if (!anchors) {
-    host.className = 'simulator-map';
-    const message = predictionModelState === 'loading'
-      ? 'Loading forecast anchors…'
-      : predictionModelState === 'offline'
-        ? 'The simulator needs predictions.json when this file is opened offline.'
-        : 'Published simulator anchors are unavailable.';
-    host.innerHTML = `<div class="simulator-loading">${message}</div>`;
-    grid.innerHTML = '';
-    document.getElementById('simulatorInterpretation').textContent = message;
-    return;
-  }
-  const initial = simulatedProbabilities(anchors, simulatorAssumptions());
-  host.className = 'simulator-map simulator-ready';
-  host.innerHTML = `
-    <svg viewBox="0 0 720 330" role="img" aria-labelledby="simulatorSvgTitle simulatorSvgDesc">
-      <title id="simulatorSvgTitle">Interactive probability branch map from 2026 to 2040</title>
-      <desc id="simulatorSvgDesc">A branch map using published forecast anchors.</desc>
-      <line class="sim-grid-line" x1="34" y1="306" x2="690" y2="306"/>
-      <text class="sim-year" x="42" y="322" text-anchor="middle">2026</text>
-      <text class="sim-year" x="420" y="322" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'}</text>
-      <text class="sim-year" x="650" y="322" text-anchor="middle">2040</text>
-      <path class="sim-trunk" d="M52 170 C92 170 116 170 146 170 M164 170 C205 170 232 170 266 170"/>
-      ${simulatorBranchGeometry.map(branch => `
-      <g id="sim-branch-${branch.key}" class="sim-branch-group ${branch.variant}">
-        <path class="sim-branch ${branch.variant}" d="${branch.d}"/>
-        <path id="sim-path-${branch.key}" class="sim-branch-fill ${branch.variant}" d="${branch.d}"/>
-      </g>`).join('')}
-      <g class="sim-node">
-        <circle class="sim-node-ring" cx="43" cy="170" r="9"/><circle class="sim-node-core" cx="43" cy="170" r="3"/>
-        <text class="sim-sublabel" x="43" y="194" text-anchor="middle">NOW</text>
-      </g>
-      <g class="sim-node">
-        <circle id="sim-node-agi" class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
-        <text class="sim-label" x="155" y="132" text-anchor="middle">HUMAN-LEVEL AGI</text>
-        <text class="sim-sublabel" x="155" y="147" text-anchor="middle">END OF 2026</text>
-      </g>
-      <rect class="sim-gate" x="264" y="162" width="16" height="16" rx="3" transform="rotate(45 272 170)"/>
-      <text class="sim-sublabel" x="272" y="198" text-anchor="middle">BRANCH POINT</text>
-      <g class="sim-node">
-        <rect class="sim-gate" x="412" y="67" width="16" height="16" rx="3"/>
-        <text class="sim-label" x="420" y="36" text-anchor="middle">MANAGED PAUSE</text>
-        <text class="sim-sublabel" x="420" y="52" text-anchor="middle">FRONTIER TRAINING · 2029</text>
-      </g>
-      <g class="sim-node">
-        <circle id="sim-node-handoff" class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
-        <text class="sim-label" x="650" y="36" text-anchor="middle">MANAGED HANDOFF</text>
-        <text class="sim-sublabel" x="650" y="52" text-anchor="middle">2040</text>
-      </g>
-      <g class="sim-node">
-        <circle id="sim-node-default" class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
-        <text class="sim-label" x="420" y="140" text-anchor="middle">DEFAULT PATH</text>
-        <text class="sim-sublabel" x="420" y="156" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
-      </g>
-      <g class="sim-node">
-        <circle id="sim-node-ungoverned" class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
-        <text class="sim-label" x="420" y="240" text-anchor="middle">UNGOVERNED TAKEOFF</text>
-        <text class="sim-sublabel" x="420" y="256" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
-      </g>
-    </svg>`;
-  grid.innerHTML = Object.keys(simulatorOutcomeLabels).map(key => `
-    <div class="simulator-outcome" data-simulator-outcome="${key}" aria-label="${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${initial[key]} percent.">
-      <div class="simulator-outcome-copy"><strong>${simulatorOutcomeLabels[key].title}</strong><span>${simulatorOutcomeLabels[key].meta}</span></div>
-      <span class="simulator-outcome-rail" id="sim-rail-${key}" style="--prob:${initial[key]}%" aria-hidden="true"><i></i></span>
-      <strong class="simulator-outcome-stat" id="sim-card-${key}">${initial[key]}%</strong>
-    </div>
-  `).join('');
-  updateProbabilitySimulator(false);
-}
-function renderTurningPoints(years){
-  const host = document.getElementById('turningPointsRoute');
-  if (!host || !years.length) return;
-  const events = years.flatMap(year => year.events.map((event, index) => ({ ...event, year:year.year, index })));
-  const find = predicate => events.find(predicate);
-  const points = [
-    { label:'Human-level AGI', item:find(event => event.simAnchor === 'agi') },
-    { label:'Every-industry disruption', item:find(event => event.year === 2027 && /every major industry/i.test(event.t)) },
-    { label:'Superintelligence branch', item:find(event => event.simAnchor === 'ungoverned') },
-    { label:'Cognitive majority', item:find(event => /produce more cognitive labor than humans/i.test(event.t)) },
-    { label:'Physical automation', item:find(event => /one third of economically valuable physical tasks/i.test(event.t)) },
-    { label:'Near-total labor automation', item:find(event => event.year === 2040 && /essentially all economically relevant human labor/i.test(event.t)) },
-    { label:'Undated horizon', horizon:true },
-  ].filter(point => point.horizon || point.item);
-  if (points.length < 7 && predictionModelState === 'loading') {
-    host.innerHTML = '<span class="turning-points-loading">Loading forecast route…</span>';
-    return;
-  }
-  host.innerHTML = points.map((point, index) => {
-    const href = point.horizon ? '#post-superintelligence' : `#event-${point.item.year}-${point.item.index}`;
-    const time = point.horizon ? 'Beyond 2040' : String(point.item.year);
-    const detail = point.horizon
-      ? 'Dependency-gated possibilities'
-      : point.item.t;
-    return `<a class="turning-point-link" href="${href}" aria-label="${htmlText(point.label)}: ${htmlText(detail)}">
-      <span class="turning-point-step">${String(index + 1).padStart(2, '0')}</span>
-      <span class="turning-point-copy"><strong>${htmlText(point.label)}</strong><small>${htmlText(time)}</small></span>
-    </a>`;
-  }).join('');
-  host.querySelectorAll('a[href^="#event-"]').forEach(link => link.addEventListener('click', () => {
-    const target = document.querySelector(link.getAttribute('href'));
-    const yearBlock = target?.closest('.year-block');
-    if (yearBlock) setYearDisclosure(yearBlock, false);
-  }));
-}
-function renderRevisionTrail(){
-  const summary = document.getElementById('forecastChangesSummary');
-  const links = document.getElementById('forecastChangeLinks');
-  if (!summary || !links) return;
-  const updated = new Date(predictionRevision.updated);
-  const dateLabel = isNaN(updated.getTime())
-    ? 'Latest published revision'
-    : formatUtcDate(updated);
-  const changes = predictionRevision.changes || [];
-  summary.textContent = changes.length
-    ? `${dateLabel}: ${changes.length} material event thresholds changed. Dates and branch anchors stayed fixed; the full source basis remains in predictions.json.`
-    : `${dateLabel}: no individual event threshold changed under the anti-churn rule.`;
-  links.innerHTML = changes.length
-    ? changes.map(change => {
-      const revised = new Date(`${change.revisedAt}T00:00:00Z`);
-      const revisedLabel = isNaN(revised.getTime())
-        ? change.revisedAt
-        : formatUtcDate(revised);
-      return `<a class="revision-link" href="#event-${change.id}">
-        <time datetime="${htmlText(change.revisedAt)}">${htmlText(revisedLabel)}</time>
-        <span><strong>${htmlText(change.title)}</strong><small>${htmlText(change.note)}</small></span>
-        <span aria-hidden="true">→</span>
-      </a>`;
-    }).join('')
-    : '<p>No additions, removals or material event revisions in this publication.</p>';
-  setText('changedCount', changes.length);
-}
-function renderObservatory(){
-  if (!Array.isArray(timelineData) || !timelineData.length) return;
-  const years = timelineData;
-  const events = years.flatMap(year => year.events);
-  const today = new Date();
-  const coordinate = forecastCoordinate(today);
-  const boundedCoordinate = clampNumber(coordinate, years[0].year, years[years.length - 1].year);
-  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-  const agiAnchor = events.find(event => event.simAnchor === 'agi');
-  const fasterBranch = fasterBranchRange(years);
-  setText('heroCoordinate', boundedCoordinate.toFixed(2));
-  setText('heroCurrentPosition', boundedCoordinate.toFixed(2));
-  setText('heroCurrentContext', `Day ${dayOfYear} of ${today.getFullYear()} · the forecast begins here`);
-  animateMetric('heroEventCount', events.length, '');
-  setText('heroYearCount', years.length);
-  setText('heroHorizonCount', horizonData && Array.isArray(horizonData.items) ? horizonData.items.length : '—');
-  setText('heroBranchWindow', fasterBranch ? fasterBranch.label : 'Undated');
-  if (agiAnchor && Number.isFinite(agiAnchor.prob)) animateMetric('heroAgiProbability', agiAnchor.prob, '%');
-  renderProbabilitySimulator(years, fasterBranch);
-  renderTurningPoints(years);
-}
 
-/* ---------- Forecast Atlas sidecar state ---------- */
-let timelineData = [];
-let horizonData = {
-  title:'Post-superintelligence horizon',
-  summary:'Horizon data is loading from predictions.json.',
-  items:[],
-};
-const domainNames = { individual:'Individual', social:'Social', technology:'Technology', economic:'Economic', geopolitical:'Geopolitical', governance:'Governance' };
-const filterOptions = {
-  domain:new Set(['all', ...Object.keys(domainNames)]),
-  branch:new Set(['all','baseline','managed','default','ungoverned']),
-  probability:new Set(['all','very-high','high','medium','low','unstated']),
-  theme:new Set(['all','agents','work','robotics','compute','governance','bio','space']),
-};
-function initialForecastFilters(){
-  const params = new URLSearchParams(location.search);
-  const read = (key, values) => values.has(params.get(key)) ? params.get(key) : 'all';
-  return {
-    domain:read('fd', filterOptions.domain),
-    branch:read('fb', filterOptions.branch),
-    probability:read('fp', filterOptions.probability),
-    theme:read('ft', filterOptions.theme),
-    changed:params.get('fc') === '1',
-    query:String(params.get('fq') || '').slice(0, 120),
-  };
-}
-const forecastFilters = initialForecastFilters();
-let activeDomain = forecastFilters.domain;
-let overlayOn = true;
-let predictionRevision = { updated:null, basis:'', changes:[] };
-function latestRevisionDate(){
-  return String(predictionRevision.updated || '').slice(0, 10);
-}
-function revisedInLatestRevision(event){
-  const revisionDate = latestRevisionDate();
-  return !!event.revisedAt && !!revisionDate && event.revisedAt === revisionDate;
-}
-const themeDefinitions = {
-  agents:/\b(agent|agents|agentic|agi|superintelligen|frontier model|ai r&d|expert capability|recursive self|continual-learning)\b/i,
-  work:/\b(work|labor|labour|employment|jobs?|income|dividend|tax|econom|revenue|wealth|capital|gdp)\b/i,
-  robotics:/\b(robot|robots|robotic|humanoid|physical tasks?|factory|manufactur|autonomous strategic weapons)\b/i,
-  compute:/\b(compute|datacenter|data center|chip|semiconductor|energy|grid|power|inference|training run|cooling|radiator)\b/i,
-  governance:/\b(govern|regulat|treaty|verification|audit|safety|alignment|control|inspection|policy|court|military|deception|sabotage|sandbox)\b/i,
-  bio:/\b(bci|brain|neural|intracortical|connectom|bio|drug|disease|vaccine|pathogen|health|cure|longevity)\b/i,
-  space:/\b(orbital|space|satellite|dyson|kardashev|transcension|ruliad|off-world|civilization)\b/i,
-};
-function eventThemes(event){
-  const text = String(event && event.t || '');
-  const themes = Object.entries(themeDefinitions)
-    .filter(([, pattern]) => pattern.test(text))
-    .map(([theme]) => theme);
-  if (!themes.length && event?.d === 'governance') themes.push('governance');
-  if (!themes.length && event?.d === 'economic') themes.push('work');
-  if (!themes.length && event?.d === 'technology') themes.push('agents');
-  return themes;
-}
-function probabilityBand(probability){
-  if (!Number.isFinite(probability)) return 'unstated';
-  if (probability >= 80) return 'very-high';
-  if (probability >= 60) return 'high';
-  if (probability >= 40) return 'medium';
-  return 'low';
-}
-
-/* ---------- Live-verified news evidence mapped to predictions ---------- */
-const NEWS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H5a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1zm2 3v4h9V7zm0 6v1.5h9V13zm0 3.5V18h9v-1.5zM19 9h1.5a.5.5 0 0 1 .5.5V18a1 1 0 0 1-2 0z"/></svg>';
-/* Inline fallback. The live site overrides this from signals.json. No evidence is embedded inline,
-   so if signals.json is unavailable the UI reports unavailable evidence rather than fabricating or
-   searching. The retired medium's logo constant was deleted here rather than left unreferenced: it
-   was dead code, and shipping it kept retired vocabulary in the published payload. */
-let directSignals = {};
-let currencySignals = {};
-/* The 96 predictions with no qualifying in-window source. This is a MEASUREMENT, not a gap: each
-   record carries the reason, the window searched and the instant it was searched. It is rendered
-   rather than hidden, because a prediction that silently shows nothing is indistinguishable from a
-   prediction nobody looked at. */
-let uncitedSignals = {};
-let contextSignals = {};
-/* @peterxing trajectory signals — SUPPLEMENTARY. Kept in its own binding, never merged into
-   directSignals/contextSignals, so no code path can reach an X post while looking for evidence. */
-let xSignals = {};
-let signalCoverageReady = false;
-const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
-function decodeKnownEntities(value){
-  return String(value == null ? '' : value)
-    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
-      const codepoint = parseInt(hex, 16);
-      return Number.isInteger(codepoint) && codepoint >= 0 && codepoint <= 0x10ffff
-        ? String.fromCodePoint(codepoint)
-        : '\ufffd';
-    })
-    .replace(/&#(\d+);/g, (_, decimal) => {
-      const codepoint = parseInt(decimal, 10);
-      return Number.isInteger(codepoint) && codepoint >= 0 && codepoint <= 0x10ffff
-        ? String.fromCodePoint(codepoint)
-        : '\ufffd';
-    })
-    .replace(/&(amp|lt|gt|quot|apos|#39|nbsp);/gi, entity => HTML_ENTITIES[entity.slice(1, -1).toLowerCase()]);
-}
-function htmlText(value){
-  return decodeKnownEntities(value).replace(/[&<>"']/g, character => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  })[character]);
-}
-function safeHttpUrl(value){
-  try {
-    const url = new URL(String(value));
-    return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : '';
-  } catch {
-    return '';
-  }
-}
-
-/* X RETIREMENT 2026-08-13. `kind` is GONE FROM THE SIGNATURE, not merely unhandled. The sole
-   caller passes the literal 'news', so a kind parameter could only ever carry a retired value,
-   and the old `SIG_KIND[kind] || SIG_KIND.post` fallback answered an unknown kind with
-   "Most recent post" - inventing a provenance claim instead of failing. Retired kinds are now
-   unrepresentable rather than runtime-rejected. `recency` went with it: only the fallback read it. */
-function sigBadge(evidenceType){
-  if (evidenceType === 'scenario') return 'News evidence \u00b7 scenario source';
-  if (evidenceType === 'leading-indicator') return 'News evidence \u00b7 leading indicator';
-  return 'News evidence';
-}
-
-/* A prediction is identified by "YEAR-INDEX" (index = its position in that year's events array). The same
-   id is computed by refresh-signals.js, so each prediction's signals.json embed lines up 1:1 here. */
-function signalCard(sig){
-  /* X RETIREMENT 2026-08-13. Live-verified news is now the ONLY evidence medium, so this function no
-     longer chooses between two renderers - it renders news, and anything else is a fault to be shown
-     rather than a card to be drawn. The X branch that used to live here built a handle, a 15-digit
-     status id, a "Load live post" embed button and an x.com permalink; all four are gone.
-
-     The non-news path deliberately renders an UNAVAILABLE state instead of falling through to a
-     generic card. An embed of a retired medium reaching this point means the build emitted something
-     the migration says cannot exist, and the reader is entitled to see that rather than a card that
-     looks ordinary. It fails visibly, not quietly. */
-  if (sig && (sig.evidenceOwner === 'news' || sig.kind === 'news')) return newsSignalCard(sig);
-  return `
-    <details class="tl-signal tl-signal-retired" data-kind="unavailable">
-      <summary>
-        <span class="tl-signal-summary-text">
-          <strong>Evidence unavailable</strong>
-          This prediction carries an evidence record in a retired medium.
-        </span>
-      </summary>
-      <div class="tl-signal-detail">
-        <div class="tl-signal-text">Direct evidence is published only as live-verified news and research.
-        No substitute has been shown in its place.</div>
-      </div>
-    </details>`;
-}
-function newsSignalCard(sig){
-  const publisher = htmlText(sig.publisher || sig.publisherHost || 'Publisher');
-  const date = htmlText(sig.date || '');
-  const headline = htmlText(sig.headline || '');
-  const byline = sig.byline ? ` &middot; by ${htmlText(sig.byline)}` : '';
-  const method = htmlText(sig.matchMethod || 'reviewed-news');
-  const articleUrl = safeHttpUrl(sig.url) || '';
-  const maps = sig.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(sig.maps)}</div>` : '';
-  const rationale = sig.mappingRationale
-    ? `<div class="tl-signal-maps"><b>${sig.evidenceType === 'scenario' ? 'Scenario relevance' : 'Evidence relevance'}:</b> ${htmlText(sig.mappingRationale)}</div>`
-    : '';
-  const evidenceLabel = sig.evidenceType === 'scenario' ? 'verified news scenario source'
-    : sig.evidenceType === 'leading-indicator' ? 'verified news leading indicator'
-      : 'verified news direct evidence';
-  const reviewDate = sig.lastVerifiedAt || sig.reviewedAt || '';
-  const reuse = Number(sig.reuseCount) > 1 ? ` · reviewed reuse across ${Number(sig.reuseCount)} related predictions` : ' · unique mapping';
-  const provenanceLine = `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(evidenceLabel)}${reviewDate ? ` · verified ${htmlText(reviewDate)}` : ''}${reuse}</div>`;
-  const quote = sig.quote
-    ? `<blockquote class="tl-signal-quote">${htmlText(sig.quote)}</blockquote>`
-    : `<div class="tl-signal-text">${htmlText(sig.text)}</div>`;
-  const link = articleUrl
-    ? `<a class="tl-signal-link" href="${htmlText(articleUrl)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
-    : '';
-  return `
-    <details class="tl-signal" data-kind="news" data-evidence-medium="news">
-      <summary>
-        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
-        <span class="tl-signal-summary-text">
-          <strong>${htmlText(sigBadge(sig.evidenceType))} &mdash; ${publisher}, ${date}</strong>
-          ${headline}${byline}
-        </span>
-        <span class="tl-signal-method">${method}</span>
-      </summary>
-      <div class="tl-signal-detail">
-        ${provenanceLine}
-        ${maps}
-        ${rationale}
-        ${headline ? `<div class="tl-signal-headline">${headline}</div>` : ''}
-        ${quote}
-        <div class="tl-signal-foot">
-          <span class="tl-signal-date">Published ${date}</span>
-          <span class="tl-signal-actions">${link}</span>
-        </div>
-      </div>
-    </details>`;
-}
-/* CURRENCY EVIDENCE — the additive "where this stands now" layer.
-   This is deliberately NOT an X card and must never be mistakable for one: no handle, no
-   status id, no live-post embed, no x.com link. It is a dated reference to a live-verified
-   article, shown BENEATH the prediction's origin evidence and clearly labelled as a later,
-   independent observation rather than as Peter's own post. */
-function currencyCard(entry){
-  const publisher = htmlText(entry.publisherShort || entry.publisher || entry.publisherHost || 'Publisher');
-  const headline = htmlText(entry.headline || '');
-  const byline = entry.author ? ` &middot; ${htmlText(entry.author)}` : '';
-  const url = safeHttpUrl(entry.url) || '';
-  const published = entry.publishedAt ? new Date(entry.publishedAt) : null;
-  const dateText = published && !isNaN(published.getTime())
-    ? formatUtcDate(published)
-    : '';
-  const publishedUtc = published && !isNaN(published.getTime()) ? published.toISOString().slice(0, 10) : '';
-  const age = Number(entry.ageDays);
-  /* Plain language, because "27d" is jargon. The age is computed from the captured
-     publication date, so it degrades honestly rather than claiming false freshness. */
-  const ageText = !Number.isFinite(age) ? ''
-    : age <= 1 ? 'today'
-      : age <= 7 ? `${age} days ago`
-        : age <= 14 ? 'this fortnight'
-          : age <= 31 ? 'this month'
-            : age <= 92 ? 'this quarter'
-              : `${Math.round(age / 30)} months ago`;
-  /* A peer-reviewed paper and a company blog post are not the same kind of claim, and the
-     reader is entitled to see which one they are looking at. Shared with the context card via
-     qualityLabel() — this map used to be duplicated here and was missing two values the ledger
-     actually emits ('intergovernmental-organization', 'original-researcher'), which would have
-     rendered as the generic "Verified publication" and silently erased the distinction. */
-  const quality = qualityLabel(entry.sourceQuality);
-  const provenance = entry.provenance
-    ? `<div class="tl-signal-maps"><b>Provenance:</b> ${htmlText(entry.provenance)}</div>` : '';
-  const rationale = entry.rationale
-    ? `<div class="tl-signal-maps"><b>Why this is current evidence:</b> ${htmlText(entry.rationale)}</div>` : '';
-  const quote = entry.quote ? `<blockquote class="tl-signal-quote">${htmlText(entry.quote)}</blockquote>` : '';
-  const link = url
-    ? `<a class="tl-signal-link" href="${htmlText(url)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
-    : '';
-  return `
-    <details class="tl-signal tl-currency" data-kind="currency" data-evidence-medium="currency" data-freshness="${htmlText(entry.freshness || '')}" data-published-utc="${htmlText(publishedUtc)}">
-      <summary>
-        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
-        <span class="tl-signal-summary-text">
-          <strong>Current reference &mdash; ${publisher}, ${htmlText(dateText)}</strong>
-          ${headline}${byline}
-        </span>
-        <span class="tl-signal-method">${htmlText(ageText)}</span>
-      </summary>
-      <div class="tl-signal-detail">
-        <div class="tl-signal-maps"><b>Source type:</b> ${htmlText(quality)}${entry.publisherHost ? ` &middot; ${htmlText(entry.publisherHost)}` : ''}</div>
-        ${provenance}
-        ${rationale}
-        ${quote}
-        <div class="tl-signal-foot">
-          <span class="tl-signal-date">Published <time datetime="${htmlText(publishedUtc)}">${htmlText(dateText)}</time></span>
-          <span class="tl-signal-actions">${link}</span>
-        </div>
-      </div>
-    </details>`;
-}
-/* ESTIMATED TIMING.
-   Every dated prediction carries m (1-12), mBand (± months) and mPrecision. The precision is
-   the honest part: only 9 of 96 estimates are confident to a named month, so printing
-   "May 2026" for all of them would assert precision we explicitly decided we do not have and
-   would contradict the band. Each precision tier therefore gets wording it can actually
-   support. The month is NEVER written into the prediction text itself — that text is the
-   sticky binding key for every evidence approval and currency pin. */
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 function monthPhase(m){ return m <= 4 ? 'Early' : m <= 8 ? 'Mid' : 'Late'; }
+
 function estimatedTiming(e, year){
   const m = Number(e.m);
   if (!Number.isFinite(m) || m < 1 || m > 12) return null;
@@ -742,171 +688,63 @@ function estimatedTiming(e, year){
   const elapsed = windowEnd < now;
   return { label, bandText, precision, elapsed, basis: e.mBasis || '' };
 }
-function timingHtml(e, year){
-  const t = estimatedTiming(e, year);
-  if (!t) return '';
-  const PRECISION_NOTE = {
-    month: 'Estimated to a specific month',
-    quarter: 'Estimated to a quarter',
-    half: 'Estimated to a half-year',
-    year: 'Estimated only to within the year',
-  };
-  /* Value and band are one string, not two elements: "Mid 2030 ±6 months" is a single
-     phrase, and splitting it made screen readers announce three disconnected fragments.
-     The basis sits as a text node inside <details> rather than in a wrapped <p>, which
-     renders and reads identically while costing four fewer elements per prediction. */
-  const value = t.bandText ? `${t.label} ${t.bandText}` : t.label;
-  const note = PRECISION_NOTE[t.precision] || '';
-  return `
-    <div class="event-timing" data-precision="${htmlText(t.precision)}"${t.elapsed ? ' data-elapsed="true"' : ''}>
-      <span class="event-timing-label">Estimated timing</span>
-      <span class="event-timing-value">${htmlText(value)}</span>
-      ${t.elapsed ? '<span class="event-timing-elapsed">window elapsed</span>' : ''}
-      ${t.basis ? `<details class="event-timing-basis"><summary>Why this timing</summary>${htmlText(note ? `${note}. ${t.basis}` : t.basis)}</details>` : ''}
-    </div>`;
+const HTML_ENTITIES = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", '#39':"'", nbsp:' ' };
+
+const clampNumber = (value, min, max) => Math.max(min, Math.min(max, value));
+
+function setText(id, value){
+  const element = document.getElementById(id);
+  if (element) element.textContent = value;
 }
-function predictionEvidence(key, match, title){
-  /* An accounted-for prediction is cited, OR carries dated background, OR is explicitly recorded as
-     uncited. Only a prediction in none of the three - which the build treats as a hard failure -
-     reaches the unavailable state. The order matters: a context entry is checked BEFORE the uncited
-     record so an aged-out but genuine article is shown as background rather than reported as absent. */
-  return `<div class="prediction-evidence" data-evidence-id="${htmlText(key)}">${signalCoverageReady
-    ? predictionEvidenceBody(key) + xSignalCard(xSignals[key]) : evidenceUnavailable()}</div>`;
+
+function utcInstant(value){
+  const date = value instanceof Date ? value : new Date(value);
+  return isNaN(date.getTime()) ? null : date;
 }
-/* THE X SIGNAL IS AN APPENDIX, NEVER A SUBSTITUTE. It is appended AFTER the evidence state and can
-   never replace it: an uncited prediction still says, in full, that a search ran and found nothing.
-   Those are different claims — "no authoritative source supports this" and "here is what Peter has
-   been amplifying about it" — and merging them is exactly what this separation prevents. */
-function predictionEvidenceBody(key){
-  if (!directSignals[key]) {
-    if (contextSignals[key]) return contextCard(contextSignals[key]);
-    const record = uncitedSignals[key];
-    return record ? uncitedCard(record) : evidenceUnavailable();
+
+function formatUtcDate(value){
+  const date = utcInstant(value);
+  return date ? date.toLocaleDateString('en-US', { timeZone:'UTC', day:'numeric', month:'short', year:'numeric' }) : '';
+}
+
+function formatUtcDateTime(value){
+  const date = utcInstant(value);
+  /* The zone is named because a bare time of day is ambiguous to every reader outside UTC. */
+  return date ? date.toLocaleString('en-US', { timeZone:'UTC', day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit' }) + ' UTC' : '';
+}
+
+function decodeKnownEntities(value){
+  return String(value == null ? '' : value)
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      const codepoint = parseInt(hex, 16);
+      return Number.isInteger(codepoint) && codepoint >= 0 && codepoint <= 0x10ffff
+        ? String.fromCodePoint(codepoint)
+        : '\ufffd';
+    })
+    .replace(/&#(\d+);/g, (_, decimal) => {
+      const codepoint = parseInt(decimal, 10);
+      return Number.isInteger(codepoint) && codepoint >= 0 && codepoint <= 0x10ffff
+        ? String.fromCodePoint(codepoint)
+        : '\ufffd';
+    })
+    .replace(/&(amp|lt|gt|quot|apos|#39|nbsp);/gi, entity => HTML_ENTITIES[entity.slice(1, -1).toLowerCase()]);
+}
+
+function htmlText(value){
+  return decodeKnownEntities(value).replace(/[&<>"']/g, character => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[character]);
+}
+
+function safeHttpUrl(value){
+  try {
+    const url = new URL(String(value));
+    return (url.protocol === 'https:' || url.protocol === 'http:') && !url.username && !url.password ? url.href : '';
+  } catch {
+    return '';
   }
-  const origin = signalCard(directSignals[key]);
-  const current = Array.isArray(currencySignals[key]) ? currencySignals[key] : [];
-  if (!current.length) return origin;
-  /* Origin and current evidence answer different questions, so they are labelled rather
-     than stacked anonymously: the origin card is why this prediction exists, the current
-     reference is where the world stands on it now. */
-  return `
-    <div class="tl-evidence-group">
-      <div class="tl-evidence-band"><span class="tl-evidence-band-label">Origin evidence</span></div>
-      ${origin}
-      <div class="tl-evidence-band tl-evidence-band-current">
-        <span class="tl-evidence-band-label">Current reference${current.length > 1 ? `s &middot; ${current.length}` : ''}</span>
-      </div>
-      ${current.map(currencyCard).join('')}
-    </div>`;
-}
-function evidenceUnavailable(){
-  return '<div class="tl-signal-unavailable" role="status">Prediction evidence is temporarily unavailable.</div>';
 }
 
-/* @peterxing TRAJECTORY SIGNAL — SUPPLEMENTARY, AND SAID SO IN EVERY RENDERED WORD.
-   Added 2026-08-26 on the owner's instruction to supplement the forecast with his own posts and
-   reposts. It is NOT evidence: an X post carries no editorial responsibility, no byline standard
-   and no publication-date provenance, which is why the citation channel excludes it. The card is
-   visually and verbally distinct from every evidence card, and `tracked` (passed the 253-fixture
-   matcher) is labelled differently from `nearest` (topical proximity only), so proximity can never
-   be read as tracking. Full rationale: x-signals.js. */
-function xSignalCard(signal){
-  const url = signal ? safeHttpUrl(signal.url) : '';
-  if (!url) return '';
-  const label = signal.tier === 'tracked' ? 'Tracked by @peterxing' : 'Closest @peterxing activity';
-  const days = Number(signal.ageDays);
-  const meta = [
-    signal.authorship === 'authored' ? '@peterxing' : `@peterxing reposted @${signal.author || 'unknown'}`,
-    signal.created ? formatUtcDate(new Date(signal.created)) : '',
-    Number.isFinite(days) ? `${days} day${days === 1 ? '' : 's'} ago` : '',
-  ].filter(Boolean).join(' \u00b7 ');
-  return `
-    <details class="tl-xsignal" data-tier="${htmlText(signal.tier || 'nearest')}">
-      <summary><span class="tl-xsignal-summary-text"><strong>${htmlText(label)}</strong>
-        <span class="tl-xsignal-meta">${htmlText(meta)}</span></span></summary>
-      <div class="tl-xsignal-detail">
-        <blockquote class="tl-xsignal-text">${htmlText(signal.text || '')}</blockquote>
-        <p class="tl-xsignal-note">${htmlText(signal.statement || '')}</p>
-        <a class="tl-xsignal-link" href="${htmlText(url)}" target="_blank" rel="noopener">View on X</a>
-      </div>
-    </details>`;
-}
-/* GC seq-95 flagged the exact failure this fixes: routing an uncited prediction through
-   evidenceUnavailable() would have printed "temporarily unavailable" - a claim that something is
-   BROKEN - over a record that actually says a search ran, on a stated date, across a stated window,
-   and found nothing. Those are different claims and only one of them is true. The card below reports
-   the measurement, so the page agrees with the artefact instead of contradicting it. */
-function uncitedCard(record){
-  const days = Number(record.windowDays);
-  const window = Number.isFinite(days) && days > 0
-    ? `the last ${days} day${days === 1 ? '' : 's'}`
-    : 'the currency window';
-  const searched = record.searchedAt ? new Date(record.searchedAt) : null;
-  const searchedText = searched && !isNaN(searched.getTime())
-    ? ` Searched ${formatUtcDateTime(searched)}.`
-    : '';
-  const statement = record.statement
-    || `No authoritative source published in ${window} was found for this prediction.`;
-  return `
-    <details class="tl-signal-uncited">
-      <summary class="tl-uncited-head">
-        <span class="tl-uncited-mark" aria-hidden="true"></span>
-        <strong>No source in ${htmlText(window)}</strong>
-      </summary>
-      <p class="tl-uncited-body">${htmlText(statement)}${htmlText(searchedText)}</p>
-      <p class="tl-uncited-note">The prediction is unchanged. Nothing older, adjacent or unreviewed
-      has been substituted to fill this space.</p>
-    </details>`;
-}
-
-/* CONTEXT EVIDENCE — dated background, never styled or worded as current evidence. The article
-   passed the identical relevance and source-quality bars and was live-fetched and quote-checked
-   exactly like a cited source, but it was published outside the currency window. Its age is shown
-   in the summary row so a 200-day-old article cannot be mistaken for a 3-day-old one; an entry that
-   cannot state its own age does not render at all. Full rationale: refresh-signals.js. */
-function contextCard(entry){
-  const publisher = htmlText(entry.publisher || entry.publisherHost || 'Publisher');
-  const headline = htmlText(entry.headline || '');
-  const byline = entry.byline ? ` &middot; by ${htmlText(entry.byline)}` : '';
-  const url = safeHttpUrl(entry.url) || '';
-  const published = entry.publishedAt ? new Date(entry.publishedAt) : null;
-  const age = Number(entry.ageDays);
-  if (!published || isNaN(published.getTime()) || !Number.isFinite(age)) return evidenceUnavailable();
-  const dateText = formatUtcDate(published);
-  const ageText = age <= 92 ? `${age} days old`
-    : age <= 365 ? `${Math.round(age / 30)} months old`
-      : `${(age / 365).toFixed(1)} years old`;
-  const rationale = entry.mappingRationale
-    ? `<div class="tl-signal-maps"><b>Evidence relevance:</b> ${htmlText(entry.mappingRationale)}</div>` : '';
-  const link = url
-    ? `<a class="tl-signal-link" href="${htmlText(url)}" target="_blank" rel="noopener">Read the article at ${publisher} &rarr;</a>`
-    : '';
-  return `
-    <details class="tl-signal tl-context" data-kind="context" data-evidence-medium="context" data-age-bucket="${htmlText(entry.ageBucket || '')}" data-published-utc="${htmlText(published.toISOString().slice(0, 10))}">
-      <summary>
-        <span class="tl-x tl-news" aria-hidden="true">${NEWS_SVG}</span>
-        <span class="tl-signal-summary-text">
-          <strong>Dated background &mdash; ${publisher}, ${htmlText(dateText)}</strong>
-          ${headline}${byline}
-        </span>
-        <span class="tl-signal-method tl-context-age">${ageText}</span>
-      </summary>
-      <div class="tl-signal-detail">
-        <div class="tl-context-note">${htmlText(entry.statement || '')} Shown as context, not as current
-        evidence; fetched and quote-checked live at publication like every other source here.</div>
-        <div class="tl-signal-maps"><b>Source type:</b> ${htmlText(qualityLabel(entry.sourceQuality))}${entry.publisherHost ? ` &middot; ${htmlText(entry.publisherHost)}` : ''}</div>
-        ${entry.maps ? `<div class="tl-signal-maps"><b>Observed against:</b> ${htmlText(entry.maps)}</div>` : ''}
-        ${rationale}
-        ${entry.quote ? `<blockquote class="tl-signal-quote">${htmlText(entry.quote)}</blockquote>` : ''}
-        <div class="tl-signal-foot">
-          <span class="tl-signal-date">Published ${htmlText(dateText)} &middot; ${ageText}</span>
-          <span class="tl-signal-actions">${link}</span>
-        </div>
-      </div>
-    </details>`;
-}
-/* A source type the UI cannot NAME is one the reader cannot judge, and a generic default silently
-   erases the peer-reviewed / first-party-lab / independent-press distinction. */
 function qualityLabel(value){
   return {
     'peer-reviewed-journal': 'Peer-reviewed journal',
@@ -920,676 +758,290 @@ function qualityLabel(value){
     'intergovernmental-organization': 'Intergovernmental body, first-party',
     'government': 'Government source',
     'original-researcher': 'Original researcher',
-  }[value] || 'Verified publication';
+  }[value] || String(value || 'Source quality not recorded');
 }
 
-function branchForEvent(title){
-  if (/^managed branch:/i.test(title)) return { key:'managed', label:'Managed branch' };
-  if (/default branch:/i.test(title)) return { key:'default', label:'Default branch' };
-  if (/\bungoverned\b/i.test(title)) return { key:'ungoverned', label:'Ungoverned branch' };
-  return { key:'baseline', label:'Shared forecast' };
-}
-function setYearDisclosure(block, collapsed, notify = true){
-  if (!block) return;
-  block.classList.toggle('is-collapsed', collapsed);
-  const button = block.querySelector('.year-toggle');
-  if (button) {
-    button.setAttribute('aria-expanded', String(!collapsed));
-    button.textContent = collapsed ? 'Open year' : 'Collapse';
-  }
-  if (notify) window.dispatchEvent(new Event('resize'));
-}
-let yearObserver = null;
-function setActiveYear(year){
-  document.querySelectorAll('.year-block').forEach(block =>
-    block.classList.toggle('is-active', block.dataset.year === String(year)));
-}
-function observeTimelineYears(){
-  if (yearObserver) yearObserver.disconnect();
-  const blocks = [...document.querySelectorAll('.year-block')];
-  if (!blocks.length) return;
-  if (!('IntersectionObserver' in window)) {
-    setActiveYear(blocks[0].dataset.year);
-    return;
-  }
-  yearObserver = new IntersectionObserver(entries => {
-    const visible = entries
-      .filter(entry => entry.isIntersecting)
-      .sort((a, b) => Math.abs(a.boundingClientRect.top - 240) - Math.abs(b.boundingClientRect.top - 240));
-    if (visible[0]) setActiveYear(visible[0].target.dataset.year);
-  }, { rootMargin:'-25% 0px -58% 0px', threshold:[0, .01, .25] });
-  blocks.forEach(block => yearObserver.observe(block));
-  setActiveYear(blocks[0].dataset.year);
-}
-function updateFilterUrl(){
-  if (location.protocol === 'file:') return;
-  const url = new URL(location.href);
-  const write = (key, value, fallback = 'all') => value === fallback
-    ? url.searchParams.delete(key)
-    : url.searchParams.set(key, value);
-  write('fd', forecastFilters.domain);
-  write('fb', forecastFilters.branch);
-  write('fp', forecastFilters.probability);
-  write('ft', forecastFilters.theme);
-  write('fq', forecastFilters.query, '');
-  write('fc', forecastFilters.changed ? '1' : '0', '0');
-  history.replaceState(null, '', url);
-}
-function updateFilterControls(){
-  activeDomain = forecastFilters.domain;
-  document.querySelectorAll('[data-domain]').forEach(button => {
-    const active = button.dataset.domain === forecastFilters.domain;
-    button.classList.toggle('active', active);
-    button.setAttribute('aria-pressed', String(active));
-  });
-  const controls = {
-    branchFilter:forecastFilters.branch,
-    probabilityFilter:forecastFilters.probability,
-    themeFilter:forecastFilters.theme,
-    atlasSearch:forecastFilters.query,
-  };
-  Object.entries(controls).forEach(([id, value]) => {
-    const element = document.getElementById(id);
-    if (element && element.value !== value) element.value = value;
-  });
-  const changes = document.getElementById('changesOnlyToggle');
-  if (changes) changes.setAttribute('aria-pressed', String(forecastFilters.changed));
-}
-function setSelectCounts(id, counts){
-  const select = document.getElementById(id);
-  if (!select) return;
-  [...select.options].forEach(option => {
-    if (!option.dataset.label) option.dataset.label = option.textContent;
-    option.textContent = `${option.dataset.label} · ${counts[option.value] || 0}`;
-  });
-}
-function updateFilterCounts(){
-  const events = timelineData.flatMap(year => year.events.map(event => ({
-    ...event,
-    branch:branchForEvent(event.t).key,
-    probability:probabilityBand(event.prob),
-    themes:eventThemes(event),
-  })));
-  const domainCounts = { all:events.length };
-  const branchCounts = { all:events.length };
-  const probabilityCounts = { all:events.length };
-  const themeCounts = { all:events.length };
-  for (const event of events) {
-    domainCounts[event.d] = (domainCounts[event.d] || 0) + 1;
-    branchCounts[event.branch] = (branchCounts[event.branch] || 0) + 1;
-    probabilityCounts[event.probability] = (probabilityCounts[event.probability] || 0) + 1;
-    for (const theme of event.themes) themeCounts[theme] = (themeCounts[theme] || 0) + 1;
-  }
-  document.querySelectorAll('[data-domain-count]').forEach(element => {
-    element.textContent = domainCounts[element.dataset.domainCount] || 0;
-  });
-  setSelectCounts('branchFilter', branchCounts);
-  setSelectCounts('probabilityFilter', probabilityCounts);
-  setSelectCounts('themeFilter', themeCounts);
-  setText('changedCount', events.filter(revisedInLatestRevision).length);
-}
-function matchesForecastFilters(event){
-  const branch = branchForEvent(event.t).key;
-  const themes = eventThemes(event);
-  const queryTerms = forecastFilters.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  const searchable = `${event.t} ${domainNames[event.d] || ''} ${themes.join(' ')}`.toLowerCase();
-  return (forecastFilters.domain === 'all' || event.d === forecastFilters.domain)
-    && (forecastFilters.branch === 'all' || branch === forecastFilters.branch)
-    && (forecastFilters.probability === 'all' || probabilityBand(event.prob) === forecastFilters.probability)
-    && (forecastFilters.theme === 'all' || themes.includes(forecastFilters.theme))
-    && (!forecastFilters.changed || revisedInLatestRevision(event))
-    && queryTerms.every(term => searchable.includes(term));
-}
-function applyForecastFilters(syncUrl = true){
-  let visibleCount = 0;
-  timelineData.forEach(year => {
-    const block = document.getElementById('year-' + year.year);
-    if (!block) return;
-    const filtered = year.events.filter(matchesForecastFilters);
-    visibleCount += filtered.length;
-    year.events.forEach((event, index) => {
-      const node = document.getElementById(`event-${year.year}-${index}`);
-      if (node) node.hidden = !matchesForecastFilters(event);
-    });
-    const high = filtered.filter(event => event.high).length;
-    const average = statedAverage({ events:filtered });
-    const meta = block.querySelector('.year-meta');
-    if (meta) meta.innerHTML = `${filtered.length} shown · ${high} high${average == null ? '' : `<br>${average}% avg probability`}`;
-    const empty = block.querySelector('.tl-empty');
-    if (empty) empty.hidden = filtered.length > 0;
-    block.classList.toggle('is-filter-empty', filtered.length === 0);
-    block.hidden = filtered.length === 0;
-  });
-  setText('filterResultCount', `${visibleCount} of ${timelineData.reduce((sum, year) => sum + year.events.length, 0)} dated predictions shown`);
-  updateFilterControls();
-  if (syncUrl) updateFilterUrl();
-  requestAnimationFrame(observeTimelineYears);
-}
-function atlasSearchEntries(){
-  const entries = timelineData.flatMap(year => year.events.map((event, index) => ({
-    kind:'Prediction',
-    meta:String(year.year),
-    title:event.t,
-    href:`#event-${year.year}-${index}`,
-  })));
-  for (const item of horizonData.items || []) {
-    entries.push({ kind:'Horizon', meta:item.epistemic, title:item.t, href:`#horizon-${item.id}` });
-  }
-  chapters.forEach((chapter, index) => {
-    const text = document.createElement('div');
-    text.innerHTML = chapter.body;
-    entries.push({
-      kind:'Chapter',
-      meta:chapter.idx,
-      title:chapter.title,
-      text:text.textContent,
-      href:'#book',
-      chapterIndex:index,
-    });
-  });
-  return entries;
-}
-function renderAtlasSearchResults(){
-  const host = document.getElementById('atlasSearchResults');
-  const input = document.getElementById('atlasSearch');
-  if (!host || !input) return;
-  const terms = forecastFilters.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  if (!terms.length) {
-    host.hidden = true;
-    host.innerHTML = '';
-    return;
-  }
-  const results = atlasSearchEntries()
-    .map(entry => ({
-      ...entry,
-      haystack:`${entry.title} ${entry.meta} ${entry.kind} ${entry.text || ''}`.toLowerCase(),
-    }))
-    .filter(entry => terms.every(term => entry.haystack.includes(term)))
-    .sort((a, b) => Number(b.title.toLowerCase().startsWith(terms[0])) - Number(a.title.toLowerCase().startsWith(terms[0])))
-    .slice(0, 10);
-  host.innerHTML = results.length
-    ? results.map(entry => `<a class="search-result" href="${entry.href}"${entry.chapterIndex == null ? '' : ` data-search-chapter="${entry.chapterIndex}"`}>
-        <span>${htmlText(entry.kind)} · ${htmlText(entry.meta)}</span><strong>${htmlText(entry.title)}</strong>
-      </a>`).join('')
-    : '<div class="search-result"><span>No match</span><strong>Try a broader term or reset filters.</strong></div>';
-  host.hidden = false;
-}
-function resetForecastFilters(){
-  Object.assign(forecastFilters, {
-    domain:'all',
-    branch:'all',
-    probability:'all',
-    theme:'all',
-    changed:false,
-    query:'',
-  });
-  applyForecastFilters();
-  renderAtlasSearchResults();
-}
-function revealHashTarget(){
-  const hash = location.hash;
-  if (!/^#(?:event-|year-|horizon-)/.test(hash)) return;
-  let targetId;
-  try { targetId = decodeURIComponent(hash.slice(1)); } catch { return; }
-  const target = document.getElementById(targetId);
-  if (!target) return;
-  const event = target.closest('.event');
-  const year = target.closest('.year-block');
-  if ((event && event.hidden) || (year && year.hidden)) resetForecastFilters();
-  if (year) setYearDisclosure(year, false, false);
-  const horizon = target.closest('.horizon-item');
-  if (horizon) setHorizonDisclosure(horizon, false);
-  target.classList.add('is-selected');
-  requestAnimationFrame(() => {
-    target.scrollIntoView({ behavior:motionQuery.matches ? 'auto' : 'smooth', block:'center' });
-    target.focus({ preventScroll:true });
-  });
-  setTimeout(() => target.classList.remove('is-selected'), 1800);
-}
-function renderTimeline(){
-  const body = document.getElementById('timelineBody');
-  if (!body) return;
-  if (!timelineData.length) {
-    body.innerHTML = '<div class="tl-empty">Forecast data is loading from predictions.json.</div>';
-    setText('filterResultCount', 'Forecast data loading…');
-    return;
-  }
-  const previousYearState = new Map([...body.querySelectorAll('.year-block')]
-    .map(block => [block.dataset.year, block.classList.contains('is-collapsed')]));
-  const openEvidence = new Set([...body.querySelectorAll('.event .tl-signal[open]')]
-    .map(details => details.closest('.event')?.id).filter(Boolean));
-  const compactTimeline = window.matchMedia('(max-width: 720px)').matches;
-  const expandedThrough = timelineData[0].year + (compactTimeline ? 2 : 4);
-  body.innerHTML = timelineData.map(yr => {
-    const high = yr.events.filter(e => e.high).length;
-    const evCount = yr.events.length;
-    const average = statedAverage(yr);
-    const rows = yr.events.map((e, idx) => {
-      const id = yr.year + '-' + idx;                      // 1:1 with signals.json
-      const sigHtml = predictionEvidence(id, e.match, e.t);
-      const branch = branchForEvent(e.t);
-      const themes = eventThemes(e);
-      const probability = Number.isFinite(e.prob) ? `
-        <div class="event-probability" aria-label="${e.prob} percent stated probability">
-          <span class="event-probability-track" aria-hidden="true" style="--prob:${e.prob}%"></span>
-          <span>${e.prob}%</span>
-        </div>` : '';
-      return `
-        <article class="event ${e.signal ? 'signal' : (e.high ? 'high' : '')} branch-${branch.key} ${e.revisedAt ? 'event-revised' : ''}" id="event-${id}" data-domain="${e.d}" data-branch="${branch.key}" data-probability="${probabilityBand(e.prob)}" data-themes="${themes.join(' ')}" data-revised="${e.revisedAt || ''}" tabindex="-1">
-          <div class="event-body">
-            <div class="event-heading">
-              <span class="event-dot">${e.signal ? 'PETER’S CALL' : domainNames[e.d]}</span>
-              ${branch.key === 'baseline' ? '' : `<span class="event-branch">${branch.label}</span>`}
-              ${e.revisedAt ? `<span class="event-branch">Revised ${htmlText(e.revisedAt)}</span>` : ''}
-              <a class="deep-link" href="#event-${id}" aria-label="Link to ${htmlText(e.t)}" title="Link to this prediction">#</a>
-            </div>
-            <div class="event-title">${htmlText(e.t)}</div>
-            <div class="event-tags">
-              ${e.high ? '<span class="tag impact">High impact</span>' : ''}
-              ${e.signal ? '<span class="tag">Peter Xing anchor</span>' : ''}
-              ${referenceLink(id)}
-            </div>
-            ${probability}
-            ${timingHtml(e, yr.year)}
-            ${e.revisedAt && e.changeNote ? `<p class="event-change"><strong>What changed:</strong> ${htmlText(e.changeNote)}</p>` : ''}
-            ${sigHtml}
-          </div>
-        </article>`;
-    }).join('');
-    const eventsHtml = rows + `<div class="tl-empty" hidden>No events in this domain for ${yr.year}.</div>`;
-    const defaultCollapsed = yr.year > expandedThrough;
-    const collapsed = previousYearState.has(String(yr.year))
-      ? previousYearState.get(String(yr.year))
-      : defaultCollapsed;
-    return `
-      <section class="year-block ${collapsed ? 'is-collapsed' : ''}" id="year-${yr.year}" data-year="${yr.year}" aria-labelledby="year-label-${yr.year}" tabindex="-1">
-        <div class="year-dot"></div>
-        <div class="year-row">
-          <div class="year-tag">
-            <div class="year-title-row">
-              <div class="year-num" id="year-label-${yr.year}">${yr.year}</div>
-              <a class="deep-link" href="#year-${yr.year}" aria-label="Link to forecast year ${yr.year}" title="Link to ${yr.year}">#</a>
-            </div>
-            <div class="year-meta">${evCount} events · ${high} high${average == null ? '' : `<br>${average}% avg probability`}</div>
-            <button type="button" class="year-toggle" aria-expanded="${!collapsed}" aria-controls="year-events-${yr.year}">${collapsed ? 'Open year' : 'Collapse'}</button>
-          </div>
-          <div>
-            <div class="year-summary">${htmlText(yr.summary)}</div>
-            <div class="events" id="year-events-${yr.year}">${eventsHtml}</div>
-          </div>
-        </div>
-      </section>`;
-  }).join('');
-  body.querySelectorAll('.year-toggle').forEach(button => button.addEventListener('click', () => {
-    const block = button.closest('.year-block');
-    setYearDisclosure(block, !block.classList.contains('is-collapsed'));
-  }));
-  openEvidence.forEach(id => {
-    const details = document.querySelector('#' + id + ' .tl-signal');
-    if (details) details.open = true;
-  });
-  document.getElementById('timelineAtlas').classList.toggle('evidence-off', !overlayOn);
-  updateFilterCounts();
-  applyForecastFilters(false);
-}
-function validHorizon(h){
-  if (!h || typeof h !== 'object' || typeof h.title !== 'string' || typeof h.summary !== 'string' || !Array.isArray(h.items) || !h.items.length) return false;
-  const summary = h.summary.toLowerCase();
-  if (!summary.includes('aligned superintelligence') || !summary.includes('not a probability by 2040') || !summary.includes('mutually exclusive')) return false;
-  const validLists = item => ['dependencies','indicators'].every(k =>
-    Array.isArray(item[k]) && item[k].length >= 2 && item[k].length <= 4 && item[k].every(v => typeof v === 'string' && v.trim()));
-  if (!h.items.every(item => item && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id)
-      && typeof item.t === 'string' && domainNames[item.d]
-      && ['conditional','speculative'].includes(item.epistemic)
-      && typeof item.conditionalProb === 'number' && item.conditionalProb >= 0 && item.conditionalProb <= 100
-      && validLists(item) && typeof item.caveat === 'string' && item.caveat.trim()
-      && item.match && typeof item.match.search === 'string' && item.match.search.trim()
-      && !/\bfrom:\s*peterxing\b|x\.com|twitter\.com/i.test(item.match.search))) return false;
-  const text = h.items.map(item => `${item.t} ${item.caveat} ${item.dependencies.join(' ')} ${item.indicators.join(' ')}`).join(' ').toLowerCase();
-  return text.includes('endovascular bcis are minimally invasive, not non-invasive')
-    && text.includes('chatbot or digital replica')
-    && text.includes('small orbital clusters are not a dyson swarm')
-    && text.includes('energy-use classification')
-    && text.includes('no empirical confirmation')
-    && text.includes('not an established physical theory');
-}
-function horizonList(items){
-  return `<ul class="horizon-list">${items.map(item => `<li>${htmlText(item)}</li>`).join('')}</ul>`;
-}
-const horizonBranches = [
-  { key:'neural', label:'Neural symbiosis', detail:'Implanted and genuinely non-invasive routes', ids:['implantable-neural-symbiosis','non-invasive-neural-symbiosis'] },
-  { key:'digital', label:'Digital minds', detail:'Emulation and identity continuity', ids:['whole-brain-emulation-and-uploading'] },
-  { key:'outward', label:'Outward expansion', detail:'Orbital compute and energy capture', exclusive:true, ids:['orbital-compute-to-proto-dyson','kardashev-energy-scaling'] },
-  { key:'inward', label:'Inward transcension', detail:'Compression and testable foundations', exclusive:true, ids:['transcension-hypothesis','ruliad-testable-physics'] },
-];
-function horizonBranchFor(id){
-  return horizonBranches.find(branch => branch.ids.includes(id)) || horizonBranches[1];
-}
-function setHorizonDisclosure(card, collapsed){
-  if (!card) return;
-  card.classList.toggle('is-collapsed', collapsed);
-  const button = card.querySelector('.horizon-toggle');
-  if (button) {
-    button.setAttribute('aria-expanded', String(!collapsed));
-    button.textContent = collapsed ? 'Open evidence ladder' : 'Collapse evidence ladder';
-  }
-  window.dispatchEvent(new Event('resize'));
-}
-function renderHorizonMap(){
-  const map = document.getElementById('horizonMap');
-  if (!map) return;
-  const byId = Object.fromEntries(horizonData.items.map(item => [item.id, item]));
-  map.innerHTML = horizonBranches.map(branch => {
-    const nodes = branch.ids.map(id => byId[id]).filter(Boolean).map(item => `
-      <button type="button" class="horizon-node" data-horizon-target="${item.id}" aria-controls="horizon-${item.id}">
-        <span class="instrument-label">${item.epistemic} · ${item.conditionalProb}% conditional</span>
-        <span class="horizon-node-title">${htmlText(item.t)}</span>
-        <span class="horizon-node-meter" aria-hidden="true"><i style="--prob:${item.conditionalProb}%"></i></span>
-      </button>`).join('');
-    return `<section class="horizon-branch" data-branch="${branch.key}" data-exclusive="${branch.exclusive ? 'true' : 'false'}">
-      <div class="horizon-branch-head">
-        <span class="instrument-label">${branch.exclusive ? 'Mutually exclusive candidate' : 'Conditional pathway'}</span>
-        <strong>${branch.label}</strong>
-        <small>${branch.detail}</small>
-      </div>
-      ${nodes}
-    </section>`;
-  }).join('');
-  map.querySelectorAll('.horizon-node').forEach(node => node.addEventListener('click', () => {
-    map.querySelectorAll('.horizon-node').forEach(item => item.classList.remove('active'));
-    document.querySelectorAll('.horizon-item').forEach(item => item.classList.remove('is-selected'));
-    node.classList.add('active');
-    const card = document.getElementById('horizon-' + node.dataset.horizonTarget);
-    if (!card) return;
-    setHorizonDisclosure(card, false);
-    card.classList.add('is-selected');
-    card.scrollIntoView({ behavior: motionQuery.matches ? 'auto' : 'smooth', block:'center' });
-    card.focus({ preventScroll:true });
-  }));
-}
-function renderHorizon(){
-  const title = document.getElementById('horizonTitle');
-  const summary = document.getElementById('horizonSummary');
-  const body = document.getElementById('horizonBody');
-  if (!body) return;
-  if (!Array.isArray(horizonData.items) || !horizonData.items.length) {
-    body.innerHTML = '<div class="tl-empty">Horizon data is loading from predictions.json.</div>';
-    const map = document.getElementById('horizonMap');
-    if (map) map.innerHTML = '';
-    return;
-  }
-  const previousDisclosure = new Map([...body.querySelectorAll('.horizon-item')]
-    .map(card => [card.dataset.horizonId, card.classList.contains('is-collapsed')]));
-  const selectedId = body.querySelector('.horizon-item.is-selected')?.dataset.horizonId || null;
-  const openEvidence = new Set([...body.querySelectorAll('.horizon-item .tl-signal[open]')]
-    .map(details => details.closest('.horizon-item')?.dataset.horizonId).filter(Boolean));
-  if (title) title.textContent = horizonData.title;
-  if (summary) summary.textContent = horizonData.summary;
-  const compactHorizon = window.matchMedia('(max-width: 720px)').matches;
-  body.innerHTML = horizonData.items.map(item => {
-    const key = 'horizon-' + item.id;
-    const sigHtml = predictionEvidence(key, item.match, item.t);
-    const branch = horizonBranchFor(item.id);
-    const collapsed = previousDisclosure.has(item.id) ? previousDisclosure.get(item.id) : compactHorizon;
-    return `<article class="horizon-item ${collapsed ? 'is-collapsed' : ''} ${selectedId === item.id ? 'is-selected' : ''}" id="horizon-${item.id}" data-horizon-id="${item.id}" data-branch="${branch.key}" tabindex="-1">
-      <div class="horizon-item-head">
-        <span class="horizon-epistemic" data-label="${item.epistemic}">${item.epistemic}</span>
-        <span class="horizon-prob">${item.conditionalProb}% conditional plausibility</span>
-        <span class="horizon-domain">${domainNames[item.d]}</span>
-        <span class="horizon-domain">${branch.label}</span>
-      </div>
-      <!-- Every dated prediction carries an estimated month. These seven deliberately do not,
-           and that absence is a claim in itself, so it is stated rather than left blank. -->
-      <div class="event-timing horizon-timing" data-precision="undated">
-        <span class="event-timing-label">Estimated timing</span>
-        <span class="event-timing-value">Deliberately undated</span>
-        <details class="event-timing-basis">
-          <summary><span>Why there is no date</span></summary>
-          <p>These possibilities are gated on aligned superintelligence existing first, not on a
-          calendar. Their timing depends entirely on when — and whether — that gate opens, so any
-          month or year here would be invented precision. They are ordered by dependency and
-          conditional plausibility instead, and each states the evidence that would move it.</p>
-        </details>
-      </div>
-      <div class="horizon-item-title">
-        <h3>${htmlText(item.t)}</h3>
-        <a class="deep-link" href="#horizon-${item.id}" aria-label="Link to ${htmlText(item.t)}" title="Link to this horizon item">#</a>
-        <div class="horizon-meter" aria-label="${item.conditionalProb} percent conditional plausibility">
-          <span class="horizon-meter-track" aria-hidden="true" style="--prob:${item.conditionalProb}%"></span>
-          <span>${item.conditionalProb}%</span>
-        </div>
-        <button type="button" class="horizon-toggle" aria-expanded="${!collapsed}">${collapsed ? 'Open evidence ladder' : 'Collapse evidence ladder'}</button>
-        ${referenceLink(key)}
-      </div>
-      <div class="horizon-columns">
-        <div class="horizon-block"><h4>Dependencies</h4>${horizonList(item.dependencies)}</div>
-        <div class="horizon-block"><h4>Observable indicators</h4>${horizonList(item.indicators)}</div>
-      </div>
-      <p class="horizon-caveat"><strong>Caveat:</strong> ${htmlText(item.caveat)}</p>
-      <div class="horizon-signal">${sigHtml}</div>
-    </article>`;
-  }).join('');
-  body.querySelectorAll('.horizon-toggle').forEach(button => button.addEventListener('click', () => {
-    const card = button.closest('.horizon-item');
-    setHorizonDisclosure(card, !card.classList.contains('is-collapsed'));
-  }));
-  openEvidence.forEach(id => {
-    const details = document.querySelector(`#horizon-${id} .tl-signal`);
-    if (details) details.open = true;
-  });
-  renderHorizonMap();
-  if (selectedId) document.querySelector(`[data-horizon-target="${selectedId}"]`)?.classList.add('active');
-}
-renderTimeline();
-renderHorizon();
-renderObservatory();
-renderRevisionTrail();
-setText('heroPredFreshness', 'Forecast data · loading');
+function forecastRecords(){ return model ? model.records : []; }
+let publishedSignals = null;
+let forecastFingerprint = '';
+let exploreSession = null;
+let exploreMountFailed = false;
+let observationError = '';
+let observationLastChecked = '';
+let observationLatency = null;
+function pendingObservationRecord(){ return pending?.candidate.bundle || null; }
+Object.defineProperty(window, 'pendingSignals', { get:pendingObservationRecord, configurable:true });
 
-/* Daily-revised predictions live in predictions.json. If it cannot load, the page keeps an explicit
-   unavailable state rather than displaying a stale duplicate forecast. */
-const predictionsReady = (function loadPredictions(){
-  if (location.protocol === 'file:') {
-    predictionModelState = 'offline';
-    setText('heroPredFreshness', 'Forecast data requires the local server');
-    return Promise.resolve(false);
-  }
-  return fetch('predictions.json', { cache:'no-cache' })
-    .then(r => r.ok ? r.json() : null)
-    .then(async d => {
-      if (!d || !Array.isArray(d.years) || !d.years.length) {
-        predictionModelState = 'unavailable';
-        setText('heroPredFreshness', 'Forecast data unavailable');
-        renderTimeline();
-        renderProbabilitySimulator(timelineData, null);
-        return false;
-      }
-      const clean = d.years.filter(y => y && typeof y.year === 'number' && Array.isArray(y.events) && typeof y.summary === 'string');
-      if (!clean.length) {
-        predictionModelState = 'unavailable';
-        setText('heroPredFreshness', 'Forecast data unavailable');
-        renderTimeline();
-        renderProbabilitySimulator(timelineData, null);
-        return false;
-      }
-      clean.sort((a, b) => a.year - b.year);
-      timelineData = clean;
-      forecastSnapshot = JSON.stringify(d);
-      forecastFingerprint = await fingerprintForecast(d);
-      predictionModelState = 'loaded';
-      const revisionDate = String(d.updated || '').slice(0, 10);
-      predictionRevision = {
-        updated:d.updated || null,
-        basis:d.basis || '',
-        changes:clean.flatMap(year => year.events.map((event, index) => ({
-          id:`${year.year}-${index}`,
-          year:year.year,
-          title:event.t,
-          revisedAt:event.revisedAt,
-          note:event.changeNote,
-        }))).filter(change => change.revisedAt && change.revisedAt === revisionDate && change.note),
-      };
-      if (validHorizon(d.postSuperintelligence)) {
-        horizonData = d.postSuperintelligence;
-      } else {
-        horizonData = {
-          title:'Post-superintelligence horizon',
-          summary:'Horizon data is unavailable because its dependency contract failed validation.',
-          items:[],
-        };
-        console.error('Invalid or misleading postSuperintelligence data; hiding the horizon rather than displaying stale data.');
-      }
-      renderTimeline();
-      renderHorizon();
-      renderObservatory();
-      renderRevisionTrail();
-      renderAtlasSearchResults();
-      requestAnimationFrame(revealHashTarget);
-      const stamp = document.getElementById('predStamp');
-      if (stamp && d.updated){
-        const dt = new Date(d.updated);
-        if (!isNaN(dt.getTime())){
-          setText('heroPredFreshness', 'Forecast revised · ' + formatUtcDate(dt));
-          stamp.textContent = '\u25C8 Predictions revised from the latest news and research \u00b7 last revised '
-            + formatUtcDate(dt);
-          stamp.hidden = false;
-        }
-      }
-      return true;
-    })
-    .catch(() => {
-      predictionModelState = 'unavailable';
-      setText('heroPredFreshness', 'Forecast data unavailable');
-      renderTimeline();
-      renderHorizon();
-      renderRevisionTrail();
-      renderProbabilitySimulator(timelineData, null);
-      return false;
-    });
-})();
+const MISSION_KEY = 'pap-mission-control:v1';
+const questIds = ['scenario-v1', 'chapter-v1', 'evidence-v1', 'action-v1'];
+const readinessIds = ['uncertainty-v1', 'limits-v1', 'conversation-v1'];
+const actionIds = ['first-plan-v1', 'capability-v1', 'community-v1', 'review-v1'];
+const emptyMission = () => ({ version:1, quests:[], readiness:[], action:'', actionConfirmed:false, watchlist:{} });
+let missionStorageMode = 'local';
+let missionStorageMessage = 'Saved on this browser only.';
+const comparedForecasts = new Set();
+let missionState = null;
+function validPredictionId(id){ return /^(?:20\d{2}-\d+|horizon-[a-z0-9-]+)$/.test(id); }
 
-/* Signals are refreshed from live-verified news and research published inside the currency window.
-   The retired X source ids are kept as EXPLICIT RETIREMENT LABELS rather than deleted: if a stale
-   artefact carrying source:'archive-verified' is ever served, the page must say so in plain words
-   instead of falling back to a generic label that reads like a working source. */
-const SIGNAL_SOURCE_LABELS = {
-  'news-verified': 'live-verified news and research',
-  'x-api': 'retired X source',
-  'archive-verified': 'retired X source',
-  'public-rss': 'retired X source',
-  'public-rss-cache': 'retired X source',
-  'x-api-cache': 'retired X source',
-  'syndication': 'retired X source'
-};
-function renderSignalMetadata(data){
-  const newsMappings = Number(data.coverage?.byEvidenceMedium?.news)
-    || Number(data.coverage?.byEvidenceOwner?.news) || 0;
-  /* The provenance stamp must stay literally true: it may name only evidence the artefact carries. */
-  const sourceLabel = (SIGNAL_SOURCE_LABELS[data.source] || 'source unrecognised')
-    + (newsMappings ? ` · ${newsMappings} live-verified article${newsMappings === 1 ? '' : 's'}` : '');
-  const sourceStatus = data.sourceStatus || {};
-  const updated = new Date(data.updated);
-  const newest = new Date(data.newestItemAt);
-  const updatedLabel = isNaN(updated.getTime())
-    ? 'update time unavailable'
-    : formatUtcDate(updated);
-  const newestLabel = isNaN(newest.getTime())
-    ? 'newest-item time unavailable'
-    : formatUtcDateTime(newest);
-  const freshness = bundleFreshness(data);
-  const sourceQualifier = sourceStatus.mode === 'news-verified'
-    ? ' · live-fetched and quote-matched at publish'
-    : sourceStatus.mode === 'degraded' || sourceStatus.mode === 'unavailable' ? ' · source degraded' : '';
-  setText('heroSignalFreshness', `Evidence · ${sourceLabel}${sourceQualifier} · ${updatedLabel}`);
-  /* "six verified observations" was a hardcoded count that stayed 6 whether or not six sources
-     qualified. It is now the measured number of cards that actually cite something, and the
-     no-observation cards are counted separately rather than folded into a flattering total. */
-  const reality = Array.isArray(data.reality) ? data.reality : [];
-  const observed = reality.filter(entry => entry && entry.kind === 'news').length;
-  const blank = reality.length - observed;
-  const observedText = `${observed} verified observation${observed === 1 ? '' : 's'}`
-    + (blank > 0 ? ` · ${blank} theme${blank === 1 ? '' : 's'} with no qualifying source` : '');
-  setText('realityMeta', `${freshness} · ${sourceLabel}${sourceQualifier} · newest cited source ${newestLabel} · ${observedText}`);
-  renderEvidenceDashboard(data, sourceLabel, freshness);
-}
-function renderEvidenceDashboard(data, sourceLabel, freshness){
-  /* REWRITTEN 2026-08-13. The old dashboard measured an X corpus: Peter-written vs Peter-reposted vs
-     external mappings, unique statuses, and a "Maximum reviewed reuse" gauge. None of those quantities
-     exist any more. Rendering them with `|| 0` would have published "0 Peter wrote" and "1 of 0" -
-     confident numbers standing where a measurement used to be, which reads as a result rather than as
-     an absence. The panel now measures what the evidence actually is: how much of the forecast is
-     cited inside the currency window, how much was searched and found nothing, and what the cited
-     sources are. */
-  const coverage = data.coverage || {};
-  const total = Number(coverage.total) || 0;
-  const cited = Number(coverage.cited) || 0;
-  const uncited = Number(data.uncited && data.uncited.count) || 0;
-  const windowDays = Number(data.uncited && data.uncited.windowDays) || 0;
-  const embeds = Object.values(data.embeds || {});
-  const types = coverage.byEvidenceType || {};
-  const quality = coverage.bySourceQuality || {};
-  const articles = new Set(embeds.map(embed => embed.id)).size;
-  const publishers = new Set(embeds.map(embed => embed.publisherHost).filter(Boolean)).size;
-  const percentage = value => total ? (value / total * 100).toFixed(1) : '0.0';
-  const newest = embeds
-    .map(embed => new Date(embed.articleDate || (embed.provenance && embed.provenance.publishedAt)))
-    .filter(date => !isNaN(date.getTime()))
-    .sort((x, y) => y - x)[0];
-  setText('evidenceCitedStat', `${cited} of ${total}`);
-  setText('evidenceUncitedStat', String(uncited));
-  setText('evidenceArticlesStat', String(articles));
-  setText('evidencePublishersStat', String(publishers));
-  setText('evidenceWindowStat', windowDays ? `${windowDays} days` : 'unavailable');
-  setText('evidenceNewestStat', newest ? formatUtcDate(newest) : 'none');
-  setText('evidenceCitedShare', `${percentage(cited)}%`);
-  setText('evidenceUncitedShare', `${percentage(uncited)}%`);
-  document.getElementById('evidenceCitedBar')?.style.setProperty('--share', `${percentage(cited)}%`);
-  document.getElementById('evidenceUncitedBar')?.style.setProperty('--share', `${percentage(uncited)}%`);
-  const typeMix = document.getElementById('evidenceTypeMix');
-  if (typeMix) {
-    const QUALITY_LABELS = {
-      'peer-reviewed-journal': 'Peer-reviewed',
-      'primary-news-organization': 'Primary news',
-      'established-technology-press': 'Technology press',
-      'named-expert-analysis': 'Named expert',
-      'official-ai-lab': 'Frontier lab, first-party',
-      'official-research-organization': 'Research org, first-party',
-      'official-company': 'Company, first-party',
-      'industry-primary-source': 'Industry primary',
-      'government': 'Government',
-      'intergovernmental-organization': 'Intergovernmental',
-      'original-researcher': 'Original researcher',
-    };
-    typeMix.innerHTML = [
-      ['Direct evidence', types.direct || 0],
-      ['Leading indicators', types['leading-indicator'] || 0],
-      ['Scenario sources', types.scenario || 0],
-      ...Object.entries(quality)
-        .sort((x, y) => y[1] - x[1])
-        .map(([key, count]) => [QUALITY_LABELS[key] || key, count]),
-    ].map(([label, count]) => `<span>${htmlText(label)} · ${count}</span>`).join('');
-  }
-  const health = document.getElementById('evidenceSourceHealth');
-  if (health) {
-    const status = data.sourceStatus || {};
-    const verified = status.mode === 'news-verified';
-    const degraded = status.mode === 'degraded' || status.mode === 'unavailable';
-    health.classList.toggle('is-degraded', degraded);
-    const title = verified
-      ? `Live-verified sources · ${sourceLabel}`
-      : degraded ? `Degraded source · ${sourceLabel}` : `Source · ${sourceLabel}`;
-    const detail = degraded
-      ? `${status.message || 'The evidence source is unavailable.'} ${status.actionRequired ? `Action: ${status.actionRequired}` : ''}`
-      : `${status.message || freshness}`;
-    health.innerHTML = `<strong>${htmlText(title)}</strong><span>${htmlText(detail)}</span>`;
+function loadMission(){
+  try {
+    const raw = localStorage.getItem(MISSION_KEY);
+    if (!raw) {
+      localStorage.setItem(MISSION_KEY, JSON.stringify(emptyMission()));
+      return emptyMission();
+    }
+    const data = JSON.parse(raw);
+    if (data?.version !== 1 || !Array.isArray(data.quests) || !Array.isArray(data.readiness)
+      || !data.quests.every(id => questIds.includes(id)) || !data.readiness.every(id => readinessIds.includes(id))
+      || new Set(data.quests).size !== data.quests.length || new Set(data.readiness).size !== data.readiness.length
+      || !['', ...actionIds].includes(data.action) || typeof data.actionConfirmed !== 'boolean'
+      || (data.actionConfirmed && !data.action)
+      || !data.watchlist || Array.isArray(data.watchlist) || typeof data.watchlist !== 'object'
+      || Object.keys(data.watchlist).length > 1000
+      || !Object.entries(data.watchlist).every(([id, row]) => validPredictionId(id) && row
+        && ['title', 'forecast', 'seen'].every(key => typeof row[key] === 'string' && row[key].length < 100000))) {
+      throw new Error('Unsupported or invalid planning data');
+    }
+    for (const row of Object.values(data.watchlist)) {
+      if (row.seen) {
+        const snapshot = JSON.parse(row.seen);
+        if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) throw new Error('Invalid observation snapshot');
+      }
+    }
+    localStorage.setItem(MISSION_KEY, raw);
+    return data;
+  } catch (error) {
+    missionStorageMode = 'session';
+    missionStorageMessage = 'Session only: storage is unavailable or saved data is unreadable. Nothing has been overwritten. Reset to try local saving again.';
+    return emptyMission();
   }
 }
-function expectedSignalIds(){
+
+function saveMission(){
+  if (missionStorageMode !== 'local') return;
+  try { localStorage.setItem(MISSION_KEY, JSON.stringify(missionState)); }
+  catch (error) {
+    missionStorageMode = 'session';
+    missionStorageMessage = 'Session only: the browser could not save this change. Earlier saved data may remain; reset to retry.';
+  }
+}
+
+function completeQuest(id){
+  if (!missionState.quests.includes(id)) {
+    missionState.quests.push(id);
+    saveMission();
+    setText('missionAnnouncement', 'Planning quest recorded. This measures completion only.');
+  }
+  renderMission();
+}
+
+function watchButton(id){
+  const saved = Boolean(missionState.watchlist[id]);
+  return `<button type="button" class="watch-button" data-watch="${htmlText(id)}" aria-pressed="${saved}"
+    aria-label="${saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist'}">${saved ? 'Saved' : '+ Watch'}</button>`;
+}
+
+function evidenceSnapshot(id, data = publishedSignals){
+  if (!data) return '';
+  return JSON.stringify({
+    citation:data.embeds[id] || null, context:data.context.items[id] || null,
+    // Re-running a search is a freshness change, not a new observation.
+    gap:data.uncited.items[id]?.reason || null, currency:data.currency?.[id] || [],
+    assessment:data.observations?.items?.[id] || null,
+    references:data.referencePoints?.items[id] || null,
+    ...(data.capabilities?.metr?.context?.id === id && data.capabilities.metr.context.forecastSha256 === forecastFingerprint
+      && data.capabilities.metr.current ? { capability:[data.capabilities.metr.current.records,
+        data.capabilities.metr.current.longTasksVersion, data.capabilities.metr.current.swaaVersion] } : {}),
+  });
+}
+
+function watchStatus(row, saved){
+  if (!row) return 'No longer in the current forecast. Kept here so you can remove it.';
+  if (saved.forecast !== JSON.stringify(row.data)) return 'Forecast content changed. Review before acknowledging a new baseline.';
+  if (!publishedSignals) return 'Evidence unavailable; saved snapshot retained.';
+  const current = evidenceSnapshot(row.id);
+  if (saved.seen === current) return 'No observation change since your saved snapshot.';
+  const before = saved.seen ? JSON.parse(saved.seen) : {};
+  const after = JSON.parse(current);
+  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment', capability:'METR measurements', references:'reviewed reference points' };
+  const changed = Object.keys(fields).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => fields[key]);
+  return `Observation record changed since your saved snapshot: ${changed.join(', ')}. Inspect the source, dates and limitations before acknowledging.`;
+}
+
+function renderWatchlist(){
+  const host = document.getElementById('watchlist');
+  const focus = host.contains(document.activeElement)
+    ? { id:document.activeElement.dataset.watch || document.activeElement.dataset.ack, ack:Boolean(document.activeElement.dataset.ack) } : null;
+  const rows = new Map(forecastRecords().map(row => [row.id, row]));
+  host.innerHTML = Object.entries(missionState.watchlist).map(([id, saved]) => {
+    const row = rows.get(id);
+    return `<li class="watch-item"><div>${row ? `<a href="${row.href}">${htmlText(row.title)}</a>` : `<strong>${htmlText(saved.title)}</strong>`}
+      <p data-watch-status="${htmlText(id)}">${htmlText(watchStatus(row, saved))}</p>
+      <span class="assessment-label">${htmlText(row ? referenceLabel(id) + ' · ' + trajectoryFor(id).label : 'Forecast unavailable')}</span></div>
+      <div class="watch-actions">${row ? `<button type="button" class="text-button" data-inspect="${htmlText(id)}">Inspect</button>` : ''}
+      ${row && publishedSignals ? `<button type="button" class="text-button" data-ack="${htmlText(id)}">Acknowledge snapshot</button>` : ''}
+      <button type="button" class="text-button" data-watch="${htmlText(id)}">Remove</button></div></li>`;
+  }).join('') || '<li class="mission-empty">Nothing saved yet. Inspect a forecast below to start your watchlist.</li>';
+  if (focus) {
+    const target = host.querySelector(`[data-${focus.ack ? 'ack' : 'watch'}="${focus.id}"]`);
+    (target || document.getElementById('observationPrediction')).focus({ preventScroll:true });
+  }
+  setText('watchCount', `${Object.keys(missionState.watchlist).length} saved`);
+}
+
+function renderMissionControls(){
+  setText('missionStorage', missionStorageMessage);
+  document.getElementById('missionStorage').dataset.mode = missionStorageMode;
+  const count = questIds.filter(id => missionState.quests.includes(id)).length;
+  setText('questCount', `${count} / 4`);
+  document.getElementById('questProgress').value = count;
+  setText('questReward', count === 4
+    ? 'Field notes established. You completed four planning activities, not a prediction of your readiness.'
+    : 'Four ways to explore. Completion is not a readiness score.');
+  document.querySelectorAll('[data-quest]').forEach(node => {
+    const done = missionState.quests.includes(node.dataset.quest);
+    node.classList.toggle('is-complete', done);
+    node.querySelector('.quest-state').textContent = done ? 'Recorded' : 'To explore';
+  });
+  document.querySelectorAll('[data-readiness]').forEach(input => { input.checked = missionState.readiness.includes(input.dataset.readiness); });
+  document.getElementById('preparationAction').value = missionState.action;
+  document.getElementById('confirmPreparation').checked = missionState.actionConfirmed;
+  document.getElementById('confirmPreparation').disabled = !missionState.action;
+  document.getElementById('confirmComparison').disabled = comparedForecasts.size < 2;
+  setText('readinessCount', `${missionState.readiness.length + Number(missionState.actionConfirmed)} of 4 planning items recorded.`);
+  document.querySelectorAll('.watch-button').forEach(button => {
+    const saved = Boolean(missionState.watchlist[button.dataset.watch]);
+    button.textContent = saved ? 'Saved' : '+ Watch';
+    button.setAttribute('aria-pressed', String(saved));
+    button.setAttribute('aria-label', saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist');
+  });
+  renderWatchlist();
+  renderObservationDetail();
+  renderObservationHealth();
+  renderMetr();
+}
+function validTime(value){
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) && Date.parse(value) <= Date.now() + 300000;
+}
+
+function recordedTime(value){
+  if (!value) return 'Not recorded';
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${formatUtcDate(value)} (date only)` : formatUtcDateTime(value) || 'Not recorded';
+}
+
+function bundleFreshness(data){
+  if (!data || !validTime(data.updated) || !validTime(data.sourceFetchedAt)) return 'Source freshness unavailable';
+  if (['degraded', 'unavailable'].includes(data.sourceStatus?.mode)) return 'Source outage reported';
+  const age = Date.now() - Math.min(Date.parse(data.updated), Date.parse(data.sourceFetchedAt));
+  return age > 36 * 3600000 ? 'Stale published bundle (over 36 hours)' : 'Published bundle within 36 hours';
+}
+
+function trajectoryFor(id, data = publishedSignals){
+  const unknown = { label:'Trajectory not yet assessed', detail:'Insufficient measured data: no reviewed criterion and measurement are published for this exact forecast.', records:[] };
+  const layer = data?.observations;
+  if (!layer) return unknown;
+  if (layer.schemaVersion !== 1 || layer.forecastSha256 !== forecastFingerprint) {
+    return { ...unknown, detail:'Assessment version does not match this forecast. No direction is inferred.' };
+  }
+  const records = layer.items?.[id];
+  if (!Array.isArray(records) || !records.length) return unknown;
+  const valid = records.every(record => record && record.reviewed === true
+    && typeof record.reviewedBy === 'string' && record.reviewedBy.trim() && validTime(record.reviewedAt)
+    && ['supporting', 'mixed', 'challenging'].includes(record.direction)
+    && typeof record.criterion?.id === 'string' && record.criterion.id
+    && typeof record.criterion.version === 'string' && record.criterion.version
+    && typeof record.criterion.description === 'string' && record.criterion.description
+    && Number.isFinite(record.measurement?.value) && typeof record.measurement.unit === 'string' && record.measurement.unit
+    && validTime(record.measurement.observedAt) && safeHttpUrl(record.source?.url)
+    && !/(?:^|\.)((?:x|twitter)\.com)$/i.test(new URL(record.source.url).hostname)
+    && validTime(record.source.publishedAt) && validTime(record.source.fetchedAt)
+    && typeof record.source.name === 'string' && record.source.name
+    && typeof record.rationale === 'string' && record.rationale
+    && typeof record.limitations === 'string' && record.limitations);
+  if (!valid) return { ...unknown, detail:'A published assessment is incomplete. Treat trajectory as unassessed; the source record is not enough.' };
+  const directions = new Set(records.map(record => record.direction));
+  const direction = directions.size > 1 || directions.has('mixed') ? 'mixed' : records[0].direction;
+  return { label:{ supporting:'Supporting observations', mixed:'Mixed observations', challenging:'Challenging observations' }[direction],
+    detail:'Reviewed direction against the stated criteria, not proof that the target is achieved or a new probability.', records };
+}
+
+function referenceLabel(id){
+  const rows = publishedSignals?.referencePoints?.items[id];
+  return rows?.length ? `Reference: ${rows[0].relation} / ${rows[0].direction.replaceAll('-', ' ')}` : 'Inspect real-world references';
+}
+
+function renderMetr(){
+  const m = publishedSignals?.capabilities?.metr, s = m?.current;
+  const select = document.getElementById('metrModel');
+  const value = select.value;
+  const options = s?.records.map(r => `<option value="${htmlText(r.id)}">${htmlText(r.id)}</option>`).join('') || '<option>No measurements loaded</option>';
+  if (select.innerHTML !== options) { select.innerHTML = options; if (s?.records.some(r => r.id === value)) select.value = value; }
+  select.disabled = !s;
+  const r = s?.records.find(r => r.id === select.value);
+  setText('metrStatus', !m || m.status !== 'ok' ? `${m?.error || 'Source unavailable.'} ${s ? 'Last-good measurements retained.' : 'No measurements available.'}`
+    : Date.now() - Date.parse(m.lastCheckedAt) > 36 * 3600000 ? 'Stale source check (over 36 hours).' : 'Source checked; this does not mean a new evaluation.');
+  for (const key of ['p50', 'p80']) {
+    const v = r?.[key];
+    setText(key === 'p50' ? 'metrP50' : 'metrP80', v ? `${v.estimate.toFixed(2)} min (95% CI ${v.ci_low.toFixed(2)}–${v.ci_high.toFixed(2)})` : 'Not recorded');
+  }
+  for (const [id, date] of Object.entries({ metrRelease:r?.releaseDate, metrChecked:m?.lastCheckedAt,
+    metrFetched:m?.lastSuccessfulFetchAt, metrModified:s?.lastModified })) setText(id, recordedTime(date));
+  setText('metrRevision', s ? `${s.benchmark}; SHA-256 ${s.sha256}` : 'Not recorded');
+  setText('metrSetup', r?.scaffolds.join('; ') || 'Not recorded');
+  setText('metrChange', m?.changeSummary || 'No site collection history yet.');
+  setText('metrContext', m?.context?.id === document.getElementById('observationPrediction').value
+    && m.context.forecastSha256 === forecastFingerprint ? m.context.role : '');
+}
+
+function ensureMission(){
+  if (!missionState) missionState = loadMission();
+  return missionState;
+}
+function renderMission(){
+  if (!missionState) return;
+  if (exploreSession) renderMissionControls();
+  document.querySelectorAll('[data-watch]').forEach(button => {
+    const saved = Boolean(missionState.watchlist[button.dataset.watch]);
+    button.textContent = saved ? 'Saved to watchlist' : 'Save to watchlist';
+    button.setAttribute('aria-pressed', String(saved));
+  });
+}
+function watchControl(id){
+  const control = action(missionState?.watchlist[id] ? 'Saved to watchlist' : 'Save to watchlist', () => {});
+  control.dataset.watch = id;
+  control.classList.add('watch-button');
+  control.setAttribute('aria-pressed', String(Boolean(missionState?.watchlist[id])));
+  return control;
+}
+function renderObservationHealth(){
+  const coverage = publishedSignals?.referencePoints?.coverage;
+  setText('referenceCoverage', coverage
+    ? `${coverage.mapped}/${coverage.total} forecasts have reviewed reference mappings to ${coverage.sources} sources. This is coverage, not forecast success.`
+    : 'Reviewed reference data is unavailable.');
+  setText('observationFreshness', observationError
+    ? `Update unavailable. ${publishedSignals ? 'Last good record retained.' : 'No coherent source record loaded.'}`
+    : bundleFreshness(publishedSignals));
+  setText('observationCheck', observationError || (observationLastChecked
+    ? `Browser checked ${formatUtcDateTime(observationLastChecked)}; ${observationLatency} ms round trip.`
+    : 'No browser source check completed.'));
+  setText('observationTimes', publishedSignals
+    ? `Snapshot ${recordedTime(publishedSignals.updated)}. Collection ${recordedTime(publishedSignals.sourceFetchedAt)}. Browser checks do not reverify upstream sources.`
+    : 'Publication and collection dates appear only after a coherent record loads.');
+  byId('applyObservations').hidden = !pending;
+}
+function assertPublishedRecord(data, predictions, hash, previous){
+  const timelineData = predictions.years;
+  const horizonData = predictions.postSuperintelligence;
+  const forecastFingerprint = hash;
+  const publishedSignals = previous;
+  const forecastRecords = () => recordsFor(predictions);
+  function expectedSignalIds(){
   return [
     ...timelineData.flatMap(year => year.events.map((_, index) => `${year.year}-${index}`)),
     ...horizonData.items.map(item => `horizon-${item.id}`),
   ];
 }
+
 function hasCompleteSignalCoverage(data){
   /* REWRITTEN 2026-08-13 for the news migration. The previous gate demanded an embed for EVERY one of
      the 103 ids. With 7 cited and 96 honestly recorded as uncited it returned false, which set
@@ -1716,210 +1168,464 @@ function hasCompleteSignalCoverage(data){
     && data.sourceStatus.mode === 'news-verified'
     && data.sourceStatus.primarySource === 'live-verified-news';
 }
-/* Daily-refreshed About-the-Author: a sidecar author.json (regenerated daily from Peter Xing's
-   LinkedIn profile + his latest talks) overrides the inline fallback markup above. */
-(function loadAuthor(){
-  if (location.protocol === 'file:') return; // offline file:// — keep inline fallback
-  fetch('author.json', { cache:'no-cache' })
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(d){
-      if (!d) return;
-      if (d.name)     { var n = document.getElementById('authorName');     if (n) n.textContent = d.name; }
-      if (d.headline) { var h = document.getElementById('authorHeadline'); if (h) h.textContent = d.headline; }
-      if (d.linkedin) {
-        var lk = document.getElementById('authorLink');
-        var linkedIn = safeHttpUrl(d.linkedin);
-        if (lk && linkedIn) lk.href = linkedIn;
-      }
-      if (Array.isArray(d.bio) && d.bio.length) {
-        var bioEl = document.getElementById('authorBio');
-        if (bioEl) {
-          var link = bioEl.querySelector('.author-link');
-          bioEl.innerHTML = d.bio.map(function(p){ return '<p>' + htmlText(p) + '</p>'; }).join('') + (link ? link.outerHTML : '');
-        }
-      }
-      if (Array.isArray(d.roles) && d.roles.length) {
-        var rolesEl = document.getElementById('authorRoles');
-        if (rolesEl) rolesEl.innerHTML = d.roles.map(function(r){
-          return '<li><strong>' + htmlText(r.org) + '</strong><span>' + htmlText(r.detail) + '</span></li>';
-        }).join('');
-      }
-      if (Array.isArray(d.talks) && d.talks.length) {
-        var talksEl = document.getElementById('authorTalks');
-        if (talksEl) talksEl.innerHTML = d.talks.map(function(t){
-          var meta = htmlText(t.venue) + (t.year ? ' · ' + htmlText(t.year) : '');
-          var talkUrl = safeHttpUrl(t.url);
-          return '<a class="card author-talk" href="' + htmlText(talkUrl) + '" target="_blank" rel="noopener">' +
-                 '<span class="talk-venue">' + meta + '</span>' +
-                 '<h5>' + htmlText(t.title) + '</h5>' +
-                 '<p>' + htmlText(t.blurb) + '</p>' +
-                 '<span class="talk-go">Watch / listen →</span></a>';
-        }).join('');
-      }
-    })
-    .catch(function(){});
-})();
 
-function applySignalBundle(data){
-  validatePublishedBundle(data);
-  const initial = !publishedSignals;
-  const anchor = [...document.querySelectorAll('.event, .horizon-item, .chapter, .section-head')]
-    .find(node => {
-      const rect = node.getBoundingClientRect();
-      return rect.height > 0 && rect.bottom > 68 && rect.top < window.innerHeight;
-    });
-  const anchorTop = anchor?.getBoundingClientRect().top;
-  signalCoverageReady = hasCompleteSignalCoverage(data);
-  directSignals = data.embeds;
-  uncitedSignals = data.uncited.items;
-  contextSignals = data.context.items;
-  currencySignals = signalCoverageReady && data.currency ? data.currency : {};
-  xSignals = data.xSignals?.items || {};
-  publishedSignals = data;
-  if (initial) {
-    renderTimeline();
-    renderHorizon();
-    renderReality(data.reality);
-    requestAnimationFrame(revealHashTarget);
-  } else {
-    // Patch only changed evidence, never the forecast, reader, simulator or year containers.
-    document.querySelectorAll('[data-evidence-id]').forEach(host => {
-      if (host.dataset.snapshot === renderedEvidenceSnapshot(host.dataset.evidenceId)) return;
-      const open = [...host.querySelectorAll('details')].map(node => node.open);
-      host.innerHTML = predictionEvidenceBody(host.dataset.evidenceId) + xSignalCard(xSignals[host.dataset.evidenceId]);
-      host.querySelectorAll('details').forEach((node, i) => { node.open = Boolean(open[i]); });
-    });
-    renderReality(data.reality);
+function validatePublishedBundle(data){
+  const refs = data?.referencePoints, priorRefs = publishedSignals?.referencePoints;
+  const records = forecastRecords(), ids = new Set(records.map(row => row.id));
+  if (priorRefs && (!refs || Date.parse(refs.updatedAt) < Date.parse(priorRefs.updatedAt)))
+    throw new Error('Older or missing reference roster returned. Last good bundle retained.');
+  if (refs && (refs.schemaVersion !== 1 || refs.forecastSha256 !== forecastFingerprint || !validTime(refs.updatedAt)
+    || !refs.sources || !refs.items || !refs.gaps || refs.coverage?.total !== records.length
+    || refs.coverage.mapped !== Object.keys(refs.items).length
+    || refs.coverage.gaps !== Object.keys(refs.gaps).length
+    || refs.coverage.mapped + refs.coverage.gaps !== refs.coverage.total
+    || refs.coverage.sources !== new Set(Object.values(refs.items).flat().map(r => r.sourceId)).size
+    || refs.coverage.references !== Object.values(refs.items).flat().length
+    || [...Object.keys(refs.items), ...Object.keys(refs.gaps)].some(id => !ids.has(id))
+    || !records.every(row => {
+      const entries = refs.items[row.id];
+      return entries?.length ? !refs.gaps[row.id] && entries.every(r => {
+        const s = refs.sources[r.sourceId], m = r.metric;
+        return r.id === row.id && r.predictionText === row.title && s && /^https:\/\//.test(safeHttpUrl(s.url))
+          && !/(?:^|\.)(?:x|twitter)\.com$/i.test(new URL(s.url).hostname)
+          && ['measured','deployment','policy','trial','precursor','feasibility','constraint','counterevidence','theory'].includes(r.relation)
+          && ['supports-prerequisite','context','challenges'].includes(r.direction)
+          && [r.facet,r.why,r.doesNotEstablish,r.excerpt,s.title,s.organization].every(v => typeof v === 'string' && v.trim())
+          && (m === null || (Number.isFinite(m?.value) && [undefined,'>','<','~'].includes(m.operator)
+            && (m.high === undefined || Number.isFinite(m.high) && m.high >= m.value && !m.operator)
+            && typeof m.unit === 'string' && typeof m.coverage === 'string' && typeof m.evidence === 'string'))
+          && validTime(r.reviewedAt) && validTime(s.retrievedAt) && (s.publishedAt === null || validTime(s.publishedAt))
+          && (!s.publishedPeriod || /^\d{4}-(0[1-9]|1[0-2])$/.test(s.publishedPeriod))
+          && ['verified','unavailable','changed','unverified'].includes(s.health?.status)
+          && /^[a-f0-9]{64}$/.test(s.reviewSha256) && s.health.reviewSha256 === s.reviewSha256
+          && validTime(s.health.lastCheckedAt) && validTime(s.health.lastVerifiedAt)
+          && Date.parse(s.health.lastCheckedAt) >= Date.parse(s.health.lastVerifiedAt);
+      }) : typeof refs.gaps[row.id] === 'string';
+    }))) throw new Error('Reference schema or forecast binding mismatch. Last good bundle retained; revision review is pending.');
+  const m = data?.capabilities?.metr, s = m?.current;
+  const prior = publishedSignals?.capabilities?.metr;
+  if (prior?.current && (!s || Date.parse(m?.lastCheckedAt) < Date.parse(prior.lastCheckedAt)))
+    throw new Error('Older or missing METR data returned. Last good bundle retained.');
+  if (m && (m.schemaVersion !== 1 || !['ok', 'error', 'unavailable'].includes(m.status)
+    || (m.lastCheckedAt !== null && !validTime(m.lastCheckedAt)) || (m.status === 'ok' && !s)
+    || (s && (s.benchmark !== 'METR-Horizon-v1.1' || s.unit !== 'human-expert minutes'
+    || !validTime(s.retrievedAt) || !validTime(m.lastCheckedAt) || m.lastSuccessfulFetchAt !== s.retrievedAt
+    || Date.parse(m.lastCheckedAt) < Date.parse(s.retrievedAt) || !/^[a-f0-9]{64}$/.test(s.sha256)
+    || s.measuredAt !== null || s.publishedAt !== null
+    || s.intervalLevel !== 0.95 || !Array.isArray(s.records) || !s.records.length || s.records.length > 200
+    || !s.records.every(r => r && typeof r.id === 'string' && validTime(r.releaseDate) && Array.isArray(r.scaffolds)
+      && r.p80?.estimate <= r.p50?.estimate
+      && ['p50', 'p80'].every(k => [r[k]?.estimate, r[k]?.ci_low, r[k]?.ci_high].every(v => Number.isFinite(v) && v > 0)
+        && r[k].ci_low <= r[k].estimate && r[k].estimate <= r[k].ci_high))))))
+    throw new Error('METR measurement schema is invalid. Last good bundle retained.');
+  if (!forecastFingerprint || data?.forecastVersion?.schemaVersion !== 1 || data.forecastVersion.sha256 !== forecastFingerprint) {
+    throw new Error('Forecast and observation versions do not match. Reload after publication completes; existing data is retained.');
   }
-  document.querySelectorAll('[data-evidence-id]').forEach(host => {
-    host.dataset.snapshot = renderedEvidenceSnapshot(host.dataset.evidenceId);
-  });
-  renderSignalMetadata(data);
-  document.querySelectorAll('[data-reference]').forEach(link => {
-    link.textContent = referenceLabel(link.dataset.reference);
-  });
-  const stamp = document.getElementById('sigStamp');
-  stamp.textContent = `Prediction evidence · ${data.coverage.cited} of ${data.coverage.total} cited · `
-    + `${data.context.count} with dated background · ${data.uncited.count} searched with no qualifying source · `
-    + `zero search fallbacks · ${SIGNAL_SOURCE_LABELS[data.source]} · ${data.uncited.windowDays}-day currency window · bundle published ${formatUtcDateTime(data.updated)}`;
-  stamp.hidden = false;
-  renderMission();
-  if (!initial && anchor?.isConnected && anchorTop != null) {
-    window.scrollBy({ top:anchor.getBoundingClientRect().top - anchorTop, behavior:'instant' });
+  if (!validTime(data.updated) || !validTime(data.sourceFetchedAt) || !hasCompleteSignalCoverage(data)
+    || !Array.isArray(data.reality) || !data.reality.length || data.reality.length > 100
+    || !data.reality.every(row => row && typeof row.t === 'string' && ['news', 'none'].includes(row.kind)
+      && (row.kind !== 'news' || /^https:\/\//.test(safeHttpUrl(row.url))))
+    || data.context.count !== Object.keys(data.context.items).length) {
+    throw new Error('Published evidence failed timestamp, provenance or coverage validation. No replacement was applied.');
+  }
+  if (publishedSignals && Date.parse(data.updated) < Date.parse(publishedSignals.updated)) {
+    throw new Error('The server returned an older bundle. The newer local snapshot is retained.');
   }
 }
-/* X RETIREMENT 2026-08-13. Deleted: loadTwitter() injected the platform.twitter.com widgets.js script
-   into the live page and a click handler rendered an X-hosted tweet embed in place. This was the last
-   code that made a VISITOR's browser contact X, independently of whether any link remained on screen,
-   and it is the one GC ranked first for the reader. Removing it also removes the site's only remaining
-   third-party script origin. Nothing replaces it: news evidence is quoted verbatim in the card, with a
-   SHA-256 of the fetched article text checked at publish, so there is no remote embed to load. */
-
-document.querySelectorAll('[data-domain]').forEach(button => button.addEventListener('click', () => {
-  forecastFilters.domain = button.dataset.domain;
-  applyForecastFilters();
-}));
-[
-  ['branchFilter','branch'],
-  ['probabilityFilter','probability'],
-  ['themeFilter','theme'],
-].forEach(([id, key]) => document.getElementById(id).addEventListener('change', event => {
-  forecastFilters[key] = event.target.value;
-  applyForecastFilters();
-}));
-document.getElementById('changesOnlyToggle').addEventListener('click', event => {
-  forecastFilters.changed = event.currentTarget.getAttribute('aria-pressed') !== 'true';
-  applyForecastFilters();
-});
-document.getElementById('filterReset').addEventListener('click', resetForecastFilters);
-document.getElementById('atlasSearch').addEventListener('input', event => {
-  forecastFilters.query = event.target.value.slice(0, 120);
-  applyForecastFilters();
-  renderAtlasSearchResults();
-});
-document.getElementById('atlasSearch').addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
-    forecastFilters.query = '';
-    applyForecastFilters();
-    renderAtlasSearchResults();
-  } else if (event.key === 'ArrowDown') {
-    const first = document.querySelector('#atlasSearchResults .search-result[href]');
-    if (first) {
-      event.preventDefault();
-      first.focus();
+  validatePublishedBundle(data);
+  for (const source of Object.values(data.referencePoints?.sources || {})) {
+    for (const url of [source.dateEvidenceUrl, source.revisionIndex?.url].filter(Boolean)) engine.safeSourceUrl(url);
+  }
+  for (const entries of Object.values(data.currency || {})) {
+    if (!Array.isArray(entries)) throw new Error('The later-reference layer has an invalid record shape.');
+    for (const entry of entries) engine.safeSourceUrl(entry.url);
+  }
+}
+function updateExploreSnapshot(){
+  publishedSignals = model?.bundle || null;
+  forecastFingerprint = model?.fingerprint || '';
+  observationError = '';
+  if (exploreSession) exploreSession.update();
+}
+function bindMissionControls(){
+  byId('observationPrediction').addEventListener('change', () => { renderObservationDetail(); renderMetr(); });
+  byId('metrModel').addEventListener('change', renderMetr);
+  byId('observationDetail').addEventListener('toggle', event => {
+    if (event.target.matches('.source-inspection') && event.target.open) recordComparison(byId('observationPrediction').value);
+  }, true);
+  byId('confirmComparison').addEventListener('click', () => {
+    if (comparedForecasts.size >= 2) completeQuest('evidence-v1');
+  });
+  document.querySelectorAll('[data-readiness]').forEach(input => input.addEventListener('change', () => {
+    missionState.readiness = readinessIds.filter(id => document.querySelector(`[data-readiness="${id}"]`).checked);
+    saveMission(); renderMission();
+  }));
+  byId('preparationAction').addEventListener('change', event => {
+    missionState.action = event.target.value;
+    missionState.actionConfirmed = false;
+    missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
+    saveMission(); renderMission();
+  });
+  byId('confirmPreparation').addEventListener('change', event => {
+    missionState.actionConfirmed = Boolean(missionState.action && event.target.checked);
+    missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
+    if (missionState.actionConfirmed) missionState.quests.push('action-v1');
+    saveMission(); renderMission();
+  });
+  const reset = byId('missionResetDialog');
+  byId('missionReset').addEventListener('click', () => reset.showModal());
+  byId('cancelMissionReset').addEventListener('click', () => reset.close());
+  byId('confirmMissionReset').addEventListener('click', () => {
+    missionState = emptyMission(); comparedForecasts.clear();
+    missionStorageMode = 'local'; missionStorageMessage = 'Saved on this browser only.';
+    saveMission(); renderMission(); reset.close(); byId('missionReset').focus();
+    setText('missionAnnouncement', missionStorageMode === 'local' ? 'Planning data cleared.' : 'Session data cleared; browser storage could not be changed.');
+  });
+  byId('refreshObservations').addEventListener('click', loadRecord);
+  byId('applyObservations').addEventListener('click', () => {
+    if (pending) applyRecord(pending.candidate, pending.predictions);
+  });
+}
+function recordComparison(id){
+  if (!model?.records.some(row => row.id === id)) return;
+  comparedForecasts.add(id);
+  byId('confirmComparison').disabled = comparedForecasts.size < 2;
+}
+document.addEventListener('click', event => {
+  const watch = event.target.closest('[data-watch]');
+  const acknowledge = event.target.closest('[data-ack]');
+  const inspect = event.target.closest('[data-inspect]');
+  const read = event.target.closest('[data-read-chapter]');
+  if (watch) {
+    ensureMission();
+    const id = watch.dataset.watch, row = forecastRecords().find(row => row.id === id);
+    if (missionState.watchlist[id]) delete missionState.watchlist[id];
+    else if (row) missionState.watchlist[id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(id) };
+    else { setText('timelineAnnouncement', 'This forecast is unavailable; no saved record was changed.'); return; }
+    saveMission(); renderMission();
+    setText('timelineAnnouncement', `${missionState.watchlist[id] ? 'Forecast saved.' : 'Forecast removed.'} ${missionStorageMessage}`);
+  }
+  if (acknowledge) {
+    ensureMission();
+    const row = forecastRecords().find(row => row.id === acknowledge.dataset.ack);
+    if (row && missionState.watchlist[row.id] && publishedSignals) {
+      missionState.watchlist[row.id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(row.id) };
+      saveMission(); renderMission();
     }
   }
-});
-document.getElementById('searchClear').addEventListener('click', () => {
-  forecastFilters.query = '';
-  applyForecastFilters();
-  renderAtlasSearchResults();
-  document.getElementById('atlasSearch').focus();
-});
-document.getElementById('atlasSearchResults').addEventListener('click', event => {
-  const result = event.target.closest('.search-result[href]');
-  if (!result) return;
-  const chapterIndex = result.dataset.searchChapter;
-  if (chapterIndex != null) {
-    event.preventDefault();
-    window.openReader?.(Number(chapterIndex));
+  if (inspect) {
+    openExplore('#observations');
+    const select = byId('observationPrediction');
+    select.value = inspect.dataset.inspect;
+    select.dispatchEvent(new Event('change'));
+    select.focus({ preventScroll:true }); select.scrollIntoView({ block:'center', behavior:'instant' });
   }
-  document.getElementById('atlasSearchResults').hidden = true;
-  setTimeout(revealHashTarget, 0);
-});
-document.addEventListener('click', event => {
-  if (event.target.closest('.atlas-search, .atlas-search-results')) return;
-  document.getElementById('atlasSearchResults').hidden = true;
-});
-window.addEventListener('hashchange', revealHashTarget);
-updateFilterControls();
-document.getElementById('overlayToggle').addEventListener('click', () => {
-  overlayOn = !overlayOn;
-  document.getElementById('overlaySwitch').classList.toggle('on', overlayOn);
-  document.getElementById('overlayToggle').setAttribute('aria-pressed', String(overlayOn));
-  document.getElementById('overlayToggle').querySelector('span:last-child').textContent =
-    overlayOn ? 'Evidence visible' : 'Evidence hidden';
-  document.getElementById('timelineAtlas').classList.toggle('evidence-off', !overlayOn);
+  if (read && byId('reader').open) {
+    ensureMission(); completeQuest('chapter-v1');
+    read.textContent = 'Reading recorded'; read.setAttribute('aria-pressed', 'true');
+    read.closest('.reader-context').querySelector('[role="status"]').textContent = missionStorageMessage;
+  }
 });
 
-/* ---------- Six Ds ---------- */
-const sixDs = [
-  ['Digitised', 'Once intelligence is represented as data, it inherits the exponential. Models, weights and tokens replace handcrafted expertise.'],
-  ['Deceptive', 'Early progress looks underwhelming — chatbots that hallucinate — so most people dismiss the curve right before it bends.'],
-  ['Disruptive', 'Cheaper, better AI undercuts incumbents: search, coding, translation, tutoring, diagnosis, design — all reorganised.'],
-  ['Demonetised', 'The marginal cost of intelligence falls toward zero. What cost a salary now costs an API call.'],
-  ['Dematerialised', 'Whole product categories collapse into software — the studio, the office, the call centre, the analyst all fit on a phone.'],
-  ['Democratised', 'Finally, the capability is everywhere and cheap. A teenager with a laptop wields what nations once couldn\'t buy.'],
+function initializeExplore(){
+  ensureMission();
+  let timelineData = forecastData?.years || [];
+  let predictionModelState = model ? 'loaded' : 'loading';
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  const frames = new Set(), timers = new Set();
+  function requestAnimationFrame(callback){
+    const id = window.requestAnimationFrame(time => { frames.delete(id); callback(time); });
+    frames.add(id); return id;
+  }
+  function setTimeout(callback, delay){
+    const id = window.setTimeout(() => { timers.delete(id); callback(); }, delay);
+    timers.add(id); return id;
+  }
+  function clearTimeout(id){ timers.delete(id); window.clearTimeout(id); }
+  const probabilitySimulatorState = {
+  anchors:null,
+  values:null,
+  controlsBound:false,
+  updateTimer:0,
+};
+const simulatorBranchGeometry = [
+  { key:'managed', variant:'managed', d:'M274 168 C322 128 352 78 412 76' },
+  { key:'handoff', variant:'managed', d:'M428 75 C500 72 558 66 642 65' },
+  { key:'default', variant:'default', d:'M274 170 C330 170 362 170 412 170 C500 170 558 170 650 170' },
+  { key:'ungoverned', variant:'ungoverned', d:'M274 172 C324 214 356 266 412 270 C500 276 560 280 650 282' },
 ];
+const simulatorNodeScale = {
+  agi:{ id:'sim-node-agi', base:8, range:6 },
+  default:{ id:'sim-node-default', base:7, range:6 },
+  ungoverned:{ id:'sim-node-ungoverned', base:7, range:6 },
+  handoff:{ id:'sim-node-handoff', base:6, range:6 },
+};
+  function fasterBranchRange(years){
+  const anchored = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
+  const ungoverned = anchored.find(event => event.simAnchor === 'ungoverned');
+  const defaultPath = anchored.find(event => event.simAnchor === 'default');
+  if (ungoverned && defaultPath) {
+    return { start:ungoverned.year, end:defaultPath.year, label:`${ungoverned.year}–${defaultPath.year}` };
+  }
+  const match = years.map(year => year.summary).join(' ').match(/\b(20\d{2})\s*[–-]\s*(20\d{2})\b/);
+  if (!match) return null;
+  return { start:Number(match[1]), end:Number(match[2]), label:`${match[1]}–${match[2]}` };
+}
+
+function simulatorAnchors(years){
+  const events = years.flatMap(year => year.events.map(event => ({ ...event, year:year.year })));
+  const anchors = {
+    agi:events.find(event => event.simAnchor === 'agi' && Number.isFinite(event.prob)),
+    managed:events.find(event => event.simAnchor === 'managed' && Number.isFinite(event.prob)),
+    default:events.find(event => event.simAnchor === 'default' && Number.isFinite(event.prob)),
+    ungoverned:events.find(event => event.simAnchor === 'ungoverned' && Number.isFinite(event.prob)),
+    handoff:events.find(event => event.simAnchor === 'handoff' && Number.isFinite(event.prob)),
+  };
+  return Object.values(anchors).every(Boolean) ? anchors : null;
+}
+
+function simulatedProbabilities(anchors, assumptions){
+  const { capability, coordination, deployment } = assumptions;
+  const round = value => Math.round(clampNumber(value, 5, 95));
+  return {
+    agi:round(anchors.agi.prob + capability * .55),
+    managed:round(anchors.managed.prob - capability * .15 + coordination * .65),
+    default:round(anchors.default.prob + capability * .45 - coordination * .35 - deployment * .08),
+    ungoverned:round(anchors.ungoverned.prob + capability * .5 - coordination * .55),
+    handoff:round(anchors.handoff.prob + coordination * .35 - deployment * .45),
+  };
+}
+
+function simulatorAssumptions(){
+  return {
+    capability:Number(document.getElementById('simCapability').value),
+    coordination:Number(document.getElementById('simCoordination').value),
+    deployment:Number(document.getElementById('simDeployment').value),
+  };
+}
+
+function formatSimulatorAssumption(value){
+  if (value === 0) return 'Baseline';
+  return (value > 0 ? '+' : '−') + Math.abs(value);
+}
+
+function simulatorBranchStyle(value){
+  const share = clampNumber(value, 0, 100) / 100;
+  return {
+    width:(1.5 + share * 8).toFixed(2),
+    opacity:(.22 + share * .74).toFixed(2),
+  };
+}
+
+function animateSimulatorValue(element, next, animate){
+  if (!element) return;
+  const previous = Number.parseInt(element.textContent, 10);
+  if (!animate || motionQuery.matches || !Number.isFinite(previous)) {
+    element.textContent = next + '%';
+    return;
+  }
+  const token = String((Number(element.dataset.animationToken) || 0) + 1);
+  element.dataset.animationToken = token;
+  const started = performance.now();
+  const duration = 260;
+  function frame(now){
+    if (element.dataset.animationToken !== token) return;
+    const progress = clampNumber((now - started) / duration, 0, 1);
+    const value = Math.round(previous + (next - previous) * (1 - Math.pow(1 - progress, 3)));
+    element.textContent = value + '%';
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function setSimulatorBranch(key, value){
+  const group = document.getElementById('sim-branch-' + key);
+  const fill = document.getElementById('sim-path-' + key);
+  if (!group || !fill) return;
+  const style = simulatorBranchStyle(value);
+  group.style.setProperty('--branch-width', style.width);
+  group.style.setProperty('--branch-opacity', style.opacity);
+  /* Filled length is the quantity. getTotalLength() is geometry not layout, so it is correct before
+     first paint and inside a hidden route, where a bounding-box read would be 0 and draw it empty. */
+  const total = typeof fill.getTotalLength === 'function' ? fill.getTotalLength() : 0;
+  if (total > 0) {
+    const filled = total * clampNumber(value, 0, 100) / 100;
+    fill.style.strokeDasharray = `${filled.toFixed(2)} ${(total - filled + 1).toFixed(2)}`;
+  }
+  group.setAttribute('data-probability', String(value));
+}
+
+function setSimulatorNode(key, value){
+  const scale = simulatorNodeScale[key];
+  if (!scale) return;
+  const node = document.getElementById(scale.id);
+  if (!node) return;
+  node.setAttribute('r', (scale.base + clampNumber(value, 0, 100) / 100 * scale.range).toFixed(2));
+}
+
+function updateProbabilitySimulator(animate = true){
+  if (!probabilitySimulatorState.anchors) return;
+  const assumptions = simulatorAssumptions();
+  const values = simulatedProbabilities(probabilitySimulatorState.anchors, assumptions);
+  probabilitySimulatorState.values = values;
+  document.getElementById('simCapabilityOutput').textContent = formatSimulatorAssumption(assumptions.capability);
+  document.getElementById('simCoordinationOutput').textContent = formatSimulatorAssumption(assumptions.coordination);
+  document.getElementById('simDeploymentOutput').textContent = formatSimulatorAssumption(assumptions.deployment);
+  document.getElementById('simCapability').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.capability));
+  document.getElementById('simCoordination').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.coordination));
+  document.getElementById('simDeployment').setAttribute('aria-valuetext', formatSimulatorAssumption(assumptions.deployment));
+  Object.entries(values).forEach(([key, value]) => {
+    animateSimulatorValue(document.getElementById('sim-card-' + key), value, animate);
+    document.getElementById('sim-rail-' + key)?.style.setProperty('--prob', value + '%');
+    const row = document.querySelector(`[data-simulator-outcome="${key}"]`);
+    if (row) row.setAttribute('aria-label', `${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${value} percent.`);
+  });
+  setSimulatorBranch('managed', values.managed);
+  setSimulatorBranch('handoff', values.handoff);
+  setSimulatorBranch('default', values.default);
+  setSimulatorBranch('ungoverned', values.ungoverned);
+  Object.keys(simulatorNodeScale).forEach(key => setSimulatorNode(key, values[key]));
+  const branches = [
+    ['Managed pause', values.managed],
+    ['Default-path superintelligence', values.default],
+    ['Ungoverned takeoff', values.ungoverned],
+  ].sort((a, b) => b[1] - a[1]);
+  /* Which branch leads is categorical, so it gets a categorical mark: proportional encodings alone
+     cannot show a lead CHANGING HANDS, which is the most decisive thing these assumptions can do. */
+  const leaders = { 'Managed pause':'managed', 'Default-path superintelligence':'default', 'Ungoverned takeoff':'ungoverned' };
+  const leadingKey = leaders[branches[0][0]];
+  simulatorBranchGeometry.forEach(branch => {
+    document.getElementById('sim-branch-' + branch.key)
+      ?.classList.toggle('is-leading', branch.key === leadingKey);
+  });
+  const isBaseline = Object.values(assumptions).every(value => value === 0);
+  document.getElementById('simulatorInterpretation').textContent = isBaseline
+    ? `Published baseline: AGI ${values.agi}%, managed pause ${values.managed}%, default path ${values.default}%, ungoverned takeoff ${values.ungoverned}%, managed handoff ${values.handoff}%.`
+    : `Under these assumptions, ${branches[0][0].toLowerCase()} carries the strongest simulated pressure at ${branches[0][1]}%, while the end-2026 AGI anchor moves to ${values.agi}%.`;
+  const description = document.getElementById('simulatorSvgDesc');
+  if (description) description.textContent =
+    `A branch map from the ${values.agi}% end-2026 AGI anchor to a ${values.managed}% managed pause, ${values.default}% default path, ${values.ungoverned}% ungoverned takeoff and ${values.handoff}% managed handoff.`;
+  document.querySelectorAll('[data-sim-preset]').forEach(button => {
+    const preset = simulatorPresets[button.dataset.simPreset];
+    const active = preset && Object.keys(preset).every(key => preset[key] === assumptions[key]);
+    button.classList.toggle('active', active);
+  });
+  const map = document.getElementById('probabilitySimulatorMap');
+  if (animate && !motionQuery.matches) {
+    map.classList.remove('is-updating');
+    void map.offsetWidth;
+    map.classList.add('is-updating');
+    clearTimeout(probabilitySimulatorState.updateTimer);
+    probabilitySimulatorState.updateTimer = setTimeout(() => map.classList.remove('is-updating'), 380);
+  }
+}
+
+function bindProbabilitySimulatorControls(){
+  if (probabilitySimulatorState.controlsBound) return;
+  probabilitySimulatorState.controlsBound = true;
+  ['simCapability','simCoordination','simDeployment'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => updateProbabilitySimulator(true));
+  });
+  document.querySelectorAll('[data-sim-preset]').forEach(button => button.addEventListener('click', () => {
+    const preset = simulatorPresets[button.dataset.simPreset];
+    if (!preset) return;
+    document.getElementById('simCapability').value = preset.capability;
+    document.getElementById('simCoordination').value = preset.coordination;
+    document.getElementById('simDeployment').value = preset.deployment;
+    updateProbabilitySimulator(true);
+  }));
+}
+
+function renderProbabilitySimulator(years, branchRange){
+  const host = document.getElementById('probabilitySimulatorMap');
+  const grid = document.getElementById('simulatorProbabilityGrid');
+  if (!host || !grid) return;
+  const anchors = simulatorAnchors(years);
+  probabilitySimulatorState.anchors = anchors;
+  bindProbabilitySimulatorControls();
+  const controls = ['simCapability','simCoordination','simDeployment'].map(id => document.getElementById(id));
+  controls.forEach(control => { control.disabled = !anchors; });
+  if (!anchors) {
+    host.className = 'simulator-map';
+    const message = predictionModelState === 'loading'
+      ? 'Loading forecast anchors…'
+      : predictionModelState === 'offline'
+        ? 'The simulator needs predictions.json when this file is opened offline.'
+        : 'Published simulator anchors are unavailable.';
+    host.innerHTML = `<div class="simulator-loading">${message}</div>`;
+    grid.innerHTML = '';
+    document.getElementById('simulatorInterpretation').textContent = message;
+    return;
+  }
+  const initial = simulatedProbabilities(anchors, simulatorAssumptions());
+  host.className = 'simulator-map simulator-ready';
+  host.innerHTML = `
+    <svg viewBox="0 0 720 330" role="img" aria-labelledby="simulatorSvgTitle simulatorSvgDesc">
+      <title id="simulatorSvgTitle">Interactive probability branch map from 2026 to 2040</title>
+      <desc id="simulatorSvgDesc">A branch map using published forecast anchors.</desc>
+      <line class="sim-grid-line" x1="34" y1="306" x2="690" y2="306"/>
+      <text class="sim-year" x="42" y="322" text-anchor="middle">2026</text>
+      <text class="sim-year" x="420" y="322" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'}</text>
+      <text class="sim-year" x="650" y="322" text-anchor="middle">2040</text>
+      <path class="sim-trunk" d="M52 170 C92 170 116 170 146 170 M164 170 C205 170 232 170 266 170"/>
+      ${simulatorBranchGeometry.map(branch => `
+      <g id="sim-branch-${branch.key}" class="sim-branch-group ${branch.variant}">
+        <path class="sim-branch ${branch.variant}" d="${branch.d}"/>
+        <path id="sim-path-${branch.key}" class="sim-branch-fill ${branch.variant}" d="${branch.d}"/>
+      </g>`).join('')}
+      <g class="sim-node">
+        <circle class="sim-node-ring" cx="43" cy="170" r="9"/><circle class="sim-node-core" cx="43" cy="170" r="3"/>
+        <text class="sim-sublabel" x="43" y="194" text-anchor="middle">NOW</text>
+      </g>
+      <g class="sim-node">
+        <circle id="sim-node-agi" class="sim-node-ring" cx="155" cy="170" r="11"/><circle class="sim-node-core" cx="155" cy="170" r="4"/>
+        <text class="sim-label" x="155" y="132" text-anchor="middle">HUMAN-LEVEL AGI</text>
+        <text class="sim-sublabel" x="155" y="147" text-anchor="middle">END OF 2026</text>
+      </g>
+      <rect class="sim-gate" x="264" y="162" width="16" height="16" rx="3" transform="rotate(45 272 170)"/>
+      <text class="sim-sublabel" x="272" y="198" text-anchor="middle">BRANCH POINT</text>
+      <g class="sim-node">
+        <rect class="sim-gate" x="412" y="67" width="16" height="16" rx="3"/>
+        <text class="sim-label" x="420" y="36" text-anchor="middle">MANAGED PAUSE</text>
+        <text class="sim-sublabel" x="420" y="52" text-anchor="middle">FRONTIER TRAINING · 2029</text>
+      </g>
+      <g class="sim-node">
+        <circle id="sim-node-handoff" class="sim-node-ring" cx="650" cy="65" r="10"/><circle class="sim-node-core" cx="650" cy="65" r="3"/>
+        <text class="sim-label" x="650" y="36" text-anchor="middle">MANAGED HANDOFF</text>
+        <text class="sim-sublabel" x="650" y="52" text-anchor="middle">2040</text>
+      </g>
+      <g class="sim-node">
+        <circle id="sim-node-default" class="sim-node-ring" cx="420" cy="170" r="11"/><circle class="sim-node-core" cx="420" cy="170" r="4"/>
+        <text class="sim-label" x="420" y="140" text-anchor="middle">DEFAULT PATH</text>
+        <text class="sim-sublabel" x="420" y="156" text-anchor="middle">TOP-EXPERT / ASI · 2030</text>
+      </g>
+      <g class="sim-node">
+        <circle id="sim-node-ungoverned" class="sim-node-ring" cx="420" cy="270" r="11"/><circle class="sim-node-core" cx="420" cy="270" r="4"/>
+        <text class="sim-label" x="420" y="240" text-anchor="middle">UNGOVERNED TAKEOFF</text>
+        <text class="sim-sublabel" x="420" y="256" text-anchor="middle">${branchRange ? branchRange.label : '2028–2030'} WINDOW</text>
+      </g>
+    </svg>`;
+  grid.innerHTML = Object.keys(simulatorOutcomeLabels).map(key => `
+    <div class="simulator-outcome" data-simulator-outcome="${key}" aria-label="${simulatorOutcomeLabels[key].title}. Conditional likelihood: ${initial[key]} percent.">
+      <div class="simulator-outcome-copy"><strong>${simulatorOutcomeLabels[key].title}</strong><span>${simulatorOutcomeLabels[key].meta}</span></div>
+      <span class="simulator-outcome-rail" id="sim-rail-${key}" style="--prob:${initial[key]}%" aria-hidden="true"><i></i></span>
+      <strong class="simulator-outcome-stat" id="sim-card-${key}">${initial[key]}%</strong>
+    </div>
+  `).join('');
+  updateProbabilitySimulator(false);
+}
+  /* ---------- Six Ds ---------- */
+
 document.getElementById('sixDs').innerHTML = sixDs.map((d,i) => `
   <div class="drow">
     <div class="dword"><span>${String(i+1).padStart(2,'0')}</span> &nbsp;${d[0]}</div>
     <div class="ddesc">${d[1]}</div>
   </div>`).join('');
 
-/* ---------- Five Futures, One Portfolio ---------- */
-const futures = [
-  { key:'S1', name:'Disorderly Labour Shock', col:'var(--cp-accent)', prob:'Plausible · near-term', desc:'Capability outruns institutions. Jobs vanish faster than safety nets adapt, and the gains pool at the top before redistribution catches up.',
-    moves:['Hold a cash & skills buffer for 12–18 months','Diversify income away from a single automatable role','Back UBI / distribution politics early','Build local, hard-to-offshore relationships'] },
-  { key:'S2', name:'Fast Abundance', col:'var(--cp-accent)', prob:'Plausible · 2029–2033', desc:'Energy, compute and robotics compound and the dividend actually reaches people. Costs of the essentials fall through the floor.',
-    moves:['Own a slice of productive assets early','Learn to direct AI, not compete with it','Position for a demonetised cost of living','Help build distribution so abundance spreads'] },
-  { key:'S3', name:'The Gentle Singularity', col:'var(--cp-accent)', prob:'Central case', desc:'No single dramatic day — capability seeps into everything gradually. Most people barely notice the threshold being crossed.',
-    moves:['Treat adaptation as a continuous practice','Re-skill on a rolling 6-month cadence','Automate your own life first to feel the curve','Keep optionality; avoid 10-year bets'] },
-  { key:'S4', name:'The Long Horizon', col:'var(--cp-accent)', prob:'Possible · slower', desc:'Bottlenecks — energy build-out, regulation, trust, robotics — stretch timelines into the 2040s. The change is real but unhurried.',
-    moves:['Invest in durable, compounding skills','Don\'t over-rotate on hype cycles','Build institutions and community capacity','Stay solvent and patient'] },
-  { key:'S5', name:'Existential Risk', col:'var(--cp-accent)', prob:'Low probability · high stakes', desc:'Misaligned or weaponised superintelligence threatens catastrophe. Low odds, but the downside is unbounded — so it earns a hedge.',
-    moves:['Support alignment & governance work','Favour resilient, decentralised systems','Avoid single points of catastrophic failure','Treat safety as everyone\'s problem'] },
-  { key:'S6', name:'The Sixth Thread: Human Merger', col:'var(--cp-accent)', prob:'Runs through all five', desc:'Across every branch, the line between human and machine blurs — BCIs, cognitive tools, biological enhancement. We don\'t just witness the change; we become it.',
-    moves:['Stay curious about enhancement, not fearful','Guard agency and identity deliberately','Keep a human core: relationships, meaning, body','Decide your own augmentation boundaries'] },
-];
-const allocBuckets = [
-  { name:'Cash & skills buffer',    sub:'Hedges S1 · Disorderly Labour Shock', col:'var(--cp-accent)', def:20 },
-  { name:'Productive assets',       sub:'Hedges S2 · Fast Abundance',           col:'var(--cp-accent)', def:30 },
-  { name:'Adaptive re-skilling',    sub:'Hedges S3 · The Gentle Singularity',   col:'var(--cp-accent)',  def:20 },
-  { name:'Community & local ties',  sub:'Hedges S4 · The Long Horizon',         col:'var(--cp-accent)', def:15 },
-  { name:'Alignment & safety',      sub:'Hedges S5 · Existential Risk',         col:'var(--cp-accent)', def:5  },
-  { name:'Enhancement optionality', sub:'Hedges S6 · The Sixth Thread',         col:'var(--cp-accent)', def:10 },
-];
+
+  /* ---------- Five Futures, One Portfolio ---------- */
+
+
 document.getElementById('futTabs').setAttribute('role', 'tablist');
 document.getElementById('futTabs').setAttribute('aria-label', 'Future branches');
 document.getElementById('futTabs').innerHTML = futures.map((f,i) =>
@@ -1966,7 +1672,8 @@ document.querySelectorAll('.fut-tab').forEach(tab => {
   });
 });
 
-/* ---------- One Portfolio: net-worth allocator ---------- */
+
+  /* ---------- One Portfolio: net-worth allocator ---------- */
 (function(){
   const rowsEl = document.getElementById('allocRows');
   const totalEl = document.getElementById('allocTotal');
@@ -2046,94 +1753,9 @@ document.querySelectorAll('.fut-tab').forEach(tab => {
   render();
 })();
 
-/* ---------- Book star map ---------- */
-const systems = [
-  { id:'op', x:50,  y:240, label:'Opening', sub:'launch vector', col:'var(--cp-accent)' },
-  { id:'01', x:120, y:170, label:'01 · Why', sub:'origin system', col:'var(--cp-accent)' },
-  { id:'02', x:200, y:215, label:'02 · Abundance', sub:'engine room', col:'var(--cp-accent)' },
-  { id:'03', x:165, y:110, label:'03 · Human Stack', sub:'ordinary life', col:'var(--cp-accent)' },
-  { id:'04', x:265, y:140, label:'04 · Energy', sub:'compute lanes', col:'var(--cp-accent)' },
-  { id:'05', x:300, y:225, label:'05 · Work', sub:'new ladders', col:'var(--cp-accent)' },
-  { id:'06', x:355, y:90,  label:'06 · Portfolio', sub:'scenario bets', col:'var(--cp-accent)' },
-];
-const links = [['op','01'],['01','02'],['02','03'],['02','04'],['04','06'],['02','05'],['05','06'],['03','04']];
-const sm = document.getElementById('starmap');
-const byId = Object.fromEntries(systems.map(s=>[s.id,s]));
-let smHtml = `<rect x="0" y="0" width="420" height="300" fill="var(--cp-bg-elevated)"/>`;
-smHtml += `<path d="M28 252 C105 44 288 42 392 246" fill="none" stroke="var(--cp-border)" stroke-width="1"/>
-  <path d="M42 266 C164 174 276 164 378 62" fill="none" stroke="var(--cp-border)" stroke-width="1" stroke-dasharray="4 5"/>`;
-links.forEach(([a,b]) => { const A=byId[a],B=byId[b]; smHtml += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="var(--cp-border-strong)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>`; });
-systems.forEach(s => {
-  smHtml += `<g class="sysnode" data-sys="${s.id}" role="button" tabindex="0" aria-label="Open ${s.label} chapter" style="cursor:pointer">
-    <circle cx="${s.x}" cy="${s.y}" r="7" fill="${s.col}"/>
-    <circle cx="${s.x}" cy="${s.y}" r="13" fill="none" stroke="${s.col}" stroke-width="1" opacity="0.4"/>
-    <text x="${s.x}" y="${s.y-18}" text-anchor="middle" fill="var(--cp-text)" font-size="9" font-family="Consolas,monospace" font-weight="700">${s.label}</text>
-    <text x="${s.x}" y="${s.y+24}" text-anchor="middle" fill="var(--cp-text-muted)" font-size="7" font-family="Consolas,monospace">${s.sub}</text>
-  </g>`;
-});
-sm.innerHTML = smHtml;
 
-/* ---------- Chapters ---------- */
-const chapters = [
-  { idx:'00', route:'Capability', rc:'var(--cp-accent)', title:'How to Use This Book', body:'<p>This is a navigation map, not a manual. Pick a <strong>route</strong> — capability, abundance, or risk — and jump between star systems. It\'s a living document: forecasts update as reality sends new signals.</p>' },
-  { idx:'—', route:'Capability', rc:'var(--cp-accent)', title:'Opening — The Future Stopped Arriving Politely', body:'<p>For decades the future RSVP\'d in advance. Now it just shows up. <strong>When intelligence becomes cheap, every plan changes</strong> — so the task is to build toward abundance instead of bracing for panic.</p>' },
-  { idx:'01', route:'Abundance', rc:'var(--cp-accent)', title:'From Scarcity to Abundance — My Why', body:'<p>Peter\'s origin: from Harbin on the Black Dragon River to Hobart and Sydney, climbing the migrant ladder as hard-won skills — English, travel agencies, taxis, tax advisory — were devalued one by one by software. A hospital bed became the turn toward transhumanism: <strong>if scarcity made us, abundance can remake us.</strong></p>' },
-  { idx:'02', route:'Abundance', rc:'var(--cp-accent)', title:'The Abundance Engine', body:'<p>The <strong>Six Ds</strong> carry every exponential from digitisation to democratisation. The abundance stack — energy, compute, robots, capital, policy, trust — is assembling now: physical AGI and Optimus-class labour, decentralised AI token networks, AGI compressing into 2026–2027, Diamandis\'s "middle of the singularity," Hassabis\'s AGI around 2030. The bottleneck isn\'t intelligence; it\'s <strong>bureaucracy</strong>.</p>' },
-  { idx:'03', route:'Abundance', rc:'var(--cp-accent)', title:'The Human Stack', body:'<p>Four layers to secure, bottom-up: <strong>survival, economic, social, and potential.</strong> The goal is adaptive plans, not bunker fantasies — resilience you can actually live inside.</p>' },
-  { idx:'04', route:'Capability', rc:'var(--cp-accent)', title:'Energy, Compute, Capacity', body:'<p>Energy is the floor of abundance; compute is your access to intelligence. Pair them with productive infrastructure — homes, farms, workshops, community hubs — so the curve produces <strong>things people can touch</strong>, not just charts.</p>' },
-  { idx:'05', route:'Abundance', rc:'var(--cp-accent)', title:'Work After Work', body:'<p>The ladder breaks before the top disappears. Four work identities replace the single career, and — per <em>Alyse\'s View</em> — sometimes the winning move is simply to <strong>keep it simple</strong> and stay human-shaped.</p>' },
-  { idx:'06', route:'Risk', rc:'var(--cp-accent)', title:'Five Futures, One Portfolio', body:'<p>Disorderly labour shock, fast abundance, the gentle singularity, the long horizon, and existential risk — plus a sixth thread, the human merger, running through them all. Don\'t predict one; <strong>hold a portfolio</strong> that pays off across branches.</p>' },
-  { idx:'07', route:'Capability', rc:'var(--cp-accent)', title:'When — Capability, Deployment, Impact', body:'<p>Separate three clocks: when a capability exists, when it\'s deployed, and when it actually hits your life. My call: <strong>human-level capability by end of 2026</strong>, disruptive across every industry through 2027 — so <strong>hope for the best, prepare for the worst.</strong></p>' },
-  { idx:'08', route:'Abundance', rc:'var(--cp-accent)', title:'Your 1000-Day Moonshot Plan', body:'<p>Four phases: <strong>0–30 days</strong> create your first plan, <strong>30–180</strong> build capability, <strong>180–365</strong> own or access productive assets, <strong>365–1000</strong> become a node in the better future.</p>' },
-  { idx:'09', route:'Abundance', rc:'var(--cp-accent)', title:'The Distribution Layer', body:'<p>UBI is the floor, <strong>Universal High Income</strong> is the aspiration, and <strong>Universal Compute</strong> is the leverage — making sure the dividend of abundance reaches people, not just balance sheets.</p>' },
-  { idx:'10', route:'Risk', rc:'var(--cp-accent)', title:'Human Enhancement', body:'<p>Longevity escape velocity, BCIs and cognitive tools move enhancement from fringe to mainstream. The question stops being <em>whether</em> and becomes <strong>how you keep agency and meaning</strong> while you change.</p>' },
-  { idx:'11', route:'Abundance', rc:'var(--cp-accent)', title:'Build the Better Branch', body:'<p>The future isn\'t something that happens to you — it\'s a branch you help select. <strong>Become a node</strong>: build, connect, distribute, and steer toward the abundant timeline on purpose.</p>' },
-];
-document.getElementById('chapters').innerHTML = chapters.map((c,i) => `
-  <article class="chapter" data-ch="${c.idx}">
-    <button type="button" class="ch-head" aria-expanded="false" aria-controls="chapter-body-${i}">
-      <span class="ch-idx">${c.idx}</span>
-      <span class="ch-title">${c.title}</span>
-      <span class="ch-route" style="color:${c.rc};border-color:${c.rc}">${c.route}</span>
-      <svg class="ch-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-    <div class="ch-body" id="chapter-body-${i}" hidden><div class="ch-inner">${c.body}<button class="ch-read" data-open="${i}">Read full chapter →</button></div></div>
-  </article>`).join('');
-document.querySelectorAll('.chapter .ch-head').forEach(h => h.addEventListener('click', () => {
-  const open = h.parentElement.classList.toggle('open');
-  h.setAttribute('aria-expanded', String(open));
-  h.parentElement.querySelector('.ch-body').hidden = !open;
-}));
-document.querySelectorAll('.sysnode').forEach(n => {
-  const openSystem = () => {
-    const map = { op:1,'01':2,'02':3,'03':4,'04':5,'05':6,'06':7 };
-    const idx = map[n.dataset.sys];
-    if(idx != null && window.openReader) window.openReader(idx);
-  };
-  n.addEventListener('click', openSystem);
-  n.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openSystem();
-    }
-  });
-});
+  /* ---------- 1000-Day Moonshot planner ---------- */
 
-/* ---------- 1000-Day Moonshot planner ---------- */
-const questions = [
-  { q:"How soon do you think AI meaningfully changes your daily work?", dim:'urgency',
-    opts:[ ["Already has","a",3],["Within ~2 years","b",3],["3–5 years out","c",2],["Not in my field","d",0] ] },
-  { q:"If your income stopped tomorrow, how long could you sustain yourself?", dim:'survival',
-    opts:[ ["Under a month","a",0],["1–6 months","b",1],["6–18 months","c",2],["18+ months / passive income","d",3] ] },
-  { q:"How are you adapting your skills right now?", dim:'capability',
-    opts:[ ["Not really","a",0],["Reading & watching","b",1],["Using AI tools weekly","c",2],["Building & orchestrating AI daily","d",3] ] },
-  { q:"Do you own anything that produces value while you sleep?", dim:'assets',
-    opts:[ ["No","a",0],["A little savings","b",1],["Some equity / audience / property","c",2],["Diversified productive assets","d",3] ] },
-  { q:"How plugged in are you to a community or network?", dim:'community',
-    opts:[ ["Mostly on my own","a",0],["A few loose ties","b",1],["An active community or two","c",2],["A network I actively build","d",3] ] },
-  { q:"Which future are you actually preparing for?", dim:'portfolio',
-    opts:[ ["None in particular","a",0],["Just the bad one","b",1],["Just the good one","c",1],["A portfolio across all five","d",3] ] },
-];
 let answers = new Array(questions.length).fill(null);
 let qi = 0;
 
@@ -2223,822 +1845,539 @@ function renderResult(body){
 }
 renderPlanner();
 
-/* ---------- Reality signals grid ---------- */
-/* Inline fallback (shown offline / before signals.json loads). The live site OVERRIDES this from
-   signals.json's reality[] — the most recent live-verified news observation per theme. (X evidence was retired 2026-08-13;
-   this comment previously described the field as @peterxing posts/reposts, which the section has
-   not rendered since.) */
-/* The offline baseline claims NOTHING. Six themes are named so the section keeps its shape before
-   signals.json arrives, but every card states that no source is loaded rather than asserting an
-   observation the page cannot stand behind. The previous fallback shipped six "Open the latest
-   @peterxing observations" cards, which asserted an observation existed AND linked to X. */
-const realitySignals = [
-  { tag:'CODE', t:'Frontier coding agents.', kind:'none' },
-  { tag:'ROBOTS', t:'Humanoid and general-purpose robotics.', kind:'none' },
-  { tag:'ABUNDANCE', t:'Energy, compute and abundance.', kind:'none' },
-  { tag:'CAPABILITY', t:'Frontier capability and evaluations.', kind:'none' },
-  { tag:'MARKETS', t:'AI economics and labour markets.', kind:'none' },
-  { tag:'GOVERNANCE', t:'AI governance and enforcement.', kind:'none' },
+
+  (function(){
+    /* ---------- Book star map ---------- */
+const systems = [
+  { id:'op', x:50,  y:240, label:'Opening', sub:'launch vector', col:'var(--cp-accent)' },
+  { id:'01', x:120, y:170, label:'01 · Why', sub:'origin system', col:'var(--cp-accent)' },
+  { id:'02', x:200, y:215, label:'02 · Abundance', sub:'engine room', col:'var(--cp-accent)' },
+  { id:'03', x:165, y:110, label:'03 · Human Stack', sub:'ordinary life', col:'var(--cp-accent)' },
+  { id:'04', x:265, y:140, label:'04 · Energy', sub:'compute lanes', col:'var(--cp-accent)' },
+  { id:'05', x:300, y:225, label:'05 · Work', sub:'new ladders', col:'var(--cp-accent)' },
+  { id:'06', x:355, y:90,  label:'06 · Portfolio', sub:'scenario bets', col:'var(--cp-accent)' },
 ];
-function realityCard(s, index){
-  const tag = htmlText(s.tag || 'SIGNAL');
-  const recency = ['week','recent','historical','none'].includes(s.recency) ? s.recency : 'observed';
-  let srcHtml;
-  /* X RETIREMENT 2026-08-13 - BOTH X URL BUILDERS REMOVED. GC seq-93 found these and my own audits had
-     missed them, because the URLs never existed as literals in any data file: they were ASSEMBLED HERE
-     at render time from a search fragment, so scanning signals.json and predictions.json for "x.com"
-     reported a clean migration while the page still linked to X on every card.
+const links = [['op','01'],['01','02'],['02','03'],['02','04'],['04','06'],['02','05'],['05','06'],['03','04']];
+const sm = document.getElementById('starmap');
+const byId = Object.fromEntries(systems.map(s=>[s.id,s]));
+let smHtml = `<rect x="0" y="0" width="420" height="300" fill="var(--cp-bg-elevated)"/>`;
+smHtml += `<path d="M28 252 C105 44 288 42 392 246" fill="none" stroke="var(--cp-border)" stroke-width="1"/>
+  <path d="M42 266 C164 174 276 164 378 62" fill="none" stroke="var(--cp-border)" stroke-width="1" stroke-dasharray="4 5"/>`;
+links.forEach(([a,b]) => { const A=byId[a],B=byId[b]; smHtml += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="var(--cp-border-strong)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>`; });
+systems.forEach(s => {
+  smHtml += `<g class="sysnode" data-sys="${s.id}" role="button" tabindex="0" aria-label="Open ${s.label} chapter" style="cursor:pointer">
+    <circle cx="${s.x}" cy="${s.y}" r="7" fill="${s.col}"/>
+    <circle cx="${s.x}" cy="${s.y}" r="13" fill="none" stroke="${s.col}" stroke-width="1" opacity="0.4"/>
+    <text x="${s.x}" y="${s.y-18}" text-anchor="middle" fill="var(--cp-text)" font-size="9" font-family="Consolas,monospace" font-weight="700">${s.label}</text>
+    <text x="${s.x}" y="${s.y+24}" text-anchor="middle" fill="var(--cp-text-muted)" font-size="7" font-family="Consolas,monospace">${s.sub}</text>
+  </g>`;
+});
+sm.innerHTML = smHtml;
 
-     The kind:'search' card was the worse of the two. It asserted nothing and cited nothing - its entire
-     content was "go and look on X" - and with the account retired it would have been a dead link
-     presented as an observation. Reality Signals are now a field log of live-verified articles, so a
-     card either shows the source it actually verified, or says plainly that it has none. */
-  if (s.kind === 'news' && s.url){
-    const host = htmlText(s.publisherHost || '');
-    const publisher = htmlText(s.publisher || s.publisherHost || 'Source');
-    const when = htmlText(s.date || '');
-    const age = Number.isFinite(Number(s.ageDays)) ? ` &middot; ${Number(s.ageDays)}d ago` : '';
-    const hostHtml = host ? `<span class="signal-host">${host}</span>` : '';
-    srcHtml = `<a class="signal-src signal-src-link" data-recency="${recency}" href="${htmlText(s.url)}"`
-      + ` target="_blank" rel="noopener nofollow"><span class="sig-dot"></span>${publisher} &middot; ${when}${age}`
-      + `${hostHtml} &rarr;</a>`;
-  } else if (s.kind === 'none'){
-    srcHtml = `<div class="signal-src signal-src-none" data-recency="none"><span class="sig-dot"></span>`
-      + `No qualifying source in the currency window</div>`;
-  } else {
-    srcHtml = `<div class="signal-src">${htmlText(String(s.src || '').toUpperCase())}</div>`;
-  }
-  return `
-    <article class="card observation-card" data-recency="${recency}">
-      <div class="observation-head">
-        <div class="card-num">${tag}</div>
-        <span class="observation-index">OBS ${String(index + 1).padStart(2, '0')}</span>
-      </div>
-      <p>${htmlText(s.t)}</p>
-      ${srcHtml}
-    </article>`;
-}
-function renderReality(list){
-  const grid = document.getElementById('signalsGrid');
-  if (!grid || !Array.isArray(list) || !list.length) return;
-  grid.innerHTML = list.map(realityCard).join('');
-  grid.dataset.observed = String(list.filter(entry => entry && entry.kind === 'news').length);
-}
-renderReality(realitySignals);
-setText('realityMeta', 'Offline baseline · no source loaded · live observations arrive with signals.json');
 
-/* ---------- Immersive book reader ---------- */
-(function(){
-  const reader = document.getElementById('reader');
-  const rdBody = document.getElementById('rdBody');
-  const rdScroll = document.getElementById('rdScroll');
-  const rdBar = document.getElementById('rdBar');
-  const rdProgress = document.getElementById('rdProgress');
-  const rdPrev = document.getElementById('rdPrev');
-  const rdNext = document.getElementById('rdNext');
-  const rdPrevT = document.getElementById('rdPrevT');
-  const rdNextT = document.getElementById('rdNextT');
-  const rdToc = document.getElementById('rdToc');
-  const source = document.getElementById('bookSource');
-  const total = chapters.length;
-  let current = -1;
-  let lastFocus = null;
-  const backgroundNodes = [...document.querySelectorAll('.content > :not(#reader)')];
-
-  rdToc.innerHTML = chapters.map((chapter, index) =>
-    `<button type="button" class="rd-toc-item" data-reader-chapter="${index}">
-      ${chapter.idx} · ${chapter.title}
-    </button>`).join('');
-
-  function chapterContext(chapter){
-    if (/1000-Day/i.test(chapter.title)) {
-      return { href:'#moonshot', label:'Open the 1000-day planner', note:'Turn this chapter into a concrete starting vector.' };
-    }
-    if (/Five Futures/i.test(chapter.title)) {
-      return { href:'#futures', label:'Open the scenario portfolio', note:'Compare the five futures and adjust the hedge portfolio.' };
-    }
-    if (chapter.route === 'Risk') {
-      return { href:'#post-superintelligence', label:'Inspect the dependency-gated horizon', note:'Separate dated risk from conditional post-superintelligence possibilities.' };
-    }
-    if (chapter.route === 'Capability') {
-      return { href:'#timeline', label:'Return to the dated forecast', note:'Compare capability, deployment, and impact against the 2026–2040 field.' };
-    }
-    return { href:'#engine', label:'Trace the abundance engine', note:'Connect the chapter’s argument to the six forces already in motion.' };
-  }
-
-  function updateBar(){
-    const max = rdScroll.scrollHeight - rdScroll.clientHeight;
-    const pct = max > 8 ? (rdScroll.scrollTop / max) * 100 : 0;
-    rdBar.style.width = Math.max(0, Math.min(100, pct)).toFixed(1) + '%';
-  }
-
-  window.openReader = function(n){
-    n = Math.max(0, Math.min(total - 1, n | 0));
-    const art = source.querySelector('article[data-idx="' + n + '"]');
-    if(!art) return;
-    if (reader.hidden) lastFocus = document.activeElement;
-    current = n;
-    const context = chapterContext(chapters[n]);
-    rdBody.innerHTML = art.innerHTML + `
-      <aside class="reader-context">
-        <button type="button" class="btn btn-ghost" data-read-chapter="${n}">I have read this chapter</button>
-        <p class="mission-help">Self-reported reading progress. Opening a chapter does not complete a quest.</p>
-        <span class="instrument-label">Contextual instrument</span>
-        <p>${context.note}</p>
-        <a href="${context.href}" data-reader-context>${context.label} →</a>
-      </aside>`;
-    rdProgress.textContent = String(n + 1).padStart(2, '0') + ' / ' + total + ' · ' + chapters[n].title;
-    rdPrev.disabled = n === 0;
-    rdNext.disabled = n === total - 1;
-    rdPrevT.textContent = n > 0 ? chapters[n - 1].title : '';
-    rdNextT.textContent = n < total - 1 ? chapters[n + 1].title : '';
-    rdToc.querySelectorAll('.rd-toc-item').forEach((button, index) => {
-      button.classList.toggle('active', index === n);
-      if (index === n) button.setAttribute('aria-current', 'page');
-      else button.removeAttribute('aria-current');
+    document.querySelectorAll('.sysnode').forEach(element => {
+      const open = () => {
+        const indexes = { op:1, '01':2, '02':3, '03':4, '04':5, '05':6, '06':7 };
+        window.openReader(indexes[element.dataset.sys]);
+      };
+      element.addEventListener('click', open);
+      element.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); }
+      });
     });
-    reader.hidden = false;
-    backgroundNodes.forEach(node => { node.inert = true; });
-    document.body.style.overflow = 'hidden';
-    rdScroll.scrollTop = 0;
-    rdBar.style.width = '0%';
-    document.getElementById('rdClose').focus();
+  })();
+  bindMissionControls();
+  document.querySelector('.probability-simulator').addEventListener('input', () => completeQuest('scenario-v1'));
+  document.querySelector('.probability-simulator').addEventListener('click', event => {
+    if (event.target.closest('[data-sim-preset]:not([data-sim-preset="baseline"])') && probabilitySimulatorState.anchors)
+      completeQuest('scenario-v1');
+  });
+  const filters = initialForecastFilters();
+  let evidenceVisible = true, cataloguePage = 0;
+  function catalogue(syncUrl = false){
+    const dated = forecastRecords().filter(row => !row.id.startsWith('horizon-'));
+    const matched = dated.filter(row => matchesCatalogueFilters(row.data, filters));
+    const horizons = forecastRecords().filter(row => row.id.startsWith('horizon-')
+      && (!filters.query || row.title.toLowerCase().includes(filters.query.toLowerCase()))
+      && (filters.domain === 'all' || filters.domain === row.data.d));
+    const host = byId('catalogueResults');
+    const total = matched.length + horizons.length;
+    cataloguePage = Math.min(cataloguePage, Math.max(0, Math.ceil(total / 12) - 1));
+    host.replaceChildren();
+    for (const row of [...matched, ...horizons].slice(cataloguePage * 12, cataloguePage * 12 + 12)) {
+      const item = node('article', 'catalogue-result');
+      const title = node('h4');
+      title.append(link(row.title, row.href));
+      item.append(node('p', 'instrument-label', `${row.timing} / ${domainNames[row.data.d]}`), title,
+        node('p', '', row.probability), watchControl(row.id));
+      if (evidenceVisible) {
+        const news = publishedSignals?.embeds[row.id] || publishedSignals?.context?.items[row.id];
+        item.append(node('p', 'mission-help', !publishedSignals ? 'Evidence unavailable; no source is inferred.'
+          : news ? `${publishedSignals.context.items[row.id] ? 'Dated background' : 'Cited in this snapshot'}: ${news.publisher}. Open the forecast for dates and limits.`
+            : publishedSignals.uncited.items[row.id]?.statement || 'No NEWS record is available.'));
+      }
+      host.append(item);
+    }
+    if (!total) host.append(node('p', 'mission-help', model ? 'No forecasts match these filters.' : 'Forecast records are unavailable.'));
+    if (total > 12) {
+      const pages = node('nav', 'more-stories');
+      pages.setAttribute('aria-label', 'Forecast catalogue pages');
+      const previous = action('Previous forecasts', () => { cataloguePage--; catalogue(); byId('filterResultCount').focus(); });
+      const next = action('Next forecasts', () => { cataloguePage++; catalogue(); byId('filterResultCount').focus(); });
+      previous.disabled = cataloguePage === 0; next.disabled = (cataloguePage + 1) * 12 >= total;
+      pages.append(previous, node('span', '', `${cataloguePage + 1} / ${Math.ceil(total / 12)}`), next); host.append(pages);
+    }
+    setText('filterResultCount', model ? `${matched.length} dated forecasts and ${horizons.length} undated horizons match.` : 'Forecast catalogue unavailable.');
+    byId('filterResultCount').tabIndex = -1;
+    byId('atlasSearch').value = filters.query;
+    byId('branchFilter').value = filters.branch;
+    byId('probabilityFilter').value = filters.probability;
+    byId('themeFilter').value = filters.theme;
+    byId('changesOnlyToggle').setAttribute('aria-pressed', String(filters.changed));
+    document.querySelectorAll('[data-domain]').forEach(button => {
+      button.classList.toggle('active', button.dataset.domain === filters.domain);
+      button.setAttribute('aria-pressed', String(button.dataset.domain === filters.domain));
+    });
+    document.querySelectorAll('[data-domain-count]').forEach(element => {
+      element.textContent = dated.filter(row => element.dataset.domainCount === 'all' || row.data.d === element.dataset.domainCount).length;
+    });
+    if (syncUrl) {
+      const url = new URL(location.href);
+      for (const [key, value] of Object.entries({ fd:filters.domain, fb:filters.branch, fp:filters.probability, ft:filters.theme, fc:filters.changed ? '1' : '', fq:filters.query })) {
+        if (!value || value === 'all') url.searchParams.delete(key); else url.searchParams.set(key, value);
+      }
+      history.replaceState(history.state, '', url);
+    }
+    renderChapterSearch(filters.query);
+  }
+  function changeFilter(key, value){
+    filters[key] = value; cataloguePage = 0; catalogue(true);
+  }
+  byId('atlasSearch').addEventListener('input', event => changeFilter('query', event.target.value.slice(0, 120)));
+  byId('atlasSearch').addEventListener('keydown', event => {
+    if (event.key === 'Escape') changeFilter('query', '');
+  });
+  byId('searchClear').addEventListener('click', () => { changeFilter('query', ''); byId('atlasSearch').focus(); });
+  for (const [id, key] of [['branchFilter','branch'],['probabilityFilter','probability'],['themeFilter','theme']])
+    byId(id).addEventListener('change', event => changeFilter(key, event.target.value));
+  byId('changesOnlyToggle').addEventListener('click', () => changeFilter('changed', !filters.changed));
+  document.querySelectorAll('[data-domain]').forEach(button => button.addEventListener('click', () => changeFilter('domain', button.dataset.domain)));
+  byId('filterReset').addEventListener('click', () => {
+    Object.assign(filters, { domain:'all', branch:'all', probability:'all', theme:'all', changed:false, query:'' });
+    cataloguePage = 0; catalogue(true);
+  });
+  byId('overlayToggle').addEventListener('click', () => {
+    evidenceVisible = !evidenceVisible;
+    byId('overlayToggle').setAttribute('aria-pressed', String(evidenceVisible));
+    byId('overlaySwitch').classList.toggle('on', evidenceVisible);
+    byId('overlayToggle').querySelector('span:last-child').textContent = evidenceVisible ? 'Evidence visible' : 'Evidence hidden';
+    catalogue();
+  });
+  function update(){
+    timelineData = forecastData?.years || [];
+    predictionModelState = model ? 'loaded' : 'unavailable';
+    renderProbabilitySimulator(timelineData, fasterBranchRange(timelineData));
+    const select = byId('observationPrediction'), selected = select.value;
+    select.replaceChildren(new Option(model ? 'Choose a forecast to inspect' : 'Forecast data unavailable', ''));
+    for (const row of forecastRecords()) select.add(new Option(`${row.timing} / ${row.title}`, row.id));
+    if (forecastRecords().some(row => row.id === selected)) select.value = selected;
+    catalogue(); renderSourceOverview(); renderRevisionNotes(); renderLivingSignals();
+    renderMissionControls();
+    byId('exploreStatus').textContent = model
+      ? 'Optional tools are ready. Original calculation rules and saved planning keys are unchanged.'
+      : 'Planning tools are ready. Forecast-dependent instruments need a coherent published record.';
+  }
+  return {
+    update,
+    close(){
+      for (const id of frames) window.cancelAnimationFrame(id);
+      for (const id of timers) window.clearTimeout(id);
+      frames.clear(); timers.clear();
+    },
+    reopen(){
+      renderProbabilitySimulator(timelineData, fasterBranchRange(timelineData));
+      renderPlanner(); renderMissionControls();
+    },
   };
-
-  function closeReader(){
-    reader.hidden = true;
-    backgroundNodes.forEach(node => { node.inert = false; });
-    document.body.style.overflow = '';
-    current = -1;
-    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
-    lastFocus = null;
-  }
-
-  rdScroll.addEventListener('scroll', updateBar, { passive: true });
-  document.getElementById('rdClose').addEventListener('click', closeReader);
-  rdPrev.addEventListener('click', () => { if(current > 0) window.openReader(current - 1); });
-  rdNext.addEventListener('click', () => { if(current < total - 1) window.openReader(current + 1); });
-  rdToc.addEventListener('click', event => {
-    const button = event.target.closest('[data-reader-chapter]');
-    if (button) window.openReader(Number(button.dataset.readerChapter));
-  });
-  rdBody.addEventListener('click', event => {
-    if (event.target.closest('[data-reader-context]')) closeReader();
-  });
-  document.addEventListener('keydown', (e) => {
-    if(reader.hidden) return;
-    if(e.key === 'Tab') {
-      const focusable = [...reader.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
-        .filter(element => element.offsetParent !== null);
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    } else if(e.key === 'Escape') closeReader();
-    else if(e.key === 'ArrowLeft' && current > 0) window.openReader(current - 1);
-    else if(e.key === 'ArrowRight' && current < total - 1) window.openReader(current + 1);
-  });
-
-  const rb = document.getElementById('readBookBtn');
-  if(rb) rb.addEventListener('click', () => window.openReader(0));
-
-  document.getElementById('chapters').addEventListener('click', (e) => {
-    const btn = e.target.closest('.ch-read');
-    if(!btn) return;
-    e.stopPropagation();
-    window.openReader(parseInt(btn.dataset.open, 10));
-  });
-})();
-
-/* ---------- One-shot editorial figure motion ---------- */
-(function(){
-  const figures = [...document.querySelectorAll('[data-editorial-figure]')];
-  if (!figures.length) return;
-  if (motionQuery.matches || !('IntersectionObserver' in window)) {
-    figures.forEach(figure => figure.classList.add('is-visible'));
-    return;
-  }
-  root.classList.add('figure-motion-ready');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    });
-  }, { rootMargin:'0px 0px -10% 0px', threshold:.12 });
-  figures.forEach(figure => {
-    figure.addEventListener('focusin', () => {
-      figure.classList.add('is-visible');
-      observer.unobserve(figure);
-    }, { once:true });
-    observer.observe(figure);
-  });
-})();
-
-/* ---------- Reading and forecast position ---------- */
-(function(){
-  const progress = document.getElementById('pageProgress');
-  let progressFrame = 0;
-  function updatePageProgress(){
-    progressFrame = 0;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const value = max > 0 ? clampNumber(window.scrollY / max, 0, 1) : 0;
-    progress.style.transform = `scaleX(${value.toFixed(4)})`;
-  }
-  function requestProgress(){
-    if (!progressFrame) progressFrame = requestAnimationFrame(updatePageProgress);
-  }
-  window.addEventListener('scroll', requestProgress, { passive:true });
-  window.addEventListener('resize', requestProgress, { passive:true });
-  updatePageProgress();
-
-  const linkedSections = [...document.querySelectorAll('#mission-control, #timeline, #post-superintelligence, #engine, #futures, #book, #moonshot, #signals, #author')];
-  if ('IntersectionObserver' in window) {
-    const navObserver = new IntersectionObserver(entries => {
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      if (!visible[0]) return;
-      const id = visible[0].target.id;
-      const navId = id === 'futures' ? 'engine' : id;
-      navLinks.querySelectorAll('a').forEach(link =>
-        link.classList.toggle('active', link.getAttribute('href') === '#' + navId));
-    }, { rootMargin:'-25% 0px -60% 0px', threshold:[.01, .2, .5] });
-    linkedSections.forEach(section => navObserver.observe(section));
-  }
-})();
-
-/* ---------- Local planning workspace and published observation refresh ---------- */
-const MISSION_KEY = 'pap-mission-control:v1';
-const questIds = ['scenario-v1', 'chapter-v1', 'evidence-v1', 'action-v1'];
-const readinessIds = ['uncertainty-v1', 'limits-v1', 'conversation-v1'];
-const actionIds = ['first-plan-v1', 'capability-v1', 'community-v1', 'review-v1'];
-const emptyMission = () => ({ version:1, quests:[], readiness:[], action:'', actionConfirmed:false, watchlist:{} });
-let missionStorageMode = 'local';
-let missionStorageMessage = 'Saved on this browser only.';
-let missionState = loadMission();
-let publishedSignals = null;
-let pendingSignals = null;
-let observationController = null;
-let observationTimer = 0;
-let observationFailures = 0;
-let observationLastAttempt = 0;
-let observationLastChecked = '';
-let observationLatency = null;
-let observationError = '';
-const comparedForecasts = new Set();
-function validPredictionId(id){ return /^(?:20\d{2}-\d+|horizon-[a-z0-9-]+)$/.test(id); }
-
-function loadMission(){
-  try {
-    const raw = localStorage.getItem(MISSION_KEY);
-    if (!raw) {
-      localStorage.setItem(MISSION_KEY, JSON.stringify(emptyMission()));
-      return emptyMission();
+}
+function openExplore(hash = ''){
+  byId('exploreDisclosure').open = true;
+  if (exploreMountFailed) return;
+  if (!exploreSession) {
+    try {
+      exploreSession = initializeExplore();
+      exploreSession.update();
+      byId('exploreStatus').textContent = 'Optional tools are ready. Original calculation rules and saved planning keys are unchanged.';
+    } catch (error) {
+      exploreMountFailed = true;
+      byId('exploreStatus').textContent = `The tools could not initialize: ${error.message}. Reload to retry. Existing saves have not been reset.`;
+      throw error;
     }
-    const data = JSON.parse(raw);
-    if (data?.version !== 1 || !Array.isArray(data.quests) || !Array.isArray(data.readiness)
-      || !data.quests.every(id => questIds.includes(id)) || !data.readiness.every(id => readinessIds.includes(id))
-      || new Set(data.quests).size !== data.quests.length || new Set(data.readiness).size !== data.readiness.length
-      || !['', ...actionIds].includes(data.action) || typeof data.actionConfirmed !== 'boolean'
-      || (data.actionConfirmed && !data.action)
-      || !data.watchlist || Array.isArray(data.watchlist) || typeof data.watchlist !== 'object'
-      || Object.keys(data.watchlist).length > 1000
-      || !Object.entries(data.watchlist).every(([id, row]) => validPredictionId(id) && row
-        && ['title', 'forecast', 'seen'].every(key => typeof row[key] === 'string' && row[key].length < 100000))) {
-      throw new Error('Unsupported or invalid planning data');
+  }
+  if (!model) loadRecord();
+  if (hash) {
+    const target = byId(hash.replace(/^#/, ''));
+    if (target) {
+      for (let parent = target.parentElement; parent && parent !== byId('explore'); parent = parent.parentElement)
+        if (parent.tagName === 'DETAILS') parent.open = true;
+      if (!target.matches('input, select, button, a, summary')) target.tabIndex = -1;
+      requestAnimationFrame(() => { target.scrollIntoView({ block:'start', behavior:'instant' }); target.focus({ preventScroll:true }); });
     }
-    for (const row of Object.values(data.watchlist)) {
-      if (row.seen) {
-        const snapshot = JSON.parse(row.seen);
-        if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) throw new Error('Invalid observation snapshot');
-      }
-    }
-    localStorage.setItem(MISSION_KEY, raw);
-    return data;
-  } catch (error) {
-    missionStorageMode = 'session';
-    missionStorageMessage = 'Session only: storage is unavailable or saved data is unreadable. Nothing has been overwritten. Reset to try local saving again.';
-    return emptyMission();
   }
 }
-function saveMission(){
-  if (missionStorageMode !== 'local') return;
-  try { localStorage.setItem(MISSION_KEY, JSON.stringify(missionState)); }
-  catch (error) {
-    missionStorageMode = 'session';
-    missionStorageMessage = 'Session only: the browser could not save this change. Earlier saved data may remain; reset to retry.';
-  }
-}
-function completeQuest(id){
-  if (!missionState.quests.includes(id)) {
-    missionState.quests.push(id);
-    saveMission();
-    setText('missionAnnouncement', 'Planning quest recorded. This measures completion only.');
-  }
-  renderMission();
-}
-function forecastRecords(){
-  return [
-    ...timelineData.flatMap(year => year.events.map((data, i) => ({
-      id:`${year.year}-${i}`, title:data.t, data, timing:String(year.year), probability:`${data.prob}% stated probability`,
-      href:`#event-${year.year}-${i}`,
-    }))),
-    ...horizonData.items.map(data => ({
-      id:`horizon-${data.id}`, title:data.t, data, timing:'Dependency-gated / undated',
-      probability:`${data.conditionalProb}% conditional plausibility`, href:`#horizon-${data.id}`,
-    })),
-  ];
-}
-function watchButton(id){
-  const saved = Boolean(missionState.watchlist[id]);
-  return `<button type="button" class="watch-button" data-watch="${htmlText(id)}" aria-pressed="${saved}"
-    aria-label="${saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist'}">${saved ? 'Saved' : '+ Watch'}</button>`;
-}
-function evidenceSnapshot(id, data = publishedSignals){
-  if (!data) return '';
-  return JSON.stringify({
-    citation:data.embeds[id] || null, context:data.context.items[id] || null,
-    // Re-running a search is a freshness change, not a new observation.
-    gap:data.uncited.items[id]?.reason || null, currency:data.currency?.[id] || [],
-    assessment:data.observations?.items?.[id] || null,
-    references:data.referencePoints?.items[id] || null,
-    ...(data.capabilities?.metr?.context?.id === id && data.capabilities.metr.context.forecastSha256 === forecastFingerprint
-      && data.capabilities.metr.current ? { capability:[data.capabilities.metr.current.records,
-        data.capabilities.metr.current.longTasksVersion, data.capabilities.metr.current.swaaVersion] } : {}),
-  });
-}
-function renderedEvidenceSnapshot(id){
-  return JSON.stringify([directSignals[id], contextSignals[id], uncitedSignals[id], currencySignals[id], xSignals[id]]);
-}
-function watchStatus(row, saved){
-  if (!row) return 'No longer in the current forecast. Kept here so you can remove it.';
-  if (saved.forecast !== JSON.stringify(row.data)) return 'Forecast content changed. Review before acknowledging a new baseline.';
-  if (!publishedSignals) return 'Evidence unavailable; saved snapshot retained.';
-  const current = evidenceSnapshot(row.id);
-  if (saved.seen === current) return 'No observation change since your saved snapshot.';
-  const before = saved.seen ? JSON.parse(saved.seen) : {};
-  const after = JSON.parse(current);
-  const fields = { citation:'citation details', context:'dated background', gap:'search outcome', currency:'current references', assessment:'reviewed assessment', capability:'METR measurements', references:'reviewed reference points' };
-  const changed = Object.keys(fields).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => fields[key]);
-  return `Observation record changed since your saved snapshot: ${changed.join(', ')}. Inspect the source, dates and limitations before acknowledging.`;
-}
-function renderWatchlist(){
-  const host = document.getElementById('watchlist');
-  const focus = host.contains(document.activeElement)
-    ? { id:document.activeElement.dataset.watch || document.activeElement.dataset.ack, ack:Boolean(document.activeElement.dataset.ack) } : null;
-  const rows = new Map(forecastRecords().map(row => [row.id, row]));
-  host.innerHTML = Object.entries(missionState.watchlist).map(([id, saved]) => {
-    const row = rows.get(id);
-    return `<li class="watch-item"><div>${row ? `<a href="${row.href}">${htmlText(row.title)}</a>` : `<strong>${htmlText(saved.title)}</strong>`}
-      <p data-watch-status="${htmlText(id)}">${htmlText(watchStatus(row, saved))}</p>
-      <span class="assessment-label">${htmlText(row ? referenceLabel(id) + ' · ' + trajectoryFor(id).label : 'Forecast unavailable')}</span></div>
-      <div class="watch-actions">${row ? `<button type="button" class="text-button" data-inspect="${htmlText(id)}">Inspect</button>` : ''}
-      ${row && publishedSignals ? `<button type="button" class="text-button" data-ack="${htmlText(id)}">Acknowledge snapshot</button>` : ''}
-      <button type="button" class="text-button" data-watch="${htmlText(id)}">Remove</button></div></li>`;
-  }).join('') || '<li class="mission-empty">Nothing saved yet. Inspect a forecast below to start your watchlist.</li>';
-  if (focus) {
-    const target = host.querySelector(`[data-${focus.ack ? 'ack' : 'watch'}="${focus.id}"]`);
-    (target || document.getElementById('observationPrediction')).focus({ preventScroll:true });
-  }
-  setText('watchCount', `${Object.keys(missionState.watchlist).length} saved`);
-}
-function renderMission(){
-  setText('missionStorage', missionStorageMessage);
-  document.getElementById('missionStorage').dataset.mode = missionStorageMode;
-  const count = questIds.filter(id => missionState.quests.includes(id)).length;
-  setText('questCount', `${count} / 4`);
-  document.getElementById('questProgress').value = count;
-  setText('questReward', count === 4
-    ? 'Field notes established. You completed four planning activities, not a prediction of your readiness.'
-    : 'Four ways to explore. Completion is not a readiness score.');
-  document.querySelectorAll('[data-quest]').forEach(node => {
-    const done = missionState.quests.includes(node.dataset.quest);
-    node.classList.toggle('is-complete', done);
-    node.querySelector('.quest-state').textContent = done ? 'Recorded' : 'To explore';
-  });
-  document.querySelectorAll('[data-readiness]').forEach(input => { input.checked = missionState.readiness.includes(input.dataset.readiness); });
-  document.getElementById('preparationAction').value = missionState.action;
-  document.getElementById('confirmPreparation').checked = missionState.actionConfirmed;
-  document.getElementById('confirmPreparation').disabled = !missionState.action;
-  document.getElementById('confirmComparison').disabled = comparedForecasts.size < 2;
-  setText('readinessCount', `${missionState.readiness.length + Number(missionState.actionConfirmed)} of 4 planning items recorded.`);
-  document.querySelectorAll('.watch-button').forEach(button => {
-    const saved = Boolean(missionState.watchlist[button.dataset.watch]);
-    button.textContent = saved ? 'Saved' : '+ Watch';
-    button.setAttribute('aria-pressed', String(saved));
-    button.setAttribute('aria-label', saved ? 'Remove forecast from watchlist' : 'Save forecast to watchlist');
-  });
-  renderWatchlist();
-  renderObservationDetail();
-  renderObservationHealth();
-  renderMetr();
-}
-function renderMetr(){
-  const m = publishedSignals?.capabilities?.metr, s = m?.current;
-  const select = document.getElementById('metrModel');
-  const value = select.value;
-  const options = s?.records.map(r => `<option value="${htmlText(r.id)}">${htmlText(r.id)}</option>`).join('') || '<option>No measurements loaded</option>';
-  if (select.innerHTML !== options) { select.innerHTML = options; if (s?.records.some(r => r.id === value)) select.value = value; }
-  select.disabled = !s;
-  const r = s?.records.find(r => r.id === select.value);
-  setText('metrStatus', !m || m.status !== 'ok' ? `${m?.error || 'Source unavailable.'} ${s ? 'Last-good measurements retained.' : 'No measurements available.'}`
-    : Date.now() - Date.parse(m.lastCheckedAt) > 36 * 3600000 ? 'Stale source check (over 36 hours).' : 'Source checked; this does not mean a new evaluation.');
-  for (const key of ['p50', 'p80']) {
-    const v = r?.[key];
-    setText(key === 'p50' ? 'metrP50' : 'metrP80', v ? `${v.estimate.toFixed(2)} min (95% CI ${v.ci_low.toFixed(2)}–${v.ci_high.toFixed(2)})` : 'Not recorded');
-  }
-  for (const [id, date] of Object.entries({ metrRelease:r?.releaseDate, metrChecked:m?.lastCheckedAt,
-    metrFetched:m?.lastSuccessfulFetchAt, metrModified:s?.lastModified })) setText(id, recordedTime(date));
-  setText('metrRevision', s ? `${s.benchmark}; SHA-256 ${s.sha256}` : 'Not recorded');
-  setText('metrSetup', r?.scaffolds.join('; ') || 'Not recorded');
-  setText('metrChange', m?.changeSummary || 'No site collection history yet.');
-  setText('metrContext', m?.context?.id === document.getElementById('observationPrediction').value
-    && m.context.forecastSha256 === forecastFingerprint ? m.context.role : '');
-}
-document.getElementById('metrModel').addEventListener('change', renderMetr);
-function validTime(value){
-  return typeof value === 'string' && Number.isFinite(Date.parse(value)) && Date.parse(value) <= Date.now() + 300000;
-}
-function recordedTime(value){
-  if (!value) return 'Not recorded';
-  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${formatUtcDate(value)} (date only)` : formatUtcDateTime(value) || 'Not recorded';
-}
-async function fingerprintForecast(data){
-  if (!globalThis.crypto?.subtle) return '';
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(data)));
-  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
-}
-function bundleFreshness(data){
-  if (!data || !validTime(data.updated) || !validTime(data.sourceFetchedAt)) return 'Source freshness unavailable';
-  if (['degraded', 'unavailable'].includes(data.sourceStatus?.mode)) return 'Source outage reported';
-  const age = Date.now() - Math.min(Date.parse(data.updated), Date.parse(data.sourceFetchedAt));
-  return age > 36 * 3600000 ? 'Stale published bundle (over 36 hours)' : 'Published bundle within 36 hours';
-}
-function trajectoryFor(id, data = publishedSignals){
-  const unknown = { label:'Trajectory not yet assessed', detail:'Insufficient measured data: no reviewed criterion and measurement are published for this exact forecast.', records:[] };
-  const layer = data?.observations;
-  if (!layer) return unknown;
-  if (layer.schemaVersion !== 1 || layer.forecastSha256 !== forecastFingerprint) {
-    return { ...unknown, detail:'Assessment version does not match this forecast. No direction is inferred.' };
-  }
-  const records = layer.items?.[id];
-  if (!Array.isArray(records) || !records.length) return unknown;
-  const valid = records.every(record => record && record.reviewed === true
-    && typeof record.reviewedBy === 'string' && record.reviewedBy.trim() && validTime(record.reviewedAt)
-    && ['supporting', 'mixed', 'challenging'].includes(record.direction)
-    && typeof record.criterion?.id === 'string' && record.criterion.id
-    && typeof record.criterion.version === 'string' && record.criterion.version
-    && typeof record.criterion.description === 'string' && record.criterion.description
-    && Number.isFinite(record.measurement?.value) && typeof record.measurement.unit === 'string' && record.measurement.unit
-    && validTime(record.measurement.observedAt) && safeHttpUrl(record.source?.url)
-    && !/(?:^|\.)((?:x|twitter)\.com)$/i.test(new URL(record.source.url).hostname)
-    && validTime(record.source.publishedAt) && validTime(record.source.fetchedAt)
-    && typeof record.source.name === 'string' && record.source.name
-    && typeof record.rationale === 'string' && record.rationale
-    && typeof record.limitations === 'string' && record.limitations);
-  if (!valid) return { ...unknown, detail:'A published assessment is incomplete. Treat trajectory as unassessed; the source record is not enough.' };
-  const directions = new Set(records.map(record => record.direction));
-  const direction = directions.size > 1 || directions.has('mixed') ? 'mixed' : records[0].direction;
-  return { label:{ supporting:'Supporting observations', mixed:'Mixed observations', challenging:'Challenging observations' }[direction],
-    detail:'Reviewed direction against the stated criteria, not proof that the target is achieved or a new probability.', records };
-}
-function referenceLabel(id){
-  const rows = publishedSignals?.referencePoints?.items[id];
-  return rows?.length ? `Reference: ${rows[0].relation} / ${rows[0].direction.replaceAll('-', ' ')}` : 'Inspect real-world references';
-}
-function referenceLink(id){
-  return `<button type="button" class="text-button" data-reference="${htmlText(id)}" data-inspect="${htmlText(id)}">${htmlText(referenceLabel(id))}</button>`;
-}
-function referenceDetails(id){
-  const layer = publishedSignals?.referencePoints, rows = layer?.items[id];
-  if (!rows?.length) return `<p class="mission-empty">${htmlText(layer?.gaps[id] || 'Reviewed reference points have not loaded.')}</p>`;
-  return rows.map(row => {
-    const s = layer.sources[row.sourceId], h = s.health;
-    const stale = !h.lastCheckedAt || Date.now() - Date.parse(h.lastCheckedAt) > 7 * 86400000;
-    const uses = Object.values(layer.items).flat().filter(r => r.sourceId === row.sourceId).length;
-    const provenance = s.dateEvidenceUrl || s.revisionIndex?.url;
-    return `<div class="measured-observation" data-reference-detail="${htmlText(id)}">
-      <strong>${htmlText(referenceLabel(id))}</strong><p><strong>Mapped facet:</strong> ${htmlText(row.facet)}</p>
-      <p>${htmlText(row.why)}</p>
-      ${h.status !== 'verified' || stale ? `<p class="mission-help">Last-good reference retained. ${htmlText(h.error || 'Source check overdue (over seven days).')} No forecast direction is inferred from source availability.</p>` : ''}
-      <details class="source-inspection"><summary>Source, excerpt and limits: ${htmlText(s.organization)}</summary>
-        <h4><a href="${htmlText(safeHttpUrl(s.url))}" target="_blank" rel="noopener">${htmlText(s.title)}</a></h4>
-        <blockquote>${htmlText(row.excerpt)}</blockquote>
-        <p><strong>Does not establish:</strong> ${htmlText(row.doesNotEstablish)}</p>
-        ${row.metric ? `<p>Reported value: ${htmlText(row.metric.operator || '')}${row.metric.value}${row.metric.high == null ? '' : `–${row.metric.high}`} ${htmlText(row.metric.unit)}. Coverage: ${htmlText(row.metric.coverage)}</p>` : ''}
-        <p>Publication: ${htmlText(s.publishedAt || (s.publishedPeriod ? `${s.publishedPeriod} (month precision)` : 'not recorded; source date unknown'))}${s.publishedAt ? ` (${Math.max(0, Math.floor((Date.now() - Date.parse(s.publishedAt)) / 86400000))} days old)` : ''}. ${htmlText(s.quality)}. ${Array.isArray(s.pdfPages) ? `PDF pages checked: ${htmlText(s.pdfPages.join(', '))}.` : ''}
-        Reviewed ${htmlText(row.reviewedAt)}. Referenced by ${uses} forecast${uses === 1 ? '' : 's'}; not independent corroboration.</p>
-        ${provenance ? `<p><a href="${htmlText(safeHttpUrl(provenance))}" target="_blank" rel="noopener">${s.revisionIndex ? 'Policy version index' : 'Publication date from the parent report'}</a></p>` : ''}
-        <p>Source retrieved ${htmlText(s.retrievedAt)}. Excerpt last verified ${htmlText(h.lastVerifiedAt || 'never')}.
-        Last source check ${htmlText(h.lastCheckedAt || 'never')}. ${htmlText(h.error || (stale ? 'Source check is stale (over seven days).' : 'Reviewed excerpt still present.'))}</p>
-        <p>Partial reference, not a whole-forecast verdict. Daily source checks do not make an older study new.</p>
-      </details></div>`;
-  }).join('');
-}
-function renderObservationDetail(){
-  const id = document.getElementById('observationPrediction').value;
-  const row = forecastRecords().find(row => row.id === id);
-  const host = document.getElementById('observationDetail');
-  if (!row) {
-    host.innerHTML = '<p class="mission-empty">Choose a prediction to inspect its published probability, sources and unanswered questions.</p>';
-    return;
-  }
-  const assessment = trajectoryFor(id);
-  const source = publishedSignals?.embeds[id] || publishedSignals?.context.items[id];
-  const gap = publishedSignals?.uncited.items[id];
-  const markup = `<div class="observation-forecast"><span class="instrument-label">Author's forecast / unchanged</span>
-    <h4>${htmlText(row.title)}</h4><p>${htmlText(row.probability)} &middot; ${htmlText(row.timing)}</p>
-    <div class="observation-actions"><a href="${row.href}">Open forecast details &rarr;</a>${watchButton(id)}</div></div>
-    ${referenceDetails(id)}
-    <div class="trajectory-state"><strong>${htmlText(assessment.label)}</strong><p>${htmlText(assessment.detail)}</p></div>
-    ${assessment.records.map(record => `<div class="measured-observation"><strong>${htmlText(record.direction)}: ${htmlText(record.criterion.description)}</strong>
-      <p>${record.measurement.value} ${htmlText(record.measurement.unit)} &middot; observed ${htmlText(formatUtcDateTime(record.measurement.observedAt))}</p>
-      <p>${htmlText(record.rationale)}</p><p><strong>Limitations:</strong> ${htmlText(record.limitations)}</p>
-      <a href="${htmlText(safeHttpUrl(record.source.url))}" target="_blank" rel="noopener">${htmlText(record.source.name)}</a>
-      <p>Published ${htmlText(formatUtcDateTime(record.source.publishedAt))} &middot; fetched ${htmlText(formatUtcDateTime(record.source.fetchedAt))}
-      &middot; reviewed ${htmlText(formatUtcDateTime(record.reviewedAt))} by ${htmlText(record.reviewedBy)}</p></div>`).join('')}
-    <details class="source-inspection"><summary>${source ? `${publishedSignals.context.items[id] ? 'Dated background' : 'News in the published citation window'}: ${htmlText(source.publisher)}` : 'News evidence gap / no qualifying source'}</summary>
-      ${source ? `<h4>${htmlText(source.headline)}</h4><blockquote>${htmlText(source.quote)}</blockquote>
-        <p><strong>Relevance and limits:</strong> ${htmlText(source.mappingRationale)}</p>
-        <dl><dt>Article published</dt><dd>${htmlText(recordedTime(source.publishedAt || source.articleDate))}</dd>
-        <dt>Source retrieved</dt><dd>${htmlText(recordedTime(source.provenance?.retrievedAt))}</dd>
-        <dt>Mapping reviewed</dt><dd>${htmlText(recordedTime(source.reviewedAt))}</dd>
-        <dt>Source last verified</dt><dd>${htmlText(recordedTime(source.lastVerifiedAt))}</dd></dl>
-        <a href="${htmlText(safeHttpUrl(source.url))}" target="_blank" rel="noopener">Read the original article &rarr;</a>`
-        : `<p>${htmlText(gap?.statement || 'Published evidence is unavailable. No observation is inferred.')}</p>
-          <p>${gap ? `Search recorded ${htmlText(formatUtcDateTime(gap.searchedAt))}.` : ''}</p>`}
-    </details>`;
-  if (host.dataset.rendered === markup) return;
-  const open = [...host.querySelectorAll('details')].map(node => node.open);
-  const focusedWatch = host.contains(document.activeElement) && document.activeElement.matches('[data-watch]');
-  host.innerHTML = markup;
-  host.dataset.rendered = markup;
-  host.querySelectorAll('details').forEach((node, i) => { node.open = Boolean(open[i]); });
-  if (focusedWatch) host.querySelector('[data-watch]').focus({ preventScroll:true });
-}
-function renderObservationHealth(){
-  const coverage = publishedSignals?.referencePoints?.coverage;
-  setText('referenceCoverage', coverage
-    ? `${coverage.mapped}/${coverage.total} forecasts mapped to ${coverage.sources} canonical sources. Reference coverage is separate from news citations and forecast success.`
-    : 'Reference coverage unavailable.');
-  setText('observationFreshness', observationError
-    ? `Update unavailable. ${publishedSignals ? 'Last good bundle retained.' : 'No evidence bundle loaded.'}`
-    : bundleFreshness(publishedSignals));
-  setText('observationCheck', observationError || (observationLastChecked
-    ? `Browser checked ${formatUtcDateTime(observationLastChecked)}. Round trip ${observationLatency} ms.`
-    : 'No browser check completed yet.'));
-  setText('observationTimes', publishedSignals
-    ? `Bundle published ${formatUtcDateTime(publishedSignals.updated)}. Source collection ${formatUtcDateTime(publishedSignals.sourceFetchedAt)}. `
-      + (pendingSignals ? 'A newer validated bundle is waiting; current details have not changed.' : 'Checks run every 5 minutes while this page is visible; errors back off to 30 minutes.')
-    : 'Publication and collection timestamps will appear only after a valid bundle loads.');
-  document.getElementById('applyObservations').hidden = !pendingSignals;
-}
-function validatePublishedBundle(data){
-  const refs = data?.referencePoints, priorRefs = publishedSignals?.referencePoints;
-  const records = forecastRecords(), ids = new Set(records.map(row => row.id));
-  if (priorRefs && (!refs || Date.parse(refs.updatedAt) < Date.parse(priorRefs.updatedAt)))
-    throw new Error('Older or missing reference roster returned. Last good bundle retained.');
-  if (refs && (refs.schemaVersion !== 1 || refs.forecastSha256 !== forecastFingerprint || !validTime(refs.updatedAt)
-    || !refs.sources || !refs.items || !refs.gaps || refs.coverage?.total !== records.length
-    || refs.coverage.mapped !== Object.keys(refs.items).length
-    || refs.coverage.gaps !== Object.keys(refs.gaps).length
-    || refs.coverage.mapped + refs.coverage.gaps !== refs.coverage.total
-    || refs.coverage.sources !== new Set(Object.values(refs.items).flat().map(r => r.sourceId)).size
-    || refs.coverage.references !== Object.values(refs.items).flat().length
-    || [...Object.keys(refs.items), ...Object.keys(refs.gaps)].some(id => !ids.has(id))
-    || !records.every(row => {
-      const entries = refs.items[row.id];
-      return entries?.length ? !refs.gaps[row.id] && entries.every(r => {
-        const s = refs.sources[r.sourceId], m = r.metric;
-        return r.id === row.id && r.predictionText === row.title && s && /^https:\/\//.test(safeHttpUrl(s.url))
-          && !/(?:^|\.)(?:x|twitter)\.com$/i.test(new URL(s.url).hostname)
-          && ['measured','deployment','policy','trial','precursor','feasibility','constraint','counterevidence','theory'].includes(r.relation)
-          && ['supports-prerequisite','context','challenges'].includes(r.direction)
-          && [r.facet,r.why,r.doesNotEstablish,r.excerpt,s.title,s.organization].every(v => typeof v === 'string' && v.trim())
-          && (m === null || (Number.isFinite(m?.value) && [undefined,'>','<','~'].includes(m.operator)
-            && (m.high === undefined || Number.isFinite(m.high) && m.high >= m.value && !m.operator)
-            && typeof m.unit === 'string' && typeof m.coverage === 'string' && typeof m.evidence === 'string'))
-          && validTime(r.reviewedAt) && validTime(s.retrievedAt) && (s.publishedAt === null || validTime(s.publishedAt))
-          && (!s.publishedPeriod || /^\d{4}-(0[1-9]|1[0-2])$/.test(s.publishedPeriod))
-          && ['verified','unavailable','changed','unverified'].includes(s.health?.status)
-          && /^[a-f0-9]{64}$/.test(s.reviewSha256) && s.health.reviewSha256 === s.reviewSha256
-          && validTime(s.health.lastCheckedAt) && validTime(s.health.lastVerifiedAt)
-          && Date.parse(s.health.lastCheckedAt) >= Date.parse(s.health.lastVerifiedAt);
-      }) : typeof refs.gaps[row.id] === 'string';
-    }))) throw new Error('Reference schema or forecast binding mismatch. Last good bundle retained; revision review is pending.');
-  const m = data?.capabilities?.metr, s = m?.current;
-  const prior = publishedSignals?.capabilities?.metr;
-  if (prior?.current && (!s || Date.parse(m?.lastCheckedAt) < Date.parse(prior.lastCheckedAt)))
-    throw new Error('Older or missing METR data returned. Last good bundle retained.');
-  if (m && (m.schemaVersion !== 1 || !['ok', 'error', 'unavailable'].includes(m.status)
-    || (m.lastCheckedAt !== null && !validTime(m.lastCheckedAt)) || (m.status === 'ok' && !s)
-    || (s && (s.benchmark !== 'METR-Horizon-v1.1' || s.unit !== 'human-expert minutes'
-    || !validTime(s.retrievedAt) || !validTime(m.lastCheckedAt) || m.lastSuccessfulFetchAt !== s.retrievedAt
-    || Date.parse(m.lastCheckedAt) < Date.parse(s.retrievedAt) || !/^[a-f0-9]{64}$/.test(s.sha256)
-    || s.measuredAt !== null || s.publishedAt !== null
-    || s.intervalLevel !== 0.95 || !Array.isArray(s.records) || !s.records.length || s.records.length > 200
-    || !s.records.every(r => r && typeof r.id === 'string' && validTime(r.releaseDate) && Array.isArray(r.scaffolds)
-      && r.p80?.estimate <= r.p50?.estimate
-      && ['p50', 'p80'].every(k => [r[k]?.estimate, r[k]?.ci_low, r[k]?.ci_high].every(v => Number.isFinite(v) && v > 0)
-        && r[k].ci_low <= r[k].estimate && r[k].estimate <= r[k].ci_high))))))
-    throw new Error('METR measurement schema is invalid. Last good bundle retained.');
-  if (!forecastFingerprint || data?.forecastVersion?.schemaVersion !== 1 || data.forecastVersion.sha256 !== forecastFingerprint) {
-    throw new Error('Forecast and observation versions do not match. Reload after publication completes; existing data is retained.');
-  }
-  if (!validTime(data.updated) || !validTime(data.sourceFetchedAt) || !hasCompleteSignalCoverage(data)
-    || !Array.isArray(data.reality) || !data.reality.length || data.reality.length > 100
-    || !data.reality.every(row => row && typeof row.t === 'string' && ['news', 'none'].includes(row.kind)
-      && (row.kind !== 'news' || /^https:\/\//.test(safeHttpUrl(row.url))))
-    || data.context.count !== Object.keys(data.context.items).length) {
-    throw new Error('Published evidence failed timestamp, provenance or coverage validation. No replacement was applied.');
-  }
-  if (publishedSignals && Date.parse(data.updated) < Date.parse(publishedSignals.updated)) {
-    throw new Error('The server returned an older bundle. The newer local snapshot is retained.');
-  }
-}
-async function fetchPublishedJson(file, signal){
-  const response = await fetch(file, { cache:'no-cache', signal });
-  if (!response.ok) throw new Error(`Published data request failed (HTTP ${response.status}).`);
-  if (Number(response.headers.get('content-length')) > 2000000) throw new Error('Published data exceeded the size limit.');
-  const text = await response.text();
-  if (text.length > 2000000) throw new Error('Published data exceeded the size limit.');
-  return JSON.parse(text);
-}
-function scheduleObservationRefresh(){
-  clearTimeout(observationTimer);
-  if (document.hidden || location.protocol === 'file:') return;
-  observationTimer = setTimeout(() => refreshPublishedObservations(), Math.min(1800000, 300000 * 2 ** observationFailures));
-}
-function canApplyObservations(){
-  return document.getElementById('reader').hidden
-    && !document.activeElement?.closest('.prediction-evidence, #observationDetail, #metrInstrument, #watchlist, #signalsGrid');
-}
-async function refreshPublishedObservations(){
-  if (observationController || document.hidden || Date.now() - observationLastAttempt < 15000) return;
-  observationLastAttempt = Date.now();
-  observationController = new AbortController();
-  const controller = observationController;
-  const timeout = setTimeout(() => controller.abort('timeout'), 12000);
-  const start = performance.now();
-  const button = document.getElementById('refreshObservations');
-  button.disabled = true;
-  button.textContent = 'Checking published data...';
-  try {
-    const forecast = await fetchPublishedJson('predictions.json', controller.signal);
-    if (JSON.stringify(forecast) !== forecastSnapshot) {
-      throw new Error('A different forecast revision is published. Reload to review it; the current forecast and evidence have not been changed.');
-    }
-    const data = await fetchPublishedJson('signals.json', controller.signal);
-    validatePublishedBundle(data);
-    observationLastChecked = new Date().toISOString();
-    observationLatency = Math.round(performance.now() - start);
-    observationError = '';
-    observationFailures = 0;
-    if (JSON.stringify(data) !== JSON.stringify(publishedSignals)) {
-      if (!publishedSignals || canApplyObservations()) {
-        applySignalBundle(data);
-        pendingSignals = null;
-      } else pendingSignals = data;
-    }
-  } catch (error) {
-    if (controller.signal.reason !== 'hidden') {
-      observationFailures++;
-      observationError = controller.signal.aborted ? 'The published-data request timed out. Try again later.' : error.message;
-      if (!publishedSignals) setText('heroSignalFreshness', 'Prediction evidence unavailable');
-    }
-  } finally {
-    clearTimeout(timeout);
-    observationController = null;
-    button.textContent = 'Check published updates';
-    setTimeout(() => { button.disabled = false; }, Math.max(0, 15000 - (Date.now() - observationLastAttempt)));
-    renderObservationHealth();
-    scheduleObservationRefresh();
-  }
-}
-document.getElementById('refreshObservations').addEventListener('click', refreshPublishedObservations);
-document.getElementById('applyObservations').addEventListener('click', () => {
-  if (pendingSignals && canApplyObservations()) {
-    applySignalBundle(pendingSignals);
-    pendingSignals = null;
-    renderObservationHealth();
-  }
+byId('exploreDisclosure').addEventListener('toggle', () => {
+  if (byId('exploreDisclosure').open) {
+    if (exploreSession) exploreSession.reopen(); else openExplore();
+  } else exploreSession?.close();
 });
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    clearTimeout(observationTimer);
-    observationController?.abort('hidden');
+function revealExploreHash(){
+  const target = byId(location.hash.slice(1));
+  if (target?.closest('#explore')) openExplore(location.hash);
+}
+addEventListener('hashchange', revealExploreHash);
+addEventListener('pagehide', () => exploreSession?.close());
+
+const domainNames = { individual:'Individual', social:'Social', technology:'Technology', economic:'Economic', geopolitical:'Geopolitical', governance:'Governance' };
+
+const filterOptions = {
+  domain:new Set(['all', ...Object.keys(domainNames)]),
+  branch:new Set(['all','baseline','managed','default','ungoverned']),
+  probability:new Set(['all','very-high','high','medium','low','unstated']),
+  theme:new Set(['all','agents','work','robotics','compute','governance','bio','space']),
+};
+
+const themeDefinitions = {
+  agents:/\b(agent|agents|agentic|agi|superintelligen|frontier model|ai r&d|expert capability|recursive self|continual-learning)\b/i,
+  work:/\b(work|labor|labour|employment|jobs?|income|dividend|tax|econom|revenue|wealth|capital|gdp)\b/i,
+  robotics:/\b(robot|robots|robotic|humanoid|physical tasks?|factory|manufactur|autonomous strategic weapons)\b/i,
+  compute:/\b(compute|datacenter|data center|chip|semiconductor|energy|grid|power|inference|training run|cooling|radiator)\b/i,
+  governance:/\b(govern|regulat|treaty|verification|audit|safety|alignment|control|inspection|policy|court|military|deception|sabotage|sandbox)\b/i,
+  bio:/\b(bci|brain|neural|intracortical|connectom|bio|drug|disease|vaccine|pathogen|health|cure|longevity)\b/i,
+  space:/\b(orbital|space|satellite|dyson|kardashev|transcension|ruliad|off-world|civilization)\b/i,
+};
+
+function initialForecastFilters(){
+  const params = new URLSearchParams(location.search);
+  const read = (key, values) => values.has(params.get(key)) ? params.get(key) : 'all';
+  return {
+    domain:read('fd', filterOptions.domain),
+    branch:read('fb', filterOptions.branch),
+    probability:read('fp', filterOptions.probability),
+    theme:read('ft', filterOptions.theme),
+    changed:params.get('fc') === '1',
+    query:String(params.get('fq') || '').slice(0, 120),
+  };
+}
+
+function eventThemes(event){
+  const text = String(event && event.t || '');
+  const themes = Object.entries(themeDefinitions)
+    .filter(([, pattern]) => pattern.test(text))
+    .map(([theme]) => theme);
+  if (!themes.length && event?.d === 'governance') themes.push('governance');
+  if (!themes.length && event?.d === 'economic') themes.push('work');
+  if (!themes.length && event?.d === 'technology') themes.push('agents');
+  return themes;
+}
+
+function probabilityBand(probability){
+  if (!Number.isFinite(probability)) return 'unstated';
+  if (probability >= 80) return 'very-high';
+  if (probability >= 60) return 'high';
+  if (probability >= 40) return 'medium';
+  return 'low';
+}
+
+function branchForEvent(title){
+  if (/^managed branch:/i.test(title)) return { key:'managed', label:'Managed branch' };
+  if (/default branch:/i.test(title)) return { key:'default', label:'Default branch' };
+  if (/\bungoverned\b/i.test(title)) return { key:'ungoverned', label:'Ungoverned branch' };
+  return { key:'baseline', label:'Shared forecast' };
+}
+function matchesCatalogueFilters(event, filters){
+  const terms = filters.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const themes = eventThemes(event), searchable = `${event.t} ${domainNames[event.d] || ''} ${themes.join(' ')}`.toLowerCase();
+  return (filters.domain === 'all' || event.d === filters.domain)
+    && (filters.branch === 'all' || branchForEvent(event.t).key === filters.branch)
+    && (filters.probability === 'all' || probabilityBand(event.prob) === filters.probability)
+    && (filters.theme === 'all' || themes.includes(filters.theme))
+    && (!filters.changed || Boolean(event.revisedAt && event.revisedAt === String(forecastData?.updated || '').slice(0, 10)))
+    && terms.every(term => searchable.includes(term));
+}
+function renderChapterSearch(query){
+  const host = byId('atlasSearchResults');
+  host.replaceChildren(); host.hidden = !query.trim();
+  if (host.hidden) return;
+  const terms = query.toLowerCase().trim().split(/\s+/);
+  const found = chapters.map((chapter, index) => ({ chapter, index })).filter(({ chapter }) =>
+    terms.every(term => `${chapter.title} ${chapter.body}`.toLowerCase().includes(term)));
+  for (const { chapter, index } of found) host.append(action(`Read: ${chapter.title}`, () => window.openReader(index)));
+  if (!found.length) host.append(node('p', 'mission-help', 'No chapter summaries match. Matching forecasts appear below.'));
+}
+function renderRevisionNotes(){
+  if (!forecastData) { setText('forecastChangesSummary', 'The forecast revision is unavailable.'); return; }
+  setText('forecastChangesSummary', `Published forecast revision: ${recorded(forecastData.updated)}. The full authored basis is retained below.`);
+  const host = byId('forecastChangeLinks');
+  host.replaceChildren();
+  const details = node('details');
+  details.append(node('summary', '', 'Read the authored revision basis'), node('p', '', forecastData.basis || 'No revision basis is recorded.'));
+  host.append(details);
+  const changes = forecastRecords().filter(row => row.data.revisedAt === String(forecastData.updated).slice(0, 10));
+  setText('changedCount', changes.length);
+  for (const row of changes) host.append(link(row.title, row.href), node('p', 'mission-help', row.data.changeNote));
+}
+function renderSourceOverview(){
+  const host = byId('sourceOverview');
+  host.replaceChildren();
+  if (!model) { host.append(node('p', '', 'Source coverage is unavailable. No successful checks are inferred.')); return; }
+  const data = model.bundle, refs = data.referencePoints?.coverage;
+  host.append(node('p', '', `NEWS: ${Object.keys(data.embeds).length} cited forecast mappings, ${Object.keys(data.context.items).length} dated-context mappings and ${Object.keys(data.uncited.items).length} explicit gaps. The chronology deduplicates their articles.`));
+  host.append(node('p', '', refs ? `Research references: ${refs.mapped} forecast mappings / ${refs.sources} canonical sources. Their health checks do not verify the NEWS layer.` : 'Research references are unavailable.'));
+  host.append(node('p', '', 'METR is a scoped software-task instrument, not an AGI score. X is a separate discussion supplement, not evidence.'));
+}
+function renderLivingSignals(){
+  const host = byId('signalsGrid');
+  host.replaceChildren();
+  if (!model) { setText('realityMeta', 'Published observations unavailable.'); return; }
+  setText('realityMeta', `Snapshot ${recorded(model.bundle.updated)}. Collection ${recorded(model.bundle.sourceFetchedAt)}. Reporting dates and limitations remain distinct.`);
+  for (const signal of model.bundle.reality) {
+    const article = node('article', 'living-signal');
+    article.append(node('h3', '', signal.t));
+    if (signal.text || signal.note) article.append(node('p', '', signal.text || signal.note));
+    else if (signal.kind !== 'news') article.append(node('p', '', 'No qualifying observation is recorded.'));
+    if (signal.kind === 'news') {
+      article.append(link(signal.headline || `Read at ${signal.publisher}`, engine.safeSourceUrl(signal.url), true));
+      const date = engine.parsePublishedDate(signal.publishedAt || null);
+      article.append(node('p', 'mission-help', `Published ${date.label}. ${engine.publicationAge(date)}. A reported source is not a whole-forecast verdict.`));
+    }
+    host.append(article);
+  }
+}
+
+
+function dossierSection(title, description){
+  const section = node('section', 'dossier-section');
+  section.append(node('h5', '', title));
+  if (description) section.append(node('p', 'dossier-note', description));
+  return section;
+}
+function datedSourceLabel(value, period){
+  return value ? recorded(value) : period ? recorded(period) : 'not recorded; publication date unknown';
+}
+function disclosure(title, build, id = ''){
+  const details = node('details', 'dossier-disclosure');
+  if (id) details.id = id;
+  details.append(node('summary', '', title));
+  details.addEventListener('toggle', () => {
+    if (details.open && !details.dataset.rendered) {
+      details.append(build()); details.dataset.rendered = 'true';
+    } else if (!details.open && details.dataset.rendered) {
+      while (details.children.length > 1) details.lastElementChild.remove();
+      delete details.dataset.rendered;
+    }
+  });
+  return details;
+}
+function reviewedNewsDossier(row){
+  const data = model.bundle, record = data.embeds[row.id] || data.context.items[row.id];
+  const section = dossierSection('NEWS', 'Reviewed reporting and dated context are not the same as confirmation of this forecast.');
+  section.dataset.newsChannel = record ? (data.context.items[row.id] ? 'context' : 'cited') : 'uncited';
+  section.dataset.newsForecast = row.id;
+  if (!record) {
+    const gap = data.uncited.items[row.id];
+    section.append(node('p', '', gap?.statement || 'NEWS evidence is unavailable. No substitute has been inferred.'));
+    if (gap) section.append(node('p', 'dossier-note', `Search recorded ${recorded(gap.searchedAt)}. Reason: ${gap.reason}.`));
+    return section;
+  }
+  const article = model.articles.find(item => item.connections.some(connection => connection.id === row.id));
+  const connection = article.connections.find(item => item.id === row.id);
+  section.append(link(record.headline, engine.safeSourceUrl(record.url), true));
+  section.append(node('p', 'dossier-note', `${connection.channel === 'context' ? 'Dated background' : 'Cited in this snapshot'} / ${typeLabels[connection.type]}. Published ${article.date.label}. ${engine.publicationAge(article.date)}.`));
+  section.append(node('blockquote', '', record.quote || record.text));
+  section.append(node('p', 'dossier-rationale', connection.rationale));
+  section.append(renderProvenance(connection));
+  section.append(link('Find this report in its publication-year chronology', `#${sourceId(article)}`));
+  const currency = data.currency?.[row.id];
+  if (Array.isArray(currency) && currency.length) {
+    section.append(disclosure('Separately reviewed later references', () => {
+      const host = node('div');
+      for (const item of currency) {
+        const reference = node('article', 'dossier-record');
+        reference.append(link(item.headline || item.title || item.publisher, engine.safeSourceUrl(item.url), true));
+        if (item.quote) reference.append(node('blockquote', '', item.quote));
+        if (item.mappingRationale) reference.append(node('p', '', item.mappingRationale));
+        reference.append(node('p', 'dossier-note', `Source quality: ${qualityLabel(item.sourceQuality)}. A later reference is not a whole-forecast verdict.`));
+        reference.append(node('p', 'dossier-note', `Published ${datedSourceLabel(item.publishedAt || item.articleDate)}. Reviewed ${recorded(item.reviewedAt)}. Recorded verification ${recorded(item.lastVerifiedAt)}.`));
+        host.append(reference);
+      }
+      return host;
+    }, `currency-${row.id}`));
+  }
+  return section;
+}
+function referenceDossier(row){
+  const layer = model.bundle.referencePoints, entries = layer?.items[row.id] || [];
+  const section = dossierSection('Research and real-world references', 'These reviewed references concern specific facets. Their source checks do not verify NEWS articles or resolve the whole forecast.');
+  if (!entries.length) {
+    section.append(node('p', '', layer?.gaps[row.id] || 'Reviewed reference points are unavailable.'));
+    return section;
+  }
+  const page = node('div');
+  let offset = 0;
+  function render(){
+    page.replaceChildren();
+    for (const entry of entries.slice(offset, offset + 6)) {
+      const source = layer.sources[entry.sourceId], health = source.health;
+      const stale = !health.lastCheckedAt || Date.now() - Date.parse(health.lastCheckedAt) > 7 * 86400000;
+      const item = node('article', 'dossier-record');
+      item.dataset.referenceDetail = row.id;
+      item.append(node('p', 'dossier-note', `Limited-facet relationship: ${entry.relation} / ${entry.direction.replaceAll('-', ' ')}.`));
+      item.append(node('h6', '', entry.facet), node('p', '', entry.why));
+      const limits = node('p');
+      limits.append(node('strong', '', 'Does not establish: '), document.createTextNode(entry.doesNotEstablish));
+      item.append(limits);
+      if (stale || health.status !== 'verified') item.append(node('p', 'dossier-warning',
+        `Last-good reviewed reference retained. ${health.error || (stale ? 'Source check is over seven days old.' : `Recorded health: ${health.status}.`)} Availability does not determine forecast direction.`));
+      item.append(disclosure(`Source, excerpt and review record: ${source.organization}`, () => {
+        const body = node('div');
+        body.append(link(source.title, engine.safeSourceUrl(source.url), true), node('blockquote', '', entry.excerpt));
+        if (entry.metric) {
+          const metric = entry.metric;
+          body.append(node('p', '', `Reported value: ${metric.operator || ''}${metric.value}${metric.high == null ? '' : `–${metric.high}`} ${metric.unit}. Coverage: ${metric.coverage}`));
+          body.append(node('p', 'dossier-note', `Metric evidence: ${metric.evidence}`));
+        }
+        const uses = Object.values(layer.items).flat().filter(value => value.sourceId === entry.sourceId).length;
+        body.append(node('p', 'dossier-note', `Publication: ${datedSourceLabel(source.publishedAt, source.publishedPeriod)}. Source quality: ${source.quality}. Mapping reviewed ${recorded(entry.reviewedAt)} by ${entry.reviewedBy || 'reviewer not recorded'}.`));
+        body.append(node('p', 'dossier-note', `Source retrieved ${recorded(source.retrievedAt)}. Excerpt last verified ${recorded(health.lastVerifiedAt)}. Source last checked ${recorded(health.lastCheckedAt)}. Recorded health: ${health.status}.`));
+        body.append(node('p', 'dossier-note', `Used by ${uses} forecast mappings; reuse is not independent corroboration. Research checks are separate from NEWS verification.`));
+        if (source.pdfPages?.length) body.append(node('p', 'dossier-note', `PDF pages checked: ${source.pdfPages.join(', ')}.`));
+        const provenance = source.dateEvidenceUrl || source.revisionIndex?.url;
+        if (provenance) body.append(link('Publication-date provenance / revision index', engine.safeSourceUrl(provenance), true));
+        body.append(node('p', 'dossier-note', `Review SHA-256: ${source.reviewSha256}. Recorded excerpt SHA-256: ${health.textSha256 || 'not recorded'}.`));
+        return body;
+      }, `reference-${row.id}-${entry.sourceId}`));
+      page.append(item);
+    }
+    if (entries.length > 6) {
+      const controls = node('nav', 'more-stories');
+      controls.setAttribute('aria-label', 'Reviewed reference pages');
+      const previous = action('Previous references', () => { offset -= 6; render(); page.querySelector('summary').focus(); });
+      const next = action('Next references', () => { offset += 6; render(); page.querySelector('summary').focus(); });
+      previous.disabled = offset === 0; next.disabled = offset + 6 >= entries.length;
+      controls.append(previous, node('span', '', `${offset + 1}–${Math.min(offset + 6, entries.length)} of ${entries.length}`), next);
+      page.append(controls);
+    }
+  }
+  render(); section.append(page); return section;
+}
+function measuredAssessmentDossier(row){
+  const assessment = trajectoryFor(row.id);
+  const section = dossierSection(assessment.label, assessment.detail);
+  for (const record of assessment.records) {
+    const item = node('article', 'dossier-record');
+    item.append(node('h6', '', `${record.direction}: ${record.criterion.description}`));
+    item.append(node('p', '', `${record.measurement.value} ${record.measurement.unit}. Observed ${recorded(record.measurement.observedAt)}.`));
+    item.append(node('p', '', record.rationale), node('p', '', `Limitations: ${record.limitations}`));
+    item.append(link(record.source.name, engine.safeSourceUrl(record.source.url), true));
+    item.append(node('p', 'dossier-note', `Source published ${recorded(record.source.publishedAt)}, fetched ${recorded(record.source.fetchedAt)}; reviewed ${recorded(record.reviewedAt)} by ${record.reviewedBy}.`));
+    section.append(item);
+  }
+  return section;
+}
+function metrDossier(row){
+  const data = model.bundle.capabilities?.metr;
+  const section = dossierSection('METR / scoped capability instrument', 'Human-expert software-task duration at a specified success rate is not agent runtime, all-job automation or an AGI score.');
+  if (data?.context?.id !== row.id || data.context.forecastSha256 !== model.fingerprint) {
+    section.append(node('p', '', 'This instrument is not bound as context to this forecast. No numeric claim is transferred from another forecast.'));
   } else {
-    renderObservationHealth();
-    if (Date.now() - observationLastAttempt >= 300000) refreshPublishedObservations();
-    else scheduleObservationRefresh();
+    section.append(node('p', '', data.context.role));
+    const record = data.current?.records?.[0];
+    if (record) {
+      section.append(node('p', '', `Model record: ${record.id}. Released ${recorded(record.releaseDate)}.`));
+      for (const [key, label] of [['p50','50% task success'],['p80','80% task success']]) {
+        const metric = record[key];
+        section.append(node('p', '', `${label}: ${metric.estimate.toFixed(2)} human-expert minutes (95% interval ${metric.ci_low.toFixed(2)}–${metric.ci_high.toFixed(2)}).`));
+      }
+    } else section.append(node('p', '', 'No validated measurement record is available.'));
+    const stale = !data.lastCheckedAt || Date.now() - Date.parse(data.lastCheckedAt) > 36 * 3600000;
+    section.append(node('p', 'dossier-note', `${data.status !== 'ok' ? `${data.error || 'Collection unavailable.'} Last-good measurements, if present, are retained. ` : ''}${stale ? 'The source check is stale. ' : ''}Checked ${recorded(data.lastCheckedAt)}; last successful collection ${recorded(data.lastSuccessfulFetchAt)}.`));
+    section.append(node('p', 'dossier-note', 'Evaluation/publication dates are not supplied by this dataset. Neither the model release date nor HTTP modification time substitutes for them. Estimates above 960 human-expert minutes are unreliable with the current task suite.'));
   }
-});
-window.addEventListener('pagehide', () => {
-  clearTimeout(observationTimer);
-  observationController?.abort('hidden');
-});
-document.addEventListener('click', event => {
-  const watch = event.target.closest('[data-watch]');
-  const inspect = event.target.closest('[data-inspect]');
-  const ack = event.target.closest('[data-ack]');
-  const read = event.target.closest('[data-read-chapter]');
-  if (watch) {
-    const id = watch.dataset.watch;
-    const row = forecastRecords().find(row => row.id === id);
-    if (missionState.watchlist[id]) delete missionState.watchlist[id];
-    else if (row) missionState.watchlist[id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(id) };
-    else { setText('missionAnnouncement', 'This forecast is no longer available.'); return; }
-    saveMission();
-    renderMission();
-    setText('missionAnnouncement', missionState.watchlist[id] ? 'Forecast saved to your watchlist.' : 'Forecast removed from your watchlist.');
+  const instrument = link('Inspect model selection, intervals and dataset provenance in Explore', '#metrInstrument');
+  section.append(instrument); return section;
+}
+function discussionDossier(row){
+  const layer = model.bundle.xSignals, item = layer?.items?.[row.id];
+  const section = dossierSection('X / discussion supplement', 'Posts, quotes and reposts are discussion, not NEWS evidence, research verification or forecast success.');
+  if (!item) {
+    section.append(node('p', '', layer ? 'No matched discussion item is recorded for this forecast in the loaded supplement.' : 'No discussion supplement is available.'));
+    return section;
   }
-  if (inspect) {
-    const select = document.getElementById('observationPrediction');
-    select.value = inspect.dataset.inspect;
-    select.dispatchEvent(new Event('change'));
-    select.scrollIntoView({ block:'center', behavior:motionQuery.matches ? 'instant' : 'smooth' });
-    select.focus({ preventScroll:true });
+  let url, date;
+  try {
+    if (!['tracked','nearest'].includes(item.tier) || !['authored','reposted'].includes(item.authorship)
+      || typeof item.text !== 'string') throw new Error('Invalid discussion record.');
+    url = new URL(item.url);
+    if (url.protocol !== 'https:' || url.username || url.password || !/(^|\.)(x|twitter)\.com$/i.test(url.hostname)) throw new Error('Invalid X link.');
+    date = engine.parsePublishedDate(item.created || null);
+  } catch {
+    section.append(node('p', 'dossier-warning', 'The published discussion record is invalid. No link or evidence claim has been substituted.'));
+    return section;
   }
-  if (ack) {
-    const row = forecastRecords().find(row => row.id === ack.dataset.ack);
-    if (row && missionState.watchlist[row.id] && publishedSignals) {
-      missionState.watchlist[row.id] = { title:row.title, forecast:JSON.stringify(row.data), seen:evidenceSnapshot(row.id) };
-      saveMission();
-      renderMission();
-    }
-  }
-  if (read && !document.getElementById('reader').hidden) {
-    completeQuest('chapter-v1');
-    read.textContent = 'Reading recorded';
-    read.setAttribute('aria-pressed', 'true');
-  }
-});
-document.getElementById('observationPrediction').addEventListener('change', () => { renderObservationDetail(); renderMetr(); });
-document.getElementById('observationDetail').addEventListener('toggle', event => {
-  if (event.target.matches('.source-inspection') && event.target.open) {
-    comparedForecasts.add(document.getElementById('observationPrediction').value);
-    document.getElementById('confirmComparison').disabled = comparedForecasts.size < 2;
-  }
-}, true);
-document.getElementById('confirmComparison').addEventListener('click', () => {
-  if (comparedForecasts.size >= 2) completeQuest('evidence-v1');
-});
-document.querySelector('.probability-simulator').addEventListener('input', () => completeQuest('scenario-v1'));
-document.querySelector('.probability-simulator').addEventListener('click', event => {
-  if (event.target.closest('[data-sim-preset]:not([data-sim-preset="baseline"])') && probabilitySimulatorState.anchors) completeQuest('scenario-v1');
-});
-document.querySelectorAll('[data-readiness]').forEach(input => input.addEventListener('change', () => {
-  missionState.readiness = readinessIds.filter(id => document.querySelector(`[data-readiness="${id}"]`).checked);
-  saveMission();
-  renderMission();
-}));
-document.getElementById('preparationAction').addEventListener('change', event => {
-  missionState.action = event.target.value;
-  missionState.actionConfirmed = false;
-  missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
-  saveMission();
-  renderMission();
-});
-document.getElementById('confirmPreparation').addEventListener('change', event => {
-  missionState.actionConfirmed = Boolean(missionState.action && event.target.checked);
-  missionState.quests = missionState.quests.filter(id => id !== 'action-v1');
-  if (missionState.actionConfirmed) missionState.quests.push('action-v1');
-  saveMission();
-  renderMission();
-});
-const resetDialog = document.getElementById('missionResetDialog');
-document.getElementById('missionReset').addEventListener('click', () => resetDialog.showModal());
-document.getElementById('cancelMissionReset').addEventListener('click', () => resetDialog.close());
-document.getElementById('confirmMissionReset').addEventListener('click', () => {
-  missionState = emptyMission();
-  comparedForecasts.clear();
-  missionStorageMode = 'local';
-  missionStorageMessage = 'Saved on this browser only.';
-  saveMission();
-  renderMission();
-  resetDialog.close();
-  document.getElementById('missionReset').focus();
-  setText('missionAnnouncement', missionStorageMode === 'local' ? 'Planning data cleared.' : 'Session planning data cleared; browser storage could not be cleared.');
-});
-renderMission();
-predictionsReady.then(ready => {
-  const select = document.getElementById('observationPrediction');
-  if (!ready) {
-    select.innerHTML = '<option value="">Forecast unavailable</option>';
-    setText('observationFreshness', 'Forecast unavailable. Observation refresh cannot run.');
+  const authored = item.authorship === 'authored';
+  section.append(node('p', '', `${authored ? '@peterxing authored this' : `@peterxing reposted @${item.author || 'author not recorded'}`}. ${item.tier === 'tracked' ? 'Recorded as tracked discussion' : 'Nearest topical activity only, not tracking of the forecast'}.`));
+  section.append(node('blockquote', '', item.text));
+  if (item.statement) section.append(node('p', '', item.statement));
+  section.append(node('p', 'dossier-note', `Post created ${date.label}. ${engine.publicationAge(date)}. Supplement collected ${recorded(layer.summary?.harvestedAt)}; assembled ${recorded(layer.summary?.builtAt)}. This may not include later activity.`));
+  section.append(link('View the original discussion on X', url.href, true));
+  return section;
+}
+function renderSourceDossier(row){
+  const host = node('div', 'forecast-source-dossier');
+  host.dataset.forecastDossier = row.id;
+  if (!model) { host.append(node('p', '', 'The coherent source record is unavailable. No evidence is inferred.')); return host; }
+  host.append(node('p', 'dossier-note', `Source snapshot ${recorded(model.bundle.updated)}. Collection ${recorded(model.bundle.sourceFetchedAt)}. Each layer retains its own publication, review and source-check dates.`));
+  host.append(reviewedNewsDossier(row), referenceDossier(row), measuredAssessmentDossier(row), metrDossier(row), discussionDossier(row));
+  return host;
+}
+function forecastDossierControl(row, prefix = 'forecast'){
+  const details = disclosure('Sources, context & limitations', () => renderSourceDossier(row), `${prefix}-sources-${row.id}`);
+  details.classList.add('source-inspection', 'forecast-dossier');
+  details.name = 'reader-source-dossiers';
+  details.addEventListener('toggle', () => {
+    if (!details.open) return;
+    for (const other of document.querySelectorAll('.forecast-dossier[open]')) if (other !== details) other.open = false;
+    recordComparison(row.id);
+  });
+  return details;
+}
+let observationRenderedModel = null;
+let observationRenderedId = '';
+function renderObservationDetail(){
+  const id = byId('observationPrediction').value;
+  const row = forecastRecords().find(item => item.id === id), host = byId('observationDetail');
+  if (!row) {
+    observationRenderedModel = null;
+    observationRenderedId = '';
+    host.replaceChildren(node('p', 'mission-help', model
+      ? 'Choose a forecast to inspect its estimate, sources and unanswered questions.'
+      : 'Forecast sources are unavailable. Saved records are retained.'));
     return;
   }
-  select.innerHTML = '<option value="">Choose a forecast to inspect</option>' + forecastRecords().map(row =>
-    `<option value="${row.id}">${htmlText(row.timing)} / ${htmlText(row.title)}</option>`).join('');
-  renderMission();
-  refreshPublishedObservations();
-});
+  if (observationRenderedModel === model && observationRenderedId === id) return;
+  const heading = node('div', 'observation-forecast');
+  heading.append(node('p', 'instrument-label', 'Authored forecast / unchanged'), node('h4', '', row.title),
+    node('p', '', `${row.probability} / ${row.timing}`));
+  const actions = node('div', 'observation-actions');
+  actions.append(link('Read this forecast in the timeline', row.href), watchControl(row.id));
+  heading.append(actions);
+  host.replaceChildren(heading, forecastDossierControl(row, 'desk'));
+  observationRenderedModel = model;
+  observationRenderedId = id;
+}
 
-/* APP-JS-DONE */
+/* END RESTORED EXPLORE */
+
+loadAuthor();
+revealHash();
+revealExploreHash();
