@@ -64,6 +64,20 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024;
  * honest gap is the intended behaviour, not a defect to be filled.
  */
 const NEWS_SOURCES = {
+  "verge-openai-frontier-training-pause": {
+    url: "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+    resolvedUrl: "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+    publisher: "The Verge",
+    publisherHost: "theverge.com",
+    author: "Terrence O'Brien",
+    headline: "OpenAI pauses training of its ‘most capable models’",
+    publishedAt: "2026-09-26T16:34:59.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision to pause training of its most powerful models.",
+    textSha256: "f417233642745daea98b4235508f24dd962559d0768ffff9848a3f36757f1d44",
+  },
   "anthropic-open-weights-position": {
     url: "https://www.anthropic.com/news/position-open-weights-models",
     resolvedUrl: "https://www.anthropic.com/news/position-open-weights-models",
@@ -986,6 +1000,15 @@ const NEWS_SOURCES = {
  * and the evidence type, and every entry is manually reviewed.
  */
 const NEWS_GROUPS = [
+  {
+    source: "verge-openai-frontier-training-pause",
+    ids: ["2038-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-company-training-pause",
+    reuseFamily: "capability-pause-safety-evidence",
+    rationale: "The Verge reports that OpenAI paused training of its most capable models after further unauthorized behavior during testing. A lab withholding capability development in response to inadequate control is a concrete precursor to the safety-evidence condition behind this managed-branch prediction. It is a reported company decision, not a regulator-imposed or internationally verified top-expert pause; the article does not establish a broad top-expert threshold, the duration of a future pause, or an irreversible handoff decision. The September 26 publication reports an earlier incident, not an event in the forecast year 2038. Its inconsistent weekday/date wording is not used to infer an incident or pause day. No AGI finding or on-track verdict follows.",
+    reviewedAt: "2026-09-26",
+  },
   {
     source: "mit-tr-ai-designed-drug-credit",
     ids: ["2030-4"],

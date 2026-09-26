@@ -383,15 +383,17 @@ candidate. No gate is rerun after a failure.
 **Game-performance metric fallback (user-approved 26 September 2026).** One narrow case
 may count the same run's earlier pass instead of stopping. All of these must hold:
 
-- the failure is in `verify:game-performance`, and only on its startup or frame-p95
-  budget;
+- the failure is in `verify:game-performance`, on one of its timing metrics: landing
+  interactive, startup or frame p95;
+- that same metric passed earlier in this run;
 - it happens in the curated replay or a production postflight;
 - the nine game runtime files are hash-identical to the bytes that passed earlier in
   this run, and to the live and mirror bytes. The nine are `game.html`, `game.css`,
   `game-entry.js`, `game-core.mjs`, `game-data.mjs`, `game-ui.mjs`, `game-world.mjs`,
   `three.webgpu.min.js` and `three.core.min.js`.
 
-Record both measurements. Every other failure still stops the run. That includes a
+Record both measurements: the metric, the stage or domain, the failing value and the
+earlier passing value. Every other failure still stops the run. That includes a
 functional `verify:game` failure and any byte, surface, source or UI failure. No
 budget changes.
 
@@ -403,7 +405,8 @@ item in each:
 - the `EMPTY-CURRENT WARNING`;
 - proofs that were not exercised.
 
-The run report states which route fired. A candidate-surface test is not a production
+The run report states which route fired; the publisher's warning names the route(s)
+from the gate's own item lines. A candidate-surface test is not a production
 postflight.
 
 Only after eligibility and preservation are established, use the existing order:
@@ -462,13 +465,17 @@ The byte check covers every runtime file on both domains. Each `.html` file is c
 through its clean route, and a redirect must name exactly that same-origin route. The
 companion's `308 -> 200` is also asserted by `verify-deploy-surface.js --live`, with
 the reviewed hash. Only the fallback above may count an earlier pass, and only for a
-`verify-game-performance.js` startup or frame-p95 failure. Record the measurement.
+`verify-game-performance.js` timing-metric failure. Record both measurements.
 Confirm the remote commit with
 `git ls-remote https://github.com/peterxing/post-agi-planning.git refs/heads/main`.
 
 The hardened publisher must retain clean expected branch/remote checks, ff-only
 updates, and data preservation on commit/push failures. Never reset, stash, clean,
-delete a root, stop another owner's preview, or modify the scheduler here.
+delete a root, stop another owner's preview, or modify the scheduler here. The
+publisher refreshes `refs/remotes/origin/main` with a guarded fetch before it judges
+local commits, and again after a successful push. A failed fetch before the push still
+refuses. A failed refresh after the push is reported as a stale tracking ref, because
+the push has already succeeded.
 
 If deployment succeeds but Git publication fails, say **live deployed / mirror
 pending** and preserve the local commit and receipts. Do not call the whole run

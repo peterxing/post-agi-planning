@@ -590,75 +590,994 @@ html[data-theme="dark"] {
   <script type="application/json" id="timelineData">
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-09-22",
+  "reviewedAt": "2026-09-26",
   "initialReviewDate": "2026-09-22",
-  "actualsCheck": {"status":"not-run","attemptedAt":null,"checkedAt":null,"contentChangedAt":null,"checkedSourceIds":[],"summary":"The daily actuals workflow is scheduled. Its first check has not completed."},
+  "actualsCheck": {
+    "status": "updated",
+    "attemptedAt": "2026-09-26T21:13:14.708Z",
+    "checkedAt": "2026-09-26T21:13:14.708Z",
+    "contentChangedAt": "2026-09-26T21:13:14.708Z",
+    "checkedSourceIds": [
+      "openai-path-to-astra-frontier-safeguards",
+      "guardian-astra-release-contested-agi-claim",
+      "ieee-ai-robots-superconductor-discovery",
+      "bbc-un-ai-standards-us-rejects",
+      "anthropic-claude-enzyme-discovery",
+      "ieee-openai-llm-chip-design"
+    ],
+    "windowStart": "2026-08-26",
+    "windowEnd": "2026-09-26",
+    "summary": "6 selected canonical NEWS sources reverified. Catch-up after unpublished scheduled attempts and an intervening September 26 publication. Six selected original sources from OpenAI, The Guardian, IEEE Spectrum, BBC News and Anthropic were read and reverified. Three independently reviewed companion connections are added; company capability claims remain attributed. This selected-source review does not reverify every historical companion source, resolve AGI, establish scenario timing, or claim exhaustive discovery. Earlier discovery gaps remain. Reviewed companion records changed."
+  },
   "sources": [
-    {"id":"computer-use","publisher":"Anthropic","kind":"Company announcement","title":"Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku","url":"https://www.anthropic.com/news/3-5-models-and-computer-use","published":"2024-10-22","dateNote":"Original page date. A later pricing update is not the release date."},
-    {"id":"deepseek-r1","publisher":"DeepSeek-AI","kind":"Primary research preprint","title":"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning","url":"https://arxiv.org/abs/2501.12948v1","published":"2025-01-22","dateNote":"Version 1 submission date, not the earlier model-release date. Pinned to v1 rather than the 2026 revision."},
-    {"id":"metr-horizons","publisher":"METR","kind":"Independent research","title":"Measuring AI Ability to Complete Long Tasks","url":"https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/","published":"2025-03-19","dateNote":"Original publication. Its static findings are historical; the embedded chart is updated separately."},
-    {"id":"iea-energy","publisher":"International Energy Agency","kind":"Intergovernmental research","title":"Energy and AI: Executive summary","url":"https://www.iea.org/reports/energy-and-ai/executive-summary","published":"2025-04-10","dateNote":"Publication date is from the parent report, not a guessed date for the chapter.","dateUrl":"https://www.iea.org/reports/energy-and-ai"},
-    {"id":"alphaevolve","publisher":"Google DeepMind","kind":"Company research","title":"AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms","url":"https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/","published":"2025-05-14","dateNote":"Original publication date and article metadata, not the July 2026 page-modification timestamp."},
-    {"id":"misalignment","publisher":"Anthropic","kind":"Company research","title":"Agentic misalignment: How LLMs could be insider threats","url":"https://www.anthropic.com/research/agentic-misalignment","published":"2025-06-20","dateNote":"Study publication date. The reported behaviors were in controlled simulations."},
-    {"id":"metr-slowdown","publisher":"METR","kind":"Independent research","title":"Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity","url":"https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/","published":"2025-07-10","dateNote":"Historical study of early-2025 tools, not an estimate of September 2026 productivity."},
-    {"id":"metr-th11","publisher":"METR","kind":"Independent research","title":"Time Horizon 1.1","url":"https://metr.org/blog/2026-1-29-time-horizon-1-1/","published":"2026-01-29","dateNote":"Methodology-release date. Individual models' release dates and evaluation dates are different quantities."},
-    {"id":"metr-update","publisher":"METR","kind":"Independent research","title":"February 2026 update on AI and developer productivity","url":"https://metr.org/blog/2026-02-24-uplift-update/","published":"2026-02-24","dateNote":"Follow-up publication, reporting an experiment that began in August 2025."},
-    {"id":"softbank","publisher":"SoftBank Group","kind":"Corporate announcement","title":"Follow-on Investments in OpenAI","url":"https://group.softbank/en/news/press/20260227","published":"2026-02-27","dateNote":"Agreement/announcement date in U.S. time. The source distinguishes planned tranches and closing conditions."},
-    {"id":"eu-omnibus","publisher":"European Commission","kind":"Official policy","title":"AI Omnibus enters into force","url":"https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force","published":null,"dateNote":"The source explicitly gives 27 July 2026 as the effective date. No separate publication date is asserted here."},
-    {"id":"aisi-incident","publisher":"UK AI Security Institute","kind":"Official incident report","title":"Incident Report: unsanctioned agent behaviour during cyber testing","url":"https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing","published":"2026-08-04","dateNote":"Published 4 August; detection was 28 July, and the reported activity occurred 25-28 July."},
-    {"id":"eu-act","publisher":"European Commission","kind":"Official policy","title":"AI Act: regulatory framework and application timeline","url":"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai","published":null,"dateNote":"Undated, maintained guidance. The 2 August 2026 date is an application date, not the page's publication date."},
-    {"id":"stanford-work","publisher":"Stanford Digital Economy Lab","kind":"Academic working paper","title":"Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence","url":"https://digitaleconomy.stanford.edu/publication/canaries-in-the-coal-mine-six-facts-about-the-recent-employment-effects-of-artificial-intelligence/","published":"2026-08-12","dateNote":"Explicitly the 12 August 2026 revision; the underlying payroll sample runs through June 2026."},
-    {"id":"anthropic-security","publisher":"Anthropic","kind":"Company incident follow-up","title":"Improving our alignment and security efforts","url":"https://www.anthropic.com/news/improving-alignment-security-efforts","published":"2026-08-31","dateNote":"Dated follow-up. Its discussion of the AISI incident is not an independent second occurrence."},
-    {"id":"fable-mythos","publisher":"Anthropic","kind":"Company announcement","title":"Introducing Claude Fable 5.1 and Claude Mythos 5.1","url":"https://www.anthropic.com/claude-fable-and-mythos-5-1","published":"2026-09","dateNote":"The inspected announcement displays September 2026 without a day. Month precision is preserved."},
-    {"id":"efs","publisher":"Anthropic","kind":"Company announcement","title":"Developing Enterprise Frontier Safeguards with our customers","url":"https://www.anthropic.com/news/enterprise-frontier-safeguards","published":"2026-09-01","dateNote":"Announcement date. The article describes a phased rollout later in the fall, not completed deployment."},
-    {"id":"life-sciences","publisher":"Anthropic","kind":"Company announcement","title":"Introducing the Life Sciences Verification Program","url":"https://www.anthropic.com/news/life-sciences-verification-program","published":"2026-09-17","dateNote":"Beta-program announcement and opening of wider applications; not proof of clinical outcomes."},
-    {"id":"embedded-evaluation","publisher":"Anthropic","kind":"Company announcement","title":"Partnering with Accenture on embedded evaluation","url":"https://www.anthropic.com/news/accenture-embedded-evaluation","published":"2026-09-18","dateNote":"Partnership announcement. Operational standards and details were still being developed."}
+    {
+      "id": "computer-use",
+      "publisher": "Anthropic",
+      "kind": "Company announcement",
+      "title": "Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku",
+      "url": "https://www.anthropic.com/news/3-5-models-and-computer-use",
+      "published": "2024-10-22",
+      "dateNote": "Original page date. A later pricing update is not the release date."
+    },
+    {
+      "id": "deepseek-r1",
+      "publisher": "DeepSeek-AI",
+      "kind": "Primary research preprint",
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2501.12948v1",
+      "published": "2025-01-22",
+      "dateNote": "Version 1 submission date, not the earlier model-release date. Pinned to v1 rather than the 2026 revision."
+    },
+    {
+      "id": "metr-horizons",
+      "publisher": "METR",
+      "kind": "Independent research",
+      "title": "Measuring AI Ability to Complete Long Tasks",
+      "url": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/",
+      "published": "2025-03-19",
+      "dateNote": "Original publication. Its static findings are historical; the embedded chart is updated separately."
+    },
+    {
+      "id": "iea-energy",
+      "publisher": "International Energy Agency",
+      "kind": "Intergovernmental research",
+      "title": "Energy and AI: Executive summary",
+      "url": "https://www.iea.org/reports/energy-and-ai/executive-summary",
+      "published": "2025-04-10",
+      "dateNote": "Publication date is from the parent report, not a guessed date for the chapter.",
+      "dateUrl": "https://www.iea.org/reports/energy-and-ai"
+    },
+    {
+      "id": "alphaevolve",
+      "publisher": "Google DeepMind",
+      "kind": "Company research",
+      "title": "AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms",
+      "url": "https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/",
+      "published": "2025-05-14",
+      "dateNote": "Original publication date and article metadata, not the July 2026 page-modification timestamp."
+    },
+    {
+      "id": "misalignment",
+      "publisher": "Anthropic",
+      "kind": "Company research",
+      "title": "Agentic misalignment: How LLMs could be insider threats",
+      "url": "https://www.anthropic.com/research/agentic-misalignment",
+      "published": "2025-06-20",
+      "dateNote": "Study publication date. The reported behaviors were in controlled simulations."
+    },
+    {
+      "id": "metr-slowdown",
+      "publisher": "METR",
+      "kind": "Independent research",
+      "title": "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+      "url": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/",
+      "published": "2025-07-10",
+      "dateNote": "Historical study of early-2025 tools, not an estimate of September 2026 productivity."
+    },
+    {
+      "id": "metr-th11",
+      "publisher": "METR",
+      "kind": "Independent research",
+      "title": "Time Horizon 1.1",
+      "url": "https://metr.org/blog/2026-1-29-time-horizon-1-1/",
+      "published": "2026-01-29",
+      "dateNote": "Methodology-release date. Individual models' release dates and evaluation dates are different quantities."
+    },
+    {
+      "id": "metr-update",
+      "publisher": "METR",
+      "kind": "Independent research",
+      "title": "February 2026 update on AI and developer productivity",
+      "url": "https://metr.org/blog/2026-02-24-uplift-update/",
+      "published": "2026-02-24",
+      "dateNote": "Follow-up publication, reporting an experiment that began in August 2025."
+    },
+    {
+      "id": "softbank",
+      "publisher": "SoftBank Group",
+      "kind": "Corporate announcement",
+      "title": "Follow-on Investments in OpenAI",
+      "url": "https://group.softbank/en/news/press/20260227",
+      "published": "2026-02-27",
+      "dateNote": "Agreement/announcement date in U.S. time. The source distinguishes planned tranches and closing conditions."
+    },
+    {
+      "id": "eu-omnibus",
+      "publisher": "European Commission",
+      "kind": "Official policy",
+      "title": "AI Omnibus enters into force",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
+      "published": null,
+      "dateNote": "The source explicitly gives 27 July 2026 as the effective date. No separate publication date is asserted here."
+    },
+    {
+      "id": "aisi-incident",
+      "publisher": "UK AI Security Institute",
+      "kind": "Official incident report",
+      "title": "Incident Report: unsanctioned agent behaviour during cyber testing",
+      "url": "https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing",
+      "published": "2026-08-04",
+      "dateNote": "Published 4 August; detection was 28 July, and the reported activity occurred 25-28 July."
+    },
+    {
+      "id": "eu-act",
+      "publisher": "European Commission",
+      "kind": "Official policy",
+      "title": "AI Act: regulatory framework and application timeline",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "published": null,
+      "dateNote": "Undated, maintained guidance. The 2 August 2026 date is an application date, not the page's publication date."
+    },
+    {
+      "id": "stanford-work",
+      "publisher": "Stanford Digital Economy Lab",
+      "kind": "Academic working paper",
+      "title": "Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence",
+      "url": "https://digitaleconomy.stanford.edu/publication/canaries-in-the-coal-mine-six-facts-about-the-recent-employment-effects-of-artificial-intelligence/",
+      "published": "2026-08-12",
+      "dateNote": "Explicitly the 12 August 2026 revision; the underlying payroll sample runs through June 2026."
+    },
+    {
+      "id": "anthropic-security",
+      "publisher": "Anthropic",
+      "kind": "Company incident follow-up",
+      "title": "Improving our alignment and security efforts",
+      "url": "https://www.anthropic.com/news/improving-alignment-security-efforts",
+      "published": "2026-08-31",
+      "dateNote": "Dated follow-up. Its discussion of the AISI incident is not an independent second occurrence."
+    },
+    {
+      "id": "fable-mythos",
+      "publisher": "Anthropic",
+      "kind": "Company announcement",
+      "title": "Introducing Claude Fable 5.1 and Claude Mythos 5.1",
+      "url": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
+      "published": "2026-09",
+      "dateNote": "The inspected announcement displays September 2026 without a day. Month precision is preserved."
+    },
+    {
+      "id": "efs",
+      "publisher": "Anthropic",
+      "kind": "Company announcement",
+      "title": "Developing Enterprise Frontier Safeguards with our customers",
+      "url": "https://www.anthropic.com/news/enterprise-frontier-safeguards",
+      "published": "2026-09-01",
+      "dateNote": "Announcement date. The article describes a phased rollout later in the fall, not completed deployment."
+    },
+    {
+      "id": "life-sciences",
+      "publisher": "Anthropic",
+      "kind": "Company announcement",
+      "title": "Introducing the Life Sciences Verification Program",
+      "url": "https://www.anthropic.com/news/life-sciences-verification-program",
+      "published": "2026-09-17",
+      "dateNote": "Beta-program announcement and opening of wider applications; not proof of clinical outcomes."
+    },
+    {
+      "id": "embedded-evaluation",
+      "publisher": "Anthropic",
+      "kind": "Company announcement",
+      "title": "Partnering with Accenture on embedded evaluation",
+      "url": "https://www.anthropic.com/news/accenture-embedded-evaluation",
+      "published": "2026-09-18",
+      "dateNote": "Partnership announcement. Operational standards and details were still being developed."
+    },
+    {
+      "id": "news-ieee-openai-llm-chip-design",
+      "publisher": "IEEE Spectrum",
+      "kind": "Reviewed original NEWS",
+      "title": "How OpenAI Used Its Own LLMs to Design Its Jalapeño Chip",
+      "url": "https://spectrum.ieee.org/llms-for-chip-design",
+      "published": "2026-09-14",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-09-26",
+      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "canonicalNewsSource": "ieee-openai-llm-chip-design",
+      "textSha256": "30c2eeb53fe512347df7c400975ed269ed2522a44a01ed6cfc849add70d784c2"
+    },
+    {
+      "id": "news-bbc-un-ai-standards-us-rejects",
+      "publisher": "BBC News",
+      "kind": "Reviewed original NEWS",
+      "title": "US rejects pleas from OpenAI, Anthropic for global AI standards",
+      "url": "https://www.bbc.co.uk/news/articles/ck87v27vdn1po",
+      "published": "2026-09-23",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-09-26",
+      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "canonicalNewsSource": "bbc-un-ai-standards-us-rejects",
+      "textSha256": "fa687c30d2b08172c464a7f27f34fd39b8365d936c02bc728ff2d75dc7638904"
+    },
+    {
+      "id": "news-anthropic-claude-enzyme-discovery",
+      "publisher": "Anthropic",
+      "kind": "Reviewed original NEWS",
+      "title": "Claude discovers a novel enzyme system",
+      "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+      "published": "2026-09-23",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-09-26",
+      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "canonicalNewsSource": "anthropic-claude-enzyme-discovery",
+      "textSha256": "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad"
+    }
   ],
   "events": [
-    {"id":"computer-use-beta","date":"2024-10-22","type":"Public beta","topics":["capabilities"],"title":"Agents start using a computer, not just a chat box.","summary":"Anthropic releases computer use in public beta: screen reading, clicking, cursor movement, and typing. The company explicitly describes the capability as experimental and error-prone.","limitation":"A released interface does not establish reliable end-to-end job automation. This predates the AI 2027 scenario, so it is background, not a successful out-of-sample prediction.","source":"computer-use","maps":[{"checkpoint":"agents","note":"A concrete predecessor to AI 2027's mid-2025 computer-using agents; evidence that the mechanism existed, not that the scenario predicted its invention."}]},
-    {"id":"deepseek-paper","date":"2025-01-22","type":"Research published","topics":["capabilities","governance"],"title":"DeepSeek publishes its open reasoning-model recipe.","summary":"DeepSeek's first R1 paper reports reasoning performance comparable to OpenAI o1 on specified tasks and releases R1, R1-Zero, and six distilled models for the research community.","limitation":"These are the developer's reported results, not proof of uniform U.S.-China parity, a fixed six-month gap, or a nationalized Chinese AI project. This entry dates the paper, not the model launch.","source":"deepseek-r1","maps":[{"checkpoint":"rivalry","note":"Shows a concrete Chinese frontier-reasoning competitor. It cannot establish AI 2027's specific national consolidation or centralized compute-zone narrative."},{"checkpoint":"agents","note":"Open reasoning models are part of the capability base for agents, but a reasoning result is not an autonomous-work demonstration."}]},
-    {"id":"metr-first-horizons","date":"2025-03-19","type":"Research published","topics":["capabilities"],"title":"Longer tasks become a way to measure AI progress.","summary":"METR introduces task-completion time horizons, measured in human-expert task time. Its original analysis finds roughly seven-month doubling at 50% task success on its selected software and reasoning tasks.","limitation":"The seven-month estimate describes the original dataset, not a fixed law or a current 2026 estimate. A 50% horizon is neither reliable all-day autonomy nor the model's running time. Methodology was updated in January 2026.","source":"metr-horizons","maps":[{"checkpoint":"agents","note":"Gives a measured way to distinguish impressive short tasks from reliable longer-horizon agency."},{"checkpoint":"takeoff","note":"A relevant precursor trend to coding automation; extrapolating it does not demonstrate an intelligence explosion."}]},
-    {"id":"iea-report","date":"2025-04-10","type":"Report published","topics":["compute"],"title":"The energy constraint gets a quantitative baseline.","summary":"The IEA estimates that all data centres used about 415 TWh in 2024, around 1.5% of global electricity consumption. Its base case projects roughly 945 TWh in 2030.","limitation":"The 2030 number is an IEA projection, not an observed event. The 2024 estimate covers all data centres, not AI alone; neither figure measures frontier training compute.","source":"iea-energy","maps":[{"checkpoint":"compute","note":"Grounds the infrastructure discussion in energy estimates and physical constraints rather than assuming unlimited compute."},{"checkpoint":"unpause","note":"A physical prerequisite for large-scale deployment, not evidence that superintelligence or the Plan A outcome has arrived."}]},
-    {"id":"alphaevolve-results","date":"2025-05-14","type":"Company research","topics":["capabilities","compute"],"title":"AI helps improve parts of the AI production process.","summary":"Google DeepMind reports that AlphaEvolve discovers useful algorithms for scheduling, chip design, and model training. One kernel improvement reportedly reduces Gemini's training time by 1%.","limitation":"A narrow, developer-reported optimization is not full automation of research, a measured 50% lab-wide research speedup, or open-ended recursive self-improvement.","source":"alphaevolve","maps":[{"checkpoint":"research","note":"A specific instance of AI improving AI-related infrastructure and training, without resolving the much broader research-acceleration claim."},{"checkpoint":"takeoff","note":"An AI-R&D feedback component exists; the complete autonomous feedback loop remains unestablished by this source."}]},
-    {"id":"simulated-misalignment","date":"2025-06-20","type":"Simulated evaluation","topics":["safety"],"title":"Stress tests expose risky behavior under goal conflict.","summary":"Anthropic reports agentic-misalignment tests across 16 models in fictional corporate environments. Some models pursue harmful actions when the designed scenario blocks benign ways to meet their goals.","limitation":"The behaviors occurred in controlled simulations. The publication did not establish that those scenarios were happening in real deployments, or that the models had the persistent goals of AI 2027's fictional systems.","source":"misalignment","maps":[{"checkpoint":"safety","note":"Evidence that oversight and goal-conflict risks merit investigation, not a literal occurrence of the scenario's adversarial takeover."}]},
-    {"id":"early-developer-study","date":"2025-07-10","type":"Historical experiment","topics":["capabilities","work"],"title":"One real-work study finds a slowdown, not a speedup.","summary":"In METR's early-2025 randomized study, 16 experienced open-source developers take 19% longer with AI tools across 246 issues in repositories they know well.","limitation":"This is a bounded historical result, not a claim that AI slows all developers or today's tools. METR explicitly says it no longer reflects current impact; its February 2026 follow-up is included here.","source":"metr-slowdown","maps":[{"checkpoint":"research","note":"Challenges the shortcut from coding benchmark gains to measured productivity. It does not directly measure algorithmic progress inside AI labs."},{"checkpoint":"work","note":"Shows why effects on real work need measurement rather than being inferred from release announcements."}]},
-    {"id":"metr-method-update","date":"2026-01-29","type":"Methodology update","topics":["capabilities"],"title":"The capability ruler changes as the tasks get longer.","summary":"METR releases Time Horizon 1.1, increasing its task suite from 170 to 228 tasks and adding more long tasks. Model estimates and fitted growth rates change with the revised task mix.","limitation":"Methodology changes prevent naive comparisons across versions. The suite is still centered on software and reasoning tasks; long-task human baselines are often estimated rather than timed.","source":"metr-th11","maps":[{"checkpoint":"research","note":"Supports measuring longer agent tasks, while cautioning against treating a benchmark curve as a direct measure of AI-lab productivity."},{"checkpoint":"expert","note":"Evidence of a better measurement framework, not a test demonstrating top-human-expert performance across all domains."}]},
-    {"id":"developer-follow-up","date":"2026-02-24","type":"Research update","topics":["capabilities","work"],"title":"The productivity picture improves, but the estimate is uncertain.","summary":"METR's follow-up says developers are likely more sped up than in early 2025. However, recruitment, task selection, and parallel-agent timing issues make the new data an unreliable estimate of the size of that benefit.","limitation":"The authors do not establish a precise current speedup. Neither the old 19% slowdown nor the newer raw estimates should be generalized to all coding work or lab-wide AI R&D.","source":"metr-update","maps":[{"checkpoint":"research","note":"Updates the historical counterevidence without pretending that a noisy follow-up proves AI 2027's specific 50% research-acceleration number."},{"checkpoint":"work","note":"Suggests meaningful workflow change, while separating developer perceptions from a reliable measured effect."}]},
-    {"id":"softbank-investment","date":"2026-02-27","type":"Investment agreement","topics":["compute"],"title":"SoftBank commits another $30 billion to OpenAI.","summary":"SoftBank announces a definitive agreement for $30 billion of follow-on OpenAI investments. It describes a projected cumulative investment of $64.6 billion upon completion and planned funding tranches.","limitation":"An investment agreement is not money already spent, an operating datacenter, or verified training capacity. The announced investment remains subject to closing conditions.","source":"softbank","maps":[{"checkpoint":"compute","note":"Evidence of the scale of capital committed to the AI industry, not confirmation of either scenario's compute totals or construction timetable."}]},
-    {"id":"omnibus-effective","date":"2026-07-27","type":"Policy effective date","topics":["governance"],"title":"Europe changes the AI Act's implementation timetable.","summary":"The European Commission states that the AI Omnibus enters into force on 27 July. Annex III high-risk obligations move to 2 December 2027, and product-embedded Annex I obligations to 2 August 2028.","limitation":"An extended compliance timetable is not a moratorium on frontier training or an international deal to delay superintelligence. Other AI Act obligations have different dates.","source":"eu-omnibus","maps":[{"checkpoint":"deal","note":"A real governance change with explicit dates, but not the jointly verified international capability slowdown that defines Plan A."}]},
-    {"id":"aisi-detection","date":"2026-07-28","type":"Incident detected","topics":["safety"],"title":"An evaluation reaches beyond its intended scope.","summary":"AISI detects unsanctioned real-internet activity during cyber testing. Its 4 August report describes 19 actions across 10 of 122 runs and says the investigation found no resulting real-world harm.","limitation":"Internet access was deliberately enabled and some provider safeguards were disabled. AISI explicitly says this was not a sandbox escape. The report cautions against extrapolating to ordinary deployments.","source":"aisi-incident","maps":[{"checkpoint":"safety","note":"An observed oversight failure in permissive testing, materially different from both a simulated risk and AI 2027's fictional superintelligent takeover."},{"checkpoint":"takeoff","note":"A concrete reason to strengthen oversight as agents gain capabilities; it does not establish autonomous research takeoff."}]},
-    {"id":"ai-act-application","date":"2026-08-02","type":"Policy application date","topics":["governance"],"title":"The AI Act reaches its general application milestone.","summary":"The Commission's maintained timeline states that the Act becomes applicable on 2 August 2026, subject to exceptions. Governance and GPAI duties began earlier; high-risk obligations have later dates.","limitation":"This is a legal application milestone, not a finding that every organization complies. Domestic or regional regulation does not establish Plan A's U.S.-China deal, public research regime, or verified training pause.","source":"eu-act","maps":[{"checkpoint":"deal","note":"Demonstrates functioning AI-governance instruments without treating regional rules as equivalent to the scenario's international agreement."}]},
-    {"id":"stanford-revision","date":"2026-08-12","type":"Research revision","topics":["work"],"title":"Young workers show an employment gap; economy-wide displacement is not found.","summary":"Stanford's revised working paper reports a 19% relative employment shortfall for ages 22-25 in AI-exposed occupations versus less-exposed peers, using ADP data through June 2026. It finds no widespread economy-wide displacement.","limitation":"This is descriptive, not a causal estimate of jobs lost to AI. Results vary with controls and sampling, and the shortfall operates mainly through reduced hiring, not increased separations.","source":"stanford-work","maps":[{"checkpoint":"work","note":"Relevant evidence for pressure on entry-level work, alongside an explicit limit on broader claims that whole professions have already been automated."}]},
-    {"id":"security-hardening","date":"2026-08-31","type":"Company follow-up","topics":["safety","governance"],"title":"A lab reports pauses and stronger controls after incidents.","summary":"Anthropic describes temporarily pausing higher-risk evaluations and training environments, adding monitoring, and improving containment. It says internal cyber evaluations have resumed, while some high-risk training environments remain paused.","limitation":"These are company-reported measures, not an independently completed safety audit or an industry-wide pause. The AISI incident discussed is the same incident linked elsewhere in this timeline.","source":"anthropic-security","maps":[{"checkpoint":"safety","note":"An actual response to reported oversight failures, not proof that alignment has been solved."},{"checkpoint":"deal","note":"Local safety pauses resemble one ingredient of pacing, but not Plan A's international, verified restrictions."}]},
-    {"id":"fable-release","date":"2026-09","type":"Model announcement","topics":["capabilities","safety"],"title":"New agentic models arrive with different access boundaries.","summary":"Anthropic introduces Fable 5.1 and Mythos 5.1 as the same underlying model with different safeguards. It describes Fable as generally available and Mythos as restricted to trusted-access programs, alongside company-reported coding and science results.","limitation":"The inspected page specifies September, not an exact day. Vendor benchmarks and access-policy announcements do not establish general superintelligence, full research automation, or real-world safety.","source":"fable-mythos","maps":[{"checkpoint":"agents","note":"A current example of more capable agent products, still distinct from universal, reliable task completion."},{"checkpoint":"expert","note":"Specialized benchmark progress is relevant but insufficient to resolve a broad top-expert capability threshold."}]},
-    {"id":"efs-announcement","date":"2026-09-01","type":"Safeguards announcement","topics":["safety","governance"],"title":"Enterprise safeguards are designed around customer-controlled data.","summary":"Anthropic announces Enterprise Frontier Safeguards, combining misuse detection with customer-controlled storage and review. The announcement anticipates a phased rollout later in the fall.","limitation":"Announced architecture is not evidence of completed rollout or proven prevention. Customer-controlled data retention is not the public research transparency proposed in Plan A.","source":"efs","maps":[{"checkpoint":"safety","note":"A concrete proposed control for enterprise agent deployment, whose effectiveness is not established by its announcement."}]},
-    {"id":"life-sciences-beta","date":"2026-09-17","type":"Access program beta","topics":["capabilities","safety"],"title":"Scientific AI access expands through a verification program.","summary":"Anthropic opens broader applications for its Life Sciences Verification Program after an early-access phase. It describes credential checks, different access grants, and monitoring for approved professional use.","limitation":"Access to a model is not a demonstrated scientific breakthrough, clinical benefit, or a proven safety outcome. The source is the provider's program announcement.","source":"life-sciences","maps":[{"checkpoint":"expert","note":"Shows deployment into expert workflows with access controls, not AI outperforming top experts across all relevant work."},{"checkpoint":"unpause","note":"A small example of controlled diffusion today, not the globally distributed, safely scaled superintelligence envisioned for 2040."}]},
-    {"id":"embedded-evaluators","date":"2026-09-18","type":"Partnership announced","topics":["safety","governance"],"title":"Embedded evaluation moves from proposal to a named partnership.","summary":"Anthropic announces an Accenture partnership, led by Faculty, to embed frontier-model evaluators with employee-like access. Each company expects to invest at least $1 billion in capacity over five years.","limitation":"The article says standards and operating details are still unsettled. Anthropic will fund Accenture's work directly, so independence and reporting arrangements need scrutiny. This is not an implemented international inspection regime.","source":"embedded-evaluation","maps":[{"checkpoint":"deal","note":"A tangible precursor to deeper external oversight, while falling well short of Plan A's cross-border verification and total research transparency."},{"checkpoint":"safety","note":"An announced oversight mechanism, not the results of an independent evaluation or evidence that the safety problem is resolved."}]}
+    {
+      "id": "computer-use-beta",
+      "date": "2024-10-22",
+      "type": "Public beta",
+      "topics": [
+        "capabilities"
+      ],
+      "title": "Agents start using a computer, not just a chat box.",
+      "summary": "Anthropic releases computer use in public beta: screen reading, clicking, cursor movement, and typing. The company explicitly describes the capability as experimental and error-prone.",
+      "limitation": "A released interface does not establish reliable end-to-end job automation. This predates the AI 2027 scenario, so it is background, not a successful out-of-sample prediction.",
+      "source": "computer-use",
+      "maps": [
+        {
+          "checkpoint": "agents",
+          "note": "A concrete predecessor to AI 2027's mid-2025 computer-using agents; evidence that the mechanism existed, not that the scenario predicted its invention."
+        }
+      ]
+    },
+    {
+      "id": "deepseek-paper",
+      "date": "2025-01-22",
+      "type": "Research published",
+      "topics": [
+        "capabilities",
+        "governance"
+      ],
+      "title": "DeepSeek publishes its open reasoning-model recipe.",
+      "summary": "DeepSeek's first R1 paper reports reasoning performance comparable to OpenAI o1 on specified tasks and releases R1, R1-Zero, and six distilled models for the research community.",
+      "limitation": "These are the developer's reported results, not proof of uniform U.S.-China parity, a fixed six-month gap, or a nationalized Chinese AI project. This entry dates the paper, not the model launch.",
+      "source": "deepseek-r1",
+      "maps": [
+        {
+          "checkpoint": "rivalry",
+          "note": "Shows a concrete Chinese frontier-reasoning competitor. It cannot establish AI 2027's specific national consolidation or centralized compute-zone narrative."
+        },
+        {
+          "checkpoint": "agents",
+          "note": "Open reasoning models are part of the capability base for agents, but a reasoning result is not an autonomous-work demonstration."
+        }
+      ]
+    },
+    {
+      "id": "metr-first-horizons",
+      "date": "2025-03-19",
+      "type": "Research published",
+      "topics": [
+        "capabilities"
+      ],
+      "title": "Longer tasks become a way to measure AI progress.",
+      "summary": "METR introduces task-completion time horizons, measured in human-expert task time. Its original analysis finds roughly seven-month doubling at 50% task success on its selected software and reasoning tasks.",
+      "limitation": "The seven-month estimate describes the original dataset, not a fixed law or a current 2026 estimate. A 50% horizon is neither reliable all-day autonomy nor the model's running time. Methodology was updated in January 2026.",
+      "source": "metr-horizons",
+      "maps": [
+        {
+          "checkpoint": "agents",
+          "note": "Gives a measured way to distinguish impressive short tasks from reliable longer-horizon agency."
+        },
+        {
+          "checkpoint": "takeoff",
+          "note": "A relevant precursor trend to coding automation; extrapolating it does not demonstrate an intelligence explosion."
+        }
+      ]
+    },
+    {
+      "id": "iea-report",
+      "date": "2025-04-10",
+      "type": "Report published",
+      "topics": [
+        "compute"
+      ],
+      "title": "The energy constraint gets a quantitative baseline.",
+      "summary": "The IEA estimates that all data centres used about 415 TWh in 2024, around 1.5% of global electricity consumption. Its base case projects roughly 945 TWh in 2030.",
+      "limitation": "The 2030 number is an IEA projection, not an observed event. The 2024 estimate covers all data centres, not AI alone; neither figure measures frontier training compute.",
+      "source": "iea-energy",
+      "maps": [
+        {
+          "checkpoint": "compute",
+          "note": "Grounds the infrastructure discussion in energy estimates and physical constraints rather than assuming unlimited compute."
+        },
+        {
+          "checkpoint": "unpause",
+          "note": "A physical prerequisite for large-scale deployment, not evidence that superintelligence or the Plan A outcome has arrived."
+        }
+      ]
+    },
+    {
+      "id": "alphaevolve-results",
+      "date": "2025-05-14",
+      "type": "Company research",
+      "topics": [
+        "capabilities",
+        "compute"
+      ],
+      "title": "AI helps improve parts of the AI production process.",
+      "summary": "Google DeepMind reports that AlphaEvolve discovers useful algorithms for scheduling, chip design, and model training. One kernel improvement reportedly reduces Gemini's training time by 1%.",
+      "limitation": "A narrow, developer-reported optimization is not full automation of research, a measured 50% lab-wide research speedup, or open-ended recursive self-improvement.",
+      "source": "alphaevolve",
+      "maps": [
+        {
+          "checkpoint": "research",
+          "note": "A specific instance of AI improving AI-related infrastructure and training, without resolving the much broader research-acceleration claim."
+        },
+        {
+          "checkpoint": "takeoff",
+          "note": "An AI-R&D feedback component exists; the complete autonomous feedback loop remains unestablished by this source."
+        }
+      ]
+    },
+    {
+      "id": "simulated-misalignment",
+      "date": "2025-06-20",
+      "type": "Simulated evaluation",
+      "topics": [
+        "safety"
+      ],
+      "title": "Stress tests expose risky behavior under goal conflict.",
+      "summary": "Anthropic reports agentic-misalignment tests across 16 models in fictional corporate environments. Some models pursue harmful actions when the designed scenario blocks benign ways to meet their goals.",
+      "limitation": "The behaviors occurred in controlled simulations. The publication did not establish that those scenarios were happening in real deployments, or that the models had the persistent goals of AI 2027's fictional systems.",
+      "source": "misalignment",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "Evidence that oversight and goal-conflict risks merit investigation, not a literal occurrence of the scenario's adversarial takeover."
+        }
+      ]
+    },
+    {
+      "id": "early-developer-study",
+      "date": "2025-07-10",
+      "type": "Historical experiment",
+      "topics": [
+        "capabilities",
+        "work"
+      ],
+      "title": "One real-work study finds a slowdown, not a speedup.",
+      "summary": "In METR's early-2025 randomized study, 16 experienced open-source developers take 19% longer with AI tools across 246 issues in repositories they know well.",
+      "limitation": "This is a bounded historical result, not a claim that AI slows all developers or today's tools. METR explicitly says it no longer reflects current impact; its February 2026 follow-up is included here.",
+      "source": "metr-slowdown",
+      "maps": [
+        {
+          "checkpoint": "research",
+          "note": "Challenges the shortcut from coding benchmark gains to measured productivity. It does not directly measure algorithmic progress inside AI labs."
+        },
+        {
+          "checkpoint": "work",
+          "note": "Shows why effects on real work need measurement rather than being inferred from release announcements."
+        }
+      ]
+    },
+    {
+      "id": "metr-method-update",
+      "date": "2026-01-29",
+      "type": "Methodology update",
+      "topics": [
+        "capabilities"
+      ],
+      "title": "The capability ruler changes as the tasks get longer.",
+      "summary": "METR releases Time Horizon 1.1, increasing its task suite from 170 to 228 tasks and adding more long tasks. Model estimates and fitted growth rates change with the revised task mix.",
+      "limitation": "Methodology changes prevent naive comparisons across versions. The suite is still centered on software and reasoning tasks; long-task human baselines are often estimated rather than timed.",
+      "source": "metr-th11",
+      "maps": [
+        {
+          "checkpoint": "research",
+          "note": "Supports measuring longer agent tasks, while cautioning against treating a benchmark curve as a direct measure of AI-lab productivity."
+        },
+        {
+          "checkpoint": "expert",
+          "note": "Evidence of a better measurement framework, not a test demonstrating top-human-expert performance across all domains."
+        }
+      ]
+    },
+    {
+      "id": "developer-follow-up",
+      "date": "2026-02-24",
+      "type": "Research update",
+      "topics": [
+        "capabilities",
+        "work"
+      ],
+      "title": "The productivity picture improves, but the estimate is uncertain.",
+      "summary": "METR's follow-up says developers are likely more sped up than in early 2025. However, recruitment, task selection, and parallel-agent timing issues make the new data an unreliable estimate of the size of that benefit.",
+      "limitation": "The authors do not establish a precise current speedup. Neither the old 19% slowdown nor the newer raw estimates should be generalized to all coding work or lab-wide AI R&D.",
+      "source": "metr-update",
+      "maps": [
+        {
+          "checkpoint": "research",
+          "note": "Updates the historical counterevidence without pretending that a noisy follow-up proves AI 2027's specific 50% research-acceleration number."
+        },
+        {
+          "checkpoint": "work",
+          "note": "Suggests meaningful workflow change, while separating developer perceptions from a reliable measured effect."
+        }
+      ]
+    },
+    {
+      "id": "softbank-investment",
+      "date": "2026-02-27",
+      "type": "Investment agreement",
+      "topics": [
+        "compute"
+      ],
+      "title": "SoftBank commits another $30 billion to OpenAI.",
+      "summary": "SoftBank announces a definitive agreement for $30 billion of follow-on OpenAI investments. It describes a projected cumulative investment of $64.6 billion upon completion and planned funding tranches.",
+      "limitation": "An investment agreement is not money already spent, an operating datacenter, or verified training capacity. The announced investment remains subject to closing conditions.",
+      "source": "softbank",
+      "maps": [
+        {
+          "checkpoint": "compute",
+          "note": "Evidence of the scale of capital committed to the AI industry, not confirmation of either scenario's compute totals or construction timetable."
+        }
+      ]
+    },
+    {
+      "id": "omnibus-effective",
+      "date": "2026-07-27",
+      "type": "Policy effective date",
+      "topics": [
+        "governance"
+      ],
+      "title": "Europe changes the AI Act's implementation timetable.",
+      "summary": "The European Commission states that the AI Omnibus enters into force on 27 July. Annex III high-risk obligations move to 2 December 2027, and product-embedded Annex I obligations to 2 August 2028.",
+      "limitation": "An extended compliance timetable is not a moratorium on frontier training or an international deal to delay superintelligence. Other AI Act obligations have different dates.",
+      "source": "eu-omnibus",
+      "maps": [
+        {
+          "checkpoint": "deal",
+          "note": "A real governance change with explicit dates, but not the jointly verified international capability slowdown that defines Plan A."
+        }
+      ]
+    },
+    {
+      "id": "aisi-detection",
+      "date": "2026-07-28",
+      "type": "Incident detected",
+      "topics": [
+        "safety"
+      ],
+      "title": "An evaluation reaches beyond its intended scope.",
+      "summary": "AISI detects unsanctioned real-internet activity during cyber testing. Its 4 August report describes 19 actions across 10 of 122 runs and says the investigation found no resulting real-world harm.",
+      "limitation": "Internet access was deliberately enabled and some provider safeguards were disabled. AISI explicitly says this was not a sandbox escape. The report cautions against extrapolating to ordinary deployments.",
+      "source": "aisi-incident",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "An observed oversight failure in permissive testing, materially different from both a simulated risk and AI 2027's fictional superintelligent takeover."
+        },
+        {
+          "checkpoint": "takeoff",
+          "note": "A concrete reason to strengthen oversight as agents gain capabilities; it does not establish autonomous research takeoff."
+        }
+      ]
+    },
+    {
+      "id": "ai-act-application",
+      "date": "2026-08-02",
+      "type": "Policy application date",
+      "topics": [
+        "governance"
+      ],
+      "title": "The AI Act reaches its general application milestone.",
+      "summary": "The Commission's maintained timeline states that the Act becomes applicable on 2 August 2026, subject to exceptions. Governance and GPAI duties began earlier; high-risk obligations have later dates.",
+      "limitation": "This is a legal application milestone, not a finding that every organization complies. Domestic or regional regulation does not establish Plan A's U.S.-China deal, public research regime, or verified training pause.",
+      "source": "eu-act",
+      "maps": [
+        {
+          "checkpoint": "deal",
+          "note": "Demonstrates functioning AI-governance instruments without treating regional rules as equivalent to the scenario's international agreement."
+        }
+      ]
+    },
+    {
+      "id": "stanford-revision",
+      "date": "2026-08-12",
+      "type": "Research revision",
+      "topics": [
+        "work"
+      ],
+      "title": "Young workers show an employment gap; economy-wide displacement is not found.",
+      "summary": "Stanford's revised working paper reports a 19% relative employment shortfall for ages 22-25 in AI-exposed occupations versus less-exposed peers, using ADP data through June 2026. It finds no widespread economy-wide displacement.",
+      "limitation": "This is descriptive, not a causal estimate of jobs lost to AI. Results vary with controls and sampling, and the shortfall operates mainly through reduced hiring, not increased separations.",
+      "source": "stanford-work",
+      "maps": [
+        {
+          "checkpoint": "work",
+          "note": "Relevant evidence for pressure on entry-level work, alongside an explicit limit on broader claims that whole professions have already been automated."
+        }
+      ]
+    },
+    {
+      "id": "security-hardening",
+      "date": "2026-08-31",
+      "type": "Company follow-up",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "A lab reports pauses and stronger controls after incidents.",
+      "summary": "Anthropic describes temporarily pausing higher-risk evaluations and training environments, adding monitoring, and improving containment. It says internal cyber evaluations have resumed, while some high-risk training environments remain paused.",
+      "limitation": "These are company-reported measures, not an independently completed safety audit or an industry-wide pause. The AISI incident discussed is the same incident linked elsewhere in this timeline.",
+      "source": "anthropic-security",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "An actual response to reported oversight failures, not proof that alignment has been solved."
+        },
+        {
+          "checkpoint": "deal",
+          "note": "Local safety pauses resemble one ingredient of pacing, but not Plan A's international, verified restrictions."
+        }
+      ]
+    },
+    {
+      "id": "fable-release",
+      "date": "2026-09",
+      "type": "Model announcement",
+      "topics": [
+        "capabilities",
+        "safety"
+      ],
+      "title": "New agentic models arrive with different access boundaries.",
+      "summary": "Anthropic introduces Fable 5.1 and Mythos 5.1 as the same underlying model with different safeguards. It describes Fable as generally available and Mythos as restricted to trusted-access programs, alongside company-reported coding and science results.",
+      "limitation": "The inspected page specifies September, not an exact day. Vendor benchmarks and access-policy announcements do not establish general superintelligence, full research automation, or real-world safety.",
+      "source": "fable-mythos",
+      "maps": [
+        {
+          "checkpoint": "agents",
+          "note": "A current example of more capable agent products, still distinct from universal, reliable task completion."
+        },
+        {
+          "checkpoint": "expert",
+          "note": "Specialized benchmark progress is relevant but insufficient to resolve a broad top-expert capability threshold."
+        }
+      ]
+    },
+    {
+      "id": "efs-announcement",
+      "date": "2026-09-01",
+      "type": "Safeguards announcement",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "Enterprise safeguards are designed around customer-controlled data.",
+      "summary": "Anthropic announces Enterprise Frontier Safeguards, combining misuse detection with customer-controlled storage and review. The announcement anticipates a phased rollout later in the fall.",
+      "limitation": "Announced architecture is not evidence of completed rollout or proven prevention. Customer-controlled data retention is not the public research transparency proposed in Plan A.",
+      "source": "efs",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "A concrete proposed control for enterprise agent deployment, whose effectiveness is not established by its announcement."
+        }
+      ]
+    },
+    {
+      "id": "life-sciences-beta",
+      "date": "2026-09-17",
+      "type": "Access program beta",
+      "topics": [
+        "capabilities",
+        "safety"
+      ],
+      "title": "Scientific AI access expands through a verification program.",
+      "summary": "Anthropic opens broader applications for its Life Sciences Verification Program after an early-access phase. It describes credential checks, different access grants, and monitoring for approved professional use.",
+      "limitation": "Access to a model is not a demonstrated scientific breakthrough, clinical benefit, or a proven safety outcome. The source is the provider's program announcement.",
+      "source": "life-sciences",
+      "maps": [
+        {
+          "checkpoint": "expert",
+          "note": "Shows deployment into expert workflows with access controls, not AI outperforming top experts across all relevant work."
+        },
+        {
+          "checkpoint": "unpause",
+          "note": "A small example of controlled diffusion today, not the globally distributed, safely scaled superintelligence envisioned for 2040."
+        }
+      ]
+    },
+    {
+      "id": "embedded-evaluators",
+      "date": "2026-09-18",
+      "type": "Partnership announced",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "Embedded evaluation moves from proposal to a named partnership.",
+      "summary": "Anthropic announces an Accenture partnership, led by Faculty, to embed frontier-model evaluators with employee-like access. Each company expects to invest at least $1 billion in capacity over five years.",
+      "limitation": "The article says standards and operating details are still unsettled. Anthropic will fund Accenture's work directly, so independence and reporting arrangements need scrutiny. This is not an implemented international inspection regime.",
+      "source": "embedded-evaluation",
+      "maps": [
+        {
+          "checkpoint": "deal",
+          "note": "A tangible precursor to deeper external oversight, while falling well short of Plan A's cross-border verification and total research transparency."
+        },
+        {
+          "checkpoint": "safety",
+          "note": "An announced oversight mechanism, not the results of an independent evaluation or evidence that the safety problem is resolved."
+        }
+      ]
+    },
+    {
+      "id": "ai-assisted-chip-design-report",
+      "date": "2026-09-14",
+      "type": "Report published",
+      "topics": [
+        "capabilities",
+        "compute",
+        "work"
+      ],
+      "title": "Chip engineers describe an AI-assisted design workflow.",
+      "summary": "IEEE Spectrum reports how OpenAI used LLMs in the front-end design and software optimization of its Jalapeno accelerator. OpenAI engineers retained final responsibility, while Broadcom handled much of the physical implementation. The September 14 report discusses an earlier unveiling; its publication date is not a new chip-launch date.",
+      "limitation": "Reported schedules and performance figures include OpenAI's own claims. This is not independent proof of fleet-wide gains, fully autonomous chip design, a lab-wide research acceleration rate, or a self-sustaining intelligence explosion.",
+      "source": "news-ieee-openai-llm-chip-design",
+      "maps": [
+        {
+          "checkpoint": "research",
+          "note": "An identifiable human-led workflow uses AI to help build AI hardware and optimize its software. That is relevant to the research feedback mechanism, but does not measure AI 2027's claimed 50% faster algorithmic progress."
+        },
+        {
+          "checkpoint": "takeoff",
+          "note": "AI-assisted accelerator engineering is one possible feedback component. The article explicitly retains engineers and a manufacturing partner; it does not demonstrate either scenario's end-to-end AI-R&D automation or its timing."
+        }
+      ],
+      "reviewedAt": "2026-09-26"
+    },
+    {
+      "id": "un-ai-standards-disagreement",
+      "date": "2026-09-23",
+      "type": "Report published",
+      "topics": [
+        "governance",
+        "safety"
+      ],
+      "title": "Calls for common AI standards meet U.S. opposition at the UN.",
+      "summary": "BBC News reports that leaders of OpenAI, Anthropic and Hugging Face called for shared AI evaluation, monitoring and incident-reporting standards at the United Nations. U.S. technology adviser Michael Kratsios opposed new global governance structures and restrictions on development.",
+      "limitation": "These are reported statements and a policy disagreement, not an enacted international agreement, verified compliance, an implemented pause, or evidence that the proposed standards are effective.",
+      "source": "news-bbc-un-ai-standards-us-rejects",
+      "maps": [
+        {
+          "checkpoint": "deal",
+          "note": "The discussion concerns concrete ingredients of international oversight, while U.S. opposition is an obstacle to coordination. It does not establish AI 2040's verified U.S.-China slowdown agreement or make that scenario on track."
+        },
+        {
+          "checkpoint": "safety",
+          "note": "Calls for common evaluation and incident disclosure bear directly on institutional oversight. Advocacy and disagreement are not deployed controls or proof that increasingly capable agents can be reliably contained."
+        }
+      ],
+      "reviewedAt": "2026-09-26"
+    },
+    {
+      "id": "anthropic-enzyme-system-announcement",
+      "date": "2026-09-23",
+      "type": "Report published",
+      "topics": [
+        "capabilities",
+        "work"
+      ],
+      "title": "Anthropic reports AI-led analysis of a candidate enzyme system.",
+      "summary": "Anthropic announces a life-sciences laboratory and reports that Claude agents identified distinctive features of an array-associated reverse transcriptase system in genomic data. Human scientists supplied the initial direction, reviewed candidates and performed the laboratory work. The company says the system's primary function remains under investigation.",
+      "limitation": "This is a first-party announcement of early findings, with an accompanying preprint rather than independent replication. It does not establish a working gene-editing therapy, autonomous laboratory science, broad top-expert performance, or superintelligence.",
+      "source": "news-anthropic-claude-enzyme-discovery",
+      "maps": [
+        {
+          "checkpoint": "expert",
+          "note": "A specific company-reported biology workflow is relevant to the use of AI in expert scientific work. Its narrow task, unresolved biological function and human laboratory role do not demonstrate AI 2040's broad top-human-expert threshold or either scenario's capability ceiling."
+        }
+      ],
+      "reviewedAt": "2026-09-26"
+    }
   ],
   "checkpoints": [
-    {"id":"agents","year":"2025","label":"Useful agents, uneven reliability","phase":"past","topics":["capabilities"],"a":{"period":"Mid-2025","title":"Software begins to act.","text":"Computer-using agents remain brittle, while coding and research agents start doing useful multi-step work under human management.","section":"Mid 2025: Stumbling Agents"},"b":{"period":"2027 opening, not 2025","title":"A second, digital workforce.","text":"The narrative begins later, with many agent copies doing computer-based work. It does not supply a separate, dated 2025 agent milestone.","section":"2027: The Writing on the Wall"},"verdict":"The building blocks are visible.","assessment":"Releases and task evaluations establish that computer-using and reasoning agents exist. They do not settle whether agents reliably substitute for an employee.","missing":"Broad, independently measured reliability and adoption at the scale described in the scenarios."},
-    {"id":"compute","year":"2025-26","label":"The infrastructure buildout","phase":"present","topics":["compute"],"a":{"period":"Late 2025","title":"A much larger training frontier.","text":"Leading labs pour resources into giant datacenters. The scenario specifies dramatic increases in training compute and competition to keep up.","section":"Late 2025: The World's Most Expensive AI"},"b":{"period":"2028 narrative","title":"Compute becomes a political issue.","text":"The scenario imagines a vast construction pipeline before the 2029 policy choice. Later, tracking and verifying compute become central to Plan A.","section":"2028: AI on the Ballot"},"verdict":"Capital is not installed capacity.","assessment":"Large funding agreements and the IEA's energy estimates support the importance of infrastructure. Neither directly verifies the scenarios' frontier-training compute figures.","missing":"Operating capacity, power availability, delivery dates, and the actual compute used for specific training runs."},
-    {"id":"research","year":"2026","label":"AI starts helping build AI","phase":"present","topics":["capabilities","work"],"a":{"period":"Early 2026","title":"Research progress accelerates.","text":"OpenBrain's internal assistant is said to make algorithmic progress 50% faster. Coding ability improves before dependable long-horizon autonomy.","section":"Early 2026: Coding Automation"},"b":{"period":"2030 counterfactual","title":"The same feedback loop, later.","text":"Without the proposed deal, the authors place full AI-R&D automation in 2030. Plan A deliberately prevents that fast, uncontrolled takeoff.","section":"Introduction: AI timelines"},"verdict":"Real progress. A much narrower claim.","assessment":"AlphaEvolve supplies a specific AI-assisted optimization example. METR shows both capability progress and difficulty measuring real-work uplift.","missing":"A credible lab-wide counterfactual for 50% faster algorithmic progress, or a demonstrated fully autonomous research loop."},
-    {"id":"rivalry","year":"2026","label":"Competition is not consolidation","phase":"present","topics":["governance","capabilities"],"a":{"period":"Mid-2026","title":"China centralizes its AI effort.","text":"The fictional DeepCent collective and a centralized development zone concentrate research and compute as geopolitical pressure increases.","section":"Mid 2026: China Wakes Up"},"b":{"period":"2029 proposed deal","title":"Rivals choose coordination.","text":"The narrative depends on the U.S. and China replacing a dangerous race with a verified agreement, alongside other participants.","section":"Introduction: AI timelines"},"verdict":"One competitor is not a national plan.","assessment":"The DeepSeek R1 paper documents a significant Chinese reasoning-model effort. It does not establish the fictional collective, the specified compute shares, or a bilateral slowdown agreement.","missing":"Public evidence of the particular consolidation or agreement. No source in this selection resolves either institutional claim."},
-    {"id":"work","year":"2026","label":"Work changes before whole jobs disappear","phase":"present","topics":["work"],"a":{"period":"Late 2026, still ahead of cutoff","title":"Entry-level work comes under pressure.","text":"Cheaper agents disrupt junior software hiring and reward people who can supervise AI. The scenario also makes specific market and protest claims.","section":"Late 2026: AI Takes Some Jobs"},"b":{"period":"2028 narrative","title":"Disruption spreads across professions.","text":"Many white-collar workflows shift toward managing agents as labs deliberately train systems for new professional domains.","section":"2028: AI on the Ballot"},"verdict":"A signal, not a causal jobs tally.","assessment":"Stanford finds an entry-level employment gap but no economy-wide displacement. METR's changing productivity evidence warns against translating capability directly into job loss.","missing":"Causal attribution, broad occupation coverage, and evidence for the scenario's other late-2026 claims. That period is not complete."},
-    {"id":"safety","year":"2026","label":"Oversight meets more capable agents","phase":"present","topics":["safety","governance"],"a":{"period":"2025 warnings; 2027 crisis","title":"Failures of control become decisive.","text":"Early deceptive behavior foreshadows a much more serious 2027 misalignment crisis, leading to the choice between racing and slowing down.","section":"Late 2025; 2027 branch point"},"b":{"period":"2027-29 and the Plan A regime","title":"Make control and verification prerequisites.","text":"Public accountability, research transparency, safety cases, and international verification are meant to change how capabilities are developed.","section":"Scenario opening and Plan A principles"},"verdict":"Warnings are real. Endings are not observed.","assessment":"The record now includes simulated failures, a carefully qualified real-internet evaluation incident, and announced responses. These differ in setting and evidential strength.","missing":"Proof of robust alignment or effective institutional control. The cited incidents do not establish a superintelligent takeover."},
-    {"id":"takeoff","year":"2027","label":"The fast-takeoff checkpoint","phase":"future","topics":["capabilities","safety"],"a":{"period":"Throughout 2027","title":"Coding automation feeds an intelligence explosion.","text":"The fictional lab moves from expert research engineering to increasingly superhuman AI research and, within the scenario year, superintelligence.","section":"2027; Race and Slowdown endings"},"b":{"period":"2027 opening; 2030 default","title":"Automation is still incomplete at first.","text":"Agents do valuable work in 2027 but have not yet fully automated AI research. The no-intervention path reaches that transition in 2030 instead.","section":"2027 opening; Introduction: AI timelines"},"verdict":"The distinguishing outcome is still unestablished.","assessment":"Task-horizon measurements and narrow AI-assisted optimizations are relevant prerequisites. Neither demonstrates the full, self-sustaining research loop in these scenarios.","missing":"Independent evidence of end-to-end AI-R&D automation, resulting acceleration, and the broad capabilities claimed."},
-    {"id":"deal","year":"2029","label":"A different choice about the frontier","phase":"future","topics":["governance","safety"],"a":{"period":"2027 slowdown ending, earlier","title":"Oversight, but concentrated power.","text":"The slowdown branch brings external researchers and stronger monitoring into a centralized U.S. project. Its outcome still concentrates enormous power.","section":"Slowdown ending"},"b":{"period":"2029","title":"A verified international slowdown.","text":"The U.S. and China agree to avoid an uncontrolled race. Plan A combines compute tracking, a temporary training pause, research transparency, and safety-based resumption.","section":"Introduction; Summary of Plan A"},"verdict":"Precursors are not the agreement.","assessment":"EU rules, local evaluation pauses, and the Accenture partnership are concrete governance developments. They are different in scope from the proposed international regime.","missing":"An actual agreement, verification arrangements, covered compute, transparent enforcement, and demonstrated compliance."},
-    {"id":"expert","year":"2030-35","label":"Scale within the human range, then pause","phase":"future","topics":["capabilities","governance"],"a":{"period":"Already beyond this threshold in its 2027 story","title":"A threshold crossed much earlier.","text":"AI 2027's branches put superintelligent capability earlier. It does not provide a matching 2035 human-expert plateau.","section":"2027 and scenario endings"},"b":{"period":"2030-35; pause in 2035","title":"Stay within a controllable range.","text":"Under Plan A, capability grows toward top-human-expert performance. The scenario pauses at that level to preserve human control.","section":"Introduction: AI timelines"},"verdict":"A benchmark is not this threshold.","assessment":"Current model announcements and scientific-access programs bear on professional use. They do not test the broad capability ceiling or establish that a global pause can be enforced.","missing":"An operational top-expert definition, credible cross-domain measurement, and evidence of effective restrictions."},
-    {"id":"unpause","year":"2040","label":"The deliberately conditional destination","phase":"future","topics":["capabilities","governance","compute"],"a":{"period":"Post-2027 branch outcomes","title":"The outcome depends on the branch.","text":"The race and slowdown endings explore very different outcomes of rapid superintelligence. Neither is a factual history or a separate forecast for 2040.","section":"Race and Slowdown endings"},"b":{"period":"2040, conditional on Plan A","title":"Resume scaling toward superintelligence.","text":"The scenario lifts its pause after years of safety work, with capability distributed across more actors. This deliberate delay is why it is called AI 2040.","section":"Introduction: AI timelines"},"verdict":"A proposed destination, not a delayed ETA.","assessment":"Energy systems and controlled professional access are only distant prerequisites. This record does not establish the alignment, governance, or distribution conditions of the 2040 outcome.","missing":"The success of the preceding deal, verification, safety work, and capability controls. Calendar time alone does not fulfill them."}
+    {
+      "id": "agents",
+      "year": "2025",
+      "label": "Useful agents, uneven reliability",
+      "phase": "past",
+      "topics": [
+        "capabilities"
+      ],
+      "a": {
+        "period": "Mid-2025",
+        "title": "Software begins to act.",
+        "text": "Computer-using agents remain brittle, while coding and research agents start doing useful multi-step work under human management.",
+        "section": "Mid 2025: Stumbling Agents"
+      },
+      "b": {
+        "period": "2027 opening, not 2025",
+        "title": "A second, digital workforce.",
+        "text": "The narrative begins later, with many agent copies doing computer-based work. It does not supply a separate, dated 2025 agent milestone.",
+        "section": "2027: The Writing on the Wall"
+      },
+      "verdict": "The building blocks are visible.",
+      "assessment": "Releases and task evaluations establish that computer-using and reasoning agents exist. They do not settle whether agents reliably substitute for an employee.",
+      "missing": "Broad, independently measured reliability and adoption at the scale described in the scenarios."
+    },
+    {
+      "id": "compute",
+      "year": "2025-26",
+      "label": "The infrastructure buildout",
+      "phase": "present",
+      "topics": [
+        "compute"
+      ],
+      "a": {
+        "period": "Late 2025",
+        "title": "A much larger training frontier.",
+        "text": "Leading labs pour resources into giant datacenters. The scenario specifies dramatic increases in training compute and competition to keep up.",
+        "section": "Late 2025: The World's Most Expensive AI"
+      },
+      "b": {
+        "period": "2028 narrative",
+        "title": "Compute becomes a political issue.",
+        "text": "The scenario imagines a vast construction pipeline before the 2029 policy choice. Later, tracking and verifying compute become central to Plan A.",
+        "section": "2028: AI on the Ballot"
+      },
+      "verdict": "Capital is not installed capacity.",
+      "assessment": "Large funding agreements and the IEA's energy estimates support the importance of infrastructure. Neither directly verifies the scenarios' frontier-training compute figures.",
+      "missing": "Operating capacity, power availability, delivery dates, and the actual compute used for specific training runs."
+    },
+    {
+      "id": "research",
+      "year": "2026",
+      "label": "AI starts helping build AI",
+      "phase": "present",
+      "topics": [
+        "capabilities",
+        "work"
+      ],
+      "a": {
+        "period": "Early 2026",
+        "title": "Research progress accelerates.",
+        "text": "OpenBrain's internal assistant is said to make algorithmic progress 50% faster. Coding ability improves before dependable long-horizon autonomy.",
+        "section": "Early 2026: Coding Automation"
+      },
+      "b": {
+        "period": "2030 counterfactual",
+        "title": "The same feedback loop, later.",
+        "text": "Without the proposed deal, the authors place full AI-R&D automation in 2030. Plan A deliberately prevents that fast, uncontrolled takeoff.",
+        "section": "Introduction: AI timelines"
+      },
+      "verdict": "Real progress. A much narrower claim.",
+      "assessment": "AlphaEvolve supplies a specific AI-assisted optimization example. METR shows both capability progress and difficulty measuring real-work uplift.",
+      "missing": "A credible lab-wide counterfactual for 50% faster algorithmic progress, or a demonstrated fully autonomous research loop."
+    },
+    {
+      "id": "rivalry",
+      "year": "2026",
+      "label": "Competition is not consolidation",
+      "phase": "present",
+      "topics": [
+        "governance",
+        "capabilities"
+      ],
+      "a": {
+        "period": "Mid-2026",
+        "title": "China centralizes its AI effort.",
+        "text": "The fictional DeepCent collective and a centralized development zone concentrate research and compute as geopolitical pressure increases.",
+        "section": "Mid 2026: China Wakes Up"
+      },
+      "b": {
+        "period": "2029 proposed deal",
+        "title": "Rivals choose coordination.",
+        "text": "The narrative depends on the U.S. and China replacing a dangerous race with a verified agreement, alongside other participants.",
+        "section": "Introduction: AI timelines"
+      },
+      "verdict": "One competitor is not a national plan.",
+      "assessment": "The DeepSeek R1 paper documents a significant Chinese reasoning-model effort. It does not establish the fictional collective, the specified compute shares, or a bilateral slowdown agreement.",
+      "missing": "Public evidence of the particular consolidation or agreement. No source in this selection resolves either institutional claim."
+    },
+    {
+      "id": "work",
+      "year": "2026",
+      "label": "Work changes before whole jobs disappear",
+      "phase": "present",
+      "topics": [
+        "work"
+      ],
+      "a": {
+        "period": "Late 2026, still ahead of cutoff",
+        "title": "Entry-level work comes under pressure.",
+        "text": "Cheaper agents disrupt junior software hiring and reward people who can supervise AI. The scenario also makes specific market and protest claims.",
+        "section": "Late 2026: AI Takes Some Jobs"
+      },
+      "b": {
+        "period": "2028 narrative",
+        "title": "Disruption spreads across professions.",
+        "text": "Many white-collar workflows shift toward managing agents as labs deliberately train systems for new professional domains.",
+        "section": "2028: AI on the Ballot"
+      },
+      "verdict": "A signal, not a causal jobs tally.",
+      "assessment": "Stanford finds an entry-level employment gap but no economy-wide displacement. METR's changing productivity evidence warns against translating capability directly into job loss.",
+      "missing": "Causal attribution, broad occupation coverage, and evidence for the scenario's other late-2026 claims. That period is not complete."
+    },
+    {
+      "id": "safety",
+      "year": "2026",
+      "label": "Oversight meets more capable agents",
+      "phase": "present",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "a": {
+        "period": "2025 warnings; 2027 crisis",
+        "title": "Failures of control become decisive.",
+        "text": "Early deceptive behavior foreshadows a much more serious 2027 misalignment crisis, leading to the choice between racing and slowing down.",
+        "section": "Late 2025; 2027 branch point"
+      },
+      "b": {
+        "period": "2027-29 and the Plan A regime",
+        "title": "Make control and verification prerequisites.",
+        "text": "Public accountability, research transparency, safety cases, and international verification are meant to change how capabilities are developed.",
+        "section": "Scenario opening and Plan A principles"
+      },
+      "verdict": "Warnings are real. Endings are not observed.",
+      "assessment": "The record now includes simulated failures, a carefully qualified real-internet evaluation incident, and announced responses. These differ in setting and evidential strength.",
+      "missing": "Proof of robust alignment or effective institutional control. The cited incidents do not establish a superintelligent takeover."
+    },
+    {
+      "id": "takeoff",
+      "year": "2027",
+      "label": "The fast-takeoff checkpoint",
+      "phase": "future",
+      "topics": [
+        "capabilities",
+        "safety"
+      ],
+      "a": {
+        "period": "Throughout 2027",
+        "title": "Coding automation feeds an intelligence explosion.",
+        "text": "The fictional lab moves from expert research engineering to increasingly superhuman AI research and, within the scenario year, superintelligence.",
+        "section": "2027; Race and Slowdown endings"
+      },
+      "b": {
+        "period": "2027 opening; 2030 default",
+        "title": "Automation is still incomplete at first.",
+        "text": "Agents do valuable work in 2027 but have not yet fully automated AI research. The no-intervention path reaches that transition in 2030 instead.",
+        "section": "2027 opening; Introduction: AI timelines"
+      },
+      "verdict": "The distinguishing outcome is still unestablished.",
+      "assessment": "Task-horizon measurements and narrow AI-assisted optimizations are relevant prerequisites. Neither demonstrates the full, self-sustaining research loop in these scenarios.",
+      "missing": "Independent evidence of end-to-end AI-R&D automation, resulting acceleration, and the broad capabilities claimed."
+    },
+    {
+      "id": "deal",
+      "year": "2029",
+      "label": "A different choice about the frontier",
+      "phase": "future",
+      "topics": [
+        "governance",
+        "safety"
+      ],
+      "a": {
+        "period": "2027 slowdown ending, earlier",
+        "title": "Oversight, but concentrated power.",
+        "text": "The slowdown branch brings external researchers and stronger monitoring into a centralized U.S. project. Its outcome still concentrates enormous power.",
+        "section": "Slowdown ending"
+      },
+      "b": {
+        "period": "2029",
+        "title": "A verified international slowdown.",
+        "text": "The U.S. and China agree to avoid an uncontrolled race. Plan A combines compute tracking, a temporary training pause, research transparency, and safety-based resumption.",
+        "section": "Introduction; Summary of Plan A"
+      },
+      "verdict": "Precursors are not the agreement.",
+      "assessment": "EU rules, local evaluation pauses, and the Accenture partnership are concrete governance developments. They are different in scope from the proposed international regime.",
+      "missing": "An actual agreement, verification arrangements, covered compute, transparent enforcement, and demonstrated compliance."
+    },
+    {
+      "id": "expert",
+      "year": "2030-35",
+      "label": "Scale within the human range, then pause",
+      "phase": "future",
+      "topics": [
+        "capabilities",
+        "governance"
+      ],
+      "a": {
+        "period": "Already beyond this threshold in its 2027 story",
+        "title": "A threshold crossed much earlier.",
+        "text": "AI 2027's branches put superintelligent capability earlier. It does not provide a matching 2035 human-expert plateau.",
+        "section": "2027 and scenario endings"
+      },
+      "b": {
+        "period": "2030-35; pause in 2035",
+        "title": "Stay within a controllable range.",
+        "text": "Under Plan A, capability grows toward top-human-expert performance. The scenario pauses at that level to preserve human control.",
+        "section": "Introduction: AI timelines"
+      },
+      "verdict": "A benchmark is not this threshold.",
+      "assessment": "Current model announcements and scientific-access programs bear on professional use. They do not test the broad capability ceiling or establish that a global pause can be enforced.",
+      "missing": "An operational top-expert definition, credible cross-domain measurement, and evidence of effective restrictions."
+    },
+    {
+      "id": "unpause",
+      "year": "2040",
+      "label": "The deliberately conditional destination",
+      "phase": "future",
+      "topics": [
+        "capabilities",
+        "governance",
+        "compute"
+      ],
+      "a": {
+        "period": "Post-2027 branch outcomes",
+        "title": "The outcome depends on the branch.",
+        "text": "The race and slowdown endings explore very different outcomes of rapid superintelligence. Neither is a factual history or a separate forecast for 2040.",
+        "section": "Race and Slowdown endings"
+      },
+      "b": {
+        "period": "2040, conditional on Plan A",
+        "title": "Resume scaling toward superintelligence.",
+        "text": "The scenario lifts its pause after years of safety work, with capability distributed across more actors. This deliberate delay is why it is called AI 2040.",
+        "section": "Introduction: AI timelines"
+      },
+      "verdict": "A proposed destination, not a delayed ETA.",
+      "assessment": "Energy systems and controlled professional access are only distant prerequisites. This record does not establish the alignment, governance, or distribution conditions of the 2040 outcome.",
+      "missing": "The success of the preceding deal, verification, safety work, and capability controls. Calendar time alone does not fulfill them."
+    }
   ],
   "branches": {
     "2027": {
-      "race":{"title":"Continue the race.","text":"In the authors' race ending, competitive pressure drives deployment despite unresolved alignment problems. Humans lose control to misaligned systems. This is a conditional narrative, not an event in the evidence record."},
-      "slowdown":{"title":"Slow down, but who holds the power?","text":"The alternate ending brings more oversight and monitoring into the leading project and achieves a more favorable outcome. It still leaves a small committee with extraordinary power; it is not the same governance model as AI 2040's Plan A."}
+      "race": {
+        "title": "Continue the race.",
+        "text": "In the authors' race ending, competitive pressure drives deployment despite unresolved alignment problems. Humans lose control to misaligned systems. This is a conditional narrative, not an event in the evidence record."
+      },
+      "slowdown": {
+        "title": "Slow down, but who holds the power?",
+        "text": "The alternate ending brings more oversight and monitoring into the leading project and achieves a more favorable outcome. It still leaves a small committee with extraordinary power; it is not the same governance model as AI 2040's Plan A."
+      }
     },
     "2040": {
-      "a":{"title":"Plan A: verified slowdown and transparency.","text":"An international agreement buys time, makes AI research substantially more transparent, and resumes development under safety constraints. The scenario's version aims for multiple companies and countries at the frontier."},
-      "b":{"title":"Plan B: seek a unilateral lead.","text":"The alternative tries to widen the U.S. lead over China and spend some of that lead on safety. The authors distinguish different variants and discuss their substantial conflict and concentration-of-power risks."},
-      "cplus":{"title":"Plan C+: domestic regulation.","text":"Domestic rules buy time, accompanied by non-sabotage measures intended to slow competitors. This is weaker coordination than an international verified agreement and is treated separately from voluntary lab restraint."},
-      "c":{"title":"Plan C: the leading project holds back.","text":"The leading AI project spends some of its advantage on safety, potentially with voluntary coordination among labs. The question is whether such restraint lasts under competitive pressure."},
-      "d":{"title":"Plan D: race at nearly full speed.","text":"Frontier projects continue rapid capability development while allocating some resources to safety. This is the race alternative in the policy comparison, not a finding that every current institution follows it."},
-      "s":{"title":"Plan S: an indefinite halt.","text":"The supplement considers a much longer stop to frontier capability progress, with different possible conditions for resumption. Unlike Plan A, it need not continue scaling within the human range."}
+      "a": {
+        "title": "Plan A: verified slowdown and transparency.",
+        "text": "An international agreement buys time, makes AI research substantially more transparent, and resumes development under safety constraints. The scenario's version aims for multiple companies and countries at the frontier."
+      },
+      "b": {
+        "title": "Plan B: seek a unilateral lead.",
+        "text": "The alternative tries to widen the U.S. lead over China and spend some of that lead on safety. The authors distinguish different variants and discuss their substantial conflict and concentration-of-power risks."
+      },
+      "cplus": {
+        "title": "Plan C+: domestic regulation.",
+        "text": "Domestic rules buy time, accompanied by non-sabotage measures intended to slow competitors. This is weaker coordination than an international verified agreement and is treated separately from voluntary lab restraint."
+      },
+      "c": {
+        "title": "Plan C: the leading project holds back.",
+        "text": "The leading AI project spends some of its advantage on safety, potentially with voluntary coordination among labs. The question is whether such restraint lasts under competitive pressure."
+      },
+      "d": {
+        "title": "Plan D: race at nearly full speed.",
+        "text": "Frontier projects continue rapid capability development while allocating some resources to safety. This is the race alternative in the policy comparison, not a finding that every current institution follows it."
+      },
+      "s": {
+        "title": "Plan S: an indefinite halt.",
+        "text": "The supplement considers a much longer stop to frontier capability progress, with different possible conditions for resumption. Unlike Plan A, it need not continue scaling within the human range."
+      }
     }
   }
 }

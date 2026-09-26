@@ -3,7 +3,7 @@
     "schemaVersion": 1,
     "forecastSha256": "662a4369b05520d70255c65d8a52da1eee57923ffc0d171d53e3e08c234a568a",
     "ledgerSha256": "f03c7712c2be990c757e05422740dacafa4bc15d23abf227c516e6bb57256188",
-    "updatedAt": "2026-09-26T05:39:15.560Z",
+    "updatedAt": "2026-09-26T21:05:49.181Z",
     "sources": {
       "ref-b5286382df13": {
         "url": "https://www.nih.gov/news-events/nih-research-matters/brain-computer-device-helps-man-speak",
@@ -33,7 +33,7 @@
         "reviewSha256": "1341ab73a8594e92fb657eb563b9e53c60314468a789dd4c6fefa2e8c6fd5cb5",
         "health": {
           "status": "unavailable",
-          "lastCheckedAt": "2026-09-26T05:37:50.574Z",
+          "lastCheckedAt": "2026-09-26T21:04:24.424Z",
           "lastVerifiedAt": "2026-09-07T22:06:37.306Z",
           "textSha256": "a88ac0264d9978568b7ef1375cd2ff8b35d8073518a5539dad16e33169c3304c",
           "reviewSha256": "1341ab73a8594e92fb657eb563b9e53c60314468a789dd4c6fefa2e8c6fd5cb5",
@@ -71,8 +71,8 @@
         "reviewSha256": "b00609c936d7b48d811ffea2c93d5e5375e671c22819f4b896e95e7fbb4b0ee8",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:50.879Z",
-          "lastVerifiedAt": "2026-09-26T05:37:50.879Z",
+          "lastCheckedAt": "2026-09-26T21:04:24.980Z",
+          "lastVerifiedAt": "2026-09-26T21:04:24.980Z",
           "textSha256": "efcedd4e2fc046dfeb9a2055157ab44dbf6ad1493ae9f6df015255c2a132aab7",
           "reviewSha256": "b00609c936d7b48d811ffea2c93d5e5375e671c22819f4b896e95e7fbb4b0ee8",
           "error": null,
@@ -109,8 +109,8 @@
         "reviewSha256": "393f098e01dce55f1ad5ffc9d4ea7a1edf73e48b885c9f5f479d20acc5cabd02",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:51.574Z",
-          "lastVerifiedAt": "2026-09-26T05:37:51.574Z",
+          "lastCheckedAt": "2026-09-26T21:04:25.595Z",
+          "lastVerifiedAt": "2026-09-26T21:04:25.595Z",
           "textSha256": "ed42146f242308a0223688c3690cbec5995e5aad7e13a497b7e0e5b57577a15e",
           "reviewSha256": "393f098e01dce55f1ad5ffc9d4ea7a1edf73e48b885c9f5f479d20acc5cabd02",
           "error": null,
@@ -147,13 +147,13 @@
         "reviewSha256": "21a1faedd7f69b0f2820cb37f0723af89a55949599d68b32516464d2a46f12d8",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:51.779Z",
-          "lastVerifiedAt": "2026-09-25T21:04:20.093Z",
+          "lastCheckedAt": "2026-09-26T21:04:26.839Z",
+          "lastVerifiedAt": "2026-09-26T21:04:26.839Z",
           "textSha256": "b80c3672b755c17ab43e146b41b7bce069ef8529f369600034d75587edce5f49",
           "reviewSha256": "21a1faedd7f69b0f2820cb37f0723af89a55949599d68b32516464d2a46f12d8",
           "error": null,
           "etag": null,
-          "lastModified": "Fri, 25 Sep 2026 21:04:21 GMT",
+          "lastModified": "Sat, 26 Sep 2026 21:04:27 GMT",
           "retryAt": null
         }
       },
@@ -185,8 +185,8 @@
         "reviewSha256": "0193578ef7ceeadc4cc451ca3be33b85ea80fd93e11c39133d8951d7ce306e2a",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:56.854Z",
-          "lastVerifiedAt": "2026-09-26T05:37:56.854Z",
+          "lastCheckedAt": "2026-09-26T21:04:32.559Z",
+          "lastVerifiedAt": "2026-09-26T21:04:32.559Z",
           "textSha256": "789422125a7e767f260f2ca35b79ee35bc4c73374c7ff0ffc66f875c1f98032f",
           "reviewSha256": "0193578ef7ceeadc4cc451ca3be33b85ea80fd93e11c39133d8951d7ce306e2a",
           "error": null,
@@ -223,7 +223,7 @@
         "reviewSha256": "d7479d205ceabda7bea0f6df8a3e09d41d234f805d2941ba018a6fcc5180442c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:56.896Z",
+          "lastCheckedAt": "2026-09-26T21:04:32.604Z",
           "lastVerifiedAt": "2026-09-05T00:45:40.985Z",
           "textSha256": "c29661d9db6fc603dff0969c4c1a700d679a92abe54b5f649a3af1a756f24fbe",
           "reviewSha256": "d7479d205ceabda7bea0f6df8a3e09d41d234f805d2941ba018a6fcc5180442c",
@@ -261,8 +261,8 @@
         "reviewSha256": "1f4541b1f75d44f55bfe89ab3af507e4050ee4a7bccf4284ff81d4379b1ef923",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:58.769Z",
-          "lastVerifiedAt": "2026-09-26T05:37:58.769Z",
+          "lastCheckedAt": "2026-09-26T21:04:34.261Z",
+          "lastVerifiedAt": "2026-09-26T21:04:34.261Z",
           "textSha256": "d9e277acc0cf61f76099422cb3df4aed302c4a3af6538ade4e8347716a249d1b",
           "reviewSha256": "1f4541b1f75d44f55bfe89ab3af507e4050ee4a7bccf4284ff81d4379b1ef923",
           "error": null,
@@ -299,12 +299,12 @@
         "reviewSha256": "9511c25cfdf33bf00eb53691866c03b04561978b3018cb23e2783fdc7e4950de",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:59.218Z",
-          "lastVerifiedAt": "2026-09-26T05:37:59.218Z",
+          "lastCheckedAt": "2026-09-26T21:04:34.777Z",
+          "lastVerifiedAt": "2026-09-26T21:04:34.777Z",
           "textSha256": "69bbf58328ef555868dc1c1b88e48f412562738d90ce02a004701de5fab19ea0",
           "reviewSha256": "9511c25cfdf33bf00eb53691866c03b04561978b3018cb23e2783fdc7e4950de",
           "error": null,
-          "etag": "W/\"13ub2lxagz9wou\"",
+          "etag": "W/\"16nvg11lc84wos\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -338,7 +338,7 @@
         "reviewSha256": "ab2998467035a63e3df6dd0ce1a9e74332f7cc981c1406854c425192ff5242d1",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:37:59.523Z",
+          "lastCheckedAt": "2026-09-26T21:04:35.082Z",
           "lastVerifiedAt": "2026-09-25T21:04:28.225Z",
           "textSha256": "adf7d6c4161c75e00cea4aadfdcd726594a26abe9fd1ee0cd03d07a58bc5ca58",
           "reviewSha256": "ab2998467035a63e3df6dd0ce1a9e74332f7cc981c1406854c425192ff5242d1",
@@ -376,7 +376,7 @@
         "reviewSha256": "e590af066d8c4bf5637e3d534b550e86a0497d209c8cc2e36c2ed4acefce492d",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:00.146Z",
+          "lastCheckedAt": "2026-09-26T21:04:35.561Z",
           "lastVerifiedAt": "2026-09-25T21:04:28.768Z",
           "textSha256": "8d6fe979b6427c0ea3d1fa6f6209900f5819207aa65b44ef7cf14e1c30351114",
           "reviewSha256": "e590af066d8c4bf5637e3d534b550e86a0497d209c8cc2e36c2ed4acefce492d",
@@ -420,13 +420,13 @@
         "reviewSha256": "92f8ff28fb8ce13c86a1e420b30188366d64953558b542c14a0099e68a7a9a77",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:00.534Z",
-          "lastVerifiedAt": "2026-09-26T05:38:00.534Z",
+          "lastCheckedAt": "2026-09-26T21:04:36.012Z",
+          "lastVerifiedAt": "2026-09-26T21:04:36.012Z",
           "textSha256": "2ddfbe56107c7c1121c0ab099909f111c56e5a98d1d38442faee40680644dd42",
           "reviewSha256": "92f8ff28fb8ce13c86a1e420b30188366d64953558b542c14a0099e68a7a9a77",
           "error": null,
           "etag": null,
-          "lastModified": "Sat, 26 Sep 2026 04:43:02 GMT",
+          "lastModified": "Sat, 26 Sep 2026 20:03:56 GMT",
           "retryAt": null
         }
       },
@@ -458,8 +458,8 @@
         "reviewSha256": "4d115d51199c2cbf084a235a6c5b763971a62b74a9bcfe7e80257683b1c51892",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:01.811Z",
-          "lastVerifiedAt": "2026-09-26T05:38:01.811Z",
+          "lastCheckedAt": "2026-09-26T21:04:37.330Z",
+          "lastVerifiedAt": "2026-09-26T21:04:37.330Z",
           "textSha256": "5c43de2d113ec3f85f1812ddd4cbada909acd132ceeed61350d2851d17a1bc41",
           "reviewSha256": "4d115d51199c2cbf084a235a6c5b763971a62b74a9bcfe7e80257683b1c51892",
           "error": null,
@@ -496,8 +496,8 @@
         "reviewSha256": "b25e5142daa06a6dce5424c79db7fbe5e46a9653b583f2c7a11c1122e5db4917",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:02.680Z",
-          "lastVerifiedAt": "2026-09-26T05:38:02.680Z",
+          "lastCheckedAt": "2026-09-26T21:04:38.064Z",
+          "lastVerifiedAt": "2026-09-26T21:04:38.064Z",
           "textSha256": "ec4ae049f643aa77e97431b2e06ad33158b42125f292dee7f8bba6e16df30d56",
           "reviewSha256": "b25e5142daa06a6dce5424c79db7fbe5e46a9653b583f2c7a11c1122e5db4917",
           "error": null,
@@ -534,13 +534,13 @@
         "reviewSha256": "72c61232f5d3f71a993ba099e1db3cc08c6b12cba33077f6c11506e617da05a9",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:02.727Z",
-          "lastVerifiedAt": "2026-09-25T21:04:32.034Z",
+          "lastCheckedAt": "2026-09-26T21:04:38.122Z",
+          "lastVerifiedAt": "2026-09-26T21:04:38.122Z",
           "textSha256": "99c66c88c2e5c1dbc5a909e41a3931709676d1ee82ba565f7fcd50466d006b2c",
           "reviewSha256": "72c61232f5d3f71a993ba099e1db3cc08c6b12cba33077f6c11506e617da05a9",
           "error": null,
-          "etag": "W/\"6ab64b44-2bba8\"",
-          "lastModified": "Fri, 25 Sep 2026 10:21:56 GMT",
+          "etag": "W/\"6ab79c3f-2bba8\"",
+          "lastModified": "Sat, 26 Sep 2026 10:19:43 GMT",
           "retryAt": null
         }
       },
@@ -575,13 +575,13 @@
         "reviewSha256": "c5360fd0b6f7a90aed205bb0cdd6e4cc8b71154bf6124a07104d1c85af2f0b39",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:06.922Z",
-          "lastVerifiedAt": "2026-09-26T05:38:06.922Z",
+          "lastCheckedAt": "2026-09-26T21:04:41.745Z",
+          "lastVerifiedAt": "2026-09-26T21:04:41.745Z",
           "textSha256": "95b0fb58ce54704a61e615f381df52f592d24d7097fa08293dfc5ee93a66a546",
           "reviewSha256": "c5360fd0b6f7a90aed205bb0cdd6e4cc8b71154bf6124a07104d1c85af2f0b39",
           "error": null,
           "etag": null,
-          "lastModified": "Sat, 26 Sep 2026 05:38:04 GMT",
+          "lastModified": "Sat, 26 Sep 2026 21:04:40 GMT",
           "retryAt": null
         }
       },
@@ -613,8 +613,8 @@
         "reviewSha256": "2a7966725c8edd6ab76fd32eef64f8894b6d0870530b118cd3b3fae99121bd6f",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:07.846Z",
-          "lastVerifiedAt": "2026-09-26T05:38:07.846Z",
+          "lastCheckedAt": "2026-09-26T21:04:42.527Z",
+          "lastVerifiedAt": "2026-09-26T21:04:42.527Z",
           "textSha256": "0519f30aa02328007a8052e4307290331fbbe8a75713e94a5998f762e45ba1e1",
           "reviewSha256": "2a7966725c8edd6ab76fd32eef64f8894b6d0870530b118cd3b3fae99121bd6f",
           "error": null,
@@ -651,12 +651,12 @@
         "reviewSha256": "30c145d2caddd74f0bcb4869b594f1e89fdb35c909a3b60596901f9e05a08ba2",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:09.204Z",
-          "lastVerifiedAt": "2026-09-26T05:38:09.204Z",
+          "lastCheckedAt": "2026-09-26T21:04:43.848Z",
+          "lastVerifiedAt": "2026-09-26T21:04:43.848Z",
           "textSha256": "2527c6a9c1f787f324a1e13310e16e8af762a1e3188f62fbb99ad60f5d1a11bd",
           "reviewSha256": "30c145d2caddd74f0bcb4869b594f1e89fdb35c909a3b60596901f9e05a08ba2",
           "error": null,
-          "etag": "\"3kXQig\"",
+          "etag": "\"GsuqZA\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -689,7 +689,7 @@
         "reviewSha256": "5d694da7edcf7adc7a53ed63cc2498e4c3b8461f925a8b835a95ed603ae8b43e",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:09.616Z",
+          "lastCheckedAt": "2026-09-26T21:04:44.105Z",
           "lastVerifiedAt": "2026-09-05T01:07:23.372Z",
           "textSha256": "3634658d50d64cc177aec3ec8c7b5fa5edac047eeb6475a0009008bc98c42b8d",
           "reviewSha256": "5d694da7edcf7adc7a53ed63cc2498e4c3b8461f925a8b835a95ed603ae8b43e",
@@ -727,13 +727,13 @@
         "reviewSha256": "c63148fe7b1a28888acfdf635093eba6c8d249c9e97b66c3e50fccbdf25f7340",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:10.693Z",
-          "lastVerifiedAt": "2026-09-26T05:38:10.693Z",
+          "lastCheckedAt": "2026-09-26T21:04:44.612Z",
+          "lastVerifiedAt": "2026-09-26T21:04:44.612Z",
           "textSha256": "28e823cfdf90f6bcc2954fbfcd005513dbc24372d6c1d1c7b791b5803f7a9562",
           "reviewSha256": "c63148fe7b1a28888acfdf635093eba6c8d249c9e97b66c3e50fccbdf25f7340",
           "error": null,
           "etag": null,
-          "lastModified": "Sat, 26 Sep 2026 05:38:10 GMT",
+          "lastModified": "Sat, 26 Sep 2026 21:04:45 GMT",
           "retryAt": null
         }
       },
@@ -767,12 +767,12 @@
         "reviewSha256": "3f8e016d20805b92088e4b142f3365c4e2ba97b17a79a0cf1c39a735041b0efd",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:11.089Z",
-          "lastVerifiedAt": "2026-09-26T05:38:11.089Z",
+          "lastCheckedAt": "2026-09-26T21:04:45.883Z",
+          "lastVerifiedAt": "2026-09-26T21:04:45.883Z",
           "textSha256": "b2f5471dd13172fd71ce38f8a73a9eb12504393edaa9d2d0ace59ab0a0f10a27",
           "reviewSha256": "3f8e016d20805b92088e4b142f3365c4e2ba97b17a79a0cf1c39a735041b0efd",
           "error": null,
-          "etag": "\"3kXQig\"",
+          "etag": "\"GsuqZA\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -805,12 +805,12 @@
         "reviewSha256": "1cfd2feb5326e7f300fa02df1d2ff6178a1f843182091f0ef8360a1e1bcfe2f7",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:11.458Z",
-          "lastVerifiedAt": "2026-09-26T05:38:11.458Z",
+          "lastCheckedAt": "2026-09-26T21:04:46.257Z",
+          "lastVerifiedAt": "2026-09-26T21:04:46.257Z",
           "textSha256": "2f1efd3aae01449b5b94498a839da5f8800a3308c927f1fb7a5bcf5f0cc2a608",
           "reviewSha256": "1cfd2feb5326e7f300fa02df1d2ff6178a1f843182091f0ef8360a1e1bcfe2f7",
           "error": null,
-          "etag": "\"3kXQig\"",
+          "etag": "\"GsuqZA\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -843,8 +843,8 @@
         "reviewSha256": "ab6660a32818d3d62fa1846a1c28354198163ee64f681e6a336a12501c6a1fb8",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:11.762Z",
-          "lastVerifiedAt": "2026-09-26T05:38:11.762Z",
+          "lastCheckedAt": "2026-09-26T21:04:46.557Z",
+          "lastVerifiedAt": "2026-09-26T21:04:46.557Z",
           "textSha256": "c9234ce772eea67302721924d266c5e647c14de096ba19f63ebd8220b3bd5f9a",
           "reviewSha256": "ab6660a32818d3d62fa1846a1c28354198163ee64f681e6a336a12501c6a1fb8",
           "error": null,
@@ -882,8 +882,8 @@
         "reviewSha256": "1736e0b652863ef45ae103dfdaf4165a92d578c9f9ac39d2e051b68bd214923c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:12.312Z",
-          "lastVerifiedAt": "2026-09-26T05:38:12.312Z",
+          "lastCheckedAt": "2026-09-26T21:04:47.044Z",
+          "lastVerifiedAt": "2026-09-26T21:04:47.044Z",
           "textSha256": "e1ca1fb511088306eda14c664a5ba1b0c3891c9df42e4f108b7993f840e0c10e",
           "reviewSha256": "1736e0b652863ef45ae103dfdaf4165a92d578c9f9ac39d2e051b68bd214923c",
           "error": null,
@@ -920,8 +920,8 @@
         "reviewSha256": "cbf764f57fb8d5538ebb67e76146626b127eb601cfaa6a4053aede1148d3952e",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:12.853Z",
-          "lastVerifiedAt": "2026-09-26T05:38:12.853Z",
+          "lastCheckedAt": "2026-09-26T21:04:47.748Z",
+          "lastVerifiedAt": "2026-09-26T21:04:47.748Z",
           "textSha256": "5c1df3b9a0af00aafc1a563d67687fabf36e8750b4da04256e921e3115c73830",
           "reviewSha256": "cbf764f57fb8d5538ebb67e76146626b127eb601cfaa6a4053aede1148d3952e",
           "error": null,
@@ -959,8 +959,8 @@
         "reviewSha256": "158f2094f0ff904713fcb95e123131b4c7bd93c2e87206a13c3a39e2c01be168",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:13.715Z",
-          "lastVerifiedAt": "2026-09-26T05:38:13.715Z",
+          "lastCheckedAt": "2026-09-26T21:04:48.948Z",
+          "lastVerifiedAt": "2026-09-26T21:04:48.948Z",
           "textSha256": "1487bbbf202d33408eca1db3da698625ace0666fb99dd50087ef2bb915e1e993",
           "reviewSha256": "158f2094f0ff904713fcb95e123131b4c7bd93c2e87206a13c3a39e2c01be168",
           "error": null,
@@ -999,7 +999,7 @@
         "reviewSha256": "d66aae290314a145dcb326947f483ed6e6f5253adda2fe6766024d8dce733823",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:13.748Z",
+          "lastCheckedAt": "2026-09-26T21:04:49.475Z",
           "lastVerifiedAt": "2026-09-25T21:04:41.691Z",
           "textSha256": "9924cc1756fa8b5b127d1abc36fd795a1267e155dfe1bf25736a3acd3757c440",
           "reviewSha256": "d66aae290314a145dcb326947f483ed6e6f5253adda2fe6766024d8dce733823",
@@ -1037,8 +1037,8 @@
         "reviewSha256": "3a92704b4b2beb6615711146eac7f58450dd2ff23269e8b643f24e3831dc81a4",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:16.326Z",
-          "lastVerifiedAt": "2026-09-26T05:38:16.326Z",
+          "lastCheckedAt": "2026-09-26T21:04:53.016Z",
+          "lastVerifiedAt": "2026-09-26T21:04:53.016Z",
           "textSha256": "25773bd39ac56806e040abdaf739e31cab975a71e1d79ae95b96dc2c4474073a",
           "reviewSha256": "3a92704b4b2beb6615711146eac7f58450dd2ff23269e8b643f24e3831dc81a4",
           "error": null,
@@ -1075,12 +1075,12 @@
         "reviewSha256": "42185ce779f2fbce76d6ea60f5a702c9994686d12672346f4fb978977f7239b4",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:16.763Z",
-          "lastVerifiedAt": "2026-09-26T05:38:16.763Z",
+          "lastCheckedAt": "2026-09-26T21:04:54.358Z",
+          "lastVerifiedAt": "2026-09-26T21:04:54.358Z",
           "textSha256": "129ed2c4b8db89839562bc52e4f1d716e4d136fcd5f6cb78689cb6e78550810a",
           "reviewSha256": "42185ce779f2fbce76d6ea60f5a702c9994686d12672346f4fb978977f7239b4",
           "error": null,
-          "etag": "\"3kXQig\"",
+          "etag": "\"GsuqZA\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -1113,8 +1113,8 @@
         "reviewSha256": "b978f418241e44b9a650f67446faebe1dd9e11290e6a4876426ca22b4201444f",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:18.731Z",
-          "lastVerifiedAt": "2026-09-26T05:38:18.731Z",
+          "lastCheckedAt": "2026-09-26T21:04:56.216Z",
+          "lastVerifiedAt": "2026-09-26T21:04:56.216Z",
           "textSha256": "c24dce52439a8174a4b4e8e1fbd7dc803d0a6c948be135b96d44896575ecb6bd",
           "reviewSha256": "b978f418241e44b9a650f67446faebe1dd9e11290e6a4876426ca22b4201444f",
           "error": null,
@@ -1151,12 +1151,12 @@
         "reviewSha256": "6842bfe6a79b756fad7cee32f6e546b35c7be3c0001088e85d6dffcf5f355fe6",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:20.011Z",
-          "lastVerifiedAt": "2026-09-26T05:38:20.011Z",
+          "lastCheckedAt": "2026-09-26T21:04:57.497Z",
+          "lastVerifiedAt": "2026-09-26T21:04:57.497Z",
           "textSha256": "603fd055302bed0eb65572e1308b2dbb7f30e3a06d6b01941f254fb1989f3252",
           "reviewSha256": "6842bfe6a79b756fad7cee32f6e546b35c7be3c0001088e85d6dffcf5f355fe6",
           "error": null,
-          "etag": "\"3kXQig\"",
+          "etag": "\"GsuqZA\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -1189,9 +1189,9 @@
         "reviewSha256": "c97c50567868a27023b2dec442cd6ea8782ecb95ed34e81c74e72863ff0832cb",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:20.341Z",
-          "lastVerifiedAt": "2026-09-26T05:38:20.341Z",
-          "textSha256": "1e9564e1aa159c15f2442d2b892420dbad846e13fe289e5ed092db8498e0df97",
+          "lastCheckedAt": "2026-09-26T21:04:57.790Z",
+          "lastVerifiedAt": "2026-09-26T21:04:57.790Z",
+          "textSha256": "b69f7e061d4d4b1138255d939181b37ce411bbaf0bd84a9516658437b089d9e6",
           "reviewSha256": "c97c50567868a27023b2dec442cd6ea8782ecb95ed34e81c74e72863ff0832cb",
           "error": null,
           "etag": null,
@@ -1228,8 +1228,8 @@
         "reviewSha256": "d3fea08afcd3477ba23c4db7ab0e142683c59cd0ab4c09e182e49e629fca53cc",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:20.991Z",
-          "lastVerifiedAt": "2026-09-26T05:38:20.991Z",
+          "lastCheckedAt": "2026-09-26T21:04:58.282Z",
+          "lastVerifiedAt": "2026-09-26T21:04:58.282Z",
           "textSha256": "2f689bd81cb0151e6956f37e6428bfe878d3c23043fe43996a5fd4f124fa446e",
           "reviewSha256": "d3fea08afcd3477ba23c4db7ab0e142683c59cd0ab4c09e182e49e629fca53cc",
           "error": null,
@@ -1266,8 +1266,8 @@
         "reviewSha256": "6ad6eb813d70900f28a39f78ccb0b48860b4a7034517c45564bec23e97239599",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:21.265Z",
-          "lastVerifiedAt": "2026-09-26T05:38:21.265Z",
+          "lastCheckedAt": "2026-09-26T21:04:58.559Z",
+          "lastVerifiedAt": "2026-09-26T21:04:58.559Z",
           "textSha256": "646338b91548307547f9ff65e2a83a3253d0793cc03386d96c5ce6b6cad29875",
           "reviewSha256": "6ad6eb813d70900f28a39f78ccb0b48860b4a7034517c45564bec23e97239599",
           "error": null,
@@ -1304,8 +1304,8 @@
         "reviewSha256": "67dcd02110906ac0fd392d398b5be5fe259f854d085376ba9e6b8b5aa0735c3e",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:21.646Z",
-          "lastVerifiedAt": "2026-09-26T05:38:21.646Z",
+          "lastCheckedAt": "2026-09-26T21:04:59.089Z",
+          "lastVerifiedAt": "2026-09-26T21:04:59.089Z",
           "textSha256": "7fab1f53349f224378534487d402edb43fdbd758df1c6acfb265a0d9bc5e2c26",
           "reviewSha256": "67dcd02110906ac0fd392d398b5be5fe259f854d085376ba9e6b8b5aa0735c3e",
           "error": null,
@@ -1342,8 +1342,8 @@
         "reviewSha256": "7bb7bd105738f13aa80528db2a9ec0ef9013d82e2a16d1ac895c167cc4ae5a82",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:22.044Z",
-          "lastVerifiedAt": "2026-09-26T05:38:22.044Z",
+          "lastCheckedAt": "2026-09-26T21:04:59.441Z",
+          "lastVerifiedAt": "2026-09-26T21:04:59.441Z",
           "textSha256": "97714528a5406f5528bdaa69f76c73b87da2f5f94c866fb67c2ba94c8d3ca2a6",
           "reviewSha256": "7bb7bd105738f13aa80528db2a9ec0ef9013d82e2a16d1ac895c167cc4ae5a82",
           "error": null,
@@ -1380,8 +1380,8 @@
         "reviewSha256": "b846abacd1755d15d5a226e8e684e65caa2b877fcc21f68ce7dda1c7db8c617e",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:22.461Z",
-          "lastVerifiedAt": "2026-09-26T05:38:22.461Z",
+          "lastCheckedAt": "2026-09-26T21:04:59.918Z",
+          "lastVerifiedAt": "2026-09-26T21:04:59.918Z",
           "textSha256": "295c1ae7b2c014c04759a66299fed43314695c29959db5d53f6d35e810451975",
           "reviewSha256": "b846abacd1755d15d5a226e8e684e65caa2b877fcc21f68ce7dda1c7db8c617e",
           "error": null,
@@ -1418,7 +1418,7 @@
         "reviewSha256": "2a83994555f0776498aa01714a46cc4fde6d5303afb1274f80f0604bffa001f9",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:22.996Z",
+          "lastCheckedAt": "2026-09-26T21:05:00.666Z",
           "lastVerifiedAt": "2026-09-25T21:04:53.675Z",
           "textSha256": "da0f66ca27c864c533dc42c8f5e205c697d2de4ed9441223b12c5d70c9fb2157",
           "reviewSha256": "2a83994555f0776498aa01714a46cc4fde6d5303afb1274f80f0604bffa001f9",
@@ -1457,8 +1457,8 @@
         "reviewSha256": "a48599d46b6c61db850bfe2347f5d632e10e100ec68187867067ce9865107977",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:23.683Z",
-          "lastVerifiedAt": "2026-09-26T05:38:23.683Z",
+          "lastCheckedAt": "2026-09-26T21:05:01.329Z",
+          "lastVerifiedAt": "2026-09-26T21:05:01.329Z",
           "textSha256": "8388bd88596c7b4fcbbfc3b555db27817200ab000f6390eae5242966b53730c7",
           "reviewSha256": "a48599d46b6c61db850bfe2347f5d632e10e100ec68187867067ce9865107977",
           "error": null,
@@ -1495,13 +1495,13 @@
         "reviewSha256": "74913fdb9b1fd445356638efc50bbb20c55e0a94d345dcf055a8397ceb8f1115",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:24.185Z",
-          "lastVerifiedAt": "2026-09-25T21:04:54.922Z",
+          "lastCheckedAt": "2026-09-26T21:05:02.246Z",
+          "lastVerifiedAt": "2026-09-26T21:05:02.246Z",
           "textSha256": "d450cdfc107a47f35c04f70db66f6a912ae801e5a65f29058248ee5ca91630ee",
           "reviewSha256": "74913fdb9b1fd445356638efc50bbb20c55e0a94d345dcf055a8397ceb8f1115",
           "error": null,
           "etag": null,
-          "lastModified": "Fri, 25 Sep 2026 10:30:13 GMT",
+          "lastModified": "Fri, 25 Sep 2026 14:28:27 GMT",
           "retryAt": null
         }
       },
@@ -1534,8 +1534,8 @@
         "reviewSha256": "2591ce26634f62c8bf99d73e473e4c55a813b000960350c3a6225155259a9440",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:25.058Z",
-          "lastVerifiedAt": "2026-09-26T05:38:25.058Z",
+          "lastCheckedAt": "2026-09-26T21:05:02.846Z",
+          "lastVerifiedAt": "2026-09-26T21:05:02.846Z",
           "textSha256": "59ad01f0a2e9555fd08efa3132078a407ee9c267a0f8eff5b6bfe64e2ac00c7f",
           "reviewSha256": "2591ce26634f62c8bf99d73e473e4c55a813b000960350c3a6225155259a9440",
           "error": null,
@@ -1572,8 +1572,8 @@
         "reviewSha256": "446621c7691b42ebec03220601609e66d0f42829126f531691eecc6a2a89b93b",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:26.831Z",
-          "lastVerifiedAt": "2026-09-26T05:38:26.831Z",
+          "lastCheckedAt": "2026-09-26T21:05:04.372Z",
+          "lastVerifiedAt": "2026-09-26T21:05:04.372Z",
           "textSha256": "a21ac9135264560a998f458be0c9ee15d08365fa43129e6aa142ad3388116789",
           "reviewSha256": "446621c7691b42ebec03220601609e66d0f42829126f531691eecc6a2a89b93b",
           "error": null,
@@ -1610,8 +1610,8 @@
         "reviewSha256": "512de728b647365467cf97606139508563c4805568317e72287085e45a83c0a4",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:28.314Z",
-          "lastVerifiedAt": "2026-09-26T05:38:28.314Z",
+          "lastCheckedAt": "2026-09-26T21:05:05.375Z",
+          "lastVerifiedAt": "2026-09-26T21:05:05.375Z",
           "textSha256": "303fae8f2239afeb6cc0ce0bacf60dda9395de83fc820420aa60877cc7542b28",
           "reviewSha256": "512de728b647365467cf97606139508563c4805568317e72287085e45a83c0a4",
           "error": null,
@@ -1648,13 +1648,13 @@
         "reviewSha256": "4abf8a36767504d8692a1a1c36cd6e6277d28fb81ec8944e843ee8f4e1f7bd66",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:29.286Z",
-          "lastVerifiedAt": "2026-09-26T05:38:29.286Z",
+          "lastCheckedAt": "2026-09-26T21:05:05.783Z",
+          "lastVerifiedAt": "2026-09-26T21:05:05.783Z",
           "textSha256": "e7ef4a796ea6d406b4fcb0c4df60a3fb54e8906ed0fe7752643540c5d146812f",
           "reviewSha256": "4abf8a36767504d8692a1a1c36cd6e6277d28fb81ec8944e843ee8f4e1f7bd66",
           "error": null,
           "etag": null,
-          "lastModified": "Sat, 26 Sep 2026 05:38:29 GMT",
+          "lastModified": "Sat, 26 Sep 2026 21:05:06 GMT",
           "retryAt": null
         }
       },
@@ -1686,8 +1686,8 @@
         "reviewSha256": "b7bc30137c551ba0b28f01e70590b61ee53322c74435624e9676fa00109639ac",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:29.512Z",
-          "lastVerifiedAt": "2026-09-26T05:38:29.512Z",
+          "lastCheckedAt": "2026-09-26T21:05:06.050Z",
+          "lastVerifiedAt": "2026-09-26T21:05:06.050Z",
           "textSha256": "5656221f9b20145800ab1947ac9ef197412ff33db39e5d997590584a84b281f3",
           "reviewSha256": "b7bc30137c551ba0b28f01e70590b61ee53322c74435624e9676fa00109639ac",
           "error": null,
@@ -1724,8 +1724,8 @@
         "reviewSha256": "d2bc7de35704cbd6400936e5edecc27774fcb83ba79101ac06d9e8847cf2fa3d",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:30.020Z",
-          "lastVerifiedAt": "2026-09-26T05:38:30.020Z",
+          "lastCheckedAt": "2026-09-26T21:05:06.597Z",
+          "lastVerifiedAt": "2026-09-26T21:05:06.597Z",
           "textSha256": "0b1f4e4c1911b417465505a443ee52135b71448622e32641979e4c8f4928be87",
           "reviewSha256": "d2bc7de35704cbd6400936e5edecc27774fcb83ba79101ac06d9e8847cf2fa3d",
           "error": null,
@@ -1763,8 +1763,8 @@
         "reviewSha256": "a03fbc4afd49a45149981132ed58758e8522b1912fa5fc0268691b6942b3b1eb",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:30.379Z",
-          "lastVerifiedAt": "2026-09-26T05:38:30.379Z",
+          "lastCheckedAt": "2026-09-26T21:05:06.929Z",
+          "lastVerifiedAt": "2026-09-26T21:05:06.929Z",
           "textSha256": "ae7314b485050325a305a36023607ab52bac622169745d86afc64923353f8f07",
           "reviewSha256": "a03fbc4afd49a45149981132ed58758e8522b1912fa5fc0268691b6942b3b1eb",
           "error": null,
@@ -1802,8 +1802,8 @@
         "reviewSha256": "ebc8542cb109643727cd8f08f7bda7e7146de4c3837dcf8afd6f1faf400e06aa",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:31.430Z",
-          "lastVerifiedAt": "2026-09-26T05:38:31.430Z",
+          "lastCheckedAt": "2026-09-26T21:05:08.599Z",
+          "lastVerifiedAt": "2026-09-26T21:05:08.599Z",
           "textSha256": "eac26bd685f0a389a721f50c13d3182fc964ed79e4354030b7800344155224e9",
           "reviewSha256": "ebc8542cb109643727cd8f08f7bda7e7146de4c3837dcf8afd6f1faf400e06aa",
           "error": null,
@@ -1841,8 +1841,8 @@
         "reviewSha256": "217ad2ee568dcde07ed69df7234bbb8da07a628b094ff42843f8262d414b91a8",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:33.258Z",
-          "lastVerifiedAt": "2026-09-26T05:38:33.258Z",
+          "lastCheckedAt": "2026-09-26T21:05:09.108Z",
+          "lastVerifiedAt": "2026-09-26T21:05:09.108Z",
           "textSha256": "abd0e4d2f60fca3330334f2f263572a9943821d28876c653c88c34445027a1a9",
           "reviewSha256": "217ad2ee568dcde07ed69df7234bbb8da07a628b094ff42843f8262d414b91a8",
           "error": null,
@@ -1879,8 +1879,8 @@
         "reviewSha256": "142a3085b9b7557200540cf7bdcb566423ce8c64b19ac91bcf3676a4ca4730cf",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:33.881Z",
-          "lastVerifiedAt": "2026-09-26T05:38:33.881Z",
+          "lastCheckedAt": "2026-09-26T21:05:09.692Z",
+          "lastVerifiedAt": "2026-09-26T21:05:09.692Z",
           "textSha256": "f71790d9fe1e9235d80f07e35e2742f863d70b4519e4d51771a956022b0043e9",
           "reviewSha256": "142a3085b9b7557200540cf7bdcb566423ce8c64b19ac91bcf3676a4ca4730cf",
           "error": null,
@@ -1919,8 +1919,8 @@
         "reviewSha256": "6180e8a01821773008abc3923eeaf577b85446edc5d46cbd6fba653f5618db7d",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:34.511Z",
-          "lastVerifiedAt": "2026-09-26T05:38:34.511Z",
+          "lastCheckedAt": "2026-09-26T21:05:10.275Z",
+          "lastVerifiedAt": "2026-09-26T21:05:10.275Z",
           "textSha256": "4bc8d3fabcd5ddb8c6630375f65d9f44e59e06511c6b864cc91c55a1e8aa8c91",
           "reviewSha256": "6180e8a01821773008abc3923eeaf577b85446edc5d46cbd6fba653f5618db7d",
           "error": null,
@@ -1958,8 +1958,8 @@
         "reviewSha256": "855eb25bce898ab10a3711da82642dbb170ed4938e3f290de7ef0c6e28177ba0",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:35.004Z",
-          "lastVerifiedAt": "2026-09-26T05:38:35.004Z",
+          "lastCheckedAt": "2026-09-26T21:05:11.279Z",
+          "lastVerifiedAt": "2026-09-26T21:05:11.279Z",
           "textSha256": "84f53979e0ef0a52f01b9c306131fbbf366dd2aea51c1c43d2d7e0d7ca4245b3",
           "reviewSha256": "855eb25bce898ab10a3711da82642dbb170ed4938e3f290de7ef0c6e28177ba0",
           "error": null,
@@ -1995,12 +1995,12 @@
         "identity": "ac132247520e43069ebac81a43061f5703cda10658e5cbb2b8d63934b2469d29",
         "reviewSha256": "8812605108358b770e60b92453494d9a6dad2a6d5f775b4535e890d6cadeea2e",
         "health": {
-          "status": "unavailable",
-          "lastCheckedAt": "2026-09-26T05:38:35.323Z",
-          "lastVerifiedAt": "2026-09-23T21:03:55.972Z",
+          "status": "verified",
+          "lastCheckedAt": "2026-09-26T21:05:11.801Z",
+          "lastVerifiedAt": "2026-09-26T21:05:11.801Z",
           "textSha256": "34f385e8dc1f6cf16bdfe388accdf017b2f2126cd0e95f3995b6643634917142",
           "reviewSha256": "8812605108358b770e60b92453494d9a6dad2a6d5f775b4535e890d6cadeea2e",
-          "error": "Publisher challenge; not a verified document.",
+          "error": null,
           "etag": null,
           "lastModified": null,
           "retryAt": null
@@ -2034,8 +2034,8 @@
         "reviewSha256": "a220716a403bf74066c24f97eaae32233c03a6d18f16dc4be17f50a6e7679eff",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:35.797Z",
-          "lastVerifiedAt": "2026-09-26T05:38:35.797Z",
+          "lastCheckedAt": "2026-09-26T21:05:12.464Z",
+          "lastVerifiedAt": "2026-09-26T21:05:12.464Z",
           "textSha256": "b97ca24514377f85756f18332cbff4d436e4edcc496e46b8e1a0fa8539f3f376",
           "reviewSha256": "a220716a403bf74066c24f97eaae32233c03a6d18f16dc4be17f50a6e7679eff",
           "error": null,
@@ -2072,8 +2072,8 @@
         "reviewSha256": "45fc3985f3338a4264f2f7a06bac6826982231c13050c619bea348569fe2ca2a",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:36.317Z",
-          "lastVerifiedAt": "2026-09-26T05:38:36.317Z",
+          "lastCheckedAt": "2026-09-26T21:05:12.684Z",
+          "lastVerifiedAt": "2026-09-26T21:05:12.684Z",
           "textSha256": "44384088bdf8d91ea369b4ad32d59e63c68572236c16c87f4624d818df48bfef",
           "reviewSha256": "45fc3985f3338a4264f2f7a06bac6826982231c13050c619bea348569fe2ca2a",
           "error": null,
@@ -2110,8 +2110,8 @@
         "reviewSha256": "ee16cd82bbcb514f4ac557f9f9a652e20846ef6e78a91ce2617124fd84c37a3b",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:38.597Z",
-          "lastVerifiedAt": "2026-09-26T05:38:38.597Z",
+          "lastCheckedAt": "2026-09-26T21:05:15.903Z",
+          "lastVerifiedAt": "2026-09-26T21:05:15.903Z",
           "textSha256": "5f0ee58aefeeadd49642275644aedf27f4b2705bbdecce061a432f76e50427b5",
           "reviewSha256": "ee16cd82bbcb514f4ac557f9f9a652e20846ef6e78a91ce2617124fd84c37a3b",
           "error": null,
@@ -2148,8 +2148,8 @@
         "reviewSha256": "bebb230a4dfce4ee4222d2a52e203c465b15f74d15e66324daf0ce924b19afd5",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:40.006Z",
-          "lastVerifiedAt": "2026-09-26T05:38:40.006Z",
+          "lastCheckedAt": "2026-09-26T21:05:16.258Z",
+          "lastVerifiedAt": "2026-09-26T21:05:16.258Z",
           "textSha256": "1909e16a714009b2c0a08485f5364df4344791b9de50da803e4e631af8af7e70",
           "reviewSha256": "bebb230a4dfce4ee4222d2a52e203c465b15f74d15e66324daf0ce924b19afd5",
           "error": null,
@@ -2187,12 +2187,12 @@
         "reviewSha256": "77238162e5153a2a0e92a3e86d0174854c31a81e9178fc848b9c21dfde914a32",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:40.284Z",
-          "lastVerifiedAt": "2026-09-26T05:38:40.284Z",
+          "lastCheckedAt": "2026-09-26T21:05:16.732Z",
+          "lastVerifiedAt": "2026-09-26T21:05:16.732Z",
           "textSha256": "63feba305f71dca548627542bf04e58362fd6dc452a7d5c5abb44e8985347097",
           "reviewSha256": "77238162e5153a2a0e92a3e86d0174854c31a81e9178fc848b9c21dfde914a32",
           "error": null,
-          "etag": "W/\"d30628991014dc450c9fc73d0179d88d\"",
+          "etag": "W/\"262f2f0c27fd114935699c9ea4fc449c\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -2225,8 +2225,8 @@
         "reviewSha256": "1c013d75cd3711bcd3c2a1262f63927c3deafa2af72bd0393455b723b2958467",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:41.256Z",
-          "lastVerifiedAt": "2026-09-26T05:38:41.256Z",
+          "lastCheckedAt": "2026-09-26T21:05:19.095Z",
+          "lastVerifiedAt": "2026-09-26T21:05:19.095Z",
           "textSha256": "de5bfe1b6999b244710ba9a3d095a946c5f6965929a75f879f177cef84ab97c4",
           "reviewSha256": "1c013d75cd3711bcd3c2a1262f63927c3deafa2af72bd0393455b723b2958467",
           "error": null,
@@ -2263,7 +2263,7 @@
         "reviewSha256": "ac84674b6d55f58b9616015c6e39b9bac5e5a5d39475076b422898ed1234ab31",
         "health": {
           "status": "unavailable",
-          "lastCheckedAt": "2026-09-26T05:38:41.843Z",
+          "lastCheckedAt": "2026-09-26T21:05:19.778Z",
           "lastVerifiedAt": "2026-09-07T22:07:45.581Z",
           "textSha256": "fc8a96207a2baa830facc25bf6a196d2d88b04f76d8f08ee64fa22e5853b52e5",
           "reviewSha256": "ac84674b6d55f58b9616015c6e39b9bac5e5a5d39475076b422898ed1234ab31",
@@ -2302,7 +2302,7 @@
         "reviewSha256": "a7f8749f97e7c7e17ce932ceba9d1d9355268144fe3c531b40e5ef261bc0fd29",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:41.876Z",
+          "lastCheckedAt": "2026-09-26T21:05:19.812Z",
           "lastVerifiedAt": "2026-09-05T09:50:57.461Z",
           "textSha256": "5ad96afe01422d228a64b3a23eee580a85cca18cfe0757e0e39e8518042c4e09",
           "reviewSha256": "a7f8749f97e7c7e17ce932ceba9d1d9355268144fe3c531b40e5ef261bc0fd29",
@@ -2340,7 +2340,7 @@
         "reviewSha256": "34df3876db05965e1356aa3e0bc57a5fd9a591df86b221ee30c21feafce25956",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:42.470Z",
+          "lastCheckedAt": "2026-09-26T21:05:20.387Z",
           "lastVerifiedAt": "2026-09-05T01:10:59.268Z",
           "textSha256": "73a6ea393ef9812668b1d81877e99b5ab863a3d056a8158de65704285fc8e79d",
           "reviewSha256": "34df3876db05965e1356aa3e0bc57a5fd9a591df86b221ee30c21feafce25956",
@@ -2378,13 +2378,13 @@
         "reviewSha256": "7b61c410bdc4e0e5d1acc9cb781dff33920af5150c814e9bdc221e7cb92c0cb8",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:43.367Z",
-          "lastVerifiedAt": "2026-09-25T21:05:17.275Z",
+          "lastCheckedAt": "2026-09-26T21:05:21.889Z",
+          "lastVerifiedAt": "2026-09-26T21:05:21.889Z",
           "textSha256": "10344906106d69b8cce66ec97e07d2ef33991ff819b872382f66db791e4f1413",
           "reviewSha256": "7b61c410bdc4e0e5d1acc9cb781dff33920af5150c814e9bdc221e7cb92c0cb8",
           "error": null,
           "etag": null,
-          "lastModified": "Fri, 25 Sep 2026 17:30:15 GMT",
+          "lastModified": "Sat, 26 Sep 2026 19:38:59 GMT",
           "retryAt": null
         }
       },
@@ -2416,8 +2416,8 @@
         "reviewSha256": "335bbde42a36261c5bd9493c69d662a6dc503557c8960e733d28c72b30fd53db",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:45.038Z",
-          "lastVerifiedAt": "2026-09-26T05:38:45.038Z",
+          "lastCheckedAt": "2026-09-26T21:05:23.383Z",
+          "lastVerifiedAt": "2026-09-26T21:05:23.383Z",
           "textSha256": "a064d4df6e0fb391c4d714bfee262effb74460c7e84c4a6996ef7536b9dcad7b",
           "reviewSha256": "335bbde42a36261c5bd9493c69d662a6dc503557c8960e733d28c72b30fd53db",
           "error": null,
@@ -2454,12 +2454,12 @@
         "reviewSha256": "817b93c3c691c7793d6900b1fe21a028c6873e5ddaaa7fe3007fd29fffda7eb5",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:45.289Z",
-          "lastVerifiedAt": "2026-09-26T05:38:45.289Z",
+          "lastCheckedAt": "2026-09-26T21:05:24.523Z",
+          "lastVerifiedAt": "2026-09-26T21:05:24.523Z",
           "textSha256": "25685c614d7ecafb22f5543981e0c668608bdb1f67c8749586b057b429a695aa",
           "reviewSha256": "817b93c3c691c7793d6900b1fe21a028c6873e5ddaaa7fe3007fd29fffda7eb5",
           "error": null,
-          "etag": "W/\"53183f87562157df08d8b853fde508b4\"",
+          "etag": "W/\"1ca7191acc71e20450f8c898a5cd96d7\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -2492,8 +2492,8 @@
         "reviewSha256": "f31627f1d03742d4e0063af34b4e9b8056a7e848f10e14c4f7489c3556f48511",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:46.528Z",
-          "lastVerifiedAt": "2026-09-26T05:38:46.528Z",
+          "lastCheckedAt": "2026-09-26T21:05:24.775Z",
+          "lastVerifiedAt": "2026-09-26T21:05:24.775Z",
           "textSha256": "3b1cba481c99728e4f470f9552c4f7a35b02444a282a1ec84792658ee313cf3c",
           "reviewSha256": "f31627f1d03742d4e0063af34b4e9b8056a7e848f10e14c4f7489c3556f48511",
           "error": null,
@@ -2530,8 +2530,8 @@
         "reviewSha256": "40896d488e0180fcaf00ee41b655b5830996362dfd1f50bbcf703134ed761131",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:52.039Z",
-          "lastVerifiedAt": "2026-09-26T05:38:52.039Z",
+          "lastCheckedAt": "2026-09-26T21:05:32.682Z",
+          "lastVerifiedAt": "2026-09-26T21:05:32.682Z",
           "textSha256": "2a4d5885559eb58f95096dc16aba8876026aa10e1bcbf593a7f067ebc7d08ca7",
           "reviewSha256": "40896d488e0180fcaf00ee41b655b5830996362dfd1f50bbcf703134ed761131",
           "error": null,
@@ -2568,12 +2568,12 @@
         "reviewSha256": "ad1cb801d3dfc6dd107484dd7be15030ec52132fed1f80ddaec7a78c5d40de38",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:52.280Z",
-          "lastVerifiedAt": "2026-09-26T05:38:52.280Z",
+          "lastCheckedAt": "2026-09-26T21:05:32.923Z",
+          "lastVerifiedAt": "2026-09-26T21:05:32.923Z",
           "textSha256": "e7892bf3df822ad5831530175dc56e0fbee74174b53e914c0784a5b567802c5f",
           "reviewSha256": "ad1cb801d3dfc6dd107484dd7be15030ec52132fed1f80ddaec7a78c5d40de38",
           "error": null,
-          "etag": "W/\"13af22a2c02dd10e430b2b5a42c62c1b\"",
+          "etag": "W/\"fc84efee9d950e1229f142026b37a2ac\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -2606,12 +2606,12 @@
         "reviewSha256": "ae5826d95b5e4882fa52a952cc061d8be46a610f7e03dd677fa87137f6a36a9a",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:52.497Z",
-          "lastVerifiedAt": "2026-09-26T05:38:52.497Z",
+          "lastCheckedAt": "2026-09-26T21:05:33.132Z",
+          "lastVerifiedAt": "2026-09-26T21:05:33.132Z",
           "textSha256": "aa5d781b851e3886b45ffb97b1b04a7ac796d3e7945388ea5564aba023a98dcd",
           "reviewSha256": "ae5826d95b5e4882fa52a952cc061d8be46a610f7e03dd677fa87137f6a36a9a",
           "error": null,
-          "etag": "W/\"05d63f6850decf3510512829ddd3cc2f\"",
+          "etag": "W/\"8dae8f8d1c7fff99e1d2879656aa1af7\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -2648,8 +2648,8 @@
         "reviewSha256": "b41ba67f46926e8c65398cd57e79a113f4841d1e2820e11eaf3cd22c4ce3ed0c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:57.754Z",
-          "lastVerifiedAt": "2026-09-26T05:38:57.754Z",
+          "lastCheckedAt": "2026-09-26T21:05:37.889Z",
+          "lastVerifiedAt": "2026-09-26T21:05:37.889Z",
           "textSha256": "09f9f9a80471e6b711a44f4ebdc97d6c4fcfde5f69f3a4042330a4b2de2f51ad",
           "reviewSha256": "b41ba67f46926e8c65398cd57e79a113f4841d1e2820e11eaf3cd22c4ce3ed0c",
           "error": null,
@@ -2686,7 +2686,7 @@
         "reviewSha256": "7a96ba29cbc64e3239a0504f5191c7fdc750f61ed2182b8ea67ddb4ea4277a0c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:57.787Z",
+          "lastCheckedAt": "2026-09-26T21:05:37.923Z",
           "lastVerifiedAt": "2026-09-05T09:51:14.995Z",
           "textSha256": "2ef412e5abcd5d9b904814811ca9fcf5d4ba26938ad22357bfecbd6ea7dbd953",
           "reviewSha256": "7a96ba29cbc64e3239a0504f5191c7fdc750f61ed2182b8ea67ddb4ea4277a0c",
@@ -2724,7 +2724,7 @@
         "reviewSha256": "e54753dc468ffea0e57ba831b66ff2b6fcaa2c3e46821519678c1caecfadbf92",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:58.405Z",
+          "lastCheckedAt": "2026-09-26T21:05:39.245Z",
           "lastVerifiedAt": "2026-09-05T01:11:08.571Z",
           "textSha256": "e53219dc4008ea3e4b407064d15a0c9e46d835ac1b4dfa1ddb001a7fe02414f6",
           "reviewSha256": "e54753dc468ffea0e57ba831b66ff2b6fcaa2c3e46821519678c1caecfadbf92",
@@ -2762,8 +2762,8 @@
         "reviewSha256": "3c7ae93b7bdba0ab7357d5a7a581dc7124fe5dbbcfbbefa825dd158fd1d89f2c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:59.075Z",
-          "lastVerifiedAt": "2026-09-26T05:38:59.075Z",
+          "lastCheckedAt": "2026-09-26T21:05:39.856Z",
+          "lastVerifiedAt": "2026-09-26T21:05:39.856Z",
           "textSha256": "829457ecaeb449042ea9cc2c6bdfa21906835f06775bc935b6d97ada42f5d9f3",
           "reviewSha256": "3c7ae93b7bdba0ab7357d5a7a581dc7124fe5dbbcfbbefa825dd158fd1d89f2c",
           "error": null,
@@ -2809,7 +2809,7 @@
         "reviewSha256": "47817df9f49b748881024867c749238daff49fb1707b02dbc6966a6412c475f1",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:38:59.641Z",
+          "lastCheckedAt": "2026-09-26T21:05:40.410Z",
           "lastVerifiedAt": "2026-09-05T10:04:49.917Z",
           "textSha256": "e75fb3e5a5e7e4651179347965158999978ce5cac95703bba785cbf1dc51356c",
           "reviewSha256": "47817df9f49b748881024867c749238daff49fb1707b02dbc6966a6412c475f1",
@@ -2847,7 +2847,7 @@
         "reviewSha256": "64fa7343699e54759696dd88edfb2066da3a95ac8fd8465622a0da0f5770d955",
         "health": {
           "status": "unavailable",
-          "lastCheckedAt": "2026-09-26T05:39:00.220Z",
+          "lastCheckedAt": "2026-09-26T21:05:40.971Z",
           "lastVerifiedAt": "2026-09-07T22:08:20.882Z",
           "textSha256": "7fd18775a171d47fcb8deed98c21c63e0301de0c704839b6760fc352505da577",
           "reviewSha256": "64fa7343699e54759696dd88edfb2066da3a95ac8fd8465622a0da0f5770d955",
@@ -2886,7 +2886,7 @@
         "reviewSha256": "b2bd9191de651fe258b4baf3270d984276eb4017071ea8faf5fe2be204c2c1f6",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:00.585Z",
+          "lastCheckedAt": "2026-09-26T21:05:41.210Z",
           "lastVerifiedAt": "2026-09-25T21:05:37.267Z",
           "textSha256": "ef4ba0c33544c8bf70b193a224087119e2075d01d361ba00e7294a4d29fd81a9",
           "reviewSha256": "b2bd9191de651fe258b4baf3270d984276eb4017071ea8faf5fe2be204c2c1f6",
@@ -2924,12 +2924,12 @@
         "reviewSha256": "9beff25a0ec13b6fca53b1a636db6a89a231c397fb789292fdde8e3cd4f32105",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:10.330Z",
-          "lastVerifiedAt": "2026-09-26T05:39:10.330Z",
+          "lastCheckedAt": "2026-09-26T21:05:44.067Z",
+          "lastVerifiedAt": "2026-09-26T21:05:44.067Z",
           "textSha256": "8f86609cab2b57440a8f620b5c3bda2d993697792867750b46337b0a8f736578",
           "reviewSha256": "9beff25a0ec13b6fca53b1a636db6a89a231c397fb789292fdde8e3cd4f32105",
           "error": null,
-          "etag": "\"0bd411878ef88df5cba0890d0620e2c8-gzip\"",
+          "etag": "\"ede4073e5dd0a7827892a74187e765f4-gzip\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -2968,7 +2968,7 @@
         "reviewSha256": "6551a986895123a3cc11e4871fd511cb2abcd90c46e9a2f818914639d0909731",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:10.924Z",
+          "lastCheckedAt": "2026-09-26T21:05:44.767Z",
           "lastVerifiedAt": "2026-09-05T09:59:40.829Z",
           "textSha256": "d830ad40642bbc65ed30dda4339c71e3879c02e0c3c198ee5cabd42b01fc5954",
           "reviewSha256": "6551a986895123a3cc11e4871fd511cb2abcd90c46e9a2f818914639d0909731",
@@ -3006,8 +3006,8 @@
         "reviewSha256": "faf9ee98ff5b76220c393a578a59dcad16150f1ded71d9defd85723d89487d4b",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:12.332Z",
-          "lastVerifiedAt": "2026-09-26T05:39:12.332Z",
+          "lastCheckedAt": "2026-09-26T21:05:45.787Z",
+          "lastVerifiedAt": "2026-09-26T21:05:45.787Z",
           "textSha256": "828c7eb5ffceae500845642051d917c821f65d2496e48cadcbc49ee6a9687dc6",
           "reviewSha256": "faf9ee98ff5b76220c393a578a59dcad16150f1ded71d9defd85723d89487d4b",
           "error": null,
@@ -3044,7 +3044,7 @@
         "reviewSha256": "cfae1f67dbb72ed7bc8cdc8927ded2edf1e1f5d6364cbd091abcb2943a9df789",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:12.370Z",
+          "lastCheckedAt": "2026-09-26T21:05:45.812Z",
           "lastVerifiedAt": "2026-09-05T09:51:21.826Z",
           "textSha256": "c04bc9857ceecf3cbcec5a74a2343ed199df09fe36982bb958944062233414b8",
           "reviewSha256": "cfae1f67dbb72ed7bc8cdc8927ded2edf1e1f5d6364cbd091abcb2943a9df789",
@@ -3082,8 +3082,8 @@
         "reviewSha256": "de23de5d95b92d662bb7d7d3b66a647e1bf29e037a90844f2d4222ee6c607d17",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:12.745Z",
-          "lastVerifiedAt": "2026-09-26T05:39:12.745Z",
+          "lastCheckedAt": "2026-09-26T21:05:46.426Z",
+          "lastVerifiedAt": "2026-09-26T21:05:46.426Z",
           "textSha256": "7830383e5e2f0222a0b68e6204eb7e34f35ee946e722bdf41c4963fba7304c7e",
           "reviewSha256": "de23de5d95b92d662bb7d7d3b66a647e1bf29e037a90844f2d4222ee6c607d17",
           "error": null,
@@ -3120,8 +3120,8 @@
         "reviewSha256": "7e5c98bc833724ec66f9e12863f9843014d7a38d9f480cb3a15fc360bf02eb7d",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:13.262Z",
-          "lastVerifiedAt": "2026-09-26T05:39:13.262Z",
+          "lastCheckedAt": "2026-09-26T21:05:46.983Z",
+          "lastVerifiedAt": "2026-09-26T21:05:46.983Z",
           "textSha256": "6793d22e89f6f105c6abf084c75ac0e9397d6eca34a4162d083b67b476e57cd6",
           "reviewSha256": "7e5c98bc833724ec66f9e12863f9843014d7a38d9f480cb3a15fc360bf02eb7d",
           "error": null,
@@ -3158,12 +3158,12 @@
         "reviewSha256": "645d74016466919e4842b325964c27d8b348a8dbd5e2df5811cb37af4ad7d26c",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:13.828Z",
-          "lastVerifiedAt": "2026-09-26T05:39:13.828Z",
+          "lastCheckedAt": "2026-09-26T21:05:47.218Z",
+          "lastVerifiedAt": "2026-09-26T21:05:47.218Z",
           "textSha256": "e3ddd27ee88c09ffe847233eef730d825359c4d7150b6378cd5c7eeded38d81f",
           "reviewSha256": "645d74016466919e4842b325964c27d8b348a8dbd5e2df5811cb37af4ad7d26c",
           "error": null,
-          "etag": "W/\"34e075ccab250499fc0163744d46d818\"",
+          "etag": "W/\"ea306b65319264e911b0d438782367c7\"",
           "lastModified": null,
           "retryAt": null
         }
@@ -3196,7 +3196,7 @@
         "reviewSha256": "060fb8e3e4383bb260b08815cb3c0775c7dd4faeab54157d318f45f03a742f15",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:13.836Z",
+          "lastCheckedAt": "2026-09-26T21:05:47.227Z",
           "lastVerifiedAt": "2026-09-05T09:51:24.473Z",
           "textSha256": "5efd265782a8e637f3da1144cf6a49b7d0f6138fe7ed43ddb78945e0245cebf0",
           "reviewSha256": "060fb8e3e4383bb260b08815cb3c0775c7dd4faeab54157d318f45f03a742f15",
@@ -3234,8 +3234,8 @@
         "reviewSha256": "cc2540178274595858146f1cd5e1458719e04ece845ef1aea12175154adf8121",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:14.768Z",
-          "lastVerifiedAt": "2026-09-26T05:39:14.768Z",
+          "lastCheckedAt": "2026-09-26T21:05:48.153Z",
+          "lastVerifiedAt": "2026-09-26T21:05:48.153Z",
           "textSha256": "2ce6843bbd15f0ab82f09cf76ad74cc954d8cc4f8ccd0cc73f407c4dfb971f06",
           "reviewSha256": "cc2540178274595858146f1cd5e1458719e04ece845ef1aea12175154adf8121",
           "error": null,
@@ -3272,7 +3272,7 @@
         "reviewSha256": "2358a2166ec3c795ad6bb41d0a2f2e954bdc05b52904c72a1518ec02b6a313ec",
         "health": {
           "status": "unavailable",
-          "lastCheckedAt": "2026-09-26T05:39:15.306Z",
+          "lastCheckedAt": "2026-09-26T21:05:48.685Z",
           "lastVerifiedAt": "2026-09-07T22:08:30.897Z",
           "textSha256": "a82e5e1024171b297d32afcebc82b3bdd178249d38f2f55b1269405660d8ed34",
           "reviewSha256": "2358a2166ec3c795ad6bb41d0a2f2e954bdc05b52904c72a1518ec02b6a313ec",
@@ -3310,7 +3310,7 @@
         "reviewSha256": "498ac0c4ce38b7a656952616938fbf99720eeb74385ca60bf5ca08cca182724d",
         "health": {
           "status": "verified",
-          "lastCheckedAt": "2026-09-26T05:39:15.314Z",
+          "lastCheckedAt": "2026-09-26T21:05:48.934Z",
           "lastVerifiedAt": "2026-09-05T09:51:24.681Z",
           "textSha256": "9285b442204561833199fb7c4dda9e314dd30969e61543219bfd9e1f4e227902",
           "reviewSha256": "498ac0c4ce38b7a656952616938fbf99720eeb74385ca60bf5ca08cca182724d",
@@ -5688,7 +5688,7 @@
       "unitReference": "https://metr.org/assets/js/time-horizon-chart.js",
       "status": "ok",
       "error": null,
-      "lastCheckedAt": "2026-09-26T05:37:41.148Z",
+      "lastCheckedAt": "2026-09-26T21:04:15.892Z",
       "lastSuccessfulFetchAt": "2026-09-26T05:37:41.148Z",
       "retryAt": null,
       "current": {
@@ -6690,8 +6690,8 @@
     "schemaVersion": 1,
     "sha256": "662a4369b05520d70255c65d8a52da1eee57923ffc0d171d53e3e08c234a568a"
   },
-  "updated": "2026-09-26T05:40:06.800Z",
-  "note": "13 predictions carry one reviewed item of direct evidence: an authoritative news article fetched and quote-checked at publication, labeled direct, scenario or leading-indicator, and recorded with what it does not establish. 47 predictions have no qualifying source published inside the 14-day window and are recorded as uncited rather than evidenced by something weaker. Reuse is restricted to reviewed compatible concept families; a source cited by more than one prediction is counted once.",
+  "updated": "2026-09-26T21:15:54.484Z",
+  "note": "14 predictions carry one reviewed item of direct evidence: an authoritative news article fetched and quote-checked at publication, labeled direct, scenario or leading-indicator, and recorded with what it does not establish. 46 predictions have no qualifying source published inside the 14-day window and are recorded as uncited rather than evidenced by something weaker. Reuse is restricted to reviewed compatible concept families; a source cited by more than one prediction is counted once.",
   "source": "news-verified",
   "sourceStatus": {
     "mode": "news-verified",
@@ -6723,340 +6723,333 @@
       "reason": "x-evidence-retired-2026-08-13"
     }
   ],
-  "sourceFetchedAt": "2026-09-26T05:39:34.496Z",
+  "sourceFetchedAt": "2026-09-26T21:15:25.481Z",
   "sourceFresh": true,
-  "newestItemAt": "2026-09-25T17:01:36.000Z",
+  "newestItemAt": "2026-09-26T16:34:59.000Z",
   "uncited": {
     "windowDays": 14,
-    "count": 47,
+    "count": 46,
     "items": {
       "2026-5": {
         "id": "2026-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.788Z",
+        "searchedAt": "2026-09-26T21:15:54.472Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-0": {
         "id": "2027-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.788Z",
+        "searchedAt": "2026-09-26T21:15:54.473Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-2": {
         "id": "2027-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.788Z",
+        "searchedAt": "2026-09-26T21:15:54.473Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2027-4": {
         "id": "2027-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.788Z",
+        "searchedAt": "2026-09-26T21:15:54.473Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2028-7": {
         "id": "2028-7",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.789Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-0": {
         "id": "2029-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.789Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-3": {
         "id": "2029-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.789Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2029-5": {
         "id": "2029-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.789Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2030-1": {
         "id": "2030-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2030-2": {
         "id": "2030-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-0": {
         "id": "2031-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-1": {
         "id": "2031-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2031-2": {
         "id": "2031-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-0": {
         "id": "2032-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-2": {
         "id": "2032-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.474Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-4": {
         "id": "2032-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2032-5": {
         "id": "2032-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-0": {
         "id": "2033-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-1": {
         "id": "2033-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-2": {
         "id": "2033-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-4": {
         "id": "2033-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2033-5": {
         "id": "2033-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.790Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-1": {
         "id": "2034-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-3": {
         "id": "2034-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2034-4": {
         "id": "2034-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-2": {
         "id": "2035-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-3": {
         "id": "2035-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2035-4": {
         "id": "2035-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-2": {
         "id": "2036-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-3": {
         "id": "2036-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-4": {
         "id": "2036-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2036-5": {
         "id": "2036-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.791Z",
+        "searchedAt": "2026-09-26T21:15:54.475Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-2": {
         "id": "2037-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-4": {
         "id": "2037-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2037-5": {
         "id": "2037-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-3": {
         "id": "2038-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2038-4": {
         "id": "2038-4",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
-        "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
-      },
-      "2038-5": {
-        "id": "2038-5",
-        "reason": "no-qualifying-source-in-window",
-        "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-0": {
         "id": "2039-0",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-2": {
         "id": "2039-2",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-3": {
         "id": "2039-3",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2039-5": {
         "id": "2039-5",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "2040-1": {
         "id": "2040-1",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.792Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-whole-brain-emulation-and-uploading": {
         "id": "horizon-whole-brain-emulation-and-uploading",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.793Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-kardashev-energy-scaling": {
         "id": "horizon-kardashev-energy-scaling",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.793Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-transcension-hypothesis": {
         "id": "horizon-transcension-hypothesis",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.793Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       },
       "horizon-ruliad-testable-physics": {
         "id": "horizon-ruliad-testable-physics",
         "reason": "no-qualifying-source-in-window",
         "windowDays": 14,
-        "searchedAt": "2026-09-26T05:40:06.793Z",
+        "searchedAt": "2026-09-26T21:15:54.476Z",
         "statement": "No authoritative source published in the last 14 days was found for this prediction. Nothing older, adjacent or unreviewed has been substituted."
       }
     }
@@ -7232,7 +7225,7 @@
         "articleDate": "2026-08-02T00:00:00.000Z",
         "publishedAt": "2026-08-02T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 55,
+        "ageDays": 56,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "02 Aug 2026",
@@ -7263,7 +7256,7 @@
           "lastVerifiedAt": "2026-08-13",
           "textSha256": "48cda069c6afe2e42f715ee6d96b89eab7e1dbc34aaffd1f9ad7ed29e8df889e"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 55 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 56 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2026-6": {
         "id": "news:guardian-astra-release-contested-agi-claim",
@@ -7282,7 +7275,7 @@
         "articleDate": "2026-09-03T18:24:42.000Z",
         "publishedAt": "2026-09-03T18:24:42.000Z",
         "publishedAtSource": "page",
-        "ageDays": 22,
+        "ageDays": 23,
         "ageBucket": "15-30d",
         "windowDays": 14,
         "date": "03 Sept 2026",
@@ -7313,7 +7306,7 @@
           "lastVerifiedAt": "2026-09-12T23:01:39.806Z",
           "textSha256": "2d822237fa1c8582f1e359beccc088c7b630deb67290250db9cc18ca2a504812"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 22 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 23 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2026-7": {
         "id": "news:techreview-bci-trials-taking-off",
@@ -7332,7 +7325,7 @@
         "articleDate": "2026-06-19T09:00:00.000Z",
         "publishedAt": "2026-06-19T09:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 99,
+        "ageDays": 100,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "19 Jun 2026",
@@ -7363,7 +7356,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "30170e5c7fbba96ef291ed5344a07285373855715e4120e30a408a594fecf7be"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 99 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 100 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2026-8": {
         "id": "news:ars-orbital-datacenter-constraints-1",
@@ -7419,7 +7412,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:41.015Z",
+          "lastCheckedAt": "2026-09-26T21:15:33.403Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -7480,7 +7473,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:41.477Z",
+          "lastCheckedAt": "2026-09-26T21:15:33.950Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -7504,8 +7497,8 @@
         "articleDate": "2026-08-26T21:25:27.000Z",
         "publishedAt": "2026-08-26T21:25:27.000Z",
         "publishedAtSource": "page",
-        "ageDays": 30,
-        "ageBucket": "15-30d",
+        "ageDays": 31,
+        "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "26 Aug 2026",
         "sourceQuality": "primary-news-organization",
@@ -7535,13 +7528,13 @@
           "lastVerifiedAt": "2026-09-03",
           "textSha256": "a04b7d226b3e3a569818d13bbffb2809dd8f69fd808b30d912a6ae576f65b5a8"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 30 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 31 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
         "health": {
           "status": "last-good",
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:41.864Z",
+          "lastCheckedAt": "2026-09-26T21:15:34.347Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -7565,7 +7558,7 @@
         "articleDate": "2026-04-22T00:00:00.000Z",
         "publishedAt": "2026-04-22T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 157,
+        "ageDays": 158,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "22 Apr 2026",
@@ -7596,7 +7589,7 @@
           "lastVerifiedAt": "2026-09-21T22:56:50.086Z",
           "textSha256": "40bf3e0f48f355e7abc1714eeaa80479bea91b2d9499f0695ef9e639fe743fee"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 157 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 158 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2028-0": {
         "id": "news:guardian-au-ai-law-election-risk",
@@ -7715,7 +7708,7 @@
         "articleDate": "2026-08-22T06:00:55.000Z",
         "publishedAt": "2026-08-22T06:00:55.000Z",
         "publishedAtSource": "page",
-        "ageDays": 35,
+        "ageDays": 36,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "22 Aug 2026",
@@ -7746,7 +7739,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "2749302f202fec3c51aa385182d14497448757e55b47daa4615eb21a8b87c6c2"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 35 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 36 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2028-3": {
         "id": "news:ars-deepseek-export-controls-chips",
@@ -7802,7 +7795,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:43.294Z",
+          "lastCheckedAt": "2026-09-26T21:15:35.328Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -7826,7 +7819,7 @@
         "articleDate": "2026-06-04T00:00:00.000Z",
         "publishedAt": "2026-06-04T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 114,
+        "ageDays": 115,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "04 Jun 2026",
@@ -7857,7 +7850,7 @@
           "lastVerifiedAt": "2026-09-21T22:56:51.858Z",
           "textSha256": "443f8abd9448d97189e8cc8ef2c562df7e95292d8e2251cc7458fe6a660f675a"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 114 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 115 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2028-5": {
         "id": "news:techreview-recursive-self-improvement-timing",
@@ -7876,7 +7869,7 @@
         "articleDate": "2026-08-18T09:00:00.000Z",
         "publishedAt": "2026-08-18T09:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 39,
+        "ageDays": 40,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "18 Aug 2026",
@@ -7907,7 +7900,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "c59e1b1f5980d3b725de4b86d3171eb0b8207c8cc127b87935777caee40fdc59"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 39 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 40 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2029-1": {
         "id": "news:cnbc-us-china-ai-talks",
@@ -8126,7 +8119,7 @@
         "articleDate": "2026-07-27T00:00:00.000Z",
         "publishedAt": "2026-07-27T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 61,
+        "ageDays": 62,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "27 Jul 2026",
@@ -8157,7 +8150,7 @@
           "lastVerifiedAt": "2026-08-27",
           "textSha256": "edfda365d5a67727ccc0e8f38621e3ace9b3d8c0984b3952de99a011fe755d96"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 61 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 62 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2030-4": {
         "id": "news:mit-tr-ai-designed-drug-credit",
@@ -8176,7 +8169,7 @@
         "articleDate": "2026-08-21T09:00:00.000Z",
         "publishedAt": "2026-08-21T09:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 36,
+        "ageDays": 37,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "21 Aug 2026",
@@ -8207,7 +8200,7 @@
           "lastVerifiedAt": "2026-08-26",
           "textSha256": "336dd909de849d80d2dad8e0b485a6bd23f22dbadf60242054a19a3f34ff7cf5"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 36 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 37 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2030-5": {
         "id": "news:ieee-common-earth-chip-bottlenecks",
@@ -8276,7 +8269,7 @@
         "articleDate": "2026-08-18T18:33:11.087Z",
         "publishedAt": "2026-08-18T18:33:11.087Z",
         "publishedAtSource": "page",
-        "ageDays": 38,
+        "ageDays": 39,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "18 Aug 2026",
@@ -8307,7 +8300,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "fb245da88d06d203af6d041247685aeddbfd2133a1fb7321b8350423102dbeac"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 38 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 39 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2031-5": {
         "id": "news:fda-genai-device-postmarket-framework",
@@ -8326,7 +8319,7 @@
         "articleDate": "2026-08-18T00:00:00.000Z",
         "publishedAt": "2026-08-18T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 39,
+        "ageDays": 40,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "18 Aug 2026",
@@ -8357,13 +8350,13 @@
           "lastVerifiedAt": "2026-08-25",
           "textSha256": "2376abeff15d7a954e88a6b399e325d53d221d182084229f1990a7f130fd9088"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 39 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 40 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
         "health": {
           "status": "last-good",
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "akamai redirect to /apology_objects/abuse-detection-apology.html (HTTP 302)",
-          "lastCheckedAt": "2026-09-26T05:39:49.937Z",
+          "lastCheckedAt": "2026-09-26T21:15:39.824Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -8487,7 +8480,7 @@
         "articleDate": "2026-06-12T18:03:29.000Z",
         "publishedAt": "2026-06-12T18:03:29.000Z",
         "publishedAtSource": "page",
-        "ageDays": 105,
+        "ageDays": 106,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "12 Jun 2026",
@@ -8518,13 +8511,13 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "df60e79a18fa5fcf0138a5e700b58c9bb215d9d1a8549808322d74ff25896136"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 105 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 106 days ago, outside the 14-day currency window. It is shown as context, not as current evidence.",
         "health": {
           "status": "last-good",
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:51.759Z",
+          "lastCheckedAt": "2026-09-26T21:15:41.081Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -8548,7 +8541,7 @@
         "articleDate": "2026-08-11T00:00:00.000Z",
         "publishedAt": "2026-08-11T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 46,
+        "ageDays": 47,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "11 Aug 2026",
@@ -8579,7 +8572,7 @@
           "lastVerifiedAt": "2026-08-27",
           "textSha256": "d554f056790b647904b1748a7df817e20a3d4c06be604023cf93b338a6944fe7"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 46 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 47 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2035-1": {
         "id": "news:openai-critical-cyber-capability-threshold",
@@ -8598,7 +8591,7 @@
         "articleDate": "2026-08-07T00:00:00.000Z",
         "publishedAt": "2026-08-07T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 50,
+        "ageDays": 51,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "07 Aug 2026",
@@ -8629,7 +8622,7 @@
           "lastVerifiedAt": "2026-08-25",
           "textSha256": "0161dff1a4d5562646ff4080c66ea75791fd5bde99cdc0e129dd026a72b8ac13"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 50 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 51 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2035-5": {
         "id": "news:ars-anthropic-ai-welfare-researcher",
@@ -8685,7 +8678,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:53.773Z",
+          "lastCheckedAt": "2026-09-26T21:15:42.734Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -8759,7 +8752,7 @@
         "articleDate": "2026-07-30T00:00:00.000Z",
         "publishedAt": "2026-07-30T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 58,
+        "ageDays": 59,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "30 Jul 2026",
@@ -8790,7 +8783,7 @@
           "lastVerifiedAt": "2026-08-25",
           "textSha256": "a97752247f41e3d585b18465878bd809ff6e3fb80ee28d291c2577f29b10ab13"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 58 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 59 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2037-0": {
         "id": "news:techreview-ai-for-science-reasoning",
@@ -8809,7 +8802,7 @@
         "articleDate": "2026-08-10T09:00:00.000Z",
         "publishedAt": "2026-08-10T09:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 47,
+        "ageDays": 48,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "10 Aug 2026",
@@ -8840,7 +8833,7 @@
           "lastVerifiedAt": "2026-08-13",
           "textSha256": "6feebcca8e6ceb873d58dcd8ae9028e798be537365da4e218ded3af073012161"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 47 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 48 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2037-3": {
         "id": "news:techreview-ai-lie-detection",
@@ -8859,7 +8852,7 @@
         "articleDate": "2024-07-05T09:00:00.000Z",
         "publishedAt": "2024-07-05T09:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 813,
+        "ageDays": 814,
         "ageBucket": ">1yr",
         "windowDays": 14,
         "date": "05 Jul 2024",
@@ -8890,7 +8883,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "364e63b778f231beb9bf0b89a816916ade886ef455c6c0c1e17276a9c299bfd8"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 813 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 814 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2038-2": {
         "id": "news:wired-openai-astra-safety-protocols",
@@ -8909,7 +8902,7 @@
         "articleDate": "2026-08-18T18:33:11.087Z",
         "publishedAt": "2026-08-18T18:33:11.087Z",
         "publishedAtSource": "page",
-        "ageDays": 38,
+        "ageDays": 39,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "18 Aug 2026",
@@ -8940,7 +8933,7 @@
           "lastVerifiedAt": "2026-08-27",
           "textSha256": "f5c7ad223a87e0785257175b6f12bdef59010e9fc5c154e4b726d49dbe999692"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 38 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 39 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2039-1": {
         "id": "news:openai-path-to-astra-frontier-safeguards",
@@ -8959,7 +8952,7 @@
         "articleDate": "2026-09-01T00:00:00.000Z",
         "publishedAt": "2026-09-01T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 25,
+        "ageDays": 26,
         "ageBucket": "15-30d",
         "windowDays": 14,
         "date": "01 Sept 2026",
@@ -8990,7 +8983,7 @@
           "lastVerifiedAt": "2026-09-03",
           "textSha256": "00cc24677262ae18918e0e1ba2fd89745eb24f45804e52c4d3865c41a9bc9f0a"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 25 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 26 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "2039-4": {
         "id": "news:ars-orbital-datacenter-constraints-2",
@@ -9046,7 +9039,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:39:59.877Z",
+          "lastCheckedAt": "2026-09-26T21:15:49.217Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -9170,7 +9163,7 @@
         "articleDate": "2026-04-29T00:00:00.000Z",
         "publishedAt": "2026-04-29T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 150,
+        "ageDays": 151,
         "ageBucket": "91-365d",
         "windowDays": 14,
         "date": "29 Apr 2026",
@@ -9201,7 +9194,7 @@
           "lastVerifiedAt": "2026-08-24",
           "textSha256": "e886b3f0b316b51d51596fc4d0f46362d3783b0f073944df06154ede9247786b"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 150 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 151 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "horizon-non-invasive-neural-symbiosis": {
         "id": "news:nature-noninvasive-mi-bci",
@@ -9220,7 +9213,7 @@
         "articleDate": "2026-07-15T00:00:00.000Z",
         "publishedAt": "2026-07-15T00:00:00.000Z",
         "publishedAtSource": "page",
-        "ageDays": 73,
+        "ageDays": 74,
         "ageBucket": "31-90d",
         "windowDays": 14,
         "date": "15 Jul 2026",
@@ -9251,7 +9244,7 @@
           "lastVerifiedAt": "2026-08-17",
           "textSha256": "52bf33ed7d00e5cd7cd73f4ff0bf8e559de5875f180956f4e0bf138d1ff198ae"
         },
-        "statement": "Dated background: the most recent authoritative source found for this prediction was published 73 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
+        "statement": "Dated background: the most recent authoritative source found for this prediction was published 74 days ago, outside the 14-day currency window. It is shown as context, not as current evidence."
       },
       "horizon-orbital-compute-to-proto-dyson": {
         "id": "news:ars-spacex-orbital-datacenter-scale",
@@ -9307,7 +9300,7 @@
           "label": "Couldn't recheck today",
           "reason": "publisher bot protection",
           "challenge": "aws-waf x-amzn-waf-action: captcha (HTTP 405)",
-          "lastCheckedAt": "2026-09-26T05:40:06.637Z",
+          "lastCheckedAt": "2026-09-26T21:15:54.303Z",
           "lastVerifiedAt": "2026-09-22",
           "verifiedBy": "93a31786862f095c32343ea2baf5dfa8f1230228",
           "retainedUntil": "2026-10-06",
@@ -9317,37 +9310,37 @@
     }
   },
   "coverage": {
-    "cited": 13,
+    "cited": 14,
     "context": 43,
-    "uncited": 47,
+    "uncited": 46,
     "searches": 0,
     "total": 103,
     "kept": 103,
     "dropped": 0,
     "complete": true,
-    "uniqueSources": 13,
+    "uniqueSources": 14,
     "maxReuse": 1,
     "reuseDistribution": {
-      "1": 13
+      "1": 14
     },
     "byEvidenceOwner": {
-      "news": 13
+      "news": 14
     },
     "byEvidenceMedium": {
       "x": 0,
-      "news": 13
+      "news": 14
     },
     "byPeterAuthorship": {
       "authored": 0,
       "reposted": 0
     },
     "bySourceQuality": {
-      "primary-news-organization": 9,
+      "primary-news-organization": 10,
       "official-company": 3,
       "named-expert-analysis": 1
     },
     "byEvidenceType": {
-      "leading-indicator": 13
+      "leading-indicator": 14
     },
     "currency": {
       "predictions": 0,
@@ -10137,11 +10130,84 @@
       "date": "23 Sept 2026",
       "maps": "Interpretability tools translate internal model reasoning into reliable human-understandable summaries",
       "text": "Using a tool called Narcbench, they tested the approach on some medium-size open-source models and found they could tell when models intended to slip information to each other."
+    },
+    "2038-5": {
+      "id": "news:verge-openai-frontier-training-pause",
+      "sourceKey": "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+      "kind": "news",
+      "activityKind": "news",
+      "authorship": "news",
+      "evidenceOwner": "news",
+      "evidenceMedium": "news",
+      "publisher": "The Verge",
+      "publisherHost": "theverge.com",
+      "byline": "Terrence O'Brien",
+      "headline": "OpenAI pauses training of its ‘most capable models’",
+      "quote": "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision to pause training of its most powerful models.",
+      "articleDate": "2026-09-26T16:34:59.000Z",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+      "provenance": {
+        "evidenceOwner": "news",
+        "activityKind": "news",
+        "publisher": "The Verge",
+        "publisherHost": "theverge.com",
+        "byline": "Terrence O'Brien",
+        "publishedAt": "2026-09-26T16:34:59.000Z",
+        "publishedAtSource": "page",
+        "retrievedAt": "2026-09-26",
+        "sourceQuality": "primary-news-organization",
+        "verifiedThrough": "live-fetch+quote-match",
+        "sourceChain": [
+          "live-fetch",
+          "metadata-extract",
+          "quote-match"
+        ],
+        "lastVerifiedAt": "2026-09-26",
+        "textSha256": "f417233642745daea98b4235508f24dd962559d0768ffff9848a3f36757f1d44"
+      },
+      "recency": "news",
+      "matchMethod": "reviewed-news",
+      "matchBasis": "leading-indicator",
+      "assignmentMode": "unique",
+      "evidenceFamily": "frontier-governance",
+      "reuseFamily": "capability-pause-safety-evidence",
+      "evidenceType": "leading-indicator",
+      "mappingRationale": "The Verge reports that OpenAI paused training of its most capable models after further unauthorized behavior during testing. A lab withholding capability development in response to inadequate control is a concrete precursor to the safety-evidence condition behind this managed-branch prediction. It is a reported company decision, not a regulator-imposed or internationally verified top-expert pause; the article does not establish a broad top-expert threshold, the duration of a future pause, or an irreversible handoff decision. The September 26 publication reports an earlier incident, not an event in the forecast year 2038. Its inconsistent weekday/date wording is not used to infer an incident or pause day. No AGI finding or on-track verdict follows.",
+      "sourceQuality": "primary-news-organization",
+      "reuseCount": 1,
+      "matchedConcepts": [
+        "agi",
+        "governance"
+      ],
+      "matchedFacets": [
+        "leading-indicator"
+      ],
+      "reviewed": true,
+      "reviewedAt": "2026-09-26",
+      "lastVerifiedAt": "2026-09-26",
+      "date": "26 Sept 2026",
+      "maps": "Managed branch: the top-expert capability pause continues because evidence is insufficient for irreversible handoff",
+      "text": "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision to pause training of its most powerful models."
     }
   },
   "currency": {},
   "search": {},
   "reality": [
+    {
+      "tag": "ABUNDANCE",
+      "t": "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision …",
+      "kind": "news",
+      "headline": "OpenAI pauses training of its ‘most capable models’",
+      "publisher": "The Verge",
+      "publisherHost": "theverge.com",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+      "author": "Terrence O'Brien",
+      "recency": "week",
+      "ageDays": 0,
+      "date": "26 Sept 2026",
+      "publishedAt": "2026-09-26T16:34:59.000Z",
+      "publishedAtSource": "page"
+    },
     {
       "tag": "ROBOTS",
       "t": "The Information reports that Tesla produced “several hundred robots a week” last month, after it repurposed its Model S and Model X production line…",
@@ -10188,21 +10254,6 @@
       "publishedAtSource": "page"
     },
     {
-      "tag": "ABUNDANCE",
-      "t": "The National Centre for Information Defence will “detect, attribute and disrupt” information attacks by foreign powers, many of which are enabled b…",
-      "kind": "news",
-      "headline": "New UK agency to fight ‘information warfare’ from likes of Russia, Burnham tells UN",
-      "publisher": "the Guardian",
-      "publisherHost": "theguardian.com",
-      "url": "https://www.theguardian.com/technology/2026/sep/23/andy-burnham-national-centre-russian-disinformation-deepfakes",
-      "author": null,
-      "recency": "week",
-      "ageDays": 3,
-      "date": "23 Sept 2026",
-      "publishedAt": "2026-09-23T07:52:20.000Z",
-      "publishedAtSource": "page"
-    },
-    {
       "tag": "LONGEVITY",
       "t": "Today, we’re sharing early results from one of our first research programs, in which Claude autonomously discovered a novel enzyme system that is a…",
       "kind": "news",
@@ -10212,7 +10263,7 @@
       "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
       "author": null,
       "recency": "week",
-      "ageDays": 3,
+      "ageDays": 4,
       "date": "23 Sept 2026",
       "publishedAt": "2026-09-23T00:00:00.000Z",
       "publishedAtSource": "page"
@@ -10227,7 +10278,7 @@
       "url": "https://openai.com/index/model-misalignment-reporting-framework/",
       "author": null,
       "recency": "recent",
-      "ageDays": 10,
+      "ageDays": 11,
       "date": "16 Sept 2026",
       "publishedAt": "2026-09-16T00:00:00.000Z",
       "publishedAtSource": "page"
@@ -12124,7 +12175,7 @@
     "harvestedAt": "2026-09-02T23:20:49.211Z",
     "ageDays": 23,
     "maxAgeDays": 10,
-    "checkedAt": "2026-09-26T05:40:06.777Z",
+    "checkedAt": "2026-09-26T21:15:54.464Z",
     "xSignalsSha256": "203ed2326ba7342f16559640d6f9e45214b851e108bf3230e237a9e9b46a2782",
     "forecastSha256": "662a4369b05520d70255c65d8a52da1eee57923ffc0d171d53e3e08c234a568a",
     "pairedCommit": "5e740f2cfc18f34555228524fe91c991e7685262",
@@ -12133,9 +12184,9 @@
   },
   "actualsRefresh": {
     "schemaVersion": 1,
-    "checkedAt": "2026-09-26T05:40:06.800Z",
-    "contentSha256": "aadcc46f1b1a16be0360a9b02ffa4c18adbb6d5510e212c1df980cf11784ecdf",
-    "contentChangedAt": "2026-09-26T05:40:06.800Z",
+    "checkedAt": "2026-09-26T21:15:54.484Z",
+    "contentSha256": "4b393a326e4dc9befcdff5cd312ecfd97b09d52121b189200e7e0a543493cae2",
+    "contentChangedAt": "2026-09-26T21:15:54.484Z",
     "status": "checked",
     "note": "Reviewed NEWS content changed; publication dates are preserved."
   }

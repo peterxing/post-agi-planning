@@ -140,8 +140,16 @@ Push-Location $Deploy
 & node $coverageVerifier
 $coverageExit = $LASTEXITCODE
 if ($coverageExit -eq 0) {
-  & node $newsVerifier
-  $newsExit = $LASTEXITCODE
+  # Captured as well as shown, so the inert warning below can name the routes the gate itself printed.
+  $newsLines = @()
+  $priorOutputEncoding = [Console]::OutputEncoding
+  try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false) } catch { }
+  try {
+    & node $newsVerifier | Tee-Object -Variable newsLines | Out-Host
+    $newsExit = $LASTEXITCODE
+  } finally {
+    try { [Console]::OutputEncoding = $priorOutputEncoding } catch { }
+  }
   # 70 from the news gate is PASSED BUT INERT and MUST continue the chain. Gating the next three
   # verifiers on -eq 0 would have made a truthful "3 of 6 proofs were not exercised" silently skip
   # currency, surface and interlock — punishing the gate for reporting honestly, which is how a
@@ -219,9 +227,24 @@ if ($currencyInert) {
 # that the path was "proven live and fails closed on ... drift" — naming two capabilities that did
 # not execute. Routing that state to 70 is STRICTLY STRONGER than what it did before, not a
 # relaxation: the only runs affected are ones that previously reported a full pass.
+# The warning names the route(s) the gate itself printed, never a cause restated here. The gate
+# has three exit-70 routes: last-good sources it couldn't recheck, an aging-empty current window,
+# and proofs it could not exercise. Each is recognised only by the gate's own item lines.
 $newsInert = ($newsExit -eq 70)
 if ($newsInert) {
-  Write-Warning "publish-github: news gate PASSED BUT INERT — one or more live proofs were NOT EXERCISED on this run; the gate listed them by name under 'RESULT: PASSED BUT INERT' above. Publication proceeds because the live news citations were each checked individually; this run does not establish the unexercised proofs."
+  $newsRoutes = @()
+  $lastGoodLines = @($newsLines | Where-Object { $_ -match "^\s*- couldn't recheck today: " } | ForEach-Object { $_.Trim() } | Sort-Object -Unique)
+  if ($lastGoodLines.Count) { $newsRoutes += "last-good ($($lastGoodLines.Count) source(s) couldn't be rechecked today)" }
+  if (@($newsLines | Where-Object { $_ -match 'EMPTY-CURRENT WARNING' }).Count) { $newsRoutes += 'aging-empty (no news from the current window is linked yet)' }
+  $unexercisedLines = @($newsLines | Where-Object { $_ -match '^\s*- not exercised: ' } | ForEach-Object { $_.Trim() } | Sort-Object -Unique)
+  if ($unexercisedLines.Count) { $newsRoutes += "proofs-not-exercised ($($unexercisedLines.Count) live proof(s) did not run)" }
+  $newsResult = @($newsLines | Where-Object { $_ -match '^RESULT: PASSED BUT INERT' } | Select-Object -Last 1)
+  if ($newsRoutes.Count) {
+    Write-Warning "publish-github: news gate PASSED BUT INERT via $($newsRoutes -join '; '). The gate named every item above. Publication proceeds; those items were not verified on this run."
+  } else {
+    Write-Warning "publish-github: news gate PASSED BUT INERT, but its output named no recognised route. Read the gate output above. Publication proceeds under the existing exit-70 sanction."
+  }
+  if ($newsResult.Count) { Write-Warning "publish-github: news gate result: $($newsResult[0])" }
 }
 # TWO OUTCOMES MAY SHARE AN EXIT CODE ONLY IF THEY IMPLY THE SAME NEXT ACTION. Two facts reach
 # this verdict and they demand opposite responses:
@@ -379,15 +402,14 @@ function Initialize-PublishMirror {
   }
   Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
   $tracking = "refs/remotes/origin/$ExpectedBranch"
-  $counts = (((Invoke-PublishMirrorGit $fullPath @('rev-list','--left-right','--count',"HEAD...$tracking")) -join ' ').Trim() -split '\s+')
-  if ($counts.Count -ne 2 -or [int]$counts[0] -ne 0) {
-    throw 'Mirror contains unpublished local commits or diverges from origin. No reset was attempted.'
-  }
+  # Refresh the tracking ref BEFORE judging local commits. The push below names a token URL, so
+  # Git never advances this ref by itself; a stale ref made an already-published HEAD read as an
+  # unpublished local commit and refused a clean mirror. A failed fetch still refuses here.
   Invoke-PublishMirrorGit $fullPath @('fetch','--quiet','--no-tags','origin',"refs/heads/${ExpectedBranch}:$tracking") | Out-Null
   Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
   $counts = (((Invoke-PublishMirrorGit $fullPath @('rev-list','--left-right','--count',"HEAD...$tracking")) -join ' ').Trim() -split '\s+')
   if ($counts.Count -ne 2 -or [int]$counts[0] -ne 0) {
-    throw 'Fetched origin is not a fast-forward of the mirror. Local commits and working data are preserved.'
+    throw 'Mirror contains unpublished local commits or diverges from origin. No reset was attempted.'
   }
   if ([int]$counts[1] -gt 0) {
     Invoke-PublishMirrorGit $fullPath @('merge','--ff-only','--no-edit',$tracking) | Out-Null
@@ -395,6 +417,15 @@ function Initialize-PublishMirror {
   Assert-PublishMirrorClean $fullPath $ExpectedRemote $ExpectedBranch
   Invoke-PublishMirrorGit $fullPath @('config','core.autocrlf','false') | Out-Null
   Invoke-PublishMirrorGit $fullPath @('config','core.safecrlf','false') | Out-Null
+}
+
+function Sync-PublishMirrorTracking {
+  param([string]$Checkout, [string]$ExpectedBranch)
+  # The same guarded fetch as the preparation: it advances only refs/remotes/origin/<branch>,
+  # never HEAD, the index or the worktree. Returns the refreshed SHA; throws if the fetch fails.
+  $tracking = "refs/remotes/origin/$ExpectedBranch"
+  Invoke-PublishMirrorGit $Checkout @('fetch','--quiet','--no-tags','origin',"refs/heads/${ExpectedBranch}:$tracking") | Out-Null
+  return ((Invoke-PublishMirrorGit $Checkout @('rev-parse','--verify',$tracking)) -join '').Trim()
 }
 
 function Assert-PublishMirrorSurface {
@@ -744,4 +775,17 @@ $out = $out.Replace($tok, '***')                       # scrub token from any ec
 Write-Host $out.Trim()
 if ($code -ne 0) { Write-Error "publish-github: git push failed ($code)"; exit 4 }
 Write-Host "publish-github: pushed $($staged.Count) file(s) to $Repo@$Branch."
+# The push has already succeeded. Refresh the tracking ref so the next run compares against the
+# real remote; a failed refresh is reported as a stale ref, never turned into a failure here.
+try {
+  $pushedSha = ((Invoke-PublishMirrorGit $Clone @('rev-parse','--verify','HEAD')) -join '').Trim()
+  $trackingSha = Sync-PublishMirrorTracking -Checkout $Clone -ExpectedBranch $Branch
+  if ($trackingSha -eq $pushedSha) {
+    Write-Host "publish-github: refs/remotes/origin/$Branch now matches the pushed commit $pushedSha."
+  } else {
+    Write-Warning "publish-github: pushed $pushedSha, but refs/remotes/origin/$Branch is $trackingSha after the refresh. The tracking ref is stale; the next run refreshes it before judging local commits."
+  }
+} catch {
+  Write-Warning "publish-github: the push succeeded, but refreshing refs/remotes/origin/$Branch failed: $($_.Exception.Message) The tracking ref is stale; the next run refreshes it before judging local commits."
+}
 exit 0
