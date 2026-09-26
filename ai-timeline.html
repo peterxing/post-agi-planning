@@ -201,6 +201,23 @@ html[data-theme="dark"] {
     .boundary strong { font: 12px Consolas, "Courier New", Courier, monospace; white-space: nowrap; }
     .boundary p { font-size: 11px; color: var(--cp-text-muted); }
     .event-list { max-width: 1060px; margin: 0 auto; }
+    .month-block { padding: 24px 0 32px; border-top: 1px solid var(--cp-border); scroll-margin-top: 24px; }
+    .month-block > h3 { font-size: 26px; margin-bottom: 20px; }
+    .monthly-entry { margin-bottom: 24px; }
+    .monthly-entry > .event-date { text-align: left; padding: 0 0 12px; display: flex; gap: 12px; align-items: center; }
+    .monthly-entry > .event-date::after { display: none; }
+    .monthly-entry > .event-date small { margin: 0; }
+    .month-comparison { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; }
+    .month-comparison .event-card { padding: 20px; }
+    .month-comparison .event-card h4 { font-size: 19px; margin: 12px 0; }
+    .month-comparison .event-card p { font-size: 12px; }
+    .month-comparison .event-bottom { gap: 8px; }
+    .month-comparison .event-bottom .text-link { margin-left: 0; }
+    .scenario-reference, .earlier-record { border-top: 1px solid var(--cp-border); margin-top: 24px; padding-top: 20px; }
+    .scenario-reference > summary, .earlier-record > summary { font-size: 16px; font-weight: 650; padding: 12px 0; }
+    .scenario-reference > p, .earlier-record > p, .month-empty { color: var(--cp-text-muted); font-size: 12px; margin: 12px 0 20px; }
+    .actuals-status { margin: 12px 0 16px; font-size: 12px; color: var(--cp-text-muted); }
+    .actuals-status[data-state="failed"], .actuals-status[data-state="stale"] { border-left: 3px solid var(--cp-warning); padding-left: 12px; }
     .event-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 28px; padding-bottom: 24px; position: relative; }
     .event-row:not(:last-child)::before { content: ""; position: absolute; left: 137px; top: 25px; bottom: 0; width: 1px; background: var(--cp-border); }
     .event-date { text-align: right; padding-top: 22px; color: var(--cp-text-muted); position: relative; }
@@ -319,6 +336,8 @@ html[data-theme="dark"] {
       .checkpoint h3 { font-size: 21px; }
       .checkpoint-head > .badge { font-size: 8px; padding: 3px 5px; }
       .comparison-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .month-comparison { grid-template-columns: 1fr 1fr; }
+      .month-comparison .event-card { grid-column: 1 / -1; }
       .reality-card { grid-column: 1 / -1; }
       .scenario-card { padding: 16px 14px; border-radius: 12px; }
       .scenario-card h4 { font-size: 15px; }
@@ -347,6 +366,7 @@ html[data-theme="dark"] {
       .tabs { gap: 12px; }
       .tab-count { display: none; }
       .comparison-grid { grid-template-columns: 1fr; }
+      .month-comparison { grid-template-columns: 1fr; }
       .checkpoint-head { flex-direction: column; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -363,7 +383,7 @@ html[data-theme="dark"] {
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#explore">Skip to the comparison</a>
+  <a class="skip-link" href="#explore">Skip to the monthly chronology</a>
   <header class="topbar">
     <div class="wrap topbar-inner">
       <a class="brand" href="#top" aria-label="AI, in perspective, top of page">
@@ -383,14 +403,14 @@ html[data-theme="dark"] {
     <section class="hero wrap" aria-labelledby="heroTitle">
       <div class="dateline">
         <p class="eyebrow">AI 2027 &times; AI 2040 &nbsp; / &nbsp; an independent reading guide</p>
-        <span class="snapshot-label mono">Research snapshot &middot; 22 Sep 2026</span>
+        <span class="snapshot-label mono" id="snapshotLabel">Research snapshot</span>
       </div>
       <div class="hero-grid">
         <div class="hero-copy">
           <h1 id="heroTitle">Two futures.<br>One unfolding<br><span>reality.</span></h1>
           <p>One scenario imagines a race to superintelligence. The other asks what it would take to slow down. Put both beside what has actually happened&mdash;and follow the evidence for yourself.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#explore">Explore the comparison <span aria-hidden="true">&darr;</span></a>
+            <a class="button primary" href="#explore">Read month by month <span aria-hidden="true">&darr;</span></a>
             <button class="button" type="button" data-open-view="reality">Just the real events <span aria-hidden="true">&rarr;</span></button>
           </div>
         </div>
@@ -399,7 +419,7 @@ html[data-theme="dark"] {
             <figcaption class="map-head"><span class="small-label">The paths, at a glance</span><span class="mono muted">NOT TO SCALE</span></figcaption>
             <svg class="scenario-map" viewBox="0 0 500 280" role="img" aria-labelledby="mapTitle mapDescription">
               <title id="mapTitle">A shared present, two different scenarios</title>
-              <desc id="mapDescription">Recorded observations stop at the September 2026 review cutoff. Dashed illustrative branches show AI 2027's rapid takeoff and AI 2040's proposed 2029 deal, 2035 pause and 2040 resumption. This is not a measured capability or probability chart; neither branch is an observed future.</desc>
+              <desc id="mapDescription">Recorded observations stop at the displayed research cutoff. Dashed illustrative branches show AI 2027's rapid takeoff and AI 2040's proposed 2029 deal, 2035 pause and 2040 resumption. This is not a measured capability or probability chart; neither branch is an observed future.</desc>
               <path d="M34 146H464M151 34V246" stroke="var(--cp-border)" stroke-width="1" stroke-dasharray="3 5"/>
               <path d="M34 146H151" stroke="var(--cp-text)" stroke-width="2.5"/>
               <path d="M151 146C202 146 204 64 271 64H450" stroke="var(--cp-accent)" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
@@ -413,7 +433,7 @@ html[data-theme="dark"] {
               <circle cx="450" cy="211" r="5" fill="var(--cp-bg-elevated)" stroke="var(--cp-accent)" stroke-width="2"/>
               <text x="26" y="173" class="map-small">2024</text>
               <text x="128" y="120" class="map-small" style="fill:var(--cp-accent)">WE ARE HERE</text>
-              <text x="127" y="173" class="map-small">SEP 2026</text>
+              <text x="127" y="173" class="map-small" id="mapAsOf">AS OF SNAPSHOT</text>
               <text x="267" y="43" class="map-number">2027</text>
               <text x="290" y="91" class="map-label">Rapid takeoff</text>
               <text x="290" y="109" class="map-small">RACE OR SLOWDOWN?</text>
@@ -443,11 +463,11 @@ html[data-theme="dark"] {
 
     <section class="explore wrap" id="explore" aria-labelledby="exploreTitle">
       <div class="section-title">
-        <div><p class="eyebrow">The evidence, not just the story</p><h2 id="exploreTitle">Read the futures against the present.</h2></div>
-        <p>Related evidence is not a completed prediction.<br>Every connection includes what it does <em>not</em> establish.</p>
+        <div><p class="eyebrow">The evidence, month by month</p><h2 id="exploreTitle">One chronology. Different kinds of claims.</h2></div>
+        <p>Start in January 2026. Actual dates determine the month; the scenarios alongside keep their own original timing.</p>
       </div>
       <div class="tabs" role="tablist" aria-label="Explore the research">
-        <button class="tab" id="tab-compare" role="tab" aria-controls="panel-compare" aria-selected="true" tabindex="0" data-view="compare">Compare scenarios <span class="tab-count" id="compareTabCount"></span></button>
+        <button class="tab" id="tab-compare" role="tab" aria-controls="panel-compare" aria-selected="true" tabindex="0" data-view="compare">Monthly chronology <span class="tab-count" id="compareTabCount"></span></button>
         <button class="tab" id="tab-reality" role="tab" aria-controls="panel-reality" aria-selected="false" tabindex="-1" data-view="reality">Actual timeline <span class="tab-count" id="realityTabCount"></span></button>
         <button class="tab" id="tab-sources" role="tab" aria-controls="panel-sources" aria-selected="false" tabindex="-1" data-view="sources">Source library <span class="tab-count" id="sourcesTabCount"></span></button>
         <button id="shareButton" class="button share-button" type="button">Copy this view <span aria-hidden="true">&nearr;</span></button>
@@ -471,26 +491,33 @@ html[data-theme="dark"] {
       </div>
       <div class="filter-context">
         <span id="resultCount" role="status" aria-live="polite"></span>
-        <label id="futureControl"><input type="checkbox" id="includeFuture" checked>Include future checkpoints</label>
-        <div id="dateControls" class="selects" hidden>
-          <label for="yearFilter">Year <select id="yearFilter"><option value="all">All years</option></select></label>
-          <label for="sortOrder">Order <select id="sortOrder"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+        <div id="dateControls" class="selects">
+          <label for="monthFilter">Month <select id="monthFilter"><option value="all">All months</option></select></label>
+          <label for="yearFilter" hidden>Legacy year filter <select id="yearFilter"><option value="all">All years</option></select></label>
+          <label for="sortOrder">Order <select id="sortOrder"><option value="oldest">Oldest first</option><option value="newest">Newest first</option></select></label>
         </div>
       </div>
+      <p id="actualsStatus" class="actuals-status" role="status"></p>
       <div class="reading-note">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cp-accent)" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></svg>
         <p><strong>These are not competing countdown clocks.</strong> AI 2027 is a fast-takeoff scenario with two endings. AI 2040's Plan A is primarily a policy recommendation: its 2040 endpoint depends on a deliberate slowdown, not merely slower technical progress. <a href="#methodology" data-methodology>Read the method &rarr;</a></p>
       </div>
       <div id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" tabindex="0">
         <div class="compare-layout">
-          <nav class="year-nav" id="yearNav" aria-label="Scenario checkpoints"></nav>
+          <nav class="year-nav" id="yearNav" aria-label="Monthly chronology"></nav>
           <div>
+            <div id="monthlyComparison"></div>
+            <details class="scenario-reference" id="scenarioReferences">
+            <summary>Not month-dated: original scenario checkpoints</summary>
+            <p>These original scenario periods are not monthly predictions or facts. Related reports above are dated to their actual publication or documented occurrence, not these scenario years.</p>
+            <label id="futureControl"><input type="checkbox" id="includeFuture" checked>Include conditional future checkpoints in this reference</label>
             <div class="column-labels" aria-hidden="true">
               <div><span class="small-label">The fast scenario</span><strong>AI 2027</strong></div>
               <div><span class="small-label">The proposed alternative</span><strong>AI 2040 &middot; Plan A</strong></div>
               <div><span class="small-label">Our editorial comparison</span><strong>What the record supports</strong></div>
             </div>
             <div id="checkpointList"></div>
+            </details>
           </div>
         </div>
         <section class="branch-section" aria-labelledby="branchTitle">
@@ -538,13 +565,14 @@ html[data-theme="dark"] {
           <p>METR's early-2025 developer slowdown is explicitly historical and paired with its February 2026 update. Stanford's employment results are descriptive, not a causal estimate. AISI's incident involved deliberately permissive evaluation settings; it is not presented as a sandbox escape or normal consumer behavior.</p>
         </div>
         <div>
-          <h3>A dated snapshot, not a live feed.</h3>
-          <p>Reviewed on <strong>22 September 2026</strong>. The latest dated event included is <strong id="methodLatest">loading</strong>. The gap between those dates is not evidence that nothing happened. This is a selected public-source record, not an exhaustive audit of either scenario or a complete news archive.</p>
+          <h3>Daily actuals checks, not invented daily news.</h3>
+          <p>Content snapshot dated <strong id="methodReview">loading</strong>. The latest dated event included is <strong id="methodLatest">loading</strong>. A daily check can find no qualifying additions; it does not redate existing events or prove nothing happened. This remains a curated record, not a complete news archive.</p>
+          <p>Both site timelines use a single daily workflow at 7:00 am Sydney time. New companion entries require their own reviewed scenario connection and verified original source. The published check status and content-change time are separate; failed runs retain the last good record. An overdue check is labelled rather than silently called fresh. The original scenario text and timing are not automatically rewritten.</p>
           <p>Event dates and source publication dates are separate. Revisions and effective dates are identified. Month-only dates remain month-only and are grouped within their month, not assigned a fabricated day. An undated policy page is labelled as such. Opening this page does not refresh the research.</p>
           <p>Sources were read through public web retrieval or a browser. Those access checks are not endorsements or independent replication. The selected source set includes multiple reports from the same organization; repeated references to the same source or incident are not independent corroboration. Some publishers may restrict access in your location.</p>
           <h3>Attribution &amp; scope.</h3>
           <p>Original scenarios: <a href="https://ai-2027.com/about" target="_blank" rel="noopener noreferrer">AI Futures Project's AI 2027 team</a> and <a href="https://ai-2040.com/about" target="_blank" rel="noopener noreferrer">AI 2040 team</a>, with original websites by Lightcone Infrastructure. This independent page is not affiliated with or endorsed by them. Summaries, diagrams, and mappings here are original; consult the originals for their complete arguments and updates.</p>
-          <p>This page does not modify Peter Xing's forecast, the main site's evidence accounting, or its scheduled collectors. Filters stay in the URL; there are no accounts, analytics, background requests, or browser-storage records.</p>
+          <p>This page does not modify Peter Xing's forecast or the main site's evidence accounting. Daily operator-side checks reuse the existing source-verification process; opening this page does not collect news. Filters stay in the URL; there are no accounts, analytics, background requests, or browser-storage records.</p>
         </div>
       </div>
     </details>
@@ -563,6 +591,8 @@ html[data-theme="dark"] {
 {
   "schemaVersion": 1,
   "reviewedAt": "2026-09-22",
+  "initialReviewDate": "2026-09-22",
+  "actualsCheck": {"status":"not-run","attemptedAt":null,"checkedAt":null,"contentChangedAt":null,"checkedSourceIds":[],"summary":"The daily actuals workflow is scheduled. Its first check has not completed."},
   "sources": [
     {"id":"computer-use","publisher":"Anthropic","kind":"Company announcement","title":"Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku","url":"https://www.anthropic.com/news/3-5-models-and-computer-use","published":"2024-10-22","dateNote":"Original page date. A later pricing update is not the release date."},
     {"id":"deepseek-r1","publisher":"DeepSeek-AI","kind":"Primary research preprint","title":"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning","url":"https://arxiv.org/abs/2501.12948v1","published":"2025-01-22","dateNote":"Version 1 submission date, not the earlier model-release date. Pinned to v1 rather than the 2026 revision."},
@@ -654,7 +684,20 @@ html[data-theme="dark"] {
       let data, sourceById, eventById, checkpointById, state, observer, dialogOpener;
       try {
         data = JSON.parse($("timelineData").textContent);
-        if (data.schemaVersion !== 1 || !isDate(data.reviewedAt) || data.reviewedAt.length !== 10) throw new Error("Unsupported or undated research snapshot.");
+        if (data.schemaVersion !== 1 || !isDate(data.reviewedAt) || data.reviewedAt.length !== 10
+          || data.reviewedAt > new Date().toISOString().slice(0, 10) || !isDate(data.initialReviewDate)
+          || data.initialReviewDate > data.reviewedAt) throw new Error("Unsupported or undated research snapshot.");
+        if (!data.actualsCheck || !["not-run", "checked", "updated", "failed"].includes(data.actualsCheck.status)
+          || !Array.isArray(data.actualsCheck.checkedSourceIds) || typeof data.actualsCheck.summary !== "string")
+          throw new Error("Daily check provenance is missing.");
+        for (const key of ["attemptedAt", "checkedAt", "contentChangedAt"]) {
+          const value = data.actualsCheck[key];
+          if (value !== null && (typeof value !== "string" || !Number.isFinite(Date.parse(value))
+            || new Date(value).toISOString() !== value || Date.parse(value) > Date.now() + 300000))
+            throw new Error("Daily check timestamps are invalid.");
+        }
+        if (data.actualsCheck.contentChangedAt && (!data.actualsCheck.checkedAt
+          || data.actualsCheck.contentChangedAt > data.actualsCheck.checkedAt)) throw new Error("Content change cannot postdate its completed review.");
         for (const list of [data.sources, data.events, data.checkpoints]) {
           if (!Array.isArray(list) || !list.length || new Set(list.map(item => item.id)).size !== list.length
             || list.some(item => !/^[a-z0-9-]+$/.test(item.id))) throw new Error("The research snapshot has missing or duplicate records.");
@@ -693,11 +736,21 @@ html[data-theme="dark"] {
 
       const years = [...new Set(data.events.map(event => event.date.slice(0, 4)))].sort().reverse();
       years.forEach(year => $("yearFilter").add(new Option(year, year)));
-      const defaults = { view:"compare", topic:"all", query:"", year:"all", order:"newest", future:true, event:"", branch2027:"race", branch2040:"a" };
+      const months = new Set(data.events.map(event => event.date.slice(0, 7)));
+      const cutoff = data.reviewedAt.slice(0, 7);
+      for (let year = 2026; year <= Number(cutoff.slice(0, 4)); year++) {
+        for (let month = 1; month <= 12; month++) {
+          const key = `${year}-${String(month).padStart(2, "0")}`;
+          if (key <= cutoff) months.add(key);
+        }
+      }
+      const monthKeys = [...months].sort();
+      monthKeys.forEach(month => $("monthFilter").add(new Option(formatDate(month), month)));
+      const defaults = { view:"compare", topic:"all", query:"", year:"all", month:"all", order:"oldest", future:true, event:"", branch2027:"race", branch2040:"a" };
       function readState() {
         const params = new URLSearchParams(location.search);
         const next = { ...defaults };
-        const options = { view:views, topic:topics, year:["all", ...years], order:["newest", "oldest"],
+        const options = { view:views, topic:topics, year:["all", ...years], month:["all", ...monthKeys], order:["newest", "oldest"],
           branch2027:Object.keys(data.branches["2027"]), branch2040:Object.keys(data.branches["2040"]) };
         let invalid = false;
         for (const [key, values] of Object.entries(options)) {
@@ -720,7 +773,7 @@ html[data-theme="dark"] {
       state = readState();
       function writeState() {
         const url = new URL(location.href);
-        const values = { view:state.view, topic:state.topic, q:state.query, year:state.year, order:state.order,
+        const values = { view:state.view, topic:state.topic, q:state.query, year:state.year, month:state.month, order:state.order,
           future:state.future ? "1" : "0", event:state.event, branch2027:state.branch2027, branch2040:state.branch2040 };
         const base = { ...defaults, q:"", future:"1" };
         for (const [key, value] of Object.entries(values)) {
@@ -733,9 +786,20 @@ html[data-theme="dark"] {
       $("checkpointCount").textContent = String(data.checkpoints.length).padStart(2, "0");
       $("latestDate").textContent = formatDate(latest);
       $("methodLatest").textContent = formatDate(latest);
-      $("compareTabCount").textContent = data.checkpoints.length;
+      $("compareTabCount").textContent = monthKeys.filter(month => month >= "2026-01").length;
       $("realityTabCount").textContent = data.events.length;
       $("sourcesTabCount").textContent = data.sources.length;
+      $("snapshotLabel").textContent = `Content snapshot / ${formatDate(data.reviewedAt)}`;
+      $("methodReview").textContent = formatDate(data.reviewedAt);
+      $("mapAsOf").textContent = new Intl.DateTimeFormat("en-GB", { month:"short", year:"numeric", timeZone:"UTC" }).format(new Date(data.reviewedAt + "T12:00:00Z")).toUpperCase();
+      const check = data.actualsCheck;
+      const checkTime = check?.checkedAt && new Date(check.checkedAt);
+      const stale = checkTime && Date.now() - checkTime.getTime() > 36 * 3600000;
+      const checkText = value => value ? new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit", timeZone:"UTC" }).format(new Date(value)) + " UTC" : "not recorded";
+      $("actualsStatus").dataset.state = check?.status === "failed" ? "failed" : stale ? "stale" : check?.status || "not-run";
+      $("actualsStatus").textContent = `${check?.status === "failed" ? "Daily check failed; last good facts retained. " : stale ? "Daily check overdue; showing the last published record. " : ""}`
+        + `Last completed actuals check: ${checkText(check?.checkedAt)}. Content change: ${check?.contentChangedAt ? checkText(check.contentChangedAt) : formatDate(data.initialReviewDate)}. `
+        + (check?.summary || "Daily actuals checks have not started. No fresh facts are implied.");
 
       function syncTheme() {
         $("themeToggle").setAttribute("aria-label", document.documentElement.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
@@ -758,8 +822,15 @@ html[data-theme="dark"] {
       const queryMatches = text => !state.query.trim() || text.toLowerCase().includes(state.query.trim().toLowerCase());
       function matchingEvents() {
         return data.events.filter(event => (state.topic === "all" || event.topics.includes(state.topic))
-          && (state.year === "all" || event.date.startsWith(state.year)) && queryMatches(eventSearchText(event)))
-          .sort((a, b) => (state.order === "newest" ? -1 : 1) * (a.date.localeCompare(b.date) || a.id.localeCompare(b.id)));
+          && (state.year === "all" || event.date.startsWith(state.year))
+          && (state.month === "all" || event.date.startsWith(state.month)) && queryMatches(eventSearchText(event)))
+          .sort((a, b) => {
+            const direction = state.order === "newest" ? -1 : 1;
+            const month = a.date.slice(0, 7).localeCompare(b.date.slice(0, 7));
+            if (month) return direction * month;
+            if (a.date.length !== b.date.length) return b.date.length - a.date.length;
+            return direction * a.date.localeCompare(b.date) || a.id.localeCompare(b.id);
+          });
       }
       const empty = (name, detail) => `<div class="empty-state"><h3>No ${esc(name)} match.</h3><p>${esc(detail)}</p><button class="button" data-reset>Reset filters</button></div>`;
       function sourceLink(source, label = "Read the source") {
@@ -780,7 +851,7 @@ html[data-theme="dark"] {
           let boundary = "";
           if (checkpoint.phase === "future" && !boundaryShown) {
             boundaryShown = true;
-            boundary = `<div class="boundary"><strong>22 SEP 2026 / THE KNOWLEDGE BOUNDARY</strong><p>Beyond this point: future scenario checkpoints. Linked evidence still comes only from the observed past.</p></div>`;
+            boundary = `<div class="boundary"><strong>CONDITIONAL SCENARIO REFERENCE</strong><p>Original scenario notes, reviewed ${esc(formatDate(data.initialReviewDate))}. Linked evidence is not completion of a future checkpoint.</p></div>`;
           }
           const index = data.checkpoints.indexOf(checkpoint) + 1;
           const related = eventsFor(checkpoint);
@@ -793,34 +864,40 @@ html[data-theme="dark"] {
             <p>${esc(checkpoint.assessment)}</p><p class="not-established"><b>Not established:</b> ${esc(checkpoint.missing)}</p>
             <div class="evidence-links">${related.map(event => `<button type="button" class="evidence-button" data-evidence="${event.id}" title="${esc(event.title)}" aria-label="Inspect evidence: ${esc(event.title)}">${esc(sourceById.get(event.source).publisher)} &middot; ${esc(formatDate(event.date))} &nearr;</button>`).join("")}</div></article></div></section>`;
         }).join("") : empty("checkpoints", "Try a different thread or search, or include future checkpoints. Missing matches are not evidence against a scenario.");
-        const navYears = new Set();
-        $("yearNav").innerHTML = '<span class="small-label">Jump through time</span>' + checkpoints.filter(checkpoint => {
-          if (navYears.has(checkpoint.year)) return false;
-          navYears.add(checkpoint.year); return true;
-        }).map(checkpoint => `<a href="#checkpoint-${checkpoint.id}">${esc(checkpoint.year)}${checkpoint.year === "2026" ? "<small>NOW</small>" : ""}</a>`).join("")
-          + '<p class="rail-note">A shared reading axis.<br>Actual narrative periods are labelled on every card.</p>';
-        if ("IntersectionObserver" in window) {
-          observer = new IntersectionObserver(entries => {
-            const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-            if (!visible) return;
-            const checkpoint = checkpointById.get(visible.target.id.replace("checkpoint-", ""));
-            const first = checkpoints.find(item => item.year === checkpoint.year);
-            document.querySelectorAll("#yearNav a").forEach(link => {
-              if (link.hash === "#checkpoint-" + first.id) link.setAttribute("aria-current", "location"); else link.removeAttribute("aria-current");
-            });
-          }, { rootMargin:"-5% 0px -55% 0px", threshold:0 });
-          document.querySelectorAll(".checkpoint").forEach(element => observer.observe(element));
-        }
-        return `${checkpoints.length} of ${data.checkpoints.length} checkpoints${state.future ? " / including conditional futures" : " / future checkpoints hidden"}`;
+        const events = matchingEvents();
+        const shownMonths = renderMonthly(events, true);
+        $("yearNav").innerHTML = '<span class="small-label">Jump to a month</span>'
+          + shownMonths.map(month => `<a href="#compare-month-${month}">${esc(formatDate(month))}</a>`).join("")
+          + '<a href="#scenarioReferences">Not month-dated</a><p class="rail-note">Reports determine these months. Scenario cards retain their original periods.</p>';
+        return `${events.length} of ${data.events.length} events / ${shownMonths.length} months / earlier background retained separately`;
+      }
+      function renderEvent(event, compare = false) {
+          const source = sourceById.get(event.source);
+          const checkpoint = checkpointById.get(event.maps[0].checkpoint);
+          const body = `<div class="event-card"><div class="event-meta"><span class="eyebrow">Reported / ${esc(source.publisher)}</span><span class="badge">${esc(event.type)}</span></div>
+            <h4>${esc(event.title)}</h4><p>${esc(event.summary)}</p><p class="not-established"><b>Limit:</b> ${esc(event.limitation)}</p>
+            <div class="event-bottom"><span class="event-map">${event.maps.length} reviewed connection${event.maps.length === 1 ? "" : "s"} / scenario timing is separate</span><button class="button" data-evidence="${event.id}">Inspect the connection</button>${sourceLink(source)}</div></div>`;
+          return `<article class="${compare ? "monthly-entry" : "event-row"}" data-event-id="${event.id}"><div class="event-date"><time datetime="${event.date}">${esc(formatDate(event.date))}</time><small>${event.date.length === 7 ? "Month only / day unknown" : esc(event.type)}</small></div>`
+            + (compare ? `<div class="month-comparison">${body}${scenarioCard(checkpoint.a, "2027")}${scenarioCard(checkpoint.b, "2040")}</div>` : body) + "</article>";
+      }
+      function renderMonthly(events, compare) {
+        const view = compare ? "compare" : "reality", host = compare ? $("monthlyComparison") : $("eventList");
+        const eligible = monthKeys.filter(month => month >= "2026-01" && month <= cutoff
+          && (state.year === "all" || month.startsWith(state.year)) && (state.month === "all" || month === state.month)
+          && (!state.query.trim() && state.topic === "all" || events.some(event => event.date.startsWith(month))));
+        if (state.order === "newest") eligible.reverse();
+        const sections = eligible.map(month => {
+          const rows = events.filter(event => event.date.startsWith(month));
+          return `<section class="month-block" id="${view}-month-${month}" data-month="${month}"><h3>${esc(formatDate(month))}</h3>`
+            + (rows.length ? rows.map(event => renderEvent(event, compare)).join("") : '<p class="month-empty">No reviewed event is recorded for this month in this snapshot. This does not mean nothing happened.</p>') + "</section>";
+        });
+        const earlier = events.filter(event => event.date < "2026-01");
+        if (earlier.length) sections.push(`<details class="earlier-record"${state.year !== "all" || state.month !== "all" || state.query ? " open" : ""}><summary>Earlier background / ${earlier.length} events before January 2026</summary><p>These dates predate the main chronology and remain historical context.</p>${earlier.map(event => renderEvent(event, compare)).join("")}</details>`);
+        host.innerHTML = sections.length ? sections.join("") : empty("events", "No reviewed entries match. Reset the filters to restore the monthly chronology.");
+        return eligible;
       }
       function renderEvents(events) {
-        $("eventList").innerHTML = events.length ? events.map(event => {
-          const source = sourceById.get(event.source);
-          return `<article class="event-row" data-event-id="${event.id}"><div class="event-date"><time datetime="${event.date}">${esc(formatDate(event.date))}</time><small>${event.date.length === 7 ? "Month only" : esc(event.type)}</small></div>
-            <div class="event-card"><div class="event-meta"><span class="eyebrow">${esc(source.publisher)}</span><span class="badge">${esc(event.type)}</span>${event.topics.map(topic => `<span class="badge">${esc(topic)}</span>`).join("")}</div>
-            <h3>${esc(event.title)}</h3><p>${esc(event.summary)}</p><p class="not-established"><b>Limit:</b> ${esc(event.limitation)}</p>
-            <div class="event-bottom"><span class="event-map">Maps to ${event.maps.length} scenario checkpoint${event.maps.length === 1 ? "" : "s"}</span><button class="button" data-evidence="${event.id}">Inspect the connection</button>${sourceLink(source)}</div></div></article>`;
-        }).join("") : empty("events", "No documented events match this combination. Try all years or a broader search.");
+        renderMonthly(events, false);
       }
       function renderSources(events) {
         const relevant = new Set(events.map(event => event.source));
@@ -855,8 +932,9 @@ html[data-theme="dark"] {
         $("clearSearch").hidden = !state.query;
         $("includeFuture").checked = state.future;
         $("futureControl").hidden = state.view !== "compare";
-        $("dateControls").hidden = state.view === "compare";
+        $("dateControls").hidden = false;
         $("yearFilter").value = state.year;
+        $("monthFilter").value = state.month;
         $("sortOrder").value = state.order;
         observer?.disconnect();
         if (state.view === "compare") $("resultCount").textContent = renderCompare();
@@ -867,7 +945,7 @@ html[data-theme="dark"] {
             $("resultCount").textContent = `${events.length} of ${data.events.length} recorded events / dates preserved at source precision`;
           } else {
             const count = renderSources(events);
-            $("resultCount").textContent = `${count} of ${data.sources.length} sources / year filter uses event dates / reviewed ${formatDate(data.reviewedAt)}`;
+            $("resultCount").textContent = `${count} of ${data.sources.length} sources / month filter uses event dates / content as of ${formatDate(data.reviewedAt)}`;
           }
         }
         renderBranches();
@@ -897,6 +975,7 @@ html[data-theme="dark"] {
       $("clearSearch").addEventListener("click", () => { state.query = ""; render(); writeState(); $("searchInput").focus(); });
       $("includeFuture").addEventListener("change", event => { state.future = event.target.checked; render(); writeState(); });
       $("yearFilter").addEventListener("change", event => { state.year = event.target.value; render(); writeState(); });
+      $("monthFilter").addEventListener("change", event => { state.month = event.target.value; state.year = "all"; render(); writeState(); });
       $("sortOrder").addEventListener("change", event => { state.order = event.target.value; render(); writeState(); });
       document.querySelectorAll("[data-branch-family]").forEach(button => button.addEventListener("click", () => {
         state["branch" + button.dataset.branchFamily] = button.dataset.branch; renderBranches(); writeState();
@@ -918,7 +997,7 @@ html[data-theme="dark"] {
           }).join("")}
           <div class="source-detail"><span class="small-label">${esc(source.kind)}</span><strong>${esc(source.title)}</strong><p>${esc(source.dateNote)}</p>
           ${sourceLink(source, "Open the original source")}${source.dateUrl ? `<p style="margin-top:12px"><a href="${esc(source.dateUrl)}" target="_blank" rel="noopener noreferrer">Publication-date provenance &nearr;</a></p>` : ""}</div>
-          <p class="dialog-status">Source and mapping reviewed ${esc(formatDate(data.reviewedAt))}. Editorial mapping, not independent replication. This dialog does not perform a new source check.</p>`;
+          <p class="dialog-status">Source reviewed ${esc(formatDate(source.reviewedAt || data.initialReviewDate))}; mapping reviewed ${esc(formatDate(event.reviewedAt || data.initialReviewDate))}. Editorial mapping, not independent replication. This dialog does not perform a new source check.</p>`;
         state.event = id; writeState();
         if (!$("evidenceDialog").open) $("evidenceDialog").showModal();
         $("evidenceDialog").scrollTop = 0;
@@ -946,8 +1025,9 @@ html[data-theme="dark"] {
         if (jump) {
           event.preventDefault();
           closeDialog();
-          state = { ...state, view:"compare", topic:"all", query:"", future:true, event:"" };
+          state = { ...state, view:"compare", topic:"all", query:"", year:"all", month:"all", future:true, event:"" };
           render(); writeState();
+          $("scenarioReferences").open = true;
           const target = $("checkpoint-" + jump.dataset.jump);
           dialogOpener = target;
           target.setAttribute("tabindex", "-1");
@@ -971,12 +1051,22 @@ html[data-theme="dark"] {
       });
       function followHash() {
         if (location.hash === "#methodology") { $("methodology").open = true; return; }
+        if (location.hash === "#scenarioReferences") { $("scenarioReferences").open = true; return; }
+        const month = location.hash.match(/^#(compare|reality)-month-(\d{4}-\d\d)$/);
+        if (month && monthKeys.includes(month[2])) {
+          if (state.view !== month[1] || !document.getElementById(location.hash.slice(1))) {
+            state.view = month[1]; state.month = state.year = state.topic = "all"; state.query = ""; render(); writeState();
+          }
+          document.getElementById(location.hash.slice(1))?.scrollIntoView();
+          return;
+        }
         const match = location.hash.match(/^#checkpoint-([a-z0-9-]+)$/);
         if (match && checkpointById.has(match[1])) {
           const target = $("checkpoint-" + match[1]);
           if (!target || state.view !== "compare") {
             state.view = "compare"; state.topic = "all"; state.query = ""; state.future = true; render(); writeState();
           }
+          $("scenarioReferences").open = true;
           $("checkpoint-" + match[1]).scrollIntoView();
         }
       }

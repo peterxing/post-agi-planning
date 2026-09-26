@@ -528,7 +528,7 @@ $fromDeploy = @(
   
   'build-game.js','game-source.js','game-map.json','game-policy.json',
   'verify-game-content.js','verify-game.js','verify-game-performance.js'
-  'ai-timeline.html', 'news-timeline.js','verify-ai-timeline.js'
+  'ai-timeline.html', 'news-timeline.js','verify-ai-timeline.js','refresh-timeline-actuals.js','TIMELINE-DAILY-RUN.md'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')

@@ -166,20 +166,25 @@
     <section class="timeline-section wrap" id="timeline" aria-labelledby="timelineTitle">
       <div class="section-heading">
         <div><p class="eyebrow">01 / Follow the evidence</p><h2 id="timelineTitle">A timeline,<br><em>not a prophecy.</em></h2></div>
-        <p>Begin in 2026. Read the reporting in publication order, then explore the forecasts it informs. Connections are not confirmations.</p>
+        <p>Begin in January 2026 and follow a continuous monthly chronology. Reporting keeps its publication date; forecasts keep their authored timing and uncertainty.</p>
       </div>
-      <button id="openTimeline" class="text-button" type="button">Start reading from 2026 <span aria-hidden="true">↗</span></button>
+      <button id="openTimeline" class="text-button" type="button">Start reading from January 2026 <span aria-hidden="true">↗</span></button>
       <div class="timeline-toolbar" hidden>
-        <div class="year-navigation"><button type="button" data-year-step="-1" aria-label="Previous timeline year">←</button><nav id="yearRail" class="year-rail" aria-label="Timeline years"></nav><button type="button" data-year-step="1" aria-label="Next timeline year">→</button></div>
+        <div class="year-navigation"><button type="button" data-year-step="-1" aria-label="Previous timeline month">←</button><nav id="yearRail" class="year-rail" aria-label="Jump to a timeline month"></nav><button type="button" data-year-step="1" aria-label="Next timeline month">→</button></div>
         <label class="topic-search"><span>Find a theme</span><input data-reader-search type="search" placeholder="Robotics, energy, governance…" maxlength="120"><button id="newsReset" type="button" class="text-button">Reset</button></label>
       </div>
       <p class="record-status" id="recordStatus" role="status">The curated record loads when you choose to read. No game or graphics pack starts with it.</p>
       <details class="record-info" id="recordInfo" hidden><summary>About this record</summary><p id="recordDates"></p><button id="refreshRecord" class="text-button" type="button">Check published updates</button></details>
       <div id="yearContent" class="year-content" aria-live="off"></div>
       <p id="timelineAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
+      <details class="earlier-background" id="notMonthDated">
+        <summary>Not month-dated: broader forecast windows</summary>
+        <p>Quarter, half-year and year estimates retain their authored bands. They are not assigned an invented month. These are forecasts, not reported events.</p>
+        <div id="notMonthDatedForecasts"></div>
+      </details>
       <details class="earlier-background" id="earlierBackground">
-        <summary>Earlier background &amp; undated sources</summary>
-        <p>Context outside the main 2026-onward chronology. Original publication dates and reviewed connections are retained.</p>
+        <summary>Earlier background &amp; sources without a recorded month</summary>
+        <p>Pre-2026 background and sources that cannot be placed in a month. Original date precision and reviewed connections are retained.</p>
         <div id="earlierStories"></div>
       </details>
     </section>

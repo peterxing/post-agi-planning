@@ -162,13 +162,68 @@ check('daily and author contracts preserve X without a whole-payload ban or coll
     assert.ok(!/^\s*(?:node\s+x-(?:harvest|signals)\.js|npm\s+run\s+x:(?:harvest|signals))\b/m.test(source),
       `${file} instructs a second X collector`);
   }
-  for (const file of ['refresh-signals.js', 'refresh-metr.js', 'refresh-reference-points.js']) {
+  for (const file of ['refresh-signals.js', 'refresh-metr.js', 'refresh-reference-points.js', 'refresh-timeline-actuals.js']) {
     const source = executableSource(file);
     assert.ok(!/\brequire\(['"]\.\/x-harvest(?:\.js)?['"]\)/.test(source),
       `${file} imports X collection`);
     assert.ok(!/\b(?:spawn|exec|execFile)(?:Sync)?\s*\([^;]*x-(?:harvest|signals)/s.test(source),
       `${file} launches X collection or rebuilding`);
   }
+});
+
+check('stale X is retained only by the explicit actuals mode bound to a published fresh pairing', () => {
+  const { createHash } = require('crypto');
+  const sha = value => createHash('sha256').update(value).digest('hex');
+  const { xSignalLayer, buildPredictions } = require('./refresh-signals.js');
+  const { retainStaleXSnapshot, mirrorHistory } = require('./refresh-timeline-actuals.js');
+  const forecasts = { years:[{ year:2026, events:[{ t:'first fixture forecast', prob:40 }, { t:'second fixture forecast', prob:20 }] }] };
+  const fingerprint = value => sha(JSON.stringify(value));
+  const payload = { summary:{ builtAt:'2026-01-01T00:00:00.000Z', harvestedAt:'2025-12-31T23:00:00.000Z' },
+    signals:{ '2026-0':{ created:'2025-12-30T00:00:00.000Z', text:'fixture', likes:3 }, '2026-1':{ created:'2025-12-29T00:00:00.000Z', text:'fixture two', likes:1 } } };
+  const raw = Buffer.from(JSON.stringify(payload)), layer = { summary:payload.summary, items:payload.signals };
+  const blobs = (signals = { updated:'2026-01-01T01:00:00.000Z', xSignals:layer }, predictions = forecasts) => ({
+    'x-signals.json':raw, 'signals.json':Buffer.from(JSON.stringify(signals)), 'predictions.json':Buffer.from(JSON.stringify(predictions)) });
+  const history = (paired = blobs(), extra = {}) => ({ head:() => 'B', commits:() => ['0', 'A', 'B'],
+    read:(commit, file) => commit === '0' ? (file === 'x-signals.json' ? Buffer.from('{}') : null) : paired[file] || null,
+    published:() => true, ...extra });
+  const base = { raw, payload, previous:{ xSignals:layer, forecastVersion:{ sha256:fingerprint(forecasts) } },
+    forecastSha256:fingerprint(forecasts), buildNow:Date.parse('2026-02-01T00:00:00Z'), maxAgeDays:10, history:history() };
+  const kept = retainStaleXSnapshot(base);
+  assert.deepStrictEqual([kept.pairedCommit, kept.ageDays, kept.builtAt, kept.harvestedAt, kept.xSignalsSha256],
+    ['A', 31, payload.summary.builtAt, payload.summary.harvestedAt, sha(raw)]);
+  assert.match(kept.note, /retained unchanged[\s\S]*not been re-verified[\s\S]*never evidence/);
+  const refuse = (name, change) => assert.throws(() => retainStaleXSnapshot({ ...base, ...change }), /Stale X preservation refused/, name);
+  const today = value => ({ forecastSha256:fingerprint(value), previous:{ ...base.previous, forecastVersion:{ sha256:fingerprint(value) } } });
+  const [first, second] = forecasts.years[0].events;
+  refuse('same ids and count with changed text', today({ years:[{ year:2026, events:[{ ...first, t:'revised' }, second] }] }));
+  refuse('changed probability', today({ years:[{ year:2026, events:[{ ...first, prob:41 }, second] }] }));
+  refuse('reordered forecasts', today({ years:[{ year:2026, events:[second, first] }] }));
+  refuse('removed forecast', today({ years:[{ year:2026, events:[first] }] }));
+  refuse('digest minted from today with a different paired history', { history:history(blobs(undefined, { years:[] })) });
+  refuse('absent binding', { history:history(blobs(), { commits:() => [] }) });
+  refuse('mirror unavailable', { history:history(blobs(), { head:() => { throw new Error('no mirror'); } }) });
+  refuse('unpublished pairing', { history:history(blobs(), { published:() => false }) });
+  refuse('corrupt paired snapshot', { history:history({ ...blobs(), 'signals.json':Buffer.from('{') }) });
+  refuse('paired layer differs', { history:history(blobs({ updated:'2026-01-01T01:00:00.000Z', xSignals:{ ...layer, items:{} } })) });
+  refuse('paired after the freshness ceiling', { history:history(blobs({ updated:'2026-01-12T01:00:00.000Z', xSignals:layer })) });
+  refuse('mirror head carries different bytes', { history:history(blobs(), { head:() => '0' }) });
+  refuse('last-good differs', { previous:{ ...base.previous, xSignals:{ ...layer, items:{ '2026-0':payload.signals['2026-0'] } } } });
+  refuse('last-good fingerprint absent', { previous:{ xSignals:layer } });
+  refuse('future-dated build', { buildNow:Date.parse('2025-12-31T00:00:00Z') });
+  refuse('future-dated post', { payload:{ ...payload, signals:{ ...payload.signals, '2026-1':{ created:'2026-01-02T00:00:00.000Z' } } } });
+  refuse('malformed payload', { payload:{ summary:payload.summary } });
+  const real = JSON.parse(fs.readFileSync(path.join(__dirname, 'x-signals.json'), 'utf8'));
+  const signals = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
+  const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8'));
+  const ids = buildPredictions().map(prediction => prediction.id);
+  if (Math.round((Date.now() - Date.parse(real.summary.builtAt)) / 864e5) <= 10) return;
+  assert.throws(() => xSignalLayer(ids, Date.now()), /day ceiling/, 'the default producer path no longer refuses stale X');
+  const mirror = path.resolve(__dirname, '..', 'pap-github');
+  if (!fs.existsSync(path.join(mirror, '.git'))) return;
+  const retained = xSignalLayer(ids, Date.now(), { preserveStaleX:true, previous:signals,
+    forecastSha256:fingerprint(predictions), history:mirrorHistory(mirror) });
+  assert.strictEqual(JSON.stringify(retained.xSignals), JSON.stringify(signals.xSignals), 'retained X is not byte-identical');
+  assert.strictEqual(retained.xSignalsRetention.builtAt, real.summary.builtAt);
 });
 
 /* 2. TIER HONESTY ---------------------------------------------------------------------------- */

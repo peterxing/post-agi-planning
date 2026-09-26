@@ -44,10 +44,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 # NEWS mappings must re-resolve and still carry their exact reviewed quote at deploy time.
 & node $newsVerifier
-if ($LASTEXITCODE -ne 0) {
-  Write-Error 'Verified news evidence validation failed; deployment aborted.'
-  exit 6
-}
+$newsExit = $LASTEXITCODE
+if ($newsExit -eq 70) { Write-Warning "News gate PASSED BUT INERT - it named every last-good or empty-current warning above. Deployment proceeds; those sources were not verified on this run." }
+if ($newsExit -ne 0 -and $newsExit -ne 70) { Write-Error 'Verified news evidence validation failed; deployment aborted.'; exit 6 }
 # The additive currency layer must re-resolve live and still carry its exact reviewed
 # quote, headline and date. Exit 75 is INFRASTRUCTURE (a source served a bot challenge
 # or was unreachable), which is NOT an evidence fault: it blocks the deploy as DEFERRED

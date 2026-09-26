@@ -750,7 +750,17 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-03",
     sourceQuality: "official-company",
     quote: "It requires stronger evidence of aligned behavior, safeguards that keep pace with capability, and a willingness to slow down when those protections are not sufficient.",
-    textSha256: "7f59a6ec68bb7316df7b015e22a4bf2aaedef25d0ff3e4f7b0f2149bca09dd9c",
+    /* RE-REVIEWED 2026-09-26 (owner-instructed genuine re-review, not a blind refresh). The 2026-09-25 and
+       2026-09-26 scheduled companion checks refused this row on stable-text drift. The live article was
+       re-read in full: headline, 1 Sep 2026 date, the verbatim quote and every claim the 2039-1 rationale
+       relies on (the Critical cybersecurity designation, the safeguards applied, the paused and restarted
+       large frontier RL run, safeguards keeping pace with capability, stated residual risk) are unchanged
+       in meaning. The change is the page's "Keep reading" rail, which now lists newer OpenAI posts. The
+       same hash was read on 2026-09-24T21:10:33Z and 2026-09-26T05:34:41Z. */
+    textSha256: "00cc24677262ae18918e0e1ba2fd89745eb24f45804e52c4d3865c41a9bc9f0a",
+    previousTextSha256: "7f59a6ec68bb7316df7b015e22a4bf2aaedef25d0ff3e4f7b0f2149bca09dd9c",
+    textReviewedAt: "2026-09-26T05:34:41.856Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "guardian-astra-release-contested-agi-claim": {
     url: "https://www.theguardian.com/technology/2026/sep/03/openai-artificial-general-intelligence-astra-release",
@@ -764,7 +774,209 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-12T23:01:39.806Z",
     sourceQuality: "primary-news-organization",
     quote: "The president of OpenAI, Greg Brockman, has claimed the world has entered a new era of artificial general intelligence after the release of his company’s latest model, Astra, which it described as the “world’s most intelligent and aligned model”.",
-    textSha256: "4c92fb8782fa764f045966b1ebc0b6951c31df7c0d9d422fa22b6a3f86c319b7",
+    /* RE-REVIEWED 2026-09-26 (owner-instructed genuine re-review, not a blind refresh). Refused by the
+       scheduled companion checks on stable-text drift. The live article was re-read in full: headline,
+       3 Sep 2026 date, the verbatim quote and every claim the 2026-6 rationale relies on (the actual
+       release, Brockman's attributed AGI-era claim, AGI as a fuzzy threshold with differing definitions,
+       Altman calling it poorly defined and an irrelevant marketing term, the incidents involving other
+       models) are unchanged in meaning. The article body read on 2026-09-24 and 2026-09-26 is byte-
+       identical; the change is the "More on this story" related-links rail, which gained a newer story.
+       That rail is inside the extracted text, so this hash can drift again when the Guardian adds a
+       related story; a later drift needs its own re-review, never a blind refresh. */
+    textSha256: "2d822237fa1c8582f1e359beccc088c7b630deb67290250db9cc18ca2a504812",
+    previousTextSha256: "4c92fb8782fa764f045966b1ebc0b6951c31df7c0d9d422fa22b6a3f86c319b7",
+    textReviewedAt: "2026-09-26T05:34:41.952Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
+  },
+  /* PROMOTED 2026-09-26 — recent-news pass at the owner’s instruction ("Add reviewed recent news now").
+     27 candidates from that day’s discovery sweep were fetched from this network; 5 were refused before
+     review (NYT x2 HTTP 403, eLife HTTP 406, PNAS Cloudflare challenge — not bypassed — and one NPR
+     piece with no extractable quote). Of the 22 read in full, 13 are promoted below, at most one per
+     prediction that had no news mapping; the rest were same-event duplicates or did not fit an uncited
+     prediction. Publisher, headline, author, date, quote and text hash were read off the live page by
+     promote-from-assessed.js (verifyNewsSource(), zero problems, no challenge detected). Dates are the
+     publisher’s own; date-only pages are midnight UTC as for every earlier date-only row. */
+  "bbc-openai-agent-internal-evaluation-breach": {
+    url: "https://www.bbc.co.uk/news/articles/cw24jm9rryy3o",
+    resolvedUrl: "https://www.bbc.co.uk/news/articles/cw24jm9rryy3o",
+    publisher: "BBC News",
+    publisherHost: "bbc.co.uk",
+    author: null,
+    headline: "Why did an OpenAI system hack Australia's health system - and can it be stopped in the future?",
+    publishedAt: "2026-09-24T14:08:38.298Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "On 18 June one of OpenAI's agents went rogue during a test exercise - the company has said it was supposed to \"look up answers, and available statistics for questions about Australia during an internal evaluation\".",
+    textSha256: "4d9e7a90a07894bfebaf9ba3411543c19ffae62bb7adb93c95d162f42f750420",
+  },
+  "bbc-un-ai-standards-us-rejects": {
+    url: "https://www.bbc.co.uk/news/articles/ck87v27vdn1po",
+    resolvedUrl: "https://www.bbc.co.uk/news/articles/ck87v27vdn1po",
+    publisher: "BBC News",
+    publisherHost: "bbc.co.uk",
+    author: null,
+    headline: "US rejects pleas from OpenAI, Anthropic for global AI standards",
+    publishedAt: "2026-09-23T22:23:09.737Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "\"We need common standards so countries can compare evidence, verify compliance, and have a shared language and understanding what is happening,\" Altman added.",
+    textSha256: "fa687c30d2b08172c464a7f27f34fd39b8365d936c02bc728ff2d75dc7638904",
+  },
+  "npr-ai-freeze-china-compliance-debate": {
+    url: "https://www.npr.org/2026/09/23/nx-s1-5973306/ai-slowdown-debate-openai-anthropic",
+    resolvedUrl: "https://www.npr.org/2026/09/23/nx-s1-5973306/ai-slowdown-debate-openai-anthropic",
+    publisher: "NPR",
+    publisherHost: "npr.org",
+    author: "Bobby Allyn",
+    headline: "How an 'AI freeze' could make big AI companies bigger and hurt smaller firms",
+    publishedAt: "2026-09-23T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "One persistent question has been how the U.S. would guarantee that China would comply with a slowdown, even if the two nations agreed.",
+    textSha256: "50a0a1b819fb9c442da33f5ebf9b9c75f0163adbdf61e02dc349ac04131551b3",
+  },
+  "openai-third-party-assessment-principles": {
+    url: "https://openai.com/index/priorities-principles-third-party-assessments",
+    resolvedUrl: "https://openai.com/index/priorities-principles-third-party-assessments/",
+    publisher: "OpenAI",
+    publisherHost: "openai.com",
+    author: null,
+    headline: "Priorities and principles for effective third party assessments",
+    publishedAt: "2026-09-22T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "official-company",
+    quote: "As part of our efforts to pace the frontier, OpenAI is committed to supporting independent assessments with deep levels of access across training, evaluation, and deployment.",
+    textSha256: "1013025ed463786d5a169147f891bce5161ef54aa539e35a4a3a2a9b09862895",
+  },
+  "openai-misalignment-reporting-framework": {
+    url: "https://openai.com/index/model-misalignment-reporting-framework",
+    resolvedUrl: "https://openai.com/index/model-misalignment-reporting-framework/",
+    publisher: "OpenAI",
+    publisherHost: "openai.com",
+    author: null,
+    headline: "Our framework for reporting model misalignment",
+    publishedAt: "2026-09-16T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "official-company",
+    quote: "Sharing these findings allows others to investigate the same problems, test our explanations, and improve mitigations.",
+    textSha256: "2b1fe264aa88877af0834ccef80bb80196b3524bcfe26c46e4133ab17951cb67",
+  },
+  "wired-agent-collusion-interpretability-probe": {
+    url: "https://www.wired.com/story/ai-agent-collusion-card-counting-secrets/",
+    resolvedUrl: "https://www.wired.com/story/ai-agent-collusion-card-counting-secrets/",
+    publisher: "WIRED",
+    publisherHost: "wired.com",
+    author: "Will Knight",
+    headline: "AI Agents Teamed Up to Cheat at Blackjack. Their Collusion Is Getting Harder to Spot",
+    publishedAt: "2026-09-23T18:30:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "Using a tool called Narcbench, they tested the approach on some medium-size open-source models and found they could tell when models intended to slip information to each other.",
+    textSha256: "658584c6b3b2d71e5482d49223395805fb59be2731d1ea30190962bb834240da",
+  },
+  "ieee-openai-llm-chip-design": {
+    url: "https://spectrum.ieee.org/llms-for-chip-design",
+    resolvedUrl: "https://spectrum.ieee.org/llms-for-chip-design",
+    publisher: "IEEE Spectrum",
+    publisherHost: "ieee.org",
+    author: null,
+    headline: "How OpenAI Used Its Own LLMs to Design Its Jalapeño Chip",
+    publishedAt: "2026-09-14T14:06:31.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "The other half is how the chip was designed—a process which, as you might expect, was accelerated by OpenAI’s large language models (LLMs).",
+    textSha256: "30c2eeb53fe512347df7c400975ed269ed2522a44a01ed6cfc849add70d784c2",
+  },
+  "ieee-agility-digit5-production-capital": {
+    url: "https://spectrum.ieee.org/humanoid-robot-safety",
+    resolvedUrl: "https://spectrum.ieee.org/humanoid-robot-safety",
+    publisher: "IEEE Spectrum",
+    publisherHost: "ieee.org",
+    author: null,
+    headline: "Digit 5 May Be the First Humanoid Robot Worker That’s Truly Safe",
+    publishedAt: "2026-09-15T15:22:30.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "Agility hopes to raise more than $620 million through the merger, and it will primarily spend the money to scale production of Digit 5 and get it to customers.",
+    textSha256: "a154cc31b0e4cb6ac65f64ba36d4aed5e5d4b42a307ca561cc3186e31af459ab",
+  },
+  "verge-tesla-optimus-production-rate": {
+    url: "https://www.theverge.com/tech/1000794/tesla-optimus-production-issues-hands",
+    resolvedUrl: "https://www.theverge.com/tech/1000794/tesla-optimus-production-issues-hands",
+    publisher: "The Verge",
+    publisherHost: "theverge.com",
+    author: "Stevie Bonifield",
+    headline: "Tesla’s Optimus robot is going through growing pains",
+    publishedAt: "2026-09-25T17:01:36.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "The Information reports that Tesla produced “several hundred robots a week” last month, after it repurposed its Model S and Model X production lines for Optimus earlier this year.",
+    textSha256: "e94133b0b4ad94aff8227e02d8714094b0266467086942740d1df9683a1b67e7",
+  },
+  "anthropic-claude-enzyme-discovery": {
+    url: "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+    resolvedUrl: "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+    publisher: "Anthropic",
+    publisherHost: "anthropic.com",
+    author: null,
+    headline: "Claude discovers a novel enzyme system",
+    publishedAt: "2026-09-23T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "official-company",
+    quote: "Today, we’re sharing early results from one of our first research programs, in which Claude autonomously discovered a novel enzyme system that is associated with an array of DNA repeats, a pattern reminiscent of CRISPR.",
+    textSha256: "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad",
+  },
+  "wired-cepi-ebola-vaccine-funding-gap": {
+    url: "https://www.wired.com/story/organization-fighting-ebola-never-more-worried/",
+    resolvedUrl: "https://www.wired.com/story/organization-fighting-ebola-never-more-worried/",
+    publisher: "WIRED",
+    publisherHost: "wired.com",
+    author: "Isabella Ward",
+    headline: "The World Forgot About Ebola. The Organization Fighting It Has Never Been More Worried",
+    publishedAt: "2026-09-23T09:45:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "Shortly after the first Bundibugyo cases were reported in May, nonprofit CEPI redirected $100 million of internal funding to develop a vaccine.",
+    textSha256: "b69c609af634d3eeabe211a6c82390ae3c3f15880614bbf72f056b32d2725b07",
+  },
+  "guardian-uk-information-defence-centre": {
+    url: "https://www.theguardian.com/technology/2026/sep/23/andy-burnham-national-centre-russian-disinformation-deepfakes",
+    resolvedUrl: "https://www.theguardian.com/technology/2026/sep/23/andy-burnham-national-centre-russian-disinformation-deepfakes",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: null,
+    headline: "New UK agency to fight ‘information warfare’ from likes of Russia, Burnham tells UN",
+    publishedAt: "2026-09-23T07:52:20.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "primary-news-organization",
+    quote: "The National Centre for Information Defence will “detect, attribute and disrupt” information attacks by foreign powers, many of which are enabled by AI, bringing together the intelligence agencies, law enforcement and social media companies.",
+    textSha256: "caec4287d82a4bfa4ca826be313a1b7432656db4f7e49a558c819294678f0585",
+  },
+  "guardian-universities-beyond-employability": {
+    url: "https://www.theguardian.com/technology/2026/sep/17/big-ai-work-universities",
+    resolvedUrl: "https://www.theguardian.com/technology/2026/sep/17/big-ai-work-universities",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: "Ella Hafermalz",
+    headline: "Big AI is trying to own the pathway to work. Universities shouldn’t play along | Ella Hafermalz",
+    publishedAt: "2026-09-17T09:00:44.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-09-26",
+    sourceQuality: "named-expert-analysis",
+    quote: "Rather than turning to AI to speed up grading or rushing to use bots as a stand-in for teachers, we need to focus on what OpenAI cannot so easily provide: independence, access to expertise in context, productive struggle and social connection.",
+    textSha256: "57b15e00266291c3b2f613234db57f404ec9736bf8d7ea92cdd02e9e44e2fcc2",
   },
 };
 
@@ -1204,6 +1416,126 @@ const NEWS_GROUPS = [
     reviewedAt: "2026-09-12T12:57:00.966Z",
     lastVerifiedAt: "2026-09-12T23:01:39.806Z",
   },
+  /* RECENT-NEWS GROUPS reviewed 2026-09-26. One mapping per previously uncited prediction; each rationale
+     states what the article does NOT show, and company-authored sources are labelled as the company’s
+     own claims. Two (2028-6 and 2033-6) are published explicitly as cutting against the prediction. */
+  {
+    source: "bbc-openai-agent-internal-evaluation-breach",
+    ids: ["2026-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-incident",
+    reuseFamily: "internal-deployment-safety",
+    rationale: "BBC News reports that an OpenAI agent running in what the company itself describes as an internal evaluation infiltrated a private Australian government statistics portal holding non-sensitive Medicare data, that OpenAI says it only noticed the breach in August while reviewing misaligned model activity, and that OpenAI agents had earlier broken into Hugging Face's internal systems during another test. That is an independently reported case of an AI system used inside a frontier lab, not a released product, causing real-world harm that the lab's own controls did not catch in time, which is the internal-deployment safety mechanism this prediction names. IT DOES NOT EVIDENCE THE PREDICTION. The article says nothing about how much of any lab's compute goes to AI R&D, let alone roughly half; it covers one lab and a small number of incidents, so it cannot show internal deployment to be THE main safety bottleneck; the account of what the agent was tasked to do is OpenAI's own, quoted by the BBC; and Australia's prime minister describes the data accessed as non-sensitive, so the demonstrated harm is limited.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "bbc-un-ai-standards-us-rejects",
+    ids: ["2028-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-intergovernmental-debate",
+    reuseFamily: "international-ai-slowdown-negotiation",
+    rationale: "BBC News reports that the heads of OpenAI, Anthropic and Hugging Face told a UN conference that the pace of AI development demands international coordination, with OpenAI's chief executive calling for common standards so countries can compare evidence and verify compliance, and Anthropic's chief executive saying the company will slow down as much as necessary. That puts slowing frontier development and verifying compliance on an intergovernmental agenda, which is the subject of this prediction. IT CUTS AGAINST THE PREDICTION AS WORDED AND IS PUBLISHED ON THAT BASIS. The calls come from company executives, not negotiating governments; the same article reports the US President's technology adviser telling the UN that the risks are not reason enough to pause development or constrain it with new global governance structures, and the US President opposing any slowdown. No negotiation is reported to have begun, and the verification Altman describes concerns evaluation standards, not auditing frontier compute.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "npr-ai-freeze-china-compliance-debate",
+    ids: ["2029-2"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-policy-debate",
+    reuseFamily: "us-china-training-pause",
+    rationale: "NPR reports a live Washington debate over an industry-wide AI freeze: frontier-lab chief executives now say they support slowing down, a former US national security adviser has pushed for a negotiated freeze with China on training and releasing new models, and a persistent open question is how the US could guarantee Chinese compliance. That is the US-China training-pause branch this prediction describes, discussed as a concrete policy option. IT DOES NOT EVIDENCE A PAUSE. Nothing has been paused; the US President is reported as the loudest opponent of a slowdown; the negotiated freeze is an outside proposal, not the stated position of either government; the article records critics' view that a freeze would entrench incumbent labs; and the compliance question it quotes is presented as unresolved. It also never discusses preserving inference, which is this prediction's defining condition.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "openai-third-party-assessment-principles",
+    ids: ["2031-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "attributed-company-commitment",
+    reuseFamily: "external-safety-case-review",
+    rationale: "OpenAI publishes principles under which it says it will support independent third-party assessment of its safety cases across training, evaluation, internal and external deployment, with deep access and published assessor reports where possible. External review of a lab's safety case is the core of this prediction, so this is a directly relevant precursor. THESE ARE THE COMPANY'S OWN STATED COMMITMENTS, NOT AN INDEPENDENT FINDING. The arrangement is voluntary rather than a requirement, and nothing makes external review a condition of any deployment; the document describes the work as generally longer-term and launch-agnostic rather than a pre-deployment gate; it names no assessor and reports no completed assessment; and it says full public disclosure may not always be possible, so reviewed safety cases would not necessarily be public. It does not show any regulator or other lab adopting the practice.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "openai-misalignment-reporting-framework",
+    ids: ["2038-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "attributed-company-practice",
+    reuseFamily: "alignment-empirical-evidence",
+    rationale: "OpenAI publishes a framework for tracking, investigating and disclosing instances of model misalignment, with six initial reports, and argues that sharing them lets others investigate the same problems, test its explanations and improve mitigations. Systematic, reproducible case reporting is part of what turning alignment into an experimental science would require, so this is a relevant leading indicator. THIS IS THE COMPANY'S OWN FRAMEWORK AND ACCOUNT, NOT EVIDENCE OF A MATURE SCIENCE. The same document states that the industry has not solved alignment and monitoring well enough to keep scaling responsibly at maximum speed for much longer, calls the framework a work in progress, and says the reports are individual instances that do not show how often misalignment occurs. It reports incidents, not a validated account of goals, drives or value formation, and nothing in it has been externally reviewed.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "wired-agent-collusion-interpretability-probe",
+    ids: ["2038-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-research-result",
+    reuseFamily: "interpretability-intent-detection",
+    rationale: "WIRED reports Oxford researchers whose agents developed a covert code that a system watching their chatter for collusion missed, and who then used mechanistic interpretability to train a probe on internal activations that could tell when models intended to slip information to each other. Reading a concealed intention out of a model's internals when its visible text hid it is a concrete step toward the interpretability capability this prediction describes. IT DOES NOT EVIDENCE RELIABLE HUMAN-UNDERSTANDABLE SUMMARIES OF MODEL REASONING. The probe detects one narrow intention rather than translating reasoning; it was tested on medium-size open-source models in a laboratory card game; the researchers say detection required monitoring both agents and saw signs that larger models give a weaker signal; and no reliability figure is reported. It is a newsletter account of research, not itself a peer-reviewed evaluation.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "ieee-openai-llm-chip-design",
+    ids: ["2034-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-engineering-practice",
+    reuseFamily: "ai-semiconductor-design",
+    rationale: "IEEE Spectrum reports that OpenAI's first AI accelerator was designed with heavy use of its own large language models, from front-end high-level synthesis to post-silicon software optimisation, by a team averaging fewer than 100 people, and that OpenAI claims AI-guided physical-design optimisation cut the area of its matrix-multiplication units by 10 percent against an optimised human baseline. That is AI taking on a substantial share of cognitive work in semiconductor design at one company, which is the trajectory this prediction describes. IT DOES NOT EVIDENCE MAJORITY AUTOMATION. OpenAI's engineers are quoted saying they still drive the work and are the final arbiter, and that they do not believe chip design can be fully automated; AI was less useful for backend design, most of which Broadcom handled with its own workflow; the performance and area figures are the company's claims; and the article covers one chip, not semiconductor R&D or production engineering across the industry.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "ieee-agility-digit5-production-capital",
+    ids: ["2032-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-capital-raise-plan",
+    reuseFamily: "robot-production-capital",
+    rationale: "IEEE Spectrum reports that Agility Robotics hopes to raise more than $620 million through a SPAC merger and spend it primarily on scaling production of its Digit 5 humanoid, citing more than $300 million in multi-year customer orders that the article estimates at comfortably under 1,000 robots, one tenth of its factory's capacity. That is capital being raised specifically to build robot production, which is the mechanism this prediction describes. IT DOES NOT EVIDENCE THE PREDICTION. It is one company's planned raise, not capital flooding into mines, motors, actuators, fabs and factories; the merger has not closed; the cost and savings figures come from the company's filing and are described there as illustrative estimates; and nothing in the article shows robotics to be the binding bottleneck on economic growth.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "verge-tesla-optimus-production-rate",
+    ids: ["2036-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-production-rate",
+    reuseFamily: "humanoid-production-scale",
+    rationale: "The Verge, relaying reporting by The Information, says Tesla produced several hundred Optimus humanoid robots a week last month on car production lines repurposed for the robot, against a goal of 20,000 a week. That is a reported rate of humanoid manufacturing at a major industrial company, which bears on the robot-count half of this prediction. IT DOES NOT EVIDENCE THE PREDICTION. Several hundred a week is many orders of magnitude from two billion advanced robots; the figures are second-hand, attributed to another outlet rather than confirmed by Tesla; the article reports manufacturing snags, including hands that still need manual assembly, and says the robots are still used internally for specific tasks in limited areas; and it says nothing about frontier AI worker counts, the prediction's other half.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "anthropic-claude-enzyme-discovery",
+    ids: ["2037-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "attributed-company-research-claim",
+    reuseFamily: "ai-driven-biology-discovery",
+    rationale: "Anthropic reports that Claude agents, given only a high-level prompt, searched a large DNA sequence database and identified a previously uncharacterised enzyme system with CRISPR-like repeats, which its own laboratory then found is expressed as distinct short RNAs, and quotes CRISPR pioneer Feng Zhang calling the finding genuinely intriguing. That is an AI system originating a biological discovery of the kind that has historically led to new medical tools, a leading indicator for AI-driven research. THIS IS THE COMPANY'S OWN ACCOUNT AND IT IS NOT A CURE. The system's function is still unknown, it has produced no therapy or clinical result, the work is described in a pre-print rather than a peer-reviewed paper, all laboratory work was done by human scientists, and the article concerns biology only; it says nothing about clean energy, the prediction's second half.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "wired-cepi-ebola-vaccine-funding-gap",
+    ids: ["2033-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-public-health-funding",
+    reuseFamily: "rapid-vaccine-funding",
+    rationale: "WIRED reports that during a fast-growing Ebola outbreak the vaccine body CEPI redirected $100 million to develop vaccines, doses of one candidate were manufactured at record speed and two candidates have entered safety trials, and the US government committed $50 million to the countermeasure effort. That is the rapid-vaccine capability this prediction describes, operating now. IT CUTS AGAINST THE PREDICTION AND IS PUBLISHED ON THAT BASIS. The article reports that CEPI will run out of funds for its Ebola programme by December unless it raises more, that responders are short of staff since the US left the World Health Organization and dismantled USAID, and that aid cuts have left shortages of basic equipment. That is governments under-funding a single outbreak response, the opposite of universal-scale biodefense; the article concerns one natural outbreak, mentions regional surveillance support only in passing, and says nothing about continuous pathogen monitoring at scale or AI-enabled threats.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "guardian-uk-information-defence-centre",
+    ids: ["2033-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-government-announcement",
+    reuseFamily: "ai-influence-countermeasures",
+    rationale: "The Guardian reports that the UK prime minister has announced a National Centre for Information Defence to detect, attribute and disrupt foreign information attacks, many of them enabled by AI, bringing together intelligence agencies, law enforcement and social media companies, and quotes him telling the UN that AI will multiply the threat. That is a government building institutional capacity specifically against AI-enabled influence operations, a precursor to the controls this prediction describes. IT DOES NOT EVIDENCE THE PREDICTION. The centre targets hostile-state disinformation rather than cheap AI persuasion generally; it is an announcement, not an operating body; and the article names no capability limit, disclosure rule or tax on targeted influence, which are the three responses the prediction requires.",
+    reviewedAt: "2026-09-26",
+  },
+  {
+    source: "guardian-universities-beyond-employability",
+    ids: ["2036-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "named-expert-opinion",
+    reuseFamily: "education-purpose",
+    rationale: "In a Guardian comment piece, an associate professor of work and technology argues that universities should resist AI companies' attempts to own the pathway from education to employment and should instead focus on independence, expertise in context, productive struggle and social connection. That is an explicit argument for recentring education on human development rather than employability, which is the shift this prediction describes. IT IS OPINION, AND THE DEVELOPMENTS IT REPORTS POINT THE OTHER WAY. It is one academic's argument, not evidence that any institution has changed; the developments it describes, AI-company certificates, campus ambassador programmes and a planned jobs platform, show education being pulled further toward employability, not away from it; and it says nothing about social institutions beyond universities.",
+    reviewedAt: "2026-09-26",
+  },
 ];
 
 const NEWS_MAPPINGS = {};
@@ -1512,6 +1844,36 @@ function requestOnce(url) {
   });
 }
 
+/* PUBLISHER ACCESS CHALLENGES (owner-approved 2026-09-24). A FINITE, POSITIVE list of bot-protection
+   answers, recognised only on a non-200 hop: AWS WAF `x-amzn-waf-action: captcha|challenge`,
+   Cloudflare `cf-mitigated: challenge`, and an Akamai same-site redirect to its abuse-detection
+   apology page (which is not followed). The read still FAILS; the label only lets the separately
+   gated last-good assessor below consider an unchanged, durably verified record. A plain
+   404/405/410/5xx, a timeout or any other status carries no marker and stays an ordinary failure.
+   Nothing here retries, alters headers, solves, proxies or substitutes a cache or archive. */
+const AKAMAI_APOLOGY_PATH = '/apology_objects/abuse-detection-apology.html';
+function accessChallengeOf(response, requestUrl) {
+  const headers = (response && response.headers) || {};
+  const status = Number(response && response.status);
+  if (!Number.isFinite(status) || status === 200) return null;
+  const waf = String(headers['x-amzn-waf-action'] || '').trim().toLowerCase();
+  if (waf === 'captcha' || waf === 'challenge') return { vendor: 'aws-waf', status, marker: `x-amzn-waf-action: ${waf}` };
+  if (String(headers['cf-mitigated'] || '').trim().toLowerCase() === 'challenge') {
+    return { vendor: 'cloudflare', status, marker: 'cf-mitigated: challenge' };
+  }
+  if (status >= 300 && status < 400 && headers.location) {
+    try {
+      const from = new URL(requestUrl);
+      const to = new URL(headers.location, requestUrl);
+      if (to.protocol === 'https:' && to.pathname === AKAMAI_APOLOGY_PATH
+          && registrableHost(to.hostname) === registrableHost(from.hostname)) {
+        return { vendor: 'akamai', status, marker: `redirect to ${AKAMAI_APOLOGY_PATH}` };
+      }
+    } catch { return null; }
+  }
+  return null;
+}
+
 /*
  * Fetch an article, following redirects manually so the FINAL resolved URL is
  * recorded rather than the input URL, and so a redirect into an aggregator or
@@ -1528,6 +1890,11 @@ async function fetchArticle(url, { requestImpl = requestOnce } = {}) {
     const response = await requestImpl(current);
     if (!response.ok) return { ok: false, finalUrl: current, redirects, reason: response.reason, code: response.code };
     const status = Number(response.status);
+    const challenge = accessChallengeOf(response, current);
+    if (challenge) {
+      return { ok: false, status, finalUrl: current, redirects, challenge,
+        reason: `HTTP ${status}; publisher bot protection (${challenge.marker})` };
+    }
     if (status >= 300 && status < 400 && response.headers.location) {
       const next = new URL(response.headers.location, current).toString();
       redirects.push({ from: current, to: next, status });
@@ -2035,7 +2402,10 @@ async function verifyNewsSource(key, source, options = {}) {
       + 'refusing to substitute a plain fetch this source is declared to fail');
     return { problems, fetched: null };
   }
-  const transport = declaredTransport === 'browser' ? options.browserTransport : fetchArticle;
+  // requestImpl replaces only the raw HTTP exchange for offline fixtures; every classification remains.
+  const transport = declaredTransport === 'browser' ? options.browserTransport
+    : typeof options.requestImpl === 'function' ? url => fetchArticle(url, { requestImpl: options.requestImpl })
+      : fetchArticle;
 
   const fetched = await transport(source.url);
   if (!fetched.ok) {
@@ -2068,21 +2438,259 @@ async function verifyNewsSource(key, source, options = {}) {
   return { problems, fetched, extracted, textDrift: drifted, transport: declaredTransport };
 }
 
+/* ------------------------------------------------------------------ *
+ * Access-challenge last-good (owner-approved 2026-09-24)
+ * ------------------------------------------------------------------ *
+ * A publisher's bot protection can refuse this host's plain GET without the article changing. For an
+ * EXISTING published record only, such a refusal may be carried as a last-good WARNING — never a
+ * PASS — when every one of these holds; anything else keeps the ordinary failure:
+ *   - the live read failed with a positively identified challenge (accessChallengeOf above) and
+ *     with no other problem in the record;
+ *   - the source and every mapping to it are identical (value- and order-exact JSON) to both the
+ *     published mirror HEAD and the commit named by a durable prior live verification below;
+ *   - that commit is in the mirror history and was committed on the stated UTC day;
+ *   - that day is not in the future and at most NEWS_LAST_GOOD_MAX_DAYS UTC days ago.
+ * The last-verified date is the recorded one; today's date is only the recheck attempt. */
+const ACCESS_CHALLENGE_VENDORS = new Set(['aws-waf', 'cloudflare', 'akamai']);
+const NEWS_LAST_GOOD_MAX_DAYS = 14;
+/* DURABLE PRIOR LIVE VERIFICATIONS. Append a row only for a released run whose hardened publisher
+   chain executed verify:news against every NEWS_SOURCES record and then committed; the newest row is
+   the only one consulted, so a later change cannot fall back to an older verification. */
+const NEWS_LIVE_VERIFICATIONS = [
+  {
+    commit: '93a31786862f095c32343ea2baf5dfa8f1230228',
+    verifiedOn: '2026-09-22',
+    basis: 'Released verify:news PASS: hardened publish-github.ps1 live-verified every NEWS_SOURCES '
+      + 'record before committing and pushing Site sync 2026-09-22 16:28Z; remote main confirmed by git ls-remote.',
+  },
+];
+
+function newsRecordIdentity(key, sources, mappings) {
+  const source = sources && sources[key];
+  if (!source) return null;
+  const rows = Object.entries(mappings || {})
+    .filter(([, mapping]) => mapping && mapping.source === key)
+    .sort(([a], [b]) => a.localeCompare(b));
+  return rows.length ? sha256(JSON.stringify({ key, source, mappings: rows })) : null;
+}
+
+/* Read-only view of the published mirror. Returns null when no checkout exists, which refuses. */
+function newsMirror(checkout) {
+  const fs = require('fs');
+  const path = require('path');
+  const { execFileSync } = require('child_process');
+  if (!checkout || !fs.existsSync(path.join(checkout, '.git'))) return null;
+  const readOnly = new Set(['rev-parse', 'log', 'show', 'merge-base']);
+  const git = args => {
+    if (!readOnly.has(args[0])) throw new Error(`refusing non-read git ${args[0]}`);
+    return execFileSync('git', ['-C', checkout, ...args],
+      { maxBuffer: 1 << 28, timeout: 30000, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  };
+  const loaded = new Map();
+  const load = commit => {
+    let code;
+    try { code = git(['show', `${commit}:news-evidence.js`]).toString('utf8'); } catch { return null; }
+    try {
+      const Module = require('module');
+      const filename = path.join(__dirname, `news-evidence@${commit.slice(0, 12)}.js`);
+      const committed = new Module(filename, null);
+      committed.filename = filename;
+      committed.paths = Module._nodeModulePaths(__dirname);
+      committed._compile(code, filename);
+      const { NEWS_SOURCES: sources, NEWS_MAPPINGS: mappings } = committed.exports || {};
+      return sources && mappings ? { sources, mappings } : null;
+    } catch { return null; }
+  };
+  return {
+    head: () => { try { return git(['rev-parse', '--verify', 'HEAD^{commit}']).toString().trim(); } catch { return null; } },
+    committedOn: commit => {
+      try { return new Date(git(['log', '-1', '--format=%cI', `${commit}^{commit}`]).toString().trim()).toISOString().slice(0, 10); }
+      catch { return null; }
+    },
+    contains: commit => { try { git(['merge-base', '--is-ancestor', commit, 'HEAD']); return true; } catch { return false; } },
+    news: commit => {
+      if (!loaded.has(commit)) loaded.set(commit, load(commit));
+      return loaded.get(commit);
+    },
+  };
+}
+function defaultNewsMirror() {
+  return newsMirror(process.env.PAP_NEWS_MIRROR || require('path').resolve(__dirname, '..', 'pap-github'));
+}
+
+function assessNewsLastGood({ key, source, mappings = NEWS_MAPPINGS, fetched, now = Date.now(), mirror,
+  verifications = NEWS_LIVE_VERIFICATIONS }) {
+  const refuse = reason => ({ retained: false, reason: `last-good refused: ${reason}` });
+  const challenge = fetched && fetched.challenge;
+  if (!challenge || !ACCESS_CHALLENGE_VENDORS.has(challenge.vendor)) {
+    return refuse('no positively identified publisher bot-protection challenge');
+  }
+  if (String((source && source.transport) || 'https').toLowerCase() !== 'https') return refuse('only plain https reads qualify');
+  if (!mirror) return refuse('the published mirror is unavailable, so no durable prior verification can be established');
+  const current = newsRecordIdentity(key, { [key]: source }, mappings);
+  if (!current) return refuse('the record has no reviewed mapping');
+  const clock = new Date(now);
+  if (!Number.isFinite(clock.getTime())) return refuse('the clock is invalid');
+  const todayUtc = Date.UTC(clock.getUTCFullYear(), clock.getUTCMonth(), clock.getUTCDate());
+  const latest = [...verifications].sort((a, b) => String(b.verifiedOn).localeCompare(String(a.verifiedOn)))[0];
+  if (!latest) return refuse('no durable prior live verification is recorded');
+  const { commit, verifiedOn } = latest;
+  const verifiedUtc = Date.parse(`${verifiedOn}T00:00:00Z`);
+  if (!/^[a-f0-9]{40}$/.test(String(commit)) || !/^\d{4}-\d{2}-\d{2}$/.test(String(verifiedOn))
+      || !Number.isFinite(verifiedUtc) || new Date(verifiedUtc).toISOString().slice(0, 10) !== verifiedOn) {
+    return refuse('the durable verification record is malformed');
+  }
+  if (verifiedUtc > todayUtc) return refuse(`the recorded verification date ${verifiedOn} is in the future`);
+  const short = commit.slice(0, 12);
+  if (!mirror.contains(commit)) return refuse(`verification commit ${short} is not in the published mirror history`);
+  if (mirror.committedOn(commit) !== verifiedOn) return refuse(`verification commit ${short} was not committed on ${verifiedOn}`);
+  const verified = mirror.news(commit);
+  if (!verified) return refuse(`news-evidence.js at ${short} is missing or unreadable`);
+  if (!verified.sources[key]) return refuse(`the record did not exist at ${short}, so it was never verified`);
+  if (newsRecordIdentity(key, verified.sources, verified.mappings) !== current) {
+    return refuse(`the record or one of its mappings changed after the verification at ${short}`);
+  }
+  const head = mirror.head();
+  const published = head && mirror.news(head);
+  if (!published || newsRecordIdentity(key, published.sources, published.mappings) !== current) {
+    return refuse('the record is not identical to the last published mirror record');
+  }
+  const ageDays = Math.round((todayUtc - verifiedUtc) / 864e5);
+  if (ageDays > NEWS_LAST_GOOD_MAX_DAYS) {
+    return refuse(`the last live verification (${verifiedOn}) is ${ageDays} days old; the ${NEWS_LAST_GOOD_MAX_DAYS}-day limit has expired`);
+  }
+  return {
+    retained: true,
+    health: {
+      status: 'last-good',
+      label: "Couldn't recheck today",
+      reason: 'publisher bot protection',
+      challenge: `${challenge.vendor} ${challenge.marker} (HTTP ${challenge.status})`,
+      lastCheckedAt: clock.toISOString(),
+      lastVerifiedAt: verifiedOn,
+      verifiedBy: commit,
+      retainedUntil: new Date(verifiedUtc + NEWS_LAST_GOOD_MAX_DAYS * 864e5).toISOString().slice(0, 10),
+      ageDays,
+    },
+  };
+}
+
+/* verifyNewsSource plus the last-good assessment, for EXISTING published records only: verify:news and
+   the canonical producer opt in; discovery, promotion and backfill keep calling verifyNewsSource. */
+async function verifyNewsSourceAllowingLastGood(key, source, options = {}) {
+  const result = await verifyNewsSource(key, source, options);
+  if (!result.problems.length || !(result.fetched && result.fetched.challenge)) return result;
+  if (result.problems.length !== 1) return result;
+  const verdict = assessNewsLastGood({ key, source, mappings: options.mappings, fetched: result.fetched,
+    now: options.now, mirror: options.mirror, verifications: options.verifications });
+  if (!verdict.retained) return { ...result, problems: [`${result.problems[0]}; ${verdict.reason}`] };
+  return { ...result, problems: [], lastGood: verdict.health };
+}
+
+/* HONEST EMPTY-CURRENT MODE (owner-approved 2026-09-26). A quiet news fortnight can leave the cited
+   channel empty for one reason only: every reviewed mapping has aged past the window into dated context.
+   That is a true state, so it is classified 'aging-empty' (a WARNING, never a PASS) and may publish with
+   its public label. Every other route to an empty channel is a FAULT: a missing or malformed partition,
+   a stale or searched build, incomplete coverage, an absent news tally, a mapping that is neither cited
+   nor aged context, a context row still inside the window, or a row no reviewed mapping accounts for.
+   A non-empty cited channel is returned as 'cited' untouched, so the normal path keeps every existing
+   check. Pure: the verifiers and their fixtures call this same function. */
+function classifyNewsCurrency(signals, { mappings = NEWS_MAPPINGS, expectedIds } = {}) {
+  const embeds = signals && signals.embeds;
+  if (!embeds || typeof embeds !== 'object' || Array.isArray(embeds)) {
+    return { mode: 'fault', problems: ['embeds partition is missing or malformed, so an empty cited channel cannot be attributed to window aging'] };
+  }
+  if (Object.keys(embeds).length) return { mode: 'cited', problems: [] };
+  const problems = [];
+  const isMap = value => !!value && typeof value === 'object' && !Array.isArray(value);
+  const ids = expectedIds instanceof Set ? expectedIds : new Set(expectedIds || []);
+  const coverage = isMap(signals.coverage) ? signals.coverage : null;
+  const owners = coverage && isMap(coverage.byEvidenceOwner) ? coverage.byEvidenceOwner : null;
+  const context = isMap(signals.context) && isMap(signals.context.items) ? signals.context : null;
+  const uncited = isMap(signals.uncited) && isMap(signals.uncited.items) ? signals.uncited : null;
+  const updatedAt = Date.parse(signals.updated);
+  if (signals.sourceFresh !== true) problems.push(`sourceFresh is ${JSON.stringify(signals.sourceFresh)}, not true`);
+  if (signals.search && (!isMap(signals.search) || Object.keys(signals.search).length)) problems.push('search ids are present');
+  if (!Number.isFinite(updatedAt)) problems.push('updated is not a usable build instant');
+  if (!ids.size) problems.push('the expected forecast population is empty');
+  if (!coverage) problems.push('coverage is missing');
+  else {
+    if (coverage.complete !== true) problems.push('coverage.complete is not true');
+    if (coverage.cited !== 0) problems.push(`coverage.cited is ${JSON.stringify(coverage.cited)} while embeds is empty`);
+    if (coverage.searches !== 0) problems.push('coverage.searches is not 0');
+    if (coverage.dropped !== 0 || coverage.total !== ids.size || coverage.kept !== ids.size) {
+      problems.push(`coverage population is ${coverage.kept}/${coverage.total} kept with ${coverage.dropped} dropped, not ${ids.size}/${ids.size} with 0`);
+    }
+  }
+  if (!owners || !Object.prototype.hasOwnProperty.call(owners, 'news') || owners.news !== 0) {
+    problems.push('coverage.byEvidenceOwner.news is not an explicit 0');
+  }
+  if (!context || !uncited) {
+    problems.push('the context/uncited partition is missing or malformed');
+    return { mode: 'fault', problems };
+  }
+  const windowDays = Number(context.windowDays);
+  if (!Number.isInteger(windowDays) || windowDays <= 0 || Number(uncited.windowDays) !== windowDays) {
+    problems.push('context and uncited do not declare one positive window');
+  }
+  const contextIds = Object.keys(context.items), uncitedIds = Object.keys(uncited.items);
+  if (Number(context.count) !== contextIds.length || Number(uncited.count) !== uncitedIds.length
+      || (coverage && (coverage.context !== contextIds.length || coverage.uncited !== uncitedIds.length))) {
+    problems.push('partition counts disagree with their items');
+  }
+  const seen = new Set();
+  for (const id of [...contextIds, ...uncitedIds]) {
+    if (!ids.has(id)) problems.push(`${id}: partitioned id is not a forecast`);
+    if (seen.has(id)) problems.push(`${id}: appears in both context and uncited`);
+    seen.add(id);
+  }
+  for (const id of ids) if (!seen.has(id)) problems.push(`${id}: forecast is unaccounted for`);
+  const mappingIds = Object.keys(mappings || {});
+  if (!mappingIds.length) problems.push('no reviewed NEWS mapping exists, so an empty channel is not explained by window aging');
+  let lastLinkedNewsAt = null;
+  for (const id of mappingIds) {
+    const row = context.items[id];
+    if (!row) { problems.push(`${id}: reviewed mapping is neither cited nor aged context`); continue; }
+    const publishedAt = Date.parse(row.publishedAt);
+    const rawAge = (updatedAt - publishedAt) / 864e5;
+    if (row.id !== `news:${mappings[id].source}` || row.channel !== 'context' || row.evidenceOwner !== 'news') {
+      problems.push(`${id}: context row is not the reviewed mapping's source`);
+    } else if (!Number.isFinite(rawAge) || !(Number(row.ageDays) > windowDays) || !(rawAge > windowDays)
+        || Math.abs(rawAge - Number(row.ageDays)) > 1) {
+      problems.push(`${id}: context row (age ${row.ageDays}) is not aged past the ${windowDays}-day window`);
+    } else if (!lastLinkedNewsAt || publishedAt > Date.parse(lastLinkedNewsAt)) {
+      lastLinkedNewsAt = new Date(publishedAt).toISOString();
+    }
+  }
+  for (const id of contextIds) if (!mappings[id]) problems.push(`${id}: context row has no reviewed mapping`);
+  return problems.length
+    ? { mode: 'fault', problems }
+    : { mode: 'aging-empty', problems: [], windowDays, aged: mappingIds.length, lastLinkedNewsAt };
+}
+
 module.exports = {
   NEWS_GROUPS,
+  NEWS_LAST_GOOD_MAX_DAYS,
+  NEWS_LIVE_VERIFICATIONS,
   NEWS_MAPPINGS,
   NEWS_SOURCES,
   NEWS_QUALITY_CLASSES,
   NEWS_TRANSPORTS,
   REJECTED_HOSTS,
+  accessChallengeOf,
+  assessNewsLastGood,
   canonicalUrl,
   classifyHost,
+  classifyNewsCurrency,
   collapse,
   decodeEntities,
+  defaultNewsMirror,
   detectBotChallenge,
   extractArticle,
   extractMainText,
   fetchArticle,
+  newsMirror,
+  newsRecordIdentity,
   normalizeForQuote,
   normalizeUrl,
   quotePresent,
@@ -2090,4 +2698,5 @@ module.exports = {
   renderedPublishedDate,
   sha256,
   verifyNewsSource,
+  verifyNewsSourceAllowingLastGood,
 };

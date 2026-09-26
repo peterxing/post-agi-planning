@@ -33,12 +33,48 @@ async function main(){
         await openReaderSite(page,BASE,profile.theme);
         assert.equal(await page.locator('.primary-nav a').count(),4);
         assert.equal(await page.locator('#yearContent').getAttribute('data-year'),'2026');
-        assert(await page.locator('#yearRail [aria-current="date"]').count());
+        assert.equal(await page.locator('#monthJump').inputValue(),'2026-01');
+        assert.deepEqual(await page.locator('.chronology-month > .year-heading h3').allTextContents(),
+          ['January 2026','February 2026','March 2026','April 2026','May 2026','June 2026']);
         assert.equal(await page.locator('.alloc-row').count(),0,'Explore is not initialized at reader entry.');
         assert(!requests.some(name=>/\/(?:game|three\.)/.test(name)));
         await page.locator('[data-year-step="1"]').click();
-        assert.equal(await page.locator('#yearContent').getAttribute('data-year'),'2027');
+        assert.equal(await page.locator('#yearContent').getAttribute('data-month'),'2026-02');
+        assert.equal(await page.locator('.chronology-month').count(),6,'Month navigation does not replace the chronology with year tabs.');
+        await page.locator('#monthJump').selectOption('2026-12');
+        assert.equal(await page.locator('#month-2026-12 > .year-heading h3').textContent(),'December 2026');
+        assert.equal(await page.locator('#event-2026-6 .forecast-title').textContent(),predictions.years[0].events[6].t);
+        assert.equal(await page.locator('#notMonthDatedForecasts .forecast-card').count(),
+          predictions.years.flatMap(year=>year.events).filter(row=>row.mPrecision!=='month').length);
+        await page.evaluate(()=>navigateSection('#year-2027'));
+        assert.equal(await page.locator('#notMonthDated').getAttribute('open')!==null,true);
+        assert.equal(await page.locator('#event-2027-0').getAttribute('open')!==null,true);
         await page.locator('#newsReset').click();
+        if(profile.name==='desktop-light'){
+          const controls=await page.evaluate(()=>{
+            const original=model, selected=selectedMonth, count=visibleCount;
+            try{
+              const dated=value=>({...original.articles[0],key:value,url:original.articles[0].url,date:engine.parsePublishedDate(value)});
+              const december=dated('2026-12-31T23:30:00Z'),january=dated('2027-01-01T00:30:00Z');
+              model={...original,articles:[...original.articles,december,january]};
+              visibleCount=100;renderYear();
+              const labels=[...document.querySelectorAll('.chronology-month > .year-heading h3')].map(el=>el.textContent);
+              let futureRefused=false;
+              try{assertReportedDates({articles:[dated('2099-01-01')]});}catch{futureRefused=true;}
+              return {labels:labels.slice(-2),futureRefused,
+                offsetMonth:reportMonth(dated('2026-12-31T23:30:00-02:00')),
+                coarse:forecastMonth({timing:'2027',data:{m:6,mPrecision:'quarter'}}),
+                precise:forecastMonth({timing:'2027',data:{m:1,mPrecision:'month'}}),
+                unknown:forecastMonth({timing:'2027',data:{}}),
+                stable:engine.compareArticles({...january,key:'a'},{...january,key:'b'},'newest')<0};
+            }finally{model=original;selectedMonth=selected;visibleCount=count;renderYear();}
+          });
+          assert.deepEqual(controls,{labels:['December 2026','January 2027'],futureRefused:true,offsetMonth:'2027-01',coarse:null,precise:'2027-01',unknown:null,stable:true});
+          await page.locator('#loadMoreMonths').click();
+          assert(await page.locator('.chronology-month').count()>6,'Load more appends months rather than replacing the first six.');
+          assert.equal(await page.locator('.chronology-month').first().getAttribute('data-month'),'2026-01');
+          await page.locator('#newsReset').click();
+        }
         const firstArticle=await page.locator('#yearContent .story').first().getAttribute('id');
         await page.locator('#yearContent .story > details > summary').first().click();
         await page.waitForSelector('#yearContent .connection');

@@ -99,6 +99,7 @@ const allGuarded = [
   'verify-x-harvest.js',
   'build-game.js','verify-game-content.js','verify-game.js','verify-game-performance.js',
   'verify-ai-timeline.js',
+  'refresh-timeline-actuals.js',
 ];
 const manifest = JSON.parse(readOr(path.join(DIR,'package.json')));
 const mirrorScope = manifest.publicationScope === 'curated-mirror';

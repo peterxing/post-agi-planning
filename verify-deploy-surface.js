@@ -181,6 +181,15 @@ const ALLOWED_EGRESS_HOSTS = new Set([
      mill or preprint server. Declaring the host never makes its contents admissible; that stays with
      the per-article fetch, quote-match and source-quality gates. */
   'www.bbc.co.uk',
+  /* REVIEWED EDIT 2026-09-26 — declared because feeds.npr.org, already on this list as a DISCOVERY
+     feed, RESOLVES ITS ITEMS to www.npr.org: the reviewed citation for 2029-2 (NPR's report on the
+     US-China AI-freeze debate, promoted in the owner-instructed recent-news pass) records that article
+     host, and an undeclared host fails this gate closed. It is the same first-party publisher already
+     trusted for discovery, under the host where its articles live; NPR is a primary news organisation
+     with named editorial responsibility and is not an aggregator, syndicator, press-release mill or
+     preprint server. Declaring the host never makes its contents admissible; that stays with the
+     per-article fetch, quote-match and source-quality gates. */
+  'www.npr.org',
   // Reviewed 2026-09-22: the two user-approved, publicly verified Nature replacements.
   'www.constructiondive.com',
 ]);

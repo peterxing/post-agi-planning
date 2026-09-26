@@ -57,8 +57,9 @@ const {
 const {
   NEWS_MAPPINGS,
   NEWS_SOURCES,
+  defaultNewsMirror,
   normalizeUrl,
-  verifyNewsSource,
+  verifyNewsSourceAllowingLastGood,
 } = require('./news-evidence');
 // X RETIREMENT 2026-08-13 — the @peterxing archive corpus, its hydration chain and the X API were
 // retired on the site owner's instruction ("remove all references to x posts and stop using the x
@@ -1645,11 +1646,17 @@ function qualifyFamilyPost(text, p){
    pointing at wording that has since changed. */
 const X_SIGNALS_PATH = path.join(DIR, 'x-signals.json');
 const X_SIGNALS_MAX_AGE_DAYS = 10;
-function xSignalLayer(livePredictionIds, buildNow){
+/* Only TIMELINE-DAILY-RUN.md's actuals-only job passes this flag. Without it a stale layer is refused
+   exactly as before; with it the layer is retained only through retainStaleXSnapshot's binding. */
+const PRESERVE_STALE_X = process.argv.includes('--actuals-preserve-stale-x');
+const X_PAIRING_MIRROR = (process.argv.find(arg => arg.startsWith('--x-pairing-mirror=')) || '').slice(19)
+  || path.resolve(DIR, '..', 'pap-github');
+function xSignalLayer(livePredictionIds, buildNow, options = {}){
   if (!fs.existsSync(X_SIGNALS_PATH)) return {};
-  let payload;
+  let payload, raw;
   try {
-    payload = JSON.parse(fs.readFileSync(X_SIGNALS_PATH, 'utf8').replace(/^\uFEFF/, ''));
+    raw = fs.readFileSync(X_SIGNALS_PATH);
+    payload = JSON.parse(raw.toString('utf8').replace(/^\uFEFF/, ''));
   } catch (error) {
     throw new Error(`x-signals.json is present but unparseable (${error.message}); refusing to build. `
       + 'Preserve the published site and refer repair to the weekly X workflow; daily/author runs must not recollect or delete it.');
@@ -1662,7 +1669,15 @@ function xSignalLayer(livePredictionIds, buildNow){
     throw new Error('x-signals.json declares no usable builtAt; refusing to publish a layer of unknown age.');
   }
   const ageDays = (buildNow - builtAt) / 864e5;
-  if (Math.round(ageDays) > X_SIGNALS_MAX_AGE_DAYS) {
+  if (builtAt > buildNow) {
+    throw new Error('x-signals.json declares a future builtAt; refusing to publish a layer of impossible age.');
+  }
+  let retention = null;
+  if (Math.round(ageDays) > X_SIGNALS_MAX_AGE_DAYS && options.preserveStaleX) {
+    retention = require('./refresh-timeline-actuals').retainStaleXSnapshot({ raw, payload,
+      previous:options.previous, forecastSha256:options.forecastSha256, buildNow,
+      maxAgeDays:X_SIGNALS_MAX_AGE_DAYS, history:options.history });
+  } else if (Math.round(ageDays) > X_SIGNALS_MAX_AGE_DAYS) {
     throw new Error(`x-signals.json was built ${Math.round(ageDays)} days ago, beyond the `
       + `${X_SIGNALS_MAX_AGE_DAYS}-day ceiling. Prediction text is revised daily and these signals are `
       + 'matched against it, so a stale layer can attach a post to wording that has since changed. '
@@ -1685,7 +1700,8 @@ function xSignalLayer(livePredictionIds, buildNow){
         + 'a trajectory signal must never be shaped like a citation.');
     }
   }
-  return { xSignals: { summary: payload.summary, items: payload.signals } };
+  return { xSignals: { summary: payload.summary, items: payload.signals },
+    ...(retention ? { xSignalsRetention: retention } : {}) };
 }
 
 function assertNoXIngestFiles(){
@@ -2081,6 +2097,9 @@ async function main(){
     .map(p => p.id));
   const newsVerified = new Map();
   const newsIntegrityErrors = [];
+  /* Access-challenge last-good (news-evidence.js): an unchanged, durably verified record refused only by
+     a recognised publisher bot challenge keeps its reviewed fields and carries a visible health object. */
+  const newsMirrorView = defaultNewsMirror();
   const knownPredictionIds = new Set(PREDICTIONS.map(p => p.id));
   /* BROWSER TRANSPORT — OPENED ONLY IF A REVIEWED ROW DECLARES IT, AND FAIL-CLOSED IF IT CANNOT
      OPEN. A reviewed row may declare transport:'browser' for a publisher that refuses a plain GET
@@ -2138,12 +2157,17 @@ async function main(){
       throw new Error(`news mapping ${predictionId} names source ${mapping.source}, which is absent `
         + 'from NEWS_SOURCES - refusing to drop a reviewed mapping silently');
     }
-    const check = await verifyNewsSource(mapping.source, article, { browserTransport });
+    const check = await verifyNewsSourceAllowingLastGood(mapping.source, article, { browserTransport, mirror: newsMirrorView });
     if (check.problems.length) {
       newsIntegrityErrors.push(...check.problems);
       continue;
     }
-    newsVerified.set(predictionId, { mapping, article, transport: check.transport || 'https' });
+    if (check.lastGood) {
+      console.error(`[refresh] LAST-GOOD WARNING ${predictionId} ${mapping.source}: ${check.lastGood.label} - `
+        + `${check.lastGood.reason} (${check.lastGood.challenge}); last verified ${check.lastGood.lastVerifiedAt}; `
+        + `retained until ${check.lastGood.retainedUntil}.`);
+    }
+    newsVerified.set(predictionId, { mapping, article, transport: check.transport || 'https', lastGood: check.lastGood || null });
   }
   } finally {
     if (browserSession) await browserSession.close();
@@ -2198,7 +2222,8 @@ async function main(){
       if (!mapping || !external) {
         const news = newsVerified.get(p.id);
         if (news) {
-          const { mapping: newsMapping, article, transport: newsTransport } = news;
+          const { mapping: newsMapping, article, transport: newsTransport, lastGood: newsLastGood } = news;
+          const newsHealth = newsLastGood ? { health: newsLastGood } : {};
           /* PROVENANCE MUST NAME THE TRANSPORT THAT ACTUALLY READ THE PAGE. A browser-verified
              source recorded as 'live-fetch' would be a false provenance claim in the one field a
              reader has for judging how the citation was obtained — and it would be indistinguishable
@@ -2266,6 +2291,7 @@ async function main(){
               statement: `Dated background: the most recent authoritative source found for this `
                 + `prediction was published ${Math.round(newsAgeDays)} days ago, outside the `
                 + `${CURRENCY_MAX_AGE_DAYS}-day currency window. It is shown as context, not as current evidence.`,
+              ...newsHealth,
             };
             chosen[p.id] = `context [${newsMapping.source} ${Math.round(newsAgeDays)}d outside the ${CURRENCY_MAX_AGE_DAYS}-day window]`;
             continue;
@@ -2322,6 +2348,7 @@ async function main(){
             date: fmtDate(new Date(article.publishedAt)),
             maps: p.maps,
             text: newsText,
+            ...newsHealth,
           };
           chosen[p.id] = `news:${article.publisherHost} [${newsMapping.evidenceType}/${embeds[p.id].assignmentMode} source=${newsMapping.source} reuse=${newsReuse}]`;
           continue;
@@ -2696,7 +2723,9 @@ async function main(){
   const coverageComplete = mappingIntegrityErrors.length === 0
     && populationIntact
     && accountedIds.size === registeredTotal;
-  const ownerTally = {};
+  /* EMPTY-CURRENT MODE (2026-09-26): the news tally is emitted as an explicit 0 on a quiet day, never
+     omitted, so a lost tally stays distinguishable from an honestly empty cited channel. */
+  const ownerTally = { news: 0 };
   const sourceQualityTally = {};
   const evidenceTypeTally = {};
   const mediumTally = { x: 0, news: 0 };
@@ -2910,12 +2939,13 @@ async function main(){
       .filter(value => Number.isFinite(value));
     return dates.length ? new Date(Math.max(...dates)).toISOString() : null;
   })();
+  const forecastSha256 = createHash('sha256').update(JSON.stringify(JSON.parse(fs.readFileSync(PRED, 'utf8')))).digest('hex');
   const out = {
     referencePoints,
     capabilities: { metr },
     forecastVersion: {
       schemaVersion: 1,
-      sha256: createHash('sha256').update(JSON.stringify(JSON.parse(fs.readFileSync(PRED, 'utf8')))).digest('hex'),
+      sha256: forecastSha256,
     },
     updated: new Date().toISOString(),
     note,
@@ -3003,7 +3033,8 @@ async function main(){
        which is why every X refusal added at the 2026-08-13 retirement still passes.
        Built by x-signals.js and read from x-signals.json; absent when that file has not been built,
        so the site degrades to exactly its pre-2026-08-26 behaviour rather than half-rendering. */
-    ...xSignalLayer(PREDICTIONS.map(p => p.id), BUILD_NOW),
+    ...xSignalLayer(PREDICTIONS.map(p => p.id), BUILD_NOW, PRESERVE_STALE_X ? { preserveStaleX:true, previous:prev,
+      forecastSha256, history:require('./refresh-timeline-actuals').mirrorHistory(X_PAIRING_MIRROR) } : {}),
   };
 
   const kindTally = {}; const tierTally = {};
@@ -3098,6 +3129,7 @@ async function main(){
     // differ, so it is the one place that must not quote the survivor count.
     throw new Error(`direct coverage incomplete (${currentCoveredIds.size}/${registeredTotal}): ${mappingIntegrityErrors.join('; ')}`);
   }
+  out.actualsRefresh = require('./refresh-timeline-actuals').actualsMetadata(prev, out, out.updated);
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
   console.error(`[refresh] Wrote complete direct-only signals.json (${currentCoveredIds.size}/${registeredTotal}).`);
   /* X RETIREMENT 2026-08-13 — the automatic ratchet WRITER is retired, not the ratchet.
@@ -3138,4 +3170,5 @@ module.exports = {
   qualifyFamilyPost,
   qualifyPost,
   scorePost,
+  xSignalLayer,
 };

@@ -41,7 +41,7 @@ async function verifyAccounting(page){
   for(const row of expected){
     const dossier=await inspectForecast(page,row);
     const detailsId=row.year===null?row.id:`event-${row.id}`;
-    assert.equal(await page.locator(`#${detailsId} > summary`).textContent(),row.data.t);
+    assert.equal(await page.locator(`#${detailsId} > summary .forecast-title`).textContent(),row.data.t);
     const source=signals.embeds[row.id]||signals.context.items[row.id];
     const channel=signals.embeds[row.id]?'cited':signals.context.items[row.id]?'context':'uncited';
     const news=dossier.locator(`[data-news-forecast="${row.id}"]`);
@@ -57,6 +57,13 @@ async function verifyAccounting(page){
       assert.equal(new URL(href).href,new URL(source.url).href);
       assert(!/(^|\.)(x|twitter|twimg)\.com$/i.test(new URL(href).hostname));
       if(channel==='context')assert.match(text,/Dated background/);
+      if(source.health?.status==='last-good'){
+        assert.equal(source.health.label,"Couldn't recheck today");assert.equal(source.health.reason,'publisher bot protection');
+        await news.locator('.source-provenance').evaluate(node=>{node.open=true;});
+        const shown=await news.locator('.source-provenance').textContent();
+        assert.match(shown,/Couldn't recheck today: publisher bot protection\. Last verified \d{1,2} [A-Z][a-z]+ \d{4}/,`Visible last-good label and verified date: ${row.id}`);
+        assert(shown.includes('not re-verified')&&(await news.locator('.source-provenance > summary').textContent()).includes("Couldn't recheck today"),`Last-good is not presented as verified: ${row.id}`);
+      }else assert(!text.includes("Couldn't recheck today"),`No last-good label without health: ${row.id}`);
     }else assert(text.includes(signals.uncited.items[row.id].statement),`Explicit searched gap ${row.id}`);
     const fact=await page.locator(`#${detailsId} > .forecast-facts`).textContent();
     assert(fact.includes(String(row.year===null?row.data.conditionalProb:row.data.prob)));
@@ -65,6 +72,9 @@ async function verifyAccounting(page){
       assert(fact.includes(row.data.caveat));
     }else assert(fact.includes(row.data.mBasis));
     assert.equal(await dossier.locator('.dossier-section > h5').count(),5,'NEWS/reference/assessment/METR/X remain separate');
+    const xStale=signals.xSignals&&(signals.xSignalsRetention?.mode==='stale-snapshot-retained'||!((Date.parse(signals.updated)-Date.parse(signals.xSignals.summary.builtAt))/864e5<11));
+    assert.equal(await dossier.locator('.x-stale').count(),xStale?1:0,`Visible X snapshot staleness: ${row.id}`);
+    if(signals.xSignalsRetention)assert.equal(await dossier.locator('.x-stale').textContent(),signals.xSignalsRetention.note);
     assert(!await page.locator('.tl-signal-search').count(),'No discovery search substitutes for evidence');
   }
   assert.deepEqual(seen,counts);assert.equal(visited.size,expected.length);
@@ -81,6 +91,9 @@ async function main(){
         page.on('pageerror',error=>errors.push(error.message));
         await openReaderSite(page,base,theme);
         const result=await verifyAccounting(page);
+        const quiet=page.locator('#sourceOverview .news-empty-current');
+        assert.equal(await quiet.count(),counts.cited?0:1,'Quiet-day NEWS label appears exactly when no news is cited');
+        if(!counts.cited)assert.match(await quiet.textContent(),/^No news from the last 14 days is linked yet — last linked news: \d{1,2} [A-Z][a-z]+ \d{4}/);
         assert.deepEqual(errors,[]);
         assert.equal(await page.locator('script[src="app.js"]').count(),1);
         assert.equal(await page.locator('link[href="styles.css"]').count(),1);

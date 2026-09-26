@@ -5,7 +5,7 @@ const search = document.querySelector('[data-reader-search]');
 const dateFormat = new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' });
 const monthFormat = new Intl.DateTimeFormat('en-GB', { month:'long', year:'numeric', timeZone:'UTC' });
 const typeLabels = { direct:'Reporting / observation', 'leading-indicator':'Partial leading indicator', scenario:'Scenario reporting' };
-let engine, model, forecastData, selectedYear = 2026, visibleCount = 6, query = '', request = null, pending = null;
+let engine, model, forecastData, selectedMonth = '2026-01', visibleCount = 6, query = '', request = null, pending = null;
 let refreshTimer = 0, refreshFailures = 0, recordController = null, suppressHashRestore = '';
 const readingPositions = new Map();
 
@@ -54,6 +54,16 @@ async function readJson(name, signal){
 function dateLabel(date){
   return date.at == null ? date.label : dateFormat.format(date.at);
 }
+function assertReportedDates(candidate){
+  const now = new Date(), today = now.toISOString().slice(0, 10);
+  for (const article of candidate.articles) {
+    const date = article.date;
+    const key = date.year ? [date.year, date.month, date.day].filter(value => value != null)
+      .map(value => String(value).padStart(2, '0')).join('-') : '';
+    if (key && key > today.slice(0, key.length) || date.at != null && date.at > now.getTime() + 300000)
+      throw new Error('A future-dated report cannot enter the observed chronology. The last good record is retained.');
+  }
+}
 function sourceId(article){
   return `article-${encodeURIComponent(article.key)}`;
 }
@@ -89,13 +99,13 @@ function restore(saved){
 }
 function rememberReadingPosition(){
   if (!model) return;
-  const saved = { selectedYear, visibleCount, query, position:position(), scrollY };
+  const saved = { selectedMonth, visibleCount, query, position:position(), scrollY };
   readingPositions.set(location.hash, saved);
 }
 function restoreReadingPosition(){
   const saved = readingPositions.get(location.hash);
   if (!saved || !model) return false;
-  selectedYear = saved.selectedYear; visibleCount = saved.visibleCount; query = search.value = saved.query;
+  selectedMonth = saved.selectedMonth; visibleCount = saved.visibleCount; query = search.value = saved.query;
   renderYear();
   scrollTo({ top:saved.scrollY, behavior:'instant' }); restore(saved.position);
   return true;
@@ -113,6 +123,9 @@ function setRecordStatus(error = ''){
   const stale = Date.now() - Math.min(model.updated, model.fetched) > 36 * 3600000;
   byId('recordDates').textContent = `Snapshot published ${recorded(model.bundle.updated)}. Source collection ${recorded(model.bundle.sourceFetchedAt)}. `
     + `${stale ? 'The recorded collection is stale. ' : ''}Review and verification dates belong to individual sources; this is not a live feed. Author estimates are not observed outcomes.`;
+  const actuals = model.bundle.actualsRefresh;
+  if (actuals) byId('recordDates').append(document.createTextNode(
+    ` Daily NEWS check: ${recorded(actuals.checkedAt)} (${actuals.status}). Last substantive NEWS change: ${recorded(actuals.contentChangedAt)}. ${actuals.note}`));
   byId('recordInfo').hidden = false;
 }
 async function loadRecord(){
@@ -133,6 +146,7 @@ async function loadRecord(){
       const hash = await fingerprint(predictions);
       assertPublishedRecord(signals, predictions, hash, model?.bundle || null);
       const candidate = engine.projectNews(recordsFor(predictions), signals, hash);
+      assertReportedDates(candidate);
       if (model && (candidate.updated < model.updated || candidate.fetched < model.fetched)) throw new Error('An older snapshot was returned.');
       if (model && hash !== model.fingerprint) throw new Error('A new forecast revision is published. Reload to review it; the current record has not changed.');
       observationLastChecked = new Date().toISOString();
@@ -174,6 +188,7 @@ async function loadRecord(){
   return request;
 }
 function applyRecord(candidate, predictions){
+  assertReportedDates(candidate);
   const saved = position();
   const prior = model;
   const newsChanged = !prior || JSON.stringify([prior.bundle.embeds, prior.bundle.context, prior.bundle.uncited])
@@ -183,22 +198,14 @@ function applyRecord(candidate, predictions){
   observationLastChecked = new Date().toISOString();
   updateExploreSnapshot();
   if (saved.id) {
-    const articles = engine.selectArticles(model.articles, { order:'oldest', query }).filter(article => article.date.year === selectedYear);
-    const index = articles.findIndex(article => sourceId(article) === saved.id);
-    if (index >= 0) visibleCount = Math.ceil((index + 1) / 6) * 6;
+    const article = model.articles.find(item => sourceId(item) === saved.id);
+    const row = model.records.find(item => item.href.slice(1) === saved.id);
+    const key = article ? reportMonth(article) : row ? forecastMonth(row) : null;
+    if (key) visibleCount = Math.max(visibleCount, chronologyMonths().indexOf(key) + 1);
   }
   byId('refreshRecord').textContent = 'Check published updates';
   byId('openTimeline').hidden = true;
   document.querySelector('.timeline-toolbar').hidden = false;
-  if (!prior) {
-    const rail = byId('yearRail');
-    rail.replaceChildren();
-    for (const year of predictions.years.filter(row => row.year >= 2026)) {
-      const item = link(String(year.year), `#year-${year.year}`);
-      item.dataset.year = String(year.year);
-      rail.append(item);
-    }
-  }
   if (newsChanged) { renderYear(); renderEarlier(); renderHorizons(); }
   else document.querySelectorAll('.forecast-dossier[open] [data-forecast-dossier]').forEach(host => {
     const row = forecastRecords().find(item => item.id === host.dataset.forecastDossier);
@@ -212,11 +219,16 @@ function applyRecord(candidate, predictions){
 }
 function renderProvenance(connection){
   const details = node('details', 'source-provenance');
-  details.append(node('summary', '', 'Source record & limits'));
+  const health = connection.health, lastGood = health?.status === 'last-good';
+  details.append(node('summary', '', lastGood ? `Source record & limits: ${health.label}` : 'Source record & limits'));
   details.append(node('p', '', `${connection.channel === 'context' ? 'Dated background, not current evidence' : 'Cited in this snapshot, not a freshness claim'}. ${typeLabels[connection.type]}. NEWS source quality: ${qualityLabel(connection.quality)}.`));
   details.append(node('p', '', `Mapping reviewed: ${recorded(connection.reviewedAt)}. Recorded verification: ${recorded(connection.verifiedAt)}. Retrieved: ${recorded(connection.retrievedAt)}.`));
-  const health = connection.health;
-  details.append(node('p', '', health
+  if (lastGood) {
+    let until;
+    try { until = recorded(health.retainedUntil); } catch { until = 'not recorded'; }
+    details.append(node('p', 'dossier-warning', `${health.label}: ${health.reason}. Last verified ${recorded(health.lastVerifiedAt)}; recheck attempted ${recorded(health.lastCheckedAt)}. Retained unchanged as last-good until ${until}, not re-verified.`));
+  }
+  else details.append(node('p', '', health
     ? `NEWS health: ${health.status}. Checked ${recorded(health.lastCheckedAt)}; verified ${recorded(health.lastVerifiedAt)}.`
     : 'Current health is not recorded in this NEWS record. Checks from the separate research-reference layer are not substituted.'));
   details.append(node('p', '', `Reviewed source text SHA-256: ${connection.textSha256}.`));
@@ -289,7 +301,10 @@ function renderForecast(row){
   const details = node('details', 'forecast-card');
   details.id = row.href.slice(1);
   details.tabIndex = -1;
-  const summary = node('summary', '', row.title);
+  const summary = node('summary');
+  const timing = !row.id.startsWith('horizon-') && estimatedTiming(row.data, Number(row.timing));
+  if (timing) summary.append(node('span', 'month-label', `${timing.label} ${timing.bandText} / Forecast`));
+  summary.append(node('span', 'forecast-title', row.title));
   details.append(summary);
   details.addEventListener('toggle', () => {
     if (!details.open || details.dataset.rendered) return;
@@ -314,7 +329,7 @@ function renderForecast(row){
       if (row.data.mBasis) body.append(node('p', '', row.data.mBasis));
     }
     const related = relatedArticles(row.id), sources = node('ul', 'forecast-sources');
-    body.append(node('p', '', related.length ? 'Read the connected reporting in its actual publication year:' : 'No reviewed NEWS article is currently connected. This is not evidence that the forecast has occurred.'));
+    body.append(node('p', '', related.length ? 'Read the connected reporting in its actual publication month:' : 'No reviewed NEWS article is currently connected. This is not evidence that the forecast has occurred.'));
     for (const article of related) {
       const item = node('li');
       item.append(link(`${dateLabel(article.date)} · ${article.title}`, `#${sourceId(article)}`));
@@ -325,77 +340,93 @@ function renderForecast(row){
   });
   return details;
 }
+function forecastMonth(row){
+  return /^\d{4}$/.test(row.timing) && row.data.mPrecision === 'month'
+    && Number.isInteger(row.data.m) && row.data.m >= 1 && row.data.m <= 12
+    ? `${row.timing}-${String(row.data.m).padStart(2, '0')}` : null;
+}
+function reportMonth(article){
+  return article.date.year && article.date.month
+    ? `${article.date.year}-${String(article.date.month).padStart(2, '0')}` : null;
+}
+function monthTitle(key){
+  return monthFormat.format(new Date(`${key}-01T12:00:00Z`));
+}
+function chronologyMonths(){
+  const keys = new Set(['2026-01']);
+  const current = new Date();
+  const limit = Math.max(0, (current.getUTCFullYear() - 2026) * 12 + current.getUTCMonth());
+  for (let offset = 0; offset <= Math.min(limit, 179); offset++)
+    keys.add(`${2026 + Math.floor(offset / 12)}-${String(offset % 12 + 1).padStart(2, '0')}`);
+  for (const article of model.articles) {
+    const key = reportMonth(article);
+    if (key && key >= '2026-01') keys.add(key);
+  }
+  for (const row of model.records) {
+    const key = forecastMonth(row);
+    if (key && key >= '2026-01') keys.add(key);
+  }
+  return [...keys].sort();
+}
 function renderYear(){
   if (!model) return;
-  const year = forecastData.years.find(row => row.year === selectedYear);
-  if (!year) return;
-  const heading = node('div', 'year-heading');
-  heading.id = `year-${selectedYear}`; heading.tabIndex = -1;
-  const outlook = node('p');
-  outlook.append(node('strong', 'outlook-label', 'Peter’s outlook for this year'), document.createTextNode(year.summary));
-  heading.append(node('h3', '', String(selectedYear)), outlook);
-  const columns = node('div', 'year-columns');
-  const reports = node('section');
-  reports.append(node('h4', 'column-label', 'The reported record / publication order'));
-  const all = engine.selectArticles(model.articles, { order:'oldest', query }).filter(article => article.date.year === selectedYear);
-  visibleCount = Math.max(6, Math.min(visibleCount, Math.ceil(all.length / 6) * 6 || 6));
-  const visible = all.slice(Math.max(0, visibleCount - 6), visibleCount);
-  let month = '';
-  for (const article of visible) {
-    if (article.date.group !== month) {
-      month = article.date.group;
-      reports.append(node('p', 'month-label', month));
-    }
-    reports.append(renderStory(article));
+  const openIds = [...document.querySelectorAll('#yearContent details[open][id], #notMonthDatedForecasts details[open][id]')].map(item => item.id);
+  const months = chronologyMonths(), articles = engine.selectArticles(model.articles, { order:'oldest', query });
+  const matches = row => !query || row.title.toLowerCase().includes(query.toLowerCase());
+  const filtered = months.filter(key => !query || articles.some(article => reportMonth(article) === key)
+    || model.records.some(row => forecastMonth(row) === key && matches(row)));
+  const jump = node('select');
+  jump.id = 'monthJump'; jump.setAttribute('aria-label', 'Jump to month');
+  for (const key of months) jump.add(new Option(monthTitle(key), key));
+  if (!months.includes(selectedMonth)) selectedMonth = months[0];
+  jump.value = selectedMonth;
+  jump.addEventListener('change', () => navigateSection(`#month-${jump.value}`));
+  byId('yearRail').replaceChildren(jump);
+  const fragment = document.createDocumentFragment();
+  for (const key of filtered.slice(0, visibleCount)) {
+    const section = node('section', 'chronology-month');
+    section.id = `month-${key}`; section.dataset.month = key; section.tabIndex = -1;
+    const heading = node('div', 'year-heading');
+    heading.append(node('h3', '', monthTitle(key)));
+    const reports = node('section');
+    reports.append(node('h4', 'column-label', 'Reported / original publication dates'));
+    const monthArticles = articles.filter(article => reportMonth(article) === key);
+    for (const article of monthArticles) reports.append(renderStory(article));
+    if (!monthArticles.length) reports.append(node('p', 'empty-record', 'No reviewed reporting is recorded for this month in this curated snapshot. This is not a claim that nothing happened.'));
+    const forecasts = node('aside', 'forecast-reading');
+    forecasts.append(node('h4', 'column-label', 'Forecast / authored month estimates'),
+      node('p', '', 'Estimates with uncertainty bands, not observed outcomes. Broader windows are kept in the not-month-dated lane.'));
+    const rows = model.records.filter(row => forecastMonth(row) === key && matches(row));
+    for (const row of rows) forecasts.append(renderForecast(row));
+    if (!rows.length) forecasts.append(node('p', '', 'No matching month-precision forecast. No date has been inferred from a broader timing window.'));
+    const columns = node('div', 'year-columns'); columns.append(reports, forecasts);
+    section.append(heading, columns); fragment.append(section);
   }
-  if (!all.length) reports.append(node('p', 'empty-record', query
-    ? 'No reports match this theme in this year. Clear the search to restore the record.'
-    : 'No reviewed report is published in this year in the loaded record. The milestones shown alongside are forecasts, not future facts.'));
-  if (visibleCount < all.length || visibleCount > 6) {
-    const footer = node('div', 'more-stories');
-    if (visibleCount > 6) footer.append(action('← Previous reports', () => {
-      visibleCount -= 6; renderYear(); byId(`year-${selectedYear}`).focus();
-    }));
-    if (visibleCount < all.length) footer.append(action('Continue through the year →', () => {
-      visibleCount += 6; renderYear();
-      const first = yearHost.querySelector('.story');
-      first.focus({ preventScroll:true }); first.scrollIntoView({ block:'start', behavior:'instant' });
-    }));
-    footer.append(node('span', '', `${Math.max(1, visibleCount - 5)}–${Math.min(visibleCount, all.length)} of ${all.length} reports`));
-    reports.append(footer);
+  if (!filtered.length) fragment.append(node('p', 'empty-record', 'No month-dated entries match. Check broader forecasts below, or reset the search.'));
+  if (visibleCount < filtered.length) {
+    const next = action('Load more months →', () => {
+      const first = filtered[visibleCount]; visibleCount += 6; renderYear();
+      byId(`month-${first}`)?.focus({ preventScroll:true });
+    });
+    next.id = 'loadMoreMonths'; fragment.append(next);
   }
-  const forecasts = node('aside', 'forecast-reading');
-  forecasts.append(node('h4', 'column-label', `Forecasts for ${selectedYear}`), node('p', '', 'Authored milestones, not a record of what has happened. Open a forecast for its estimate, timing and connected reports.'));
-  for (const row of model.records.filter(row => row.timing === String(selectedYear)
-    && (!query || row.title.toLowerCase().includes(query.toLowerCase())))) forecasts.append(renderForecast(row));
-  if (selectedYear > 2026 && !all.length && !query) {
-    columns.classList.add('forecast-year');
-    const note = node('p', 'empty-record', 'No reviewed reports are dated to this year in the loaded record. These are authored forecasts, not future facts.');
-    columns.append(note, forecasts);
-  } else columns.append(reports, forecasts);
-  yearHost.replaceChildren(heading, columns);
-  for (const item of byId('yearRail').querySelectorAll('a')) {
-    if (item.dataset.year === String(selectedYear)) item.setAttribute('aria-current', 'date');
-    else item.removeAttribute('aria-current');
-  }
-  const years = forecastData.years.filter(item => item.year >= 2026).map(item => item.year);
-  document.querySelector('[data-year-step="-1"]').disabled = selectedYear === years[0];
-  document.querySelector('[data-year-step="1"]').disabled = selectedYear === years.at(-1);
-  const current = byId('yearRail').querySelector('[aria-current="date"]');
-  if (current) {
-    const rail = byId('yearRail'), bounds = current.getBoundingClientRect(), viewport = rail.getBoundingClientRect();
-    if (bounds.left < viewport.left || bounds.right > viewport.right)
-      rail.scrollLeft += bounds.left - viewport.left - (viewport.width - bounds.width) / 2;
-  }
-  byId('timelineAnnouncement').textContent = `${selectedYear}. ${all.length} matching reports, in publication order.`;
-  yearHost.dataset.year = String(selectedYear);
+  yearHost.replaceChildren(fragment);
+  const broader = model.records.filter(row => !row.id.startsWith('horizon-') && !forecastMonth(row) && matches(row));
+  byId('notMonthDatedForecasts').replaceChildren(...broader.map(renderForecast));
+  for (const id of openIds) { const element = byId(id); if (element) element.open = true; }
+  byId('notMonthDated').querySelector('summary').textContent = `Not month-dated: ${broader.length} broader forecast windows`;
+  document.querySelector('[data-year-step="-1"]').disabled = selectedMonth === months[0];
+  document.querySelector('[data-year-step="1"]').disabled = selectedMonth === months.at(-1);
+  byId('timelineAnnouncement').textContent = `${Math.min(visibleCount, filtered.length)} of ${filtered.length} months, in chronological order. ${broader.length} broader forecasts remain separately labelled.`;
+  yearHost.dataset.month = selectedMonth;
+  yearHost.dataset.year = selectedMonth.slice(0, 4);
 }
 function renderEarlier(){
   const host = byId('earlierStories');
   host.replaceChildren();
   const render = () => {
     if (!byId('earlierBackground').open || host.childElementCount) return;
-    for (const article of engine.selectArticles(model.articles, { order:'oldest' }).filter(article => article.date.year < 2026 || !article.date.year))
+    for (const article of engine.selectArticles(model.articles, { order:'oldest' }).filter(article => article.date.year < 2026 || !reportMonth(article)))
       host.append(renderStory(article));
   };
   render();
@@ -417,7 +448,7 @@ function revealHash(){
   const hash = location.hash;
   if (/^#chapter-\d+$/.test(hash)) { openReader(Number(hash.slice(9))); return; }
   if (!model) {
-    if (/^#(?:timeline|year-|event-|article-|horizon-|post-superintelligence|news-timeline|signals)/.test(hash)) loadRecord();
+    if (/^#(?:timeline|month-|year-|event-|article-|horizon-|post-superintelligence|news-timeline|signals)/.test(hash)) loadRecord();
     else {
       const section = byId(hash.slice(1));
       if (section && !section.closest('#explore')) {
@@ -429,25 +460,35 @@ function revealHash(){
     return;
   }
   let target;
-  const year = /^#(?:year-|event-)(\d{4})/.exec(hash);
-  if (year) {
-    if (!forecastData.years.some(row => row.year === Number(year[1]))) {
-      byId('timelineAnnouncement').textContent = 'This timeline year is not present in the current forecast.';
-      return;
+  const month = /^#month-(\d{4}-(?:0[1-9]|1[0-2]))$/.exec(hash);
+  const legacyYear = /^#year-(\d{4})$/.exec(hash);
+  const forecast = model.records.find(row => row.href === hash);
+  if (month || legacyYear || forecast && !forecast.id.startsWith('horizon-')) {
+    query = search.value = '';
+    const months = chronologyMonths();
+    const key = month?.[1] || (forecast ? forecastMonth(forecast) : months.find(key => key.startsWith(legacyYear[1])));
+    if (key && months.includes(key)) {
+      selectedMonth = key; visibleCount = Math.max(visibleCount, months.indexOf(key) + 1); renderYear();
+      target = forecast ? byId(forecast.href.slice(1)) : byId(`month-${key}`);
+    } else {
+      renderYear(); byId('notMonthDated').open = true;
+      target = forecast ? byId(forecast.href.slice(1))
+        : [...byId('notMonthDatedForecasts').children].find(card => card.id.startsWith(`event-${legacyYear?.[1]}-`));
+      if (!target) {
+        byId('timelineAnnouncement').textContent = 'No recorded month or authored forecast matches this link. No date has been inferred.';
+        return;
+      }
     }
-    selectedYear = Number(year[1]); query = search.value = ''; visibleCount = 6; renderYear();
-    target = byId(hash.slice(1));
   } else if (hash.startsWith('#article-')) {
     const article = model.articles.find(item => `#${sourceId(item)}` === hash);
     if (!article) return;
-    if (article.date.year >= 2026) {
-      selectedYear = article.date.year; query = search.value = '';
-      const articles = engine.selectArticles(model.articles, { order:'oldest' }).filter(item => item.date.year === selectedYear);
-      visibleCount = Math.ceil((articles.indexOf(article) + 1) / 6) * 6; renderYear();
+    if (article.date.year >= 2026 && reportMonth(article)) {
+      selectedMonth = reportMonth(article); query = search.value = '';
+      visibleCount = Math.max(visibleCount, chronologyMonths().indexOf(selectedMonth) + 1); renderYear();
     } else {
       byId('earlierBackground').open = true;
       const host = byId('earlierStories');
-      if (!host.childElementCount) for (const item of engine.selectArticles(model.articles, { order:'oldest' }).filter(item => item.date.year < 2026 || !item.date.year)) host.append(renderStory(item));
+      if (!host.childElementCount) for (const item of engine.selectArticles(model.articles, { order:'oldest' }).filter(item => item.date.year < 2026 || !reportMonth(item))) host.append(renderStory(item));
     }
     target = byId(sourceId(article));
     target.querySelector('details').open = true;
@@ -466,15 +507,14 @@ function revealHash(){
 }
 byId('openTimeline').addEventListener('click', loadRecord);
 byId('newsReset').addEventListener('click', () => {
-  query = search.value = ''; selectedYear = 2026; visibleCount = 6;
+  query = search.value = ''; selectedMonth = '2026-01'; visibleCount = 6;
   renderYear(); search.focus({ preventScroll:true });
-  byId('timelineAnnouncement').textContent = 'Timeline reset to 2026. All themes are shown.';
+  byId('timelineAnnouncement').textContent = 'Timeline reset to January 2026. All themes are shown.';
 });
 document.querySelectorAll('[data-year-step]').forEach(button => button.addEventListener('click', () => {
   if (!forecastData) return;
-  const years = forecastData.years.filter(year => year.year >= 2026).map(year => year.year);
-  const index = years.indexOf(selectedYear) + Number(button.dataset.yearStep);
-  if (index >= 0 && index < years.length) navigateSection(`#year-${years[index]}`);
+  const months = chronologyMonths(), index = months.indexOf(selectedMonth) + Number(button.dataset.yearStep);
+  if (index >= 0 && index < months.length) navigateSection(`#month-${months[index]}`);
 }));
 byId('refreshRecord').addEventListener('click', () => pending ? applyRecord(pending.candidate, pending.predictions) : loadRecord());
 search.addEventListener('input', () => { query = search.value; visibleCount = 6; renderYear(); });
@@ -2126,12 +2166,19 @@ function renderRevisionNotes(){
   setText('changedCount', changes.length);
   for (const row of changes) host.append(link(row.title, row.href), node('p', 'mission-help', row.data.changeNote));
 }
+function quietNewsLabel(data, format = recorded){
+  if (Object.keys(data.embeds).length) return '';
+  const last = Object.values(data.context.items).map(row => row.publishedAt)
+    .filter(value => Number.isFinite(Date.parse(value))).sort((a, b) => Date.parse(b) - Date.parse(a))[0];
+  return `No news from the last ${data.context.windowDays} days is linked yet — last linked news: ${last ? format(last) : 'not recorded'}.`;
+}
 function renderSourceOverview(){
   const host = byId('sourceOverview');
   host.replaceChildren();
   if (!model) { host.append(node('p', '', 'Source coverage is unavailable. No successful checks are inferred.')); return; }
-  const data = model.bundle, refs = data.referencePoints?.coverage;
+  const data = model.bundle, refs = data.referencePoints?.coverage, quiet = quietNewsLabel(data);
   host.append(node('p', '', `NEWS: ${Object.keys(data.embeds).length} cited forecast mappings, ${Object.keys(data.context.items).length} dated-context mappings and ${Object.keys(data.uncited.items).length} explicit gaps. The chronology deduplicates their articles.`));
+  if (quiet) host.append(node('p', 'news-empty-current', quiet));
   host.append(node('p', '', refs ? `Research references: ${refs.mapped} forecast mappings / ${refs.sources} canonical sources. Their health checks do not verify the NEWS layer.` : 'Research references are unavailable.'));
   host.append(node('p', '', 'METR is a scoped software-task instrument, not an AGI score. X is a separate discussion supplement, not evidence.'));
 }
@@ -2309,6 +2356,11 @@ function metrDossier(row){
 function discussionDossier(row){
   const layer = model.bundle.xSignals, item = layer?.items?.[row.id];
   const section = dossierSection('X / discussion supplement', 'Posts, quotes and reposts are discussion, not NEWS evidence, research verification or forecast success.');
+  const retained = model.bundle.xSignalsRetention, builtAt = Date.parse(layer?.summary?.builtAt);
+  const staleDays = Math.floor((Date.parse(model.bundle.updated) - builtAt) / 864e5);
+  if (layer && retained?.mode === 'stale-snapshot-retained' && retained.builtAt === layer.summary?.builtAt && typeof retained.note === 'string')
+    section.append(node('p', 'dossier-warning x-stale', retained.note));
+  else if (layer && !(staleDays <= 10)) section.append(node('p', 'dossier-warning x-stale', `Stale X snapshot: assembled ${Number.isFinite(staleDays) ? `${staleDays} days` : 'an unknown time'} before this source snapshot. It is not re-verified and may not reflect later activity.`));
   if (!item) {
     section.append(node('p', '', layer ? 'No matched discussion item is recorded for this forecast in the loaded supplement.' : 'No discussion supplement is available.'));
     return section;

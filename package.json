@@ -18,6 +18,7 @@
                     "refresh:metr":  "node refresh-metr.js",
                     "verify:metr":  "node verify-metr.js",
                     "refresh:references":  "node refresh-reference-points.js --refresh",
+                    "refresh:timeline":  "node refresh-timeline-actuals.js",
                     "verify:references":  "node verify-reference-points.js",
                     "validate":  "node validate-predictions.js",
                     "verify":  "node verify-site.js http://127.0.0.1:8787",

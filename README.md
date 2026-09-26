@@ -397,6 +397,39 @@ Optional `PAP_UI_ARTIFACT_DIR` saves responsive screenshots outside the public t
 
 ### AI scenarios and actual events
 
+Both reader timelines now flow month by month from **January 2026**, rather than
+switching between year views. Reports use original publication dates (the companion
+also retains explicitly documented occurrence dates). Only authored month-precision
+forecasts enter a named month; quarter/half/year estimates remain in the labelled
+**Not month-dated** lane with their original bands. Pre-2026 reports remain Earlier
+background. Existing year, forecast and article links still locate the appropriate
+month or explicitly broader timing lane.
+
+The single daily **07:00 Sydney** actuals automation follows
+[`TIMELINE-DAILY-RUN.md`](TIMELINE-DAILY-RUN.md), not the forecast-reassessment portions
+of `DAILY-RUN.md`. The existing canonical NEWS/reference/METR producers remain the
+source of the homepage. `refresh-timeline-actuals.js --review=ABSOLUTE_REVIEW_JSON`
+reverifies selected existing reviewed NEWS sources and applies separately reviewed
+companion mappings, with page/scenario identity checks, duplicate refusal, correction
+history and last-good retention. It is source-only tooling, not a browser asset or
+a new collector. The contract and helper are mirrored but not served.
+
+Checks and substantive content changes have separate timestamps:
+`signals.actualsRefresh` for canonical NEWS and embedded `actualsCheck` for the
+companion. A no-change check does not redate old facts. Failed runs do not publish
+partial results; the live last-good view marks overdue checks. Original companion
+curation dates remain visible for historical records. The schedule requires the
+local host/automation service to be available; creating it is not a completed run.
+An existing published NEWS item blocked only by a recognised publisher bot challenge
+may be kept for at most 14 days after its last real live verification. It is shown
+as "Couldn't recheck today" (publisher bot protection) with that date, and is never
+counted as re-verified. The rules are in `TIMELINE-DAILY-RUN.md`.
+A quiet fortnight in which every reviewed NEWS mapping has aged into dated context
+publishes as an explicit EMPTY-CURRENT warning (exit 70), never a pass. The homepage
+then shows "No news from the last 14 days is linked yet — last linked news: <date>".
+Empty channels caused by a missing partition, a lost news tally, dropped mappings or
+failed verification still fail. The rules are in `TIMELINE-DAILY-RUN.md`.
+
 `/ai-timeline` (also `ai-timeline.html`) is an independent, self-contained companion to the
 existing site, linked from the homepage and footer. It compares original summaries of
 [AI 2027](https://ai-2027.com/) and [AI 2040](https://ai-2040.com/) with a curated public-source
@@ -420,7 +453,8 @@ as a local HTML file. Source links require internet access. It does not read or 
 
 To revise the snapshot, edit the embedded source, event, and checkpoint records together after
 reading the primary sources; do not advance `reviewedAt` merely because the page was opened.
-Run `node verify-ai-timeline.js` for data, date, source-link, accessibility/interaction, responsive,
+Run `node verify-ai-timeline.js` for monthly grouping, incremental/no-change/failure controls,
+data, date, source-link, accessibility/interaction, responsive,
 and serving checks. Optional `PAP_UI_ARTIFACT_DIR` saves screenshots outside the public tree.
 The page is included explicitly in the existing local-server and deployment allow-lists; the
 verification script is mirrored as tooling, never served. No deployment is performed by the test.

@@ -33,7 +33,8 @@ require('./pipeline-lock').guard('verify-currency');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { fetchArticle, extractArticle, quotePresent, registrableHost, detectBotChallenge, normalizeForQuote } = require('./news-evidence');
+const { fetchArticle, extractArticle, quotePresent, registrableHost, detectBotChallenge, normalizeForQuote,
+  classifyNewsCurrency, NEWS_MAPPINGS } = require('./news-evidence');
 
 const OFFLINE = process.argv.includes('--offline');
 /* The OPERATOR of the demotion predicate is read from refresh-signals.js at L360 so it cannot drift
@@ -1324,7 +1325,18 @@ async function main() {
   const embedIds = signals.embeds && typeof signals.embeds === 'object' ? Object.keys(signals.embeds).length : 0;
   const shut = [];
   if (signals.sourceFresh !== true) shut.push(`sourceFresh is ${JSON.stringify(signals.sourceFresh)}, not true`);
-  if (!embedIds) shut.push('embeds is absent or empty');
+  /* EMPTY-CURRENT MODE (owner-approved 2026-09-26). The reader renders an empty cited channel, so an
+     empty one no longer shuts the gate BY ITSELF — but only when news-evidence.js classifyNewsCurrency()
+     proves window aging alone explains it (complete partition, explicit news tally 0, every reviewed
+     mapping aged into context). That state is an INERT axis, never a PASS; every other empty is SHUT. */
+  const newsCurrency = classifyNewsCurrency(signals, { mappings: NEWS_MAPPINGS, expectedIds: ids });
+  if (!embedIds && newsCurrency.mode === 'aging-empty') {
+    inert('cited NEWS channel (empty-current)', `EMPTY-CURRENT WARNING: no news from the last ${newsCurrency.windowDays} days is linked yet; `
+      + `all ${newsCurrency.aged} reviewed mapping(s) aged into dated context (last linked news ${newsCurrency.lastLinkedNewsAt}). `
+      + 'Publication proceeds with the visible quiet-day label; this is not a verified cited channel');
+  } else if (!embedIds) {
+    shut.push(`embeds is absent or empty and window aging does not explain it (${newsCurrency.problems.join('; ')})`);
+  }
   if (searchIds) shut.push(`${searchIds} search id(s) present`);
   if (shut.length) {
     fail(`render gate SHUT (${shut.join('; ')}): the reader rejects this artefact before committing its coherent source model, so file counts do not establish a rendered currency layer`);

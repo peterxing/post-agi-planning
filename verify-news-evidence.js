@@ -43,12 +43,15 @@ const {
   NEWS_QUALITY_CLASSES,
   NEWS_TRANSPORTS,
   classifyHost,
+  classifyNewsCurrency,
+  defaultNewsMirror,
   extractArticle,
   fetchArticle,
   quotePresent,
   registrableHost,
   sha256,
   verifyNewsSource,
+  verifyNewsSourceAllowingLastGood,
 } = news;
 
 const readJson = file => JSON.parse(fs.readFileSync(path.join(__dirname, file), 'utf8').replace(/^\uFEFF/, ''));
@@ -156,6 +159,13 @@ function auditLedger({ sources, mappings, ceiling, predictionIds, peterApprovals
   return problems;
 }
 
+/* The empty-current verdict ORDER, pure so the fixtures exercise the same rule the run applies: any
+   verification or integrity problem FAILS first; a fault-empty FAILS; only a clean aging-empty WARNS. */
+function emptyCurrentVerdict(problems, newsCurrency) {
+  if (problems.length || newsCurrency.mode === 'fault') return 'FAIL';
+  return newsCurrency.mode === 'aging-empty' ? 'WARN' : 'PASS';
+}
+
 /* ------------------------------------------------------------------ *
  * Proof harness
  * ------------------------------------------------------------------ */
@@ -183,6 +193,8 @@ const PROOF_ROSTER = [
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents',
   'inline-spacing tidy cannot change any quote comparison',
   'reuse ceiling holds against an over-ceiling ledger',
+  'publisher bot protection is a dated last-good warning only for an unchanged, durably verified record',
+  'an empty cited channel is a warning only when window aging explains it',
   'fabricated / non-existent article fails closed',
   'real authoritative article verifies end to end',
   'quote drift fails closed',
@@ -203,6 +215,8 @@ const PROOF_CAPABILITY = {
   'the reviewed host map fills a missing publisher, never overrides a declared one, and never invents': 'publisher attribution',
   'inline-spacing tidy cannot change any quote comparison': 'quote fidelity',
   'reuse ceiling holds against an over-ceiling ledger': 'reuse ceiling',
+  'publisher bot protection is a dated last-good warning only for an unchanged, durably verified record': 'access-challenge last-good bounds',
+  'an empty cited channel is a warning only when window aging explains it': 'empty-current bounds',
   'fabricated / non-existent article fails closed': 'fabrication',
   'real authoritative article verifies end to end': 'live retrieval',
   'quote drift fails closed': 'quote drift',
@@ -486,12 +500,142 @@ async function runProofs(log) {
     ceilingProblems.some(problem => problem.includes(`exceeds reviewed ceiling ${MAX_REVIEWED_REUSE}`)),
     `${ids.length} mappings on one source rejected at ceiling ${MAX_REVIEWED_REUSE}`);
 
-  // Proof 2: a fabricated URL on a real publisher must fail closed.
-  const fabricated = await verifyNewsSource('proof-fabricated', {
-    url: 'https://arstechnica.com/this-article-does-not-exist-verification-probe',
-    resolvedUrl: 'https://arstechnica.com/this-article-does-not-exist-verification-probe',
-    publisher: 'Ars Technica',
-    publisherHost: 'arstechnica.com',
+  /* Proof: access-challenge last-good (owner-approved 2026-09-24). Offline: only the HTTP exchange and
+     the mirror are fixtures; classification, record identity and date arithmetic are production code. */
+  const lgKey = 'proof-last-good';
+  const lgUrl = 'https://example.org/2026/09/verified-story';
+  const lgSource = {
+    url: lgUrl, resolvedUrl: lgUrl, publisher: 'Example Publisher', publisherHost: 'example.org',
+    headline: 'A verified story', publishedAt: '2026-09-01T00:00:00.000Z', publishedAtSource: 'page',
+    retrievedAt: '2026-09-02', sourceQuality: 'primary-news-organization',
+    quote: 'A sufficiently long verbatim supporting sentence used only for the last-good proof.',
+    textSha256: sha256('last-good'),
+  };
+  const lgMappings = { '2027-1': { source: lgKey, reuseFamily: 'proof', evidenceType: 'leading-indicator',
+    rationale: 'last-good proof', reviewedAt: '2026-09-02', lastVerifiedAt: '2026-09-02' } };
+  const lgCommit = 'a'.repeat(40);
+  const lgVerifications = [{ commit: lgCommit, verifiedOn: '2026-09-22', basis: 'fixture' }];
+  const lgMirror = ({ sources = { [lgKey]: lgSource }, mappings = lgMappings, head = null, contains = true,
+    committedOn = '2026-09-22' } = {}) => ({
+    head: () => 'b'.repeat(40), committedOn: () => committedOn, contains: () => contains,
+    news: commit => (commit === lgCommit ? { sources, mappings } : head || { sources, mappings }),
+  });
+  const answer = (status, headers = {}) => async () => ({ ok: true, status, headers, body: '' });
+  const waf = answer(405, { 'x-amzn-waf-action': 'captcha' });
+  const within = Date.parse('2026-09-24T01:00:00Z');
+  let akamaiCalls = 0;
+  const akamai = async () => { akamaiCalls++; return { ok: true, status: 302, headers: { location: '/apology_objects/abuse-detection-apology.html' }, body: '' }; };
+  const lgRun = (overrides = {}) => verifyNewsSourceAllowingLastGood(lgKey, overrides.source || lgSource, {
+    mappings: overrides.mappings || lgMappings, mirror: 'mirror' in overrides ? overrides.mirror : lgMirror(),
+    now: overrides.now || within, verifications: lgVerifications, requestImpl: overrides.request || waf,
+    browserTransport: overrides.browserTransport,
+  });
+  const expectWarn = (result, now) => result.problems.length === 0 && result.lastGood
+    && result.lastGood.status === 'last-good' && result.lastGood.label === "Couldn't recheck today"
+    && result.lastGood.reason === 'publisher bot protection' && result.lastGood.lastVerifiedAt === '2026-09-22'
+    && result.lastGood.lastCheckedAt === new Date(now).toISOString() && result.lastGood.retainedUntil === '2026-10-06';
+  const expectFail = result => result.problems.length > 0 && !result.lastGood;
+  const changedQuote = { ...lgSource, quote: 'A different verbatim supporting sentence that was never verified by the released gate.' };
+  const shortQuote = { ...lgSource, quote: 'Too short to be probative.' };
+  const movedUrl = 'https://example.org/2026/09/moved-story';
+  const lgCases = [
+    ['WAF captcha, unchanged, within 14 days', expectWarn(await lgRun(), within)],
+    ['WAF challenge action', expectWarn(await lgRun({ request: answer(202, { 'x-amzn-waf-action': 'challenge' }) }), within)],
+    ['day 14 (end of 6 Oct UTC)', expectWarn(await lgRun({ now: Date.parse('2026-10-06T23:59:59Z') }), Date.parse('2026-10-06T23:59:59Z'))],
+    ['Akamai apology redirect, not followed', expectWarn(await lgRun({ request: akamai }), within) && akamaiCalls === 1],
+    ['Cloudflare cf-mitigated challenge', expectWarn(await lgRun({ request: answer(403, { 'cf-mitigated': 'challenge' }) }), within)],
+    ['day 15', expectFail(await lgRun({ now: Date.parse('2026-10-07T00:00:00Z') }))],
+    ['plain 405', expectFail(await lgRun({ request: answer(405) }))],
+    ['plain 404', expectFail(await lgRun({ request: answer(404) }))],
+    ['plain 410', expectFail(await lgRun({ request: answer(410) }))],
+    ['plain 503', expectFail(await lgRun({ request: answer(503) }))],
+    ['timeout', expectFail(await lgRun({ request: async () => ({ ok: false, reason: 'timeout after 20000ms', code: 'ETIMEDOUT' }) }))],
+    ['unrecognised WAF action', expectFail(await lgRun({ request: answer(403, { 'x-amzn-waf-action': 'block' }) }))],
+    ['apology redirect to another site', expectFail(await lgRun({ request: async url => (url === lgUrl
+      ? { ok: true, status: 302, headers: { location: 'https://example-not-reviewed.test/apology_objects/abuse-detection-apology.html' }, body: '' }
+      : { ok: true, status: 404, headers: {}, body: '' }) }))],
+    ['challenge on a changed quote', expectFail(await lgRun({ source: changedQuote }))],
+    ['challenge on a changed URL', expectFail(await lgRun({ source: { ...lgSource, url: movedUrl, resolvedUrl: movedUrl } }))],
+    ['challenge on a changed mapping', expectFail(await lgRun({ mappings: { '2027-1': { ...lgMappings['2027-1'], rationale: 'edited' } } }))],
+    ['challenge on a never-verified item', expectFail(await lgRun({ mirror: lgMirror({ sources: {}, mappings: {} }) }))],
+    ['changed in the published head after verification', expectFail(await lgRun({ mirror: lgMirror({ head: { sources: { [lgKey]: changedQuote }, mappings: lgMappings } }) }))],
+    ['record with another problem', expectFail(await lgRun({ source: shortQuote, mirror: lgMirror({ sources: { [lgKey]: shortQuote } }) }))],
+    ['mirror unavailable', expectFail(await lgRun({ mirror: null }))],
+    ['verification commit not published', expectFail(await lgRun({ mirror: lgMirror({ contains: false }) }))],
+    ['commit day differs from recorded day', expectFail(await lgRun({ mirror: lgMirror({ committedOn: '2026-09-21' }) }))],
+    ['verification dated in the future', expectFail(await lgRun({ now: Date.parse('2026-09-21T12:00:00Z') }))],
+    ['browser transport', expectFail(await lgRun({ source: { ...lgSource, transport: 'browser' }, browserTransport: async () => ({
+      ok: false, reason: 'HTTP 405', challenge: { vendor: 'aws-waf', status: 405, marker: 'x-amzn-waf-action: captcha' } }) }))],
+  ];
+  const lgFailed = lgCases.filter(([, passed]) => !passed).map(([name]) => name);
+  record('publisher bot protection is a dated last-good warning only for an unchanged, durably verified record',
+    lgFailed.length === 0,
+    lgFailed.length ? `unexpected: ${lgFailed.join('; ')}` : `${lgCases.length}/${lgCases.length} controls (5 WARN, ${lgCases.length - 5} FAIL)`);
+
+  /* Proof: honest empty-current mode (owner-approved 2026-09-26). Offline and synthetic; the classifier,
+     the verdict order and the public label are the production code (the label is read out of app.js). */
+  const ecIds = new Set(['2027-1', '2027-2', '2027-3']);
+  const ecMappings = { '2027-1': { source: 'aged-a' }, '2027-2': { source: 'aged-b' } };
+  const ecRow = (source, publishedAt, ageDays) => ({ id: `news:${source}`, channel: 'context', evidenceOwner: 'news', publishedAt, ageDays });
+  const ecBase = () => ({
+    updated: '2026-10-01T00:00:00.000Z', sourceFresh: true, embeds: {},
+    coverage: { complete: true, cited: 0, context: 2, uncited: 1, searches: 0, total: 3, kept: 3, dropped: 0, byEvidenceOwner: { news: 0 } },
+    context: { windowDays: 14, count: 2, items: {
+      '2027-1': ecRow('aged-a', '2026-09-10T08:00:00.000Z', 21), '2027-2': ecRow('aged-b', '2026-09-15T00:00:00.000Z', 16) } },
+    uncited: { windowDays: 14, count: 1, items: { '2027-3': { id: '2027-3' } } },
+  });
+  const ec = (mutate = () => {}, mappings = ecMappings) => {
+    const fixture = ecBase(); mutate(fixture);
+    return classifyNewsCurrency(fixture, { mappings, expectedIds: ecIds });
+  };
+  const toUncited = (s, id) => { delete s.context.items[id]; s.context.count--; s.coverage.context--;
+    s.uncited.items[id] = { id }; s.uncited.count++; s.coverage.uncited++; };
+  const ecFault = result => result.mode === 'fault' && result.problems.length > 0;
+  const quietSource = (fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')
+    .match(/function quietNewsLabel\(data, format = recorded\)\{[\s\S]*?\n\}/) || [])[0];
+  // eslint-disable-next-line no-new-func
+  const quietLabel = quietSource ? new Function('recorded', `${quietSource}; return quietNewsLabel;`)(value => value) : null;
+  const warm = ec();
+  const ecCases = [
+    ['aging-empty is a WARNING with its label', warm.mode === 'aging-empty' && warm.aged === 2
+      && warm.lastLinkedNewsAt === '2026-09-15T00:00:00.000Z' && emptyCurrentVerdict([], warm) === 'WARN'
+      && !!quietLabel && quietLabel(ecBase()) === 'No news from the last 14 days is linked yet — last linked news: 2026-09-15T00:00:00.000Z.'],
+    ['normal cited path unchanged, no label', (() => { const cited = ec(s => { s.embeds = { '2027-1': {} }; });
+      return cited.mode === 'cited' && !cited.problems.length && emptyCurrentVerdict([], cited) === 'PASS'
+        && !!quietLabel && quietLabel({ ...ecBase(), embeds: { '2027-1': {} } }) === ''; })()],
+    ['verification failure on an aged-empty day', emptyCurrentVerdict(['live fetch failed'], warm) === 'FAIL'],
+    ['embeds missing', ecFault(ec(s => { delete s.embeds; }))],
+    ['embeds malformed', ecFault(ec(s => { s.embeds = []; }))],
+    ['context partition missing', ecFault(ec(s => { delete s.context; }))],
+    ['uncited partition corrupt', ecFault(ec(s => { s.uncited.items = null; }))],
+    ['news tally absent', ecFault(ec(s => { delete s.coverage.byEvidenceOwner.news; }))],
+    ['news tally nonzero', ecFault(ec(s => { s.coverage.byEvidenceOwner.news = 1; }))],
+    ['coverage incomplete', ecFault(ec(s => { s.coverage.complete = false; }))],
+    ['stale build', ecFault(ec(s => { s.sourceFresh = false; }))],
+    ['search ids present', ecFault(ec(s => { s.search = { '2027-3': {} }; }))],
+    ['population dropped', ecFault(ec(s => { s.coverage.dropped = 1; s.coverage.kept = 2; }))],
+    ['mapping dropped to uncited', ecFault(ec(s => toUncited(s, '2027-2')))],
+    ['forecast unaccounted', ecFault(ec(s => { delete s.uncited.items['2027-3']; s.uncited.count = 0; s.coverage.uncited = 0; }))],
+    ['row still inside the window', ecFault(ec(s => { s.context.items['2027-2'] = ecRow('aged-b', '2026-09-28T00:00:00.000Z', 3); }))],
+    ['forged age on a recent row', ecFault(ec(s => { s.context.items['2027-2'] = ecRow('aged-b', '2026-09-28T00:00:00.000Z', 16); }))],
+    ['future-dated row', ecFault(ec(s => { s.context.items['2027-2'] = ecRow('aged-b', '2026-10-05T00:00:00.000Z', 16); }))],
+    ['row from another source', ecFault(ec(s => { s.context.items['2027-2'] = ecRow('other', '2026-09-15T00:00:00.000Z', 16); }))],
+    ['unreviewed context row', ecFault(ec(s => { delete s.uncited.items['2027-3']; s.uncited.count = 0; s.coverage.uncited = 0;
+      s.context.items['2027-3'] = ecRow('unreviewed', '2026-09-01T00:00:00.000Z', 30); s.context.count = 3; s.coverage.context = 3; }))],
+    ['id in both context and uncited', ecFault(ec(s => { s.uncited.items['2027-1'] = { id: '2027-1' }; s.uncited.count = 2; s.coverage.uncited = 2; }))],
+    ['partition count disagrees', ecFault(ec(s => { s.context.count = 3; }))],
+    ['no reviewed mapping at all', ecFault(ec(s => { toUncited(s, '2027-1'); toUncited(s, '2027-2'); }, {}))],
+  ];
+  const ecFailed = ecCases.filter(([, passed]) => !passed).map(([name]) => name);
+  record('an empty cited channel is a warning only when window aging explains it',
+    ecFailed.length === 0,
+    ecFailed.length ? `unexpected: ${ecFailed.join('; ')}` : `${ecCases.length}/${ecCases.length} controls (1 WARN, 1 cited PASS, ${ecCases.length - 2} FAIL)`);
+
+  /* Proof 2: a fabricated URL on a real publisher must fail closed ON THAT PUBLISHER'S OWN ANSWER. A bot
+     challenge proves nothing about a missing article, so a challenged probe is repeated on the host that
+     has just served the real proof article; it must also never qualify for last-good retention. */
+  const fabricatedSource = (url, publisher, publisherHost) => ({
+    url, resolvedUrl: url, publisher, publisherHost,
     headline: 'An article that was never published',
     publishedAt: '2026-01-01T00:00:00.000Z',
     publishedAtSource: 'page',
@@ -500,9 +644,20 @@ async function runProofs(log) {
     quote: 'A fabricated sentence that no real article on this publisher has ever contained anywhere.',
     textSha256: sha256('fabricated'),
   });
-  const fabricatedFailed = fabricated.problems.some(problem => /live fetch failed|HTTP 4\d\d/.test(problem));
-  record('fabricated / non-existent article fails closed', fabricatedFailed,
-    fabricated.problems[0] || 'no problem reported');
+  const proofMirror = defaultNewsMirror();
+  const fabricated = await verifyNewsSourceAllowingLastGood('proof-fabricated', fabricatedSource(
+    'https://arstechnica.com/this-article-does-not-exist-verification-probe', 'Ars Technica', 'arstechnica.com'),
+  { mirror: proofMirror });
+  let fabricatedChallenge = null;
+  if (fabricated.fetched && fabricated.fetched.challenge) {
+    fabricatedChallenge = `arstechnica.com answered with publisher bot protection (${fabricated.fetched.challenge.marker}), `
+      + `which proves nothing about a missing article; ${fabricated.lastGood ? 'IT WAS RETAINED AS LAST-GOOD' : 'last-good refused it'}`;
+    if (fabricated.lastGood) record('fabricated / non-existent article fails closed', false, fabricatedChallenge);
+  } else {
+    record('fabricated / non-existent article fails closed',
+      !fabricated.lastGood && fabricated.problems.some(problem => /live fetch failed|HTTP 4\d\d/.test(problem)),
+      fabricated.problems[0] || 'no problem reported');
+  }
 
   // The live-retrieval and drift proofs need a real, currently published article.
   const discovered = await discoverProofArticle();
@@ -540,6 +695,17 @@ async function runProofs(log) {
   record('real authoritative article verifies end to end', live.problems.length === 0,
     `${reviewed.publisher} · ${reviewed.publishedAt.slice(0, 10)} · ${reviewed.headline.slice(0, 60)}`
     + (live.problems.length ? ` :: ${live.problems.join('; ')}` : ''));
+
+  if (fabricatedChallenge && !fabricated.lastGood) {
+    const probe = new URL('/this-article-does-not-exist-verification-probe', discovered.url).toString();
+    const retry = await verifyNewsSourceAllowingLastGood('proof-fabricated',
+      fabricatedSource(probe, reviewed.publisher, reviewed.publisherHost), { mirror: proofMirror });
+    const ownAnswer = !(retry.fetched && retry.fetched.challenge) && !retry.lastGood
+      && retry.problems.some(problem => /HTTP 4\d\d|headline|quote|publisher|publication date|resolved URL/.test(problem));
+    record('fabricated / non-existent article fails closed', ownAnswer,
+      `${fabricatedChallenge}; repeated on ${new URL(probe).hostname}, which just served the real proof article: `
+      + (retry.problems[0] || 'no problem reported'));
+  }
 
   const drifted = await verifyNewsSource('proof-quote-drift', {
     ...reviewed,
@@ -701,6 +867,15 @@ if (process.argv.includes('--academic-dates-only')) {
      with the tally deleted AND no news embeds it reads 0 !== 0 and passes vacuously, on a payload
      that has lost its evidence accounting entirely. The tally must be PRESENT and numeric. */
   const owners = (signals.coverage && signals.coverage.byEvidenceOwner) || {};
+  /* EMPTY-CURRENT MODE (owner-approved 2026-09-26): an empty cited channel is a WARNING only when window
+     aging alone explains it; every other empty is a FAULT. A non-empty channel is untouched. */
+  const newsCurrency = classifyNewsCurrency(signals, { mappings: NEWS_MAPPINGS, expectedIds });
+  if (newsCurrency.mode === 'fault') {
+    problems.push(...newsCurrency.problems.map(problem => `empty cited NEWS channel is not explained by window aging: ${problem}`));
+  } else if (newsCurrency.mode === 'aging-empty') {
+    log(`  EMPTY-CURRENT WARNING — no news from the last ${newsCurrency.windowDays} days is linked yet; all `
+      + `${newsCurrency.aged} reviewed mapping(s) aged into dated context; last linked news ${newsCurrency.lastLinkedNewsAt}`);
+  }
   if (!Number.isFinite(Number(owners.news))) {
     problems.push('coverage.byEvidenceOwner.news is missing or non-numeric, so the news tally '
       + `cannot be compared against the ${publishedNews.length} published news embeds`);
@@ -724,11 +899,20 @@ if (process.argv.includes('--academic-dates-only')) {
       + 'on 2026-08-13 and must be absent. A nonzero count means an X mapping was reinstated.');
   }
 
-  // Live re-verification of every reviewed news source before publish.
+  // Live re-verification of every reviewed news source before publish. A positively identified
+  // publisher bot challenge on an unchanged, durably verified record is a dated last-good WARNING.
+  const liveMirror = defaultNewsMirror();
+  const lastGood = [];
   for (const [key, source] of Object.entries(NEWS_SOURCES)) {
-    const result = await verifyNewsSource(key, source).catch(error => ({ problems: [`${key}: ${error.message}`] }));
+    const result = await verifyNewsSourceAllowingLastGood(key, source, { mirror: liveMirror })
+      .catch(error => ({ problems: [`${key}: ${error.message}`] }));
     problems.push(...result.problems);
-    if (!result.problems.length) {
+    if (result.lastGood) {
+      lastGood.push({ key, ...result.lastGood });
+      log(`  LAST-GOOD WARNING ${key} — ${result.lastGood.label}: ${result.lastGood.reason} (${result.lastGood.challenge}); `
+        + `last verified ${result.lastGood.lastVerifiedAt} (${result.lastGood.verifiedBy.slice(0, 12)}); `
+        + `retained until ${result.lastGood.retainedUntil}; not verified this run`);
+    } else if (!result.problems.length) {
       log(`  live OK ${key} — ${source.publisher} · ${String(source.publishedAt).slice(0, 10)}${result.textDrift ? ' (boilerplate text drift; headline, date and quote unchanged)' : ''}`);
     }
   }
@@ -758,13 +942,41 @@ if (process.argv.includes('--academic-dates-only')) {
     problems.forEach(problem => console.log(`  - ${problem}`));
     process.exit(1);
   }
-  const state = mappingIds.length
-    ? `${mappingIds.length} reviewed news mapping(s) are live, quoted and unchanged`
-    : 'no NEWS mapping was checked; this establishes no reviewed evidence';
+  const lastGoodKeys = new Set(lastGood.map(item => item.key));
+  const retainedMappings = mappingIds.filter(id => lastGoodKeys.has(NEWS_MAPPINGS[id].source)).length;
+  const state = !mappingIds.length
+    ? 'no NEWS mapping was checked; this establishes no reviewed evidence'
+    : retainedMappings
+      ? `${mappingIds.length - retainedMappings} of ${mappingIds.length} reviewed news mapping(s) are live, quoted and `
+        + `unchanged; ${retainedMappings} rest on ${lastGood.length} source(s) that couldn't be rechecked today `
+        + '(publisher bot protection) and are LAST-GOOD WARNINGS, not verified this run'
+      : `${mappingIds.length} reviewed news mapping(s) are live, quoted and unchanged`;
   /* Assembled from the proofs that actually ran and passed, never written by hand. */
   const proven = proofs.results
     .filter(proof => proof.passed && PROOF_CAPABILITY[proof.name])
     .map(proof => PROOF_CAPABILITY[proof.name]);
+  if (emptyCurrentVerdict(problems, newsCurrency) === 'WARN' && !notExercised.length) {
+    /* Never a PASS: nothing is cited this run. Same passed-but-inert shape, so a quiet day may publish
+       with its visible label while every fault-empty case above has already failed. */
+    console.log(`RESULT: PASSED BUT INERT — EMPTY-CURRENT WARNING: no news from the last ${newsCurrency.windowDays} days `
+      + `is linked yet (last linked news ${newsCurrency.lastLinkedNewsAt}); ${state}; partition complete and every `
+      + 'reviewed mapping accounted for as aged context.');
+    lastGood.forEach(item => console.log(`  - couldn't recheck today: ${item.key} — ${item.reason} (${item.challenge}); `
+      + `last verified ${item.lastVerifiedAt}; retained until ${item.retainedUntil}`));
+    console.log(`  proven this run: ${proven.length ? proven.join(', ') : 'nothing'} `
+      + `(${proofs.results.length}/${PROOF_ROSTER.length} proofs exercised).`);
+    process.exit(70);
+  }
+  if (lastGood.length && !notExercised.length) {
+    /* A last-good warning is never a PASS: those sources were not verified on this run. It is the same
+       passed-but-inert shape as below, so publication may proceed with the warning carried visibly. */
+    console.log(`RESULT: PASSED BUT INERT — ${state}:`);
+    lastGood.forEach(item => console.log(`  - couldn't recheck today: ${item.key} — ${item.reason} (${item.challenge}); `
+      + `last verified ${item.lastVerifiedAt}; retained until ${item.retainedUntil}`));
+    console.log(`  proven this run: ${proven.length ? proven.join(', ') : 'nothing'} `
+      + `(${proofs.results.length}/${PROOF_ROSTER.length} proofs exercised).`);
+    process.exit(70);
+  }
   if (notExercised.length) {
     /* PASSED BUT INERT, the exit-70 shape this tree already uses for the currency gate: nothing
        failed, and one or more axes verified NOTHING. A total feed outage is a network fault, not an
@@ -776,6 +988,12 @@ if (process.argv.includes('--academic-dates-only')) {
       + `${notExercised.length} of ${PROOF_ROSTER.length} proof(s) were NOT EXERCISED on this run, `
       + 'so it does not establish them:');
     notExercised.forEach(name => console.log(`  - not exercised: ${name}`));
+    if (newsCurrency.mode === 'aging-empty') {
+      console.log(`  - EMPTY-CURRENT WARNING: no news from the last ${newsCurrency.windowDays} days is linked yet `
+        + `(last linked news ${newsCurrency.lastLinkedNewsAt})`);
+    }
+    lastGood.forEach(item => console.log(`  - couldn't recheck today: ${item.key} — ${item.reason} (${item.challenge}); `
+      + `last verified ${item.lastVerifiedAt}; retained until ${item.retainedUntil}`));
     console.log(`  proven this run: ${proven.length ? proven.join(', ') : 'nothing'}.`);
     /* `infrastructure` had 0 consumers tree-wide: the reason was published and read by nothing, so
        the exit code carried none of it. It is consumed HERE rather than assumed, because the roster
