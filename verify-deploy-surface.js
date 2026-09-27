@@ -71,6 +71,9 @@ const PUBLIC_SURFACE = [
   
   
   'ai-timeline.html', 'news-timeline.js',
+  // Openly licensed, credited report photos (PHOTO_LIBRARY in app.js).
+  'photo-berlaymont.webp', 'photo-datacenter.webp', 'photo-ebola.webp', 'photo-fda-building.webp',
+  'photo-iss-arrays.webp', 'photo-pylons.webp', 'photo-robonaut.webp', 'photo-wafer.webp',
 ];
 
 // Uploaded so Vercel can read it as configuration, but consumed rather than
@@ -96,6 +99,8 @@ const ALLOWED_TRAILING_DENIES = new Set(['.env*', '.vercel', '.pipeline.lock']);
 const ALLOWED_EGRESS_HOSTS = new Set([
   // local verification and the two production domains
   '127.0.0.1', 'peterxing.com', 'post-agi-planning.vercel.app',
+  // Reviewed 2026-09-26: credit and licence links beside the self-hosted report photos. Never fetched.
+  'commons.wikimedia.org', 'creativecommons.org',
   // Reviewed 2026-09-05: first-party benchmark measurements, never news citations.
   'metr.org',
   // Reviewed reference instruments and primary publications, not new browser egress.

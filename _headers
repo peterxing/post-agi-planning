@@ -8,6 +8,8 @@
   Cache-Control: public, max-age=300, must-revalidate
 /styles.css
   Cache-Control: public, max-age=300, must-revalidate
+/photo-*.webp
+  Cache-Control: public, max-age=300, must-revalidate
 /game-content.json
   Cache-Control: no-store, max-age=0, must-revalidate
 /game

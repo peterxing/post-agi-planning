@@ -351,7 +351,7 @@ if (/git add -A/.test(publisherSource)
   if(repeated>explored.nodes+15||repeated>6550)problems.push('Repeated Explore mounts grow the retained DOM.');
   const allNames=['index.html','app.js','styles.css','news-timeline.js','ai-timeline.html',
     ...JSON.parse(fs.readFileSync(path.join(__dirname,'game-policy.json'),'utf8')).publicFiles,
-    'predictions.json','signals.json','author.json'];
+    'predictions.json','signals.json','author.json',...fs.readdirSync(__dirname).filter(name=>/^photo-[a-z0-9-]+\.webp$/.test(name)).sort()];
   const declared=[...new Set(allNames)].map(name=>{const bytes=fs.readFileSync(path.join(__dirname,name));return{name,bytes:bytes.length,gzip6:require('node:zlib').gzipSync(bytes,{level:6}).length};});
   console.log(JSON.stringify({openedReadyMs,optionalModuleBytes:moduleBytes.length,optionalGzip,explored,repeated,allDeclaredAssets:declared,
     cumulativeDeclaredBytes:declared.reduce((sum,row)=>sum+row.bytes,0),cumulativeDeclaredGzip:declared.reduce((sum,row)=>sum+row.gzip6,0)}));

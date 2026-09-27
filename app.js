@@ -27,6 +27,159 @@ function action(text, handler){
   element.addEventListener('click', handler);
   return element;
 }
+/* Original topic illustrations, not photographs of any reported event. One shared rule list keeps
+   the choice deterministic; the first matching text wins and the record's own tag/domain is the
+   fallback. The companion page carries the same list and sprite. */
+const ILLUSTRATION_RULES = [
+  ['robot', /humanoid|robot|optimus|\bdigit\b|welder/], ['brain', /brain|\bbci\b|neural interface|intracortical|neuro|motor imagery/],
+  ['shield', /safety|misalign|security|cyber|risk|interpretab|\blie|rogue|\bhack|breach|safeguard|welfare|collu|escape|incident|evaluat|assessment|alignment/],
+  ['health', /drug|vaccine|ebola|health|medic|clinic|disease|longevity|\baging|ageing|enzyme|\bbio|protein|\bdna\b|cancer|patient|lifespan/],
+  ['orbit', /orbit|\bspace|satellite|lunar|\bmars\b/], ['power', /\bpower\b|energy|\bgrid\b|electric|nuclear|fusion|solar|\bvdc\b/],
+  ['datacenter', /data ?cent|stargate|hyperscal/], ['chip', /\bchips?\b|semiconductor|\bgpus?\b|compute|nvidia|tsmc|export control|rare earth/],
+  ['code', /\bcod(e|ing)\b|software|programm|developer/], ['agent', /\bagents?\b|agentic|computer use|computer-use|automated research/],
+  ['science', /scien|discover|research|superconduct|material|physic|\bmath/],
+  ['work', /\bjobs?\b|labou?r|workforce|worker|employ|layoff|hiring|wage|profession|universit|educat|career/],
+  ['market', /market|econom|\bgdp\b|invest|stock|financ|\bprices?\b|\bbank|downturn|trillion|revenue|valuation|capital|compan(y|ies)/],
+  ['governance', /\blaws?\b|legislat|regulat|\bact\b|govern|policy|standard|commission|\bnist\b|\bfda\b|lobby|election|treaty|court|parliament|congress|senate|consortium/],
+  ['globe', /china|geopolit|military|\bwar\b|warfare|drone|defen[cs]e|russia|ukraine|sovereign|international|global|nation/],
+  ['abundance', /abundan|basic income|\bubi\b|scarcity|\bfood\b|housing/],
+  ['society', /societ|social|people|public|culture|creative|hollywood|information|trust|democra|religio|community/],
+];
+const ILLUSTRATION_FALLBACK = { ROBOTS:'robot', CODE:'code', MARKETS:'market', ABUNDANCE:'abundance', LONGEVITY:'health', GOVERNANCE:'governance',
+  CAPABILITY:'spark', LABOUR:'work', technology:'spark', economic:'market', governance:'governance', geopolitical:'globe', social:'society', individual:'person' };
+function illustrationFor(texts, fallback){
+  for (const text of texts) {
+    const value = String(text || '').toLowerCase(), hit = ILLUSTRATION_RULES.find(([, pattern]) => pattern.test(value));
+    if (hit) return hit[0];
+  }
+  return ILLUSTRATION_FALLBACK[fallback] || 'spark';
+}
+function illustration(name){
+  // The namespace is read from the page's own inline sprite, so no namespace URL literal is needed.
+  const ns = document.getElementById('illustrationSprite')?.namespaceURI;
+  if (!ns) return document.createComment('illustration sprite unavailable');
+  const svg = document.createElementNS(ns, 'svg'), use = document.createElementNS(ns, 'use');
+  svg.setAttribute('class', 'ill'); svg.setAttribute('viewBox', '0 0 64 64');
+  svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+  svg.dataset.illustration = name; use.setAttribute('href', `#ill-${name}`); svg.append(use);
+  return svg;
+}
+/* Openly licensed photos, shown only where one is genuinely relevant to a report. Each is a small
+   self-hosted WebP whose source page, author, licence, retrieval date and changes are recorded here
+   and shown beside it. A photo illustrates the topic: unless showsEvent is true it is not an image
+   of the reported event, and its caption says so. */
+const PHOTO_LIBRARY = Object.freeze([
+  { file:'photo-robonaut.webp', width:480, height:270, bytes:28474, sha256:'5475357dec2bdbec2794a95473d8820d46d89e3fd44dc664b3c8e374bc2ae1f8', subject:'humanoid robot',
+    alt:"NASA's Robonaut 2 humanoid robot inside the International Space Station's Destiny laboratory.",
+    caption:"NASA's Robonaut 2 humanoid robot during tests aboard the International Space Station, 13 October 2011. Illustrative: not the robot in this report.",
+    author:'NASA', licence:'Public domain', licenceUrl:null,
+    sourcePage:'https://commons.wikimedia.org/wiki/File:ISS-29_second_onboard_tests_of_Robonaut_2.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://spectrum.ieee.org/humanoid-robot-safety', 'https://www.theverge.com/tech/1000794/tesla-optimus-production-issues-hands',
+      'https://spectrum.ieee.org/persona-ai-humanoid-robot-welding', 'https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-robotics-er-2'] },
+  { file:'photo-datacenter.webp', width:480, height:270, bytes:18418, sha256:'2af4ce1ed043f6d2963cbbe2bf33ed3a6ba32b8875f88085790d1367baca0b8b', subject:'data centre',
+    alt:'Rows of server racks in a data centre.',
+    caption:'Server racks in a data centre, 2015. Illustrative: not a facility named in this report.',
+    author:'Carl Lender', licence:'CC BY 2.0', licenceUrl:'https://creativecommons.org/licenses/by/2.0/',
+    sourcePage:'https://commons.wikimedia.org/wiki/File:Datacenter_Server_Racks_(22370909788).jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157',
+      'https://www.theguardian.com/australia-news/2026/aug/25/albanese-seeks-to-quell-datacentre-disquiet-as-climate-expert-warns-weve-got-one-shot-to-get-the-rules-right',
+      'https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972'] },
+  { file:'photo-wafer.webp', width:480, height:270, bytes:10654, sha256:'227f7e975e6d2370ee47289fd9f89fb12c09d9362b96486e4b21841e2cb627db', subject:'silicon wafer',
+    alt:'Close view of a patterned silicon wafer.',
+    caption:'A patterned silicon wafer, 2017. Illustrative: not a chip named in this report.',
+    author:'Le hollandais volant', licence:'CC BY 4.0', licenceUrl:'https://creativecommons.org/licenses/by/4.0/',
+    sourcePage:'https://commons.wikimedia.org/wiki/File:Silicon_wafer_close_view.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://spectrum.ieee.org/llms-for-chip-design', 'https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips',
+      'https://spectrum.ieee.org/rare-earth-metals-in-semiconductors'] },
+  { file:'photo-iss-arrays.webp', width:480, height:270, bytes:18560, sha256:'6e41585b123839c95f34a8744a57e2259a937d9b01ce685f04e6adb8d170e18a', subject:'orbital hardware',
+    alt:'Solar arrays on the International Space Station, with Earth below.',
+    caption:'Solar arrays on the International Space Station, 27 December 2016. Illustrative: no orbital data centre is shown.',
+    author:'NASA', licence:'Public domain', licenceUrl:null,
+    sourcePage:'https://commons.wikimedia.org/wiki/File:ISS-50_Solar_arrays_on_the_International_Space_Station.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually',
+      'https://arstechnica.com/science/2026/08/spacexs-orbital-data-centers-would-create-a-new-category-of-e-waste'] },
+  { file:'photo-pylons.webp', width:480, height:270, bytes:21530, sha256:'abce20b919c10027dbe11da72b38218b55be8fc915c097f13931b8f50093b6a7', subject:'power grid',
+    alt:'Pylons carrying electricity transmission lines across fields.',
+    caption:'Pylons carrying electricity transmission lines, 2024. Illustrative: not infrastructure named in this report.',
+    author:'Jim Smillie', licence:'CC BY-SA 2.0', licenceUrl:'https://creativecommons.org/licenses/by-sa/2.0/',
+    sourcePage:'https://commons.wikimedia.org/wiki/File:Pylons_carrying_electricity_transmission_lines_-_geograph.org.uk_-_7869746.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP. This adaptation is shared under CC BY-SA 2.0.',
+    reports:['https://blogs.nvidia.com/blog/800-vdc-power-architecture-ai-factory'] },
+  { file:'photo-berlaymont.webp', width:480, height:270, bytes:28954, sha256:'3c491cc4f5ceb7e4a3620ef5b5770c1d448d885ed8fcea19e17281d27c16ff3a', subject:'European Commission',
+    alt:'The Berlaymont building in Brussels behind a row of EU flags.',
+    caption:'The Berlaymont, European Commission headquarters in Brussels, 2016. Illustrative: not an image of this announcement.',
+    author:'almathias', licence:'CC0 1.0', licenceNote:'via Pixabay, pre-2019 upload', licenceUrl:'https://creativecommons.org/publicdomain/zero/1.0/',
+    sourcePage:'https://commons.wikimedia.org/wiki/File:Berlaymont_building_in_Brussels.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://digital-strategy.ec.europa.eu/en/news/commission-starts-enforcing-ai-act-rules-and-new-transparency-requirements-2-august'] },
+  { file:'photo-fda-building.webp', width:480, height:270, bytes:10610, sha256:'d532130ec7c480bdba9d121d2bb602d4bee2c3389009022d823f18e3c87be5d1', subject:'FDA laboratory building',
+    alt:"The exterior of an FDA laboratory building on the agency's White Oak campus.",
+    caption:"An FDA laboratory building on the agency's White Oak campus, Maryland, 2010. Illustrative: not an image of this announcement.",
+    author:'U.S. Food and Drug Administration', licence:'Public domain', licenceUrl:null,
+    sourcePage:'https://commons.wikimedia.org/wiki/File:FDA_Bldg_64_-_Exterior_(5161375466).jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://www.fda.gov/news-events/press-announcements/fda-seeks-public-feedback-inform-regulatory-approach-generative-ai-enabled-medical-devices'] },
+  { file:'photo-ebola.webp', width:480, height:270, bytes:20810, sha256:'3778a782b19b5c1337feda00345578f9d441048e54da2c1ae4abfe1c29d2dbdd', subject:'Ebola virus',
+    alt:'A colourised transmission electron micrograph of a single filamentous Ebola virus particle.',
+    caption:'Ebola virus particle, colourised transmission electron micrograph (CDC Public Health Image Library 10816). Illustrative: not from this report.',
+    author:'CDC / Cynthia Goldsmith', licence:'Public domain', licenceUrl:null,
+    sourcePage:'https://commons.wikimedia.org/wiki/File:Ebola_virus_virion.jpg', retrieved:'2026-09-26', showsEvent:false,
+    changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
+    reports:['https://www.wired.com/story/organization-fighting-ebola-never-more-worried'] },
+]);
+function reportIdentity(value){
+  try { const url = new URL(value); url.hash = ''; url.pathname = url.pathname.replace(/\/+$/, '') || '/'; return url.href; }
+  catch { return ''; }
+}
+function photoFor(key){
+  const wanted = reportIdentity(key);
+  return wanted ? PHOTO_LIBRARY.find(photo => photo.reports.some(report => reportIdentity(report) === wanted)) || null : null;
+}
+function photoFigure(photo){
+  const figure = node('figure', 'report-photo'), image = node('img'), caption = node('figcaption');
+  image.src = photo.file; image.alt = photo.alt; image.width = photo.width; image.height = photo.height;
+  image.loading = 'lazy'; image.decoding = 'async';
+  const credit = node('span', 'report-photo-credit', `Photo: ${photo.author} · `);
+  credit.append(photo.licenceUrl ? link(photo.licence, photo.licenceUrl, true) : document.createTextNode(photo.licence),
+    document.createTextNode(photo.licenceNote ? ` (${photo.licenceNote}) · ` : ' · '), link('source on Wikimedia Commons', photo.sourcePage, true),
+    document.createTextNode(` · retrieved ${photo.retrieved}. ${photo.changes}`));
+  caption.append(node('span', 'report-photo-caption', photo.caption), credit);
+  figure.dataset.photo = photo.file;
+  figure.append(image, caption);
+  return figure;
+}
+function shortQuote(text, limit = 240){
+  const value = String(text || '').trim();
+  if (value.length <= limit) return value;
+  const cut = value.slice(0, limit), space = cut.lastIndexOf(' ');
+  return `${cut.slice(0, space > limit * 0.6 ? space : limit).trim()}…`;
+}
+/* A headline card is drawn from the reviewed record itself. It is not a screenshot of the page,
+   and the linked original stays the source of record. */
+function headlineCard({ url, headline, publisher, date, quote, health, key }, { withQuote = true } = {}){
+  const card = node('article', 'headline-card'), href = engine.safeSourceUrl(url);
+  let host = 'source';
+  try { host = new URL(href).hostname.replace(/^www\./, ''); } catch {}
+  card.dataset.headlineCard = key || '';
+  const masthead = node('p', 'headline-card-masthead');
+  masthead.append(node('span', 'headline-card-publisher', publisher || host), node('span', 'headline-card-kind', 'Headline card · not a screenshot'));
+  const title = node('p', 'headline-card-title');
+  title.append(link(headline, href, true));
+  card.append(masthead, title, node('p', 'headline-card-dateline', `Published ${date.label}`));
+  if (withQuote && quote) card.append(node('blockquote', 'headline-card-quote', shortQuote(quote)));
+  if (health?.status === 'last-good')
+    card.append(node('p', 'headline-card-status', `${health.label} · last verified ${recorded(health.lastVerifiedAt)} · ${health.reason}`));
+  const footer = node('p', 'headline-card-link');
+  footer.append(link(`Read the original at ${host}`, href, true));
+  card.append(footer);
+  const photo = photoFor(key);
+  if (photo) card.append(photoFigure(photo));
+  return card;
+}
 function recordsFor(data){
   if (!Array.isArray(data?.years) || !Array.isArray(data?.postSuperintelligence?.items)) throw new Error('Forecast structure is unavailable.');
   return [
@@ -206,6 +359,9 @@ function applyRecord(candidate, predictions){
   byId('refreshRecord').textContent = 'Check published updates';
   byId('openTimeline').hidden = true;
   document.querySelector('.timeline-toolbar').hidden = false;
+  const timelineIntro = document.querySelector('#timeline .section-heading > p');
+  if (timelineIntro && !timelineIntro.querySelector('.visual-note')) timelineIntro.append(' ', node('span', 'visual-note',
+    'Icons are original topic illustrations. Opening a report shows a headline card drawn from the reviewed record, not a screenshot, and an openly licensed, credited photo where one is genuinely relevant. Photos illustrate the topic, not the reported event.'));
   if (newsChanged) { renderYear(); renderEarlier(); renderHorizons(); }
   else document.querySelectorAll('.forecast-dossier[open] [data-forecast-dossier]').forEach(host => {
     const row = forecastRecords().find(item => item.id === host.dataset.forecastDossier);
@@ -264,6 +420,11 @@ function renderStory(article){
   let connectionPage = 0;
   function connections(){
     while (detail.children.length > 1) detail.lastElementChild.remove();
+    if (connectionPage === 0) {
+      const first = article.connections[0], record = first && (model.bundle.embeds[first.id] || model.bundle.context.items[first.id]);
+      detail.append(headlineCard({ url:article.url, headline:article.title, publisher:article.publisher, date:article.date, key:article.key,
+        quote:record?.quote, health:article.connections.find(connection => connection.health?.status === 'last-good')?.health }));
+    }
     const selected = article.connections.slice(connectionPage * 6, (connectionPage + 1) * 6);
     for (const connection of selected) detail.append(renderConnection(connection, article));
     if (article.connections.length > 6) {
@@ -289,7 +450,8 @@ function renderStory(article){
   const preview = article.connections.length === 1
     ? article.connections[0].rationale.match(/^.+?[.!?](?:\s|$)/)?.[0]?.trim()
     : `One reported article, ${article.connections.length} separately reviewed forecast connections.`;
-  story.append(meta, title);
+  story.append(illustration(illustrationFor([article.title, article.connections.map(connection => connection.rationale).join(' ')],
+    article.connections[0]?.forecast?.data?.d)), meta, title);
   if (preview) story.append(node('p', 'why-preview', preview));
   story.append(detail);
   return story;
@@ -302,6 +464,7 @@ function renderForecast(row){
   details.id = row.href.slice(1);
   details.tabIndex = -1;
   const summary = node('summary');
+  summary.append(illustration(illustrationFor([row.title, row.data.caveat], row.data.d)));
   const timing = !row.id.startsWith('horizon-') && estimatedTiming(row.data, Number(row.timing));
   if (timing) summary.append(node('span', 'month-label', `${timing.label} ${timing.bandText} / Forecast`));
   summary.append(node('span', 'forecast-title', row.title));
@@ -2189,7 +2352,7 @@ function renderLivingSignals(){
   setText('realityMeta', `Snapshot ${recorded(model.bundle.updated)}. Collection ${recorded(model.bundle.sourceFetchedAt)}. Reporting dates and limitations remain distinct.`);
   for (const signal of model.bundle.reality) {
     const article = node('article', 'living-signal');
-    article.append(node('h3', '', signal.t));
+    article.append(illustration(illustrationFor([signal.headline, signal.t], signal.tag)), node('h3', '', signal.t));
     if (signal.text || signal.note) article.append(node('p', '', signal.text || signal.note));
     else if (signal.kind !== 'news') article.append(node('p', '', 'No qualifying observation is recorded.'));
     if (signal.kind === 'news') {
@@ -2238,7 +2401,8 @@ function reviewedNewsDossier(row){
   }
   const article = model.articles.find(item => item.connections.some(connection => connection.id === row.id));
   const connection = article.connections.find(item => item.id === row.id);
-  section.append(link(record.headline, engine.safeSourceUrl(record.url), true));
+  section.append(headlineCard({ url:record.url, headline:record.headline, publisher:article.publisher, date:article.date, key:article.key,
+    health:connection.health }, { withQuote:false }));
   section.append(node('p', 'dossier-note', `${connection.channel === 'context' ? 'Dated background' : 'Cited in this snapshot'} / ${typeLabels[connection.type]}. Published ${article.date.label}. ${engine.publicationAge(article.date)}.`));
   section.append(node('blockquote', '', record.quote || record.text));
   section.append(node('p', 'dossier-rationale', connection.rationale));
@@ -2377,8 +2541,29 @@ function discussionDossier(row){
     return section;
   }
   const authored = item.authorship === 'authored';
+  const staleSnapshot = !!section.querySelector('.x-stale');
   section.append(node('p', '', `${authored ? '@peterxing authored this' : `@peterxing reposted @${item.author || 'author not recorded'}`}. ${item.tier === 'tracked' ? 'Recorded as tracked discussion' : 'Nearest topical activity only, not tracking of the forecast'}.`));
-  section.append(node('blockquote', '', item.text));
+  const card = node('article', 'x-card'), head = node('header', 'x-card-head'), who = node('span', 'x-who');
+  card.dataset.xStale = String(staleSnapshot);
+  const handle = authored ? 'peterxing' : String(item.author || 'unknown').replace(/[^A-Za-z0-9_]/g, '').slice(0, 30) || 'unknown';
+  const avatar = node('span', 'x-avatar', handle.slice(0, 1).toUpperCase());
+  avatar.setAttribute('aria-hidden', 'true');
+  /* Display names are not stored in the supplement. The site's own author is the one name this page knows;
+     every other account is shown by its @handle alone rather than a guessed name. */
+  const displayName = handle === 'peterxing' ? document.querySelector('#author h2')?.textContent.trim() || null : null;
+  const name = node('strong', 'x-name', displayName || `@${handle}`), meta = node('span', 'x-meta');
+  if (!displayName) name.title = 'Display name not stored in this snapshot';
+  if (displayName) meta.append(node('span', 'x-handle', `@${handle}`), document.createTextNode(' · '));
+  const when = link(date.label, url.href, true);
+  when.className = 'x-time'; when.setAttribute('aria-label', `Open the post on X, created ${date.label}`);
+  meta.append(document.createTextNode(authored ? `${item.kind === 'quote' ? 'Quote post' : 'Post'} · ` : 'Reposted by @peterxing · '), when);
+  who.append(name, meta);
+  head.append(avatar, who);
+  if (staleSnapshot) head.append(node('span', 'x-stale-badge', 'Stale snapshot'));
+  card.append(head, node('blockquote', '', item.text));
+  if (Number.isInteger(item.likes) && Number.isInteger(item.rts) && item.likes >= 0 && item.rts >= 0)
+    card.append(node('p', 'x-metrics', `${item.likes} likes · ${item.rts} reposts when collected ${recorded(layer.summary?.harvestedAt)}; not refreshed since.`));
+  section.append(card);
   if (item.statement) section.append(node('p', '', item.statement));
   section.append(node('p', 'dossier-note', `Post created ${date.label}. ${engine.publicationAge(date)}. Supplement collected ${recorded(layer.summary?.harvestedAt)}; assembled ${recorded(layer.summary?.builtAt)}. This may not include later activity.`));
   section.append(link('View the original discussion on X', url.href, true));

@@ -5,7 +5,7 @@ const zlib = require('zlib');
 const { createHash } = require('crypto');
 
 const DIR = __dirname;
-const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8' };
+const types = { '.html':'text/html; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.json':'application/json; charset=utf-8' };
 
 // Default-deny: the public site only needs these files + static image/style assets. Everything else
 // (server-side scripts x-*.js / refresh-signals.js / server.js, *.ps1, *.md, debug/raw JSON, etc.) is
@@ -37,6 +37,9 @@ const ALLOW_FILES = new Set([
   
   
   'ai-timeline.html', 'news-timeline.js',
+  // Openly licensed, credited report photos (PHOTO_LIBRARY in app.js).
+  'photo-berlaymont.webp', 'photo-datacenter.webp', 'photo-ebola.webp', 'photo-fda-building.webp',
+  'photo-iss-arrays.webp', 'photo-pylons.webp', 'photo-robonaut.webp', 'photo-wafer.webp',
 ]);
 const ALLOW_EXT = new Set([]);
 const COMPRESS_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt']);

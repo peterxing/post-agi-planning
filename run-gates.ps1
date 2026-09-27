@@ -146,8 +146,10 @@ try {
         $gameProbeFiles = @()
         $gamePolicyPath = Join-Path $Deploy 'game-policy.json'
         if (Test-Path $gamePolicyPath) { $gameProbeFiles = @((Get-Content $gamePolicyPath -Raw | ConvertFrom-Json).publicFiles) }
+        # Report photos are probed from disk, so an unlisted photo fails as unreachable instead of hiding.
+        $photoProbeFiles = @(Get-ChildItem -LiteralPath $Deploy -Filter 'photo-*.webp' -File | ForEach-Object { $_.Name })
         foreach ($f in @('signals.json', 'predictions.json', 'author.json',
-                         'app.js', 'index.html', 'styles.css') + $gameProbeFiles + $ProbeExtra) {
+                         'app.js', 'index.html', 'styles.css') + $gameProbeFiles + $photoProbeFiles + $ProbeExtra) {
             $probeSet += @{ served = $f; disk = $f }
         }
         # Control only: a deliberately WRONG expectation. The bytes-differ branch

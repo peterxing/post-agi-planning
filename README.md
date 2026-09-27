@@ -484,6 +484,48 @@ or remotes, and unpublished/diverged commits. It fetches and fast-forwards only 
 checkout. A failed validation leaves files and the index intact; it never resets, stashes, cleans
 or recursively deletes a mirror directory.
 
+### Headline cards, report photos, X snippet cards and illustrations
+
+Opening a reported story, or a forecast's NEWS dossier, shows a **headline card** drawn from the
+reviewed record. It is not a screenshot of the publisher's page. The card shows the publisher, the
+headline linked to the original, the original publication date with its precision, a short excerpt
+of the reviewed quote and, where it applies, "Couldn't recheck today" with the last verified date.
+No publisher page is captured or reproduced, and no publisher photo or `og:image` is used.
+
+Where a photo is genuinely relevant, the card also shows one **openly licensed photo**. Each is a
+small self-hosted WebP (480×270), loaded lazily and only after a report is opened. Allowed sources are
+Wikimedia Commons, NASA and other US-government public-domain works. Allowed licences are public
+domain, CC0, CC BY and CC BY-SA. NC, ND and fair-use material is refused, and nothing is hotlinked.
+`PHOTO_LIBRARY` in `app.js` records, for every photo:
+
+- the Commons source page, the author, and the licence with its link;
+- the retrieval date, the changes made, and the file's size and SHA-256;
+- the reports it illustrates.
+
+The credit is shown beside the photo. Unless a photo truly shows the event, its caption says it is
+illustrative. A CC BY-SA adaptation is shared under the same licence.
+
+X appears as snippet cards drawn only from the retained `signals.xSignals` supplement:
+
+- The card shows the @handle. A display name appears only where this page already knows it (the
+  site's own author); other names are not stored and are never guessed.
+- The original timestamp links to the post, and the card carries the same "Stale snapshot" state as
+  the dossier's retention warning.
+- The cards make no X request and load no image.
+
+Every story, forecast, living signal, and companion checkpoint, event and source also carries one
+original topic illustration from an inline sprite shared by both pages. These are icons, not
+photographs. The companion stays self-contained and shows no photos.
+
+`node verify-visuals.js` (`npm run verify:visuals`) proves:
+
+- no page capture or embedded raster image exists, and the cards come from the reviewed record;
+- every photo's licence, credit, hash, size, binding to current reports and explicit serving;
+- photos load only on intent, from this origin;
+- X card parity with no X traffic;
+- illustration coverage on both pages;
+- licence, source, caption and binding tamper cases are refused.
+
 ### Coalition campaign
 
 `/game` is an additive thirteen-mission exploration-and-strategy campaign across seven original

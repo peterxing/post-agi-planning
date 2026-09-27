@@ -560,6 +560,9 @@ $fromDeploy = @(
   'build-game.js','game-source.js','game-map.json','game-policy.json',
   'verify-game-content.js','verify-game.js','verify-game-performance.js'
   'ai-timeline.html', 'news-timeline.js','verify-ai-timeline.js','refresh-timeline-actuals.js','TIMELINE-DAILY-RUN.md'
+  # Openly licensed, credited report photos (served) and their verifier (source-only).
+  'photo-berlaymont.webp','photo-datacenter.webp','photo-ebola.webp','photo-fda-building.webp'
+  'photo-iss-arrays.webp','photo-pylons.webp','photo-robonaut.webp','photo-wafer.webp','verify-visuals.js'
 )
 $fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')

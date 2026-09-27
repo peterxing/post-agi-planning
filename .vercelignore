@@ -34,6 +34,14 @@
 !THREE-LICENSE.txt
 !ai-timeline.html
 !news-timeline.js
+!photo-berlaymont.webp
+!photo-datacenter.webp
+!photo-ebola.webp
+!photo-fda-building.webp
+!photo-iss-arrays.webp
+!photo-pylons.webp
+!photo-robonaut.webp
+!photo-wafer.webp
 
 # Belt-and-braces: the highest-risk names are also denied explicitly and last, so
 # they win over any future re-include. "*" already excludes them.

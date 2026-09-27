@@ -217,6 +217,22 @@ new `textSha256`, the `previousTextSha256`, `textReviewedAt` and `textReviewReas
 ("publisher page text changed; supporting quote/claim re-verified"). If the meaning
 changed, revise or withdraw it instead. A hash is never refreshed blind.
 
+**Report photos after a NEWS change.** Each photo in `PHOTO_LIBRARY` (`app.js`) is bound to
+the current reports it illustrates. If a run withdraws or revises a bound report,
+`verify:visuals` fails closed on that binding. In that case, remove the report from the photo's
+`reports`, or remove the photo and its allow-list entries. Never rebind a photo to make the
+gate pass.
+
+Adding a photo is a reviewed edit, never an automatic step:
+
+- use a Wikimedia Commons or US-government public-domain file only;
+- the licence must be public domain, CC0, CC BY or CC BY-SA;
+- record the source page, author, licence link, retrieval date and changes;
+- self-host a small WebP and pin its size and SHA-256;
+- write an "Illustrative" caption unless the photo truly shows the event.
+
+A daily actuals run never adds photos, and never captures a publisher page.
+
 ## Independently review companion connections
 
 Existing companion source/event IDs, historical dates and limitations survive.
@@ -437,6 +453,7 @@ foreach ($base in 'https://peterxing.com', 'https://post-agi-planning.vercel.app
     $response = $http.GetAsync("$base$($route)?pf=$stamp").Result
     $actual = [BitConverter]::ToString($sha.ComputeHash($response.Content.ReadAsByteArrayAsync().Result)).Replace('-', '')
     if ([int]$response.StatusCode -ne 200 -or $actual -ne $expected) { $bad += "$base$route HTTP $([int]$response.StatusCode)" }
+    if ($name -like '*.webp' -and "$($response.Content.Headers.ContentType.MediaType)" -ne 'image/webp') { $bad += "$base$route is not served as image/webp" }
     if ($name -like '*.html') {
       $direct = $http.GetAsync("$base/$name").Result
       $status = [int]$direct.StatusCode
@@ -453,7 +470,7 @@ if ($bad.Count) { throw "Production bytes differ: $($bad -join '; ')" }
 foreach ($base in 'https://peterxing.com/', 'https://post-agi-planning.vercel.app/') {
   $env:PAP_SITE_URL = $base
   foreach ($gate in 'verify-site.js', 'verify-observatory.js', 'verify-reality.js', 'verify-perpred.js', 'verify-author.js',
-                    'verify-metr.js', 'verify-reference-points.js', 'verify-game.js', 'verify-game-performance.js') {
+                    'verify-metr.js', 'verify-reference-points.js', 'verify-visuals.js', 'verify-game.js', 'verify-game-performance.js') {
     node $gate; if ($LASTEXITCODE -ne 0) { throw "$gate failed on $base (exit $LASTEXITCODE)" }
   }
 }
@@ -461,8 +478,11 @@ Remove-Item Env:PAP_SITE_URL
 node verify-deploy-surface.js --live
 ```
 
-The byte check covers every runtime file on both domains. Each `.html` file is checked
-through its clean route, and a redirect must name exactly that same-origin route. The
+The byte check covers every runtime file on both domains, including each report photo,
+which must also be served as `image/webp`. Each `.html` file is checked through its clean
+route, and a redirect must name exactly that same-origin route. `verify-visuals.js` then
+checks the served cards, lazy photos with visible credits, and that no photo loads before a
+report is opened. The
 companion's `308 -> 200` is also asserted by `verify-deploy-surface.js --live`, with
 the reviewed hash. Only the fallback above may count an earlier pass, and only for a
 `verify-game-performance.js` timing-metric failure. Record both measurements.

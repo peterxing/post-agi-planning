@@ -105,6 +105,9 @@ $runtimeFiles = @(
   'signals.json',
   'author.json',
   'ai-timeline.html', 'news-timeline.js',
+  # Openly licensed, credited report photos.
+  'photo-berlaymont.webp', 'photo-datacenter.webp', 'photo-ebola.webp', 'photo-fda-building.webp',
+  'photo-iss-arrays.webp', 'photo-pylons.webp', 'photo-robonaut.webp', 'photo-wafer.webp',
   'game.html',
   'game.css',
   'game-entry.js',
