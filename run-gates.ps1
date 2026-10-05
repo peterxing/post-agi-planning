@@ -238,6 +238,11 @@ try {
         elseif ($code -eq 70) {
             $inert++; $inertGates += $g
             Write-Host ("{0,-22} INERT  exit 70  (passed but verified nothing -- publication proceeds)" -f $g)
+            # Name the route(s) the gate itself printed (last-good, aging-empty, unexercised proofs, or the
+            # unchanged-game timing carry-forward), never a cause restated here.
+            foreach ($line in @($out -split "\r?\n" | Where-Object { $_ -match '^RESULT: |PASSED BUT INERT|^\s+- (carry-forward|couldn.t recheck today|not exercised): ' })) {
+                Write-Host ("{0,-22}   {1}" -f '', $line.Trim())
+            }
         }
         elseif ($code -eq 75) {
             $deferred++; $deferredGates += $g

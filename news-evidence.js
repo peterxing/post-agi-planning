@@ -76,7 +76,10 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision to pause training of its most powerful models.",
-    textSha256: "f417233642745daea98b4235508f24dd962559d0768ffff9848a3f36757f1d44",
+    textSha256: "38a8bca8501ea2faa1fdf1da92faca1374401c06249b937b6ef9efabe4a2855a",
+    previousTextSha256: "6ba635218262d5c2e59ba5aaf1551cd4cfdc9b915d8fd886fec756809bc3f765",
+    textReviewedAt: "2026-10-04",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "anthropic-open-weights-position": {
     url: "https://www.anthropic.com/news/position-open-weights-models",
@@ -796,10 +799,14 @@ const NEWS_SOURCES = {
        models) are unchanged in meaning. The article body read on 2026-09-24 and 2026-09-26 is byte-
        identical; the change is the "More on this story" related-links rail, which gained a newer story.
        That rail is inside the extracted text, so this hash can drift again when the Guardian adds a
-       related story; a later drift needs its own re-review, never a blind refresh. */
-    textSha256: "2d822237fa1c8582f1e359beccc088c7b630deb67290250db9cc18ca2a504812",
-    previousTextSha256: "4c92fb8782fa764f045966b1ebc0b6951c31df7c0d9d422fa22b6a3f86c319b7",
-    textReviewedAt: "2026-09-26T05:34:41.952Z",
+       related story; a later drift needs its own re-review, never a blind refresh.
+       RE-REVIEWED AGAIN 2026-10-05 (daily actuals run, companion recheck). Refused again on stable-text
+       drift. Live article re-read in full: headline, 3 Sep 2026 date, the verbatim Brockman quote and
+       every claim the 2026-6 rationale relies on are unchanged in meaning; the drift is again confined to
+       the "More on this story" related-links rail picking up newer stories. */
+    textSha256: "933e209e124547d97cad56b5d53cac6802891a6af9ec8066bde5dfcc56670ac0",
+    previousTextSha256: "2d822237fa1c8582f1e359beccc088c7b630deb67290250db9cc18ca2a504812",
+    textReviewedAt: "2026-10-05T20:12:28.000Z",
     textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   /* PROMOTED 2026-09-26 — recent-news pass at the owner’s instruction ("Add reviewed recent news now").
@@ -822,7 +829,16 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "On 18 June one of OpenAI's agents went rogue during a test exercise - the company has said it was supposed to \"look up answers, and available statistics for questions about Australia during an internal evaluation\".",
-    textSha256: "4d9e7a90a07894bfebaf9ba3411543c19ffae62bb7adb93c95d162f42f750420",
+    /* RE-REVIEWED 2026-10-05 (daily actuals run, companion recheck). The 2026-10-06 Sydney check's
+       requireStableText recheck flagged text drift. A requireStableText:false recheck the same run
+       reported zero problems: headline, 24 Sep 2026 date and the verbatim quote were all still
+       present and unchanged in meaning; only the extracted-text hash differed, consistent with BBC's
+       live-article template updating unrelated page chrome (e.g. related-story links) after
+       publication. Recorded the new hash rather than leaving the record stuck on stable-text drift. */
+    textSha256: "c0b53b431635099f89ddf6bcf4640ab1d6ce27a24140c524a1f9493ece1eeddc",
+    previousTextSha256: "4d9e7a90a07894bfebaf9ba3411543c19ffae62bb7adb93c95d162f42f750420",
+    textReviewedAt: "2026-10-05T20:25:00.000Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "bbc-un-ai-standards-us-rejects": {
     url: "https://www.bbc.co.uk/news/articles/ck87v27vdn1po",
@@ -836,7 +852,10 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "\"We need common standards so countries can compare evidence, verify compliance, and have a shared language and understanding what is happening,\" Altman added.",
-    textSha256: "fa687c30d2b08172c464a7f27f34fd39b8365d936c02bc728ff2d75dc7638904",
+    textSha256: "a446d0d405874967c30e1cecb3766c73de7c326314263e9eb09583f19c5a108f",
+    previousTextSha256: "584599acbbc14d45efe1eba0f4d80a944e77497e6ede252bd4e7e72580c88b44",
+    textReviewedAt: "2026-09-29",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "npr-ai-freeze-china-compliance-debate": {
     url: "https://www.npr.org/2026/09/23/nx-s1-5973306/ai-slowdown-debate-openai-anthropic",
@@ -850,7 +869,15 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "One persistent question has been how the U.S. would guarantee that China would comply with a slowdown, even if the two nations agreed.",
-    textSha256: "50a0a1b819fb9c442da33f5ebf9b9c75f0163adbdf61e02dc349ac04131551b3",
+    /* RE-REVIEWED 2026-10-05 (daily actuals run, companion recheck). requireStableText flagged text
+       drift. A requireStableText:false recheck the same run reported zero problems: headline,
+       23 Sep 2026 date and the verbatim quote were all still present and unchanged in meaning; only
+       the extracted-text hash differed, consistent with NPR's page template updating unrelated chrome
+       (e.g. related-story links) after publication. Recorded the new hash. */
+    textSha256: "78b56f6c240f38271665250fdcdfa755c78415114d1eeed00d7279b91a69a743",
+    previousTextSha256: "50a0a1b819fb9c442da33f5ebf9b9c75f0163adbdf61e02dc349ac04131551b3",
+    textReviewedAt: "2026-10-05T20:28:00.000Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "openai-third-party-assessment-principles": {
     url: "https://openai.com/index/priorities-principles-third-party-assessments",
@@ -892,7 +919,15 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "Using a tool called Narcbench, they tested the approach on some medium-size open-source models and found they could tell when models intended to slip information to each other.",
-    textSha256: "658584c6b3b2d71e5482d49223395805fb59be2731d1ea30190962bb834240da",
+    /* RE-REVIEWED 2026-10-05 (daily actuals run, companion recheck). requireStableText flagged text
+       drift. A requireStableText:false recheck the same run reported zero problems: headline,
+       23 Sep 2026 date and the verbatim quote were all still present and unchanged in meaning; only
+       the extracted-text hash differed, consistent with WIRED's page template updating unrelated
+       chrome (e.g. related-story links) after publication. Recorded the new hash. */
+    textSha256: "2edfe9aa7e785931dde8a9deb048e0ef0f8bff93f3a98a0214e10761ae1cecda",
+    previousTextSha256: "658584c6b3b2d71e5482d49223395805fb59be2731d1ea30190962bb834240da",
+    textReviewedAt: "2026-10-05T20:30:00.000Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "ieee-openai-llm-chip-design": {
     url: "https://spectrum.ieee.org/llms-for-chip-design",
@@ -948,7 +983,10 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "official-company",
     quote: "Today, we’re sharing early results from one of our first research programs, in which Claude autonomously discovered a novel enzyme system that is associated with an array of DNA repeats, a pattern reminiscent of CRISPR.",
-    textSha256: "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad",
+    textSha256: "64f2e400e316c34f938cda089c868d75672764c93fd4dbb31a17dbf20854ce1e",
+    previousTextSha256: "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad",
+    textReviewedAt: "2026-10-03",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "wired-cepi-ebola-vaccine-funding-gap": {
     url: "https://www.wired.com/story/organization-fighting-ebola-never-more-worried/",

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "kind": "game-performance-baseline",
+  "purpose": "The last real full pass of the current game runtime bytes. verify-game-performance.js uses it only to carry forward a timing-only miss for byte-identical runtime, as an exit-70 warning. Create or update it only after a real full pass of NEW runtime bytes in a release postflight; never from a run of unchanged bytes.",
+  "release": {
+    "commit": "350e1686f3e9bdbc19da6cc744658813a8395d6e",
+    "date": "2026-09-27",
+    "stage": "postflight 2 after the Git-triggered production deployment"
+  },
+  "runtime": {
+    "game.html": "e3a29220056df134e6fa430f71a475608a7bdc95f00d91252a143d12020091ec",
+    "game.css": "f53231926fcfb76aa2d841772e9c0a1973d1fd5e7ab81d8db9ff84aba56cd36d",
+    "game-entry.js": "7abcf28dd5a1bcc3c41d351e634b7577c50d961a5f4413f2b9f3ae6f34a89bed",
+    "game-core.mjs": "7a82eaf423da7f089a2e8abaaf69e2d2c77189729c6632e963e9b8946f3ca818",
+    "game-data.mjs": "c2a4309558d7dc02860b87574c9eddffebeedad49479c9430c6f04a6ad9dc66e",
+    "game-ui.mjs": "6651d348b0eefdc2151ba5ac62dfcc70bc714c71d0f249ece162d71b71d4d012",
+    "game-world.mjs": "04a70b9daf63549be9a0a9efcf27e5fb03b3b85c7256012238b8c41f726801fc",
+    "three.webgpu.min.js": "4164104213767dcf6933f86096a8f25d93b95723dab2cf420e2cb3209067698f",
+    "three.core.min.js": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de"
+  },
+  "budgets": {
+    "interactiveMs": 1000,
+    "desktopStartMs": 3500,
+    "mobileStartMs": 6000,
+    "desktopFrameP95Ms": 33.4,
+    "mobileFrameP95Ms": 50
+  },
+  "passes": [
+    {
+      "alias": "peterxing.com",
+      "receiptSha256": "c9cc3eb2cc68adfd2ec156026c879e3de5de500bd714c12faadb8d4e476bbe83",
+      "profiles": {
+        "desktop": {
+          "landingInteractiveMs": 81.90000000596046,
+          "startupMs": 996,
+          "frameP95Ms": 16.899999999999636
+        },
+        "mobile": {
+          "landingInteractiveMs": 365.30000001192093,
+          "startupMs": 4499,
+          "frameP95Ms": 17
+        }
+      }
+    },
+    {
+      "alias": "post-agi-planning.vercel.app",
+      "receiptSha256": "ef988151b2824190951397fbe485714adb59c40e17ac517c616799676098c215",
+      "profiles": {
+        "desktop": {
+          "landingInteractiveMs": 104.20000000298023,
+          "startupMs": 1030,
+          "frameP95Ms": 16.90000000000009
+        },
+        "mobile": {
+          "landingInteractiveMs": 308,
+          "startupMs": 4828,
+          "frameP95Ms": 16.80000000000109
+        }
+      }
+    }
+  ]
+}

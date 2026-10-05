@@ -332,7 +332,9 @@ Currency exit 70 remains **inert**, not a verified currency result or a failure.
 `verify:news` exit 70 with named `LAST-GOOD WARNING` lines is likewise a warning
 state (publication may proceed); exit 1 still blocks. Report each retained key, its
 challenge marker, last verified date and `retainedUntil`; never report those keys as
-live-verified.
+live-verified. `verify:game-performance` exit 70 is the unchanged-game timing
+carry-forward described below: a named warning, never a timing pass. Report each
+named metric with its value, budget and baseline pass. Exit 1 still blocks.
 Record every refusal explicitly. Do not increase budgets, drop fixtures, suppress
 source errors, or promote private operator tools to make publication pass.
 
@@ -390,31 +392,72 @@ $env:PAP_GAME_PERFORMANCE_RECEIPT = "$candidate-game-performance.json"
 Push-Location $candidate; npm run verify:game-performance; $gameExit = $LASTEXITCODE; Pop-Location
 $preview.Kill()   # this run's own preview process only
 Remove-Item Env:PAP_SITE_URL, Env:PAP_GAME_PERFORMANCE_RECEIPT
+if ($gameExit -ne 0 -and $gameExit -ne 70) { throw "verify:game-performance failed (exit $gameExit). No gate is rerun." }
 powershell -ExecutionPolicy Bypass -File (Join-Path $candidate 'run-gates.ps1') -IsolatedPreview -CandidateSurface
 ```
 
 Both game measurements are recorded. The receipt from the first run sits beside the
 candidate. No gate is rerun after a failure.
 
-**Game-performance metric fallback (user-approved 26 September 2026).** One narrow case
-may count the same run's earlier pass instead of stopping. All of these must hold:
+**Unchanged-game timing carry-forward (user-approved 4 October 2026).** The user's
+decision: "Don't let a slow speed reading block news when the game itself hasn't
+changed; still block on real game errors and size limits." `verify-game-performance.js`
+applies it itself, in every suite, the curated replay and every postflight. Only three
+readings are timing: landing interactive, start to controllable 3D and frame p95.
 
-- the failure is in `verify:game-performance`, on one of its timing metrics: landing
-  interactive, startup or frame p95;
-- that same metric passed earlier in this run;
-- it happens in the curated replay or a production postflight;
-- the nine game runtime files are hash-identical to the bytes that passed earlier in
-  this run, and to the live and mirror bytes. The nine are `game.html`, `game.css`,
-  `game-entry.js`, `game-core.mjs`, `game-data.mjs`, `game-ui.mjs`, `game-world.mjs`,
-  `three.webgpu.min.js` and `three.core.min.js`.
+The gate exits 70, a named warning and never 0, when a timing reading misses its budget
+and all of these hold:
 
-Record both measurements: the metric, the stage or domain, the failing value and the
-earlier passing value. Every other failure still stops the run. That includes a
-functional `verify:game` failure and any byte, surface, source or UI failure. No
-budget changes.
+- nothing else failed;
+- the nine game runtime files (`game.html`, `game.css`, `game-entry.js`,
+  `game-core.mjs`, `game-data.mjs`, `game-ui.mjs`, `game-world.mjs`,
+  `three.webgpu.min.js` and `three.core.min.js`) are byte-identical on disk, as served,
+  in `game-performance-baseline.json` and in the published remote main. Remote main is
+  read with `git ls-remote`, and its blobs are read from the mirror;
+- the baseline is present, valid and consistent. It must record the five timing budgets
+  exactly as `game-policy.json` states them. Its release commit must be in remote main,
+  dated as recorded, with the same nine blobs. Every recorded reading must be a
+  measured value within budget.
+
+Each warning line names the metric, the measured value, the budget and the baseline
+pass, with its commit, date and value on each domain.
+
+The gate still exits 1 for:
+
+- a functional failure: no start, a page error, a lost, disposed or stopped renderer,
+  no frames rendered, or a backend fallback;
+- a cold transfer over 650000 bytes, and any byte, transfer, draw, pixel, resource,
+  DOM, heap or response budget;
+- any runtime change, against the baseline, the served bytes or the remote;
+- a missing, corrupt or inconsistent baseline, even when every reading passes;
+- an unexpected measurement.
+
+Data files (`signals.json`, `game-content.json`, `predictions.json`, `author.json`)
+may change. Their size and transfer budgets still apply in full.
+
+The gate runs its own controls on every run, against synthetic records, before it
+measures anything. If any control misbehaves, the gate exits 1.
+
+`game-performance-baseline.json` is mirrored as source and never served. It records
+the 27 September 2026 postflight-2 pass of release 350e168 on both domains. Only a
+real full pass of NEW runtime bytes may create or update it: gate exit 0 on both
+domains in a release's postflight 2. Rebuild it from those two receipts in the same
+change, and never from a run of unchanged bytes. A budget change must ship with a
+baseline from a real pass at the new budgets.
+
+For CHANGED game runtime the carry-forward never applies, and changed game code needs a
+real pass. The narrower same-run rule (user-approved 26 September 2026) remains only
+for that case. A timing-only `verify:game-performance` miss in the curated replay or a
+production postflight may count an earlier real pass of the same metric in the same
+run, if the nine files are hash-identical to the bytes that passed and to the live and
+mirror bytes. Record both measurements. Every other failure still stops the run,
+including a functional `verify:game` failure and any byte, surface, source or UI
+failure. No budget changes.
 
 `deploy.ps1` and `publish-github.ps1` both accept `verify:news` exit 70 and abort on
-any other non-zero code. Exit 70 has exactly three routes, and the gate names every
+any other non-zero code. Neither runs `verify:game-performance`. Its exit 70 is read
+by `run-gates.ps1`, which counts it as INERT and echoes the gate's own route lines,
+and by the postflight below. Exit 70 has exactly three routes, and the gate names every
 item in each:
 
 - `couldn't recheck today` last-good keys, each with its expiry;
@@ -471,7 +514,9 @@ foreach ($base in 'https://peterxing.com/', 'https://post-agi-planning.vercel.ap
   $env:PAP_SITE_URL = $base
   foreach ($gate in 'verify-site.js', 'verify-observatory.js', 'verify-reality.js', 'verify-perpred.js', 'verify-author.js',
                     'verify-metr.js', 'verify-reference-points.js', 'verify-visuals.js', 'verify-game.js', 'verify-game-performance.js') {
-    node $gate; if ($LASTEXITCODE -ne 0) { throw "$gate failed on $base (exit $LASTEXITCODE)" }
+    node $gate; $code = $LASTEXITCODE
+    if ($code -eq 70 -and $gate -eq 'verify-game-performance.js') { Write-Warning "$gate on ${base}: unchanged-game timing carry-forward; each metric is named above" }
+    elseif ($code -ne 0) { throw "$gate failed on $base (exit $code)" }
   }
 }
 Remove-Item Env:PAP_SITE_URL
@@ -484,8 +529,10 @@ route, and a redirect must name exactly that same-origin route. `verify-visuals.
 checks the served cards, lazy photos with visible credits, and that no photo loads before a
 report is opened. The
 companion's `308 -> 200` is also asserted by `verify-deploy-surface.js --live`, with
-the reviewed hash. Only the fallback above may count an earlier pass, and only for a
-`verify-game-performance.js` timing-metric failure. Record both measurements.
+the reviewed hash. A `verify-game-performance.js` exit 70 is the unchanged-game
+carry-forward above. Report each named metric with its value, budget and baseline
+pass. For changed game runtime, only the same-run rule above may count an earlier real
+pass. Any other non-zero exit stops the run.
 Confirm the remote commit with
 `git ls-remote https://github.com/peterxing/post-agi-planning.git refs/heads/main`.
 

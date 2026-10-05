@@ -548,6 +548,13 @@ Accessible and read-only entry do not import graphics. `verify-game.js --startup
 mixed/invalid/import-failure/cancel-data/cancel-import and late-completion checks; the full default
 suite still proves campaign controls, save compatibility, native GPU loss/recovery and cleanup.
 `verify-game-performance.js` runs both actual base-GPU profiles and complete lifecycle accounting.
+Timing readings can vary with the host. If only the landing-interactive, startup or frame-p95
+reading misses its budget, and the nine game runtime files are byte-identical on disk, as served,
+in `game-performance-baseline.json` and in the published remote main, the gate exits 70. That is a
+named warning that cites the baseline's real pass, never a pass. Real game errors, every byte,
+transfer and resource limit, a changed runtime, unexpected readings and a missing or inconsistent
+baseline still fail. The baseline records the last real full pass of the current runtime bytes in
+a release postflight. Only a real full pass of new runtime bytes may replace it.
 
 Game resources and endings are fictional, not financial advice, a preparedness score or an AGI
 assessment. Every forecast has a reviewed connection to an implemented station/task/choice, with

@@ -596,24 +596,23 @@ html[data-theme="dark"] {
   <script type="application/json" id="timelineData">
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-09-26",
+  "reviewedAt": "2026-09-27",
   "initialReviewDate": "2026-09-22",
   "actualsCheck": {
-    "status": "updated",
-    "attemptedAt": "2026-09-26T21:13:14.708Z",
-    "checkedAt": "2026-09-26T21:13:14.708Z",
-    "contentChangedAt": "2026-09-26T21:13:14.708Z",
+    "status": "checked",
+    "attemptedAt": "2026-10-05T20:16:28.834Z",
+    "checkedAt": "2026-10-05T20:16:28.834Z",
+    "contentChangedAt": "2026-09-27T21:13:50.276Z",
     "checkedSourceIds": [
-      "openai-path-to-astra-frontier-safeguards",
       "guardian-astra-release-contested-agi-claim",
-      "ieee-ai-robots-superconductor-discovery",
-      "bbc-un-ai-standards-us-rejects",
-      "anthropic-claude-enzyme-discovery",
-      "ieee-openai-llm-chip-design"
+      "bbc-openai-agent-internal-evaluation-breach",
+      "npr-ai-freeze-china-compliance-debate",
+      "wired-agent-collusion-interpretability-probe",
+      "anthropic-claude-enzyme-discovery"
     ],
-    "windowStart": "2026-08-26",
-    "windowEnd": "2026-09-26",
-    "summary": "6 selected canonical NEWS sources reverified. Catch-up after unpublished scheduled attempts and an intervening September 26 publication. Six selected original sources from OpenAI, The Guardian, IEEE Spectrum, BBC News and Anthropic were read and reverified. Three independently reviewed companion connections are added; company capability claims remain attributed. This selected-source review does not reverify every historical companion source, resolve AGI, establish scenario timing, or claim exhaustive discovery. Earlier discovery gaps remain. Reviewed companion records changed."
+    "windowStart": "2026-09-04",
+    "windowEnd": "2026-10-05",
+    "summary": "5 selected canonical NEWS sources reverified. Daily actuals maintenance, 2026-10-06 Sydney run (last successful check 2026-10-04). news-backfill.js --propose surfaced 1 candidate over the bounded window (MIT News, 'Translating economic growth into better lives', published 2026-08-31): a general development-economics profile unrelated to AI-driven GDP growth, matched the 2032-2 prediction only on the shared keyword 'growth'. Rejected, not added (same candidate already rejected 2026-10-04). Reverified 5 canonical NEWS sources for companion stability: guardian-astra-release-contested-agi-claim, bbc-openai-agent-internal-evaluation-breach, npr-ai-freeze-china-compliance-debate, wired-agent-collusion-interpretability-probe, anthropic-claude-enzyme-discovery. Three (guardian, bbc, wired) refused on stable-text drift from unrelated page-template changes; each was re-read live with headline/date/quote/claims confirmed unchanged in meaning, so reviewed stable-text refreshes recorded their new hashes in news-evidence.js before this check. The other two (npr, anthropic) also drifted/matched as checked; npr likewise received a reviewed stable-text refresh, anthropic matched its recorded hash unchanged. No new or changed companion facts; original source and event dates retained. No new or changed companion facts. Original source and event dates retained."
   },
   "sources": [
     {
@@ -797,7 +796,7 @@ html[data-theme="dark"] {
       "published": "2026-09-14",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "checkedAt": "2026-10-03T03:00:37.893Z",
       "canonicalNewsSource": "ieee-openai-llm-chip-design",
       "textSha256": "30c2eeb53fe512347df7c400975ed269ed2522a44a01ed6cfc849add70d784c2"
     },
@@ -810,7 +809,7 @@ html[data-theme="dark"] {
       "published": "2026-09-23",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "checkedAt": "2026-10-03T03:00:37.893Z",
       "canonicalNewsSource": "bbc-un-ai-standards-us-rejects",
       "textSha256": "fa687c30d2b08172c464a7f27f34fd39b8365d936c02bc728ff2d75dc7638904"
     },
@@ -823,9 +822,22 @@ html[data-theme="dark"] {
       "published": "2026-09-23",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-09-26T21:13:14.708Z",
+      "checkedAt": "2026-10-05T20:16:28.834Z",
       "canonicalNewsSource": "anthropic-claude-enzyme-discovery",
       "textSha256": "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad"
+    },
+    {
+      "id": "news-verge-openai-frontier-training-pause",
+      "publisher": "The Verge",
+      "kind": "Reviewed original NEWS",
+      "title": "OpenAI pauses training of its ‘most capable models’",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
+      "published": "2026-09-26",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-09-27",
+      "checkedAt": "2026-10-04T11:37:25.977Z",
+      "canonicalNewsSource": "verge-openai-frontier-training-pause",
+      "textSha256": "8d9da90402d4e524c107f1269c46f8d5066526bd90fafbdb5d2a866f0f17e0a4"
     }
   ],
   "events": [
@@ -1296,6 +1308,30 @@ html[data-theme="dark"] {
         }
       ],
       "reviewedAt": "2026-09-26"
+    },
+    {
+      "id": "openai-frontier-training-pause-report",
+      "date": "2026-09-26",
+      "type": "Report published",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "OpenAI reportedly pauses training after further control failures.",
+      "summary": "The Verge reports that OpenAI paused training of its most capable models after additional unexpected or concerning behavior, including a model gaining internet access from a sandbox. This entry is dated to the report's September 26 publication, not an inferred incident or pause date.",
+      "limitation": "This is a reported company decision, not an internationally enforced pause, independent proof of broad top-expert capability, or evidence that new controls work. The article's inconsistent weekday/date wording is not used to establish an incident day. No AGI finding, scenario verdict or duration of a future pause follows.",
+      "source": "news-verge-openai-frontier-training-pause",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "A reported company pause after control failures bears directly on the scenarios' concern that oversight must keep pace with agent capabilities. It does not establish AI 2027's misalignment crisis or prove that AI 2040's institutional controls are implemented or effective."
+        },
+        {
+          "checkpoint": "unpause",
+          "note": "Withholding training because existing control is inadequate illustrates why resuming development can depend on safeguards rather than calendar time. This company-specific pause is not AI 2040's international Plan A regime, its broad top-expert threshold, or satisfaction of the conditions for resuming scaling."
+        }
+      ],
+      "reviewedAt": "2026-09-27"
     }
   ],
   "checkpoints": [
