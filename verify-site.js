@@ -75,6 +75,9 @@ async function verifyAccounting(page){
     const xStale=signals.xSignals&&(signals.xSignalsRetention?.mode==='stale-snapshot-retained'||!((Date.parse(signals.updated)-Date.parse(signals.xSignals.summary.builtAt))/864e5<11));
     assert.equal(await dossier.locator('.x-stale').count(),xStale?1:0,`Visible X snapshot staleness: ${row.id}`);
     if(signals.xSignalsRetention)assert.equal(await dossier.locator('.x-stale').textContent(),signals.xSignalsRetention.note);
+    const xWithheld=!signals.xSignals&&signals.xSignalsWithheld?.state==='withheld';
+    assert.equal(await dossier.locator('.x-withheld').count(),xWithheld?1:0,`Visible named X withheld notice: ${row.id}`);
+    if(xWithheld){assert.equal(await dossier.locator('.x-withheld').textContent(),signals.xSignalsWithheld.note);assert.equal(await dossier.locator('.x-card').count(),0,'No X card while the layer is withheld');}
     assert(!await page.locator('.tl-signal-search').count(),'No discovery search substitutes for evidence');
   }
   assert.deepEqual(seen,counts);assert.equal(visited.size,expected.length);

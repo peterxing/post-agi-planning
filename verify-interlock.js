@@ -96,7 +96,7 @@ const allGuarded = [
   'verify-backfill.js', 'news-backfill.js',
   'refresh-metr.js', 'verify-metr.js',
   'refresh-reference-points.js', 'verify-reference-points.js',
-  'verify-x-harvest.js',
+  'verify-x-harvest.js', 'x-oembed.js', 'verify-x-archive.js',
   'build-game.js','verify-game-content.js','verify-game.js','verify-game-performance.js',
   'verify-ai-timeline.js',
   'refresh-timeline-actuals.js',
@@ -104,11 +104,11 @@ const allGuarded = [
 const manifest = JSON.parse(readOr(path.join(DIR,'package.json')));
 const mirrorScope = manifest.publicationScope === 'curated-mirror';
 check(!manifest.publicationScope || mirrorScope, 'package publication scope is not recognized');
-const operatorGuards = new Set(['verify-backfill.js','news-backfill.js','verify-x-harvest.js']);
-const operatorCommands = ['browse','browse:report','verify:browse','x:harvest','verify:backfill','verify:xharvest'];
+const operatorGuards = new Set(['verify-backfill.js','news-backfill.js','verify-x-harvest.js','x-oembed.js','verify-x-archive.js']);
+const operatorCommands = ['browse','browse:report','verify:browse','x:harvest','verify:backfill','verify:xharvest','x:import','x:oembed','verify:xarchive'];
 if (mirrorScope) {
   for (const name of operatorCommands) check(!Object.hasOwn(manifest.scripts,name), `curated mirror retained operator command ${name}`);
-  for (const file of [...operatorGuards,'x-harvest.js']) check(!fs.existsSync(path.join(DIR,file)), `curated mirror contains operator-only file ${file}`);
+  for (const file of [...operatorGuards,'x-harvest.js','x-archive-import.js']) check(!fs.existsSync(path.join(DIR,file)), `curated mirror contains operator-only file ${file}`);
   check(fs.existsSync(path.join(DIR,'x-harvest-contract.js')), 'curated mirror lacks the shared pure X contract');
   notes.push('Curated-mirror scope: published guard subjects only; operator-local guard wiring is not claimed.');
 } else {

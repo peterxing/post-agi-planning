@@ -84,7 +84,7 @@ at the site owner's instruction:
 On August 26 the owner separately authorized `signals.xSignals`: labelled trajectory activity,
 not evidence. NEWS (`signals.embeds`, `signals.context`, `signals.uncited` and evidence accounting)
 and `signals.referencePoints` remain X-free. The supplement's post links, activity dates and UI are
-allowed; their presence does not approve a citation or a forecast. Only the weekly workflow collects
+allowed; their presence does not approve a citation or a forecast. Only the X archive workflow collects
 X under `XSIGNALS-RUN.md`; daily and author workflows preserve the supplement without recollecting,
 rebuilding or advancing its timestamps. A failed weekly harvest retains the previous valid snapshot.
 Invalid or stale bindings still fail their existing guards. Verify channel isolation, not a blanket
@@ -107,8 +107,9 @@ text ban across the runtime payload or frontend.
   `from:peterxing` evidence requirements and **zero** X-owned embeds;
 - any embed claiming `evidenceOwner: "peterxing"` or `"external"` is rejected **by name**, so a
   reinstatement fails as a reinstatement rather than as a generic schema error;
-- retired syndication, widget, oEmbed and archive hosts are refused; `api.x.com` is permitted only
-  for the weekly activity harvester, not NEWS or reference collection.
+- retired syndication, widget and archive hosts are refused; X's oEmbed service (`publish.twitter.com`,
+  redirecting to `publish.x.com`) is permitted only in the operator-local verifier `x-oembed.js`, and
+  `api.x.com` only for the dormant, explicit-only legacy harvester; neither serves NEWS or references.
 
 `verify:xsignals` guards the separate supplement, including partial-cache refusal and its
 coexistence with X-free NEWS and reviewed references. Daily and author publication use that same gate.

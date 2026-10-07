@@ -38,10 +38,13 @@ if (require.main === module) require('./pipeline-lock').guard('x-signals', { pur
 const fs = require('fs');
 const path = require('path');
 const { detectConcepts, deriveEventTerms, qualifyPost } = require('./refresh-signals.js');
-const { assertCompleteHarvest } = require('./x-harvest-contract.js');
+const { assertCompleteHarvest, verificationFor } = require('./x-harvest-contract.js');
 
 const SECRET_DIR = 'C:/Users/peterxing/pap-secrets';
 const CACHE = path.join(SECRET_DIR, 'x-signal-cache.json');
+/* Written by the operator-local x-oembed.js. Required for an archive import: such a layer may only
+   surface posts X's public embed service confirmed for that exact import (see verificationFor). */
+const OEMBED_CACHE = path.join(SECRET_DIR, 'x-oembed-cache.json');
 const OUT = path.join(__dirname, 'x-signals.json');
 
 /* A single post may legitimately track more than one prediction on the same trajectory — a post
@@ -202,6 +205,17 @@ function loadHarvest() {
   return payload;
 }
 
+function loadVerification(harvest) {
+  if (harvest.source !== 'x-archive') return null;
+  try {
+    const cache = fs.existsSync(OEMBED_CACHE) ? JSON.parse(fs.readFileSync(OEMBED_CACHE, 'utf8')) : null;
+    return verificationFor(harvest, cache);
+  } catch (error) {
+    console.error(`x-signals: ${error.message} No trajectory layer was written.`);
+    process.exit(6);
+  }
+}
+
 function buildTargets() {
   const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8'));
   const targets = [];
@@ -230,9 +244,7 @@ function matcherShape(target) {
   };
 }
 
-function main() {
-  const harvest = loadHarvest();
-  const now = Date.now();
+function rankCandidates(harvest, now) {
   const targets = buildTargets();
   const shapes = targets.map(matcherShape);
 
@@ -300,11 +312,18 @@ function main() {
     candidates.set(shape.id, list);
     nearest.set(shape.id, near);
   }
+  return { targets, candidates, nearest, guardRejections };
+}
 
-  /* ASSIGNMENT. Unique-post-first, so the layer shows breadth of Peter's activity rather than the
-     same loud post pinned to a dozen predictions; then a bounded reuse pass for predictions whose
-     only candidates are already taken. TRACKED is exhausted entirely before NEAREST is considered,
-     so a weaker tier can never displace a stronger one. */
+/* ASSIGNMENT. Unique-post-first, so the layer shows breadth of Peter's activity rather than the
+   same loud post pinned to a dozen predictions; then a bounded reuse pass for predictions whose
+   only candidates are already taken. TRACKED is exhausted entirely before NEAREST is considered,
+   so a weaker tier can never displace a stronger one.
+   `isUsable` removes a post before it can be chosen (an archive post X's embed service found gone,
+   or never confirmed); the ranking itself is untouched, so the next-best candidate takes its place
+   by the same rules. For an API harvest every post is usable, exactly as before. */
+function assignSignals(ranked, isUsable = () => true) {
+  const { candidates, nearest } = ranked;
   const used = new Map();
   const assigned = {};
   const take = (id, choice) => {
@@ -312,35 +331,51 @@ function main() {
     used.set(choice.item.id, (used.get(choice.item.id) || 0) + 1);
   };
   const byScarcity = map => [...map.entries()].sort((a, b) => a[1].length - b[1].length);
+  const ok = c => isUsable(c.item);
 
   for (const [id, list] of byScarcity(candidates)) {
-    const fresh = list.find(c => !used.has(c.item.id));
+    const fresh = list.find(c => ok(c) && !used.has(c.item.id));
     if (fresh) take(id, fresh);
   }
   for (const [id, list] of byScarcity(candidates)) {
     if (assigned[id]) continue;
-    const reusable = list.find(c => (used.get(c.item.id) || 0) < MAX_REUSE);
+    const reusable = list.find(c => ok(c) && (used.get(c.item.id) || 0) < MAX_REUSE);
     if (reusable) take(id, reusable);
   }
   for (const [id, list] of byScarcity(nearest)) {
     if (assigned[id]) continue;
-    const fresh = list.find(c => !used.has(c.item.id));
+    const fresh = list.find(c => ok(c) && !used.has(c.item.id));
     if (fresh) take(id, fresh);
   }
   for (const [id, list] of byScarcity(nearest)) {
     if (assigned[id]) continue;
-    const reusable = list.find(c => (used.get(c.item.id) || 0) < MAX_REUSE);
+    const reusable = list.find(c => ok(c) && (used.get(c.item.id) || 0) < MAX_REUSE);
     if (reusable) take(id, reusable);
   }
+  return { assigned, used };
+}
+
+function main() {
+  const harvest = loadHarvest();
+  const verification = loadVerification(harvest);
+  const now = Date.now();
+  const ranked = rankCandidates(harvest, now);
+  const { targets, guardRejections } = ranked;
+  const { assigned, used } = assignSignals(ranked, verification ? verification.usable : undefined);
 
   const signals = {};
   for (const [id, choice] of Object.entries(assigned)) {
     const tracked = choice.tier === 'tracked';
+    const checked = verification ? verification.entry(choice.item) : null;
     signals[id] = {
       id: choice.item.id,
       kind: choice.item.kind,
       authorship: choice.item.authorship,
       author: choice.item.author,
+      /* From X's own embed attribution, for an archive layer only: the display name the reader would
+         see on X, and when X last confirmed the post was public. A last-good confirmation keeps its
+         original date. */
+      ...(checked ? { authorName: checked.authorName, verifiedAt: checked.checkedAt } : {}),
       /* Assembled from the status id rather than stored, so no retired evidence host is named in
          the tree's JavaScript. The scheme+host are split for the same reason: the surface scanner
          reads `https?://host` literals, and the retirement must keep failing for any file that
@@ -379,11 +414,19 @@ function main() {
   const buckets = {};
   for (const s of Object.values(signals)) buckets[s.ageBucket] = (buckets[s.ageBucket] || 0) + 1;
 
+  const verificationCounts = {};
+  if (verification) {
+    for (const status of Object.values(verification.run.statuses)) verificationCounts[status] = (verificationCounts[status] || 0) + 1;
+  }
   const summary = {
     builtAt: new Date().toISOString(),
     harvestedAt: harvest.harvestedAt,
     account: harvest.account,
-    source: 'x-api',
+    source: harvest.source || 'x-api',
+    ...(harvest.source === 'x-archive' ? {
+      archive: { generationDate: harvest.archive.generationDate, importedAt: harvest.importedAt },
+      verification: { method: 'x-oembed', completedAt: verification.run.completedAt, ...verificationCounts },
+    } : {}),
     caps: harvest.caps,
     corpus: harvest.counts,
     predictions: targets.length,
@@ -416,4 +459,7 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { ageBucket, buildTargets, containsTerm, conceptsOf, matcherShape, relevanceTerms, MAX_REUSE };
+module.exports = {
+  ageBucket, buildTargets, containsTerm, conceptsOf, matcherShape, relevanceTerms, MAX_REUSE,
+  loadHarvest, rankCandidates, assignSignals,
+};

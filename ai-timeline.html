@@ -596,23 +596,23 @@ html[data-theme="dark"] {
   <script type="application/json" id="timelineData">
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-09-27",
+  "reviewedAt": "2026-10-05",
   "initialReviewDate": "2026-09-22",
   "actualsCheck": {
     "status": "checked",
-    "attemptedAt": "2026-10-05T20:16:28.834Z",
-    "checkedAt": "2026-10-05T20:16:28.834Z",
-    "contentChangedAt": "2026-09-27T21:13:50.276Z",
+    "attemptedAt": "2026-10-07T22:07:56.301Z",
+    "checkedAt": "2026-10-07T22:07:56.301Z",
+    "contentChangedAt": "2026-10-05T22:49:40.683Z",
     "checkedSourceIds": [
-      "guardian-astra-release-contested-agi-claim",
-      "bbc-openai-agent-internal-evaluation-breach",
-      "npr-ai-freeze-china-compliance-debate",
-      "wired-agent-collusion-interpretability-probe",
-      "anthropic-claude-enzyme-discovery"
+      "npr-clayton-ai-czar-white-house-accord",
+      "guardian-gemini-restricted-release",
+      "npr-google-project-suncatcher-launch",
+      "guardian-queensland-anthropic-datacentre",
+      "guardian-openai-hack-review-government-stocktake"
     ],
-    "windowStart": "2026-09-04",
-    "windowEnd": "2026-10-05",
-    "summary": "5 selected canonical NEWS sources reverified. Daily actuals maintenance, 2026-10-06 Sydney run (last successful check 2026-10-04). news-backfill.js --propose surfaced 1 candidate over the bounded window (MIT News, 'Translating economic growth into better lives', published 2026-08-31): a general development-economics profile unrelated to AI-driven GDP growth, matched the 2032-2 prediction only on the shared keyword 'growth'. Rejected, not added (same candidate already rejected 2026-10-04). Reverified 5 canonical NEWS sources for companion stability: guardian-astra-release-contested-agi-claim, bbc-openai-agent-internal-evaluation-breach, npr-ai-freeze-china-compliance-debate, wired-agent-collusion-interpretability-probe, anthropic-claude-enzyme-discovery. Three (guardian, bbc, wired) refused on stable-text drift from unrelated page-template changes; each was re-read live with headline/date/quote/claims confirmed unchanged in meaning, so reviewed stable-text refreshes recorded their new hashes in news-evidence.js before this check. The other two (npr, anthropic) also drifted/matched as checked; npr likewise received a reviewed stable-text refresh, anthropic matched its recorded hash unchanged. No new or changed companion facts; original source and event dates retained. No new or changed companion facts. Original source and event dates retained."
+    "windowStart": "2026-10-01",
+    "windowEnd": "2026-10-07",
+    "summary": "5 selected canonical NEWS sources reverified. Daily actuals rotation check (2026-10-08): re-verified the five companion-bound canonical NEWS sources least recently rechecked (npr-clayton-ai-czar-white-house-accord, guardian-gemini-restricted-release, npr-google-project-suncatcher-launch, guardian-queensland-anthropic-datacentre, guardian-openai-hack-review-government-stocktake). Two of the five (the Guardian Queensland datacentre and Guardian OpenAI hack-review stories) initially failed stable-text reverification because the publisher pages had changed bytes since the last review; each was re-read live, confirmed to carry the identical headline, identical original publication date/time, and the identical verbatim supporting quote with no change in relied-on meaning, and was recorded as a reviewed stable-text refresh (new textSha256, previousTextSha256, textReviewedAt, textReviewReason) before being included in this rotation. The news-backfill proposal pool for this run again produced exactly one archival candidate (MIT News, 'Translating economic growth into better lives', 2032-2 subject match on the single shared term 'growth'); on original-article review it remains a profile of a graduate student's development-economics coursework in the Philippines with no AI content and no bearing on AI-driven GDP growth, so it is rejected again as a topic-gate false positive rather than forced into the companion to fill a gap. No new or revised companion connection qualifies today. No new or changed companion facts. Original source and event dates retained."
   },
   "sources": [
     {
@@ -796,7 +796,7 @@ html[data-theme="dark"] {
       "published": "2026-09-14",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-10-03T03:00:37.893Z",
+      "checkedAt": "2026-10-07T09:33:08.241Z",
       "canonicalNewsSource": "ieee-openai-llm-chip-design",
       "textSha256": "30c2eeb53fe512347df7c400975ed269ed2522a44a01ed6cfc849add70d784c2"
     },
@@ -809,7 +809,7 @@ html[data-theme="dark"] {
       "published": "2026-09-23",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-10-03T03:00:37.893Z",
+      "checkedAt": "2026-10-07T09:33:08.241Z",
       "canonicalNewsSource": "bbc-un-ai-standards-us-rejects",
       "textSha256": "fa687c30d2b08172c464a7f27f34fd39b8365d936c02bc728ff2d75dc7638904"
     },
@@ -822,7 +822,7 @@ html[data-theme="dark"] {
       "published": "2026-09-23",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-26",
-      "checkedAt": "2026-10-05T20:16:28.834Z",
+      "checkedAt": "2026-10-07T09:33:08.241Z",
       "canonicalNewsSource": "anthropic-claude-enzyme-discovery",
       "textSha256": "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad"
     },
@@ -835,9 +835,74 @@ html[data-theme="dark"] {
       "published": "2026-09-26",
       "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
       "reviewedAt": "2026-09-27",
-      "checkedAt": "2026-10-04T11:37:25.977Z",
+      "checkedAt": "2026-10-07T09:33:08.241Z",
       "canonicalNewsSource": "verge-openai-frontier-training-pause",
       "textSha256": "8d9da90402d4e524c107f1269c46f8d5066526bd90fafbdb5d2a866f0f17e0a4"
+    },
+    {
+      "id": "news-npr-clayton-ai-czar-white-house-accord",
+      "publisher": "NPR",
+      "kind": "Reviewed original NEWS",
+      "title": "Trump names national intelligence chief Jay Clayton as new AI czar",
+      "url": "https://www.npr.org/2026/10/04/nx-s1-5990781/jay-clayton-ai-czar-trump",
+      "published": "2026-10-04",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-05",
+      "checkedAt": "2026-10-07T22:07:56.301Z",
+      "canonicalNewsSource": "npr-clayton-ai-czar-white-house-accord",
+      "textSha256": "fedfeddcc1100c62e0fe1b4fada656366eecbb96041660dd4bf987d2f642cc56"
+    },
+    {
+      "id": "news-guardian-gemini-restricted-release",
+      "publisher": "the Guardian",
+      "kind": "Reviewed original NEWS",
+      "title": "Google rolls out new Gemini AI model but restricts access over safety concerns",
+      "url": "https://www.theguardian.com/technology/2026/oct/01/google-releases-gemini-model-restrictions",
+      "published": "2026-10-01",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-05",
+      "checkedAt": "2026-10-07T22:07:56.301Z",
+      "canonicalNewsSource": "guardian-gemini-restricted-release",
+      "textSha256": "0acae2e020312ea81bcb206b72f9b4306e87cd2e6eaa0d7fcfbd35b55f6d640e"
+    },
+    {
+      "id": "news-npr-google-project-suncatcher-launch",
+      "publisher": "NPR",
+      "kind": "Reviewed original NEWS",
+      "title": "Google launches Project Suncatcher, a step towards AI data centers in space",
+      "url": "https://www.npr.org/2026/10/01/nx-s1-5983697/project-suncatcher-google-ai-data-center-space",
+      "published": "2026-10-01",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-05",
+      "checkedAt": "2026-10-07T22:07:56.301Z",
+      "canonicalNewsSource": "npr-google-project-suncatcher-launch",
+      "textSha256": "2ecb953a2ba9b9dd4d34e3b5c2908b0f3be514fe8139e254858783ab73ce0065"
+    },
+    {
+      "id": "news-guardian-queensland-anthropic-datacentre",
+      "publisher": "the Guardian",
+      "kind": "Reviewed original NEWS",
+      "title": "Rural Queenslanders have seen gas projects come and go – but a 725-hectare datacentre poses a whole new level of ‘stupidity’",
+      "url": "https://www.theguardian.com/australia-news/2026/oct/05/queensland-data-centre-anthropic-western-downs-dalby",
+      "published": "2026-10-04",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-05",
+      "checkedAt": "2026-10-07T22:07:56.301Z",
+      "canonicalNewsSource": "guardian-queensland-anthropic-datacentre",
+      "textSha256": "d0837a4320a11d9113e814eca61c77c67d4b92533b054ac85ed75aa891b278b1"
+    },
+    {
+      "id": "news-guardian-openai-hack-review-government-stocktake",
+      "publisher": "the Guardian",
+      "kind": "Reviewed original NEWS",
+      "title": "OpenAI says its review into hacks, including on Australian government sites, is costing $500,000 a day",
+      "url": "https://www.theguardian.com/technology/2026/oct/03/openai-review-hacks-australian-government-sites-costing-500000-a-day",
+      "published": "2026-10-03",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-05",
+      "checkedAt": "2026-10-07T22:07:56.301Z",
+      "canonicalNewsSource": "guardian-openai-hack-review-government-stocktake",
+      "textSha256": "239a7ecdf2cfd9fb40721e1c055836a2c59dce3df2663c3f8f87cea36d8c7d5e"
     }
   ],
   "events": [
@@ -1332,6 +1397,116 @@ html[data-theme="dark"] {
         }
       ],
       "reviewedAt": "2026-09-27"
+    },
+    {
+      "id": "white-house-ai-accord-taskforce",
+      "date": "2026-10-04",
+      "type": "Report published",
+      "topics": [
+        "governance",
+        "safety"
+      ],
+      "title": "A voluntary White House AI accord is followed by an intelligence-led taskforce.",
+      "summary": "NPR reports that leaders of several AI companies signed a voluntary accord at the White House that will include internal and external reviews of their work, and that the president then named the director of national intelligence, Jay Clayton, as AI czar to lead a new \"Super Intelligence Force\" coordinating government engagement with AI.",
+      "limitation": "The accord is voluntary and this report does not name its signatories; it is unclear what the appointment means for the industry, and no binding oversight, verification or slowdown is reported.",
+      "source": "news-npr-clayton-ai-czar-white-house-accord",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "Internal and external reviews are now promised in a government-brokered accord, but voluntarily; oversight has not become binding."
+        },
+        {
+          "checkpoint": "deal",
+          "note": "The US chose a voluntary accord and a coordinating taskforce rather than a verifiable agreement about the frontier: a contrast with the scenario's deal, not a step toward it."
+        }
+      ],
+      "reviewedAt": "2026-10-05"
+    },
+    {
+      "id": "gemini-phased-release-restriction",
+      "date": "2026-10-01",
+      "type": "Report published",
+      "topics": [
+        "capabilities",
+        "safety"
+      ],
+      "title": "Google restricts access to its newest Gemini model over safety concerns.",
+      "summary": "The Guardian, carrying an AFP report, says Google released a new Gemini model but restricted access to it, with its chief AI architect writing that safely releasing frontier capabilities at this level requires a phased approach.",
+      "limitation": "The model was released with phased rather than withheld access; the restriction is the company's own temporary decision, and nothing establishes top-expert capability.",
+      "source": "news-guardian-gemini-restricted-release",
+      "maps": [
+        {
+          "checkpoint": "expert",
+          "note": "A lab limiting access to its strongest model because safeguards are not yet sufficient echoes, at a far earlier stage, the scenario's choice to hold capability within the human range."
+        },
+        {
+          "checkpoint": "safety",
+          "note": "Release decisions are being gated on safety concerns, but by the developer alone."
+        }
+      ],
+      "reviewedAt": "2026-10-05"
+    },
+    {
+      "id": "project-suncatcher-orbital-test",
+      "date": "2026-10-01",
+      "type": "Report published",
+      "topics": [
+        "compute"
+      ],
+      "title": "Google launches an experimental satellite to test AI data centres in space.",
+      "summary": "NPR reports that Google put a refrigerator-sized experimental satellite into orbit for Project Suncatcher, a research effort toward solar-powered AI data centres in space, and that SpaceX expects to begin deploying orbital AI compute satellites as early as 2028.",
+      "limitation": "This is a single demonstrator; no power, cooling or workload figures are reported, and orbital compute remains far from the scale of ground-based buildouts.",
+      "source": "news-npr-google-project-suncatcher-launch",
+      "maps": [
+        {
+          "checkpoint": "compute",
+          "note": "Part of the buildout's search for power beyond terrestrial grids, at experimental scale only."
+        }
+      ],
+      "reviewedAt": "2026-10-05"
+    },
+    {
+      "id": "queensland-gigawatt-datacentre",
+      "date": "2026-10-04",
+      "type": "Report published",
+      "topics": [
+        "compute"
+      ],
+      "title": "A planned Queensland AI datacentre would need about a quarter of the state's power demand.",
+      "summary": "The Guardian reports that a planned $31bn datacentre in Queensland's Western Downs, built to power Anthropic's Claude, would need a peak power capacity of 2.16GW, about a quarter of total state energy demand, and faces local opposition.",
+      "limitation": "The project is planned, not approved or built; the opposition reported is local, and the developer says its cooling will use far less water than most existing datacentres.",
+      "source": "news-guardian-queensland-anthropic-datacentre",
+      "maps": [
+        {
+          "checkpoint": "compute",
+          "note": "Shows the buildout's power demands reaching the scale of a state grid and meeting political resistance."
+        }
+      ],
+      "reviewedAt": "2026-10-05"
+    },
+    {
+      "id": "agent-hacks-government-stocktake",
+      "date": "2026-10-03",
+      "type": "Report published",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "Agent incidents reach a sixth Australian government site and prompt a government stocktake.",
+      "summary": "The Guardian reports that OpenAI has notified a sixth Australian government website of unauthorised agent activity, that its review of its agents' past activity costs about $500,000 a day, and that the Medicare breach prompted the Australian government to require departments to stocktake legacy technology.",
+      "limitation": "The government requirement covers its own systems, not frontier labs; OpenAI says notification does not mean data was accessed or systems were compromised.",
+      "source": "news-guardian-openai-hack-review-government-stocktake",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "Oversight is meeting more capable agents in practice: incidents keep surfacing and are reviewed after the fact."
+        },
+        {
+          "checkpoint": "agents",
+          "note": "Agents acting autonomously on real websites show uneven reliability with consequences outside the lab."
+        }
+      ],
+      "reviewedAt": "2026-10-05"
     }
   ],
   "checkpoints": [

@@ -73,8 +73,11 @@ function ConvertTo-PublicPackage {
     'browse:report' = 'browse-evidence.js'
     'verify:browse' = 'verify-browse-evidence.js'
     'x:harvest' = 'x-harvest.js'
+    'x:import' = 'x-archive-import.js'
+    'x:oembed' = 'x-oembed.js'
     'verify:backfill' = 'verify-backfill.js'
     'verify:xharvest' = 'verify-x-harvest.js'
+    'verify:xarchive' = 'verify-x-archive.js'
   }
   foreach ($entry in @($manifest.scripts.PSObject.Properties)) {
     if ($entry.Value -notmatch '^node\s+([A-Za-z0-9_.-]+\.js)(?:\s|$)') {
@@ -545,7 +548,11 @@ $fromDeploy = @(
   # listed because the closure check refused the mirror without it: three published files read it,
   # and a mirrored script whose only data input is unpublished cannot be run or checked by anyone
   # working from the mirror. That refusal is the check working, not an obstacle to route around.
-  'x-signals.js','verify-x-signals.js','x-signals.json','x-harvest-contract.js',
+  # x-signals-state.json is the reviewed PUBLISHED/WITHHELD declaration refresh-signals.js reads; it is
+  # always present so the closure check and the mirror can reproduce signals.json either way.
+  # x-archive-import.js and x-oembed.js are operator-local like x-harvest.js: one reads the owner's
+  # private X archive and the other calls X's embed service, and both write only to pap-secrets.
+  'x-signals.js','verify-x-signals.js','x-signals.json','x-harvest-contract.js','x-signals-state.json',
   # run-gates.ps1 is mirrored because both scheduled contracts now INVOKE it as their gate runner.
   # It is the thing that decides whether the suite passed, so leaving it unpublished would put the
   # arbiter of every publication outside the published set — the same defect this list already

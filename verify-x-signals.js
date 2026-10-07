@@ -148,7 +148,7 @@ check('X sources are refused by the NEWS and reference source gates', () => {
 check('daily and author contracts preserve X without a whole-payload ban or collection step', () => {
   for (const file of ['DAILY-RUN.md', 'AUTHOR-RUN.md', 'README.md']) {
     const source = fs.readFileSync(path.join(__dirname, file), 'utf8').replace(/\s+/g, ' ');
-    assert.match(source, /Only the weekly workflow collects X/i, `${file} does not assign collection ownership`);
+    assert.match(source, /Only the (?:weekly|X archive) workflow collects X/i, `${file} does not assign collection ownership`);
     assert.match(source, /daily and author workflows preserve/i, `${file} omits preservation`);
     assert.match(source, /referencePoints/, `${file} omits reference isolation`);
     assert.ok(!/published payload (?:must contain no|contains ZERO) X vocabulary/i.test(source),
@@ -159,14 +159,14 @@ check('daily and author contracts preserve X without a whole-payload ban or coll
   }
   for (const file of ['DAILY-RUN.md', 'AUTHOR-RUN.md']) {
     const source = fs.readFileSync(path.join(__dirname, file), 'utf8');
-    assert.ok(!/^\s*(?:node\s+x-(?:harvest|signals)\.js|npm\s+run\s+x:(?:harvest|signals))\b/m.test(source),
+    assert.ok(!/^\s*(?:node\s+x-(?:harvest|signals|archive-import|oembed)\.js|npm\s+run\s+x:(?:harvest|signals|import|oembed))\b/m.test(source),
       `${file} instructs a second X collector`);
   }
   for (const file of ['refresh-signals.js', 'refresh-metr.js', 'refresh-reference-points.js', 'refresh-timeline-actuals.js']) {
     const source = executableSource(file);
-    assert.ok(!/\brequire\(['"]\.\/x-harvest(?:\.js)?['"]\)/.test(source),
+    assert.ok(!/\brequire\(['"]\.\/x-(?:harvest|archive-import|oembed)(?:\.js)?['"]\)/.test(source),
       `${file} imports X collection`);
-    assert.ok(!/\b(?:spawn|exec|execFile)(?:Sync)?\s*\([^;]*x-(?:harvest|signals)/s.test(source),
+    assert.ok(!/\b(?:spawn|exec|execFile)(?:Sync)?\s*\([^;]*x-(?:harvest|signals|archive-import|oembed)/s.test(source),
       `${file} launches X collection or rebuilding`);
   }
 });
@@ -216,6 +216,12 @@ check('stale X is retained only by the explicit actuals mode bound to a publishe
   const signals = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
   const predictions = JSON.parse(fs.readFileSync(path.join(__dirname, 'predictions.json'), 'utf8'));
   const ids = buildPredictions().map(prediction => prediction.id);
+  const declared = JSON.parse(fs.readFileSync(path.join(__dirname, 'x-signals-state.json'), 'utf8'));
+  if (declared.state === 'withheld') {
+    const withheld = xSignalLayer(ids, Date.now());
+    assert.deepStrictEqual(Object.keys(withheld), ['xSignalsWithheld'], 'the declared withheld state does not withhold the layer');
+    return;
+  }
   if (Math.round((Date.now() - Date.parse(real.summary.builtAt)) / 864e5) <= 10) return;
   assert.throws(() => xSignalLayer(ids, Date.now()), /day ceiling/, 'the default producer path no longer refuses stale X');
   const mirror = path.resolve(__dirname, '..', 'pap-github');
@@ -385,6 +391,86 @@ check('capability limits are recorded rather than hidden', () => {
     'likes/bookmarks availability is unrecorded, so an unavailable source looks like an empty one');
   assert.ok(caps.likesBookmarksNote && /user context/i.test(caps.likesBookmarksNote),
     'the reason likes and bookmarks are absent is not stated');
+  if (built.summary.source === 'x-archive') {
+    assert.ok(/^\d{4}-\d{2}-\d{2}T/.test(String(built.summary.archive && built.summary.archive.generationDate)),
+      'an archive layer does not name the archive it came from');
+    assert.ok(caps.metricsNote && caps.repostTextNote, 'an archive layer hides how its metrics and repost text were recorded');
+    assert.strictEqual(built.summary.verification && built.summary.verification.method, 'x-oembed',
+      'an archive layer was published without its embed-service verification');
+  }
+});
+
+/* THE NAMED WITHHELD STATE. While the reviewed declaration says WITHHELD, the layer is absent from
+   signals.json, x-signals.json is byte-identical to the pinned digest, and signals.json carries the
+   one named notice. Every other way for X to be absent or different is still a failure. */
+check('the X layer may be absent only through the reviewed, named withheld state', () => {
+  const { createHash } = require('crypto');
+  const { xLayerState, X_WITHHELD_NOTES } = require('./refresh-signals.js');
+  const raw = Buffer.from('{"summary":{},"signals":{}}');
+  const digest = createHash('sha256').update(raw).digest('hex');
+  const reason = 'forecasts-revised-2026-10';
+  const declared = { schemaVersion:1, state:'withheld', reason, since:'2026-10-05', xSignalsSha256:digest, note:X_WITHHELD_NOTES[reason] };
+  const now = Date.parse('2026-10-06T00:00:00Z');
+  const run = (state, bytes = raw) => xLayerState(bytes, now, () => JSON.stringify(state));
+  assert.strictEqual(run({ schemaVersion:1, state:'published' }), null, 'the published state does not publish');
+  assert.deepStrictEqual(run(declared), { xSignalsWithheld:{ state:'withheld', reason, since:'2026-10-05', xSignalsSha256:digest, note:declared.note } });
+  const refuse = (name, state, bytes) => assert.throws(() => run(state, bytes), /x-signals|withheld|refusing/i, name);
+  refuse('unknown reason', { ...declared, reason:'credits-exhausted' });
+  refuse('edited note', { ...declared, note:`${declared.note} ` });
+  refuse('extra field', { ...declared, expires:'2026-11-01' });
+  refuse('missing field', { schemaVersion:1, state:'withheld', reason, since:'2026-10-05', note:declared.note });
+  refuse('future declaration', { ...declared, since:'2026-10-07' });
+  refuse('changed snapshot bytes', declared, Buffer.from('{"summary":{},"signals":{"x":1}}'));
+  refuse('deleted snapshot', declared, null);
+  refuse('unknown state', { schemaVersion:1, state:'hidden' });
+  refuse('published with extras', { schemaVersion:1, state:'published', note:'x' });
+  assert.throws(() => xLayerState(raw, now, () => '{'), /unparseable/, 'a corrupt state file is accepted');
+  assert.throws(() => xLayerState(raw, now, () => { throw new Error('ENOENT'); }), /missing or unparseable/, 'a missing state file is accepted');
+
+  const state = JSON.parse(fs.readFileSync(path.join(__dirname, 'x-signals-state.json'), 'utf8'));
+  const signals = JSON.parse(fs.readFileSync(path.join(__dirname, 'signals.json'), 'utf8'));
+  if (state.state === 'withheld') {
+    assert.strictEqual(createHash('sha256').update(fs.readFileSync(OUT)).digest('hex'), state.xSignalsSha256,
+      'x-signals.json changed while withheld');
+    assert.ok(!('xSignals' in signals) && !('xSignalsRetention' in signals), 'a withheld layer is still published');
+    assert.deepStrictEqual(signals.xSignalsWithheld, { state:'withheld', reason:state.reason, since:state.since,
+      xSignalsSha256:state.xSignalsSha256, note:state.note }, 'signals.json does not carry the reviewed withheld notice');
+  } else {
+    assert.strictEqual(state.state, 'published', 'x-signals-state.json names an unknown state');
+    assert.ok(!('xSignalsWithheld' in signals), 'a withheld notice is published while the declared state is published');
+  }
+});
+
+check('an archive import is complete only when the archive itself proves it', () => {
+  const { verificationFor, CACHE_ITEM_KEYS } = require('./x-harvest-contract.js');
+  const item = { id:'11', sourceId:'11', kind:'post', author:'peterxing', authorship:'authored',
+    created:'2026-10-01T00:00:00.000Z', text:'fixture', likes:1, rts:0, statusId:'11' };
+  assert.deepStrictEqual(Object.keys(item), CACHE_ITEM_KEYS);
+  const archive = { source:'x-archive', account:'peterxing', harvestedAt:'2026-10-05T00:00:00.000Z', importedAt:'2026-10-05T01:00:00.000Z', items:[item],
+    archive:{ generationDate:'2026-10-05T00:00:00.000Z', userName:'peterxing', isPartialArchive:false,
+      files:[{ fileName:'data/tweets.js', declaredCount:1, parsedCount:1, sha256:'a'.repeat(64) }] },
+    caps:{ partial:false, timelinePageFailures:[], archiveComplete:true, timelineComplete:true, declaredTweets:1, parsedTweets:1,
+      recentSearchAvailable:null } };
+  assert.doesNotThrow(() => assertCompleteHarvest(archive));
+  const refuse = (name, change, pattern) => assert.throws(() => assertCompleteHarvest({ ...archive, ...change }), pattern, name);
+  refuse('partial archive', { archive:{ ...archive.archive, isPartialArchive:true } }, /partial archive/);
+  refuse('another account', { archive:{ ...archive.archive, userName:'someoneelse' } }, /another account/);
+  refuse('a retained account id', { archive:{ ...archive.archive, accountId:'1' } }, /account id/);
+  refuse('a retained user id', { userId:'1' }, /account id/);
+  refuse('truncated file', { archive:{ ...archive.archive, files:[{ ...archive.archive.files[0], parsedCount:0 }] } }, /truncated/);
+  refuse('incomplete caps', { caps:{ ...archive.caps, archiveComplete:false } }, /not recorded as complete/);
+  refuse('post after the archive', { items:[{ ...item, created:'2026-10-06T00:00:00.000Z' }] }, /dated after/);
+  refuse('schema drift', { items:[{ ...item, extra:true }] }, /cache schema/);
+  refuse('repost marked authored', { items:[{ ...item, kind:'repost' }] }, /inconsistent/);
+  refuse('generation date not the harvest date', { harvestedAt:'2026-10-04T00:00:00.000Z' }, /generation date/);
+  const cache = { schemaVersion:1, account:'peterxing', entries:{ 11:{ status:'ok', checkedAt:'2026-10-05T02:00:00.000Z' } },
+    lastRun:{ importedAt:archive.importedAt, harvestedAt:archive.harvestedAt, completedAt:'2026-10-05T02:00:00.000Z', statuses:{ 11:'verified' } } };
+  assert.strictEqual(verificationFor(archive, cache).usable(item), true);
+  assert.strictEqual(verificationFor(archive, { ...cache, lastRun:{ ...cache.lastRun, statuses:{ 11:'gone' } } }).usable(item), false);
+  assert.strictEqual(verificationFor(archive, { ...cache, lastRun:{ ...cache.lastRun, statuses:{} } }).usable(item), false);
+  assert.throws(() => verificationFor(archive, { ...cache, lastRun:{ ...cache.lastRun, importedAt:'2026-09-01T00:00:00.000Z' } }), /does not belong/);
+  assert.throws(() => verificationFor(archive, null), /does not belong/);
+  assert.strictEqual(verificationFor({ ...archive, source:'x-api' }, null), null, 'an API harvest needs no embed verification');
 });
 
 check('empty and partial harvests are refused by the shared contract and mirrored builder', () => {

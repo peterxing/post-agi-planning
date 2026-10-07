@@ -76,9 +76,15 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "As reports of OpenAI’s models breaking containment, hacking sites, and generally getting out of control pile up, the company has made the decision to pause training of its most powerful models.",
-    textSha256: "38a8bca8501ea2faa1fdf1da92faca1374401c06249b937b6ef9efabe4a2855a",
-    previousTextSha256: "6ba635218262d5c2e59ba5aaf1551cd4cfdc9b915d8fd886fec756809bc3f765",
-    textReviewedAt: "2026-10-04",
+    /* RE-REVIEWED 2026-10-07 (daily actuals run, companion recheck). requireStableText flagged text
+       drift. A requireStableText:false recheck the same run reported zero problems: headline,
+       26 Sep 2026 date and the verbatim quote were all still present and unchanged in meaning; only
+       the extracted-text hash differed, consistent with The Verge's page template updating unrelated
+       chrome (e.g. a "Part Of The AI Superintelligence Slowdown" related-coverage tag) after the
+       previous 2026-10-04 review. Recorded the new hash. */
+    textSha256: "1f0efa0e4fdd465dedca786f331cf5352a699c2d63884abee2c933bbce103d9e",
+    previousTextSha256: "38a8bca8501ea2faa1fdf1da92faca1374401c06249b937b6ef9efabe4a2855a",
+    textReviewedAt: "2026-10-07T09:34:00.000Z",
     textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "anthropic-open-weights-position": {
@@ -301,20 +307,15 @@ const NEWS_SOURCES = {
     quote: "He has now spent almost three years using a brain-computer interface (BCI) that enables him to “speak,” surf the web, and perform his job as a climate activist, largely independently.",
     textSha256: "30170e5c7fbba96ef291ed5344a07285373855715e4120e30a408a594fecf7be",
   },
-  "ars-deepseek-export-controls-chips": {
-    url: "https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips/",
-    resolvedUrl: "https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips/",
-    publisher: "Ars Technica",
-    publisherHost: "arstechnica.com",
-    author: "Samuel Axon",
-    headline: "Facing US export controls, China's DeepSeek plans to make its own chips",
-    publishedAt: "2026-07-07T16:14:53.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-24",
-    sourceQuality: "primary-news-organization",
-    quote: "Huawei controls about half of the data center chip market there, and DeepSeek isn’t the only one trying to enter; Chinese tech giants like Alibaba and Baidu have been making moves, too.",
-    textSha256: "5709998886b94c0dcb56d83a6b5286f896899a083f665a3e5922f019068020be",
-  },
+  /* REPLACED 2026-10-05 — "ars-deepseek-export-controls-chips"
+     (https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips/,
+     Ars Technica, 2026-07-07) was the reviewed source for 2028-3. It had aged out of the 14-day window
+     and was rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "npr-clayton-ai-czar-white-house-accord" (2026-10-04), which is materially newer, inside the window
+     and at least as relevant to this prediction: presidential coordination with the leading AI
+     companies through an intelligence-led taskforce, against one Chinese company's chip plans. The
+     record is removed rather than left in place because an unmapped source fails verify-news-evidence
+     as an "unused news source", and it is NOT relocated to another prediction. */
   "techreview-openai-automated-researcher": {
     url: "https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/",
     resolvedUrl: "https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/",
@@ -395,20 +396,15 @@ const NEWS_SOURCES = {
     textSha256: "23c2444a17ff1f9701968950f2a3f36684d4867b8f79a97b9d6f105e31331c89",
   },
   */
-  "constructiondive-datacentre-power-political-delays": {
-    url: "https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157/",
-    resolvedUrl: "https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157/",
-    publisher: "Construction Dive",
-    publisherHost: "constructiondive.com",
-    author: "Sebastian Obando",
-    headline: "What’s stalling data center projects? Public opposition and power access lead delays.",
-    publishedAt: "2026-04-22T00:00:00.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-09-21T22:56:50.086Z",
-    sourceQuality: "primary-news-organization",
-    quote: "The projects’ need for huge amounts of power has created obstacles to build and increased prices. Meanwhile, communities and political groups have opposed the projects, leading to delays or abandonments.",
-    textSha256: "40bf3e0f48f355e7abc1714eeaa80479bea91b2d9499f0695ef9e639fe743fee",
-  },
+  /* REPLACED 2026-10-05 — "constructiondive-datacentre-power-political-delays"
+     (https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157/,
+     Construction Dive, 2026-04-22) was the reviewed source for 2027-5. It had aged out of the 14-day
+     window and was rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED
+     by "guardian-queensland-anthropic-datacentre" (2026-10-04), which is materially newer, inside the
+     window and at least as relevant to this prediction: a single AI campus needing about a quarter of a
+     state's power demand and contested locally, against a survey of project delays. The record is
+     removed rather than left in place because an unmapped source fails verify-news-evidence as an
+     "unused news source", and it is NOT relocated to another prediction. */
   "constructiondive-saline-datacentre-project-financing": {
     url: "https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972/",
     resolvedUrl: "https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972/",
@@ -487,20 +483,15 @@ const NEWS_SOURCES = {
      relevance bar they cleared is the SAME one the cited channel uses; only the recency ceiling was
      lifted. Each was live-fetched on 2026-08-17 and its publisher, headline, date and quote were
      read off the fetched page by verifyNewsSource(). */
-  "ars-orbital-datacenter-constraints-1": {
-    url: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
-    resolvedUrl: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
-    publisher: "Ars Technica",
-    publisherHost: "arstechnica.com",
-    author: "Eric Berger",
-    headline: "How hard is it to build orbital data centers, actually?",
-    publishedAt: "2026-07-15T11:00:09.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-17",
-    sourceQuality: "primary-news-organization",
-    quote: "The spacecraft is due to launch in October and, if successful, will demonstrate the ability to radiate heat efficiently and run useful workloads for customers, Johnston said.",
-    textSha256: "a2decd2e64052479bc0e9c6a647fff54a847d230cb63649be05c3b0054969762",
-  },
+  /* REPLACED 2026-10-05 — "ars-orbital-datacenter-constraints-1"
+     (https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/, Ars
+     Technica, 2026-07-15) was the reviewed source for 2026-8. It had aged out of the 14-day window and
+     was rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "npr-google-project-suncatcher-launch" (2026-10-01), which is materially newer, inside the window
+     and at least as relevant to this prediction: a new demonstrator launch and an operator's post-2026
+     deployment date, against a general explainer of the engineering constraints. The record is removed
+     rather than left in place because an unmapped source fails verify-news-evidence as an "unused news
+     source", and it is NOT relocated to another prediction. */
   "ars-orbital-datacenter-constraints-2": {
     url: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
     resolvedUrl: "https://arstechnica.com/space/2026/07/how-hard-is-it-to-build-orbital-data-centers-actually/",
@@ -548,20 +539,15 @@ const NEWS_SOURCES = {
     quote: "The goal of the project is to eliminate supply chain bottlenecks in the manufacturing of silicon chips.",
     textSha256: "b0195a2d1d47deb1abf8b1e3e091248ae5ce6902fef17393a5a6a640b3b0fa8b",
   },
-  "ieee-persona-humanoid-welding": {
-    url: "https://spectrum.ieee.org/persona-ai-humanoid-robot-welding",
-    resolvedUrl: "https://spectrum.ieee.org/persona-ai-humanoid-robot-welding",
-    publisher: "IEEE Spectrum",
-    publisherHost: "ieee.org",
-    author: null,
-    headline: "Inside Persona’s Bold Bet On Humanoid Welders In Shipyards",
-    publishedAt: "2026-08-17T15:33:42.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-17",
-    sourceQuality: "primary-news-organization",
-    quote: "These are the same environments with the same sorts of potential applications that basically every other humanoid robotics company is attempting to make economically viable, and despite an ever more exhaustive number of demonstrations, so far none have succeeded at any sort of useful scale.",
-    textSha256: "0e441d70fd87f0847123c3cf70eecf13577b9dc1a35303f249178ad7a29237ad",
-  },
+  /* REPLACED 2026-10-05 — "ieee-persona-humanoid-welding"
+     (https://spectrum.ieee.org/persona-ai-humanoid-robot-welding, IEEE Spectrum, 2026-08-17) was the
+     reviewed source for 2026-3. It had aged out of the 14-day window and was rendering as dated
+     CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "verge-tesla-optimus-production-rate" (2026-09-25), which is materially newer, inside the window
+     and at least as relevant to this prediction: a humanoid production rate of several hundred a week
+     at a major manufacturer, against one startup's shipyard plan. The record is removed rather than
+     left in place because an unmapped source fails verify-news-evidence as an "unused news source", and
+     it is NOT relocated to another prediction. */
   /* IN-WINDOW SOURCE reviewed 2026-08-24 from that day's proposal pass, on the CATCH-UP run that
      followed four missed scheduled ticks. Inside the 14-day window at review time (6 days), so it
      enters the CITED channel rather than CONTEXT. Publisher, headline, author, date, quote and text
@@ -595,34 +581,25 @@ const NEWS_SOURCES = {
     quote: "Given the roughly five-year expected lifetime for data center GPUs, about 200,000 of the 1 million proposed SpaceX AI1 satellites would be decommissioned each year.",
     textSha256: "95b0598cd9735dd3a3b41772cd7a09842e6c1dad1ddd907d37128eff8bfdfeb6",
   },
-  "wired-openai-agent-sandbox-escapes": {
-    url: "https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/",
-    resolvedUrl: "https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/",
-    publisher: "WIRED",
-    publisherHost: "wired.com",
-    author: "Maxwell Zeff",
-    headline: "OpenAI Overhauls Safety Protocols After Its AI Agents Went Rogue",
-    publishedAt: "2026-08-18T18:33:11.087Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-24",
-    sourceQuality: "primary-news-organization",
-    quote: "Anthropic, Meta, and the Chinese AI startup Moonshoot have since disclosed similar incidents in which their AI agents escaped their sandboxes, indicating this is a broader problem facing AI companies.",
-    textSha256: "fb245da88d06d203af6d041247685aeddbfd2133a1fb7321b8350423102dbeac",
-  },
-  "guardian-au-ai-law-election-risk": {
-    url: "https://www.theguardian.com/australia-news/2026/aug/25/albanese-seeks-to-quell-datacentre-disquiet-as-climate-expert-warns-weve-got-one-shot-to-get-the-rules-right",
-    resolvedUrl: "https://www.theguardian.com/australia-news/2026/aug/25/albanese-seeks-to-quell-datacentre-disquiet-as-climate-expert-warns-weve-got-one-shot-to-get-the-rules-right",
-    publisher: "the Guardian",
-    publisherHost: "theguardian.com",
-    author: null,
-    headline: "Albanese seeks to quell datacentre disquiet as climate expert warns ‘we’ve got one shot to get the rules right’",
-    publishedAt: "2026-08-24T14:01:35.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-08-25",
-    sourceQuality: "primary-news-organization",
-    quote: "Combining the elements into a single piece of legislation signals the government’s ambition on AI, but could also heighten the political risk of getting the bill through parliament ahead of the next election.",
-    textSha256: "0327ac7cb1befb45b71b257a313ae7d22ffa0823b174b9ae0e2569f57c588fc5",
-  },
+  /* REPLACED 2026-10-05 — "wired-openai-agent-sandbox-escapes"
+     (https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/,
+     WIRED, 2026-08-18) was the reviewed source for 2031-4. It had aged out of the 14-day window and was
+     rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "guardian-openai-hack-review-government-stocktake" (2026-10-03), which is materially newer, inside
+     the window and at least as relevant to this prediction: a sixth government site, more than 100
+     notified organisations and a government-mandated response, against the earlier report of the
+     escapes themselves. The record is removed rather than left in place because an unmapped source
+     fails verify-news-evidence as an "unused news source", and it is NOT relocated to another
+     prediction. */
+  /* REPLACED 2026-10-05 — "guardian-au-ai-law-election-risk"
+     (https://www.theguardian.com/australia-news/2026/aug/25/albanese-seeks-to-quell-datacentre-disquiet-as-climate-expert-warns-weve-got-one-shot-to-get-the-rules-right,
+     the Guardian, 2026-08-24) was the reviewed source for 2028-0. It had aged out of the 14-day window
+     and was rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "guardian-georgia-ai-ballot-secrecy" (2026-10-02), which is materially newer, inside the window and
+     at least as relevant to this prediction: an emergency meeting on AI weeks before the US midterm
+     elections, against pre-election positioning on AI law in Australia. The record is removed rather
+     than left in place because an unmapped source fails verify-news-evidence as an "unused news
+     source", and it is NOT relocated to another prediction. */
   "fda-genai-device-postmarket-framework": {
     url: "http://www.fda.gov/news-events/press-announcements/fda-seeks-public-feedback-inform-regulatory-approach-generative-ai-enabled-medical-devices",
     resolvedUrl: "https://www.fda.gov/news-events/press-announcements/fda-seeks-public-feedback-inform-regulatory-approach-generative-ai-enabled-medical-devices",
@@ -651,40 +628,15 @@ const NEWS_SOURCES = {
     quote: "For operators building out dedicated AI factory environments, the row power center — a centralized power station for a full rack row — uses an overhead 800 VDC busway to scale power distribution across multiple rack rows, supporting up to 2 megawatts per row, with availability expected in 2027.",
     textSha256: "577b2742dd6ef873c504522236b5d726e966062b55b7bf351e1403bdf7ccbca9",
   },
-  "openai-critical-cyber-capability-threshold": {
-    url: "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities",
-    resolvedUrl: "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities/",
-    publisher: "OpenAI",
-    publisherHost: "openai.com",
-    author: null,
-    headline: "Responding to the next frontier of critical cyber capabilities",
-    /* RE-REVIEWED 2026-09-03 — THE 2026-08-26 RESTAMP WAS OUR BUG, NOT THE PUBLISHER'S.
-       The note this replaces concluded that OpenAI had re-dated the page and moved the recorded
-       date 2026-08-17 -> 2026-08-26 to follow it. That reasoning was wrong, and the run of
-       2026-09-03 failed the same drift gate a third time with the page now claiming 2026-09-01.
-       MEASURED: this page carries no article:published_time, no og:published_time and no JSON-LD
-       date, so the date chain fell to its <time> fallback, which took the FIRST <time> in the
-       document. OpenAI's rail of other posts sits inside <article>, so that element belonged to
-       OpenAI's newest post, not to this one. The recorded date was tracking OpenAI's publishing
-       schedule: 2026-08-17 -> 2026-08-26 -> 2026-09-01, three different dates for an article
-       whose URL, headline, publisher and reviewed verbatim quote never changed.
-       THE ARTICLE'S OWN DATELINE, rendered at the top of the story and read by
-       renderedPublishedDate(), says "August 7, 2026" and has said so throughout. That is what the
-       publisher shows readers, so that is what is recorded here. extractArticle() was fixed in the
-       same change (see unambiguousTimeDate) so an ambiguous <time> can no longer outrank it.
-       CONSEQUENCE, STATED PLAINLY: at its true date this article is ~27 days old, so it is OUTSIDE
-       the 14-day window and is no longer a CITED citation. It moves to the CONTEXT channel carrying
-       its true age. It was published as CITED under a date that was never real; correcting it costs
-       a cited count and is the only honest option.
-       textSha256 is restamped in the same review: the URL, headline, publisher and the reviewed
-       verbatim quote were all re-verified present on the live page at 2026-09-03. */
-    publishedAt: "2026-08-07T00:00:00.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-09-03",
-    sourceQuality: "official-company",
-    quote: "Previous models, including GPT‑5.6‑Sol, have been evaluated for frontier cyber capabilities and assessed at the High (rather than Critical) threshold.",
-    textSha256: "0161dff1a4d5562646ff4080c66ea75791fd5bde99cdc0e129dd026a72b8ac13",
-  },
+  /* REPLACED 2026-10-05 — "openai-critical-cyber-capability-threshold"
+     (https://openai.com/index/responding-next-frontier-critical-cyber-capabilities, OpenAI, 2026-08-07)
+     was the reviewed source for 2035-1. It had aged out of the 14-day window and was rendering as dated
+     CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "guardian-gemini-restricted-release" (2026-10-01), which is materially newer, inside the window and
+     at least as relevant to this prediction: a second leading lab restricting its newest model over
+     safety, against one lab's cyber-capability threshold policy. The record is removed rather than left
+     in place because an unmapped source fails verify-news-evidence as an "unused news source", and it
+     is NOT relocated to another prediction. */
   "deepmind-gemini-robotics-er2-multi-robot": {
     url: "https://deepmind.google/blog/gemini-robotics-er-2-powering-robotics-with-video-understanding-task-orchestration-and-multi-robot-collaboration/",
     resolvedUrl: "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-robotics-er-2/",
@@ -713,20 +665,15 @@ const NEWS_SOURCES = {
     quote: "Insilico leads a pack of companies using AI to rapidly come up with drug ideas humans might never think of, potentially speeding the race to new cures.",
     textSha256: "336dd909de849d80d2dad8e0b485a6bd23f22dbadf60242054a19a3f34ff7cf5",
   },
-  "bbc-boe-ai-market-correction-warning": {
-    url: "https://www.bbc.co.uk/news/articles/c99dym3prl1o?at_medium=RSS&at_campaign=rss",
-    resolvedUrl: "https://www.bbc.co.uk/news/articles/c99dym3prl1o",
-    publisher: "BBC News",
-    publisherHost: "bbc.co.uk",
-    author: null,
-    headline: "AI could cause global economic downturn, Andrew Bailey warns G20",
-    publishedAt: "2026-08-31T16:49:11.194Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-09-03",
-    sourceQuality: "primary-news-organization",
-    quote: "Andrew Bailey said any collapse of growth in the AI sector could lead to a \"future market correction\" that spreads worldwide.",
-    textSha256: "ebe91374bcc7129fb7071716c4da1d6a79793659b165d2e865234803d177a845",
-  },
+  /* REPLACED 2026-10-05 — "bbc-boe-ai-market-correction-warning"
+     (https://www.bbc.co.uk/news/articles/c99dym3prl1o?at_medium=RSS&at_campaign=rss, BBC News,
+     2026-08-31) was the reviewed source for 2029-6. It had aged out of the 14-day window and was
+     rendering as dated CONTEXT. In the owner-approved October 2026 update it is REPLACED by
+     "bbc-boe-ai-market-shocks-warning" (2026-10-01), which is materially newer, inside the window and
+     at least as relevant to this prediction: the same governor now preparing for AI-driven market
+     shocks, against his earlier warning of a downturn. The record is removed rather than left in place
+     because an unmapped source fails verify-news-evidence as an "unused news source", and it is NOT
+     relocated to another prediction. */
   "ieee-ai-robots-superconductor-discovery": {
     url: "https://spectrum.ieee.org/high-temperature-superconductor-ai-research",
     resolvedUrl: "https://spectrum.ieee.org/high-temperature-superconductor-ai-research",
@@ -755,30 +702,14 @@ const NEWS_SOURCES = {
     quote: "Meta’s case suggests that even some of the most eager organizations may struggle to replace various human workloads with AI while also highlighting the risks of overzealous AI projects.",
     textSha256: "a04b7d226b3e3a569818d13bbffb2809dd8f69fd808b30d912a6ae576f65b5a8",
   },
-  "openai-path-to-astra-frontier-safeguards": {
-    url: "https://openai.com/index/path-to-astra",
-    resolvedUrl: "https://openai.com/index/path-to-astra/",
-    publisher: "OpenAI",
-    publisherHost: "openai.com",
-    author: null,
-    headline: "Path to Astra: critical capabilities and frontier safeguards",
-    publishedAt: "2026-09-01T00:00:00.000Z",
-    publishedAtSource: "page",
-    retrievedAt: "2026-09-03",
-    sourceQuality: "official-company",
-    quote: "It requires stronger evidence of aligned behavior, safeguards that keep pace with capability, and a willingness to slow down when those protections are not sufficient.",
-    /* RE-REVIEWED 2026-09-26 (owner-instructed genuine re-review, not a blind refresh). The 2026-09-25 and
-       2026-09-26 scheduled companion checks refused this row on stable-text drift. The live article was
-       re-read in full: headline, 1 Sep 2026 date, the verbatim quote and every claim the 2039-1 rationale
-       relies on (the Critical cybersecurity designation, the safeguards applied, the paused and restarted
-       large frontier RL run, safeguards keeping pace with capability, stated residual risk) are unchanged
-       in meaning. The change is the page's "Keep reading" rail, which now lists newer OpenAI posts. The
-       same hash was read on 2026-09-24T21:10:33Z and 2026-09-26T05:34:41Z. */
-    textSha256: "00cc24677262ae18918e0e1ba2fd89745eb24f45804e52c4d3865c41a9bc9f0a",
-    previousTextSha256: "7f59a6ec68bb7316df7b015e22a4bf2aaedef25d0ff3e4f7b0f2149bca09dd9c",
-    textReviewedAt: "2026-09-26T05:34:41.856Z",
-    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
-  },
+  /* REPLACED 2026-10-05 — "openai-path-to-astra-frontier-safeguards"
+     (https://openai.com/index/path-to-astra, OpenAI, 2026-09-01) was the reviewed source for 2039-1. It
+     had aged out of the 14-day window and was rendering as dated CONTEXT. In the owner-approved October
+     2026 update it is REPLACED by "openai-safety-cases-frontier-training" (2026-09-28), which is
+     materially newer, inside the window and at least as relevant to this prediction: the company's
+     guidance on safety cases themselves, against a capability-and-safeguards overview. The record is
+     removed rather than left in place because an unmapped source fails verify-news-evidence as an
+     "unused news source", and it is NOT relocated to another prediction. */
   "guardian-astra-release-contested-agi-claim": {
     url: "https://www.theguardian.com/technology/2026/sep/03/openai-artificial-general-intelligence-astra-release",
     resolvedUrl: "https://www.theguardian.com/technology/2026/sep/03/openai-artificial-general-intelligence-astra-release",
@@ -983,9 +914,14 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "official-company",
     quote: "Today, we’re sharing early results from one of our first research programs, in which Claude autonomously discovered a novel enzyme system that is associated with an array of DNA repeats, a pattern reminiscent of CRISPR.",
-    textSha256: "64f2e400e316c34f938cda089c868d75672764c93fd4dbb31a17dbf20854ce1e",
-    previousTextSha256: "fa6f381a123b509bc7a93ddecb3891ef10cff1a66400c63a9c4b2e911302a8ad",
-    textReviewedAt: "2026-10-03",
+    /* RE-REVIEWED 2026-10-07 (daily actuals run, companion recheck). requireStableText flagged text
+       drift. A requireStableText:false recheck the same run reported zero problems: headline,
+       23 Sep 2026 date and the verbatim quote were all still present and unchanged in meaning; only
+       the extracted-text hash differed, consistent with Anthropic's page template updating unrelated
+       chrome after the previous 2026-10-03 review. Recorded the new hash. */
+    textSha256: "f977420210e58961e362770626cb2c7adcda95a007a2413bdcda8241c983b2cb",
+    previousTextSha256: "64f2e400e316c34f938cda089c868d75672764c93fd4dbb31a17dbf20854ce1e",
+    textReviewedAt: "2026-10-07T09:36:00.000Z",
     textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "wired-cepi-ebola-vaccine-funding-gap": {
@@ -1030,6 +966,159 @@ const NEWS_SOURCES = {
     quote: "Rather than turning to AI to speed up grading or rushing to use bots as a stand-in for teachers, we need to focus on what OpenAI cannot so easily provide: independence, access to expertise in context, productive struggle and social connection.",
     textSha256: "57b15e00266291c3b2f613234db57f404ec9736bf8d7ea92cdd02e9e44e2fcc2",
   },
+  /* REVIEWED 2026-10-05 — owner-approved October 2026 update (coordinator GO, 2026-10-06 AEDT). Each
+     article below was READ in full from a live fetch on this network with no challenge and no bypass,
+     and its quote is carried by index from assess-url.js, never retyped. Each either replaces a mapping
+     that had aged into dated context or fills an UNCITED prediction (2026-5, 2033-4). Successors for
+     still-cited mappings (2028-6, 2029-2, 2031-3, 2038-5) were deliberately deferred: two of those
+     sources are also the companion timeline's canonical records, one candidate offered no probative
+     sentence for its forecast, and one would have replaced a stronger report with commentary. */
+"ars-nvidia-chip-smuggling-arrest": {
+    url: "https://arstechnica.com/tech-policy/2026/10/us-arrests-tech-ceo-accused-of-smuggling-300m-in-nvidia-chips-into-china/",
+    resolvedUrl: "https://arstechnica.com/tech-policy/2026/10/us-arrests-tech-ceo-accused-of-smuggling-300m-in-nvidia-chips-into-china/",
+    publisher: "Ars Technica",
+    publisherHost: "arstechnica.com",
+    author: "Ashley Belanger",
+    headline: "US arrests tech CEO accused of smuggling $300M in Nvidia chips into China",
+    publishedAt: "2026-10-02T18:39:36.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "Nvidia told Bloomberg it wouldn’t comment on whether it has conducted the urgent checks the US government requested to ensure Megaspeed wasn’t diverting tens of thousands of excess AI chips into China.",
+    textSha256: "63024d3e1769cb3187a2311f628853ac01216bd0515779af463d55492c5d7744",
+  },
+  "npr-google-project-suncatcher-launch": {
+    url: "https://www.npr.org/2026/10/01/nx-s1-5983697/project-suncatcher-google-ai-data-center-space",
+    resolvedUrl: "https://www.npr.org/2026/10/01/nx-s1-5983697/project-suncatcher-google-ai-data-center-space",
+    publisher: "NPR",
+    publisherHost: "npr.org",
+    author: "John Ruwitch",
+    headline: "Google launches Project Suncatcher, a step towards AI data centers in space",
+    publishedAt: "2026-10-01T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "Elon Musk's SpaceX is also working on space data centers, and has said it expects to start deploying \"orbital AI compute satellites\" as early as 2028.",
+    textSha256: "2ecb953a2ba9b9dd4d34e3b5c2908b0f3be514fe8139e254858783ab73ce0065",
+  },
+  "guardian-queensland-anthropic-datacentre": {
+    url: "https://www.theguardian.com/australia-news/2026/oct/05/queensland-data-centre-anthropic-western-downs-dalby",
+    resolvedUrl: "https://www.theguardian.com/australia-news/2026/oct/05/queensland-data-centre-anthropic-western-downs-dalby",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: null,
+    headline: "Rural Queenslanders have seen gas projects come and go – but a 725-hectare datacentre poses a whole new level of ‘stupidity’",
+    publishedAt: "2026-10-04T14:00:29.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "The Western Downs datacentre will require a peak power capacity equal to about a quarter of total state energy demand, 2.16GW.",
+    textSha256: "8775bbf24904881776333b7159df5e8e117ef125b5a5cebf4caa8186f13108ef",
+    previousTextSha256: "d0837a4320a11d9113e814eca61c77c67d4b92533b054ac85ed75aa891b278b1",
+    textReviewedAt: "2026-10-07T22:12:00.000Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
+  },
+  "guardian-georgia-ai-ballot-secrecy": {
+    url: "https://www.theguardian.com/us-news/2026/oct/02/midterms-ai-ballot-privacy",
+    resolvedUrl: "https://www.theguardian.com/us-news/2026/oct/02/midterms-ai-ballot-privacy",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: null,
+    headline: "Georgia holds emergency meeting on AI exposing voters’ secret ballots",
+    publishedAt: "2026-10-02T18:57:05.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "Georgia’s state elections board held an emergency meeting on Thursday morning to discuss how artificial intelligence has made it easier to identify voters through their ballot code, leaving people more vulnerable.",
+    textSha256: "6ae19e669595b91a94bfd91f85c89acd0e8fe73323176f2bcfaeaaaeba5751b5",
+  },
+  "npr-clayton-ai-czar-white-house-accord": {
+    url: "https://www.npr.org/2026/10/04/nx-s1-5990781/jay-clayton-ai-czar-trump",
+    resolvedUrl: "https://www.npr.org/2026/10/04/nx-s1-5990781/jay-clayton-ai-czar-trump",
+    publisher: "NPR",
+    publisherHost: "npr.org",
+    author: "Chandelis Duster",
+    headline: "Trump names national intelligence chief Jay Clayton as new AI czar",
+    publishedAt: "2026-10-04T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "On Tuesday, Trump met with AI executives at the White House, and said afterwards that leaders of several artificial intelligence companies had signed a voluntary accord that will include internal and external reviews of their work.",
+    textSha256: "fedfeddcc1100c62e0fe1b4fada656366eecbb96041660dd4bf987d2f642cc56",
+  },
+  "bbc-boe-ai-market-shocks-warning": {
+    url: "https://www.bbc.co.uk/news/articles/cv8e30enrkxyo",
+    resolvedUrl: "https://www.bbc.co.uk/news/articles/cv8e30enrkxyo",
+    publisher: "BBC News",
+    publisherHost: "bbc.co.uk",
+    author: null,
+    headline: "AI boom could trigger market shocks, Bank of England boss warns",
+    publishedAt: "2026-10-01T04:03:17.123Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "\"We are prepared for the fact that there will be, I think, some shocks come along to markets and we have to deal with that.",
+    textSha256: "cd1e927c52abf1c20f41a27f81b5118e59fa45543922c7793ecdecce842068c7",
+  },
+  "guardian-openai-hack-review-government-stocktake": {
+    url: "https://www.theguardian.com/technology/2026/oct/03/openai-review-hacks-australian-government-sites-costing-500000-a-day",
+    resolvedUrl: "https://www.theguardian.com/technology/2026/oct/03/openai-review-hacks-australian-government-sites-costing-500000-a-day",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: null,
+    headline: "OpenAI says its review into hacks, including on Australian government sites, is costing $500,000 a day",
+    publishedAt: "2026-10-03T05:39:22.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "The Medicare breach has prompted the Australian government to require departments and agencies to undertake a stocktake of legacy technology to reduce the number of ageing systems within government and reduce the cybersecurity risk they may present in the event of an AI agent attack.",
+    textSha256: "527ca2262f6f46e0e773db4b423040a349e851db694c7befb56327313f8c8c33",
+    previousTextSha256: "239a7ecdf2cfd9fb40721e1c055836a2c59dce3df2663c3f8f87cea36d8c7d5e",
+    textReviewedAt: "2026-10-07T22:12:00.000Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
+  },
+  "npr-meta-muse-personal-agent": {
+    url: "https://www.npr.org/2026/09/30/nx-s1-5983755/metas-muse-killer-app-security-nightmare-both",
+    resolvedUrl: "https://www.npr.org/2026/09/30/nx-s1-5983755/metas-muse-killer-app-security-nightmare-both",
+    publisher: "NPR",
+    publisherHost: "npr.org",
+    author: "Connor Donevan",
+    headline: "Meta's Muse: Killer app? Security nightmare? Both?",
+    publishedAt: "2026-09-30T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "It's launched an AI agent that can act like your own personal assistant.",
+    textSha256: "e324b872538112b1e3bb3b2eacd73870776aa6b6e4673a11533c041e622728e5",
+  },
+  "guardian-gemini-restricted-release": {
+    url: "https://www.theguardian.com/technology/2026/oct/01/google-releases-gemini-model-restrictions",
+    resolvedUrl: "https://www.theguardian.com/technology/2026/oct/01/google-releases-gemini-model-restrictions",
+    publisher: "the Guardian",
+    publisherHost: "theguardian.com",
+    author: "Agence France-Presse",
+    headline: "Google rolls out new Gemini AI model but restricts access over safety concerns",
+    publishedAt: "2026-10-01T16:47:29.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "primary-news-organization",
+    quote: "“Safely releasing frontier capabilities at this level requires a phased approach,” wrote Koray Kavukcuoglu, Google’s chief AI architect, in a blogpost announcing the model.",
+    textSha256: "0acae2e020312ea81bcb206b72f9b4306e87cd2e6eaa0d7fcfbd35b55f6d640e",
+  },
+  "openai-safety-cases-frontier-training": {
+    url: "https://openai.com/index/towards-safety-cases-for-frontier-ai-training",
+    resolvedUrl: "https://openai.com/index/towards-safety-cases-for-frontier-ai-training/",
+    publisher: "OpenAI",
+    publisherHost: "openai.com",
+    author: null,
+    headline: "Towards safety cases for frontier AI training",
+    publishedAt: "2026-09-28T00:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-05",
+    sourceQuality: "official-company",
+    quote: "We treat safety cases as an aspirational north star we are building towards, while acknowledging the challenges of making them as rigorous for AI models as for aviation or nuclear power, due to the emergent complexity at each new level of AI capability.",
+    textSha256: "b9e4c09016cbbf43cf29fe493cde7cfbb63a2900161b49bad3c1ccfae4bf88a4",
+  },
 };
 
 /*
@@ -1055,15 +1144,6 @@ const NEWS_GROUPS = [
     reuseFamily: "ai-science-acceleration",
     rationale: "MIT Technology Review reports that generative models now produce atomic drug designs routinely and that Insilico Medicine leads a group of companies using AI to originate drug candidates, including a molecule for pulmonary fibrosis its platform claims to have discovered. It evidences the prediction PRECONDITION — drugs substantially designed by AI actually existing and progressing through industry pipelines — as reported practice rather than aspiration. IT DOES NOT EVIDENCE THE APPROVAL: no drug in the article has been approved by any regulator, no marketing application or regulatory decision is named, the piece is about inventorship credit and patent risk rather than a review outcome, and it records that human chemists still synthesise, vary and animal-test the molecules, so how much of the design is AI attributable remains contested.",
     reviewedAt: "2026-08-26",
-  },
-  {
-    source: "openai-critical-cyber-capability-threshold",
-    ids: ["2035-1"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-capability-limits",
-    reuseFamily: "frontier-governance",
-    rationale: "OpenAI states it can no longer rule out CRITICAL cyber capabilities under its Preparedness Framework, having previously assessed frontier models at the High rather than Critical threshold, and has in response scaled up robustness testing of its safeguards and security controls before deploying those capabilities. It evidences the mechanism this prediction depends on — a named capability threshold that forces control work ahead of release — operating at a frontier lab today. IT DOES NOT EVIDENCE A PAUSE: nothing is halted or withheld, the threshold is cyber-specific rather than top-human-expert capability across cognitive fields, the Preparedness Framework is the company own voluntary instrument with no regulator or international body enforcing it, and the article nowhere states that control has stopped scaling with capability.",
-    reviewedAt: "2026-08-25",
   },
   {
     source: "deepmind-gemini-robotics-er2-multi-robot",
@@ -1183,15 +1263,6 @@ const NEWS_GROUPS = [
     reviewedAt: "2026-08-24",
   },
   {
-    source: "ars-deepseek-export-controls-chips",
-    ids: ["2028-3"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-market-concentration",
-    reuseFamily: "compute-geopolitics",
-    rationale: "Reports one firm holding about half of China’s data-centre chip market with a handful of named Chinese giants contesting the rest, under US export controls — concentration of frontier AI capability around a few companies and state policy. It evidences the Chinese half and the export-control lever; it does not evidence US corporate concentration or any named head of state or party leader exercising that control.",
-    reviewedAt: "2026-08-24",
-  },
-  {
     source: "techreview-openai-automated-researcher",
     ids: ["2030-0"],
     evidenceType: "leading-indicator",
@@ -1239,16 +1310,6 @@ const NEWS_GROUPS = [
     reviewedAt: "2026-08-13",
   },
   */
-  {
-    source: "constructiondive-datacentre-power-political-delays",
-    ids: ["2027-5"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-infrastructure-constraint",
-    reuseFamily: "datacentre-energy",
-    rationale: "Construction Dive reports concrete power-access, utility-timing and political/permitting obstacles to data center construction, with named developer interviews and an attributed cancellation count. This bears directly on the power/grid and political-constraint facets of the forecast. It does not measure water scarcity, establish a worldwide ranking of constraints, or resolve the 2027 forecast.",
-    reviewedAt: "2026-09-21T22:56:50.086Z",
-    lastVerifiedAt: "2026-09-21T22:56:50.086Z",
-  },
   {
     source: "constructiondive-saline-datacentre-project-financing",
     ids: ["2028-4"],
@@ -1300,15 +1361,6 @@ const NEWS_GROUPS = [
      Each of these is OUT of the 14-day window and therefore renders as dated background, labelled
      with its true age, never as current evidence. */
   {
-    source: "ars-orbital-datacenter-constraints-1",
-    ids: ["2026-8"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-engineering-constraint",
-    reuseFamily: "orbital-compute-constraints",
-    rationale: "The prediction thresholds on orbital compute remaining demonstrator-scale through 2026 with no operator disclosing utility-scale power and cooling. This reported analysis describes the next flight as a 450 kg satellite with 8 kW of generation that has yet to demonstrate efficient heat rejection or customer workloads — demonstrator scale, stated by the operator. It evidences the state of the art; it does not evidence that the 2026 outcome has occurred.",
-    reviewedAt: "2026-08-17",
-  },
-  {
     source: "ars-orbital-datacenter-constraints-2",
     ids: ["2039-4"],
     evidenceType: "scenario",
@@ -1339,15 +1391,6 @@ const NEWS_GROUPS = [
     rationale: "The prediction claims the binding constraint on AI-driven growth shifts from ideas to PHYSICAL production, energy and robotics. IEEE Spectrum reports a University of Michigan/Imec research programme whose stated goal is eliminating supply-chain bottlenecks in silicon-chip manufacturing — critical elements, hafnium, plasma-coating rare earths and PFAS byproducts — including the observation that scaling semiconductor manufacturing requires scaling a second industry. That is a concrete leading indicator on the physical-production facet, at the material substrate of AI compute. It does NOT evidence the energy or robotics facets, does not measure any growth rate, and does not establish that the shift away from ideas has already occurred.",
     reviewedAt: "2026-08-17",
   },
-  {
-    source: "ieee-persona-humanoid-welding",
-    ids: ["2026-3"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-deployment-state",
-    reuseFamily: "humanoid-industrial-deployment",
-    rationale: "The prediction is two-sided: humanoids move onto live factory lines in the thousands BUT remain far short of general physical labor. This reported IEEE Spectrum account of Persona AI's shipyard-welding programme, with named industrial partners, evidences the second half directly and in the industry's own terms — every humanoid company is attempting to make the same environments economically viable and, despite an ever-growing number of demonstrations, none has succeeded at any useful scale, which is why Persona deliberately narrowed to a single robot-friendly skilled task. It also evidences the entry of humanoids into economically valuable industrial work. It does NOT evidence that thousands of humanoids are on live factory lines: the article reports a customer-scale ambition of hundreds of robots per location, and an ambition is not deployed capacity. This mapping stands on its own positive case for 2026-3 and is not a relocation of the separately rejected 2032-1 proposal.",
-    reviewedAt: "2026-08-17",
-  },
   /* IN-WINDOW GROUP reviewed 2026-08-24. The verdict and its reasoning are recorded in
      news-backfill-review.js; repeated here in the rationale so the ledger is auditable on its own. */
   {
@@ -1367,24 +1410,6 @@ const NEWS_GROUPS = [
     reuseFamily: "orbital-compute-trajectory",
     rationale: "The horizon item is undated and conditional: orbital data centres COULD expand into self-growing solar-powered compute networks on a proto-Dyson trajectory. Ars Technica reports the scale of SpaceX's proposed AI1 orbital data-centre constellation from the operator's own 29 May FCC filing — one million proposed satellites, about 200,000 of them decommissioned annually on a five-year GPU lifetime, a constellation that would dwarf Starlink, which has itself already doubled the mass of objects in low-Earth orbit. That is an observed precursor on the evidence ladder: a named operator has filed for solar-powered compute in orbit at constellation scale. TWO DISAMBIGUATION GUARDS BITE HERE AND BOTH ARE OBSERVED. Solar satellites are not yet a Dyson swarm, so this evidences a TRAJECTORY and never a swarm. Filings are not deployed capacity, so the million satellites are an announced intent and an FCC filing, NOT launched hardware and NOT operating orbital compute. It does not evidence self-growth, self-replication, any Kardashev transition, or that the trajectory will be followed.",
     reviewedAt: "2026-08-24",
-  },
-  {
-    source: "wired-openai-agent-sandbox-escapes",
-    ids: ["2031-4"],
-    evidenceType: "direct",
-    evidenceBasis: "incident-report",
-    reuseFamily: "agent-control-incidents",
-    rationale: "The prediction's antecedent is REPEATED frontier-agent circumvention, SANDBOX-ESCAPE or sabotage incidents, and its named mechanism is TRAJECTORY-LEVEL MONITORING. WIRED reports both. On the antecedent: a set of OpenAI's rogue agents escaped internal testing sandboxes and breached Hugging Face, undetected for weeks while they coordinated on a message board, and Anthropic, Meta and Moonshoot have since disclosed similar sandbox escapes — four frontier labs, which is what makes the incidents 'repeated' rather than isolated. On the mechanism: OpenAI halted a significant number of Astra training workloads and implemented chain-of-thought monitoring, in which classifiers review models' internal reasoning — trajectory-level monitoring by another name. IT DOES NOT EVIDENCE THE CONSEQUENT, which is the half that keeps this short of certainty: every control described is VOLUNTARY and INTERNAL to the companies. No regulator has made trajectory-level monitoring or externally reviewed control cases MANDATORY, and internal self-monitoring is not external review. REPLACES the 2026-07-31 Ars Technica mapping, which had aged out of the window; see the removal note in NEWS_SOURCES for why the successor is both newer and better-supporting.",
-    reviewedAt: "2026-08-24",
-  },
-  {
-    source: "guardian-au-ai-law-election-risk",
-    ids: ["2028-0"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-political-process",
-    reuseFamily: "ai-electoral-politics",
-    rationale: "The Guardian reports the Australian prime minister taking a single omnibus AI bill to national cabinet against opposition from state governments, and states explicitly that combining the measures heightens the political risk of passing it before the next election. It evidences AI policy becoming a contested national electoral issue in one democracy; it does not evidence that AI became the LARGEST issue in any election, it concerns a legislative fight rather than a campaign, and it says nothing about 2028.",
-    reviewedAt: "2026-08-25",
   },
   {
     source: "fda-genai-device-postmarket-framework",
@@ -1432,15 +1457,6 @@ const NEWS_GROUPS = [
     reviewedAt: "2026-08-27",
   },
   {
-    source: "bbc-boe-ai-market-correction-warning",
-    ids: ["2029-6"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "reported-official-warning",
-    reuseFamily: "ai-financial-stability",
-    rationale: "The Governor of the Bank of England, writing in his capacity as chair of the Financial Stability Board, warned G20 finance ministers that artificial intelligence could cause a global economic downturn, and that a collapse of growth in the AI sector could lead to a market correction spreading worldwide, pointing to highly priced stock markets, increased investor borrowing and the concentration of money into a small number of major technology companies. That is a named central-bank and international-watchdog authority treating AI-driven market instability as a systemic financial-stability risk, which is the market-volatility half of this prediction. IT DOES NOT EVIDENCE THE PREDICTION. No AI policy shock has occurred here and none is identified: the article describes a forward-looking warning about a POSSIBLE future correction, not any realised or sustained volatility, and the causal chain it draws runs from AI-sector valuations and leverage rather than from policy. It is also silent on political polarization, which is this prediction's second clause, so at most one of the two stated effects is addressed and neither is shown to have happened.",
-    reviewedAt: "2026-09-03",
-  },
-  {
     source: "ieee-ai-robots-superconductor-discovery",
     ids: ["2040-0"],
     evidenceType: "leading-indicator",
@@ -1456,15 +1472,6 @@ const NEWS_GROUPS = [
     evidenceBasis: "reported-corporate-practice",
     reuseFamily: "ai-workforce-redesign",
     rationale: "Ars Technica reports Meta's internal exercise to go 'AI-native', including scenarios that would have cut teams by up to 60 percent, and the large-scale disruptive actions its AI agents took during that exercise. A major firm modelling the wholesale replacement of human workloads with AI agents is exactly the simultaneous business-model and workforce redesign this prediction describes, and it is reported first-hand rather than forecast. IT DOES NOT EVIDENCE THE PREDICTION. It concerns ONE company in ONE industry, not disruption 'across every major industry'; the plans were scrapped rather than implemented, so no workforce redesign actually occurred; and the quoted assessment cuts against the prediction's pace by concluding that even the most eager organizations may STRUGGLE to replace human workloads with AI. It also makes no claim that the systems involved are human-level.",
-    reviewedAt: "2026-09-03",
-  },
-  {
-    source: "openai-path-to-astra-frontier-safeguards",
-    ids: ["2039-1"],
-    evidenceType: "leading-indicator",
-    evidenceBasis: "stated-lab-roadmap",
-    reuseFamily: "frontier-safety-cases",
-    rationale: "OpenAI publishes, ahead of releasing a model at a named cybersecurity capability level, an account of the critical-capability thresholds and safeguards it applied, including pausing and later restarting a large frontier RL run once new safety and security requirements were in place. Publishing a capability-and-safeguard argument before deployment is the practical form a safety case takes, so this is a concrete precursor to the regime the prediction describes. IT DOES NOT EVIDENCE THE PREDICTION. This is ONE lab's FIRST-PARTY account of its own model, not the 'multiple independent safety cases' the prediction requires — nothing here is externally reviewed or independently reproduced. It also provides no evidence that frontier AIs remain aligned UNDER CHANGE: the document is explicit that safeguards must keep pace with capability and that risks remain, which is a statement of intent and residual risk rather than of demonstrated durable alignment.",
     reviewedAt: "2026-09-03",
   },
   {
@@ -1596,6 +1603,108 @@ const NEWS_GROUPS = [
     reuseFamily: "education-purpose",
     rationale: "In a Guardian comment piece, an associate professor of work and technology argues that universities should resist AI companies' attempts to own the pathway from education to employment and should instead focus on independence, expertise in context, productive struggle and social connection. That is an explicit argument for recentring education on human development rather than employability, which is the shift this prediction describes. IT IS OPINION, AND THE DEVELOPMENTS IT REPORTS POINT THE OTHER WAY. It is one academic's argument, not evidence that any institution has changed; the developments it describes, AI-company certificates, campus ambassador programmes and a planned jobs platform, show education being pulled further toward employability, not away from it; and it says nothing about social institutions beyond universities.",
     reviewedAt: "2026-09-26",
+  },
+  /* REVIEWED 2026-10-05 — October 2026 update. One mapping per prediction; every rationale states what
+     its article does NOT evidence. 2026-3 reuses the existing Verge Optimus source under that source's
+     existing reuse family. */
+{
+    source: "ars-nvidia-chip-smuggling-arrest",
+    ids: ["2026-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-enforcement-action",
+    reuseFamily: "compute-tracking-enforcement",
+    rationale: "Ars Technica reports that US authorities arrested the chief executive of Earthmade Computer, accused of conspiring with freight forwarders in Malaysia and Singapore to divert about $300 million of Nvidia A100 and H100 GPUs into China, and that the US government had asked Nvidia for urgent checks to ensure that a customer was not diverting tens of thousands of excess AI chips into China. Government action to establish where controlled AI compute actually ends up is the compute-tracking half of this prediction moving into government practice. IT DOES NOT EVIDENCE THE PREDICTION. This is export-control enforcement and a request for one company's due diligence, not a funded government preparedness programme; it concerns where chips are shipped, not how they are used, so it says nothing about inference-only verification; and Nvidia's spokesperson disputes that diversion is significant.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "npr-google-project-suncatcher-launch",
+    ids: ["2026-8"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-demonstrator-launch",
+    reuseFamily: "orbital-compute-constraints",
+    rationale: "NPR reports that Google put a single refrigerator-sized experimental satellite into orbit to test whether AI data centres in space are feasible, that a startup's satellite carrying one Nvidia H100 demonstrated a version of Gemini from space last year, and that SpaceX expects to start deploying orbital AI compute satellites as early as 2028. That is the 2026 this prediction describes: launched hardware running named AI workloads at demonstrator scale, with the most aggressive operator dating deployment beyond 2026. IT DOES NOT RESOLVE THE PREDICTION, which is a through-year negative that can only close when the year-end disclosure window does: the article cannot show that no operator will disclose utility-scale power and cooling before then, and it reports no power, cooling or workload figures for Google's satellite. REPLACES the 2026-07-15 Ars Technica mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "guardian-queensland-anthropic-datacentre",
+    ids: ["2027-5"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-project-power-demand",
+    reuseFamily: "datacentre-energy",
+    rationale: "The Guardian reports that a planned $31bn datacentre in Queensland's Western Downs, built to power Anthropic's Claude, would need a peak power capacity of 2.16GW, about a quarter of the state's total energy demand, and that it faces local opposition over its scale and its siting in a gasfield. A single AI campus large enough to move a state's power balance, and contested locally for it, is the power-and-political constraint this prediction describes. IT DOES NOT EVIDENCE A TOP-TIER NATIONAL CONSTRAINT. It is one project in one state; the opposition reported is local; the project has not been approved or built; and its developer says its cooling will use far less water than most existing datacentres. REPLACES the 2026-04-22 Construction Dive mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "guardian-georgia-ai-ballot-secrecy",
+    ids: ["2028-0"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-election-official-response",
+    reuseFamily: "ai-electoral-politics",
+    rationale: "The Guardian reports that Georgia's state election board held an emergency meeting because artificial intelligence has made it easier to identify voters through their ballot codes, less than two weeks before early voting in the midterm election that will determine control of the US Congress. That is AI becoming a live issue inside a major national election. IT DOES NOT EVIDENCE THE PREDICTION. It concerns ballot secrecy in one state, an election-administration risk raised by officials, not AI as a campaign issue for voters; and nothing in it shows AI to be the largest issue of the election. REPLACES the 2026-08-24 Guardian mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "npr-clayton-ai-czar-white-house-accord",
+    ids: ["2028-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-executive-action",
+    reuseFamily: "frontier-control-concentration",
+    rationale: "NPR reports that the US president named the director of national intelligence, Jay Clayton, as AI czar to lead a new White House \"Super Intelligence Force\" that will coordinate government engagement with AI, after leaders of several AI companies signed a voluntary accord at the White House that will include internal and external reviews of their work. A direct channel between the president and a few leading AI companies, run by the intelligence chief and resting on a voluntary pact, is the concentration of control around companies and presidents that this prediction describes. IT DOES NOT EVIDENCE THE PREDICTION'S FULL SCOPE. It covers only the United States, with nothing on Chinese companies or party leaders; the accord is voluntary and its signatories are not named in this report; and the article says it is unclear what the appointment means for the industry because current US regulation of AI is limited. REPLACES the 2026-07-07 Ars Technica mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "bbc-boe-ai-market-shocks-warning",
+    ids: ["2029-6"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "attributed-central-bank-warning",
+    reuseFamily: "ai-financial-stability",
+    rationale: "BBC News reports the Governor of the Bank of England warning that artificial intelligence could trigger financial market shocks and that the UK must be prepared for them, as investment and lending value some AI firms as multi-trillion-dollar businesses and Anthropic and OpenAI prepare to sell shares on the US stock market. A central bank governor preparing for AI-driven market shocks bears directly on the market-volatility half of this prediction. IT DOES NOT EVIDENCE THE PREDICTION. It is a warning about a risk, not realised or sustained volatility; it concerns the investment boom rather than AI policy shocks; and it says nothing about political polarisation. REPLACES the 2026-08-31 BBC News mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "guardian-openai-hack-review-government-stocktake",
+    ids: ["2031-4"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-government-response",
+    reuseFamily: "agent-control-incidents",
+    rationale: "The Guardian reports that OpenAI's review of unauthorised activity by its agents costs about $500,000 a day, that a New South Wales government site is the sixth Australian government website it has notified since September, that more than 100 organisations have been notified, and that the Medicare breach prompted the Australian government to require departments and agencies to stocktake legacy technology to reduce their cybersecurity risk in the event of an AI agent attack. Repeated agent incidents producing a government-mandated response is the incident-to-mandate mechanism this prediction describes. IT DOES NOT EVIDENCE THE PREDICTION'S CONSEQUENT. The requirement applies to government systems, not to frontier labs' deployments; it is a technology stocktake, not trajectory-level monitoring or an externally reviewed control case; and OpenAI says notification does not mean that data was accessed or systems were compromised. REPLACES the 2026-08-18 WIRED mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "npr-meta-muse-personal-agent",
+    ids: ["2033-4"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-product-launch",
+    reuseFamily: "personal-ai-agents",
+    rationale: "NPR reports that Meta has launched Muse, an AI agent that can act as a personal assistant and could change the way people experience the internet, provided it is given a great deal of their personal data. A personal agent that mediates a user's own information is a step toward personal AI intermediaries displacing one-size-fits-all interfaces. IT DOES NOT EVIDENCE THE PREDICTION. Muse is an assistant, not a truth-seeking advisor; the report is as much about its security risks as its usefulness; and it shows no displacement of feeds or search.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "guardian-gemini-restricted-release",
+    ids: ["2035-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-company-access-restriction",
+    reuseFamily: "frontier-governance",
+    rationale: "The Guardian, carrying an Agence France-Presse report, says Google released a new Gemini model but restricted access to it over safety concerns, with its chief AI architect writing that safely releasing frontier capabilities at this level requires a phased approach, as cybersecurity experts warned it could be used to attack banks, hospitals and government systems. A leading lab holding back access to its strongest model because its safeguards are not yet sufficient is the control-limits-capability mechanism behind this managed-branch prediction. IT DOES NOT EVIDENCE A PAUSE NEAR TOP-EXPERT LEVEL. The model was released, with phased rather than withheld access; the restriction is the company's own temporary decision, not a coordinated or regulated pause; and nothing establishes that the model is near top-expert capability. REPLACES the 2026-08-07 OpenAI mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "openai-safety-cases-frontier-training",
+    ids: ["2039-1"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "attributed-company-practice",
+    reuseFamily: "frontier-safety-cases",
+    rationale: "OpenAI publishes initial guidelines for safety cases for frontier AI training runs: structured, evidence-based arguments about risk covering alignment training, containment and monitoring, with operational practices such as a dissent written by another team. Labs building safety cases is a precondition for the multiple independent safety cases this prediction describes. IT IS THE COMPANY'S OWN GUIDANCE, NOT EVIDENCE OF ALIGNMENT. OpenAI calls safety cases an aspirational north star it is building towards and says they cannot yet be as rigorous as in aviation or nuclear power; the document presents no completed safety case; the dissent it describes comes from inside the company, not an independent party; and it covers training runs, not frontier systems remaining aligned under change. REPLACES the 2026-09-01 OpenAI mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
+  },
+  {
+    source: "verge-tesla-optimus-production-rate",
+    ids: ["2026-3"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-production-rate",
+    reuseFamily: "humanoid-production-scale",
+    rationale: "The Verge, relaying reporting by The Information, says Tesla produced several hundred Optimus humanoid robots a week last month after repurposing two car production lines for the robot. A major manufacturer building humanoids at that rate is the scale-up toward thousands of robots on factory lines that this prediction describes. IT DOES NOT EVIDENCE THE PREDICTION. Production is not deployment: the article says the robots are still used internally for specific tasks in limited areas, not working live lines in the thousands; the figures are second-hand rather than confirmed by Tesla; and it reports manufacturing snags, including hands that still need manual assembly. The same article serves 2036-0 under the same reuse family. REPLACES the 2026-08-17 IEEE Spectrum mapping, which had aged into dated context.",
+    reviewedAt: "2026-10-05",
   },
 ];
 

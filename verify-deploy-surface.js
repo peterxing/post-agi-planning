@@ -176,6 +176,15 @@ const ALLOWED_EGRESS_HOSTS = new Set([
      carries no provenance fields and never enters `embeds`. verify-x-signals.js asserts that
      boundary and every X refusal added on 2026-08-13 still passes unchanged. */
   'api.x.com',
+  /* REVIEWED EDIT 2026-10-05 — X'S OFFICIAL EMBED SERVICE, FOR VERIFICATION ONLY.
+     The owner chose "the free official route: my X data archive plus X's embed service" in place of
+     the paid API. x-oembed.js makes one unauthenticated GET per surfaced post to the public oEmbed
+     endpoint (dnt=true, omit_script=1), which answers with a permanent redirect to its publish.x.com
+     twin, to confirm the post is still public and to read a reposted account's display name. Both
+     hosts therefore move off the retired list below, and ONLY x-oembed.js may name them. x.com and
+     twitter.com stay retired as evidence hosts; the syndication and widget endpoints stay retired; no
+     embed HTML or widget script is ever stored or served. */
+  'publish.twitter.com', 'publish.x.com',
   /* REVIEWED EDIT 2026-09-03 — declared because feeds.bbci.co.uk, already on this list as a DISCOVERY
      feed, RESOLVES ITS ITEMS to www.bbc.co.uk: the reviewed citation for 2029-6 (the Bank of England
      governor's warning to the G20, promoted this run) records that article host, and an undeclared
@@ -211,7 +220,6 @@ const RETIRED_EGRESS_HOSTS = new Map([
   ['twitter.com', 'X evidence retired 2026-08-13'],
   ['api.twitter.com', 'the X API was retired 2026-08-13'],
   ['cdn.syndication.twimg.com', 'the X syndication API was retired 2026-08-13'],
-  ['publish.twitter.com', 'the X oEmbed endpoint was retired 2026-08-13'],
   ['platform.twitter.com', 'the X widget script was retired 2026-08-13'],
   ['web.archive.org', 'Wayback activity discovery was retired with the X archive on 2026-08-13'],
 ]);
@@ -250,6 +258,8 @@ function assertEgressHosts() {
       problems.push(`${file} names the retired host ${host} — ${RETIRED_EGRESS_HOSTS.get(host)}`);
     } else if (host === 'api.x.com' && file !== 'x-harvest.js') {
       problems.push(`${file} names api.x.com outside the weekly activity harvester`);
+    } else if ((host === 'publish.twitter.com' || host === 'publish.x.com') && file !== 'x-oembed.js') {
+      problems.push(`${file} names X's embed service outside the operator-local verifier x-oembed.js`);
     } else if (!ALLOWED_EGRESS_HOSTS.has(host)) {
       problems.push(`${file} names undeclared network host ${host}; egress is an allow-list, so add it `
         + 'to ALLOWED_EGRESS_HOSTS as a reviewed edit or remove the call');

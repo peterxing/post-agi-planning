@@ -56,7 +56,7 @@ If a producer refuses a retained dependency, record the exact reason and stop th
 publication; a stale dependency is not permission to weaken its guard.
 
 **Stale-X preservation (owner-approved, this job only).** The ordinary producer and
-the weekly X workflow keep the 10-day ceiling. This job alone runs the producer with
+the X archive workflow keep the 10-day ceiling. This job alone runs the producer with
 `--actuals-preserve-stale-x`, which retains an older X layer only if all of these
 hold, and otherwise refuses exactly as before:
 
@@ -77,6 +77,25 @@ unchanged; `signals.xSignalsRetention` records the age, pairing commit and reaso
 each forecast's X dossier shows a visible stale-snapshot warning. Report the X age and
 retention reason separately from the day's NEWS work. This is not renewed X
 verification and never makes X evidence.
+
+**Named X withheld state (reviewed, 2026-10-05).** When the forecasts are revised before
+a fresh X archive can be matched to them, preservation correctly refuses. The reviewed
+declaration in `x-signals-state.json` (state `withheld`, a reason listed in
+`refresh-signals.js`, its date and the exact SHA-256 of `x-signals.json`) then makes the
+producer publish no `xSignals` and one named notice instead, with `x-signals.json`
+byte-identical. This job never writes, renews or clears that declaration; only the X
+archive workflow sets it back to `published` after a fresh import. Any other X fault
+still refuses. Report the withheld state and its reason with the X age.
+
+**Revised forecasts (owner-approved October 2026 reassessment, applied 2026-10-05 UTC).**
+Seven forecasts were revised in one reviewed change: six evidence-based probability
+recalibrations (2026-8, 2027-4, 2027-5, 2028-3, 2031-3, 2035-1) and the author's own
+decision on his end-of-2026 call (2026-6, 70% to 55%, timing unchanged), each with a
+`revisedAt` and an old-to-new `changeNote`. Chapter 07 carries one dated "October 2026
+update" note. Their reference-point and game bindings were re-reviewed and re-pinned in
+the same change. This job never revises a forecast, probability, note or book passage:
+it keeps all of them byte-identical. Those revisions are why the X layer is currently
+withheld (`forecasts-revised-2026-10`).
 
 ## Source discovery and canonical NEWS
 

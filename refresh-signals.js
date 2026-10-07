@@ -1651,7 +1651,47 @@ const X_SIGNALS_MAX_AGE_DAYS = 10;
 const PRESERVE_STALE_X = process.argv.includes('--actuals-preserve-stale-x');
 const X_PAIRING_MIRROR = (process.argv.find(arg => arg.startsWith('--x-pairing-mirror=')) || '').slice(19)
   || path.resolve(DIR, '..', 'pap-github');
+/* THE REVIEWED X STATE (2026-10-05). x-signals-state.json is always present and mirrored, and says
+   whether the X layer is PUBLISHED or WITHHELD. Withholding exists because a forecast revision makes
+   the published pairing point at wording that no longer exists, and stale-X preservation then
+   correctly refuses; until a fresh X archive is imported and re-matched, the layer is withheld by a
+   reviewed, named declaration instead of being dropped silently or failing every daily run.
+   While withheld, x-signals.json must stay BYTE-IDENTICAL (its digest is pinned in the declaration),
+   signals.json carries no xSignals, and it carries the one named notice below instead. Only the
+   reasons listed here exist; any other shape is an error, and so is any other X fault. */
+const X_STATE_PATH = path.join(DIR, 'x-signals-state.json');
+const X_WITHHELD_NOTES = Object.freeze({
+  'forecasts-revised-2026-10': 'X discussion is withheld: the forecasts were revised in October 2026 and these posts were '
+    + 'matched to the earlier wording. It will return when a fresh X archive is imported and matched to the revised forecasts.',
+});
+function xLayerState(raw, buildNow, readState = () => fs.readFileSync(X_STATE_PATH, 'utf8')) {
+  let state;
+  try {
+    state = JSON.parse(String(readState()).replace(/^\uFEFF/, ''));
+  } catch (error) {
+    throw new Error(`x-signals-state.json is missing or unparseable (${error.message}); refusing to build.`);
+  }
+  const keys = state && typeof state === 'object' ? Object.keys(state).join('|') : '';
+  if (keys === 'schemaVersion|state' && state.schemaVersion === 1 && state.state === 'published') return null;
+  const valid = keys === 'schemaVersion|state|reason|since|xSignalsSha256|note' && state.schemaVersion === 1
+    && state.state === 'withheld' && Object.hasOwn(X_WITHHELD_NOTES, state.reason) && state.note === X_WITHHELD_NOTES[state.reason]
+    && /^\d{4}-\d{2}-\d{2}$/.test(state.since) && Date.parse(`${state.since}T00:00:00Z`) <= buildNow
+    && /^[a-f0-9]{64}$/.test(state.xSignalsSha256);
+  if (!valid) throw new Error('x-signals-state.json is neither the published state nor a reviewed withheld declaration; refusing to build.');
+  if (!raw) {
+    throw new Error('the X layer is declared withheld but x-signals.json is missing. The withheld snapshot must stay '
+      + 'byte-identical, not be deleted.');
+  }
+  if (createHash('sha256').update(raw).digest('hex') !== state.xSignalsSha256) {
+    throw new Error('x-signals.json changed while the X layer is declared withheld. Import and review a fresh X archive, '
+      + 'then set x-signals-state.json back to published; never edit the withheld snapshot.');
+  }
+  return { xSignalsWithheld: { state: 'withheld', reason: state.reason, since: state.since,
+    xSignalsSha256: state.xSignalsSha256, note: state.note } };
+}
 function xSignalLayer(livePredictionIds, buildNow, options = {}){
+  const withheld = xLayerState(fs.existsSync(X_SIGNALS_PATH) ? fs.readFileSync(X_SIGNALS_PATH) : null, buildNow);
+  if (withheld) return withheld;
   if (!fs.existsSync(X_SIGNALS_PATH)) return {};
   let payload, raw;
   try {
@@ -3170,5 +3210,7 @@ module.exports = {
   qualifyFamilyPost,
   qualifyPost,
   scorePost,
+  xLayerState,
   xSignalLayer,
+  X_WITHHELD_NOTES,
 };

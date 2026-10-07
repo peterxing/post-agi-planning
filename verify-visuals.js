@@ -294,7 +294,17 @@ async function browserChecks(base, summary) {
     assert.equal(await news.locator('.headline-card-quote').count(), 0, 'The dossier card does not repeat the quote');
     assert.ok((await news.textContent()).includes(record.quote), 'The full reviewed quote remains in the dossier');
 
-    // X snippet cards: retained supplement only.
+    // X snippet cards: retained supplement only. A reviewed WITHHELD state shows its one named notice instead.
+    if (!signals.xSignals && signals.xSignalsWithheld?.state === 'withheld') {
+      const id = `${predictions.years[0].year}-0`;
+      await page.evaluate(hash => { history.pushState(null, '', hash); revealHash(); }, `#event-${id}`);
+      await page.waitForFunction(value => document.getElementById(value)?.querySelector('.forecast-facts'), `event-${id}`);
+      if (!await page.locator(`[data-forecast-dossier="${id}"]`).count()) await page.locator(`#event-${id} > .forecast-facts > .forecast-dossier > summary`).click();
+      await page.waitForFunction(value => document.querySelector(`[data-forecast-dossier="${value}"] .x-withheld`), id);
+      const dossier = page.locator(`[data-forecast-dossier="${id}"]`);
+      assert.equal(await dossier.locator('.x-withheld').textContent(), signals.xSignalsWithheld.note, 'The withheld notice is the reviewed text');
+      assert.equal(await dossier.locator('.x-card').count(), 0, 'No X card while the layer is withheld');
+    }
     const xRows = predictions.years.flatMap(year => year.events.map((_, index) => `${year.year}-${index}`)).filter(id => signals.xSignals?.items?.[id]);
     const pickX = authorship => xRows.find(id => signals.xSignals.items[id].authorship === authorship);
     for (const id of [pickX('authored'), pickX('reposted')].filter(Boolean)) {
@@ -310,6 +320,9 @@ async function browserChecks(base, summary) {
       if (item.authorship === 'authored') {
         assert.equal(await xcard.locator('.x-name').textContent(), await page.locator('#author h2').textContent(), "The site's own author name");
         assert.equal(await xcard.locator('.x-handle').textContent(), '@peterxing');
+      } else if (item.authorName) {
+        assert.equal(await xcard.locator('.x-name').textContent(), item.authorName, "The display name X's embed service attributed");
+        assert.equal(await xcard.locator('.x-handle').textContent(), `@${item.author}`);
       } else {
         assert.equal(await xcard.locator('.x-name').textContent(), `@${item.author}`, 'An unknown display name is not invented');
         assert.equal(await xcard.locator('.x-name').getAttribute('title'), 'Display name not stored in this snapshot');

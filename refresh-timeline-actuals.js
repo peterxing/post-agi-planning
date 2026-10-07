@@ -80,10 +80,14 @@ function retainStaleXSnapshot({ raw, payload, previous, forecastSha256, buildNow
   if (pairedForecast !== forecastSha256 || (pairedSignals.forecastVersion && pairedSignals.forecastVersion.sha256 !== forecastSha256))
     refuse('the full forecast set changed, was reordered or lost entries since the X layer was paired.');
   const ageDays = Math.floor((buildNow - builtAt) / 864e5);
+  /* An archive-sourced layer names its archive, so a reader sees which monthly X export they are
+     looking at ("X snapshot from archive dated ..."); an API-sourced layer keeps its wording. */
+  const archiveDay = summary.source === 'x-archive' && typeof summary.archive?.generationDate === 'string'
+    && Number.isFinite(Date.parse(summary.archive.generationDate)) ? summary.archive.generationDate.slice(0, 10) : null;
   return { schemaVersion:1, mode:'stale-snapshot-retained', builtAt:summary.builtAt, harvestedAt:summary.harvestedAt,
     ageDays, maxAgeDays, checkedAt:new Date(buildNow).toISOString(), xSignalsSha256:bytes, forecastSha256,
     pairedCommit, pairedPublishedAt:pairedSignals.updated,
-    note:`Stale X snapshot retained unchanged: assembled ${summary.builtAt.slice(0, 10)}, ${ageDays} days before this check and beyond the ${maxAgeDays}-day refresh ceiling. The complete forecast set is identical to the published snapshot it was paired with, so no post, date, metric or assignment changed. It has not been re-verified; X remains discussion, never evidence.` };
+    note:`${archiveDay ? `X snapshot from archive dated ${archiveDay}, retained unchanged: matched` : 'Stale X snapshot retained unchanged: assembled'} ${summary.builtAt.slice(0, 10)}, ${ageDays} days before this check and beyond the ${maxAgeDays}-day refresh ceiling. The complete forecast set is identical to the published snapshot it was paired with, so no post, date, metric or assignment changed. It has not been re-verified; X remains discussion, never evidence.` };
 }
 function parsePage(html) {
   const matches = [...html.matchAll(/(<script type="application\/json" id="timelineData">)([\s\S]*?)(<\/script>)/g)];

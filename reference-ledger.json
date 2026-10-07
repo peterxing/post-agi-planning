@@ -2333,7 +2333,7 @@
       "id": "2026-6",
       "sourceId": "ref-05665ed86ec7",
       "predictionText": "Signal: my call — genuine human-level AGI ships by end of 2026",
-      "predictionSha256": "eabb4edd88333b3d1026fd3e12166821998866fcff83a65a6af1517ea35dc7a5",
+      "predictionSha256": "b52621c0d12cbf4cf8e851cd71c0f1bdbc745ba5a850c57fb315527ca10f7ca1",
       "predictionTextSha256": "eb9f7d16bc3cfee727b4cabf703994031e1c928b4e94929a2767ed339bb78df8",
       "domain": "technology",
       "excerpt": "High accuracy on HLE would demonstrate expert-level performance on closed-ended, verifiable questions and cutting-edge scientific knowledge, but it would not alone suggest autonomous research capabilities or \"artificial general intelligence.\"",
@@ -2349,7 +2349,7 @@
         "evidence": "The dataset consists of 2,500 challenging questions across over a hundred subjects."
       },
       "reuseFamily": "cross-domain-closed-ended-expert-evaluation",
-      "reviewedAt": "2026-09-05T00:34:41.188Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
@@ -2379,7 +2379,7 @@
       "id": "2026-8",
       "sourceId": "ref-3b910b5ced30",
       "predictionText": "Orbital compute remains demonstrator-scale through 2026: launched GPUs run named AI workloads, but no operator discloses utility-scale power and cooling",
-      "predictionSha256": "8687e3f78ef3d0567b4ea83ee325d3a66ca46e1875b72c65761a1c7f5757b580",
+      "predictionSha256": "723254dc1383f2cfcd4c6bb172664a3f346512b343763940f03d0b3698dc8bc1",
       "predictionTextSha256": "b6c3dbf4eafb3da3f3a8f6758b37c7afa992aafb6c0b01fec81646d241f87d46",
       "domain": "technology",
       "excerpt": "the first spacecraft to train an LLM - the nano GPT model from Andrej Karpathy.",
@@ -2390,7 +2390,7 @@
       "doesNotEstablish": "The operator page does not independently verify workload execution, electrical power, cooling performance, or continuous service duration. It cannot establish that no other operator has disclosed utility-scale infrastructure. The page inconsistently names its inference model Gemini and Gemma; the relation rests on its separately named nano GPT training claim.",
       "metric": null,
       "reuseFamily": "orbital-gpu-named-workload-demonstrator",
-      "reviewedAt": "2026-09-05T00:33:34.768Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
@@ -2489,7 +2489,7 @@
       "id": "2027-4",
       "sourceId": "ref-2543599a4374",
       "predictionText": "The US advances an omnibus AI transparency, compute-tracking or frontier-accountability law",
-      "predictionSha256": "e79546b27d2e02bda00547605425bd1ea4660c24115c9640b901a81770e5be1b",
+      "predictionSha256": "82150dcc3745242f91281114afb87c86a4621820cf17c7da04d22c67ed9d798d",
       "predictionTextSha256": "54db8648c83b42c2acfd15cfa403e37594f59149e278d6e3f29986c136e22eb0",
       "domain": "governance",
       "excerpt": "To provide a framework for artificial intelligence innovation and accountability, and for other purposes.",
@@ -2500,14 +2500,14 @@
       "doesNotEstablish": "An introduced bill is not enacted law. This source does not show passage, a 2027 legislative advance, frontier-compute tracking, or an operative federal frontier-release regime.",
       "metric": null,
       "reuseFamily": "us-federal-ai-accountability-legislative-proposal",
-      "reviewedAt": "2026-09-05T00:42:11.043Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
       "id": "2027-5",
       "sourceId": "ref-7a179a48aad8",
       "predictionText": "Datacenter power, water and grid capacity become top-tier infrastructure and political constraints",
-      "predictionSha256": "8b356902c0f10c41e534b447989e4a561eb5344d4f95fa6ac713f9e88ea19629",
+      "predictionSha256": "485f752901afc078be449cd50cd06da16c2685309b09e3ec65d773b8a3a8b183",
       "predictionTextSha256": "b571156d71a5cba42e0490966e00c3c0c575f3a287c3efc2bd4973a55443d540",
       "domain": "geopolitical",
       "excerpt": "Electricity grids are already under strain in many places: we estimate that unless these risks are addressed, around 20% of planned data centre projects could be at risk of delays.",
@@ -2523,7 +2523,7 @@
         "evidence": "around 20% of planned data centre projects could be at risk of delays."
       },
       "reuseFamily": "datacenter-capital-and-electricity-buildout",
-      "reviewedAt": "2026-09-05T00:33:34.768Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
@@ -2599,7 +2599,7 @@
       "id": "2028-3",
       "sourceId": "ref-cd4d54c88f29",
       "predictionText": "Control over frontier AI concentrates around a handful of US and Chinese companies, presidents and party leaders",
-      "predictionSha256": "c12b5988efb4905d58bd2e6b9278e10d03ecc6460359af723ee7b8fb95274edb",
+      "predictionSha256": "f5d5d1f402db853fab0878faeedd4d8d5aa91c165deccc0b1888bf43128f0bb1",
       "predictionTextSha256": "e6dc2b9437d3e445c716bc0208a0876ea339df46eaad65f811629be271baf894",
       "domain": "geopolitical",
       "excerpt": "Industry produced over 90% of notable frontier models in 2025",
@@ -2616,7 +2616,7 @@
         "evidence": "Industry produced over 90% of notable frontier models in 2025"
       },
       "reuseFamily": "industrial-model-development-concentration",
-      "reviewedAt": "2026-09-05",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
@@ -3045,7 +3045,7 @@
       "id": "2031-3",
       "sourceId": "ref-880eab95ee56",
       "predictionText": "Public, externally reviewed safety cases become a requirement for the highest-risk frontier deployments",
-      "predictionSha256": "349bbb15522677bccbb8a74dc5daa37a52045d54c4352321e1d35bf2f66eed57",
+      "predictionSha256": "7c00e75666312e7758cd2f3e8f72d9f347b2773c25ed35b02eae8deeca052523",
       "predictionTextSha256": "2736423e28beb858ec79f50fb76aa5f596575b7ed2b78fff07e336ad2e5803b9",
       "domain": "governance",
       "excerpt": "Signatories commit to reporting to the AI Office information about their model and their systemic risk assessment and mitigation processes and measures",
@@ -3056,7 +3056,7 @@
       "doesNotEstablish": "A report to the AI Office is not necessarily a fully public safety case. The code is a voluntary compliance route, includes external-evaluation conditions and confidentiality limits, and does not establish the forecast universal public-review requirement.",
       "metric": null,
       "reuseFamily": "systemic-model-external-safety-evaluation",
-      "reviewedAt": "2026-09-05T00:42:11.043Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {
@@ -3515,7 +3515,7 @@
       "id": "2035-1",
       "sourceId": "ref-06c10deb3670",
       "predictionText": "Managed branch: frontier capabilities pause near top-expert level because control no longer scales safely",
-      "predictionSha256": "604b8a1e5bcd06f6ff98c47b412ecef6f9bf30ad8429e729ac52872eb402311a",
+      "predictionSha256": "9e348750aac841d807802b41ec1591a5a357dc26878a3e38570a5ce3c8d6436a",
       "predictionTextSha256": "6c4ac58c1eeb7867cdc1806fc2b8a250c7b744cc529b6f5a02ef2fc7e04f88e8",
       "domain": "governance",
       "excerpt": "In particular, we cannot unilaterally and unconditionally commit to staying in line with the industry-wide recommendations in the right column.",
@@ -3526,7 +3526,7 @@
       "doesNotEstablish": "This challenges that specific institutional precursor, not the entire future managed-branch forecast. Other safeguards and competitor-contingent commitments remain, and discretionary pauses remain possible. A voluntary company policy neither demonstrates control failure nor establishes whether governments or industry will pause near top-expert capability. July 8 is the policy's effective date, not an independently established publication timestamp.",
       "metric": null,
       "reuseFamily": "current-responsible-scaling-policy-governance",
-      "reviewedAt": "2026-09-05T09:55:12.063Z",
+      "reviewedAt": "2026-10-05T22:43:46.767Z",
       "reviewedBy": "Agent review under user authorization"
     },
     {

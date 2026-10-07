@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "rulesVersion": "coalition-1",
   "rulesSha256": "b5755555d635a75276f117d882ccaf6e1b53eb9d483e11ed640b2b58f38df12a",
-  "forecastSha256": "662a4369b05520d70255c65d8a52da1eee57923ffc0d171d53e3e08c234a568a",
+  "forecastSha256": "1a8b1386c06802870bcb0b55132f20380c3a41dea1abe9e05a7889d6a3ad15dc",
   "authorSha256": "d89c248f7d1ab559f18c57a6c92cc7cecce6c354fe21c77c2562f4c1506dcfe2",
-  "bookSha256": "25560a05cbf2527fed9b651f9d9a7a79c9fec6319cd5956c28d9a8c821def8d3",
+  "bookSha256": "cd773b084cf4c20d040000063edc2a5e0d0b46632d73b4e413897392cfedd474",
   "toolsSha256": "ce6b7cfe255cb3db908c775ba7856677a2a2879d94c14f5d438c07455ccd0aa2",
-  "mappingSha256": "cd695090502a0e29619b76a9c80359c59027a601a6e14c5206ff7cc069c31c19",
-  "sourceIndexSha256": "0acab10d4c5f0f491fb40a703eff2d6ffc23746c06e78e6a731b4f3457eb1c65",
+  "mappingSha256": "b078e07c6d738dbf14f955f2109e023e33233a58cb085663fcf57d39720ba657",
+  "sourceIndexSha256": "f5644b02fb4e5838ea88dc664177a7029aac444eb295a85791d8f4d4301cd0b5",
   "book": [
     {
       "index": 0,
@@ -1906,6 +1906,19 @@
         {
           "tag": "p",
           "children": [
+            {
+              "tag": "strong",
+              "children": [
+                "October 2026 update:"
+              ]
+            },
+            " I've lowered my confidence in this end-of-2026 call from 70% to 55%, though I still make it. Astra shipped with an AGI claim that OpenAI's own chief executive disputed, OpenAI then paused training of its most capable models and delayed its next one, and Google restricted its newest Gemini — the leading labs are holding back their strongest systems rather than shipping them."
+          ]
+        },
+        "\n",
+        {
+          "tag": "p",
+          "children": [
             "Which leaves you with a strange and useful gift: a warning. The gap between the clocks is the preparation window — and on my timeline that window is now measured in months, not years. The capability is effectively here; the disruption lands across 2027; and the sliver of time between them is all you get to position yourself. So here is the posture I'd urge on you, the one I live by: ",
             {
               "tag": "strong",
@@ -2728,7 +2741,7 @@
       ]
     }
   ],
-  "bookCharacters": 70170,
+  "bookCharacters": 70592,
   "tools": {
     "sixDs": [
       [
@@ -3644,7 +3657,7 @@
     },
     {
       "forecastId": "2026-6",
-      "recordSha256": "eabb4edd88333b3d1026fd3e12166821998866fcff83a65a6af1517ea35dc7a5",
+      "recordSha256": "b52621c0d12cbf4cf8e851cd71c0f1bdbc745ba5a850c57fb315527ca10f7ca1",
       "mission": "M03",
       "region": "foundry",
       "task": "routing",
@@ -3695,7 +3708,7 @@
     },
     {
       "forecastId": "2026-8",
-      "recordSha256": "8687e3f78ef3d0567b4ea83ee325d3a66ca46e1875b72c65761a1c7f5757b580",
+      "recordSha256": "723254dc1383f2cfcd4c6bb172664a3f346512b343763940f03d0b3698dc8bc1",
       "mission": "M11",
       "region": "frontier",
       "task": "frontier",
@@ -3819,7 +3832,7 @@
     },
     {
       "forecastId": "2027-4",
-      "recordSha256": "e79546b27d2e02bda00547605425bd1ea4660c24115c9640b901a81770e5be1b",
+      "recordSha256": "82150dcc3745242f91281114afb87c86a4621820cf17c7da04d22c67ed9d798d",
       "mission": "M08",
       "region": "civic",
       "task": "interlocks",
@@ -3841,7 +3854,7 @@
     },
     {
       "forecastId": "2027-5",
-      "recordSha256": "8b356902c0f10c41e534b447989e4a561eb5344d4f95fa6ac713f9e88ea19629",
+      "recordSha256": "485f752901afc078be449cd50cd06da16c2685309b09e3ec65d773b8a3a8b183",
       "mission": "M05",
       "region": "power",
       "task": "allocation",
@@ -3940,7 +3953,7 @@
     },
     {
       "forecastId": "2028-3",
-      "recordSha256": "c12b5988efb4905d58bd2e6b9278e10d03ecc6460359af723ee7b8fb95274edb",
+      "recordSha256": "f5d5d1f402db853fab0878faeedd4d8d5aa91c165deccc0b1888bf43128f0bb1",
       "mission": "M08",
       "region": "civic",
       "task": "interlocks",
@@ -4458,7 +4471,7 @@
     },
     {
       "forecastId": "2031-3",
-      "recordSha256": "349bbb15522677bccbb8a74dc5daa37a52045d54c4352321e1d35bf2f66eed57",
+      "recordSha256": "7c00e75666312e7758cd2f3e8f72d9f347b2773c25ed35b02eae8deeca052523",
       "mission": "M08",
       "region": "civic",
       "task": "interlocks",
@@ -5020,7 +5033,7 @@
     },
     {
       "forecastId": "2035-1",
-      "recordSha256": "604b8a1e5bcd06f6ff98c47b412ecef6f9bf30ad8429e729ac52872eb402311a",
+      "recordSha256": "9e348750aac841d807802b41ec1591a5a357dc26878a3e38570a5ce3c8d6436a",
       "mission": "M08",
       "region": "civic",
       "task": "interlocks",

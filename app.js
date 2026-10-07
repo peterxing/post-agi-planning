@@ -83,8 +83,7 @@ const PHOTO_LIBRARY = Object.freeze([
     author:'Carl Lender', licence:'CC BY 2.0', licenceUrl:'https://creativecommons.org/licenses/by/2.0/',
     sourcePage:'https://commons.wikimedia.org/wiki/File:Datacenter_Server_Racks_(22370909788).jpg', retrieved:'2026-09-26', showsEvent:false,
     changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
-    reports:['https://www.constructiondive.com/news/data-center-project-cancellations-power-public-pushback/818157',
-      'https://www.theguardian.com/australia-news/2026/aug/25/albanese-seeks-to-quell-datacentre-disquiet-as-climate-expert-warns-weve-got-one-shot-to-get-the-rules-right',
+    reports:['https://www.theguardian.com/australia-news/2026/oct/05/queensland-data-centre-anthropic-western-downs-dalby',
       'https://www.constructiondive.com/news/walbridge-breaks-ground-stargate-data-center-openai-oracle/821972'] },
   { file:'photo-wafer.webp', width:480, height:270, bytes:10654, sha256:'227f7e975e6d2370ee47289fd9f89fb12c09d9362b96486e4b21841e2cb627db', subject:'silicon wafer',
     alt:'Close view of a patterned silicon wafer.',
@@ -92,7 +91,7 @@ const PHOTO_LIBRARY = Object.freeze([
     author:'Le hollandais volant', licence:'CC BY 4.0', licenceUrl:'https://creativecommons.org/licenses/by/4.0/',
     sourcePage:'https://commons.wikimedia.org/wiki/File:Silicon_wafer_close_view.jpg', retrieved:'2026-09-26', showsEvent:false,
     changes:'Cropped to 16:9, resized to 480x270 and converted to WebP.',
-    reports:['https://spectrum.ieee.org/llms-for-chip-design', 'https://arstechnica.com/ai/2026/07/facing-us-export-controls-chinas-deepseek-plans-to-make-its-own-chips',
+    reports:['https://spectrum.ieee.org/llms-for-chip-design', 'https://arstechnica.com/tech-policy/2026/10/us-arrests-tech-ceo-accused-of-smuggling-300m-in-nvidia-chips-into-china',
       'https://spectrum.ieee.org/rare-earth-metals-in-semiconductors'] },
   { file:'photo-iss-arrays.webp', width:480, height:270, bytes:18560, sha256:'6e41585b123839c95f34a8744a57e2259a937d9b01ce685f04e6adb8d170e18a', subject:'orbital hardware',
     alt:'Solar arrays on the International Space Station, with Earth below.',
@@ -2520,11 +2519,18 @@ function metrDossier(row){
 function discussionDossier(row){
   const layer = model.bundle.xSignals, item = layer?.items?.[row.id];
   const section = dossierSection('X / discussion supplement', 'Posts, quotes and reposts are discussion, not NEWS evidence, research verification or forecast success.');
+  const withheld = model.bundle.xSignalsWithheld;
+  if (!layer && withheld?.state === 'withheld' && typeof withheld.note === 'string') {
+    section.append(node('p', 'dossier-warning x-withheld', withheld.note));
+    return section;
+  }
+  const archiveDate = layer?.summary?.source === 'x-archive' && Number.isFinite(Date.parse(layer.summary.archive?.generationDate))
+    ? layer.summary.archive.generationDate : null;
   const retained = model.bundle.xSignalsRetention, builtAt = Date.parse(layer?.summary?.builtAt);
   const staleDays = Math.floor((Date.parse(model.bundle.updated) - builtAt) / 864e5);
   if (layer && retained?.mode === 'stale-snapshot-retained' && retained.builtAt === layer.summary?.builtAt && typeof retained.note === 'string')
     section.append(node('p', 'dossier-warning x-stale', retained.note));
-  else if (layer && !(staleDays <= 10)) section.append(node('p', 'dossier-warning x-stale', `Stale X snapshot: assembled ${Number.isFinite(staleDays) ? `${staleDays} days` : 'an unknown time'} before this source snapshot. It is not re-verified and may not reflect later activity.`));
+  else if (layer && !(staleDays <= 10)) section.append(node('p', 'dossier-warning x-stale', `${archiveDate ? `X snapshot from archive dated ${recorded(archiveDate)}. ` : ''}Stale X snapshot: assembled ${Number.isFinite(staleDays) ? `${staleDays} days` : 'an unknown time'} before this source snapshot. It is not re-verified and may not reflect later activity.`));
   if (!item) {
     section.append(node('p', '', layer ? 'No matched discussion item is recorded for this forecast in the loaded supplement.' : 'No discussion supplement is available.'));
     return section;
@@ -2548,9 +2554,11 @@ function discussionDossier(row){
   const handle = authored ? 'peterxing' : String(item.author || 'unknown').replace(/[^A-Za-z0-9_]/g, '').slice(0, 30) || 'unknown';
   const avatar = node('span', 'x-avatar', handle.slice(0, 1).toUpperCase());
   avatar.setAttribute('aria-hidden', 'true');
-  /* Display names are not stored in the supplement. The site's own author is the one name this page knows;
-     every other account is shown by its @handle alone rather than a guessed name. */
-  const displayName = handle === 'peterxing' ? document.querySelector('#author h2')?.textContent.trim() || null : null;
+  /* Display names come only from X's own embed attribution, recorded by the archive verification;
+     without one, the site's own author is the one name this page knows, and every other account is
+     shown by its @handle alone rather than a guessed name. */
+  const verifiedName = typeof item.authorName === 'string' && item.authorName.trim() && item.authorName.length <= 80 ? item.authorName.trim() : null;
+  const displayName = verifiedName || (handle === 'peterxing' ? document.querySelector('#author h2')?.textContent.trim() || null : null);
   const name = node('strong', 'x-name', displayName || `@${handle}`), meta = node('span', 'x-meta');
   if (!displayName) name.title = 'Display name not stored in this snapshot';
   if (displayName) meta.append(node('span', 'x-handle', `@${handle}`), document.createTextNode(' · '));
@@ -2562,10 +2570,14 @@ function discussionDossier(row){
   if (staleSnapshot) head.append(node('span', 'x-stale-badge', 'Stale snapshot'));
   card.append(head, node('blockquote', '', item.text));
   if (Number.isInteger(item.likes) && Number.isInteger(item.rts) && item.likes >= 0 && item.rts >= 0)
-    card.append(node('p', 'x-metrics', `${item.likes} likes · ${item.rts} reposts when collected ${recorded(layer.summary?.harvestedAt)}; not refreshed since.`));
+    card.append(node('p', 'x-metrics', archiveDate
+      ? `${item.likes} likes · ${item.rts} reposts as recorded in the X archive dated ${recorded(archiveDate)}; not refreshed since.`
+      : `${item.likes} likes · ${item.rts} reposts when collected ${recorded(layer.summary?.harvestedAt)}; not refreshed since.`));
   section.append(card);
   if (item.statement) section.append(node('p', '', item.statement));
-  section.append(node('p', 'dossier-note', `Post created ${date.label}. ${engine.publicationAge(date)}. Supplement collected ${recorded(layer.summary?.harvestedAt)}; assembled ${recorded(layer.summary?.builtAt)}. This may not include later activity.`));
+  section.append(node('p', 'dossier-note', archiveDate
+    ? `Post created ${date.label}. ${engine.publicationAge(date)}. From the X archive dated ${recorded(archiveDate)}; matched ${recorded(layer.summary?.builtAt)}${Number.isFinite(Date.parse(item.verifiedAt)) ? `; X's embed service showed it public on ${recorded(item.verifiedAt)}` : ''}. This may not include later activity.`
+    : `Post created ${date.label}. ${engine.publicationAge(date)}. Supplement collected ${recorded(layer.summary?.harvestedAt)}; assembled ${recorded(layer.summary?.builtAt)}. This may not include later activity.`));
   section.append(link('View the original discussion on X', url.href, true));
   return section;
 }
