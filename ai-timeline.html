@@ -596,23 +596,20 @@ html[data-theme="dark"] {
   <script type="application/json" id="timelineData">
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-05",
+  "reviewedAt": "2026-10-08",
   "initialReviewDate": "2026-09-22",
   "actualsCheck": {
     "status": "checked",
-    "attemptedAt": "2026-10-07T22:07:56.301Z",
-    "checkedAt": "2026-10-07T22:07:56.301Z",
-    "contentChangedAt": "2026-10-05T22:49:40.683Z",
+    "attemptedAt": "2026-10-16T20:35:24.879Z",
+    "checkedAt": "2026-10-16T20:35:24.879Z",
+    "contentChangedAt": "2026-10-08T22:35:33.867Z",
     "checkedSourceIds": [
-      "npr-clayton-ai-czar-white-house-accord",
-      "guardian-gemini-restricted-release",
-      "npr-google-project-suncatcher-launch",
-      "guardian-queensland-anthropic-datacentre",
-      "guardian-openai-hack-review-government-stocktake"
+      "ieee-agility-digit5-production-capital",
+      "npr-ai-freeze-china-compliance-debate"
     ],
     "windowStart": "2026-10-01",
-    "windowEnd": "2026-10-07",
-    "summary": "5 selected canonical NEWS sources reverified. Daily actuals rotation check (2026-10-08): re-verified the five companion-bound canonical NEWS sources least recently rechecked (npr-clayton-ai-czar-white-house-accord, guardian-gemini-restricted-release, npr-google-project-suncatcher-launch, guardian-queensland-anthropic-datacentre, guardian-openai-hack-review-government-stocktake). Two of the five (the Guardian Queensland datacentre and Guardian OpenAI hack-review stories) initially failed stable-text reverification because the publisher pages had changed bytes since the last review; each was re-read live, confirmed to carry the identical headline, identical original publication date/time, and the identical verbatim supporting quote with no change in relied-on meaning, and was recorded as a reviewed stable-text refresh (new textSha256, previousTextSha256, textReviewedAt, textReviewReason) before being included in this rotation. The news-backfill proposal pool for this run again produced exactly one archival candidate (MIT News, 'Translating economic growth into better lives', 2032-2 subject match on the single shared term 'growth'); on original-article review it remains a profile of a graduate student's development-economics coursework in the Philippines with no AI content and no bearing on AI-driven GDP growth, so it is rejected again as a topic-gate false positive rather than forced into the companion to fill a gap. No new or revised companion connection qualifies today. No new or changed companion facts. Original source and event dates retained."
+    "windowEnd": "2026-10-16",
+    "summary": "2 selected canonical NEWS sources reverified. Catch-up: the October 16 Sydney run deployed live but the approved mirror publisher lacked a token; remote main remains a3f316b0. Both domains served those checks. NEWS rechecking succeeded after three bounded unchanged timeout retries. Discovery reached 82/95 sources and returned 1918 candidates, with access gaps. First-party browser discovery covered six of 44 uncited forecasts (2037-2, 2037-4, 2037-5, 2038-3, 2038-4, 2039-0): one current proposal, 14 near misses, 35 refusals. Read the original Scientific Reports proposal: simulated traffic privacy is not institutional AI auditing and needs real-world validation. Rejected it on relevance; 11 near misses exceed the discovery-age ceiling and three do not support their exact forecasts. Read NPR October 15 robot-training reporting: paid recordings and vendor expectations do not establish deployed robot scale or economy-wide labour substitution. Read Anthropic October 15 evaluator announcement: access for six METR staff is company-reported oversight, not published independent safety findings, public-official privacy audits or audited global safety spending. Neither was promoted. Re-read the selected IEEE and NPR originals: headline, original publication date, exact quote and stable text hash match. Digit financing remains a planned raise, not completed investment or installed capacity; the freeze debate proves neither an international agreement nor Chinese compliance. This rechecks two selected sources, not all historical companion sources. No new connection approved; scenario assumptions are unchanged. No new or changed companion facts. Original source and event dates retained."
   },
   "sources": [
     {
@@ -903,6 +900,32 @@ html[data-theme="dark"] {
       "checkedAt": "2026-10-07T22:07:56.301Z",
       "canonicalNewsSource": "guardian-openai-hack-review-government-stocktake",
       "textSha256": "239a7ecdf2cfd9fb40721e1c055836a2c59dce3df2663c3f8f87cea36d8c7d5e"
+    },
+    {
+      "id": "news-npr-meta-muse-personal-agent",
+      "publisher": "NPR",
+      "kind": "Reviewed original NEWS",
+      "title": "Meta's Muse: Killer app? Security nightmare? Both?",
+      "url": "https://www.npr.org/2026/09/30/nx-s1-5983755/metas-muse-killer-app-security-nightmare-both",
+      "published": "2026-09-30",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-08",
+      "checkedAt": "2026-10-08T22:35:33.867Z",
+      "canonicalNewsSource": "npr-meta-muse-personal-agent",
+      "textSha256": "e324b872538112b1e3bb3b2eacd73870776aa6b6e4673a11533c041e622728e5"
+    },
+    {
+      "id": "news-openai-safety-cases-frontier-training",
+      "publisher": "OpenAI",
+      "kind": "Reviewed original NEWS",
+      "title": "Towards safety cases for frontier AI training",
+      "url": "https://openai.com/index/towards-safety-cases-for-frontier-ai-training/",
+      "published": "2026-09-28",
+      "dateNote": "Original publisher date verified through the canonical NEWS ledger. Check time is recorded separately.",
+      "reviewedAt": "2026-10-08",
+      "checkedAt": "2026-10-08T22:35:33.867Z",
+      "canonicalNewsSource": "openai-safety-cases-frontier-training",
+      "textSha256": "e7f4a9e21b2f1e04109eb8b396cd2cbb5c3f0de40e8b9d26542a124562ffa759"
     }
   ],
   "events": [
@@ -1507,6 +1530,45 @@ html[data-theme="dark"] {
         }
       ],
       "reviewedAt": "2026-10-05"
+    },
+    {
+      "id": "meta-muse-agent-launch",
+      "date": "2026-09-30",
+      "type": "Report published",
+      "topics": [
+        "capabilities"
+      ],
+      "title": "Meta launches Muse, a personal AI agent.",
+      "summary": "NPR reports Meta has launched Muse, described as an AI agent that can act like a personal assistant, with the coverage weighing both its utility and its security implications.",
+      "limitation": "A product launch and a single outlet's description do not establish reliable autonomous task substitution, broad adoption, or the scale of agent capability described in the scenarios.",
+      "source": "news-npr-meta-muse-personal-agent",
+      "maps": [
+        {
+          "checkpoint": "agents",
+          "note": "Another concrete personal-assistant-style agent product, consistent with uneven but ongoing agent deployment. It does not establish the broad, reliable digital-workforce substitution the scenarios describe."
+        }
+      ],
+      "reviewedAt": "2026-10-08"
+    },
+    {
+      "id": "openai-safety-cases-framework",
+      "date": "2026-09-28",
+      "type": "Report published",
+      "topics": [
+        "safety",
+        "governance"
+      ],
+      "title": "OpenAI publishes a 'safety cases' framework for frontier training.",
+      "summary": "OpenAI describes safety cases as an aspirational goal it is building toward, while explicitly acknowledging it cannot yet make them as rigorous as safety cases in aviation or nuclear power because of the emergent complexity of each new AI capability level.",
+      "limitation": "This is the company's own aspirational framework, not an independently verified or externally audited oversight mechanism, and OpenAI explicitly says it is not yet achieved.",
+      "source": "news-openai-safety-cases-frontier-training",
+      "maps": [
+        {
+          "checkpoint": "safety",
+          "note": "Shows a leading lab publicly describing a safety-case approach to oversight, relevant background for the checkpoint's control/verification claims. It is the lab's own stated aspiration, not demonstrated effective oversight or independent verification."
+        }
+      ],
+      "reviewedAt": "2026-10-08"
     }
   ],
   "checkpoints": [

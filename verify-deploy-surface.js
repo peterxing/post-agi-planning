@@ -404,14 +404,19 @@ check(/\$fromSite\s*=\s*@\([^)]*'\.vercelignore'/.test(publisher),
 // ------------------------------------------------------------------ LIVE GATE
 
 function head(url) {
+  return probe(url).then(result => result.status);
+}
+
+// Status plus Location, without following redirects: the document root now answers with a redirect to /daily.
+function probe(url) {
   return new Promise(resolve => {
     const lib = url.startsWith('https:') ? https : http;
     const request = lib.request(url, { method: 'GET', headers: { 'user-agent': 'pap-verify-deploy-surface', 'cache-control': 'no-cache' } }, response => {
       response.resume();
-      resolve(response.statusCode);
+      resolve({ status: response.statusCode, location: response.headers.location || '' });
     });
-    request.on('error', () => resolve(0));
-    request.setTimeout(20000, () => { request.destroy(); resolve(0); });
+    request.on('error', () => resolve({ status: 0, location: '' }));
+    request.setTimeout(20000, () => { request.destroy(); resolve({ status: 0, location: '' }); });
     request.end();
   });
 }
@@ -481,8 +486,18 @@ async function assertLive(base) {
       problems.push(`${base}/${name} returned an unexpected ${status}; expected 404`);
     }
   }
-  const rootStatus = await head(`${base}/?cb=${cb}`);
-  check(rootStatus === 200, `${base}/ must serve the site but returned ${rootStatus || 'no response'}`);
+  // The document root opens on The Singularity Daily (owner's instruction, 25 Oct 2026): vercel.json redirects "/" to
+  // /daily, which it proxies to the Daily's GitHub Pages site, and serves the Guide's unchanged index.html at /guide.
+  // A redirect anywhere else, or a root that serves nothing, still fails.
+  const root = await probe(`${base}/?cb=${cb}`);
+  const rootStatus = root.status;
+  const rootTarget = root.location ? new URL(root.location, `${base}/`).pathname : '';
+  check(rootStatus === 200 || ([307, 308].includes(rootStatus) && rootTarget === '/daily'),
+    `${base}/ must serve the site or redirect to /daily but returned ${rootStatus || 'no response'}${rootTarget ? ` to ${rootTarget}` : ''}`);
+  const guideStatus = await head(`${base}/guide?cb=${cb}`);
+  check(guideStatus === 200, `${base}/guide must serve the Guide but returned ${guideStatus || 'no response'}`);
+  const dailyStatus = await head(`${base}/daily?cb=${cb}`);
+  check(dailyStatus === 200, `${base}/daily must serve The Singularity Daily but returned ${dailyStatus || 'no response'}`);
   check(reachable.length === 0, `${base} exposes non-public paths: ${reachable.join(', ')}`);
   /* ABSENT IS NOT FAILED, the same shape found in the news gate's proof harness. A served file is
      only checked if its name reaches this loop, and `targets` is built from what EXISTS on disk
@@ -498,7 +513,7 @@ async function assertLive(base) {
   check(confirmedServed === served.size,
     `${base}: only ${confirmedServed} of ${served.size} approved public files were confirmed served`
     + `${unprobed.length ? `; never probed at all: ${unprobed.join(', ')}` : ''}`);
-  notes.push(`${base}: ${targets.length} paths probed · document root ${rootStatus} · ${confirmedServed}/${served.size} approved public files served · ${reachable.length} unexpected reachable.`);
+  notes.push(`${base}: ${targets.length} paths probed · document root ${rootStatus}${rootTarget ? ` to ${rootTarget}` : ''} · /guide ${guideStatus} · /daily ${dailyStatus} · ${confirmedServed}/${served.size} approved public files served · ${reachable.length} unexpected reachable.`);
 }
 
 // ----------------------------------------------------------------------- MAIN

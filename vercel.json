@@ -2,7 +2,46 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/daily",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/guide",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/daily",
+      "destination": "https://peterxing.github.io/singularity-daily/"
+    },
+    {
+      "source": "/daily/:path*",
+      "destination": "https://peterxing.github.io/singularity-daily/daily/:path*"
+    }
+  ],
   "headers": [
+    {
+      "source": "/guide",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/daily",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    },
     {
       "source": "/ai-timeline",
       "headers": [
