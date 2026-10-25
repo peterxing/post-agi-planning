@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/guide",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/daily",
