@@ -509,8 +509,11 @@ $handler = [System.Net.Http.HttpClientHandler]::new(); $handler.AllowAutoRedirec
 $http = [System.Net.Http.HttpClient]::new($handler); $http.DefaultRequestHeaders.CacheControl = [System.Net.Http.Headers.CacheControlHeaderValue]::Parse('no-cache')
 $sha = [System.Security.Cryptography.SHA256]::Create(); $stamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds(); $bad = @()
 foreach ($base in 'https://peterxing.com', 'https://post-agi-planning.vercel.app') {
+  # peterxing.com opens on The Singularity Daily (middleware.ts), so its Guide is served at /guide;
+  # post-agi-planning.vercel.app keeps the Guide at the document root.
+  $guideRoute = if ($base -eq 'https://peterxing.com') { '/guide' } else { '/' }
   foreach ($name in $runtime) {
-    $route = if ($name -eq 'index.html') { '/' } elseif ($name -like '*.html') { '/' + $name.Substring(0, $name.Length - 5) } else { "/$name" }
+    $route = if ($name -eq 'index.html') { $guideRoute } elseif ($name -like '*.html') { '/' + $name.Substring(0, $name.Length - 5) } else { "/$name" }
     $expected = (Get-FileHash -LiteralPath (Join-Path $PWD $name) -Algorithm SHA256).Hash
     $response = $http.GetAsync("$base$($route)?pf=$stamp").Result
     $actual = [BitConverter]::ToString($sha.ComputeHash($response.Content.ReadAsByteArrayAsync().Result)).Replace('-', '')
@@ -521,15 +524,21 @@ foreach ($base in 'https://peterxing.com', 'https://post-agi-planning.vercel.app
       $status = [int]$direct.StatusCode
       if ($status -in 301, 308) {
         $target = [Uri]::new([Uri]"$base/$name", $direct.Headers.Location).AbsoluteUri
-        if ($target -ne ([Uri]"$base$route").AbsoluteUri) { $bad += "$base/$name redirects to $target" }
+        $clean = if ($name -eq 'index.html') { "$base/" } else { "$base$route" }
+        if ($target -ne ([Uri]$clean).AbsoluteUri) { $bad += "$base/$name redirects to $target" }
       } elseif ($status -ne 200 -or [BitConverter]::ToString($sha.ComputeHash($direct.Content.ReadAsByteArrayAsync().Result)).Replace('-', '') -ne $expected) {
         $bad += "$base/$name HTTP $status"
       }
     }
   }
 }
+$daily = $http.GetAsync("https://peterxing.com/?pf=$stamp").Result
+if ([int]$daily.StatusCode -ne 200 -or -not $daily.Content.ReadAsStringAsync().Result.Contains('<title>The Singularity Daily')) { $bad += 'https://peterxing.com/ does not serve The Singularity Daily' }
 if ($bad.Count) { throw "Production bytes differ: $($bad -join '; ')" }
-foreach ($base in 'https://peterxing.com/', 'https://post-agi-planning.vercel.app/') {
+# The rendered gates open the Guide at the document root, which is post-agi-planning.vercel.app (peterxing.com's
+# root is The Singularity Daily). The byte check above proves peterxing.com/guide serves the identical Guide, and
+# verify-site.js renders it there too.
+foreach ($base in 'https://post-agi-planning.vercel.app/') {
   $env:PAP_SITE_URL = $base
   foreach ($gate in 'verify-site.js', 'verify-observatory.js', 'verify-reality.js', 'verify-perpred.js', 'verify-author.js',
                     'verify-metr.js', 'verify-reference-points.js', 'verify-visuals.js', 'verify-game.js', 'verify-game-performance.js') {
@@ -538,13 +547,17 @@ foreach ($base in 'https://peterxing.com/', 'https://post-agi-planning.vercel.ap
     elseif ($code -ne 0) { throw "$gate failed on $base (exit $code)" }
   }
 }
+$env:PAP_SITE_URL = 'https://peterxing.com/guide'
+node verify-site.js; if ($LASTEXITCODE -ne 0) { throw "verify-site.js failed on https://peterxing.com/guide (exit $LASTEXITCODE)" }
 Remove-Item Env:PAP_SITE_URL
 node verify-deploy-surface.js --live
 ```
 
 The byte check covers every runtime file on both domains, including each report photo,
 which must also be served as `image/webp`. Each `.html` file is checked through its clean
-route, and a redirect must name exactly that same-origin route. `verify-visuals.js` then
+route, and a redirect must name exactly that same-origin route. On peterxing.com the Guide's
+route is `/guide`, because the document root there is The Singularity Daily (asserted by
+title); `/index.html` still cleanUrls-redirects to `/` on both domains. `verify-visuals.js` then
 checks the served cards, lazy photos with visible credits, and that no photo loads before a
 report is opened. The
 companion's `308 -> 200` is also asserted by `verify-deploy-surface.js --live`, with

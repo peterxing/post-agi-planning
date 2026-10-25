@@ -643,7 +643,7 @@ changed; only routing: `middleware.ts` (Vercel Routing Middleware) and `vercel.j
 | `/` on peterxing.com (and www) | The Singularity Daily, rewritten by `middleware.ts` from [peterxing.github.io/singularity-daily](https://peterxing.github.io/singularity-daily/) ([`peterxing/singularity-daily`](https://github.com/peterxing/singularity-daily)); the address stays peterxing.com |
 | `/` on post-agi-planning.vercel.app | this site's unchanged `index.html`, as before, so the Guide's live verifiers still open a document-root Guide |
 | `/daily`, `/daily/*` | the Daily, proxied by `vercel.json` on both domains (`/daily` is an alias; `/daily/*` carries its files) |
-| `/guide` | this site's unchanged `index.html` on both domains (on peterxing.com, `/index.html` redirects here) |
+| `/guide` | this site's unchanged `index.html` on both domains. Links into the Guide that point at `/` (the AI timeline's "Back to the field guide", the game's header) land on the Daily on peterxing.com, whose `route.js` forwards them here |
 
 The Daily forwards old links to the Guide's homepage (`/#chapter-3`, `/#event-2027-1`, `/?fd=economic`
 and so on) to `/guide`. Its **Predictions vs reality** tracker reads this site's live `predictions.json`
