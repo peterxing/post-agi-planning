@@ -64,6 +64,20 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024;
  * honest gap is the intended behaviour, not a defect to be filled.
  */
 const NEWS_SOURCES = {
+  "techreview-mind-preservation-emulation-limits": {
+    url: "https://www.technologyreview.com/2026/10/15/1145819/six-wild-ideas-perpetuating-your-mind-cognitive-immortality/",
+    resolvedUrl: "https://www.technologyreview.com/2026/10/15/1145819/six-wild-ideas-perpetuating-your-mind-cognitive-immortality/",
+    publisher: "MIT Technology Review",
+    publisherHost: "technologyreview.com",
+    author: "Antonio Regalado",
+    headline: "Six wild ideas for perpetuating your mind",
+    publishedAt: "2026-10-15T09:00:00.000Z",
+    publishedAtSource: "page",
+    retrievedAt: "2026-10-18",
+    sourceQuality: "primary-news-organization",
+    quote: "A survey of 312 neuroscientists, published in 2025 in PLOS One, estimated that human whole-brain emulation wouldn’t happen before 2125.",
+    textSha256: "3b8136daf1a17c2cdd55ae2971d7c938688017e5d77c104e668c4bf3fd28f195",
+  },
   "verge-openai-frontier-training-pause": {
     url: "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
     resolvedUrl: "https://www.theverge.com/ai-artificial-intelligence/1001049/openai-training-pause",
@@ -886,7 +900,10 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-09-26",
     sourceQuality: "primary-news-organization",
     quote: "Agility hopes to raise more than $620 million through the merger, and it will primarily spend the money to scale production of Digit 5 and get it to customers.",
-    textSha256: "a154cc31b0e4cb6ac65f64ba36d4aed5e5d4b42a307ca561cc3186e31af459ab",
+    textSha256: "9fe3ee6a5ad76ef136feae0a930ae5c955a27962dc254d01ce234167124c4dad",
+    previousTextSha256: "a154cc31b0e4cb6ac65f64ba36d4aed5e5d4b42a307ca561cc3186e31af459ab",
+    textReviewedAt: "2026-10-19T20:11:06.576Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
   "verge-tesla-optimus-production-rate": {
     url: "https://www.theverge.com/tech/1000794/tesla-optimus-production-issues-hands",
@@ -903,8 +920,13 @@ const NEWS_SOURCES = {
     textSha256: "e94133b0b4ad94aff8227e02d8714094b0266467086942740d1df9683a1b67e7",
   },
   "anthropic-claude-enzyme-discovery": {
-    url: "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
-    resolvedUrl: "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+    /* RE-REVIEWED 2026-10-26 (owner-instructed publication run). Anthropic moved the article from /news/ to
+       /research/: the previously recorded URL now answers 308 to the address below, so the gate reported a resolved-URL
+       drift. Fetched the new address: the headline "Claude discovers a novel enzyme system", the 23 Sep 2026 date and the
+       verbatim quote are all present and unchanged. Updated url and resolvedUrl only; quote, date and hash unchanged.
+       Previous url and resolvedUrl: https://www.anthropic.com/news/claude-discovers-novel-enzyme-system */
+    url: "https://www.anthropic.com/research/claude-discovers-novel-enzyme-system",
+    resolvedUrl: "https://www.anthropic.com/research/claude-discovers-novel-enzyme-system",
     publisher: "Anthropic",
     publisherHost: "anthropic.com",
     author: null,
@@ -1117,7 +1139,10 @@ const NEWS_SOURCES = {
     retrievedAt: "2026-10-05",
     sourceQuality: "official-company",
     quote: "We treat safety cases as an aspirational north star we are building towards, while acknowledging the challenges of making them as rigorous for AI models as for aviation or nuclear power, due to the emergent complexity at each new level of AI capability.",
-    textSha256: "b9e4c09016cbbf43cf29fe493cde7cfbb63a2900161b49bad3c1ccfae4bf88a4",
+    textSha256: "e7f4a9e21b2f1e04109eb8b396cd2cbb5c3f0de40e8b9d26542a124562ffa759",
+    previousTextSha256: "b9e4c09016cbbf43cf29fe493cde7cfbb63a2900161b49bad3c1ccfae4bf88a4",
+    textReviewedAt: "2026-10-08T22:34:42.867Z",
+    textReviewReason: "publisher page text changed; supporting quote/claim re-verified",
   },
 };
 
@@ -1127,6 +1152,15 @@ const NEWS_SOURCES = {
  * and the evidence type, and every entry is manually reviewed.
  */
 const NEWS_GROUPS = [
+  {
+    source: "techreview-mind-preservation-emulation-limits",
+    ids: ["horizon-whole-brain-emulation-and-uploading"],
+    evidenceType: "leading-indicator",
+    evidenceBasis: "reported-speculative-research-limits",
+    reuseFamily: "whole-brain-emulation",
+    rationale: "MIT Technology Review's Antonio Regalado reports on proposed mind-preservation approaches, distinguishing connectome-based whole-brain emulation from digital avatars and discussing whether a simulation would preserve a person's identity. This directly concerns the undated horizon's emulation mechanism and unresolved continuity caveat. IT DOES NOT DEMONSTRATE AN UPLOAD OR DIGITAL IMMORTALITY. The article describes hypotheses and preservation services, not a validated human functional emulation; the quoted 2125 estimate is an attributed 2025 neuroscientist survey, not a new measurement or a deadline adopted by this site. The article reports no independently validated preservation of memories or subjective continuity. Its October 15 publication is the report date, not the date of its historical examples, and it does not date or resolve the conditional horizon.",
+    reviewedAt: "2026-10-18",
+  },
   {
     source: "verge-openai-frontier-training-pause",
     ids: ["2038-5"],
