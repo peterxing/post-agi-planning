@@ -2,13 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/daily",
-      "permanent": false
-    }
-  ],
   "rewrites": [
     {
       "source": "/guide",

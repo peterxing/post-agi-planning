@@ -42,6 +42,7 @@
 !photo-pylons.webp
 !photo-robonaut.webp
 !photo-wafer.webp
+!middleware.ts
 
 # Belt-and-braces: the highest-risk names are also denied explicitly and last, so
 # they win over any future re-include. "*" already excludes them.

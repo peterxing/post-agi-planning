@@ -635,21 +635,23 @@ surface and the repository copy of `.vercelignore` is the live gate.
 
 At the owner's instruction (25 October 2026) peterxing.com opens on **The Singularity Daily**, the
 daily three-minute show on the last 24 hours in AI, and the Guide moves to `/guide`. No Guide file
-changed; only routing in `vercel.json` (mirrored from `pap-site` like the rest of the deploy config):
+changed; only routing: `middleware.ts` (Vercel Routing Middleware) and `vercel.json`, both mirrored from
+`pap-site` like the rest of the deploy config:
 
 | Path | Serves |
 | --- | --- |
-| `/` | a temporary (307) redirect to `/daily` |
-| `/daily`, `/daily/*` | proxied from [peterxing.github.io/singularity-daily](https://peterxing.github.io/singularity-daily/) ([`peterxing/singularity-daily`](https://github.com/peterxing/singularity-daily)) |
+| `/` | The Singularity Daily, rewritten by `middleware.ts` (matcher `/` only) from [peterxing.github.io/singularity-daily](https://peterxing.github.io/singularity-daily/) ([`peterxing/singularity-daily`](https://github.com/peterxing/singularity-daily)); the address stays peterxing.com |
+| `/daily`, `/daily/*` | the same site, proxied by `vercel.json` (`/daily` is an alias; `/daily/*` carries its files) |
 | `/guide` | this site's unchanged `index.html` |
 
 The Daily forwards old links to the Guide's homepage (`/#chapter-3`, `/#event-2027-1`, `/?fd=economic`
 and so on) to `/guide`. Its **Predictions vs reality** tracker reads this site's live `predictions.json`
 whenever an episode is published and links every forecast back to `/guide#event-…`. Those links are the
 show's editorial mapping of its own verified stories; they are separate from, and never feed, the NEWS
-evidence channel, `signals.json` or any probability. `verify-deploy-surface.js --live` accepts the root
-redirect only when it targets `/daily`, and asserts that `/guide` and `/daily` both answer 200.
-Removing the `redirects` and `rewrites` blocks from `vercel.json` restores the Guide at `/`.
+evidence channel, `signals.json` or any probability. `verify-deploy-surface.js --live` accepts a 200 root
+(or a redirect only to `/daily`), asserts that `/guide` and `/daily` both answer 200, and expects
+`middleware.ts`, like `vercel.json`, to be consumed rather than served. Deleting `middleware.ts` (and its
+lines in `.vercelignore`, `verify-deploy-surface.js` and `publish-github.ps1`) restores the Guide at `/`.
 
 ## Security
 

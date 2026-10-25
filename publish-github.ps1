@@ -573,7 +573,7 @@ $fromDeploy = @(
   'photo-berlaymont.webp','photo-datacenter.webp','photo-ebola.webp','photo-fda-building.webp'
   'photo-iss-arrays.webp','photo-pylons.webp','photo-robonaut.webp','photo-wafer.webp','verify-visuals.js'
 )
-$fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore')
+$fromSite = @('deploy.ps1','vercel.json','_headers','.vercelignore','middleware.ts')
 $repositoryBaseline = @('.env.example','.gitignore','LICENSE')
 $copiedAllowlist = @($fromDeploy + $fromSite)
 $publicAllowlist = @($copiedAllowlist + $repositoryBaseline)

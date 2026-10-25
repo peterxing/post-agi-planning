@@ -74,11 +74,13 @@ const PUBLIC_SURFACE = [
   // Openly licensed, credited report photos (PHOTO_LIBRARY in app.js).
   'photo-berlaymont.webp', 'photo-datacenter.webp', 'photo-ebola.webp', 'photo-fda-building.webp',
   'photo-iss-arrays.webp', 'photo-pylons.webp', 'photo-robonaut.webp', 'photo-wafer.webp',
+  // Routing Middleware (owner's instruction, 25 Oct 2026): serves The Singularity Daily at the bare domain.
+  'middleware.ts',
 ];
 
 // Uploaded so Vercel can read it as configuration, but consumed rather than
 // served: it must answer 404 in production like any other non-public file.
-const CONFIG_NOT_SERVED = new Set(['vercel.json']);
+const CONFIG_NOT_SERVED = new Set(['vercel.json', 'middleware.ts']);
 
 // Explicit trailing denies are allowed only for these highest-risk names. "*"
 // already excludes them; listing them again is defence in depth and keeps
@@ -99,6 +101,9 @@ const ALLOWED_TRAILING_DENIES = new Set(['.env*', '.vercel', '.pipeline.lock']);
 const ALLOWED_EGRESS_HOSTS = new Set([
   // local verification and the two production domains
   '127.0.0.1', 'peterxing.com', 'post-agi-planning.vercel.app',
+  // Reviewed 2026-10-25: The Singularity Daily's GitHub Pages site, which middleware.ts and vercel.json proxy at
+  // peterxing.com (/, /daily, /daily/*). Pages that the reader's browser loads, not a collector.
+  'peterxing.github.io',
   // Reviewed 2026-09-26: credit and licence links beside the self-hosted report photos. Never fetched.
   'commons.wikimedia.org', 'creativecommons.org',
   // Reviewed 2026-09-05: first-party benchmark measurements, never news citations.
@@ -486,9 +491,10 @@ async function assertLive(base) {
       problems.push(`${base}/${name} returned an unexpected ${status}; expected 404`);
     }
   }
-  // The document root opens on The Singularity Daily (owner's instruction, 25 Oct 2026): vercel.json redirects "/" to
-  // /daily, which it proxies to the Daily's GitHub Pages site, and serves the Guide's unchanged index.html at /guide.
-  // A redirect anywhere else, or a root that serves nothing, still fails.
+  // The document root opens on The Singularity Daily (owner's instruction, 25 Oct 2026): middleware.ts rewrites "/"
+  // to the Daily's GitHub Pages site (an earlier configuration redirected "/" to /daily instead), vercel.json proxies
+  // /daily and /daily/* to it, and serves the Guide's unchanged index.html at /guide. A redirect anywhere other than
+  // /daily, or a root that serves nothing, still fails.
   const root = await probe(`${base}/?cb=${cb}`);
   const rootStatus = root.status;
   const rootTarget = root.location ? new URL(root.location, `${base}/`).pathname : '';
