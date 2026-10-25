@@ -640,9 +640,10 @@ changed; only routing: `middleware.ts` (Vercel Routing Middleware) and `vercel.j
 
 | Path | Serves |
 | --- | --- |
-| `/` | The Singularity Daily, rewritten by `middleware.ts` (matcher `/` only) from [peterxing.github.io/singularity-daily](https://peterxing.github.io/singularity-daily/) ([`peterxing/singularity-daily`](https://github.com/peterxing/singularity-daily)); the address stays peterxing.com |
-| `/daily`, `/daily/*` | the same site, proxied by `vercel.json` (`/daily` is an alias; `/daily/*` carries its files) |
-| `/guide` | this site's unchanged `index.html` |
+| `/` on peterxing.com (and www) | The Singularity Daily, rewritten by `middleware.ts` from [peterxing.github.io/singularity-daily](https://peterxing.github.io/singularity-daily/) ([`peterxing/singularity-daily`](https://github.com/peterxing/singularity-daily)); the address stays peterxing.com |
+| `/` on post-agi-planning.vercel.app | this site's unchanged `index.html`, as before, so the Guide's live verifiers still open a document-root Guide |
+| `/daily`, `/daily/*` | the Daily, proxied by `vercel.json` on both domains (`/daily` is an alias; `/daily/*` carries its files) |
+| `/guide` | this site's unchanged `index.html` on both domains (on peterxing.com, `/index.html` redirects here) |
 
 The Daily forwards old links to the Guide's homepage (`/#chapter-3`, `/#event-2027-1`, `/?fd=economic`
 and so on) to `/guide`. Its **Predictions vs reality** tracker reads this site's live `predictions.json`
@@ -650,8 +651,11 @@ whenever an episode is published and links every forecast back to `/guide#event-
 show's editorial mapping of its own verified stories; they are separate from, and never feed, the NEWS
 evidence channel, `signals.json` or any probability. `verify-deploy-surface.js --live` accepts a 200 root
 (or a redirect only to `/daily`), asserts that `/guide` and `/daily` both answer 200, and expects
-`middleware.ts`, like `vercel.json`, to be consumed rather than served. Deleting `middleware.ts` (and its
-lines in `.vercelignore`, `verify-deploy-surface.js` and `publish-github.ps1`) restores the Guide at `/`.
+`middleware.ts`, like `vercel.json`, to be consumed rather than served. The timeline postflight in
+`TIMELINE-DAILY-RUN.md` byte-checks the Guide at `/guide` on peterxing.com and at `/` on the Vercel domain,
+confirms peterxing.com serves the Daily, and runs the rendered verifiers where the Guide is the document root.
+Deleting `middleware.ts` (and its lines in `.vercelignore`, `verify-deploy-surface.js` and `publish-github.ps1`)
+restores the Guide at `/`.
 
 ## Security
 
