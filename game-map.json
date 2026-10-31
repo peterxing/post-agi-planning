@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "reviewedBy": "Game adaptation under user-approved scope",
-  "reviewedAt": "2026-10-05T22:44:29.133Z",
-  "source": "Explicit 103-record semantic reconciliation against the implemented stations and decisions; imperative unimplemented proposal actions removed. Original record hashes retained. Re-reviewed 2026-10-05 for the owner-approved October 2026 update: seven changed records (probability and revision-note changes only; every mission, choice and chapter binding is probability-independent and still matches) and one dated note added to Chapter 07 (no chapter added, removed or retitled; chapter-to-mission bindings unchanged).",
+  "reviewedAt": "2026-10-31T22:58:08.023Z",
+  "source": "Explicit 103-record semantic reconciliation against the implemented stations and decisions; imperative unimplemented proposal actions removed. Original record hashes retained. Re-reviewed 2026-10-05 for the owner-approved October 2026 update: seven changed records (probability and revision-note changes only; every mission, choice and chapter binding is probability-independent and still matches) and one dated note added to Chapter 07 (no chapter added, removed or retitled; chapter-to-mission bindings unchanged). Re-reviewed 2026-11-01 for the owner's correction to his family history (his father taught English and drove taxis and then Uber; his parents washed dishes and worked in a travel agency; tax advisory was his own): first-person wording changed in Chapters 01, 02, 03 and 07 and in the Chapter 01 summary card only; no forecast record, mission, choice, chapter or chapter-to-mission binding changed.",
   "recordHashAlgorithm": "SHA-256 of JSON.stringify(the complete authored forecast record), distinct from the whole-forecast version.",
-  "bookSha256": "cd773b084cf4c20d040000063edc2a5e0d0b46632d73b4e413897392cfedd474",
-  "toolsSha256": "ce6b7cfe255cb3db908c775ba7856677a2a2879d94c14f5d438c07455ccd0aa2",
+  "bookSha256": "309b67df150aa1cf9e5bb770638afdb4f9cb40e0b9a8a3488319d1c8c12e93fc",
+  "toolsSha256": "34bfefacf44df312dbb9b63f0422a3028dd9cb4adcd615f94432677855fb859a",
   "mappings": [
     {
       "forecastId": "2026-0",

@@ -4,10 +4,10 @@
   "rulesSha256": "b5755555d635a75276f117d882ccaf6e1b53eb9d483e11ed640b2b58f38df12a",
   "forecastSha256": "1a8b1386c06802870bcb0b55132f20380c3a41dea1abe9e05a7889d6a3ad15dc",
   "authorSha256": "d89c248f7d1ab559f18c57a6c92cc7cecce6c354fe21c77c2562f4c1506dcfe2",
-  "bookSha256": "cd773b084cf4c20d040000063edc2a5e0d0b46632d73b4e413897392cfedd474",
-  "toolsSha256": "ce6b7cfe255cb3db908c775ba7856677a2a2879d94c14f5d438c07455ccd0aa2",
-  "mappingSha256": "b078e07c6d738dbf14f955f2109e023e33233a58cb085663fcf57d39720ba657",
-  "sourceIndexSha256": "f5644b02fb4e5838ea88dc664177a7029aac444eb295a85791d8f4d4301cd0b5",
+  "bookSha256": "309b67df150aa1cf9e5bb770638afdb4f9cb40e0b9a8a3488319d1c8c12e93fc",
+  "toolsSha256": "34bfefacf44df312dbb9b63f0422a3028dd9cb4adcd615f94432677855fb859a",
+  "mappingSha256": "3891aaf353f6cc0dbd7c0bd454bd2ffa52354d4674b4b45a5f31e19e69591473",
+  "sourceIndexSha256": "5981f2189ae52f7bd54fab82739d2c18135998422fcd0bc8b7474a9ee8ece4a9",
   "book": [
     {
       "index": 0,
@@ -455,7 +455,7 @@
         {
           "tag": "p",
           "children": [
-            "I have watched my own skills become worthless four times. This is the fifth, and I'm not afraid anymore."
+            "I have watched my family's skills become worthless four times. This is the fifth, and I'm not afraid anymore."
           ]
         },
         "\n",
@@ -490,21 +490,21 @@
         {
           "tag": "p",
           "children": [
-            "I taught English — a skill that felt safe right up until it didn't. I worked in ",
+            "My dad taught English — a skill that felt safe right up until it didn't. My parents washed dishes and worked in a ",
             {
               "tag": "strong",
               "children": [
-                "travel agencies"
+                "travel agency"
               ]
             },
-            ", helping people book the trips they couldn't book themselves, until the internet quietly demonetised the entire profession and the shopfronts emptied out. I drove and dispatched in the ",
+            ", helping people book the trips they couldn't book themselves, until the internet quietly demonetised the entire profession and the shopfronts emptied out. To put me through school and university, my dad drove ",
             {
               "tag": "strong",
               "children": [
-                "taxi"
+                "taxis"
               ]
             },
-            " world, until an app erased the value of knowing the streets. I moved into ",
+            ", and when an app erased the value of knowing the streets, he drove for Uber instead. Then it was my turn: I moved into ",
             {
               "tag": "strong",
               "children": [
@@ -518,14 +518,14 @@
         {
           "tag": "p",
           "children": [
-            "Four times I banked a skill like firewood for winter. Four times I watched technology walk up and burn the woodpile for cheap. By the fourth time, I had stopped taking it personally. A pattern that repeats that cleanly isn't bad luck. It's a law."
+            "Four times my family banked a skill like firewood for winter. Four times we watched technology walk up and burn the woodpile for cheap. By the fourth time — my own — I had stopped taking it personally. A pattern that repeats that cleanly isn't bad luck. It's a law."
           ]
         },
         "\n",
         {
           "tag": "blockquote",
           "children": [
-            "Every skill I ever owned was a candle. Technology kept turning on the lights."
+            "Every skill we ever owned was a candle. Technology kept turning on the lights."
           ]
         },
         "\n",
@@ -546,11 +546,11 @@
         {
           "tag": "p",
           "children": [
-            "What if the pie wasn't fixed? What if the thing that had repeatedly destroyed the value of my skills — technology, relentlessly making the once-expensive cheap — was not my enemy but the single most powerful force for abundance the universe had ever produced? The same demonetisation that erased the travel agent put a travel agent in everyone's pocket. The same app that erased my knowledge of the streets gave a billion people a driver. I had been standing inside the engine of abundance the whole time, mistaking it for a wrecking ball because it kept knocking down ",
+            "What if the pie wasn't fixed? What if the thing that had repeatedly destroyed the value of our skills — technology, relentlessly making the once-expensive cheap — was not my enemy but the single most powerful force for abundance the universe had ever produced? The same demonetisation that erased the travel agent put a travel agent in everyone's pocket. The same app that erased my dad's knowledge of the streets gave a billion people a driver. I had been standing inside the engine of abundance the whole time, mistaking it for a wrecking ball because it kept knocking down ",
             {
               "tag": "em",
               "children": [
-                "my"
+                "our"
               ]
             },
             " wall."
@@ -581,7 +581,7 @@
                 "everyone"
               ]
             },
-            " is about to become the migrant in the room. The thing that happened to travel agents and taxi drivers and now, yes, tax advisors and coders and radiologists — the sudden, brutal repricing of a hard-won skill — is going to happen to nearly every profession at once, on a compressed timeline. Most people have never lived through it. I've lived through it four times. So consider me the person at the front of the lifeboat who has already been in the cold water and is here to tell you: you can survive this, and more than survive it. But only if you stop defending the woodpile and start learning to live where the lights are always on."
+            " is about to become the migrant in the room. The thing that happened to travel agents and taxi drivers and now, yes, tax advisors and coders and radiologists — the sudden, brutal repricing of a hard-won skill — is going to happen to nearly every profession at once, on a compressed timeline. Most people have never lived through it. My family has lived through it four times. So consider me the person at the front of the lifeboat who has already been in the cold water and is here to tell you: you can survive this, and more than survive it. But only if you stop defending the woodpile and start learning to live where the lights are always on."
           ]
         },
         "\n",
@@ -637,7 +637,7 @@
         {
           "tag": "p",
           "children": [
-            "Here is the most important machine you will never see, because it has no housing and makes no sound. I call it the Abundance Engine, and once you can see it running, you cannot un-see it. It explains why the camera in your pocket would have cost more than your house forty years ago, why a phone call across the planet went from a luxury to a rounding error, and why the value of every skill I ever owned kept evaporating. It is the same process every time. It runs in six steps, and each one feeds the next."
+            "Here is the most important machine you will never see, because it has no housing and makes no sound. I call it the Abundance Engine, and once you can see it running, you cannot un-see it. It explains why the camera in your pocket would have cost more than your house forty years ago, why a phone call across the planet went from a luxury to a rounding error, and why the value of every skill my family ever owned kept evaporating. It is the same process every time. It runs in six steps, and each one feeds the next."
           ]
         },
         "\n",
@@ -693,7 +693,7 @@
         {
           "tag": "p",
           "children": [
-            "The fourth step is the one I felt personally, four times: ",
+            "The fourth step is the one my family felt personally, four times: ",
             {
               "tag": "strong",
               "children": [
@@ -875,7 +875,7 @@
         {
           "tag": "p",
           "children": [
-            "The next layer up is how you earn, how you exchange value, how you participate in the economy. This is the layer being repriced right now, in real time, and it's where the fear lives — because this is the layer where \"what you can do\" used to equal \"what you're worth.\" When a machine can do your economic function cheaper, that equation breaks, and it breaks suddenly. I've had this layer collapse under me four times. The work after this chapter — Work After Work, the Distribution Layer, the 1000-Day Plan — is mostly about rebuilding this layer on new foundations: owning rather than only labouring, distributing rather than only producing, and plugging into the new income structures before you need them."
+            "The next layer up is how you earn, how you exchange value, how you participate in the economy. This is the layer being repriced right now, in real time, and it's where the fear lives — because this is the layer where \"what you can do\" used to equal \"what you're worth.\" When a machine can do your economic function cheaper, that equation breaks, and it breaks suddenly. I've watched this layer collapse under my family four times. The work after this chapter — Work After Work, the Distribution Layer, the 1000-Day Plan — is mostly about rebuilding this layer on new foundations: owning rather than only labouring, distributing rather than only producing, and plugging into the new income structures before you need them."
           ]
         },
         "\n",
@@ -966,7 +966,7 @@
         {
           "tag": "p",
           "children": [
-            "Most of the public argument about AI is stuck on layer two: \"will it take my job?\" That's the wrong altitude to fight at, because layer two is exactly the layer the machines will win. The stack reframes the whole question. The goal was never to out-compute the computer at the economic layer — you can't, any more than I could out-compute the app that knew the streets. The goal is to understand that as the bottom layers get automated and cheap, the centre of gravity of a human life rises. Survival becomes a solved problem. Economics becomes about ownership and distribution. And the social and potential layers — the most human layers, the ones we've always shortchanged — become the main event."
+            "Most of the public argument about AI is stuck on layer two: \"will it take my job?\" That's the wrong altitude to fight at, because layer two is exactly the layer the machines will win. The stack reframes the whole question. The goal was never to out-compute the computer at the economic layer — you can't, any more than my dad could out-compute the app that knew the streets. The goal is to understand that as the bottom layers get automated and cheap, the centre of gravity of a human life rises. Survival becomes a solved problem. Economics becomes about ownership and distribution. And the social and potential layers — the most human layers, the ones we've always shortchanged — become the main event."
           ]
         },
         "\n",
@@ -1808,7 +1808,7 @@
         {
           "tag": "p",
           "children": [
-            "The third clock is the slowest and the one that actually matters for your life: how long until the deployed capability produces real consequences — economic, social, personal. Impact lags deployment the way deployment lags capability. The electricity was invented decades before it rewired the factory floor; the internet existed for years before it gutted the travel agency I worked in. Impact is where the Abundance Engine's \"deceptive\" phase lives — the technology is real and deployed, but the consequences are still building underground before they surface all at once."
+            "The third clock is the slowest and the one that actually matters for your life: how long until the deployed capability produces real consequences — economic, social, personal. Impact lags deployment the way deployment lags capability. The electricity was invented decades before it rewired the factory floor; the internet existed for years before it gutted the travel agency my parents worked in. Impact is where the Abundance Engine's \"deceptive\" phase lives — the technology is real and deployed, but the consequences are still building underground before they surface all at once."
           ]
         },
         "\n",
@@ -2741,7 +2741,7 @@
       ]
     }
   ],
-  "bookCharacters": 70592,
+  "bookCharacters": 70777,
   "tools": {
     "sixDs": [
       [
@@ -3065,7 +3065,7 @@
         "route": "Abundance",
         "rc": "var(--cp-accent)",
         "title": "From Scarcity to Abundance — My Why",
-        "body": "<p>Peter's origin: from Harbin on the Black Dragon River to Hobart and Sydney, climbing the migrant ladder as hard-won skills — English, travel agencies, taxis, tax advisory — were devalued one by one by software. A hospital bed became the turn toward transhumanism: <strong>if scarcity made us, abundance can remake us.</strong></p>"
+        "body": "<p>Peter's origin: from Harbin on the Black Dragon River to Hobart and Sydney, climbing the migrant ladder as the family's hard-won skills — English, travel agencies, taxis, tax advisory — were devalued one by one by software. A hospital bed became the turn toward transhumanism: <strong>if scarcity made us, abundance can remake us.</strong></p>"
       },
       {
         "idx": "02",
