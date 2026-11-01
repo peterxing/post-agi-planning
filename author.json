@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22",
+  "updated": "2026-11-01",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -28,6 +28,13 @@
     }
   ],
   "talks": [
+    {
+      "title": "EP17: What AI adoption in the public sector actually looks like right now",
+      "venue": "Nap Stack podcast (EdgeRed)",
+      "year": "2026",
+      "url": "https://podcasts.apple.com/au/podcast/ep17-what-ai-adoption-in-the-public-sector-actually/id6789457848?i=1000791215810",
+      "blurb": "Why AI's value in public sector and education now shows up as soon as staff get the tools, from GitHub Copilot at Australian universities to managing cognitive offloading."
+    },
     {
       "title": "AI will be Running Entire Companies Autonomously says Peter Xing",
       "venue": "Exponential Africa (Singularity South Africa)",
@@ -62,20 +69,6 @@
       "year": "2025",
       "url": "https://www.youtube.com/watch?v=wolNeYAd6YY",
       "blurb": "Peter's Microsoft Masterclass on Day 4 of the online Australian Software Engineering Week program, supported by UTS."
-    },
-    {
-      "title": "Panel: From Large Language Models to Learning Companions",
-      "venue": "GRAILE (Global Research Alliance for AI in Learning and Education)",
-      "year": "2025",
-      "url": "https://www.youtube.com/watch?v=O5Uj7InErAs",
-      "blurb": "Panel on whether polished AI answers build real learning — or quietly offload students' critical thinking."
-    },
-    {
-      "title": "Academia &amp; Research Panel | Advancing AI Knowledge | NextGen AI 2025",
-      "venue": "NextGen AI Conference 2025",
-      "year": "2025",
-      "url": "https://www.youtube.com/watch?v=N_Zn-I5i8hs",
-      "blurb": "With Ran Sun and Kirsty Purcell on advancing AI knowledge across research and industry."
     }
   ]
 }
