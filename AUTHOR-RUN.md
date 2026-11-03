@@ -1,5 +1,17 @@
 # Daily About-the-Author run contract — Post-AGI Planning
 
+**Since 1 November 2026 the daily About-the-Author refresh is a step of the Singularity Daily's site-sync automation**
+(12:30pm Sydney), not a separate scheduled run. It researches public sources only, edits `author.json` and publishes with
+`py engine\build\author.py publish` from the Daily's project folder
+(`OneDrive - Microsoft\Documents\Microsoft Scout\Singularity-Daily`). That command claims this tree's interlock as
+`scheduled-author`, refreshes the game projection (`node build-game.js --write`, which must stay `ready`), runs
+`pap-site\deploy.ps1` with its own preflight and `publish-github.ps1`, waits for both domains to serve the new
+`author.json`, renders the author section on both with `verify-author.js`, and releases the interlock. Its docstring holds
+the author.json rules. It does not run the full derived gate suite: since this Guide's own daily evidence run was retired,
+`verify:reality` fails on production as it stands (its 14-day news window has aged out), so the suite cannot pass for an
+author-only change. There is no inline `#authorTalks` fallback in `index.html` any more; both the Guide and the Daily read
+`author.json`. The rest of this contract remains the reference for what an author change may and may not touch.
+
 **This file is the authoritative operational contract for the scheduled About-the-Author workflow.**
 The scheduler prompt is a short pointer to it.
 

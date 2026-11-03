@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01",
+  "updated": "2026-11-04",
   "note": "About-the-Author data. The bio is Peter Xing's own authoritative LinkedIn \"About\" copy (linkedin.com/in/peter-xing) and is preserved verbatim; the daily refresh only revises it if his role/title genuinely changes. talks[] is kept to a rolling last-12-months window of real, verifiable appearances and the 'updated' date is bumped on change. The site falls back to the inline copy in index.html if this file is missing.",
   "name": "Peter Xing",
   "headline": "Futurist, keynote speaker and technologist working at the intersection of AI, longevity science and human augmentation.",
@@ -34,6 +34,13 @@
       "year": "2026",
       "url": "https://podcasts.apple.com/au/podcast/ep17-what-ai-adoption-in-the-public-sector-actually/id6789457848?i=1000791215810",
       "blurb": "Why AI's value in public sector and education now shows up as soon as staff get the tools, from GitHub Copilot at Australian universities to managing cognitive offloading."
+    },
+    {
+      "title": "Claw-Economics: How OpenClaw and the Agentic Economy Will Take Over the Web4 Block Space",
+      "venue": "WikiEXPO Hong Kong 2026",
+      "year": "2026",
+      "url": "https://www.linkedin.com/posts/activity-7482689872726532096-oCns",
+      "blurb": "A keynote on why AI agents such as OpenClaw will need blockchain, stablecoins and programmable wallets to transact at machine speed, and who will control Web4 block space."
     },
     {
       "title": "AI will be Running Entire Companies Autonomously says Peter Xing",
